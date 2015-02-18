@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mc_acc_details"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:orientation="vertical" >
+
+    <TableLayout
+        android:id="@+id/mc_acc_details_general"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:shrinkColumns="1"
+        android:stretchColumns="1,2" >
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#f0f0f0" >
+
+            <TextView
+                android:id="@+id/mc_acc_details_general_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_span="2"
+                android:textColor="#ff000000" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#e0e0e0" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_marginRight="4dp"
+                android:text="@string/mc_accidents_details_status"
+                android:textColor="#0000A0" />
+
+            <TextView
+                android:id="@+id/mc_acc_details_general_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#ff000000" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#f0f0f0" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/mc_accidents_details_begin"
+                android:textColor="#0000A0" />
+
+            <TextView
+                android:id="@+id/mc_acc_details_general_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#ff000000" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#e0e0e0" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_marginRight="4dp"
+                android:text="@string/mc_accidents_details_owner"
+                android:textColor="#0000A0" />
+
+            <TextView
+                android:id="@+id/mc_acc_details_general_owner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#ff000000" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#f0f0f0" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:text="@string/mc_accidents_details_address"
+                android:textColor="#0000A0" />
+
+            <TextView
+                android:id="@+id/mc_acc_details_general_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:textColor="#ff000000" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#e0e0e0" >
+
+            <TextView
+                android:id="@+id/mc_acc_details_general_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_span="2"
+                android:textColor="#ff000000" />
+        </TableRow>
+    </TableLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#000000" />
+
+    <HorizontalScrollView
+        android:id="@+id/mc_acc_list_scroll_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginBottom="5dp"
+        android:scrollbars="none" >
+
+        <RadioGroup
+            android:id="@+id/mc_det_tabs_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:gravity="top"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/mc_det_tab_messages"
+                style="@style/statusText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/tab"
+                android:button="@color/statusBarTextColor"
+                android:checked="true"
+                android:tag="mc_det_messages_content"
+                android:text="Сообщения" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:background="#00000000" />
+
+            <RadioButton
+                android:id="@+id/mc_det_tab_history"
+                style="@style/statusText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/tab"
+                android:button="@color/statusBarTextColor"
+                android:checked="false"
+                android:tag="mc_det_log_content"
+                android:text="История" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:background="#00000000" />
+
+            <RadioButton
+                android:id="@+id/mc_det_tab_people"
+                style="@style/statusText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/tab"
+                android:button="@color/statusBarTextColor"
+                android:checked="false"
+                android:tag="mc_det_people_content"
+                android:text="Мотограждане" />
+        </RadioGroup>
+    </HorizontalScrollView>
+
+    <FrameLayout
+        android:id="@+id/mc_det_tab_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:tag="mc_det_messages_content"
+            android:weightSum="1" >
+
+            <ScrollView
+                android:id="@+id/mc_det_messages_scroll"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:tag="mc_det_messages_content"
+                android:visibility="visible" >
+
+                <TableLayout
+                    android:id="@+id/mc_det_messages_table"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:shrinkColumns="1"
+                    android:stretchColumns="1,2" >
+                </TableLayout>
+            </ScrollView>
+
+            <LinearLayout
+                android:id="@+id/mc_new_message_area"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <EditText
+                    android:id="@+id/mc_new_message_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:lines="2" >
+
+                    <requestFocus />
+                </EditText>
+
+                <Button
+                    android:id="@+id/mc_new_message_send"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Ок" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:tag="mc_det_log_content"
+            android:visibility="invisible" >
+
+            <LinearLayout
+                android:id="@+id/mc_det_log_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+            </LinearLayout>
+        </ScrollView>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:tag="mc_det_people_content"
+            android:visibility="invisible" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:id="@+id/mc_det_people_inplace"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="invisible" >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/status_gradient"
+                        android:gravity="center"
+                        android:text="На месте"
+                        android:textColor="#ffffff" />
+
+                    <LinearLayout
+                        android:id="@+id/mc_det_people_inplace_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" >
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/mc_det_people_onway"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="invisible" >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/status_gradient"
+                        android:gravity="center"
+                        android:text="В пути"
+                        android:textColor="#ffffff" />
+
+                    <LinearLayout
+                        android:id="@+id/mc_det_people_onway_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" >
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </FrameLayout>
+
+</LinearLayout>

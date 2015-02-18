@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data-sources>
+	<data-source id="mysql5-1418026465197-909967646" provider="mysql" driver="mysql5" name="MySQL - mc_accidents" create-date="1418026519358" save-password="true" show-system-objects="true" read-only="false">
+		<connection host="localhost" port="3306" server="" database="mc_accidents" url="jdbc:mysql://localhost:3306/mc_accidents" user="root" password="GxRXLldGagJl8w==" home="C:\Program Files\MySQL\MySQL Server 5.6" type="dev">
+			<property name="@dbeaver-ssl@" value="false"/>
+			<network-handler type="PROXY" id="socks_proxy" enabled="false" user="" save-password="false">
+				<property name="socks-host" value=""/>
+				<property name="socks-port" value="1080"/>
+			</network-handler>
+			<network-handler type="TUNNEL" id="ssh_tunnel" enabled="false" user="" save-password="false">
+				<property name="port" value="22"/>
+				<property name="keyPath" value=""/>
+				<property name="host" value=""/>
+				<property name="authType" value="PASSWORD"/>
+			</network-handler>
+		</connection>
+	</data-source>
+	<data-source id="mysql5-1418372098398--490699674" provider="mysql" driver="mysql5" name="MySQL - monportal" create-date="1418372164591" save-password="true" show-system-objects="true" read-only="false">
+		<connection host="monportal" port="3306" server="" database="" url="jdbc:mysql://monportal:3306/" user="sitescope" password="GxRXLldGagJl8w==" home="C:\Program Files\MySQL\MySQL Server 5.6" type="dev">
+			<property name="@dbeaver-ssl@" value="false"/>
+			<network-handler type="PROXY" id="socks_proxy" enabled="false" user="" save-password="false">
+				<property name="socks-host" value=""/>
+				<property name="socks-port" value="1080"/>
+			</network-handler>
+			<network-handler type="TUNNEL" id="ssh_tunnel" enabled="false" user="" save-password="false">
+				<property name="port" value="22"/>
+				<property name="keyPath" value=""/>
+				<property name="host" value=""/>
+				<property name="authType" value="PASSWORD"/>
+			</network-handler>
+		</connection>
+	</data-source>
+</data-sources>
