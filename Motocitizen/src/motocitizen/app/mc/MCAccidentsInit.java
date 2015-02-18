@@ -2,7 +2,7 @@ package motocitizen.app.mc;
 
 import java.util.Properties;
 
-import motocitizen.app.mc.Listiners.MCListeners;
+import motocitizen.app.mc.listeners.MCListeners;
 import motocitizen.app.mc.objects.MCButtons;
 import motocitizen.app.mc.user.MCAuth;
 import motocitizen.app.mc.user.MCRole;
