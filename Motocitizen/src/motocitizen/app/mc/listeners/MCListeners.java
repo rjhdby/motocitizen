@@ -5,7 +5,9 @@ import java.util.Map;
 
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCAccidentsInit;
+import motocitizen.app.mc.MCSelectSound;
 import motocitizen.app.mc.create.MCCreateAcc;
+import motocitizen.app.mc.notification.MCNotification;
 import motocitizen.app.mc.user.MCAuth;
 import motocitizen.main.R;
 import motocitizen.network.JSONCall;
@@ -90,6 +92,9 @@ public class MCListeners {
 			MCAccidents.toDetails(currentId);
 			Text.set(R.id.mc_new_message_text, "");
 			Keyboard.hide(((Activity) Startup.context).findViewById(R.id.mc_new_message_text));
+			//------------------------------------
+			new MCNotification("text");
+			//------------------------------------
 		}
 	};
 	public static Button.OnClickListener firstloginButtonListener = new Button.OnClickListener() {
@@ -123,6 +128,25 @@ public class MCListeners {
 	public static Button.OnClickListener selectSoundButtonListener = new Button.OnClickListener() {
 		public void onClick(View v) {
 			Show.show(R.id.mc_select_sound_screen);
+			new MCSelectSound();
 		}
+	};
+	
+	public static Button.OnClickListener selectSoundConfirmListener = new Button.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			if (MCSelectSound.currentId != 0) {
+				Startup.prefs.edit().putString("mc.notification.sound", MCSelectSound.sounds.get(MCSelectSound.currentId).getAbsolutePath()).commit();
+			}
+			Show.showLast();
+		}
+
+	};
+	public static Button.OnClickListener cancel = new Button.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			Show.showLast();
+		}
+
 	};
 }

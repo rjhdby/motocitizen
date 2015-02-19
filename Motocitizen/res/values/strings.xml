@@ -65,6 +65,6 @@
 	<string name="fisrst_auth_check">Для доступа ко всем функциям приложения необходимо пройти авторизацию. В анонимном режиме доступен только просмотр.</string>
 	<string name="first_auth_login">Войти</string>
 	<string name="first_auth_anonim">Запустить анонимно</string>
-	<string name="mc_notif_system">По умолчанию</string>
+	<string name="mc_notif_system">default system</string>
 	<string name="mc_notif_sound">Выбрать звук</string>
 </resources>

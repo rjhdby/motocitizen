@@ -108,7 +108,11 @@ public class MCAccidents {
 					tl.addView(tr, Const.trlp);
 				}
 			}
-			tl.getChildAt(first).performClick();
+			if (sorted.length == 0) {
+				tl.addView(drawError());
+			} else {
+				tl.getChildAt(first).performClick();
+			}
 		} else {
 			tl.addView(drawError());
 		}
@@ -116,11 +120,11 @@ public class MCAccidents {
 		((RadioButton) tabsgroup.getChildAt(0)).setChecked(true);
 	}
 
-	private static void touchById(int id){
+	private static void touchById(int id) {
 		int rowId = Integer.parseInt(MCPoints.get(id).get("row_id"));
 		tl.findViewById(rowId).performClick();
 	}
-	
+
 	private static TableRow createRow(Point p) {
 		View vAccRow = Const.li.inflate(R.layout.mc_acc_row, tl, false);
 		TableRow tr = (TableRow) vAccRow.findViewById(R.id.accidentRow);
@@ -255,9 +259,10 @@ public class MCAccidents {
 	public static void toDetails() {
 		((RadioButton) tabsgroup.findViewWithTag("mc_acc_details")).setChecked(true);
 	}
+
 	public static void toDetails(int id) {
 		((RadioButton) tabsgroup.findViewWithTag("mc_acc_details")).setChecked(true);
 		touchById(id);
 	}
-	
+
 }

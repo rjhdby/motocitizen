@@ -5,6 +5,7 @@ import motocitizen.core.InitializeAll;
 import motocitizen.core.Tasks;
 import motocitizen.core.settings.SettingsMenu;
 import motocitizen.main.R;
+import motocitizen.utils.Const;
 import motocitizen.utils.Props;
 import motocitizen.utils.Show;
 import android.app.Activity;
@@ -29,13 +30,14 @@ public class Startup extends Activity {
 		StrictMode.setThreadPolicy(policy);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.main);
+		context = this;
+		new Const();
 		Show.last = this.findViewById(R.id.main_frame_applications).getId();
 		Show.lastParent = this.findViewById(R.id.main_frame).getId();
 
 		prefs = getSharedPreferences("motocitizen.startup", MODE_PRIVATE);
 		// prefs.edit().clear().commit();
 		prefs.edit().putString("backButton", "");
-		context = this;
 		props = new Props();
 		tasks = new Tasks();
 		applications = new Applications();

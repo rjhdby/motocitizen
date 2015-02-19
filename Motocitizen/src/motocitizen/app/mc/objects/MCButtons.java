@@ -19,6 +19,8 @@ public class MCButtons {
 	public static final Button firstLoginButton = (Button) findView(R.id.first_auth_login);
 	public static final Button anonimButton = (Button) findView(R.id.first_auth_anonim);
 	public static final Button selectSoundButton = (Button) findView(R.id.mc_notif_sound_button);
+	public static final Button selectSoundConfirmButton = (Button) findView(R.id.select_sound_save_button);
+	public static final Button selectSoundCancelButton = (Button) findView(R.id.select_sound_cancel_button);
 
 	private static View findView(int id) {
 		return ((Activity) Startup.context).findViewById(id);

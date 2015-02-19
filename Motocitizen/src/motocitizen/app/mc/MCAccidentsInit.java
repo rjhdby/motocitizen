@@ -2,6 +2,7 @@ package motocitizen.app.mc;
 
 import java.util.Properties;
 
+import motocitizen.app.mc.gcm.MCGCMRegistration;
 import motocitizen.app.mc.listeners.MCListeners;
 import motocitizen.app.mc.objects.MCButtons;
 import motocitizen.app.mc.user.MCAuth;
@@ -27,6 +28,7 @@ public class MCAccidentsInit {
 		addListeners();
 		MCAuth.checkFirstAuth();
 		setupRole();
+		new MCGCMRegistration();
 	}
 
 	private void deploySettings() {
@@ -58,6 +60,9 @@ public class MCAccidentsInit {
 		MCButtons.firstLoginButton.setOnClickListener(MCListeners.firstloginButtonListener);
 		MCButtons.anonimButton.setOnClickListener(MCListeners.anonimButtonListener);
 		MCButtons.authAnonimCheckBox.setOnCheckedChangeListener(MCListeners.authAnonimCheckBoxListener);
+		MCButtons.selectSoundButton.setOnClickListener(MCListeners.selectSoundButtonListener);
+		MCButtons.selectSoundConfirmButton.setOnClickListener(MCListeners.selectSoundConfirmListener);
+		MCButtons.selectSoundCancelButton.setOnClickListener(MCListeners.cancel);
 	}
 
 	private void deployScreens() {

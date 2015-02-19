@@ -17,7 +17,6 @@ import org.json.JSONException;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
-import android.text.TextUtils;
 import android.view.ViewGroup;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -69,7 +68,6 @@ public class MCMessages {
 		}
 		tvText.setMaxLines(10);
 		tvText.setSingleLine(false);
-		//tvText.setEllipsize(TextUtils.TruncateAt.valueOf("none"));
 		tvText.setText(messages.get(id).text);
 		tr.addView(tvOwner);
 		tr.addView(tvText);
