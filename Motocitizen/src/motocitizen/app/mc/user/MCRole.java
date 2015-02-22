@@ -2,6 +2,8 @@ package motocitizen.app.mc.user;
 
 import java.util.Arrays;
 
+import motocitizen.app.mc.MCAccidents;
+
 public class MCRole {
 	private static final String[] ReadOnly = new String[] { "readonly", "banned", "standart", "moderator", "admin" };
 	private static final String[] Standart = new String[] { "standart", "moderator", "admin" };
@@ -9,7 +11,7 @@ public class MCRole {
 	private static final String[] Admin = new String[] { "admin" };
 
 	private static String getRole() {
-		String role = MCAuth.user.get("role");
+		String role = MCAccidents.auth.role;
 		if (role == null) {
 			return "";
 		}

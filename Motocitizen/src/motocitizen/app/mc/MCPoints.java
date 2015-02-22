@@ -20,9 +20,9 @@ import android.location.Location;
 
 @SuppressLint("UseSparseArrays")
 public class MCPoints {
-	public static String error = "ok";
-	public static Map<Integer, Point> points;
-	public static Map<Integer, MCMessages> messages;
+	public String error = "ok";
+	public Map<Integer, Point> points;
+	public Map<Integer, MCMessages> messages;
 
 	public MCPoints() {
 		if (points == null) {
@@ -31,7 +31,7 @@ public class MCPoints {
 		}
 	}
 
-	public static Point findByCommonValue(String key, String value) {
+	public Point findByCommonValue(String key, String value) {
 		for (Point p : points.values()) {
 			if (p.get(key).equals(value)) {
 				return p;
@@ -40,7 +40,7 @@ public class MCPoints {
 		return null;
 	}
 
-	public static Point findByRowId(int id) {
+	public Point findByRowId(int id) {
 		for (Point p : points.values()) {
 			if (p.get("row_id").equals(String.valueOf(id))) {
 				return p;
@@ -49,11 +49,11 @@ public class MCPoints {
 		return null;
 	}
 
-	public static Point get(int id) {
+	public Point get(int id) {
 		return points.get(id);
 	}
 
-	public static double distanceFromUser(int id) {
+	public double distanceFromUser(int id) {
 		Location acc = new Location("");
 		acc.setLatitude(Double.parseDouble(get(id).get("lat")));
 		acc.setLongitude(Double.parseDouble(get(id).get("lon")));
@@ -61,7 +61,7 @@ public class MCPoints {
 		return user.distanceTo(acc);
 	}
 
-	public static String getTime(int id) {
+	public String getTime(int id) {
 		try {
 			Calendar date = Calendar.getInstance();
 			date.setTime(Const.dateFormat.parse(get(id).get("created")));
@@ -71,7 +71,7 @@ public class MCPoints {
 		}
 	}
 
-	public static boolean isToday(int id) {
+	public boolean isToday(int id) {
 		Calendar calendar = Calendar.getInstance();
 		int now = calendar.get(Calendar.DAY_OF_YEAR);
 		try {
@@ -86,7 +86,7 @@ public class MCPoints {
 		}
 	}
 
-	public static void load() {
+	public void load() {
 		Map<String, String> selector = new HashMap<String, String>();
 		Location userLocation = (Location) Startup.tasks.tasks.get("locationservice").getObj("getLocation");
 		selector.put("distance", String.valueOf(Startup.prefs.getInt("mc.distance.show", 100)));
@@ -106,13 +106,14 @@ public class MCPoints {
 		}
 	}
 
-	private static void parseJSON(JSONArray json) throws JSONException {
+	private void parseJSON(JSONArray json) throws JSONException {
 		for (int i = 0; i < json.length(); i++) {
 			JSONObject acc = json.getJSONObject(i);
-			if (acc.has("error")){
+			if (acc.has("error")) {
 				error = acc.getString("error");
-				return;}
-			Map<String,String> dataset = new HashMap<String,String>();
+				return;
+			}
+			Map<String, String> dataset = new HashMap<String, String>();
 			int id = acc.getInt("id");
 			MCMessages m;
 			try {

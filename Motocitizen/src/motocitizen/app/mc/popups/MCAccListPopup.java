@@ -3,6 +3,7 @@ package motocitizen.app.mc.popups;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCPoints;
 import motocitizen.app.mc.user.MCRole;
 import motocitizen.core.Point;
@@ -19,7 +20,7 @@ public class MCAccListPopup extends MCPopupWindow{
 		content.setBackgroundColor(0xFF202020);
 		content.setLayoutParams(lp);
 		if (android.os.Build.VERSION.SDK_INT > 10) {
-			textToCopy = MCPoints.getTime(p.id) + ". " + p.get("mc_accident_type") + ". " + p.get("mc_accident_med") + ". " + p.get("address") + ". "
+			textToCopy = MCAccidents.points.getTime(p.id) + ". " + p.get("mc_accident_type") + ". " + p.get("mc_accident_med") + ". " + p.get("address") + ". "
 					+ p.get("descr");
 			content.addView(copyButtonRow(), lp);
 		}

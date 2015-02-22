@@ -48,7 +48,6 @@ public class MCGCMRegistration {
 				GooglePlayServicesUtil.getErrorDialog(resultCode, (Activity) Startup.context, PLAY_SERVICES_RESOLUTION_REQUEST).show();
 			} else {
 				Log.d(TAG, "This device is not supported.");
-				//finish();
 			}
 			return false;
 		}
@@ -79,16 +78,14 @@ public class MCGCMRegistration {
 			PackageInfo packageInfo = Startup.context.getPackageManager().getPackageInfo(Startup.context.getPackageName(), 0);
 			return packageInfo.versionCode;
 		} catch (NameNotFoundException e) {
-			// should never happen
 			throw new RuntimeException("Could not get package name: " + e);
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void registerInBackground() {
-		new AsyncTask() {
+		new AsyncTask<String,String,String>() {
 			@Override
-			protected String doInBackground(Object... params) {
+			protected String doInBackground(String... params) {
 				String msg = "";
 				try {
 					if (gcm == null) {
@@ -96,33 +93,14 @@ public class MCGCMRegistration {
 					}
 					regid = gcm.register(SENDER_ID);
 					msg = "Device registered, registration ID=" + regid;
-
-					// You should send the registration ID to your server over
-					// HTTP,
-					// so it can use GCM/HTTP or CCS to send messages to your
-					// app.
-					// The request to your server should be authenticated if
-					// your app
-					// is using accounts.
 					sendRegistrationIdToBackend();
-
-					// For this demo: we don't need to send it because the
-					// device
-					// will send upstream messages to a server that echo back
-					// the
-					// message using the 'from' address in the message.
-
-					// Persist the registration ID - no need to register again.
 					storeRegistrationId(regid);
 				} catch (IOException ex) {
 					msg = "Error :" + ex.getMessage();
-					// If there is an error, don't just keep trying to register.
-					// Require the user to click a button again, or perform
-					// exponential back-off.
 				}
 				return msg;
 			}
-
+			@Override
 			protected void onPostExecute(String msg) {
 				new MCNotification(msg);
 				Log.d(TAG, msg);
@@ -135,7 +113,6 @@ public class MCGCMRegistration {
 		// Your implementation here.
 	}
 	private void storeRegistrationId(String regId) {
-	    
 	    int appVersion = getAppVersion();
 	    Log.i(TAG, "Saving regId on app version " + appVersion);
 	    SharedPreferences.Editor editor = Startup.prefs.edit();

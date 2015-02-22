@@ -108,8 +108,8 @@ public class MCPopupWindow {
 		public void onClick(View v) {
 			pw.dismiss();
 			Map<String, String> params = new HashMap<String, String>();
-			params.put("login", MCAuth.getLogin());
-			params.put("passhash", MCAuth.getPassHash());
+			params.put("login", MCAccidents.auth.getLogin());
+			params.put("passhash", MCAccidents.auth.makePassHash());
 			if (point.get("status").equals("acc_status_end")) {
 				params.put("state", "acc_status_act");
 			} else {
@@ -124,8 +124,8 @@ public class MCPopupWindow {
 		public void onClick(View v) {
 			pw.dismiss();
 			Map<String, String> params = new HashMap<String, String>();
-			params.put("login", MCAuth.getLogin());
-			params.put("passhash", MCAuth.getPassHash());
+			params.put("login", MCAccidents.auth.getLogin());
+			params.put("passhash", MCAccidents.auth.makePassHash());
 			if (point.get("status").equals("acc_status_hide")) {
 				params.put("state", "acc_status_act");
 			} else {

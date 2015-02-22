@@ -61,7 +61,7 @@ public class MCMessages {
 		lp.setMargins(0, 0, 5, 0);
 		tvOwner.setLayoutParams(lp);
 		tvOwner.setText(messages.get(id).owner);
-		if (messages.get(id).owner.equals(MCAuth.user.get("login"))) {
+		if (messages.get(id).owner.equals(MCAccidents.auth.name)) {
 			tvOwner.setBackgroundColor(Color.LTGRAY);
 		} else {
 			tvOwner.setBackgroundColor(Color.GRAY);

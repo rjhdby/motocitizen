@@ -2,14 +2,14 @@ package motocitizen.core;
 
 import java.util.Map;
 
+import motocitizen.main.R;
+import motocitizen.startup.Startup;
 import android.app.Activity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RadioGroup;
-import motocitizen.main.R;
-import motocitizen.startup.Startup;
 
 public class InitializeAll {
 	public static void init() {
@@ -34,10 +34,10 @@ public class InitializeAll {
 				}
 			}
 		}
-		addListener();
+		//addListener();
 	}
 	
-	private static void addListener() {
+	public static void addListener() {
 		final Activity act = (Activity) Startup.context;
 		final FrameLayout tabscontent = (FrameLayout) act.findViewById(R.id.tabcontent);
 		RadioGroup tabsgroup = (RadioGroup) act.findViewById(R.id.main_tabs_group);

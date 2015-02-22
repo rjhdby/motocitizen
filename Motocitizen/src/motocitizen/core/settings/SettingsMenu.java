@@ -7,6 +7,7 @@ import motocitizen.utils.Show;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -20,14 +21,11 @@ public class SettingsMenu {
 	private static final SharedPreferences prefs = Startup.prefs;
 
 	public SettingsMenu() {
-		//Show.show(R.id.main_frame_applications);
-		Show.showLast();
 		addListeners();
+		setValues();
 	}
 
 	public static void open() {
-		previsionBack = Startup.prefs.getString("backButton", "");
-		Startup.prefs.edit().putString("backButton", "motocitizen.core.settings.SettingsMenu").commit();
 		toSettings();
 		setValues();
 	}
@@ -68,6 +66,7 @@ public class SettingsMenu {
 
 	private static void setValues() {
 		for (String key : prefs.getAll().keySet()) {
+			Log.d("PREFS", key);
 			View v = includeArea.findViewWithTag(key);
 			if (v != null) {
 				if (v instanceof CheckBox) {

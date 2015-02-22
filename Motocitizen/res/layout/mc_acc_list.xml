@@ -19,8 +19,9 @@
             android:id="@+id/accListContent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#fff"
             android:shrinkColumns="1"
-            android:background="#fff" >
+            android:stretchColumns="0" >
         </TableLayout>
     </ScrollView>
 

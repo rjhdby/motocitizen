@@ -182,6 +182,9 @@ public class LocationService extends TimerTask {
 	public Location getBestLocation(Location location) {
 		Location last;
 		int d;
+		if (lastKnownLocation == null) {
+			lastKnownLocation = location;
+		}
 		last = lastKnownLocation;
 		// getBestLastLocation();
 		if (last.getAccuracy() >= location.getAccuracy()) {

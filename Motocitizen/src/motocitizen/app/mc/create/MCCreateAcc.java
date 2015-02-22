@@ -6,7 +6,6 @@ import java.util.Map;
 
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCNomination;
-import motocitizen.app.mc.user.MCAuth;
 import motocitizen.main.R;
 import motocitizen.network.JSONCall;
 import motocitizen.startup.Startup;
@@ -38,8 +37,6 @@ public class MCCreateAcc {
 	private static final int FINAL = R.id.mc_create_final_frame;
 	private static final int ACC = R.id.mc_create_acc_frame;
 	private static final int PEOPLE = R.id.mc_create_people_frame;
-	private static final int last = Show.last;
-	private static final int lastParent = Show.lastParent;
 	
 	private static Date date = new Date();
 	private static String globalText = "";
@@ -120,7 +117,7 @@ public class MCCreateAcc {
 
 	private static void exit() {
 		Startup.prefs.edit().putString("backButton", previsionBack).commit();
-		Show.show(lastParent, last);
+		Show.show(R.id.main_frame_applications);
 		Keyboard.hide(details);
 	}
 
@@ -246,7 +243,7 @@ public class MCCreateAcc {
 
 	private static Map<String, String> createPOST() {
 		Map<String, String> POST = new HashMap<String, String>();
-		POST.put("owner_id", MCAuth.user.get("id"));
+		POST.put("owner_id", String.valueOf(MCAccidents.auth.id));
 		POST.put("type", type);
 		POST.put("med", med);
 		POST.put("status", "acc_status_act");
@@ -255,8 +252,8 @@ public class MCCreateAcc {
 		POST.put("created", Const.dateFormat.format(date));
 		POST.put("address", addressText);
 		POST.put("descr", Text.get(details.getId()) + "");
-		POST.put("login", MCAuth.getLogin());
-		POST.put("passhash", MCAuth.getPassHash());
+		POST.put("login", MCAccidents.auth.getLogin());
+		POST.put("passhash", MCAccidents.auth.makePassHash());
 		POST.put("calledMethod", "createAcc");
 		return POST;
 	}

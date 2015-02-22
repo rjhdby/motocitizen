@@ -1,5 +1,6 @@
 package motocitizen.startup;
 
+import motocitizen.app.mc.MCAccidents;
 import motocitizen.core.Applications;
 import motocitizen.core.InitializeAll;
 import motocitizen.core.Tasks;
@@ -32,14 +33,12 @@ public class Startup extends Activity {
 		setContentView(R.layout.main);
 		context = this;
 		new Const();
-		Show.last = this.findViewById(R.id.main_frame_applications).getId();
-		Show.lastParent = this.findViewById(R.id.main_frame).getId();
 
 		prefs = getSharedPreferences("motocitizen.startup", MODE_PRIVATE);
 		// prefs.edit().clear().commit();
-		prefs.edit().putString("backButton", "");
 		props = new Props();
 		tasks = new Tasks();
+		// new MCAccidents();
 		applications = new Applications();
 		InitializeAll.init();
 		new SettingsMenu();
@@ -49,6 +48,12 @@ public class Startup extends Activity {
 	@Override
 	protected void onStart() {
 		super.onStart();
+		InitializeAll.addListener();
+		if (MCAccidents.auth.isFirstRun()) {
+			Show.show(R.id.main_frame,R.id.first_auth_screen);
+		} else {
+			Show.showLast();
+		}
 	}
 
 	@Override
@@ -70,16 +75,8 @@ public class Startup extends Activity {
 			SmallSettingsMenu.popupBL.show();
 			return true;
 		case KeyEvent.KEYCODE_BACK:
-			String backButtonClass = prefs.getString("backButton", "");
-			if (!backButtonClass.equals("")) {
-				try {
-					Class<?> c = Class.forName(backButtonClass);
-					c.getDeclaredMethod("backButton").invoke(null);
-					return true;
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			}
+			Show.showLast();
+			return true;
 		}
 		return super.onKeyUp(keycode, e);
 	}

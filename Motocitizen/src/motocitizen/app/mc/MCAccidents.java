@@ -7,20 +7,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import motocitizen.app.mc.gcm.MCGCMRegistration;
+import motocitizen.app.mc.init.MCInit;
 import motocitizen.app.mc.popups.MCAccListPopup;
+import motocitizen.app.mc.user.MCAuth;
+import motocitizen.app.mc.user.MCRole;
 import motocitizen.core.Point;
 import motocitizen.main.R;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 import motocitizen.utils.NewID;
 import motocitizen.utils.Text;
+import android.app.Activity;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -39,24 +46,38 @@ public class MCAccidents {
 	private static Map<String, Boolean> visibility;
 
 	public static Point currentPoint;
-
+	public static MCPoints points;
+	public static MCAuth auth;
+	private MCGCMRegistration gcm;
+	
 	public MCAccidents() {
-		new MCPoints();
+		new MCGCMRegistration();
+		Log.d("PROPS", "-----------------------");
+		MCInit.readProperties();
+		Log.d("PROPS", "-----------------------");
+		MCInit.inflateViews();
+		MCInit.addListeners();
+		auth = new MCAuth();
+		MCInit.setupAccess(auth);
+		MCInit.setupValues(auth);
+		points = new MCPoints();
+		
 		addListeners();
 		getAccidents();
+		drawList();
 	}
 
 	public static TableRow drawError() {
 		View vAccRow = Const.li.inflate(R.layout.mc_acc_list_error_row, tl, false);
 		TableRow tr = (TableRow) vAccRow.findViewById(R.id.mc_acc_list_error_row);
 		tr.setId(NewID.id());
-		((TextView) tr.findViewById(R.id.mc_acc_list_error_text)).setText(MCPoints.error);
+		((TextView) tr.findViewById(R.id.mc_acc_list_error_text)).setText(points.error);
 		return tr;
 	}
 
 	private static void makeSortedList() {
 		List<Integer> list = new ArrayList<Integer>();
-		list.addAll(MCPoints.points.keySet());
+		list.addAll(points.points.keySet());
 		sorted = new Integer[list.size()];
 		list.toArray(sorted);
 		Arrays.sort(sorted, Collections.reverseOrder());
@@ -90,15 +111,15 @@ public class MCAccidents {
 	public static void drawList() {
 		setupVisibility();
 		boolean noYesterday = true;
-		if (MCPoints.error.equals("ok") || MCPoints.error.equals("no_new")) {
+		if (points.error.equals("ok") || points.error.equals("no_new")) {
 			int first = 0;
 			makeSortedList();
 			for (int i = 0; i < sorted.length; i++) {
-				Point acc = MCPoints.get(sorted[i]);
+				Point acc = points.get(sorted[i]);
 				Log.d("POINT", acc.toString());
 				if (visibility.get(acc.get("mc_accident_orig_type"))) {
 					TableRow tr = createRow(acc);
-					if (!MCPoints.isToday(sorted[i]) && noYesterday) {
+					if (!points.isToday(sorted[i]) && noYesterday) {
 						tl.addView(yesterdayRow(), Const.trlp);
 						noYesterday = false;
 						if (tl.getChildCount() == 1) {
@@ -121,7 +142,7 @@ public class MCAccidents {
 	}
 
 	private static void touchById(int id) {
-		int rowId = Integer.parseInt(MCPoints.get(id).get("row_id"));
+		int rowId = Integer.parseInt(points.get(id).get("row_id"));
 		tl.findViewById(rowId).performClick();
 	}
 
@@ -134,7 +155,7 @@ public class MCAccidents {
 		p.set("row_id", String.valueOf(id));
 		tr.setOnClickListener(getAccRowClick(tr));
 
-		Text.set(tr, R.id.mc_row_time, MCPoints.getTime(p.id));
+		Text.set(tr, R.id.mc_row_time, points.getTime(p.id));
 		Text.set(tr, R.id.mc_row_address, p.get("address"));
 		Text.set(tr, R.id.mc_row_general, p.get("mc_accident_type") + ". " + p.get("mc_accident_med"));
 		Text.set(tr, R.id.mc_row_description, p.get("descr"));
@@ -147,7 +168,7 @@ public class MCAccidents {
 	private static OnLongClickListener rowLongClick = new OnLongClickListener() {
 		@Override
 		public boolean onLongClick(View v) {
-			Point p = MCPoints.findByRowId(v.getId());
+			Point p = points.findByRowId(v.getId());
 			PopupWindow pw;
 			pw = MCAccListPopup.getPopupWindow(p);
 			pw.showAsDropDown(v, 20, -20);
@@ -169,10 +190,10 @@ public class MCAccidents {
 		return new View.OnClickListener() {
 			public void onClick(View v) {
 				ViewGroup vg = (ViewGroup) tl;
-				Point p = MCPoints.findByRowId(tr.getId());
+				Point p = points.findByRowId(tr.getId());
 				for (int i = 0; i < vg.getChildCount(); i++) {
 					View currView = vg.getChildAt(i);
-					Point currPoint = MCPoints.findByRowId(currView.getId());
+					Point currPoint = points.findByRowId(currView.getId());
 					if (currPoint != null) {
 						currView.setBackgroundResource(getState(currPoint));
 					}
@@ -207,7 +228,7 @@ public class MCAccidents {
 	private static void makeDetails(Point p) {
 		Text.set(R.id.mc_acc_details_general_type, p.get("mc_accident_type") + ". " + p.get("mc_accident_med"));
 		Text.set(R.id.mc_acc_details_general_status, p.get("status_text"));
-		Text.set(R.id.mc_acc_details_general_time, MCPoints.getTime(p.id));
+		Text.set(R.id.mc_acc_details_general_time, points.getTime(p.id));
 		Text.set(R.id.mc_acc_details_general_owner, p.get("owner"));
 		Text.set(R.id.mc_acc_details_general_address, "(" + distanceText(p) + ") " + p.get("address"));
 		Text.set(R.id.mc_acc_details_general_description, p.get("descr"));
@@ -216,12 +237,12 @@ public class MCAccidents {
 		currentPoint = p;
 		((View) Const.act.findViewById(R.id.mc_acc_details_general)).setOnLongClickListener(detLongClick);
 		ViewGroup tv = (ViewGroup) Const.act.findViewById(R.id.mc_det_messages_table);
-		MCPoints.messages.get(p.id).drawList(tv);
+		points.messages.get(p.id).drawList(tv);
 		((ScrollView) Const.act.findViewById(R.id.mc_det_messages_scroll)).fullScroll(View.FOCUS_UP);
 	}
 
 	private static String distanceText(Point p) {
-		double d = MCPoints.distanceFromUser(p.id);
+		double d = points.distanceFromUser(p.id);
 		if (d > 1000) {
 			return String.valueOf(Math.round(d / 10) / 100) + "км";
 		} else {
@@ -248,12 +269,12 @@ public class MCAccidents {
 
 	public static void refresh() {
 		getAccidents();
+		drawList();
 	}
 
 	private static void getAccidents() {
-		MCPoints.load();
+		points.load();
 		tl.removeAllViews();
-		drawList();
 	}
 
 	public static void toDetails() {
@@ -264,5 +285,5 @@ public class MCAccidents {
 		((RadioButton) tabsgroup.findViewWithTag("mc_acc_details")).setChecked(true);
 		touchById(id);
 	}
-
+	
 }
