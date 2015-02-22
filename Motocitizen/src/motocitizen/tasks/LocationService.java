@@ -38,6 +38,12 @@ public class LocationService extends TimerTask {
 		criteria = makeCriteria(mode);
 		currentProvider = checkProvider();
 		lastKnownLocation = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+		if(lastKnownLocation == null){
+			lastKnownLocation = new Location(currentProvider);
+			lastKnownLocation.setLatitude(55.752295);
+			lastKnownLocation.setLongitude(37.622735);
+			lastKnownLocation.setAccuracy(10000);
+		}
 		nl = networkListener();
 		gl = gpsListener();
 		runListener();
