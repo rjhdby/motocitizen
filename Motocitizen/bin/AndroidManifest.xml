@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="motocitizen.main"
-    android:versionCode="7"
-    android:versionName="0.07" >
+    android:versionCode="9"
+    android:versionName="0.09" >
 
     <uses-sdk
         android:minSdkVersion="11"
@@ -53,17 +53,20 @@
 
         <activity
             android:name="motocitizen.startup.Startup"
+            android:windowSoftInputMode="adjustResize"
             android:label="@string/app_name"
+            android:launchMode="singleInstance"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name="McAccDetailsActivity" >
-        </activity>
-        <activity android:name="McAccListActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/*" />
+            </intent-filter>
         </activity>
     </application>
 

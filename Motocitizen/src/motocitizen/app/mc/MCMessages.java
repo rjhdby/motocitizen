@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import motocitizen.app.mc.user.MCAuth;
+import motocitizen.app.mc.popups.MCMessagesPopup;
 import motocitizen.core.Message;
 import motocitizen.startup.Startup;
 
@@ -17,7 +17,10 @@ import org.json.JSONException;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.widget.PopupWindow;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -69,8 +72,10 @@ public class MCMessages {
 		tvText.setMaxLines(10);
 		tvText.setSingleLine(false);
 		tvText.setText(messages.get(id).text);
+		tr.setTag(String.valueOf(id));
 		tr.addView(tvOwner);
 		tr.addView(tvText);
+		tr.setOnLongClickListener(rowLongClick);
 		return tr;
 	}
 	
@@ -83,4 +88,16 @@ public class MCMessages {
 			vg.addView(createRow(i, vg.getContext()));
 		}
 	}
+	private static OnLongClickListener rowLongClick = new OnLongClickListener() {
+		
+		@Override
+		public boolean onLongClick(View v) {
+			int id_msg = Integer.parseInt((String) v.getTag());
+			Message message = MCAccidents.points.messages.get(MCAccidents.currentPoint.id).messages.get(id_msg);
+			PopupWindow pw;
+			pw = MCMessagesPopup.getPopupWindow(message);
+			pw.showAsDropDown(v, 20, -20);
+			return true;
+		}
+	};
 }

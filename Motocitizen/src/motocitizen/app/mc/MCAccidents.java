@@ -11,23 +11,19 @@ import motocitizen.app.mc.gcm.MCGCMRegistration;
 import motocitizen.app.mc.init.MCInit;
 import motocitizen.app.mc.popups.MCAccListPopup;
 import motocitizen.app.mc.user.MCAuth;
-import motocitizen.app.mc.user.MCRole;
 import motocitizen.core.Point;
 import motocitizen.main.R;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 import motocitizen.utils.NewID;
 import motocitizen.utils.Text;
-import android.app.Activity;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -52,9 +48,7 @@ public class MCAccidents {
 	
 	public MCAccidents() {
 		new MCGCMRegistration();
-		Log.d("PROPS", "-----------------------");
 		MCInit.readProperties();
-		Log.d("PROPS", "-----------------------");
 		MCInit.inflateViews();
 		MCInit.addListeners();
 		auth = new MCAuth();

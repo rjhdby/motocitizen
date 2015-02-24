@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.RadioGroup;
 
 public class Show {
@@ -29,6 +28,13 @@ public class Show {
 		show(R.id.main_frame, childId);
 	}
 
+	public static void showCurrent(){
+		if (current == null) {
+			show(R.id.main_frame, R.id.main_frame_applications);
+		}
+		show(current.first, current.second);
+	}
+	
 	public static void showLast() {
 		if (current == null) {
 			show(R.id.main_frame, R.id.main_frame_applications);

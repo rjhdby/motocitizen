@@ -35,18 +35,26 @@ public class LocationService extends TimerTask {
 		makeActionsList();
 		act = (Activity) Startup.context;
 		lm = (LocationManager) Startup.context.getSystemService(Context.LOCATION_SERVICE);
+		makeLastLocation();
 		criteria = makeCriteria(mode);
 		currentProvider = checkProvider();
-		lastKnownLocation = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-		if(lastKnownLocation == null){
-			lastKnownLocation = new Location(currentProvider);
-			lastKnownLocation.setLatitude(55.752295);
-			lastKnownLocation.setLongitude(37.622735);
-			lastKnownLocation.setAccuracy(10000);
-		}
 		nl = networkListener();
 		gl = gpsListener();
 		runListener();
+	}
+
+	public void makeLastLocation() {
+		if (lastKnownLocation == null) {
+			lastKnownLocation = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+			if (lastKnownLocation == null) {
+				double lastLon = (double) Startup.prefs.getFloat("lastLon", 37.622735f);
+				double lastLat = (double) Startup.prefs.getFloat("lastLat", 55.752295f);
+				lastKnownLocation = new Location(currentProvider);
+				lastKnownLocation.setLatitude(lastLat);
+				lastKnownLocation.setLongitude(lastLon);
+				lastKnownLocation.setAccuracy(10000);
+			}
+		}
 	}
 
 	private void makeActionsList() {
@@ -189,7 +197,7 @@ public class LocationService extends TimerTask {
 		Location last;
 		int d;
 		if (lastKnownLocation == null) {
-			lastKnownLocation = location;
+			makeLastLocation();
 		}
 		last = lastKnownLocation;
 		// getBestLastLocation();
@@ -201,6 +209,8 @@ public class LocationService extends TimerTask {
 				lastKnownLocation = location;
 			}
 		}
+		Startup.prefs.edit().putFloat("lastLon", (float) lastKnownLocation.getLongitude()).commit();
+		Startup.prefs.edit().putFloat("lastLat", (float) lastKnownLocation.getLatitude()).commit();
 		return lastKnownLocation;
 	}
 

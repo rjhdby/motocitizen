@@ -20,8 +20,13 @@ public class MCNotification {
 			NOTIFY_ID = 0;
 		}
 		Context context = Startup.context;
+		//Intent notificationIntent = new Intent(Startup.context, AuthorizedUser.class);
 		Intent notificationIntent = new Intent(Startup.context, Startup.class);
+		notificationIntent.putExtra("text", "ЭГЕГЕЙ!");
+		notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+		
 		Resources res = context.getResources();
 		Notification.Builder builder = new Notification.Builder(context);
 		builder.setContentIntent(contentIntent)
@@ -43,7 +48,8 @@ public class MCNotification {
 		String sound = Startup.prefs.getString("mc.notification.sound", "default system");
 		Log.d("PREF SOUND", sound);
 		if (sound.equals("default system")) {
-			notification.defaults = Notification.DEFAULT_ALL;
+			//notification.defaults = Notification.DEFAULT_ALL;
+			notification.defaults = Notification.DEFAULT_VIBRATE;
 		} else {
 			notification.vibrate = new long[] { 1000, 1000, 1000 };
 			notification.sound = Uri.parse("file://" + sound);

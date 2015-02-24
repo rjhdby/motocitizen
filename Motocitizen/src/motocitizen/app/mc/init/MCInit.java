@@ -48,8 +48,9 @@ public class MCInit {
 	}
 
 	public static void addListeners() {
-		MCButtons.authButton.setOnClickListener(MCListeners.authButtonListener);
+		MCButtons.selectSoundCancelButton.setOnClickListener(MCListeners.selectSoundCancelButton);
 		MCButtons.authConfirmButton.setOnClickListener(MCListeners.authConfirmListener);
+		MCButtons.authButton.setOnClickListener(MCListeners.authButtonListener);
 		MCButtons.authCancelButton.setOnClickListener(MCListeners.authCancelListener);
 		MCButtons.dialButton.setOnClickListener(MCListeners.dialButtonListener);
 		MCButtons.createAccButton.setOnClickListener(MCListeners.createAccButtonListener);
@@ -59,7 +60,6 @@ public class MCInit {
 		MCButtons.authAnonimCheckBox.setOnCheckedChangeListener(MCListeners.authAnonimCheckBoxListener);
 		MCButtons.selectSoundButton.setOnClickListener(MCListeners.selectSoundButtonListener);
 		MCButtons.selectSoundConfirmButton.setOnClickListener(MCListeners.selectSoundConfirmListener);
-		MCButtons.selectSoundCancelButton.setOnClickListener(MCListeners.selectSoundCancelButton);
 	}
 	
 	public static void setupAccess(MCAuth auth) {
@@ -92,5 +92,4 @@ public class MCInit {
 	public static void setupValues(MCAuth auth){
 		Text.set(R.id.value_mcaccidents_auth_name, auth.name);
 	}
-	
 }

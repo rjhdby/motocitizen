@@ -3,14 +3,12 @@ package motocitizen.app.mc.user;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import motocitizen.main.R;
 import motocitizen.network.JSONCall;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
-import motocitizen.utils.Show;
 import motocitizen.utils.Text;
 
 import org.json.JSONException;
@@ -20,7 +18,6 @@ import android.content.Context;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
 
 public class MCAuth {
 	public String role;

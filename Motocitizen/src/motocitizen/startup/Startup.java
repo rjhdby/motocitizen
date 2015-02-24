@@ -11,6 +11,7 @@ import motocitizen.utils.Props;
 import motocitizen.utils.Show;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -43,17 +44,18 @@ public class Startup extends Activity {
 		InitializeAll.init();
 		new SettingsMenu();
 		new SmallSettingsMenu();
+		InitializeAll.addListener();
+		if (MCAccidents.auth.isFirstRun()) {
+			Show.show(R.id.main_frame, R.id.first_auth_screen);
+		} else {
+			Show.showLast();
+		}
+		InitializeAll.checkTab();
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		InitializeAll.addListener();
-		if (MCAccidents.auth.isFirstRun()) {
-			Show.show(R.id.main_frame,R.id.first_auth_screen);
-		} else {
-			Show.showLast();
-		}
 	}
 
 	@Override
@@ -65,7 +67,14 @@ public class Startup extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		catchIntent();
 		tasks.allWakeUp();
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		setIntent(intent);
 	}
 
 	@Override
@@ -79,5 +88,15 @@ public class Startup extends Activity {
 			return true;
 		}
 		return super.onKeyUp(keycode, e);
+	}
+
+	private void catchIntent() {
+		Intent intent = getIntent();
+		if (intent != null) {
+			String text = intent.getStringExtra("text");
+			if (text != null) {
+			//	new MCNotification(text);
+			}
+		}
 	}
 }
