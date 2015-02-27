@@ -1,12 +1,14 @@
 package motocitizen.startup;
 
 import motocitizen.app.mc.MCAccidents;
+import motocitizen.app.mc.gcm.GcmBroadcastReceiver;
 import motocitizen.core.Applications;
 import motocitizen.core.InitializeAll;
 import motocitizen.core.Tasks;
 import motocitizen.core.settings.SettingsMenu;
 import motocitizen.main.R;
 import motocitizen.utils.Const;
+import motocitizen.utils.Keyboard;
 import motocitizen.utils.Props;
 import motocitizen.utils.Show;
 import android.app.Activity;
@@ -51,6 +53,7 @@ public class Startup extends Activity {
 			Show.showLast();
 		}
 		InitializeAll.checkTab();
+		new GcmBroadcastReceiver();
 	}
 
 	@Override
@@ -82,9 +85,11 @@ public class Startup extends Activity {
 		switch (keycode) {
 		case KeyEvent.KEYCODE_MENU:
 			SmallSettingsMenu.popupBL.show();
+			Keyboard.hide();
 			return true;
 		case KeyEvent.KEYCODE_BACK:
 			Show.showLast();
+			Keyboard.hide();
 			return true;
 		}
 		return super.onKeyUp(keycode, e);

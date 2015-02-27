@@ -60,6 +60,7 @@ public class MCInit {
 		MCButtons.authAnonimCheckBox.setOnCheckedChangeListener(MCListeners.authAnonimCheckBoxListener);
 		MCButtons.selectSoundButton.setOnClickListener(MCListeners.selectSoundButtonListener);
 		MCButtons.selectSoundConfirmButton.setOnClickListener(MCListeners.selectSoundConfirmListener);
+		
 	}
 	
 	public static void setupAccess(MCAuth auth) {

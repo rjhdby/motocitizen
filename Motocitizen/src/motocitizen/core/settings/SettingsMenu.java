@@ -13,14 +13,15 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class SettingsMenu {
 	private static final Activity act = (Activity) Startup.context;
 	private static final LinearLayout includeArea = (LinearLayout) act.findViewById(R.id.settings_include_area);
 	private static String previsionBack;
-	private static final SharedPreferences prefs = Startup.prefs;
 
 	public SettingsMenu() {
+		;
 		addListeners();
 		setValues();
 	}
@@ -30,12 +31,16 @@ public class SettingsMenu {
 		setValues();
 	}
 
+	public static void refresh() {
+		setValues();
+	}
+
 	public static void backButton() {
 		cancel();
 	}
 
 	public static void cancel() {
-		for (String key : prefs.getAll().keySet()) {
+		for (String key : Startup.prefs.getAll().keySet()) {
 			View v = includeArea.findViewWithTag(key);
 			if (v instanceof EditText) {
 				Keyboard.hide(v);
@@ -65,36 +70,41 @@ public class SettingsMenu {
 	}
 
 	private static void setValues() {
-		for (String key : prefs.getAll().keySet()) {
-			Log.d("PREFS", key);
+		for (String key : Startup.prefs.getAll().keySet()) {
 			View v = includeArea.findViewWithTag(key);
 			if (v != null) {
 				if (v instanceof CheckBox) {
-					((CheckBox) v).setChecked(prefs.getBoolean(key, true));
+					((CheckBox) v).setChecked(Startup.prefs.getBoolean(key, true));
+					Log.d("PREFS", key + "=" + String.valueOf(Startup.prefs.getBoolean(key, true)));
 				} else if (v instanceof EditText) {
 					EditText e = (EditText) v;
 					if (e.getInputType() == InputType.TYPE_CLASS_NUMBER) {
-						e.setText(String.valueOf(prefs.getInt(key, 0)));
+						e.setText(String.valueOf(Startup.prefs.getInt(key, 0)));
+						Log.d("PREFS", key + "=" + String.valueOf(Startup.prefs.getInt(key, 0)));
 					} else {
-						e.setText(prefs.getString(key, ""));
+						e.setText(Startup.prefs.getString(key, ""));
+						Log.d("PREFS", key + "=" + Startup.prefs.getString(key, ""));
 					}
+				} else if (v instanceof TextView) {
+					((TextView) v).setText(Startup.prefs.getString(key, ""));
+					Log.d("PREFS", key + "=" + Startup.prefs.getString(key, ""));
 				}
 			}
 		}
 	}
 
 	private static void submit() {
-		for (String key : prefs.getAll().keySet()) {
+		for (String key : Startup.prefs.getAll().keySet()) {
 			View v = includeArea.findViewWithTag(key);
 			if (v != null) {
 				if (v instanceof CheckBox) {
-					prefs.edit().putBoolean(key, ((CheckBox) v).isChecked()).commit();
+					Startup.prefs.edit().putBoolean(key, ((CheckBox) v).isChecked()).commit();
 				} else if (v instanceof EditText) {
 					EditText e = (EditText) v;
 					if (e.getInputType() == InputType.TYPE_CLASS_NUMBER) {
-						prefs.edit().putInt(key, Integer.parseInt(e.getText().toString())).commit();
+						Startup.prefs.edit().putInt(key, Integer.parseInt(e.getText().toString())).commit();
 					} else {
-						prefs.edit().putString(key, e.getText().toString()).commit();
+						Startup.prefs.edit().putString(key, e.getText().toString()).commit();
 					}
 				}
 			}

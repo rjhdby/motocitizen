@@ -10,17 +10,6 @@
     android:paddingRight="0dp"
     android:paddingTop="0dp" >
 
-	<ImageView
-	    android:id="@+id/statusBarLogo"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:background="@drawable/logo_gradient"
-	    android:contentDescription="logo"
-	    android:gravity="center_vertical"
-	    android:paddingLeft="2dp"
-	    android:paddingRight="2dp"
-	    android:src="@drawable/m" />
-
 	<TextView
 	    android:id="@+id/statusBarText"
 	    android:layout_width="match_parent"

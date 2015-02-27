@@ -10,7 +10,6 @@
         android:stretchColumns="1,2" >
 
         <TextView
-            android:id="@+id/accListYesterdayLine"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/mc_settings_distance"
@@ -65,6 +64,7 @@
             android:id="@+id/mc_notif_sound_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:tag="mc.notification.sound"
             android:text="@string/mc_notif_system"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 

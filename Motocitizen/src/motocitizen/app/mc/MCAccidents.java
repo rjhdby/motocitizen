@@ -47,7 +47,6 @@ public class MCAccidents {
 	private MCGCMRegistration gcm;
 	
 	public MCAccidents() {
-		new MCGCMRegistration();
 		MCInit.readProperties();
 		MCInit.inflateViews();
 		MCInit.addListeners();
@@ -55,7 +54,7 @@ public class MCAccidents {
 		MCInit.setupAccess(auth);
 		MCInit.setupValues(auth);
 		points = new MCPoints();
-		
+		new MCGCMRegistration();
 		addListeners();
 		getAccidents();
 		drawList();
@@ -279,5 +278,4 @@ public class MCAccidents {
 		((RadioButton) tabsgroup.findViewWithTag("mc_acc_details")).setChecked(true);
 		touchById(id);
 	}
-	
 }

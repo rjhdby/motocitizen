@@ -38,26 +38,33 @@ public class MCCreateAcc {
 	private static final int ACC = R.id.mc_create_acc_frame;
 	private static final int PEOPLE = R.id.mc_create_people_frame;
 	
-	private static Date date = new Date();
-	private static String globalText = "";
-	private static String medText = "mc_m_na";
-	private static String ownerText = Startup.prefs.getString("mc.login", "");
-	private static String addressText = MCNomination.getAddress();
-	private static String timeText = Const.timeFormat.format((date).getTime());
+	private static Date date;
+	private static String globalText;
+	private static String medText;
+	private static String ownerText;
+	private static String addressText;
+	private static String timeText;
 	private static String type, med;
-	private static String previsionBack;
-	private static Location location = MCNomination.location;
-	private static int CURRENT = TYPE;
-	private static boolean isAcc = false;
-	
+	private static Location location;
+	private static int CURRENT;
+	private static boolean isAcc;
 
-	public MCCreateAcc() {
-		previsionBack = Startup.prefs.getString("backButton", "");
-		Startup.prefs.edit().putString("backButton", "motocitizen.app.mc.create.MCCreateMessage").commit();
-		writeGlobal();
+	public static void init(){
 		setListeners();
+		Text.set(R.id.mc_create_final_text, "");
+		date = new Date();
+		globalText = "";
+		medText = "mc_m_na";
+		ownerText = Startup.prefs.getString("mc.login", "");
+		addressText = MCNomination.getAddress();
+		timeText = Const.timeFormat.format((date).getTime());
+		location = MCNomination.location;
+		CURRENT = TYPE;
+		isAcc = false;
+		writeGlobal();
+		show(CURRENT);
 	}
-
+	
 	private static void writeGlobal() {
 		if (!medText.equals("mc_m_na")) {
 			Text.set(globalView, R.id.mc_create_what, globalText + ". " + medText);
@@ -69,7 +76,7 @@ public class MCCreateAcc {
 		Text.set(globalView, R.id.mc_create_when, timeText);
 	}
 
-	private void setListeners() {
+	private static void setListeners() {
 		int[] buttons = { R.id.mc_create_acc_ma_button, R.id.mc_create_acc_solo_button, R.id.mc_create_acc_mm_button, R.id.mc_create_acc_mp_button,
 				R.id.mc_create_people_death_button, R.id.mc_create_people_hard_button, R.id.mc_create_people_light_button,
 				R.id.mc_create_people_ok_button, R.id.mc_create_type_acc_button, R.id.mc_create_type_break_button, R.id.mc_create_type_steal_button,
@@ -84,7 +91,7 @@ public class MCCreateAcc {
 		confirm.setOnClickListener(confirmListener);
 	}
 
-	private OnClickListener confirmListener = new Button.OnClickListener() {
+	private static OnClickListener confirmListener = new Button.OnClickListener() {
 		public void onClick(View v) {
 			JSONObject json = new JSONCall("mcaccidents", "createAcc").request(createPOST());
 			if (json.has("result")) {
@@ -103,20 +110,19 @@ public class MCCreateAcc {
 		}
 	};
 
-	private OnClickListener backListener = new Button.OnClickListener() {
+	private static OnClickListener backListener = new Button.OnClickListener() {
 		public void onClick(View v) {
 			backButton();
 		}
 	};
 
-	private OnClickListener cancelListener = new Button.OnClickListener() {
+	private static OnClickListener cancelListener = new Button.OnClickListener() {
 		public void onClick(View v) {
 			exit();
 		}
 	};
 
 	private static void exit() {
-		Startup.prefs.edit().putString("backButton", previsionBack).commit();
 		Show.show(R.id.main_frame_applications);
 		Keyboard.hide(details);
 	}
@@ -150,10 +156,13 @@ public class MCCreateAcc {
 			med = "mc_m_na";
 			break;
 		}
+		if(CURRENT == TYPE){
+			back.setEnabled(false);
+		}
 		writeGlobal();
 	}
 
-	private OnClickListener listener = new Button.OnClickListener() {
+	private static OnClickListener listener = new Button.OnClickListener() {
 		public void onClick(View v) {
 			back.setEnabled(true);
 			confirm.setEnabled(true);

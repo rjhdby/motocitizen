@@ -7,7 +7,9 @@
 
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:shrinkColumns="1"
+        android:stretchColumns="1,2" >
 
         <TableRow
             android:layout_width="match_parent"
@@ -99,12 +101,11 @@
         <LinearLayout
             android:id="@+id/mc_create_type_frame"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="visible" >
 
             <TextView
-                android:id="@+id/accListYesterdayLine"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -140,16 +141,16 @@
         <LinearLayout
             android:id="@+id/mc_create_acc_frame"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="invisible" >
 
             <TextView
-                android:id="@+id/TextView01"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/mc_create_type_header"
+                style="?android:attr/buttonBarButtonStyle"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <Button
@@ -181,7 +182,7 @@
         <LinearLayout
             android:id="@+id/mc_create_people_frame"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="invisible" >
 
@@ -227,7 +228,7 @@
         <LinearLayout
             android:id="@+id/mc_create_final_frame"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="invisible" >
 
@@ -241,13 +242,13 @@
             <EditText
                 android:id="@+id/mc_create_final_text"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="top"
                 android:background="@android:color/background_dark"
-                android:ems="10"
                 android:gravity="top"
-                android:inputType="textMultiLine"
-                android:minLines="8" >
+                android:inputType="textFilter|textMultiLine|textNoSuggestions"
+                android:lines="3"
+                android:minLines="3" >
 
                 <requestFocus />
             </EditText>
@@ -257,13 +258,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="bottom" >
+        android:gravity="bottom"
+        android:weightSum="1.5" >
 
         <Button
             android:id="@+id/mc_create_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            style="?android:attr/buttonBarButtonStyle"
             android:text="@string/mc_create_cancel" />
 
         <Button
@@ -272,6 +275,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:enabled="false"
+            style="?android:attr/buttonBarButtonStyle"
             android:text="@string/mc_create_back_button" />
 
         <Button
@@ -281,6 +285,7 @@
             android:layout_weight="0.5"
             android:clickable="false"
             android:enabled="false"
+            style="?android:attr/buttonBarButtonStyle"
             android:text="@string/mc_create_create" />
     </LinearLayout>
 

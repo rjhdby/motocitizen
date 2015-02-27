@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import motocitizen.app.mc.MCAccidents;
-import motocitizen.app.mc.user.MCAuth;
 import motocitizen.core.Point;
 import motocitizen.main.R;
 import motocitizen.network.JSONCall;

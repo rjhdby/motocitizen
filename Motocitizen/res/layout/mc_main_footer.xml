@@ -30,7 +30,6 @@
             android:src="@drawable/create_acc" />
 
         <HorizontalScrollView
-            android:id="@+id/mc_acc_list_scroll_view"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginBottom="5dp"

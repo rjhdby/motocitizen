@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageButton;
 
 public class MCButtons {
@@ -21,6 +22,7 @@ public class MCButtons {
 	public static final Button selectSoundButton = (Button) findView(R.id.mc_notif_sound_button);
 	public static final Button selectSoundConfirmButton = (Button) findView(R.id.select_sound_save_button);
 	public static final Button selectSoundCancelButton = (Button) findView(R.id.select_sound_cancel_button);
+	public static final EditText inputCommentField = (EditText) ((Activity) Startup.context).findViewById(R.id.mc_new_message_text);
 
 	private static View findView(int id) {
 		return ((Activity) Startup.context).findViewById(id);

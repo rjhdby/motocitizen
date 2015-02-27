@@ -78,7 +78,7 @@ public class MCListeners {
 	public static Button.OnClickListener createAccButtonListener = new Button.OnClickListener() {
 		public void onClick(View v) {
 			Show.show(R.id.mc_create_main);
-			new MCCreateAcc();
+			MCCreateAcc.init();
 		}
 	};
 	public static Button.OnClickListener newMessageButtonListener = new Button.OnClickListener() {
@@ -95,9 +95,6 @@ public class MCListeners {
 			MCAccidents.toDetails(currentId);
 			Text.set(R.id.mc_new_message_text, "");
 			Keyboard.hide(((Activity) Startup.context).findViewById(R.id.mc_new_message_text));
-			// ------------------------------------
-			// new MCNotification("text");
-			// ------------------------------------
 		}
 	};
 	public static Button.OnClickListener firstloginButtonListener = new Button.OnClickListener() {

@@ -1,10 +1,18 @@
 package motocitizen.app.mc.gcm;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.json.JSONObject;
+
+import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.notification.MCNotification;
+import motocitizen.network.JSONCall;
 import motocitizen.startup.Startup;
+import motocitizen.utils.Const;
+import motocitizen.utils.Text;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -35,6 +43,8 @@ public class MCGCMRegistration {
 			Log.d(TAG, regid);
 			if (regid.isEmpty()) {
 				registerInBackground();
+			} else {
+				storeRegistrationId(regid);
 			}
 		} else {
 			Log.d(TAG, "No valid Google Play Services APK found.");
@@ -83,7 +93,7 @@ public class MCGCMRegistration {
 	}
 
 	private void registerInBackground() {
-		new AsyncTask<String,String,String>() {
+		new AsyncTask<String, String, String>() {
 			@Override
 			protected String doInBackground(String... params) {
 				String msg = "";
@@ -100,9 +110,10 @@ public class MCGCMRegistration {
 				}
 				return msg;
 			}
+
 			@Override
 			protected void onPostExecute(String msg) {
-				new MCNotification(msg);
+				// new MCNotification(msg);
 				Log.d(TAG, msg);
 			}
 
@@ -112,12 +123,23 @@ public class MCGCMRegistration {
 	private void sendRegistrationIdToBackend() {
 		// Your implementation here.
 	}
+
 	private void storeRegistrationId(String regId) {
-	    int appVersion = getAppVersion();
-	    Log.i(TAG, "Saving regId on app version " + appVersion);
-	    SharedPreferences.Editor editor = Startup.prefs.edit();
-	    editor.putString(PROPERTY_REG_ID, regId);
-	    editor.putInt(PROPERTY_APP_VERSION, appVersion);
-	    editor.commit();
+		int appVersion = getAppVersion();
+		Log.i(TAG, "Saving regId on app version " + appVersion);
+		SharedPreferences.Editor editor = Startup.prefs.edit();
+		editor.putString(PROPERTY_REG_ID, regId);
+		editor.putInt(PROPERTY_APP_VERSION, appVersion);
+		editor.commit();
+		JSONObject json = new JSONCall("mcaccidents", "registerGCM").request(createPOST(regId));
+	}
+	private static Map<String, String> createPOST(String regId) {
+		Map<String, String> POST = new HashMap<String, String>();
+		POST.put("owner_id", String.valueOf(MCAccidents.auth.id));
+		POST.put("gcm_key", regId);
+		POST.put("login", MCAccidents.auth.getLogin());
+		POST.put("passhash", MCAccidents.auth.makePassHash());
+		POST.put("calledMethod", "registerGCM");
+		return POST;
 	}
 }
