@@ -38,7 +38,6 @@
             android:layout_weight=".5"
             style="?android:attr/buttonBarButtonStyle"
             android:text="@string/settings_confirm_button" />
-
     </LinearLayout>
 
 </LinearLayout>

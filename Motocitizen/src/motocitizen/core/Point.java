@@ -3,8 +3,6 @@ package motocitizen.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.util.Log;
-
 public class Point {
 	public Map<String, String> common;
 	public Map<String, String> details;
@@ -17,7 +15,7 @@ public class Point {
 	public Point(Map<String, String> data) {
 		common = new HashMap<String, String>();
 		details = new HashMap<String, String>();
-		Log.d("KEY:", String.valueOf(data.size()));
+//		Log.d("KEY:", String.valueOf(data.size()));
 		for (String key : data.keySet()) {
 			common.put(key, data.get(key));
 		}

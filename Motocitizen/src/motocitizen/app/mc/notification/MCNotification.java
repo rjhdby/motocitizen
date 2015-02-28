@@ -11,7 +11,6 @@ import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 
 public class MCNotification {
 //	private static int NOTIFY_ID;
@@ -39,7 +38,6 @@ public class MCNotification {
 		@SuppressWarnings("deprecation")
 		Notification notification = builder.getNotification ();
 		String sound = Startup.prefs.getString("mc.notification.sound", "default system");
-		Log.d("PREF SOUND", sound);
 		if (sound.equals("default system")) {
 			notification.defaults = Notification.DEFAULT_ALL;
 			//notification.defaults = Notification.DEFAULT_VIBRATE;

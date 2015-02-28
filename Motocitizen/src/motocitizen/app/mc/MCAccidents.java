@@ -18,7 +18,6 @@ import motocitizen.utils.Const;
 import motocitizen.utils.NewID;
 import motocitizen.utils.Text;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnLongClickListener;
@@ -44,8 +43,6 @@ public class MCAccidents {
 	public static Point currentPoint;
 	public static MCPoints points;
 	public static MCAuth auth;
-	private MCGCMRegistration gcm;
-	
 	public MCAccidents() {
 		MCInit.readProperties();
 		MCInit.inflateViews();
@@ -109,7 +106,7 @@ public class MCAccidents {
 			makeSortedList();
 			for (int i = 0; i < sorted.length; i++) {
 				Point acc = points.get(sorted[i]);
-				Log.d("POINT", acc.toString());
+				//Log.d("POINT", acc.toString());
 				if (visibility.get(acc.get("mc_accident_orig_type"))) {
 					TableRow tr = createRow(acc);
 					if (!points.isToday(sorted[i]) && noYesterday) {

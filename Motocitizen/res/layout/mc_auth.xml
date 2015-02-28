@@ -103,6 +103,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight=".5"
+            style="?android:attr/buttonBarButtonStyle"
             android:text="@string/mc_auth_cancel_button" />
 
         <Button
@@ -110,6 +111,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight=".5"
+            style="?android:attr/buttonBarButtonStyle"
             android:text="@string/mc_auth_confirm_button" />
     </LinearLayout>
 

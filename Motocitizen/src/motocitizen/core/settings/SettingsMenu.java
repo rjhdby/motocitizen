@@ -5,9 +5,7 @@ import motocitizen.startup.Startup;
 import motocitizen.utils.Keyboard;
 import motocitizen.utils.Show;
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -75,19 +73,19 @@ public class SettingsMenu {
 			if (v != null) {
 				if (v instanceof CheckBox) {
 					((CheckBox) v).setChecked(Startup.prefs.getBoolean(key, true));
-					Log.d("PREFS", key + "=" + String.valueOf(Startup.prefs.getBoolean(key, true)));
+//					Log.d("PREFS", key + "=" + String.valueOf(Startup.prefs.getBoolean(key, true)));
 				} else if (v instanceof EditText) {
 					EditText e = (EditText) v;
 					if (e.getInputType() == InputType.TYPE_CLASS_NUMBER) {
 						e.setText(String.valueOf(Startup.prefs.getInt(key, 0)));
-						Log.d("PREFS", key + "=" + String.valueOf(Startup.prefs.getInt(key, 0)));
+//						Log.d("PREFS", key + "=" + String.valueOf(Startup.prefs.getInt(key, 0)));
 					} else {
 						e.setText(Startup.prefs.getString(key, ""));
-						Log.d("PREFS", key + "=" + Startup.prefs.getString(key, ""));
+//						Log.d("PREFS", key + "=" + Startup.prefs.getString(key, ""));
 					}
 				} else if (v instanceof TextView) {
 					((TextView) v).setText(Startup.prefs.getString(key, ""));
-					Log.d("PREFS", key + "=" + Startup.prefs.getString(key, ""));
+//					Log.d("PREFS", key + "=" + Startup.prefs.getString(key, ""));
 				}
 			}
 		}

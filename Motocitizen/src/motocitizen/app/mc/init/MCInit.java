@@ -2,11 +2,6 @@ package motocitizen.app.mc.init;
 
 import java.util.Properties;
 
-import android.app.Activity;
-import android.util.Log;
-import android.view.View;
-import android.widget.CheckBox;
-import android.widget.ImageButton;
 import motocitizen.app.mc.listeners.MCListeners;
 import motocitizen.app.mc.objects.MCButtons;
 import motocitizen.app.mc.user.MCAuth;
@@ -17,13 +12,17 @@ import motocitizen.utils.Const;
 import motocitizen.utils.Inflate;
 import motocitizen.utils.Props;
 import motocitizen.utils.Text;
+import android.app.Activity;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.ImageButton;
 
 public class MCInit {
 	public static void readProperties() {
 		Properties props = Props.readAssets("mcaccidents.properties");
 		for (Object key : props.keySet()) {
 			String value = (String) props.get(key);
-			Log.d((String) key,(String) props.get(key));
+//			Log.d((String) key,(String) props.get(key));
 			if (!Startup.prefs.contains((String) key)) {
 				if (value.equals("true") || value.equals("false")) {
 					Startup.prefs.edit().putBoolean((String) key, Boolean.parseBoolean(value)).commit();

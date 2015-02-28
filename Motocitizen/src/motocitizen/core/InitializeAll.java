@@ -41,8 +41,8 @@ public class InitializeAll {
 		tabsgroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				FrameLayout tabscontent = (FrameLayout) ((Activity) Startup.context).findViewById(R.id.tabcontent);
-				Log.d("TAB PRESSED", String.valueOf(checkedId));
-				Log.d("TAB", ((Activity) Startup.context).findViewById(checkedId).toString());
+//				Log.d("TAB PRESSED", String.valueOf(checkedId));
+//				Log.d("TAB", ((Activity) Startup.context).findViewById(checkedId).toString());
 				String name = (String) ((Activity) Startup.context).findViewById(checkedId).getTag() + "_content";
 				ViewGroup vg = (ViewGroup) tabscontent;
 				for (int i = 0; i < vg.getChildCount(); i++) {

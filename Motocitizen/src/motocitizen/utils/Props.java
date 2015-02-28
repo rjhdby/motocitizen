@@ -38,11 +38,6 @@ public class Props {
 	public static void makeSummary() {
 		summary.clear();
 		summary.putAll(global);
-		/*
-		for(Object s:summary.keySet()){
-			Log.d("PROPS", s.toString() + "=" + summary.get(s).toString());
-		}
-		*/
 	}
 
 	public static Properties read(InputStream is) {

@@ -72,6 +72,8 @@ public class Startup extends Activity {
 		super.onResume();
 		catchIntent();
 		tasks.allWakeUp();
+		context = this;
+		MCAccidents.refresh();
 	}
 
 	@Override

@@ -18,7 +18,6 @@ import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -134,7 +133,7 @@ public class MCSelectSound {
 
 		@Override
 		public void onClick(View v) {
-			Log.d("SOUND", currentFile);
+//			Log.d("SOUND", currentFile);
 			Startup.prefs.edit().putString("mc.notification.sound", currentFile).commit();
 			SettingsMenu.refresh();
 			Show.showLast();

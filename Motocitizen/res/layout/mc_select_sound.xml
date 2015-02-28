@@ -29,6 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            style="?android:attr/buttonBarButtonStyle"
             android:text="@string/mc_create_cancel" />
 
         <Button
@@ -36,6 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            style="?android:attr/buttonBarButtonStyle"
             android:text="@string/settings_confirm_button" />
     </LinearLayout>
 
