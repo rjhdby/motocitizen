@@ -2,6 +2,7 @@ package motocitizen.app.osm;
 
 import java.util.ArrayList;
 
+import motocitizen.app.mc.MCLocation;
 import motocitizen.main.R;
 import motocitizen.startup.Startup;
 
@@ -40,7 +41,7 @@ public class OSMMapInit {
 		map.getOverlays().add(myScaleBarOverlay);
 		map.getOverlays().add(jump);
 
-		location = (Location) Startup.tasks.tasks.get("locationservice").getObj("getLocation");
+		location = MCLocation.current;
 		OSMOnLocationChange.placeUser(location);
 	}
 

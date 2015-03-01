@@ -48,6 +48,7 @@ public class MCAccidents {
 		MCInit.inflateViews();
 		MCInit.addListeners();
 		auth = new MCAuth();
+		new MCLocation();
 		MCInit.setupAccess(auth);
 		MCInit.setupValues(auth);
 		points = new MCPoints();

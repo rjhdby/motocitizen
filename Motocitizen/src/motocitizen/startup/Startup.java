@@ -1,6 +1,7 @@
 package motocitizen.startup;
 
 import motocitizen.app.mc.MCAccidents;
+import motocitizen.app.mc.MCLocation;
 import motocitizen.app.mc.gcm.GcmBroadcastReceiver;
 import motocitizen.core.Applications;
 import motocitizen.core.InitializeAll;
@@ -64,11 +65,13 @@ public class Startup extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
+		MCLocation.sleep();
 		tasks.allSleep();
 	}
 
 	@Override
 	protected void onResume() {
+		MCLocation.wakeup();
 		super.onResume();
 		catchIntent();
 		tasks.allWakeUp();

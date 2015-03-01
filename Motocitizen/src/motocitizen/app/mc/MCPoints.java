@@ -57,7 +57,7 @@ public class MCPoints {
 		Location acc = new Location("");
 		acc.setLatitude(Double.parseDouble(get(id).get("lat")));
 		acc.setLongitude(Double.parseDouble(get(id).get("lon")));
-		Location user = (Location) Startup.tasks.tasks.get("locationservice").getObj("getLocation");
+		Location user = MCLocation.current;
 		return user.distanceTo(acc);
 	}
 
@@ -88,7 +88,7 @@ public class MCPoints {
 
 	public void load() {
 		Map<String, String> selector = new HashMap<String, String>();
-		Location userLocation = (Location) Startup.tasks.tasks.get("locationservice").getObj("getLocation");
+		Location userLocation = MCLocation.current;
 		selector.put("distance", String.valueOf(Startup.prefs.getInt("mc.distance.show", 100)));
 		selector.put("lon", String.valueOf(userLocation.getLongitude()));
 		selector.put("lat", String.valueOf(userLocation.getLatitude()));

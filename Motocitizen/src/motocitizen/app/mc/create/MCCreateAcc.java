@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import motocitizen.app.mc.MCAccidents;
-import motocitizen.app.mc.MCNomination;
+import motocitizen.app.mc.MCLocation;
 import motocitizen.main.R;
 import motocitizen.network.JSONCall;
 import motocitizen.startup.Startup;
@@ -56,9 +56,9 @@ public class MCCreateAcc {
 		globalText = "";
 		medText = "mc_m_na";
 		ownerText = Startup.prefs.getString("mc.login", "");
-		addressText = MCNomination.getAddress();
+		addressText = MCLocation.address;
 		timeText = Const.timeFormat.format((date).getTime());
-		location = MCNomination.location;
+		location = MCLocation.current;
 		CURRENT = TYPE;
 		isAcc = false;
 		writeGlobal();
