@@ -25,7 +25,7 @@ public class OSMMapInit {
 	public Location location;
 	public MapView map;
 	private Activity act;
-	final Jump jump;
+	final JumpToLocation jumpToLocation;
 
 	public OSMMapInit() {
 		act = (Activity) Startup.context;
@@ -36,10 +36,10 @@ public class OSMMapInit {
 		map.getController().setZoom(18);
 
 		ScaleBarOverlay myScaleBarOverlay = new ScaleBarOverlay(act);
-		jump = new Jump(act);
+		jumpToLocation = new JumpToLocation(act);
 
 		map.getOverlays().add(myScaleBarOverlay);
-		map.getOverlays().add(jump);
+		map.getOverlays().add(jumpToLocation);
 
 		location = MCLocation.current;
 		OSMOnLocationChange.placeUser(location);
@@ -51,11 +51,11 @@ public class OSMMapInit {
 		map.invalidate();
 	}
 
-	private class Jump extends Overlay {
+	private class JumpToLocation extends Overlay {
 		public float cx, cy, r;
 		private int lastZoom;
 		
-		public Jump(Activity act) {
+		public JumpToLocation(Activity act) {
 			super(act);
 		}
 
@@ -66,7 +66,7 @@ public class OSMMapInit {
 			map.getLocationInWindow(location);
 			lastZoom = -1;
 			float y = event.getRawY() - location[1];
-			if (Math.abs(jump.cx - x) < jump.r && Math.abs(jump.cy - y) < jump.r) {
+			if (Math.abs(jumpToLocation.cx - x) < jumpToLocation.r && Math.abs(jumpToLocation.cy - y) < jumpToLocation.r) {
 				goToUser();
 			}
 			return true;

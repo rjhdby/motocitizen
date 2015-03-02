@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 public class SettingsMenu {
 	private static final Activity act = (Activity) Startup.context;
-	private static final LinearLayout includeArea = (LinearLayout) act.findViewById(R.id.settings_include_area);
+	private static final View includeArea = act.findViewById(R.id.settings_include_area);
 	private static String previsionBack;
 
 	public SettingsMenu() {

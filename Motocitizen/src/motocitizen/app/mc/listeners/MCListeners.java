@@ -7,6 +7,7 @@ import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCSelectSound;
 import motocitizen.app.mc.create.MCCreateAcc;
 import motocitizen.app.mc.init.MCInit;
+import motocitizen.app.mc.objects.MCButtons;
 import motocitizen.main.R;
 import motocitizen.network.JSONCall;
 import motocitizen.startup.Startup;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.RadioGroup;
 
 public class MCListeners {
 	public static Button.OnClickListener authConfirmListener = new Button.OnClickListener() {
@@ -147,5 +149,24 @@ public class MCListeners {
 			Show.show(R.id.main_frame_settings);
 		}
 
+	};
+	public static RadioGroup.OnCheckedChangeListener mainTabsListener = new RadioGroup.OnCheckedChangeListener() {
+		public void onCheckedChanged(RadioGroup group, int checkedId) {
+			int id = group.getCheckedRadioButtonId();
+			MCButtons.accListView.setVisibility(View.INVISIBLE);
+			MCButtons.accDetailsView.setVisibility(View.INVISIBLE);
+			MCButtons.osmMapContainer.setVisibility(View.INVISIBLE);
+			switch(id){
+			case R.id.tab_accidents_button:
+				MCButtons.accListView.setVisibility(View.VISIBLE);
+				break;
+			case R.id.tab_acc_details_button:
+				MCButtons.accDetailsView.setVisibility(View.VISIBLE);
+				break;
+			case R.id.tab_map_button:
+				MCButtons.osmMapContainer.setVisibility(View.VISIBLE);
+				break;
+			}
+		}
 	};
 }

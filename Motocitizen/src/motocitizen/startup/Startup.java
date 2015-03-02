@@ -3,9 +3,7 @@ package motocitizen.startup;
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCLocation;
 import motocitizen.app.mc.gcm.GcmBroadcastReceiver;
-import motocitizen.core.Applications;
-import motocitizen.core.InitializeAll;
-import motocitizen.core.Tasks;
+import motocitizen.app.osm.OSMMapInit;
 import motocitizen.core.settings.SettingsMenu;
 import motocitizen.main.R;
 import motocitizen.utils.Const;
@@ -22,8 +20,6 @@ import android.view.KeyEvent;
 import android.view.Window;
 
 public class Startup extends Activity {
-	public static Tasks tasks;
-	public static Applications applications;
 	public static Props props;
 	public static Context context;
 	public static SharedPreferences prefs;
@@ -41,19 +37,15 @@ public class Startup extends Activity {
 		prefs = getSharedPreferences("motocitizen.startup", MODE_PRIVATE);
 		// prefs.edit().clear().commit();
 		props = new Props();
-		tasks = new Tasks();
-		// new MCAccidents();
-		applications = new Applications();
-		InitializeAll.init();
+		new MCAccidents();
+		new OSMMapInit();
 		new SettingsMenu();
 		new SmallSettingsMenu();
-		InitializeAll.addListener();
 		if (MCAccidents.auth.isFirstRun()) {
 			Show.show(R.id.main_frame, R.id.first_auth_screen);
 		} else {
-			Show.showLast();
+			Show.show(R.id.main_frame, R.id.main_frame_applications);
 		}
-		InitializeAll.checkTab();
 		new GcmBroadcastReceiver();
 	}
 
@@ -66,7 +58,6 @@ public class Startup extends Activity {
 	protected void onPause() {
 		super.onPause();
 		MCLocation.sleep();
-		tasks.allSleep();
 	}
 
 	@Override
@@ -74,7 +65,6 @@ public class Startup extends Activity {
 		MCLocation.wakeup();
 		super.onResume();
 		catchIntent();
-		tasks.allWakeUp();
 		context = this;
 		MCAccidents.refresh();
 	}
@@ -105,7 +95,6 @@ public class Startup extends Activity {
 		if (intent != null) {
 			String text = intent.getStringExtra("text");
 			if (text != null) {
-			//	new MCNotification(text);
 			}
 		}
 	}

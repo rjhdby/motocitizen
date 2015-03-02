@@ -9,6 +9,7 @@ import java.util.Map;
 
 import motocitizen.app.mc.gcm.MCGCMRegistration;
 import motocitizen.app.mc.init.MCInit;
+import motocitizen.app.mc.objects.MCButtons;
 import motocitizen.app.mc.popups.MCAccListPopup;
 import motocitizen.app.mc.user.MCAuth;
 import motocitizen.core.Point;
@@ -16,6 +17,7 @@ import motocitizen.main.R;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 import motocitizen.utils.NewID;
+import motocitizen.utils.Show;
 import motocitizen.utils.Text;
 import android.graphics.Color;
 import android.view.Gravity;
@@ -24,7 +26,6 @@ import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.PopupWindow;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
@@ -34,7 +35,6 @@ import android.widget.TextView;
 public class MCAccidents {
 	private static final TableLayout tl = (TableLayout) Const.act.findViewById(R.id.accListContent);
 	private static final RadioGroup detailstabsgroup = (RadioGroup) Const.act.findViewById(R.id.mc_det_tabs_group);
-	private static final RadioGroup tabsgroup = (RadioGroup) Const.act.findViewById(R.id.main_tabs_group);
 	private static final FrameLayout detailstabscontent = (FrameLayout) Const.act.findViewById(R.id.mc_det_tab_content);
 
 	private static Integer[] sorted;
@@ -45,7 +45,6 @@ public class MCAccidents {
 	public static MCAuth auth;
 	public MCAccidents() {
 		MCInit.readProperties();
-		MCInit.inflateViews();
 		MCInit.addListeners();
 		auth = new MCAuth();
 		new MCLocation();
@@ -128,8 +127,9 @@ public class MCAccidents {
 		} else {
 			tl.addView(drawError());
 		}
+		Show.showLast();
 
-		((RadioButton) tabsgroup.getChildAt(0)).setChecked(true);
+		//((RadioButton) tabsgroup.getChildAt(0)).setChecked(true);
 	}
 
 	private static void touchById(int id) {
@@ -269,11 +269,11 @@ public class MCAccidents {
 	}
 
 	public static void toDetails() {
-		((RadioButton) tabsgroup.findViewWithTag("mc_acc_details")).setChecked(true);
+		MCButtons.tabDetailsButton.setChecked(true);
 	}
 
 	public static void toDetails(int id) {
-		((RadioButton) tabsgroup.findViewWithTag("mc_acc_details")).setChecked(true);
+		toDetails();
 		touchById(id);
 	}
 }

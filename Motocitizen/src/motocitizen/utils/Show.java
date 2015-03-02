@@ -1,12 +1,12 @@
 package motocitizen.utils;
 
+import motocitizen.app.mc.objects.MCButtons;
 import motocitizen.main.R;
 import motocitizen.startup.Startup;
 import android.app.Activity;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioGroup;
 
 public class Show {
 	public static Pair<Integer, Integer> current;
@@ -51,8 +51,7 @@ public class Show {
 					show(R.id.main_frame, R.id.main_frame_applications );
 					break;
 				case R.id.main_frame_applications:
-					RadioGroup tabsgroup = (RadioGroup) ((Activity) Startup.context).findViewById(R.id.main_tabs_group);
-					tabsgroup.check(2);
+					MCButtons.tabAccidentsButton.setChecked(true);
 					break;
 				default:
 					break;

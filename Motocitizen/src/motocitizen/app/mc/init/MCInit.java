@@ -9,7 +9,6 @@ import motocitizen.app.mc.user.MCRole;
 import motocitizen.main.R;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
-import motocitizen.utils.Inflate;
 import motocitizen.utils.Props;
 import motocitizen.utils.Text;
 import android.app.Activity;
@@ -38,14 +37,6 @@ public class MCInit {
 		}
 	}
 
-	public static void inflateViews() {
-		Inflate.add(R.id.settings_include_area, R.layout.mc_acc_settings);
-		Inflate.add(R.layout.mc_auth);
-		Inflate.add(R.layout.mc_auth_first_check);
-		Inflate.add(R.layout.mc_app_create_point);
-		Inflate.add(R.layout.mc_select_sound);
-	}
-
 	public static void addListeners() {
 		MCButtons.selectSoundCancelButton.setOnClickListener(MCListeners.selectSoundCancelButton);
 		MCButtons.authConfirmButton.setOnClickListener(MCListeners.authConfirmListener);
@@ -53,12 +44,13 @@ public class MCInit {
 		MCButtons.authCancelButton.setOnClickListener(MCListeners.authCancelListener);
 		MCButtons.dialButton.setOnClickListener(MCListeners.dialButtonListener);
 		MCButtons.createAccButton.setOnClickListener(MCListeners.createAccButtonListener);
-		MCButtons.newMessageButton.setOnClickListener(MCListeners.newMessageButtonListener);
 		MCButtons.firstLoginButton.setOnClickListener(MCListeners.firstloginButtonListener);
 		MCButtons.anonimButton.setOnClickListener(MCListeners.anonimButtonListener);
 		MCButtons.authAnonimCheckBox.setOnCheckedChangeListener(MCListeners.authAnonimCheckBoxListener);
 		MCButtons.selectSoundButton.setOnClickListener(MCListeners.selectSoundButtonListener);
 		MCButtons.selectSoundConfirmButton.setOnClickListener(MCListeners.selectSoundConfirmListener);
+		MCButtons.mainTabsGroup.setOnCheckedChangeListener(MCListeners.mainTabsListener);
+		MCButtons.newMessageButton.setOnClickListener(MCListeners.newMessageButtonListener);
 		
 	}
 	
