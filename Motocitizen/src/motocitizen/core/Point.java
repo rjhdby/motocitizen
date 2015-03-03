@@ -3,9 +3,14 @@ package motocitizen.core;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.location.Location;
+import android.location.LocationManager;
+import android.util.Log;
+
 public class Point {
 	public Map<String, String> common;
 	public Map<String, String> details;
+	public Location location;
 	public int id;
 
 	public Point() {
@@ -15,7 +20,7 @@ public class Point {
 	public Point(Map<String, String> data) {
 		common = new HashMap<String, String>();
 		details = new HashMap<String, String>();
-//		Log.d("KEY:", String.valueOf(data.size()));
+		// Log.d("KEY:", String.valueOf(data.size()));
 		for (String key : data.keySet()) {
 			common.put(key, data.get(key));
 		}
@@ -23,6 +28,14 @@ public class Point {
 			id = Integer.parseInt(common.get("id"));
 		} catch (NumberFormatException e) {
 			id = 0;
+		}
+		if (common.containsKey("lon") && common.containsKey("lat")) {
+			
+			location = new Location(LocationManager.NETWORK_PROVIDER);
+			location.setLatitude(Float.parseFloat(common.get("lat")));
+			location.setLongitude(Float.parseFloat(common.get("lon")));
+			location.setAccuracy(10);
+			//Log.d("POINT", location.toString());
 		}
 	}
 

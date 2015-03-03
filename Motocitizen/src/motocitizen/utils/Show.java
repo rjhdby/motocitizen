@@ -1,6 +1,6 @@
 package motocitizen.utils;
 
-import motocitizen.app.mc.objects.MCButtons;
+import motocitizen.app.mc.objects.MCObjects;
 import motocitizen.main.R;
 import motocitizen.startup.Startup;
 import android.app.Activity;
@@ -51,7 +51,7 @@ public class Show {
 					show(R.id.main_frame, R.id.main_frame_applications );
 					break;
 				case R.id.main_frame_applications:
-					MCButtons.tabAccidentsButton.setChecked(true);
+					MCObjects.tabAccidentsButton.setChecked(true);
 					break;
 				default:
 					break;

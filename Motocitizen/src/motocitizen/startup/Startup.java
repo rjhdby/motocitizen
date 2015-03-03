@@ -3,7 +3,7 @@ package motocitizen.startup;
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCLocation;
 import motocitizen.app.mc.gcm.GcmBroadcastReceiver;
-import motocitizen.app.osm.OSMMapInit;
+import motocitizen.app.osm.OSMMap;
 import motocitizen.core.settings.SettingsMenu;
 import motocitizen.main.R;
 import motocitizen.utils.Const;
@@ -38,7 +38,7 @@ public class Startup extends Activity {
 		// prefs.edit().clear().commit();
 		props = new Props();
 		new MCAccidents();
-		new OSMMapInit();
+		new OSMMap();
 		new SettingsMenu();
 		new SmallSettingsMenu();
 		if (MCAccidents.auth.isFirstRun()) {
@@ -48,7 +48,7 @@ public class Startup extends Activity {
 		}
 		new GcmBroadcastReceiver();
 	}
-
+	
 	@Override
 	protected void onStart() {
 		super.onStart();
@@ -58,12 +58,13 @@ public class Startup extends Activity {
 	protected void onPause() {
 		super.onPause();
 		MCLocation.sleep();
+
 	}
 
 	@Override
 	protected void onResume() {
-		MCLocation.wakeup();
 		super.onResume();
+		MCLocation.wakeup();
 		catchIntent();
 		context = this;
 		MCAccidents.refresh();

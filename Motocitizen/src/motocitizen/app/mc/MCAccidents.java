@@ -7,11 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import motocitizen.app.mc.MCVolunteers.Volunteer;
 import motocitizen.app.mc.gcm.MCGCMRegistration;
 import motocitizen.app.mc.init.MCInit;
-import motocitizen.app.mc.objects.MCButtons;
+import motocitizen.app.mc.objects.MCObjects;
 import motocitizen.app.mc.popups.MCAccListPopup;
 import motocitizen.app.mc.user.MCAuth;
+import motocitizen.app.osm.OSMMap;
 import motocitizen.core.Point;
 import motocitizen.main.R;
 import motocitizen.startup.Startup;
@@ -24,9 +26,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.PopupWindow;
-import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -34,16 +34,17 @@ import android.widget.TextView;
 
 public class MCAccidents {
 	private static final TableLayout tl = (TableLayout) Const.act.findViewById(R.id.accListContent);
-	private static final RadioGroup detailstabsgroup = (RadioGroup) Const.act.findViewById(R.id.mc_det_tabs_group);
-	private static final FrameLayout detailstabscontent = (FrameLayout) Const.act.findViewById(R.id.mc_det_tab_content);
 
 	private static Integer[] sorted;
 	private static Map<String, Boolean> visibility;
-
+	public static int onway, inplace;
 	public static Point currentPoint;
 	public static MCPoints points;
 	public static MCAuth auth;
+
 	public MCAccidents() {
+		onway = 0;
+		inplace = 0;
 		MCInit.readProperties();
 		MCInit.addListeners();
 		auth = new MCAuth();
@@ -52,9 +53,6 @@ public class MCAccidents {
 		MCInit.setupValues(auth);
 		points = new MCPoints();
 		new MCGCMRegistration();
-		addListeners();
-		getAccidents();
-		drawList();
 	}
 
 	public static TableRow drawError() {
@@ -106,7 +104,7 @@ public class MCAccidents {
 			makeSortedList();
 			for (int i = 0; i < sorted.length; i++) {
 				Point acc = points.get(sorted[i]);
-				//Log.d("POINT", acc.toString());
+				// Log.d("POINT", acc.toString());
 				if (visibility.get(acc.get("mc_accident_orig_type"))) {
 					TableRow tr = createRow(acc);
 					if (!points.isToday(sorted[i]) && noYesterday) {
@@ -129,7 +127,7 @@ public class MCAccidents {
 		}
 		Show.showLast();
 
-		//((RadioButton) tabsgroup.getChildAt(0)).setChecked(true);
+		// ((RadioButton) tabsgroup.getChildAt(0)).setChecked(true);
 	}
 
 	private static void touchById(int id) {
@@ -223,13 +221,28 @@ public class MCAccidents {
 		Text.set(R.id.mc_acc_details_general_owner, p.get("owner"));
 		Text.set(R.id.mc_acc_details_general_address, "(" + distanceText(p) + ") " + p.get("address"));
 		Text.set(R.id.mc_acc_details_general_description, p.get("descr"));
-
-		Const.act.findViewById(R.id.mc_det_people_onway).setVisibility(View.VISIBLE);
 		currentPoint = p;
+		if (currentPoint.id == onway || currentPoint.id == inplace) {
+			MCObjects.onwayButton.setVisibility(View.INVISIBLE);
+		} else {
+			MCObjects.onwayButton.setVisibility(View.VISIBLE);
+		}
 		((View) Const.act.findViewById(R.id.mc_acc_details_general)).setOnLongClickListener(detLongClick);
 		ViewGroup tv = (ViewGroup) Const.act.findViewById(R.id.mc_det_messages_table);
 		points.messages.get(p.id).drawList(tv);
 		((ScrollView) Const.act.findViewById(R.id.mc_det_messages_scroll)).fullScroll(View.FOCUS_UP);
+		ViewGroup vg = (ViewGroup) MCObjects.onwayContent;
+		for(Volunteer v: MCAccidents.points.volunteers.get(currentPoint.id).items){
+			TableRow tr = new TableRow(vg.getContext());
+			TextView name = new TextView(tr.getContext());
+			TextView status = new TextView(tr.getContext());
+			name.setText("Мотогражданин: " + v.name + " статус: ");
+			status.setText(v.status);
+			tr.addView(name);
+			tr.addView(status);
+			vg.addView(tr);
+		}
+				
 	}
 
 	private static String distanceText(Point p) {
@@ -241,26 +254,10 @@ public class MCAccidents {
 		}
 	}
 
-	private void addListeners() {
-		detailstabsgroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-			public void onCheckedChanged(RadioGroup group, int checkedId) {
-				String name = (String) Const.act.findViewById(checkedId).getTag();
-				ViewGroup vg = (ViewGroup) detailstabscontent;
-				for (int i = 0; i < vg.getChildCount(); i++) {
-					String currentTag = (String) vg.getChildAt(i).getTag();
-					if (currentTag.equals(name)) {
-						vg.getChildAt(i).setVisibility(View.VISIBLE);
-					} else {
-						vg.getChildAt(i).setVisibility(View.INVISIBLE);
-					}
-				}
-			}
-		});
-	}
-
 	public static void refresh() {
 		getAccidents();
 		drawList();
+		OSMMap.placeAcc();
 	}
 
 	private static void getAccidents() {
@@ -269,7 +266,7 @@ public class MCAccidents {
 	}
 
 	public static void toDetails() {
-		MCButtons.tabDetailsButton.setChecked(true);
+		MCObjects.tabDetailsButton.setChecked(true);
 	}
 
 	public static void toDetails(int id) {

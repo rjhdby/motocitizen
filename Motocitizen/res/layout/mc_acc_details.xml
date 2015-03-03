@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/mc_acc_details"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_weight="1"
     android:orientation="vertical" >
 
@@ -187,20 +187,21 @@
     <FrameLayout
         android:id="@+id/mc_det_tab_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="visible" >
+        android:layout_height="match_parent" >
 
         <LinearLayout
+            android:id="@+id/det_messages"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:tag="mc_det_messages_content"
+            android:visibility="visible"
             android:weightSum="1" >
 
             <ScrollView
                 android:id="@+id/mc_det_messages_scroll"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:tag="mc_det_messages_content"
                 android:visibility="visible" >
@@ -208,7 +209,7 @@
                 <TableLayout
                     android:id="@+id/mc_det_messages_table"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:shrinkColumns="1"
                     android:stretchColumns="1,2" >
                 </TableLayout>
@@ -217,12 +218,14 @@
             <LinearLayout
                 android:id="@+id/mc_new_message_area"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom" >
 
                 <EditText
                     android:id="@+id/mc_new_message_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
                     android:layout_weight="1"
                     android:ems="10"
                     android:lines="2" >
@@ -233,84 +236,73 @@
                 <Button
                     android:id="@+id/mc_new_message_send"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
                     android:layout_weight="1"
                     android:text="Ок" />
+
             </LinearLayout>
         </LinearLayout>
 
-        <ScrollView
+        <LinearLayout
+            android:id="@+id/det_history"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:tag="mc_det_log_content"
+            android:orientation="vertical"
             android:visibility="invisible" >
 
-            <LinearLayout
-                android:id="@+id/mc_det_log_content"
+            <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical" >
-            </LinearLayout>
-        </ScrollView>
+                android:tag="mc_det_log_content" >
 
-        <ScrollView
+                <LinearLayout
+                    android:id="@+id/mc_det_log_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical" >
+                </LinearLayout>
+            </ScrollView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/det_volunteers"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:tag="mc_det_people_content"
+            android:orientation="vertical"
             android:visibility="invisible" >
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:tag="mc_det_people_content" >
+
+                <TableLayout
+                    android:id="@+id/acc_volunteers"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                </TableLayout>
+            </ScrollView>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical" >
+                android:layout_gravity="bottom"
+                android:gravity="bottom" >
 
-                <LinearLayout
-                    android:id="@+id/mc_det_people_inplace"
+                <Button
+                    android:id="@+id/onway_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="invisible" >
+                    android:layout_gravity="bottom"
+                    android:text="@string/onway_button" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/status_gradient"
-                        android:gravity="center"
-                        android:text="На месте"
-                        android:textColor="#ffffff" />
-
-                    <LinearLayout
-                        android:id="@+id/mc_det_people_inplace_content"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical" >
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/mc_det_people_onway"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="invisible" >
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/status_gradient"
-                        android:gravity="center"
-                        android:text="В пути"
-                        android:textColor="#ffffff" />
-
-                    <LinearLayout
-                        android:id="@+id/mc_det_people_onway_content"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical" >
-                    </LinearLayout>
-                </LinearLayout>
             </LinearLayout>
-        </ScrollView>
+
+        </LinearLayout>
     </FrameLayout>
 
 </LinearLayout>

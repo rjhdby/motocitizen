@@ -7,10 +7,11 @@ import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCSelectSound;
 import motocitizen.app.mc.create.MCCreateAcc;
 import motocitizen.app.mc.init.MCInit;
-import motocitizen.app.mc.objects.MCButtons;
+import motocitizen.app.mc.objects.MCObjects;
 import motocitizen.main.R;
 import motocitizen.network.JSONCall;
 import motocitizen.startup.Startup;
+import motocitizen.utils.Const;
 import motocitizen.utils.Keyboard;
 import motocitizen.utils.Show;
 import motocitizen.utils.Text;
@@ -18,6 +19,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -148,23 +150,57 @@ public class MCListeners {
 		public void onClick(View v) {
 			Show.show(R.id.main_frame_settings);
 		}
-
 	};
+	
+	public static Button.OnClickListener onwayButtonListener = new Button.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			int currentId = MCAccidents.currentPoint.id;
+			Map<String, String> post = new HashMap<String, String>();
+			post.put("login", MCAccidents.auth.getLogin());
+			post.put("passhash", MCAccidents.auth.makePassHash());
+			post.put("id", String.valueOf(currentId));
+			new JSONCall("mcaccidents", "onway").request(post);
+			MCAccidents.onway = currentId;
+			MCAccidents.refresh();
+			MCAccidents.toDetails(currentId);
+		}
+	};
+	
 	public static RadioGroup.OnCheckedChangeListener mainTabsListener = new RadioGroup.OnCheckedChangeListener() {
 		public void onCheckedChanged(RadioGroup group, int checkedId) {
 			int id = group.getCheckedRadioButtonId();
-			MCButtons.accListView.setVisibility(View.INVISIBLE);
-			MCButtons.accDetailsView.setVisibility(View.INVISIBLE);
-			MCButtons.osmMapContainer.setVisibility(View.INVISIBLE);
+			MCObjects.accListView.setVisibility(View.INVISIBLE);
+			MCObjects.accDetailsView.setVisibility(View.INVISIBLE);
+			MCObjects.osmMapContainer.setVisibility(View.INVISIBLE);
 			switch(id){
 			case R.id.tab_accidents_button:
-				MCButtons.accListView.setVisibility(View.VISIBLE);
+				MCObjects.accListView.setVisibility(View.VISIBLE);
 				break;
 			case R.id.tab_acc_details_button:
-				MCButtons.accDetailsView.setVisibility(View.VISIBLE);
+				MCObjects.accDetailsView.setVisibility(View.VISIBLE);
 				break;
 			case R.id.tab_map_button:
-				MCButtons.osmMapContainer.setVisibility(View.VISIBLE);
+				MCObjects.osmMapContainer.setVisibility(View.VISIBLE);
+				break;
+			}
+		}
+	};
+	public static RadioGroup.OnCheckedChangeListener accDetTabsListener = new RadioGroup.OnCheckedChangeListener() {
+		public void onCheckedChanged(RadioGroup group, int checkedId) {
+			int id = group.getCheckedRadioButtonId();
+			MCObjects.detMessages.setVisibility(View.INVISIBLE);
+			MCObjects.detHistory.setVisibility(View.INVISIBLE);
+			MCObjects.detVolunteers.setVisibility(View.INVISIBLE);
+			switch(id){
+			case R.id.mc_det_tab_messages:
+				MCObjects.detMessages.setVisibility(View.VISIBLE);
+				break;
+			case R.id.mc_det_tab_history:
+				MCObjects.detHistory.setVisibility(View.VISIBLE);
+				break;
+			case R.id.mc_det_tab_people:
+				MCObjects.detVolunteers.setVisibility(View.VISIBLE);
 				break;
 			}
 		}

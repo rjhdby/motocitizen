@@ -67,4 +67,13 @@
 	<string name="first_auth_anonim">Запустить анонимно</string>
 	<string name="mc_notif_system">default system</string>
 	<string name="mc_notif_sound">Выбрать звук</string>
+	<string name="tab_accidents">События</string>
+	<string name="tab_acc_details">Детали</string>
+	<string name="tab_map">Карта</string>
+	<string name="mc_add_point_button">Создать событие</string>
+	<string name="dial_button">Звонок оператору</string>
+	<string name="statusBarButton">Настройки</string>
+	<string name="inplace_delimiter">На месте</string>
+	<string name="onway_delimiter">В пути</string>
+	<string name="onway_button">Еду!</string>
 </resources>

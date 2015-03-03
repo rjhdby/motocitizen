@@ -14,10 +14,12 @@ import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 import motocitizen.utils.Text;
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -134,10 +136,12 @@ public class MCGCMRegistration {
 		JSONObject json = new JSONCall("mcaccidents", "registerGCM").request(createPOST(regId));
 	}
 	private static Map<String, String> createPOST(String regId) {
+		String imei = ((TelephonyManager) Startup.context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
 		Map<String, String> POST = new HashMap<String, String>();
 		POST.put("owner_id", String.valueOf(MCAccidents.auth.id));
 		POST.put("gcm_key", regId);
 		POST.put("login", MCAccidents.auth.getLogin());
+		POST.put("imei", imei);
 		POST.put("passhash", MCAccidents.auth.makePassHash());
 		POST.put("calledMethod", "registerGCM");
 		return POST;

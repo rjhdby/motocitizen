@@ -20,6 +20,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
+import android.widget.Toast;
 
 public class JSONCall {
 	private final static String APP = Startup.props.get("default.app");
@@ -74,10 +75,8 @@ public class JSONCall {
 				Log.d("POST", url.toString() + "?" + POST);
 				connection.setDoOutput(true);
 				connection.setRequestProperty("Content-Length", Integer.toString((POST).getBytes().length));
-//				Log.d("POST BYTES", Integer.toString((POST).getBytes().length));
 				DataOutputStream os = new DataOutputStream(connection.getOutputStream());
 				os.writeBytes(POST);
-//				Log.d("POST BYTES", Integer.toString(os.size()));
 			}
 			InputStream is = null;
 			try {
@@ -126,6 +125,10 @@ public class JSONCall {
 					first = false;
 				else
 					result.append("&");
+				if(post.get(key) == null){
+					Toast.makeText(Startup.context, "Не задано " + key, Toast.LENGTH_LONG).show();
+					return "ERROR";
+				}
 				result.append(URLEncoder.encode(key, "UTF-8"));
 				result.append("=");
 				result.append(URLEncoder.encode(post.get(key), "UTF-8"));

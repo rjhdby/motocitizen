@@ -23,11 +23,13 @@ public class MCPoints {
 	public String error = "ok";
 	public Map<Integer, Point> points;
 	public Map<Integer, MCMessages> messages;
+	public Map<Integer, MCVolunteers> volunteers;
 
 	public MCPoints() {
 		if (points == null) {
 			points = new HashMap<Integer, Point>();
 			messages = new HashMap<Integer, MCMessages>();
+			volunteers = new HashMap<Integer, MCVolunteers>();
 		}
 	}
 
@@ -107,6 +109,7 @@ public class MCPoints {
 	}
 
 	private void parseJSON(JSONArray json) throws JSONException {
+		volunteers.clear();
 		for (int i = 0; i < json.length(); i++) {
 			JSONObject acc = json.getJSONObject(i);
 			if (acc.has("error")) {
@@ -116,9 +119,17 @@ public class MCPoints {
 			Map<String, String> dataset = new HashMap<String, String>();
 			int id = acc.getInt("id");
 			MCMessages m;
+			MCVolunteers v;
 			try {
 				m = new MCMessages(acc.getJSONArray("messages"));
 				acc.remove("messages");
+			} catch (JSONException e) {
+				m = new MCMessages();
+			}
+			try {
+				v = new MCVolunteers(acc.getJSONArray("onway"));
+				acc.remove("onway");
+				volunteers.put(id, v);
 			} catch (JSONException e) {
 				m = new MCMessages();
 			}

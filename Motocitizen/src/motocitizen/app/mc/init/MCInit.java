@@ -3,7 +3,7 @@ package motocitizen.app.mc.init;
 import java.util.Properties;
 
 import motocitizen.app.mc.listeners.MCListeners;
-import motocitizen.app.mc.objects.MCButtons;
+import motocitizen.app.mc.objects.MCObjects;
 import motocitizen.app.mc.user.MCAuth;
 import motocitizen.app.mc.user.MCRole;
 import motocitizen.main.R;
@@ -38,20 +38,21 @@ public class MCInit {
 	}
 
 	public static void addListeners() {
-		MCButtons.selectSoundCancelButton.setOnClickListener(MCListeners.selectSoundCancelButton);
-		MCButtons.authConfirmButton.setOnClickListener(MCListeners.authConfirmListener);
-		MCButtons.authButton.setOnClickListener(MCListeners.authButtonListener);
-		MCButtons.authCancelButton.setOnClickListener(MCListeners.authCancelListener);
-		MCButtons.dialButton.setOnClickListener(MCListeners.dialButtonListener);
-		MCButtons.createAccButton.setOnClickListener(MCListeners.createAccButtonListener);
-		MCButtons.firstLoginButton.setOnClickListener(MCListeners.firstloginButtonListener);
-		MCButtons.anonimButton.setOnClickListener(MCListeners.anonimButtonListener);
-		MCButtons.authAnonimCheckBox.setOnCheckedChangeListener(MCListeners.authAnonimCheckBoxListener);
-		MCButtons.selectSoundButton.setOnClickListener(MCListeners.selectSoundButtonListener);
-		MCButtons.selectSoundConfirmButton.setOnClickListener(MCListeners.selectSoundConfirmListener);
-		MCButtons.mainTabsGroup.setOnCheckedChangeListener(MCListeners.mainTabsListener);
-		MCButtons.newMessageButton.setOnClickListener(MCListeners.newMessageButtonListener);
-		
+		MCObjects.selectSoundCancelButton.setOnClickListener(MCListeners.selectSoundCancelButton);
+		MCObjects.authConfirmButton.setOnClickListener(MCListeners.authConfirmListener);
+		MCObjects.authButton.setOnClickListener(MCListeners.authButtonListener);
+		MCObjects.authCancelButton.setOnClickListener(MCListeners.authCancelListener);
+		MCObjects.dialButton.setOnClickListener(MCListeners.dialButtonListener);
+		MCObjects.createAccButton.setOnClickListener(MCListeners.createAccButtonListener);
+		MCObjects.firstLoginButton.setOnClickListener(MCListeners.firstloginButtonListener);
+		MCObjects.anonimButton.setOnClickListener(MCListeners.anonimButtonListener);
+		MCObjects.authAnonimCheckBox.setOnCheckedChangeListener(MCListeners.authAnonimCheckBoxListener);
+		MCObjects.selectSoundButton.setOnClickListener(MCListeners.selectSoundButtonListener);
+		MCObjects.selectSoundConfirmButton.setOnClickListener(MCListeners.selectSoundConfirmListener);
+		MCObjects.mainTabsGroup.setOnCheckedChangeListener(MCListeners.mainTabsListener);
+		MCObjects.newMessageButton.setOnClickListener(MCListeners.newMessageButtonListener);
+		MCObjects.mcDetTabsGroup.setOnCheckedChangeListener(MCListeners.accDetTabsListener);
+		MCObjects.onwayButton.setOnClickListener(MCListeners.onwayButtonListener);
 	}
 	
 	public static void setupAccess(MCAuth auth) {
