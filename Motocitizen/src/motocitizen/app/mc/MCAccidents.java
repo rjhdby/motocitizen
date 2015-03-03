@@ -232,14 +232,18 @@ public class MCAccidents {
 		points.messages.get(p.id).drawList(tv);
 		((ScrollView) Const.act.findViewById(R.id.mc_det_messages_scroll)).fullScroll(View.FOCUS_UP);
 		ViewGroup vg = (ViewGroup) MCObjects.onwayContent;
+		vg.removeAllViews();
 		for(Volunteer v: MCAccidents.points.volunteers.get(currentPoint.id).items){
 			TableRow tr = new TableRow(vg.getContext());
 			TextView name = new TextView(tr.getContext());
 			TextView status = new TextView(tr.getContext());
-			name.setText("Мотогражданин: " + v.name + " статус: ");
-			status.setText(v.status);
+			TextView time = new TextView(tr.getContext());
+			name.setText(v.name + " ");
+			status.setText(v.status + " ");
+			time.setText(v.time);
 			tr.addView(name);
 			tr.addView(status);
+			tr.addView(time);
 			vg.addView(tr);
 		}
 				

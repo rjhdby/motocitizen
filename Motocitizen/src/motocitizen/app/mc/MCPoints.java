@@ -109,7 +109,7 @@ public class MCPoints {
 	}
 
 	private void parseJSON(JSONArray json) throws JSONException {
-		volunteers.clear();
+		// volunteers.clear();
 		for (int i = 0; i < json.length(); i++) {
 			JSONObject acc = json.getJSONObject(i);
 			if (acc.has("error")) {
@@ -129,10 +129,14 @@ public class MCPoints {
 			try {
 				v = new MCVolunteers(acc.getJSONArray("onway"));
 				acc.remove("onway");
+				if (volunteers.containsKey(id)) {
+					volunteers.clear();
+				}
 				volunteers.put(id, v);
 			} catch (JSONException e) {
 				m = new MCMessages();
 			}
+
 			if (messages.containsKey(id)) {
 				messages.get(id).messages.putAll(m.messages);
 			} else {
