@@ -116,6 +116,7 @@
                 android:layout_span="2"
                 android:textColor="#ff000000" />
         </TableRow>
+
     </TableLayout>
 
     <View
@@ -140,13 +141,29 @@
             android:orientation="horizontal" >
 
             <RadioButton
-                android:id="@+id/mc_det_tab_messages"
+                android:id="@+id/mc_det_tab_people"
                 style="@style/statusText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/tab"
                 android:button="@color/statusBarTextColor"
                 android:checked="true"
+                android:tag="mc_det_people_content"
+                android:text="Мотограждане" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:background="#00000000" />
+
+            <RadioButton
+                android:id="@+id/mc_det_tab_messages"
+                style="@style/statusText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/tab"
+                android:button="@color/statusBarTextColor"
+                android:checked="false"
                 android:tag="mc_det_messages_content"
                 android:text="Сообщения" />
 
@@ -165,22 +182,6 @@
                 android:checked="false"
                 android:tag="mc_det_log_content"
                 android:text="История" />
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="fill_parent"
-                android:background="#00000000" />
-
-            <RadioButton
-                android:id="@+id/mc_det_tab_people"
-                style="@style/statusText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/tab"
-                android:button="@color/statusBarTextColor"
-                android:checked="false"
-                android:tag="mc_det_people_content"
-                android:text="Мотограждане" />
         </RadioGroup>
     </HorizontalScrollView>
 
@@ -190,12 +191,50 @@
         android:layout_height="match_parent" >
 
         <LinearLayout
+            android:id="@+id/det_volunteers"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="visible" >
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:tag="mc_det_people_content" >
+
+                <TableLayout
+                    android:id="@+id/acc_volunteers"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                </TableLayout>
+            </ScrollView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom"
+                android:gravity="bottom" >
+
+                <Button
+                    android:id="@+id/onway_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:text="@string/onway_button" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/det_messages"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:tag="mc_det_messages_content"
-            android:visibility="visible"
+            android:visibility="invisible"
             android:weightSum="1" >
 
             <ScrollView
@@ -240,7 +279,6 @@
                     android:layout_gravity="bottom"
                     android:layout_weight="1"
                     android:text="Ок" />
-
             </LinearLayout>
         </LinearLayout>
 
@@ -263,46 +301,8 @@
                     android:orientation="vertical" >
                 </LinearLayout>
             </ScrollView>
-
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/det_volunteers"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:visibility="invisible" >
-
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:tag="mc_det_people_content" >
-
-                <TableLayout
-                    android:id="@+id/acc_volunteers"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-
-                </TableLayout>
-            </ScrollView>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="bottom"
-                android:gravity="bottom" >
-
-                <Button
-                    android:id="@+id/onway_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:text="@string/onway_button" />
-
-            </LinearLayout>
-
-        </LinearLayout>
     </FrameLayout>
 
 </LinearLayout>

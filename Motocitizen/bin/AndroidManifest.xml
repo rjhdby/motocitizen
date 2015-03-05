@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="motocitizen.main"
-    android:versionCode="12"
-    android:versionName="0.012" >
+    android:versionCode="13"
+    android:versionName="0.013" >
 
     <uses-sdk
         android:minSdkVersion="11"
@@ -45,7 +45,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:name="motocitizen.app.mc.gcm.GcmIntentService" />
+        <service android:name="motocitizen.app.mc.gcm.GcmBroadcastReceiver" />
 
         <meta-data
             android:name="com.google.android.gms.version"

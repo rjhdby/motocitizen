@@ -68,6 +68,11 @@ public class Startup extends Activity {
 		catchIntent();
 		context = this;
 		MCAccidents.refresh();
+		int id = prefs.getInt("mc.show.details", 0);
+		if( id != 0){
+			MCAccidents.toDetails(id);
+			prefs.edit().putInt("mc.show.details", 0).commit();
+		};
 	}
 
 	@Override

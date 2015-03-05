@@ -9,6 +9,7 @@ import motocitizen.startup.Startup;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.Projection;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.OverlayItem;
@@ -32,61 +33,55 @@ public class OSMMap {
 	public static MapView map;
 	private Activity act;
 	final JumpToLocation jumpToLocation;
-	private static Boolean trackEnabled;
 	private static ItemizedIconOverlay<OverlayItem> userOverlay, accOverlay;
 
 	public OSMMap() {
 		userOverlay = OSMUserOverlay.getUserOverlay();
 		accOverlay = OSMAccOverlay.getOverlay();
-		trackEnabled = true;
 		act = (Activity) Startup.context;
 		map = (MapView) act.findViewById(R.id.osm_mapview);
 		map.setTileSource(TileSourceFactory.MAPNIK);
 		map.setBuiltInZoomControls(true);
 		map.setMultiTouchControls(true);
-		map.getController().setZoom(18);
-		map.setOnDragListener(ondrag);
+		map.getController().setZoom(16);
 
 		ScaleBarOverlay myScaleBarOverlay = new ScaleBarOverlay(act);
 		jumpToLocation = new JumpToLocation(act);
 
 		map.getOverlays().add(myScaleBarOverlay);
 		map.getOverlays().add(jumpToLocation);
+		goToUser();
 	}
 
-	public static void placeAcc(){
+	public static void placeAcc() {
 		map.getOverlays().remove(accOverlay);
 		accOverlay = OSMAccOverlay.getOverlay();
 		map.getOverlays().add(accOverlay);
 		map.invalidate();
 	}
-	
+
 	public static void placeUser() {
 		map.getOverlays().remove(userOverlay);
 		userOverlay = OSMUserOverlay.getUserOverlay();
 		map.getOverlays().add(userOverlay);
-		if (trackEnabled) {
-			goToUser();
-		} else {
-			map.invalidate();
-		}
+		map.invalidate();
 	}
 
 	public static void goToUser() {
 		GeoPoint gp = new GeoPoint(MCLocation.current);
 		map.getController().animateTo(gp);
 		map.invalidate();
-		trackEnabled = true;
 	}
 
-	private OnDragListener ondrag = new OnDragListener() {
-		@Override
-		public boolean onDrag(View v, DragEvent event) {
-			trackEnabled = false;
-			return true;
-		}
-	};
-
+	public static void zoom(int zoom){
+		map.getController().setZoom(zoom);
+	}
+	
+	public static void jumpToPoint(Location location){
+		GeoPoint gp = new GeoPoint(location);
+		map.getController().animateTo(gp);
+	}
+	
 	private static class JumpToLocation extends Overlay {
 		public float cx, cy, r;
 		private int lastZoom;
@@ -102,7 +97,7 @@ public class OSMMap {
 			map.getLocationInWindow(location);
 			lastZoom = -1;
 			float y = event.getRawY() - location[1];
-			if (trackEnabled) {
+			if (x > (cx - r) && x < (cx + r) && y > (cy - r) && y < (cy + r)) {
 				goToUser();
 			}
 			return true;

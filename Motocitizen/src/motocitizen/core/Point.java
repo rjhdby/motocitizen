@@ -3,6 +3,7 @@ package motocitizen.core;
 import java.util.HashMap;
 import java.util.Map;
 
+import motocitizen.startup.Startup;
 import android.location.Location;
 import android.location.LocationManager;
 import android.util.Log;
@@ -11,6 +12,7 @@ public class Point {
 	public Map<String, String> common;
 	public Map<String, String> details;
 	public Location location;
+	public String type;
 	public int id;
 
 	public Point() {
@@ -38,7 +40,7 @@ public class Point {
 			//Log.d("POINT", location.toString());
 		}
 	}
-
+	
 	public String get(String key) {
 		return common.get(key);
 	}

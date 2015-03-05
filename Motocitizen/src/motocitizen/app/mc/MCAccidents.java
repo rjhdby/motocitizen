@@ -124,8 +124,6 @@ public class MCAccidents {
 			tl.addView(drawError());
 		}
 		Show.showLast();
-
-		// ((RadioButton) tabsgroup.getChildAt(0)).setChecked(true);
 	}
 
 	private static void touchById(int id) {
@@ -233,9 +231,9 @@ public class MCAccidents {
 		vg.removeAllViews();
 		for(Volunteer v: MCAccidents.points.volunteers.get(currentPoint.id).items){
 			TableRow tr = new TableRow(vg.getContext());
-			TextView name = new TextView(tr.getContext());
-			TextView status = new TextView(tr.getContext());
-			TextView time = new TextView(tr.getContext());
+			TextView name = new TextView(vg.getContext());
+			TextView status = new TextView(vg.getContext());
+			TextView time = new TextView(vg.getContext());
 			name.setText(v.name + " ");
 			status.setText(v.status + " ");
 			time.setText(v.time);
@@ -244,6 +242,8 @@ public class MCAccidents {
 			tr.addView(time);
 			vg.addView(tr);
 		}
+		OSMMap.zoom(16);
+		OSMMap.jumpToPoint(p.location);
 	}
 
 	private static String distanceText(Point p) {
