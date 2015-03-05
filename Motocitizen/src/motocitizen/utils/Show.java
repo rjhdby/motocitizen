@@ -1,6 +1,6 @@
 package motocitizen.utils;
 
-import motocitizen.app.mc.objects.MCObjects;
+import motocitizen.app.mc.MCObjects;
 import motocitizen.main.R;
 import motocitizen.startup.Startup;
 import android.app.Activity;

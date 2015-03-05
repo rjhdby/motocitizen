@@ -1,4 +1,4 @@
-package motocitizen.app.mc.notification;
+package motocitizen.app.mc.gcm;
 
 import motocitizen.main.R;
 import motocitizen.startup.Startup;

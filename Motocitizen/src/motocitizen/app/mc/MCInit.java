@@ -1,9 +1,7 @@
-package motocitizen.app.mc.init;
+package motocitizen.app.mc;
 
 import java.util.Properties;
 
-import motocitizen.app.mc.listeners.MCListeners;
-import motocitizen.app.mc.objects.MCObjects;
 import motocitizen.app.mc.user.MCAuth;
 import motocitizen.app.mc.user.MCRole;
 import motocitizen.main.R;

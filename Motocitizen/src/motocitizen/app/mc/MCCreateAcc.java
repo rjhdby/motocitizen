@@ -1,11 +1,9 @@
-package motocitizen.app.mc.create;
+package motocitizen.app.mc;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import motocitizen.app.mc.MCAccidents;
-import motocitizen.app.mc.MCLocation;
 import motocitizen.main.R;
 import motocitizen.network.JSONCall;
 import motocitizen.startup.Startup;

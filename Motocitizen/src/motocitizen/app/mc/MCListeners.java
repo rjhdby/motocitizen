@@ -1,13 +1,8 @@
-package motocitizen.app.mc.listeners;
+package motocitizen.app.mc;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import motocitizen.app.mc.MCAccidents;
-import motocitizen.app.mc.MCSelectSound;
-import motocitizen.app.mc.create.MCCreateAcc;
-import motocitizen.app.mc.init.MCInit;
-import motocitizen.app.mc.objects.MCObjects;
 import motocitizen.main.R;
 import motocitizen.network.JSONCall;
 import motocitizen.startup.Startup;

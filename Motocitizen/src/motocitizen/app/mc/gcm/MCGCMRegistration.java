@@ -8,7 +8,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.json.JSONObject;
 
 import motocitizen.app.mc.MCAccidents;
-import motocitizen.app.mc.notification.MCNotification;
 import motocitizen.network.JSONCall;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;

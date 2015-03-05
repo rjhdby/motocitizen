@@ -1,4 +1,4 @@
-package motocitizen.app.mc.objects;
+package motocitizen.app.mc;
 
 import motocitizen.main.R;
 import motocitizen.startup.Startup;

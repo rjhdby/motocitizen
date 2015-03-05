@@ -9,8 +9,6 @@ import java.util.Map;
 
 import motocitizen.app.mc.MCVolunteers.Volunteer;
 import motocitizen.app.mc.gcm.MCGCMRegistration;
-import motocitizen.app.mc.init.MCInit;
-import motocitizen.app.mc.objects.MCObjects;
 import motocitizen.app.mc.popups.MCAccListPopup;
 import motocitizen.app.mc.user.MCAuth;
 import motocitizen.app.osm.OSMMap;
@@ -246,7 +244,6 @@ public class MCAccidents {
 			tr.addView(time);
 			vg.addView(tr);
 		}
-				
 	}
 
 	private static String distanceText(Point p) {
