@@ -46,7 +46,7 @@ public class MCNotification {
 		}
 		@SuppressWarnings("deprecation")
 		Notification notification = builder.getNotification();
-		String sound = Startup.prefs.getString("mc.notification.sound", "default system");
+		String sound = context.getSharedPreferences("motocitizen.startup", Context.MODE_PRIVATE).getString("mc.notification.sound", "default system");
 		if (sound.equals("default system")) {
 			notification.defaults = Notification.DEFAULT_ALL;
 			// notification.defaults = Notification.DEFAULT_VIBRATE;

@@ -7,19 +7,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import motocitizen.app.mc.MCVolunteers.Volunteer;
 import motocitizen.app.mc.gcm.MCGCMRegistration;
 import motocitizen.app.mc.popups.MCAccListPopup;
 import motocitizen.app.mc.user.MCAuth;
 import motocitizen.app.osm.OSMMap;
-import motocitizen.core.Point;
 import motocitizen.main.R;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 import motocitizen.utils.NewID;
 import motocitizen.utils.Show;
 import motocitizen.utils.Text;
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnLongClickListener;
@@ -36,11 +37,13 @@ public class MCAccidents {
 	private static Integer[] sorted;
 	private static Map<String, Boolean> visibility;
 	public static int onway, inplace;
-	public static Point currentPoint;
+	public static MCPoint currentPoint;
 	public static MCPoints points;
 	public static MCAuth auth;
+	private static Context context;
 
-	public MCAccidents() {
+	public MCAccidents(Context context) {
+		this.context = context;
 		onway = 0;
 		inplace = 0;
 		MCInit.readProperties();
@@ -50,7 +53,10 @@ public class MCAccidents {
 		MCInit.setupAccess(auth);
 		MCInit.setupValues(auth);
 		points = new MCPoints();
+		points.load();
 		new MCGCMRegistration();
+		makeSortedList();
+		currentPoint = points.getPoint(sorted[0]);
 	}
 
 	public static TableRow drawError() {
@@ -63,7 +69,7 @@ public class MCAccidents {
 
 	private static void makeSortedList() {
 		List<Integer> list = new ArrayList<Integer>();
-		list.addAll(points.points.keySet());
+		list.addAll(points.keySet());
 		sorted = new Integer[list.size()];
 		list.toArray(sorted);
 		Arrays.sort(sorted, Collections.reverseOrder());
@@ -96,29 +102,29 @@ public class MCAccidents {
 
 	public static void drawList() {
 		setupVisibility();
+		tl.removeAllViews();
 		boolean noYesterday = true;
 		if (points.error.equals("ok") || points.error.equals("no_new")) {
-			int first = 0;
 			makeSortedList();
 			for (int i = 0; i < sorted.length; i++) {
-				Point acc = points.get(sorted[i]);
+				MCPoint acc = points.getPoint(sorted[i]);
 				// Log.d("POINT", acc.toString());
-				if (visibility.get(acc.get("mc_accident_orig_type"))) {
-					TableRow tr = createRow(acc);
-					if (!points.isToday(sorted[i]) && noYesterday) {
+				if (visibility.get(acc.type)) {
+					if (!acc.isToday() && noYesterday) {
 						tl.addView(yesterdayRow(), Const.trlp);
 						noYesterday = false;
-						if (tl.getChildCount() == 1) {
-							first = 1;
-						}
 					}
+					TableRow tr = acc.createTableRow(context);
 					tl.addView(tr, Const.trlp);
+				} else {
+					acc.row_id = 0;
 				}
 			}
 			if (sorted.length == 0) {
 				tl.addView(drawError());
 			} else {
-				tl.getChildAt(first).performClick();
+				makeDetails(currentPoint.id);
+				points.setSelected(context, currentPoint.id);
 			}
 		} else {
 			tl.addView(drawError());
@@ -126,98 +132,26 @@ public class MCAccidents {
 		Show.showLast();
 	}
 
-	private static void touchById(int id) {
-		int rowId = Integer.parseInt(points.get(id).get("row_id"));
-		tl.findViewById(rowId).performClick();
-	}
-
-	private static TableRow createRow(Point p) {
-		View vAccRow = Const.li.inflate(R.layout.mc_acc_row, tl, false);
-		TableRow tr = (TableRow) vAccRow.findViewById(R.id.accidentRow);
-
-		int id = NewID.id();
-		tr.setId(id);
-		p.set("row_id", String.valueOf(id));
-		tr.setOnClickListener(getAccRowClick(tr));
-
-		Text.set(tr, R.id.mc_row_time, points.getTime(p.id));
-		Text.set(tr, R.id.mc_row_address, p.get("address"));
-		Text.set(tr, R.id.mc_row_general, p.get("mc_accident_type") + ". " + p.get("mc_accident_med"));
-		Text.set(tr, R.id.mc_row_description, p.get("descr"));
-		Text.set(tr, R.id.mc_row_distance, distanceText(p));
-		tr.setOnLongClickListener(rowLongClick);
-
-		return tr;
-	}
-
-	private static OnLongClickListener rowLongClick = new OnLongClickListener() {
-		@Override
-		public boolean onLongClick(View v) {
-			Point p = points.findByRowId(v.getId());
-			PopupWindow pw;
-			pw = MCAccListPopup.getPopupWindow(p);
-			pw.showAsDropDown(v, 20, -20);
-			return true;
-		}
-	};
-
 	private static OnLongClickListener detLongClick = new OnLongClickListener() {
 		@Override
 		public boolean onLongClick(View v) {
 			PopupWindow pw;
-			pw = MCAccListPopup.getPopupWindow(currentPoint);
+			pw = MCAccListPopup.getPopupWindow(currentPoint.id);
 			pw.showAsDropDown(v, 20, -20);
 			return true;
 		}
 	};
 
-	static View.OnClickListener getAccRowClick(final TableRow tr) {
-		return new View.OnClickListener() {
-			public void onClick(View v) {
-				ViewGroup vg = (ViewGroup) tl;
-				Point p = points.findByRowId(tr.getId());
-				for (int i = 0; i < vg.getChildCount(); i++) {
-					View currView = vg.getChildAt(i);
-					Point currPoint = points.findByRowId(currView.getId());
-					if (currPoint != null) {
-						currView.setBackgroundResource(getState(currPoint));
-					}
-				}
-				tr.setBackgroundResource(getState(p, true));
-				makeDetails(p);
-				toDetails();
-			}
-		};
-	}
-
-	private static int getState(Point p) {
-		if (p.get("status").equals("acc_status_end")) {
-			return R.drawable.accident_row_gradient_ended;
-		} else if (p.get("status").equals("acc_status_hide")) {
-			return R.drawable.accident_row_gradient_hide;
-		} else {
-			return R.drawable.accident_row_gradient;
-		}
-	}
-
-	private static int getState(Point p, Boolean selected) {
-		if (p.get("status").equals("acc_status_end")) {
-			return R.drawable.accident_row_gradient_selected_ended;
-		} else if (p.get("status").equals("acc_status_hide")) {
-			return R.drawable.accident_row_gradient_selected_hide;
-		} else {
-			return R.drawable.accident_row_gradient_selected;
-		}
-	}
-
-	private static void makeDetails(Point p) {
-		Text.set(R.id.mc_acc_details_general_type, p.get("mc_accident_type") + ". " + p.get("mc_accident_med"));
-		Text.set(R.id.mc_acc_details_general_status, p.get("status_text"));
-		Text.set(R.id.mc_acc_details_general_time, points.getTime(p.id));
-		Text.set(R.id.mc_acc_details_general_owner, p.get("owner"));
-		Text.set(R.id.mc_acc_details_general_address, "(" + distanceText(p) + ") " + p.get("address"));
-		Text.set(R.id.mc_acc_details_general_description, p.get("descr"));
+	public static void makeDetails(int id) {
+		MCPoint p = points.getPoint(id);
 		currentPoint = p;
+		Text.set(R.id.mc_acc_details_general_type, p.getTypeText() + ". " + p.getMedText());
+		Text.set(R.id.mc_acc_details_general_status, p.getStatusText());
+		Text.set(R.id.mc_acc_details_general_time, Const.timeFormat.format(p.created.getTime()));
+		Text.set(R.id.mc_acc_details_general_owner, p.owner);
+		Text.set(R.id.mc_acc_details_general_address, "(" + p.distanceText() + ") " + p.address);
+		Text.set(R.id.mc_acc_details_general_description, p.descr);
+
 		if (currentPoint.id == onway || currentPoint.id == inplace) {
 			MCObjects.onwayButton.setVisibility(View.INVISIBLE);
 		} else {
@@ -225,34 +159,18 @@ public class MCAccidents {
 		}
 		((View) Const.act.findViewById(R.id.mc_acc_details_general)).setOnLongClickListener(detLongClick);
 		ViewGroup tv = (ViewGroup) Const.act.findViewById(R.id.mc_det_messages_table);
-		points.messages.get(p.id).drawList(tv);
+		tv.removeAllViews();
+		for (int i : p.messages.keySet()) {
+			tv.addView(p.messages.get(i).createRow(context));
+		}
 		((ScrollView) Const.act.findViewById(R.id.mc_det_messages_scroll)).fullScroll(View.FOCUS_UP);
 		ViewGroup vg = (ViewGroup) MCObjects.onwayContent;
 		vg.removeAllViews();
-		for(Volunteer v: MCAccidents.points.volunteers.get(currentPoint.id).items){
-			TableRow tr = new TableRow(vg.getContext());
-			TextView name = new TextView(vg.getContext());
-			TextView status = new TextView(vg.getContext());
-			TextView time = new TextView(vg.getContext());
-			name.setText(v.name + " ");
-			status.setText(v.status + " ");
-			time.setText(v.time);
-			tr.addView(name);
-			tr.addView(status);
-			tr.addView(time);
-			vg.addView(tr);
+		for (int i : p.volunteers.keySet()) {
+			vg.addView(p.volunteers.get(i).createRow(context));
 		}
 		OSMMap.zoom(16);
 		OSMMap.jumpToPoint(p.location);
-	}
-
-	private static String distanceText(Point p) {
-		double d = points.distanceFromUser(p.id);
-		if (d > 1000) {
-			return String.valueOf(Math.round(d / 10) / 100) + "км";
-		} else {
-			return String.valueOf((int) d) + "м";
-		}
 	}
 
 	public static void refresh() {
@@ -267,11 +185,12 @@ public class MCAccidents {
 	}
 
 	public static void toDetails() {
-		MCObjects.tabDetailsButton.setChecked(true);
+		toDetails(currentPoint.id);
 	}
 
 	public static void toDetails(int id) {
-		toDetails();
-		touchById(id);
+		MCObjects.tabDetailsButton.setChecked(true);
+		makeDetails(id);
+		points.setSelected(context, id);
 	}
 }

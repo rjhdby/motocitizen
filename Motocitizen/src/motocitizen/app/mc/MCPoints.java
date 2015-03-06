@@ -5,8 +5,10 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import motocitizen.core.Point;
+import motocitizen.main.R;
 import motocitizen.network.JSONCall;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
@@ -16,76 +18,43 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.location.Location;
+import android.util.Log;
+import android.widget.TableRow;
 
 @SuppressLint("UseSparseArrays")
 public class MCPoints {
 	public String error = "ok";
-	public Map<Integer, Point> points;
-	public Map<Integer, MCMessages> messages;
-	public Map<Integer, MCVolunteers> volunteers;
+	private Map<Integer, MCPoint> points;
+
+	public static final int NORMAL = R.drawable.accident_row_gradient;
+	public static final int NORMAL_SELECTED = R.drawable.accident_row_gradient_selected;
+	public static final int HIDE = R.drawable.accident_row_gradient_hide;
+	public static final int HIDE_SELECTED = R.drawable.accident_row_gradient_selected_hide;
+	public static final int ENDED = R.drawable.accident_row_gradient_ended;
+	public static final int ENDED_SELECTED = R.drawable.accident_row_gradient_selected_ended;
+
+	// public Map<Integer, TableRow> rows;
+	// public Map<Integer, MCMessages> messages;
+	// public Map<Integer, MCVolunteers> volunteers;
 
 	public MCPoints() {
+
 		if (points == null) {
-			points = new HashMap<Integer, Point>();
-			messages = new HashMap<Integer, MCMessages>();
-			volunteers = new HashMap<Integer, MCVolunteers>();
+			points = new HashMap<Integer, MCPoint>();
+			// messages = new HashMap<Integer, MCMessages>();
+			// volunteers = new HashMap<Integer, MCVolunteers>();
 		}
 	}
 
-	public Point findByCommonValue(String key, String value) {
-		for (Point p : points.values()) {
-			if (p.get(key).equals(value)) {
-				return p;
-			}
-		}
-		return null;
-	}
-
-	public Point findByRowId(int id) {
-		for (Point p : points.values()) {
-			if (p.get("row_id").equals(String.valueOf(id))) {
-				return p;
-			}
-		}
-		return null;
-	}
-
-	public Point get(int id) {
+	public MCPoint getPoint(int id) {
 		return points.get(id);
 	}
 
-	public double distanceFromUser(int id) {
-		Location acc = new Location("");
-		acc.setLatitude(Double.parseDouble(get(id).get("lat")));
-		acc.setLongitude(Double.parseDouble(get(id).get("lon")));
-		Location user = MCLocation.current;
-		return user.distanceTo(acc);
-	}
-
-	public String getTime(int id) {
-		try {
-			Calendar date = Calendar.getInstance();
-			date.setTime(Const.dateFormat.parse(get(id).get("created")));
-			return Const.timeFormat.format(date.getTime());
-		} catch (ParseException e) {
-			return "--:--";
-		}
-	}
-
-	public boolean isToday(int id) {
-		Calendar calendar = Calendar.getInstance();
-		int now = calendar.get(Calendar.DAY_OF_YEAR);
-		try {
-			calendar.setTime(Const.dateFormat.parse(get(id).get("created")));
-		} catch (ParseException e) {
-			return false;
-		}
-		if (now == calendar.get(Calendar.DAY_OF_YEAR)) {
-			return true;
-		} else {
-			return false;
-		}
+	public Set<Integer> keySet() {
+		return points.keySet();
 	}
 
 	public void load() {
@@ -109,45 +78,72 @@ public class MCPoints {
 	}
 
 	private void parseJSON(JSONArray json) throws JSONException {
-		// volunteers.clear();
 		for (int i = 0; i < json.length(); i++) {
 			JSONObject acc = json.getJSONObject(i);
-			if (acc.has("error")) {
-				error = acc.getString("error");
-				return;
-			}
-			Map<String, String> dataset = new HashMap<String, String>();
-			int id = acc.getInt("id");
-			MCMessages m;
-			MCVolunteers v;
 			try {
-				m = new MCMessages(acc.getJSONArray("messages"));
-				acc.remove("messages");
-			} catch (JSONException e) {
-				m = new MCMessages();
+				MCPoint current = new MCPoint(acc);
+				points.put(current.id, current);
+			} catch (Exception e) {
+				// e.printStackTrace();
 			}
-			try {
-				v = new MCVolunteers(acc.getJSONArray("onway"));
-				acc.remove("onway");
-				if (volunteers.containsKey(id)) {
-					volunteers.clear();
-				}
-				volunteers.put(id, v);
-			} catch (JSONException e) {
-				m = new MCMessages();
-			}
-
-			if (messages.containsKey(id)) {
-				messages.get(id).messages.putAll(m.messages);
-			} else {
-				messages.put(id, m);
-			}
-			Iterator<String> keys = acc.keys();
-			while (keys.hasNext()) {
-				String key = keys.next();
-				dataset.put(key, acc.getString(key));
-			}
-			points.put(id, new Point(dataset));
 		}
+	}
+
+	public int getFirstNonNull() {
+		for (int i : points.keySet()) {
+			if (points.get(i).row_id != 0) {
+				return i;
+			}
+		}
+		return 0;
+	}
+
+	public void setSelected(Context context, int id) {
+		MCPoint selected = points.get(id);
+
+		for (int i : points.keySet()) {
+			MCPoint p = points.get(i);
+			if (p.row_id == 0) {
+				continue;
+			}
+			((Activity) context).findViewById(p.row_id).setBackgroundResource(getBackground(p.status, false));
+		}
+		if (selected.row_id == 0) {
+			int nnid = getFirstNonNull();
+			if (nnid == 0) {
+				return;
+			} else {
+				setSelected(context, nnid);
+				MCAccidents.currentPoint = points.get(nnid);
+				MCAccidents.makeDetails(nnid);
+			}
+		} else {
+			((Activity) context).findViewById(selected.row_id).setBackgroundResource(getBackground(selected.status, true));
+		}
+
+	}
+
+	public int getBackground(String status, boolean selected) {
+		int bg = NORMAL;
+		if (status.equals("acc_status_act")) {
+			if (selected) {
+				bg = NORMAL_SELECTED;
+			}
+		}
+		if (status.equals("acc_status_end")) {
+			if (selected) {
+				bg = ENDED_SELECTED;
+			} else {
+				bg = ENDED;
+			}
+		}
+		if (status.equals("acc_status_hide")) {
+			if (selected) {
+				bg = HIDE_SELECTED;
+			} else {
+				bg = HIDE;
+			}
+		}
+		return bg;
 	}
 }

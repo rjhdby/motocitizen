@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import motocitizen.app.mc.MCAccidents;
+import motocitizen.app.mc.MCPoint;
 import motocitizen.core.Point;
 import motocitizen.main.R;
 import motocitizen.network.JSONCall;
@@ -30,7 +31,7 @@ public class MCPopupWindow {
 	protected static PopupWindow pw;
 	protected static final TableRow.LayoutParams lp = new TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 	protected static String textToCopy;
-	protected static Point point;
+	protected static MCPoint point;
 
 	protected static TableRow copyButtonRow() {
 		TableRow tr = new TableRow(content.getContext());
@@ -51,10 +52,10 @@ public class MCPopupWindow {
 		return tr;
 	}
 
-	protected static TableRow finishButtonRow(Point p) {
+	protected static TableRow finishButtonRow(MCPoint p) {
 		point = p;
 		Button finish = new Button(content.getContext());
-		if (point.get("status").equals("acc_status_end")) {
+		if (point.status.equals("acc_status_end")) {
 			finish.setText(R.string.unfinish);
 		} else {
 			finish.setText(R.string.finish);
@@ -66,10 +67,10 @@ public class MCPopupWindow {
 		return tr;
 	}
 	
-	protected static TableRow hideButtonRow(Point p) {
+	protected static TableRow hideButtonRow(MCPoint p) {
 		point = p;
 		Button finish = new Button(content.getContext());
-		if (point.get("status").equals("acc_status_hide")) {
+		if (point.status.equals("acc_status_hide")) {
 			finish.setText(R.string.show);
 		} else {
 			finish.setText(R.string.hide);
@@ -109,12 +110,12 @@ public class MCPopupWindow {
 			Map<String, String> params = new HashMap<String, String>();
 			params.put("login", MCAccidents.auth.getLogin());
 			params.put("passhash", MCAccidents.auth.makePassHash());
-			if (point.get("status").equals("acc_status_end")) {
+			if (point.status.equals("acc_status_end")) {
 				params.put("state", "acc_status_act");
 			} else {
 				params.put("state", "acc_status_end");
 			}
-			params.put("id", point.get("id"));
+			params.put("id", String.valueOf(point.id));
 			new JSONCall("mcaccidents", "changeState").request(params);
 			MCAccidents.refresh();
 		}
@@ -125,12 +126,12 @@ public class MCPopupWindow {
 			Map<String, String> params = new HashMap<String, String>();
 			params.put("login", MCAccidents.auth.getLogin());
 			params.put("passhash", MCAccidents.auth.makePassHash());
-			if (point.get("status").equals("acc_status_hide")) {
+			if (point.status.equals("acc_status_hide")) {
 				params.put("state", "acc_status_act");
 			} else {
 				params.put("state", "acc_status_hide");
 			}
-			params.put("id", point.get("id"));
+			params.put("id", String.valueOf(point.id));
 			new JSONCall("mcaccidents", "changeState").request(params);
 			MCAccidents.refresh();
 		}

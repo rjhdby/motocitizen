@@ -37,7 +37,7 @@ public class Startup extends Activity {
 		prefs = getSharedPreferences("motocitizen.startup", MODE_PRIVATE);
 		// prefs.edit().clear().commit();
 		props = new Props();
-		new MCAccidents();
+		new MCAccidents(this);
 		new OSMMap();
 		new SettingsMenu();
 		new SmallSettingsMenu();

@@ -46,6 +46,7 @@ public class AlarmsList {
 			MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 			retriever.setDataSource(file.getAbsolutePath());
 			String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+			
 			retriever.release();
 			long sec = Long.parseLong(time) / 1000;
 			return sec < seconds;

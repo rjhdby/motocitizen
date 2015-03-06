@@ -1,5 +1,6 @@
 package motocitizen.core.settings;
 
+import motocitizen.app.mc.MCAccidents;
 import motocitizen.main.R;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Keyboard;
@@ -107,6 +108,7 @@ public class SettingsMenu {
 				}
 			}
 		}
+		MCAccidents.drawList();
 		cancel();
 	}
 }
