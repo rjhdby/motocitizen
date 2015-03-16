@@ -116,7 +116,6 @@
                 android:layout_span="2"
                 android:textColor="#ff000000" />
         </TableRow>
-
     </TableLayout>
 
     <View
@@ -203,12 +202,27 @@
                 android:layout_weight="0"
                 android:tag="mc_det_people_content" >
 
-                <TableLayout
-                    android:id="@+id/acc_volunteers"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
+                    android:layout_height="match_parent"
+                    android:orientation="vertical" >
 
-                </TableLayout>
+                    <TableLayout
+                        android:id="@+id/acc_inplace_table"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:stretchColumns="*"
+                        android:visibility="invisible" >
+                    </TableLayout>
+
+                    <TableLayout
+                        android:id="@+id/acc_onway_table"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:stretchColumns="*"
+                        android:visibility="invisible" >
+                    </TableLayout>
+                </LinearLayout>
             </ScrollView>
 
             <LinearLayout
@@ -223,9 +237,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:text="@string/onway_button" />
-
             </LinearLayout>
-
         </LinearLayout>
 
         <LinearLayout
@@ -265,10 +277,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:layout_weight="1"
                     android:ems="10"
-                    android:lines="2" >
-
+                    android:lines="1" >
                     <requestFocus />
                 </EditText>
 
@@ -278,7 +288,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_weight="1"
-                    android:text="Ок" />
+                    android:enabled="false"
+                    android:text="@string/mc_auth_confirm_button" />
+
             </LinearLayout>
         </LinearLayout>
 
@@ -302,7 +314,6 @@
                 </LinearLayout>
             </ScrollView>
         </LinearLayout>
-
     </FrameLayout>
 
 </LinearLayout>

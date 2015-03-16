@@ -3,13 +3,14 @@ package motocitizen.startup;
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCLocation;
 import motocitizen.app.mc.gcm.GcmBroadcastReceiver;
-import motocitizen.app.osm.OSMMap;
 import motocitizen.core.settings.SettingsMenu;
 import motocitizen.main.R;
+import motocitizen.maps.general.MCMap;
 import motocitizen.utils.Const;
 import motocitizen.utils.Keyboard;
 import motocitizen.utils.Props;
 import motocitizen.utils.Show;
+import motocitizen.utils.Utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -32,13 +33,14 @@ public class Startup extends Activity {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.main);
 		context = this;
+		
 		new Const();
 
 		prefs = getSharedPreferences("motocitizen.startup", MODE_PRIVATE);
 		// prefs.edit().clear().commit();
 		props = new Props();
 		new MCAccidents(this);
-		new OSMMap();
+		new MCMap(this);
 		new SettingsMenu();
 		new SmallSettingsMenu();
 		if (MCAccidents.auth.isFirstRun()) {
@@ -48,7 +50,7 @@ public class Startup extends Activity {
 		}
 		new GcmBroadcastReceiver();
 	}
-	
+
 	@Override
 	protected void onStart() {
 		super.onStart();
@@ -58,21 +60,16 @@ public class Startup extends Activity {
 	protected void onPause() {
 		super.onPause();
 		MCLocation.sleep();
-
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		MCLocation.wakeup();
-		catchIntent();
+		MCLocation.wakeup(this);
+		Intent intent = getIntent();
 		context = this;
-		MCAccidents.refresh();
-		int id = prefs.getInt("mc.show.details", 0);
-		if( id != 0){
-			MCAccidents.toDetails(id);
-			prefs.edit().putInt("mc.show.details", 0).commit();
-		};
+		MCAccidents.refresh(this);
+		catchIntent(intent);
 	}
 
 	@Override
@@ -96,12 +93,20 @@ public class Startup extends Activity {
 		return super.onKeyUp(keycode, e);
 	}
 
-	private void catchIntent() {
-		Intent intent = getIntent();
-		if (intent != null) {
-			String text = intent.getStringExtra("text");
-			if (text != null) {
-			}
+	private void catchIntent(Intent intent) {
+		Bundle extras = intent.getExtras();
+		if (extras == null) {
+			return;
+		}
+		String type = extras.getString("type");
+		String idString = extras.getString("id");
+		if(type == null||idString == null||!Utils.isInteger(idString)){
+			return;
+		}
+		int id = Integer.parseInt(idString);
+		if (type.equals("acc") && id != 0) {
+			MCAccidents.points.setSelected(this, id);
+			MCAccidents.toDetails(this, id);
 		}
 	}
 }

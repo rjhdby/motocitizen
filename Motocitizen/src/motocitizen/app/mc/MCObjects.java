@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -26,7 +27,10 @@ public class MCObjects {
 	public static final Button selectSoundCancelButton = (Button) findView(R.id.select_sound_cancel_button);
 	public static final EditText inputCommentField = (EditText) findView(R.id.mc_new_message_text);
 	public static final Button onwayButton = (Button) findView(R.id.onway_button);
-	public static final View onwayContent = findView(R.id.acc_volunteers); 
+	public static final View onwayContent = findView(R.id.acc_onway_table);
+	public static final View inplaceContent = findView(R.id.acc_inplace_table);
+	public static final View mcDetMessagesTable = findView(R.id.mc_det_messages_table);
+	public static final View mcNewMessageText = findView(R.id.mc_new_message_text);
 	/*
 	 * Описание группы основных закладок
 	 */
@@ -36,7 +40,7 @@ public class MCObjects {
 	public static final RadioButton tabMapButton = (RadioButton) findView(R.id.tab_map_button);
 	public static final View accListView = findView(R.id.mc_acc_list);
 	public static final View accDetailsView = findView(R.id.mc_acc_details);
-	public static final View osmMapContainer = findView(R.id.osm_map_container);
+	public static final View mapContainer = findView(R.id.map_container);
 	/*
 	 * Описание группы закладок внутри деталей происшествия
 	 */
@@ -47,7 +51,14 @@ public class MCObjects {
 	public static final View detMessages = findView(R.id.det_messages);
 	public static final View detHistory = findView(R.id.det_history);
 	public static final View detVolunteers = findView(R.id.det_volunteers);
-	
+	/*
+	 * Объекты в активности создания события
+	 */
+	public static final Button mcCreateFineAddressButton = (Button) findView(R.id.mc_create_fine_address_button);
+	public static final Button mcCreateFineAddressConfirm = (Button) findView(R.id.mc_create_fine_address_confirm);
+	public static final View mcCreateMap = findView(R.id.mc_create_map);
+	public static final ImageView mcCreateMapPointer = (ImageView) findView(R.id.mc_create_map_pointer);
+
 	private static View findView(int id) {
 		return ((Activity) Startup.context).findViewById(id);
 	}

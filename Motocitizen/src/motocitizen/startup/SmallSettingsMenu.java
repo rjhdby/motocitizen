@@ -16,12 +16,11 @@ import android.widget.ImageButton;
 
 @SuppressLint("RtlHardcoded")
 public class SmallSettingsMenu {
-	static final private Activity act = (Activity) Startup.context;
-	final private ImageButton b;
 	public static PopupMenu popupTR, popupBL;
 
 	public SmallSettingsMenu() {
-		b = (ImageButton) act.findViewById(R.id.statusBarButton);
+		Activity act = (Activity) Startup.context;
+		ImageButton b = (ImageButton) act.findViewById(R.id.statusBarButton);
 		View v = act.findViewById(R.id.footer_menu_anchor);
 		popupBL = new PopupMenu(act, v, Gravity.LEFT);
 		popupTR = new PopupMenu(act, b);
@@ -44,7 +43,7 @@ public class SmallSettingsMenu {
 			int id = item.getItemId();
 			switch (id) {
 			case R.id.small_menu_refresh:
-				MCAccidents.refresh();
+				MCAccidents.refresh(Startup.context);
 				break;
 			case R.id.small_menu_settings:
 				SettingsMenu.open();
@@ -52,7 +51,7 @@ public class SmallSettingsMenu {
 			case R.id.small_menu_exit:
 				Intent intent = new Intent(Intent.ACTION_MAIN);
 				intent.addCategory(Intent.CATEGORY_HOME);
-				act.startActivity(intent);
+				((Activity) Startup.context).startActivity(intent);
 				int pid = android.os.Process.myPid();
 				android.os.Process.killProcess(pid);
 				break;

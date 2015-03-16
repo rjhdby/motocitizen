@@ -9,6 +9,8 @@ import motocitizen.startup.Startup;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Point;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -17,17 +19,23 @@ import android.widget.TableRow;
 public class Const {
 	public static SimpleDateFormat timeFormat;
 	public static SimpleDateFormat dateFormat;
-	public static Activity act;
 	public static LayoutInflater li;
 	public static TableRow.LayoutParams trlp;
 	public static LayoutParams lp;
 	public static int defaultColor, defaultBGColor;
 	public static Map<String,String> med_text, status_text, type_text;
+	public static final float dp = Startup.context.getResources().getDisplayMetrics().density;
+	public static int width, height;
 	
 	public Const(){
+		Display display = ((Activity) Startup.context).getWindowManager().getDefaultDisplay();
+		Point size = new Point();
+		display.getSize(size);
+		width = size.x;
+		height = size.y;
 		timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
 		dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-		act = (Activity) Startup.context;
+		Activity act = (Activity) Startup.context;
 		lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 		trlp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 		li = (LayoutInflater) act.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

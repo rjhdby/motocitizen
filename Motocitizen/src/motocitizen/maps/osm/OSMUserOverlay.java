@@ -1,4 +1,4 @@
-package motocitizen.app.osm;
+package motocitizen.maps.osm;
 
 import java.util.ArrayList;
 

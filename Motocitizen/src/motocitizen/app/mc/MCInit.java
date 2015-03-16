@@ -10,8 +10,10 @@ import motocitizen.utils.Const;
 import motocitizen.utils.Props;
 import motocitizen.utils.Text;
 import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageButton;
 
 public class MCInit {
@@ -33,10 +35,11 @@ public class MCInit {
 				}
 			}
 		}
+		MCObjects.accDetailsView.setTranslationX(Const.width);
+		MCObjects.mapContainer.setTranslationX(Const.width);
 	}
 
 	public static void addListeners() {
-		MCObjects.selectSoundCancelButton.setOnClickListener(MCListeners.selectSoundCancelButton);
 		MCObjects.authConfirmButton.setOnClickListener(MCListeners.authConfirmListener);
 		MCObjects.authButton.setOnClickListener(MCListeners.authButtonListener);
 		MCObjects.authCancelButton.setOnClickListener(MCListeners.authCancelListener);
@@ -46,20 +49,19 @@ public class MCInit {
 		MCObjects.anonimButton.setOnClickListener(MCListeners.anonimButtonListener);
 		MCObjects.authAnonimCheckBox.setOnCheckedChangeListener(MCListeners.authAnonimCheckBoxListener);
 		MCObjects.selectSoundButton.setOnClickListener(MCListeners.selectSoundButtonListener);
-		MCObjects.selectSoundConfirmButton.setOnClickListener(MCListeners.selectSoundConfirmListener);
 		MCObjects.mainTabsGroup.setOnCheckedChangeListener(MCListeners.mainTabsListener);
 		MCObjects.newMessageButton.setOnClickListener(MCListeners.newMessageButtonListener);
 		MCObjects.mcDetTabsGroup.setOnCheckedChangeListener(MCListeners.accDetTabsListener);
 		MCObjects.onwayButton.setOnClickListener(MCListeners.onwayButtonListener);
+		((EditText)	MCObjects.mcNewMessageText).addTextChangedListener(MCListeners.mcNewMessageTextListener);
 	}
 	
-	public static void setupAccess(MCAuth auth) {
-		Activity act = (Activity) Startup.context;
-		View newMessageArea = (View) act.findViewById(R.id.mc_new_message_area);
-		View loginField = Const.act.findViewById(R.id.mc_auth_login);
-		View passwordField = Const.act.findViewById(R.id.mc_auth_password);
-		CheckBox anonimCheckBox = ((CheckBox) Const.act.findViewById(R.id.mc_auth_anonim));
-		ImageButton createButton = (ImageButton) Const.act.findViewById(R.id.mc_add_point_button);
+	public static void setupAccess(Context context, MCAuth auth) {
+		View newMessageArea = (View) ((Activity) context).findViewById(R.id.mc_new_message_area);
+		View loginField = ((Activity) context).findViewById(R.id.mc_auth_login);
+		View passwordField = ((Activity) context).findViewById(R.id.mc_auth_password);
+		CheckBox anonimCheckBox = ((CheckBox) ((Activity) context).findViewById(R.id.mc_auth_anonim));
+		ImageButton createButton = (ImageButton) ((Activity) context).findViewById(R.id.mc_add_point_button);
 		
 		if (MCRole.isStandart()) {
 			newMessageArea.setVisibility(View.VISIBLE);

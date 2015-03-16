@@ -76,4 +76,5 @@
 	<string name="inplace_delimiter">На месте</string>
 	<string name="onway_delimiter">В пути</string>
 	<string name="onway_button">Еду!</string>
+	<string name="fine_address">Уточнить адрес</string>
 </resources>

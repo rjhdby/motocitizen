@@ -1,15 +1,15 @@
-package motocitizen.app.osm;
+package motocitizen.maps.osm;
 
 import java.util.ArrayList;
 
 import motocitizen.app.mc.MCLocation;
 import motocitizen.main.R;
 import motocitizen.startup.Startup;
+import motocitizen.utils.Inflate;
 
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.Projection;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.OverlayItem;
@@ -21,23 +21,19 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.location.Location;
-import android.view.DragEvent;
 import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnDragListener;
-import android.view.View.OnGenericMotionListener;
-import android.view.View.OnTouchListener;
 
-public class OSMMap {
+public class MCOSMMap {
 	public ArrayList<OverlayItem> overlayItemArray;
 	public static MapView map;
 	private Activity act;
 	final JumpToLocation jumpToLocation;
 	private static ItemizedIconOverlay<OverlayItem> userOverlay, accOverlay;
 
-	public OSMMap() {
+	public MCOSMMap(Context context) {
+		Inflate.add(R.id.map_container, R.layout.osm_view_content);
 		userOverlay = OSMUserOverlay.getUserOverlay();
-		accOverlay = OSMAccOverlay.getOverlay();
+		accOverlay = OSMAccOverlay.getOverlay(context);
 		act = (Activity) Startup.context;
 		map = (MapView) act.findViewById(R.id.osm_mapview);
 		map.setTileSource(TileSourceFactory.MAPNIK);
@@ -53,14 +49,14 @@ public class OSMMap {
 		goToUser();
 	}
 
-	public static void placeAcc() {
+	public static void placeAcc(Context context) {
 		map.getOverlays().remove(accOverlay);
-		accOverlay = OSMAccOverlay.getOverlay();
+		accOverlay = OSMAccOverlay.getOverlay(context);
 		map.getOverlays().add(accOverlay);
 		map.invalidate();
 	}
 
-	public static void placeUser() {
+	public static void placeUser(Context context) {
 		map.getOverlays().remove(userOverlay);
 		userOverlay = OSMUserOverlay.getUserOverlay();
 		map.getOverlays().add(userOverlay);

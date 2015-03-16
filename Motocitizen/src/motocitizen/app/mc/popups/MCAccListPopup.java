@@ -1,12 +1,10 @@
 package motocitizen.app.mc.popups;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCPoint;
 import motocitizen.app.mc.user.MCRole;
 import motocitizen.utils.Const;
+import motocitizen.utils.Utils;
 import android.graphics.drawable.ColorDrawable;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
@@ -23,11 +21,10 @@ public class MCAccListPopup extends MCPopupWindow {
 		textToCopy = Const.dateFormat.format(p.created) + ". " + p.getTypeText() + ". " + p.getMedText() + ". " + p.address + ". " + p.descr;
 		content.addView(copyButtonRow(), lp);
 
-		String phonesString = p.descr.replaceAll("[^0-9]", "");
-		Matcher matcher = Pattern.compile("[7|8][0-9]{10}").matcher(phonesString);
-		while (matcher.find()) {
-			content.addView(phoneButtonRow(matcher.group()), lp);
+		for (String phone : Utils.getPhonesFromText(p.descr)) {
+			content.addView(phoneButtonRow(phone), lp);
 		}
+
 		if (MCRole.isStandart()) {
 			content.addView(finishButtonRow(p));
 		}

@@ -21,8 +21,10 @@ public class MCMessage {
 	public int id, owner_id, table_row, acc_id;
 	public String owner, status, text;
 	public Date time;
+	public Boolean unread;
 
 	public MCMessage(JSONObject json, int acc_id) throws JSONException {
+		unread = true;
 		id = json.getInt("id");
 		owner_id = json.getInt("id_user");
 		owner = json.getString("owner");

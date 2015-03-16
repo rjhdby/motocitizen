@@ -11,6 +11,7 @@ import motocitizen.utils.Const;
 import motocitizen.utils.Keyboard;
 import motocitizen.utils.Show;
 import motocitizen.utils.Text;
+import motocitizen.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,7 +23,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 
 public class MCCreateAcc {
 	private static final Activity act = (Activity) Startup.context;
@@ -36,7 +40,8 @@ public class MCCreateAcc {
 	private static final int FINAL = R.id.mc_create_final_frame;
 	private static final int ACC = R.id.mc_create_acc_frame;
 	private static final int PEOPLE = R.id.mc_create_people_frame;
-	
+	private static final int FINEADDRESS = R.id.mc_create_map;
+
 	private static Date date;
 	private static String globalText;
 	private static String medText;
@@ -47,8 +52,9 @@ public class MCCreateAcc {
 	private static Location location;
 	private static int CURRENT;
 	private static boolean isAcc;
+	private static GoogleMap map;
 
-	public static void init(){
+	public static void init() {
 		setListeners();
 		Text.set(R.id.mc_create_final_text, "");
 		date = new Date();
@@ -62,8 +68,11 @@ public class MCCreateAcc {
 		isAcc = false;
 		writeGlobal();
 		show(CURRENT);
+		map = ((MapFragment) ((Activity) Startup.context).getFragmentManager().findFragmentById(R.id.mc_create_map_container)).getMap();
+		map.animateCamera(CameraUpdateFactory.newLatLngZoom(Utils.LocationToLatLng(location), 16));
+
 	}
-	
+
 	private static void writeGlobal() {
 		if (!medText.equals("mc_m_na")) {
 			Text.set(globalView, R.id.mc_create_what, globalText + ". " + medText);
@@ -79,7 +88,8 @@ public class MCCreateAcc {
 		int[] buttons = { R.id.mc_create_acc_ma_button, R.id.mc_create_acc_solo_button, R.id.mc_create_acc_mm_button, R.id.mc_create_acc_mp_button,
 				R.id.mc_create_people_death_button, R.id.mc_create_people_hard_button, R.id.mc_create_people_light_button,
 				R.id.mc_create_people_ok_button, R.id.mc_create_type_acc_button, R.id.mc_create_type_break_button, R.id.mc_create_type_steal_button,
-				R.id.mc_create_type_other_button, R.id.mc_create_people_na_button };
+				R.id.mc_create_type_other_button, R.id.mc_create_people_na_button, R.id.mc_create_fine_address_button,
+				R.id.mc_create_fine_address_confirm };
 		for (int i : buttons) {
 			Button button = new Button(act);
 			button = (Button) act.findViewById(i);
@@ -105,7 +115,7 @@ public class MCCreateAcc {
 				}
 			}
 			exit();
-			MCAccidents.refresh();
+			MCAccidents.refresh(v.getContext());
 		}
 	};
 
@@ -154,8 +164,11 @@ public class MCCreateAcc {
 			globalText = "ДТП";
 			med = "mc_m_na";
 			break;
+		case FINEADDRESS:
+			show(FINAL);
+			break;
 		}
-		if(CURRENT == TYPE){
+		if (CURRENT == TYPE) {
 			back.setEnabled(false);
 		}
 		writeGlobal();
@@ -232,6 +245,15 @@ public class MCCreateAcc {
 				medText = "";
 				med = "mc_m_na";
 				show(FINAL);
+				break;
+			case R.id.mc_create_fine_address_button:
+				map.animateCamera(CameraUpdateFactory.newLatLngZoom(Utils.LocationToLatLng(location), 16));
+				MCObjects.mcCreateMapPointer.setImageDrawable(MCAccTypes.getDrawable(Startup.context, type));
+				show(FINEADDRESS);
+				break;
+			case R.id.mc_create_fine_address_confirm:
+				location = Utils.LatLngToLocation(map.getCameraPosition().target);
+				addressText = MCLocation.getAddress(location);
 				break;
 			}
 			writeGlobal();

@@ -13,6 +13,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
 
 import motocitizen.startup.Startup;
 
@@ -34,6 +35,16 @@ public class JSONCall {
 	}
 
 	public JSONCall(String app, String method) {
+		this(app, method, true);
+	}
+
+	public JSONCall(String app, String method, Boolean https) {
+		String protocol;
+		if (https) {
+			protocol = "https";
+		} else {
+			protocol = "http";
+		}
 		this.method = method;
 		String script;
 		String defaultMethod = Startup.props.get("app." + app + ".json.method.default");
@@ -44,7 +55,7 @@ public class JSONCall {
 			script = defaultMethod;
 		}
 		try {
-			url = new URL(server + "/" + script);
+			url = new URL(protocol + "://" + server + "/" + script);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -56,7 +67,7 @@ public class JSONCall {
 
 	public JSONObject request(Map<String, String> post) {
 		post.put("calledMethod", method);
-//		Log.d("JSON CALL", "|" + url.toString() + "|");
+		// Log.d("JSON CALL", "|" + url.toString() + "|");
 		HttpURLConnection connection = null;
 		StringBuffer response = new StringBuffer();
 		CustomTrustManager.allowAllSSL();
@@ -65,6 +76,7 @@ public class JSONCall {
 			connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("POST");
 			connection.setRequestProperty("Accept-Charset", CHARSET);
+			connection.setRequestProperty("Accept-Encoding", "gzip");
 			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + CHARSET);
 			connection.setRequestProperty("Content-Language", "ru-RU");
 			connection.setRequestProperty("User-Agent", USERAGENT);
@@ -81,6 +93,7 @@ public class JSONCall {
 			InputStream is = null;
 			try {
 				is = connection.getInputStream();
+				is = new GZIPInputStream(is);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -125,7 +138,7 @@ public class JSONCall {
 					first = false;
 				else
 					result.append("&");
-				if(post.get(key) == null){
+				if (post.get(key) == null) {
 					Toast.makeText(Startup.context, "Не задано " + key, Toast.LENGTH_LONG).show();
 					return "ERROR";
 				}
@@ -136,7 +149,7 @@ public class JSONCall {
 				e.printStackTrace();
 			}
 		}
-//		Log.d("JSON POST", result.toString());
+		// Log.d("JSON POST", result.toString());
 		return result.toString();
 	}
 }

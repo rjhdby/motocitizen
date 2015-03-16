@@ -5,13 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.json.JSONObject;
-
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.network.JSONCall;
 import motocitizen.startup.Startup;
-import motocitizen.utils.Const;
-import motocitizen.utils.Text;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -132,7 +128,7 @@ public class MCGCMRegistration {
 		editor.putString(PROPERTY_REG_ID, regId);
 		editor.putInt(PROPERTY_APP_VERSION, appVersion);
 		editor.commit();
-		JSONObject json = new JSONCall("mcaccidents", "registerGCM").request(createPOST(regId));
+		new JSONCall("mcaccidents", "registerGCM").request(createPOST(regId));
 	}
 	private static Map<String, String> createPOST(String regId) {
 		String imei = ((TelephonyManager) Startup.context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();

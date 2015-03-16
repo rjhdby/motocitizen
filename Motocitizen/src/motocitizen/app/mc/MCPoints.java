@@ -1,13 +1,9 @@
 package motocitizen.app.mc;
 
-import java.text.ParseException;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import motocitizen.core.Point;
 import motocitizen.main.R;
 import motocitizen.network.JSONCall;
 import motocitizen.startup.Startup;
@@ -21,8 +17,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
-import android.util.Log;
-import android.widget.TableRow;
+import android.view.View;
+import android.widget.LinearLayout;
 
 @SuppressLint("UseSparseArrays")
 public class MCPoints {
@@ -36,16 +32,9 @@ public class MCPoints {
 	public static final int ENDED = R.drawable.accident_row_gradient_ended;
 	public static final int ENDED_SELECTED = R.drawable.accident_row_gradient_selected_ended;
 
-	// public Map<Integer, TableRow> rows;
-	// public Map<Integer, MCMessages> messages;
-	// public Map<Integer, MCVolunteers> volunteers;
-
 	public MCPoints() {
-
 		if (points == null) {
 			points = new HashMap<Integer, MCPoint>();
-			// messages = new HashMap<Integer, MCMessages>();
-			// volunteers = new HashMap<Integer, MCVolunteers>();
 		}
 	}
 
@@ -71,7 +60,7 @@ public class MCPoints {
 			selector.put("update", "1");
 		}
 		try {
-			parseJSON(new JSONCall("mcaccidents", "getlist").request(selector).getJSONArray("list"));
+			parseJSON(new JSONCall("mcaccidents", "getlist", false).request(selector).getJSONArray("list"));
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -82,6 +71,9 @@ public class MCPoints {
 			JSONObject acc = json.getJSONObject(i);
 			try {
 				MCPoint current = new MCPoint(acc);
+				if (points.containsKey(current.id)) {
+					current.messages.putAll(points.get(current.id).messages);
+				}
 				points.put(current.id, current);
 			} catch (Exception e) {
 				// e.printStackTrace();
@@ -99,14 +91,17 @@ public class MCPoints {
 	}
 
 	public void setSelected(Context context, int id) {
-		MCPoint selected = points.get(id);
-
 		for (int i : points.keySet()) {
 			MCPoint p = points.get(i);
 			if (p.row_id == 0) {
 				continue;
 			}
-			((Activity) context).findViewById(p.row_id).setBackgroundResource(getBackground(p.status, false));
+			View row = ((Activity) context).findViewById(p.row_id);
+			row.setBackgroundResource(getBackground(p.status, false));
+		}
+		MCPoint selected = points.get(id);
+		if (selected == null) {
+			return;
 		}
 		if (selected.row_id == 0) {
 			int nnid = getFirstNonNull();
@@ -115,12 +110,19 @@ public class MCPoints {
 			} else {
 				setSelected(context, nnid);
 				MCAccidents.currentPoint = points.get(nnid);
-				MCAccidents.makeDetails(nnid);
+				MCAccidents.redraw(context);
 			}
 		} else {
-			((Activity) context).findViewById(selected.row_id).setBackgroundResource(getBackground(selected.status, true));
-		}
+			View row = ((Activity) context).findViewById(selected.row_id);
+			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+					LinearLayout.LayoutParams.WRAP_CONTENT);
+			int margin = (int) (4 * Const.dp);
+			lp.setMargins(margin, 0, margin, 0);
+			row.setLayoutParams(lp);
+			row.setPadding(0, margin, 0, margin);
 
+			selected.resetMessagesUnreadFlag();
+		}
 	}
 
 	public int getBackground(String status, boolean selected) {

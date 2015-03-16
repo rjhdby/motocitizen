@@ -96,7 +96,8 @@
     <FrameLayout
         android:id="@+id/mc_create_main_frame"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="0dp"
+        android:layout_weight="1" >
 
         <LinearLayout
             android:id="@+id/mc_create_type_frame"
@@ -146,11 +147,11 @@
             android:visibility="invisible" >
 
             <TextView
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/mc_create_type_header"
-                style="?android:attr/buttonBarButtonStyle"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <Button
@@ -176,7 +177,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/mc_create_acc_ma_button" />
-
         </LinearLayout>
 
         <LinearLayout
@@ -222,7 +222,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/mc_create_people_na_button" />
-
         </LinearLayout>
 
         <LinearLayout
@@ -252,40 +251,80 @@
 
                 <requestFocus />
             </EditText>
+
+            <Button
+                android:id="@+id/mc_create_fine_address_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/fine_address" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/mc_create_map"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="invisible" >
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="1" >
+
+                <fragment
+                    android:id="@+id/mc_create_map_container"
+                    android:name="com.google.android.gms.maps.MapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ImageView
+                    android:id="@+id/mc_create_map_pointer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/accident" />
+            </FrameLayout>
+
+            <Button
+                android:id="@+id/mc_create_fine_address_confirm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_confirm_button" />
         </LinearLayout>
     </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="bottom"
         android:weightSum="1.5" >
 
         <Button
             android:id="@+id/mc_create_cancel"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            style="?android:attr/buttonBarButtonStyle"
             android:text="@string/mc_create_cancel" />
 
         <Button
             android:id="@+id/mc_create_back"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:enabled="false"
-            style="?android:attr/buttonBarButtonStyle"
             android:text="@string/mc_create_back_button" />
 
         <Button
             android:id="@+id/mc_create_create"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:clickable="false"
             android:enabled="false"
-            style="?android:attr/buttonBarButtonStyle"
             android:text="@string/mc_create_create" />
     </LinearLayout>
 

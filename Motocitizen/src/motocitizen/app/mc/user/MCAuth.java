@@ -8,12 +8,12 @@ import java.util.Map;
 import motocitizen.main.R;
 import motocitizen.network.JSONCall;
 import motocitizen.startup.Startup;
-import motocitizen.utils.Const;
 import motocitizen.utils.Text;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Context;
 import android.telephony.TelephonyManager;
 import android.view.View;
@@ -76,11 +76,11 @@ public class MCAuth {
 		return false;
 	}
 	
-	public void setAnonim(Boolean value){
+	public void setAnonim(Context context, Boolean value){
 		anonim = value;
 		Startup.prefs.edit().putBoolean("mc.anonim", value).commit();
 		reset();
-		setAccess();
+		setAccess(context);
 	}
 	
 	public void auth() {
@@ -105,11 +105,11 @@ public class MCAuth {
 		}
 	}
 
-	public void setAccess() {
+	public void setAccess(Context context) {
 		//auth();
-		View loginField = Const.act.findViewById(R.id.mc_auth_login);
-		View passwordField = Const.act.findViewById(R.id.mc_auth_password);
-		CheckBox anonimCheckBox = ((CheckBox) Const.act.findViewById(R.id.mc_auth_anonim));
+		View loginField = ((Activity) context).findViewById(R.id.mc_auth_login);
+		View passwordField = ((Activity) context).findViewById(R.id.mc_auth_password);
+		CheckBox anonimCheckBox = ((CheckBox) ((Activity) context).findViewById(R.id.mc_auth_anonim));
 		if (anonim) {
 			anonimCheckBox.setChecked(true);
 			loginField.setVisibility(View.INVISIBLE);

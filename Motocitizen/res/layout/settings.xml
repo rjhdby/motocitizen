@@ -30,7 +30,7 @@
                     android:id="@+id/value_app_mcaccidents_distance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left"
+                    android:layout_gravity="start"
                     android:ems="10"
                     android:inputType="number"
                     android:tag="mc.distance.show" >
@@ -54,7 +54,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ems="10"
-                    android:gravity="left"
+                    android:gravity="start"
                     android:inputType="number"
                     android:tag="mc.distance.alarm" />
             </TableRow>
@@ -74,7 +74,7 @@
                     android:id="@+id/mc_notif_sound_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:tag="mc.notification.sound"
+                    android:tag="mc.notification.sound.title"
                     android:text="@string/mc_notif_system"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
             </TableRow>
@@ -94,7 +94,7 @@
                     android:id="@+id/value_app_mcaccidents_accidents"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left"
+                    android:layout_gravity="start"
                     android:tag="mc.show.acc"
                     android:textColor="?android:attr/textColorPrimaryDisableOnly" />
             </TableRow>
@@ -114,7 +114,7 @@
                     android:id="@+id/value_app_mcaccidents_breaks"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left"
+                    android:layout_gravity="start"
                     android:tag="mc.show.break" />
             </TableRow>
 
@@ -133,7 +133,7 @@
                     android:id="@+id/value_app_mcaccidents_steal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left"
+                    android:layout_gravity="start"
                     android:tag="mc.show.steal" />
             </TableRow>
 
@@ -152,7 +152,7 @@
                     android:id="@+id/value_app_mcaccidents_other"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left"
+                    android:layout_gravity="start"
                     android:tag="mc.show.other" />
             </TableRow>
 
@@ -170,7 +170,7 @@
                     android:id="@+id/value_mcaccidents_auth_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left"
+                    android:layout_gravity="start"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
             </TableRow>
         </TableLayout>

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 public class Show {
 	public static Pair<Integer, Integer> current;
+	public static Integer currenGeneral;
 
 	public static void show(int parentId, int childId) {
 		current = new Pair<Integer, Integer>(parentId, childId);

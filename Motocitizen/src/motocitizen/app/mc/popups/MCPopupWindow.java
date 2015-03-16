@@ -5,7 +5,6 @@ import java.util.Map;
 
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCPoint;
-import motocitizen.core.Point;
 import motocitizen.main.R;
 import motocitizen.network.JSONCall;
 import motocitizen.startup.Startup;
@@ -117,7 +116,7 @@ public class MCPopupWindow {
 			}
 			params.put("id", String.valueOf(point.id));
 			new JSONCall("mcaccidents", "changeState").request(params);
-			MCAccidents.refresh();
+			MCAccidents.refresh(v.getContext());
 		}
 	};
 	private static OnClickListener hideButtonListener = new OnClickListener() {
@@ -133,7 +132,7 @@ public class MCPopupWindow {
 			}
 			params.put("id", String.valueOf(point.id));
 			new JSONCall("mcaccidents", "changeState").request(params);
-			MCAccidents.refresh();
+			MCAccidents.refresh(v.getContext());
 		}
 	};
 }
