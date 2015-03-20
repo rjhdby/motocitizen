@@ -38,6 +38,10 @@ public class MCPoints {
 		}
 	}
 
+	public boolean containsKey(int id){
+		return points.containsKey(id);
+	}
+	
 	public MCPoint getPoint(int id) {
 		return points.get(id);
 	}

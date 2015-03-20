@@ -118,7 +118,7 @@ public class MCAccidents {
 			if (sorted.length == 0) {
 				view.addView(noAccidentsNotification(context));
 				((Activity) context).findViewById(R.id.tab_acc_details_button).setEnabled(false);
-			} else if(currentPoint.id == 0) {
+			} else if (currentPoint.id == 0) {
 				((Activity) context).findViewById(R.id.tab_acc_details_button).setEnabled(false);
 				points.setSelected(context, currentPoint.id);
 			} else {
@@ -173,10 +173,10 @@ public class MCAccidents {
 		 * Выводим список сообщений
 		 */
 		((View) ((Activity) context).findViewById(R.id.mc_acc_details_general)).setOnLongClickListener(detLongClick);
-		ViewGroup tv = (ViewGroup) MCObjects.mcDetMessagesTable;
-		tv.removeAllViews();
+		ViewGroup messageView = (ViewGroup) MCObjects.mcDetMessagesTable;
+		messageView.removeAllViews();
 		for (int i : p.getSortedMessagesKeys()) {
-			tv.addView(p.messages.get(i).createRow(context));
+			messageView.addView(p.messages.get(i).createRow(context));
 		}
 		((ScrollView) ((Activity) context).findViewById(R.id.mc_det_messages_scroll)).fullScroll(View.FOCUS_UP);
 		/*
@@ -198,12 +198,22 @@ public class MCAccidents {
 				vg_onway.addView(current.createRow(context));
 			}
 		}
+		/*
+		 * Выводим историю
+		 */
+		ViewGroup logView = (ViewGroup) MCObjects.mcDetLogContent;
+		logView.removeAllViews();
+		logView.addView(MCPointHistory.createHeader(context));
+		for (int i : p.getSortedHistoryKeys()) {
+			logView.addView(p.history.get(i).createRow(context));
+		}
 		MCMap.zoom(16);
 		MCMap.jumpToPoint(p.location);
 	}
 
 	public static void refresh(Context context) {
 		points.load();
+		MCMap.placeAcc(context);
 		redraw(context);
 		MCMap.placeAcc(context);
 	}
@@ -225,6 +235,9 @@ public class MCAccidents {
 	}
 
 	public static void toDetails(Context context, int id) {
+		if (!points.containsKey(id)) {
+			return;
+		}
 		MCObjects.tabDetailsButton.setChecked(true);
 		makeDetails(context, id);
 		points.setSelected(context, id);

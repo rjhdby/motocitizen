@@ -23,6 +23,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:text="@string/mc_settings_distance"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -46,6 +47,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:text="@string/mc_settings_distance_alarm"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -57,26 +59,6 @@
                     android:gravity="start"
                     android:inputType="number"
                     android:tag="mc.distance.alarm" />
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/mc_notif_sound_select"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-
-                <Button
-                    android:id="@+id/mc_notif_sound_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/mc_notif_sound" />
-
-                <TextView
-                    android:id="@+id/mc_notif_sound_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:tag="mc.notification.sound.title"
-                    android:text="@string/mc_notif_system"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
             </TableRow>
 
             <TableRow
@@ -154,6 +136,26 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:tag="mc.show.other" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/mc_notif_sound_select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:id="@+id/mc_notif_sound_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mc_notif_sound" />
+
+                <TextView
+                    android:id="@+id/mc_notif_sound_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tag="mc.notification.sound.title"
+                    android:text="@string/mc_notif_system"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
             </TableRow>
 
             <TableRow

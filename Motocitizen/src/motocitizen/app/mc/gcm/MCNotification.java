@@ -1,35 +1,52 @@
 package motocitizen.app.mc.gcm;
 
+import motocitizen.app.mc.MCAccTypes;
+import motocitizen.app.mc.MCLocation;
 import motocitizen.main.R;
 import motocitizen.startup.Startup;
-import motocitizen.utils.Utils;
+import motocitizen.utils.MCUtils;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class MCNotification {
 	@SuppressWarnings("deprecation")
 	public MCNotification(Context context, Intent intent) {
 		Bundle extras = intent.getExtras();
 
-		//String type = extras.getString("type");
+		String type = extras.getString("type");
 		String message = extras.getString("message");
 		String title = extras.getString("title");
 		String idString = extras.getString("id");
+		String latString = extras.getString("lat");
+		String lngString = extras.getString("lng");
 		int id;
-		if (Utils.isInteger(idString)) {
+		double lat, lng;
+		if (MCUtils.isInteger(idString)) {
 			id = Integer.valueOf(idString);
+			lat = Double.parseDouble(latString);
+			lng = Double.parseDouble(lngString);
 		} else {
 			return;
 		}
-
+		double distance = MCLocation.getBestFusionLocation().distanceTo(MCUtils.LatLngToLocation(new LatLng(lat, lng)));
+		SharedPreferences prefs = context.getSharedPreferences("motocitizen.startup", Context.MODE_PRIVATE);
+		if (prefs.getInt("mc.distance.alarm", 0) < distance) {
+			return;
+		}
+		if (!MCAccTypes.get(type).enabled) {
+			return;
+		}
 		Intent notificationIntent = new Intent(context, Startup.class);
 		notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -41,7 +58,7 @@ public class MCNotification {
 		builder.setContentIntent(contentIntent).setSmallIcon(R.drawable.logo).setLargeIcon(BitmapFactory.decodeResource(res, R.drawable.logo))
 				.setTicker(title).setWhen(System.currentTimeMillis()).setAutoCancel(true).setContentTitle(title).setContentText(message);
 
-		String sound = context.getSharedPreferences("motocitizen.startup", Context.MODE_PRIVATE).getString("mc.notification.sound", "default system");
+		String sound = prefs.getString("mc.notification.sound", "default system");
 		if (sound.equals("default system")) {
 			builder.setDefaults(Notification.DEFAULT_ALL);
 		} else {

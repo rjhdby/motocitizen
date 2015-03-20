@@ -31,6 +31,7 @@ public class MCObjects {
 	public static final View inplaceContent = findView(R.id.acc_inplace_table);
 	public static final View mcDetMessagesTable = findView(R.id.mc_det_messages_table);
 	public static final View mcNewMessageText = findView(R.id.mc_new_message_text);
+	public static final View mcDetLogContent = findView(R.id.mc_det_log_content);
 	/*
 	 * Описание группы основных закладок
 	 */
@@ -58,6 +59,11 @@ public class MCObjects {
 	public static final Button mcCreateFineAddressConfirm = (Button) findView(R.id.mc_create_fine_address_confirm);
 	public static final View mcCreateMap = findView(R.id.mc_create_map);
 	public static final ImageView mcCreateMapPointer = (ImageView) findView(R.id.mc_create_map_pointer);
+	/*
+	 * Объекты в меню settings
+	 */
+	public static final EditText valueAppMcaccidentsDistance = (EditText) findView(R.id.value_app_mcaccidents_distance);
+	public static final EditText valueAppMcaccidentsDistanceAlarm = (EditText) findView(R.id.value_app_mcaccidents_distance_alarm);
 
 	private static View findView(int id) {
 		return ((Activity) Startup.context).findViewById(id);

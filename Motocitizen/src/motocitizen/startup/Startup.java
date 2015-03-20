@@ -10,7 +10,7 @@ import motocitizen.utils.Const;
 import motocitizen.utils.Keyboard;
 import motocitizen.utils.Props;
 import motocitizen.utils.Show;
-import motocitizen.utils.Utils;
+import motocitizen.utils.MCUtils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -100,7 +100,7 @@ public class Startup extends Activity {
 		}
 		String type = extras.getString("type");
 		String idString = extras.getString("id");
-		if(type == null||idString == null||!Utils.isInteger(idString)){
+		if(type == null||idString == null||!MCUtils.isInteger(idString)){
 			return;
 		}
 		int id = Integer.parseInt(idString);

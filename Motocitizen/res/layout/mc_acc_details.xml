@@ -279,6 +279,7 @@
                     android:layout_gravity="bottom"
                     android:ems="10"
                     android:lines="1" >
+
                     <requestFocus />
                 </EditText>
 
@@ -290,7 +291,6 @@
                     android:layout_weight="1"
                     android:enabled="false"
                     android:text="@string/mc_auth_confirm_button" />
-
             </LinearLayout>
         </LinearLayout>
 
@@ -306,12 +306,13 @@
                 android:layout_height="match_parent"
                 android:tag="mc_det_log_content" >
 
-                <LinearLayout
+                <TableLayout
                     android:id="@+id/mc_det_log_content"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical" >
-                </LinearLayout>
+                    android:shrinkColumns="*"
+                    android:stretchColumns="*" >
+                </TableLayout>
             </ScrollView>
         </LinearLayout>
     </FrameLayout>

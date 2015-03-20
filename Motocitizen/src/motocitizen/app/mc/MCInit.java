@@ -7,10 +7,12 @@ import motocitizen.app.mc.user.MCRole;
 import motocitizen.main.R;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
+import motocitizen.utils.InputFilterMinMax;
 import motocitizen.utils.Props;
 import motocitizen.utils.Text;
 import android.app.Activity;
 import android.content.Context;
+import android.text.InputFilter;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -21,7 +23,7 @@ public class MCInit {
 		Properties props = Props.readAssets("mcaccidents.properties");
 		for (Object key : props.keySet()) {
 			String value = (String) props.get(key);
-//			Log.d((String) key,(String) props.get(key));
+			// Log.d((String) key,(String) props.get(key));
 			if (!Startup.prefs.contains((String) key)) {
 				if (value.equals("true") || value.equals("false")) {
 					Startup.prefs.edit().putBoolean((String) key, Boolean.parseBoolean(value)).commit();
@@ -53,16 +55,18 @@ public class MCInit {
 		MCObjects.newMessageButton.setOnClickListener(MCListeners.newMessageButtonListener);
 		MCObjects.mcDetTabsGroup.setOnCheckedChangeListener(MCListeners.accDetTabsListener);
 		MCObjects.onwayButton.setOnClickListener(MCListeners.onwayButtonListener);
-		((EditText)	MCObjects.mcNewMessageText).addTextChangedListener(MCListeners.mcNewMessageTextListener);
+		((EditText) MCObjects.mcNewMessageText).addTextChangedListener(MCListeners.mcNewMessageTextListener);
+		MCObjects.valueAppMcaccidentsDistance.setFilters(new InputFilter[] { new InputFilterMinMax(0, 20050) });
+		MCObjects.valueAppMcaccidentsDistanceAlarm.setFilters(new InputFilter[] { new InputFilterMinMax(0, 20050) });
 	}
-	
+
 	public static void setupAccess(Context context, MCAuth auth) {
 		View newMessageArea = (View) ((Activity) context).findViewById(R.id.mc_new_message_area);
 		View loginField = ((Activity) context).findViewById(R.id.mc_auth_login);
 		View passwordField = ((Activity) context).findViewById(R.id.mc_auth_password);
 		CheckBox anonimCheckBox = ((CheckBox) ((Activity) context).findViewById(R.id.mc_auth_anonim));
 		ImageButton createButton = (ImageButton) ((Activity) context).findViewById(R.id.mc_add_point_button);
-		
+
 		if (MCRole.isStandart()) {
 			newMessageArea.setVisibility(View.VISIBLE);
 			createButton.setVisibility(View.VISIBLE);
@@ -70,7 +74,7 @@ public class MCInit {
 			newMessageArea.setVisibility(View.INVISIBLE);
 			createButton.setVisibility(View.INVISIBLE);
 		}
-		
+
 		if (auth.anonim) {
 			anonimCheckBox.setChecked(true);
 			loginField.setVisibility(View.INVISIBLE);
@@ -82,7 +86,8 @@ public class MCInit {
 			passwordField.setVisibility(View.VISIBLE);
 		}
 	}
-	public static void setupValues(MCAuth auth){
+
+	public static void setupValues(MCAuth auth) {
 		Text.set(R.id.value_mcaccidents_auth_name, auth.name);
 	}
 }

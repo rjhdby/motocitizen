@@ -24,6 +24,7 @@ public class MCMessage {
 	public Boolean unread;
 
 	public MCMessage(JSONObject json, int acc_id) throws JSONException {
+		this.acc_id = acc_id;
 		unread = true;
 		id = json.getInt("id");
 		owner_id = json.getInt("id_user");

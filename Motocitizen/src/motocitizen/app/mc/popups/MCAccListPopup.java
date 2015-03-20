@@ -4,7 +4,7 @@ import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCPoint;
 import motocitizen.app.mc.user.MCRole;
 import motocitizen.utils.Const;
-import motocitizen.utils.Utils;
+import motocitizen.utils.MCUtils;
 import android.graphics.drawable.ColorDrawable;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
@@ -21,7 +21,7 @@ public class MCAccListPopup extends MCPopupWindow {
 		textToCopy = Const.dateFormat.format(p.created) + ". " + p.getTypeText() + ". " + p.getMedText() + ". " + p.address + ". " + p.descr;
 		content.addView(copyButtonRow(), lp);
 
-		for (String phone : Utils.getPhonesFromText(p.descr)) {
+		for (String phone : MCUtils.getPhonesFromText(p.descr)) {
 			content.addView(phoneButtonRow(phone), lp);
 		}
 

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import motocitizen.app.mc.user.MCRole;
 import motocitizen.main.R;
 import motocitizen.network.JSONCall;
 import motocitizen.startup.Startup;
@@ -11,7 +12,7 @@ import motocitizen.utils.Const;
 import motocitizen.utils.Keyboard;
 import motocitizen.utils.Show;
 import motocitizen.utils.Text;
-import motocitizen.utils.Utils;
+import motocitizen.utils.MCUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,7 +27,12 @@ import android.widget.EditText;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
 
 public class MCCreateAcc {
 	private static final Activity act = (Activity) Startup.context;
@@ -50,9 +56,12 @@ public class MCCreateAcc {
 	private static String timeText;
 	private static String type, med;
 	private static Location location;
+	private static Location initialLocation;
 	private static int CURRENT;
 	private static boolean isAcc;
 	private static GoogleMap map;
+	private static Circle circle;
+	private static int radius;
 
 	public static void init() {
 		setListeners();
@@ -64,13 +73,27 @@ public class MCCreateAcc {
 		addressText = MCLocation.address;
 		timeText = Const.timeFormat.format((date).getTime());
 		location = MCLocation.current;
+		initialLocation = location;
 		CURRENT = TYPE;
 		isAcc = false;
 		writeGlobal();
 		show(CURRENT);
 		map = ((MapFragment) ((Activity) Startup.context).getFragmentManager().findFragmentById(R.id.mc_create_map_container)).getMap();
-		map.animateCamera(CameraUpdateFactory.newLatLngZoom(Utils.LocationToLatLng(location), 16));
-
+		map.animateCamera(CameraUpdateFactory.newLatLngZoom(MCUtils.LocationToLatLng(location), 16));
+		// map.setMyLocationEnabled(true);
+		map.getUiSettings().setMyLocationButtonEnabled(true);
+		map.getUiSettings().setZoomControlsEnabled(true);
+		// if (!MCRole.isModerator()) {
+		// radius = 30000000;
+		// } else {
+		radius = 1000;
+		CircleOptions circleOptions = new CircleOptions().center(MCUtils.LocationToLatLng(initialLocation)).radius(radius).fillColor(0x20FF0000);
+		if (circle != null) {
+			circle.remove();
+		}
+		circle = map.addCircle(circleOptions);
+		// }
+		map.setOnCameraChangeListener(cameraListener);
 	}
 
 	private static void writeGlobal() {
@@ -99,6 +122,20 @@ public class MCCreateAcc {
 		cancel.setOnClickListener(cancelListener);
 		confirm.setOnClickListener(confirmListener);
 	}
+
+	private static OnCameraChangeListener cameraListener = new OnCameraChangeListener() {
+
+		@Override
+		public void onCameraChange(CameraPosition camera) {
+			double distance = MCUtils.LatLngToLocation(camera.target).distanceTo(initialLocation);
+			if (distance > radius) {
+				MCObjects.mcCreateFineAddressConfirm.setEnabled(false);
+			} else {
+				MCObjects.mcCreateFineAddressConfirm.setEnabled(true);
+			}
+		}
+
+	};
 
 	private static OnClickListener confirmListener = new Button.OnClickListener() {
 		public void onClick(View v) {
@@ -166,6 +203,7 @@ public class MCCreateAcc {
 			break;
 		case FINEADDRESS:
 			show(FINAL);
+			confirm.setEnabled(true);
 			break;
 		}
 		if (CURRENT == TYPE) {
@@ -247,12 +285,15 @@ public class MCCreateAcc {
 				show(FINAL);
 				break;
 			case R.id.mc_create_fine_address_button:
-				map.animateCamera(CameraUpdateFactory.newLatLngZoom(Utils.LocationToLatLng(location), 16));
+				map.animateCamera(CameraUpdateFactory.newLatLngZoom(MCUtils.LocationToLatLng(location), 16));
 				MCObjects.mcCreateMapPointer.setImageDrawable(MCAccTypes.getDrawable(Startup.context, type));
 				show(FINEADDRESS);
 				break;
 			case R.id.mc_create_fine_address_confirm:
-				location = Utils.LatLngToLocation(map.getCameraPosition().target);
+				double distance = MCUtils.LatLngToLocation(map.getCameraPosition().target).distanceTo(initialLocation);
+				if (distance > radius)
+					return;
+				location = MCUtils.LatLngToLocation(map.getCameraPosition().target);
 				addressText = MCLocation.getAddress(location);
 				break;
 			}
