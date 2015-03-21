@@ -39,7 +39,7 @@ public class MCNotification {
 		} else {
 			return;
 		}
-		double distance = MCLocation.getBestFusionLocation().distanceTo(MCUtils.LatLngToLocation(new LatLng(lat, lng)));
+		double distance = MCLocation.getBestFusionLocation(context).distanceTo(MCUtils.LatLngToLocation(new LatLng(lat, lng)));
 		SharedPreferences prefs = context.getSharedPreferences("motocitizen.startup", Context.MODE_PRIVATE);
 		if (prefs.getInt("mc.distance.alarm", 0) < distance) {
 			return;
