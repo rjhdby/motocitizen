@@ -82,14 +82,17 @@ public class MCLocation {
 			if (prefs == null) {
 				lastLon = 37.622735;
 				lastLat = 55.752295;
+				Log.d(TAG, "FAKE");
 			} else {
 				lastLon = (double) prefs.getFloat("lastLon", 37.622735f);
 				lastLat = (double) prefs.getFloat("lastLat", 55.752295f);
+				if (lastLon == 37.622735f) {
+					Log.d(TAG, "FAKE");
+				}
 			}
 			last.setLatitude(lastLat);
 			last.setLongitude(lastLon);
 			last.setAccuracy(10000);
-			Log.d(TAG, "FAKE");
 		}
 		return last;
 	}
