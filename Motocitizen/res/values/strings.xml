@@ -3,10 +3,10 @@
     <string name="app_name">Motocitizen</string>
     <string name="action_settings">Settings</string>
 	<string name="status_top_address">адрес</string>
-	<string name="mc_acc_list"></string>
-	<string name="mc_acc_details"></string>
-	<string name="call_operator"></string>
-	<string name="create_acc"></string>
+	<string name="mc_acc_list"/>
+	<string name="mc_acc_details"/>
+	<string name="call_operator"/>
+	<string name="create_acc"/>
 	<string name="mc_accidents_details_address">Адрес</string>
 	<string name="mc_accidents_details_owner">Сообщил</string>
 	<string name="mc_accidents_details_status">Статус</string>
