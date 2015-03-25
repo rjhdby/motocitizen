@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="motocitizen.main"
     android:versionCode="202"
-    android:versionName="0.202" >
+    android:versionName="0.202">
 
     <uses-sdk
         android:minSdkVersion="11"
@@ -38,18 +38,16 @@
         android:allowBackup="true"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
-        android:theme="@style/Theme.AppCompat.NoActionBar" >
+        android:theme="@style/Theme.AppCompat.NoActionBar">
         <receiver
             android:name="motocitizen.app.mc.gcm.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
 
                 <category android:name="motocitizen.main" />
             </intent-filter>
         </receiver>
-
-        <service android:name="motocitizen.app.mc.gcm.GcmBroadcastReceiver" />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -63,7 +61,7 @@
             android:label="@string/app_name"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

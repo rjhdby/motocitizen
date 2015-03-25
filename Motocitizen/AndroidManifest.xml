@@ -5,7 +5,7 @@
     android:versionName="0.202" >
 
     <uses-sdk
-        android:minSdkVersion="11"
+        android:minSdkVersion="12"
         android:targetSdkVersion="21" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -17,7 +17,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -48,12 +47,9 @@
                 <category android:name="motocitizen.main" />
             </intent-filter>
         </receiver>
-
-        <service android:name="motocitizen.app.mc.gcm.GcmBroadcastReceiver" />
-
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="6587000" />
+            android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyDAAUQJJB1qY_IpGJBUwfmDdIbeL9LkRP4" />
