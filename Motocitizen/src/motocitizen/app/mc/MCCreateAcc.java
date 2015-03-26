@@ -164,7 +164,8 @@ class MCCreateAcc {
                 MCAccidents.refresh(v.getContext());
             }
             else {
-                Toast.makeText(act, "Запрос не был отправлен, возможно нет связи?", Toast.LENGTH_SHORT).show();
+              //todo Перенести в ресурсы
+                Toast.makeText(act, "Запрос не был отправлен, возможно нет связи.", Toast.LENGTH_SHORT).show();
             }
         }
     };
