@@ -14,6 +14,7 @@ import android.os.Bundle;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import motocitizen.Activity.ConfigActivity;
 import motocitizen.app.mc.MCAccTypes;
 import motocitizen.app.mc.MCLocation;
 import motocitizen.main.R;
@@ -41,8 +42,10 @@ class MCNotification {
             return;
         }
         double distance = MCLocation.getBestFusionLocation(context).distanceTo(MCUtils.LatLngToLocation(new LatLng(lat, lng))) / 1000;
-        SharedPreferences prefs = context.getSharedPreferences("motocitizen.startup", Context.MODE_PRIVATE);
-        if (prefs.getInt("mc.distance.alarm", 0) < distance) {
+        //TODO Грязный хак, нужно придумать как работать без имени файла
+        SharedPreferences prefs = context.getSharedPreferences("motocitizen.main_preferences", Context.MODE_PRIVATE);
+
+        if (ConfigActivity.getAlarmDistance(prefs) < distance) {
             return;
         }
         if (!MCAccTypes.get(type).enabled) {

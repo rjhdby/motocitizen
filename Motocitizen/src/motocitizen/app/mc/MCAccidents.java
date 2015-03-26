@@ -2,6 +2,7 @@ package motocitizen.app.mc;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.Gravity;
@@ -36,6 +37,8 @@ public class MCAccidents {
     public static MCPoints points;
     public static MCAuth auth;
     private static Integer[] sorted;
+    private SharedPreferences prefs;
+
     private static final OnLongClickListener detLongClick = new OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
@@ -46,7 +49,8 @@ public class MCAccidents {
         }
     };
 
-    public MCAccidents(Context context) {
+    public MCAccidents(Context context, SharedPreferences prefs) {
+        this.prefs = prefs;
         onway = 0;
         inplace = 0;
         MCInit.readProperties();
@@ -55,7 +59,7 @@ public class MCAccidents {
         new MCLocation(context);
         MCInit.setupAccess(context, auth);
         MCInit.setupValues(auth);
-        points = new MCPoints();
+        points = new MCPoints(prefs);
         points.load();
         new MCGCMRegistration();
         currentPoint = new MCPoint();

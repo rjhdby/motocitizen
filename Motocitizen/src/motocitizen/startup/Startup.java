@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.view.KeyEvent;
 import android.view.Window;
@@ -26,6 +27,7 @@ public class Startup extends Activity {
     public static Props props;
     public static Context context;
     public static SharedPreferences prefs;
+    private SharedPreferences prefsDef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +38,14 @@ public class Startup extends Activity {
         setContentView(R.layout.main);
         context = this;
 
+        prefsDef = PreferenceManager.getDefaultSharedPreferences(this);
+
         new Const();
 
         prefs = getSharedPreferences("motocitizen.startup", MODE_PRIVATE);
         // prefs.edit().clear().commit();
         props = new Props();
-        new MCAccidents(this);
+        new MCAccidents(this, prefsDef);
         new MCMap(this);
         new SettingsMenu();
         new SmallSettingsMenu();

@@ -3,6 +3,7 @@ package motocitizen.app.mc;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import motocitizen.Activity.ConfigActivity;
 import motocitizen.main.R;
 import motocitizen.network.JSONCall;
 import motocitizen.startup.Startup;
@@ -27,12 +29,15 @@ public class MCPoints {
     private static final int ENDED = R.drawable.accident_row_gradient_ended;
     public final String error;
     private Map<Integer, MCPoint> points;
+    private SharedPreferences prefs;
 
-    public MCPoints() {
+  public MCPoints(SharedPreferences prefs) {
         error = "ok";
         if (points == null) {
             points = new HashMap<>();
         }
+
+      this.prefs = prefs;
     }
 
     public boolean containsKey(int id) {
@@ -50,7 +55,7 @@ public class MCPoints {
     public void load() {
         Map<String, String> selector = new HashMap<>();
         Location userLocation = MCLocation.current;
-        selector.put("distance", String.valueOf(Startup.prefs.getInt("mc.distance.show", 100)));
+        selector.put("distance", ConfigActivity.getShowDistance(prefs));
         selector.put("lon", String.valueOf(userLocation.getLongitude()));
         selector.put("lat", String.valueOf(userLocation.getLatitude()));
         String user = Startup.prefs.getString("mc.login", "");
