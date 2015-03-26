@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -159,11 +160,16 @@ class MCCreateAcc {
                 if (!result.equals("OK")) {
                     Log.d("CREATE ACC ERROR", json.toString());
                 }
+                exit();
+                MCAccidents.refresh(v.getContext());
             }
-            exit();
-            MCAccidents.refresh(v.getContext());
+            else {
+              //todo Перенести в ресурсы
+                Toast.makeText(act, "Запрос не был отправлен, возможно нет связи.", Toast.LENGTH_SHORT).show();
+            }
         }
     };
+
     private static final OnClickListener backListener = new Button.OnClickListener() {
         public void onClick(View v) {
             backButton();
