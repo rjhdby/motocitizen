@@ -71,6 +71,8 @@ public class Startup extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        Show.show(R.id.main_frame, R.id.main_frame_applications);
         MCLocation.wakeup(this);
         Intent intent = getIntent();
         context = this;

@@ -36,7 +36,7 @@ class MCListeners {
                 MCInit.setupAccess(v.getContext(), MCAccidents.auth);
                 MCInit.setupValues(MCAccidents.auth);
                 if (MCAccidents.auth.name.equals("")) {
-                    Text.set(R.id.value_mcaccidents_auth_name, Startup.prefsDef.getString("mc.name", ""));
+                    //Text.set(R.id.value_mcaccidents_auth_name, Startup.prefsDef.getString("mc.name", ""));
                     Text.set(R.id.auth_error_helper, "Не удалось авторизоваться. Возможно неверно введен логин или пароль.");
                 } else {
                     Text.set(R.id.auth_error_helper, "");

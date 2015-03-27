@@ -89,6 +89,6 @@ public class MCInit {
     }
 
     public static void setupValues(MCAuth auth) {
-        Text.set(R.id.value_mcaccidents_auth_name, auth.name);
+        Startup.prefsDef.edit().putString("mc.name", auth.name).commit();
     }
 }

@@ -110,7 +110,7 @@ public class MCAuth {
 //            anonimCheckBox.setChecked(false);
 //            loginField.setVisibility(View.VISIBLE);
 //            passwordField.setVisibility(View.VISIBLE);
-            Text.set(R.id.value_mcaccidents_auth_name, Startup.prefsDef.getString("mc.name", ""));
+//            Text.set(R.id.value_mcaccidents_auth_name, Startup.prefsDef.getString("mc.name", ""));
         }
     }
 }
