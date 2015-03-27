@@ -187,7 +187,7 @@ class MCCreateAcc {
         date = new Date();
         globalText = "";
         medText = "mc_m_na";
-        ownerText = Startup.prefs.getString("mc.login", "");
+        ownerText = Startup.prefsDef.getString("mc.login", "");
         addressText = MCLocation.address;
         timeText = Const.timeFormat.format((date).getTime());
         location = MCLocation.current;

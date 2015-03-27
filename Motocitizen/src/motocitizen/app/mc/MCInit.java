@@ -19,25 +19,25 @@ import motocitizen.utils.InputFilterMinMax;
 import motocitizen.utils.Props;
 import motocitizen.utils.Text;
 
-class MCInit {
+public class MCInit {
     public static void readProperties() {
-        Properties props = Props.readAssets("mcaccidents.properties");
-        for (Object key : props.keySet()) {
-            String value = (String) props.get(key);
-            // Log.d((String) key,(String) props.get(key));
-            if (!Startup.prefs.contains((String) key)) {
-                if (value.equals("true") || value.equals("false")) {
-                    Startup.prefs.edit().putBoolean((String) key, Boolean.parseBoolean(value)).commit();
-                } else {
-                    try {
-                        Integer pref = Integer.parseInt(value);
-                        Startup.prefs.edit().putInt((String) key, pref).commit();
-                    } catch (NumberFormatException e) {
-                        Startup.prefs.edit().putString((String) key, value).commit();
-                    }
-                }
-            }
-        }
+//        Properties props = Props.readAssets("mcaccidents.properties");
+//        for (Object key : props.keySet()) {
+//            String value = (String) props.get(key);
+//            // Log.d((String) key,(String) props.get(key));
+//            if (!Startup.prefs.contains((String) key)) {
+//                if (value.equals("true") || value.equals("false")) {
+//                    Startup.prefs.edit().putBoolean((String) key, Boolean.parseBoolean(value)).commit();
+//                } else {
+//                    try {
+//                        Integer pref = Integer.parseInt(value);
+//                        Startup.prefs.edit().putInt((String) key, pref).commit();
+//                    } catch (NumberFormatException e) {
+//                        Startup.prefs.edit().putString((String) key, value).commit();
+//                    }
+//                }
+//            }
+//        }
         MCObjects.accDetailsView.setTranslationX(Const.width);
         MCObjects.mapContainer.setTranslationX(Const.width);
     }

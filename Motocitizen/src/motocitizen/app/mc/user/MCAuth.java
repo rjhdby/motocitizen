@@ -27,7 +27,7 @@ public class MCAuth {
 
     public MCAuth() {
         reset();
-        anonim = Startup.prefs.getBoolean("mc.anonim", false);
+        anonim = Startup.prefsDef.getBoolean("mc.anonim", false);
         if (!anonim) {
             auth();
         }
@@ -40,16 +40,16 @@ public class MCAuth {
     }
 
     public String getLogin() {
-        return Startup.prefs.getString("mc.login", "");
+        return Startup.prefsDef.getString("mc.login", "");
     }
 
     public String makePassHash() {
         String hash = "";
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
-            String pass = Startup.prefs.getString("mc.password", "");
+            String pass = Startup.prefsDef.getString("mc.password", "");
             if (pass.equals("")) {
-                Startup.prefs.edit().putString("mc.password", "").commit();
+                Startup.prefsDef.edit().putString("mc.password", "").commit();
             }
             md.update(pass.getBytes());
             byte[] digest = md.digest();
@@ -70,7 +70,7 @@ public class MCAuth {
 
     public void setAnonim(Context context, Boolean value) {
         anonim = value;
-        Startup.prefs.edit().putBoolean("mc.anonim", value).commit();
+        Startup.prefsDef.edit().putBoolean("mc.anonim", value).commit();
         reset();
         setAccess(context);
     }
@@ -83,7 +83,7 @@ public class MCAuth {
         post.put("passwordHash", makePassHash());
         JSONObject json = new JSONCall("mcaccidents", "auth").request(post);
         parseJSON(json);
-        Startup.prefs.edit().putString("mc.name", name).commit();
+        Startup.prefsDef.edit().putString("mc.name", name).commit();
     }
 
     private void parseJSON(JSONObject json) {
@@ -98,19 +98,19 @@ public class MCAuth {
 
     public void setAccess(Context context) {
         //auth();
-        View loginField = ((Activity) context).findViewById(R.id.mc_auth_login);
-        View passwordField = ((Activity) context).findViewById(R.id.mc_auth_password);
-        CheckBox anonimCheckBox = ((CheckBox) ((Activity) context).findViewById(R.id.mc_auth_anonim));
+//        View loginField = ((Activity) context).findViewById(R.id.mc_auth_login);
+//        View passwordField = ((Activity) context).findViewById(R.id.mc_auth_password);
+//        CheckBox anonimCheckBox = ((CheckBox) ((Activity) context).findViewById(R.id.mc_auth_anonim));
         if (anonim) {
-            anonimCheckBox.setChecked(true);
-            loginField.setVisibility(View.INVISIBLE);
-            passwordField.setVisibility(View.INVISIBLE);
+//            anonimCheckBox.setChecked(true);
+//            loginField.setVisibility(View.INVISIBLE);
+//            passwordField.setVisibility(View.INVISIBLE);
             role = "";
         } else {
-            anonimCheckBox.setChecked(false);
-            loginField.setVisibility(View.VISIBLE);
-            passwordField.setVisibility(View.VISIBLE);
-            Text.set(R.id.value_mcaccidents_auth_name, Startup.prefs.getString("mc.name", ""));
+//            anonimCheckBox.setChecked(false);
+//            loginField.setVisibility(View.VISIBLE);
+//            passwordField.setVisibility(View.VISIBLE);
+            Text.set(R.id.value_mcaccidents_auth_name, Startup.prefsDef.getString("mc.name", ""));
         }
     }
 }

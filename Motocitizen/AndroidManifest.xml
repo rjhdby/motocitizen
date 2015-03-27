@@ -86,6 +86,10 @@
             android:name="motocitizen.Activity.AboutActivity"
             android:label="@string/title_activity_about" >
         </activity>
+        <activity
+            android:name="motocitizen.Activity.AuthActivity"
+            android:label="AuthActivity" >
+        </activity>
     </application>
 
 </manifest>

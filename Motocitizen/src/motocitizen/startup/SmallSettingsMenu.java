@@ -12,9 +12,11 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 
 import motocitizen.Activity.AboutActivity;
+import motocitizen.Activity.AuthActivity;
 import motocitizen.Activity.ConfigActivity;
 import motocitizen.app.mc.MCAccidents;
-import motocitizen.core.settings.SettingsMenu;
+// zz
+// import motocitizen.core.settings.SettingsMenu;
 import motocitizen.main.R;
 
 @SuppressLint("RtlHardcoded")
@@ -38,9 +40,7 @@ public class SmallSettingsMenu {
                 if (id == R.id.small_menu_refresh) {
 
                     MCAccidents.refresh(Startup.context);
-                } else if (id == R.id.small_menu_settings) {
-                    SettingsMenu.open();
-                } else if(id == R.id.small_menu_settings2) {
+                } else if(id == R.id.small_menu_settings) {
                     Intent i = new Intent(act, ConfigActivity.class);
                     Startup.context.startActivity(i);
                 } else if(id == R.id.small_menu_about) {

@@ -18,7 +18,8 @@ import android.widget.TextView;
 import java.util.HashMap;
 import java.util.Map;
 
-import motocitizen.core.settings.SettingsMenu;
+// zz
+// import motocitizen.core.settings.SettingsMenu;
 import motocitizen.main.R;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
@@ -53,9 +54,10 @@ public class MCSelectSound {
 
         @Override
         public void onClick(View v) {
-            Startup.prefs.edit().putString("mc.notification.sound", currentUri).commit();
-            Startup.prefs.edit().putString("mc.notification.sound.title", currentTitle).commit();
-            SettingsMenu.refresh();
+            Startup.prefsDef.edit().putString("mc.notification.sound", currentUri).commit();
+            Startup.prefsDef.edit().putString("mc.notification.sound.title", currentTitle).commit();
+            //zz
+            // SettingsMenu.refresh();
             Show.showLast();
         }
     };
@@ -72,8 +74,8 @@ public class MCSelectSound {
         rm = new RingtoneManager(context);
         rm.setType(RingtoneManager.TYPE_NOTIFICATION);
         String defaultUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION).toString();
-        currentUri = Startup.prefs.getString("mc.notification.sound", defaultUri);
-        currentTitle = Startup.prefs.getString("mc.notification.sound.title", "default system");
+        currentUri = Startup.prefsDef.getString("mc.notification.sound", defaultUri);
+        currentTitle = Startup.prefsDef.getString("mc.notification.sound.title", "default system");
         if (firstrun == null) {
             drawList(context);
             firstrun = true;

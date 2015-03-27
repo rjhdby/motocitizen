@@ -11,8 +11,8 @@
 	<string name="mc_accidents_details_owner">Сообщил</string>
 	<string name="mc_accidents_details_status">Статус</string>
 	<string name="mc_accidents_details_begin">Начало</string>
-	<string name="mc_settings_distance">Текст(км)</string>
-	<string name="mc_settings_distance_alarm">Звук(км)</string>
+	<string name="mc_settings_distance">Текстовое оповещение(км)</string>
+	<string name="mc_settings_distance_alarm">Звуковое оповещение(км)</string>
 	<string name="mc_settings_accidents">ДТП</string>
 	<string name="settings_confirm_button">Сохранить</string>
 	<string name="settings_cancel_button">Отменить</string>
@@ -83,4 +83,6 @@
     <string name="config_acc_type_category">Типы инцидентов</string>
     <string name="small_menu_about">О приложении</string>
     <string name="about_info">Motocitizen - Программа взаимопомощи мотоциклистов на дорогах.</string>
+  <string name="config_other_category">Другое</string>
+  <string name="logout_button">Завершить сеанс</string>
 </resources>

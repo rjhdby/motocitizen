@@ -34,13 +34,13 @@ public class SettingsMenu {
     }
 
     private static void cancel() {
-        for (String key : Startup.prefs.getAll().keySet()) {
-            View v = includeArea.findViewWithTag(key);
-            if (v instanceof EditText) {
-                Keyboard.hide(v);
-            }
-        }
-        Show.show(R.id.main_frame_applications);
+//        for (String key : Startup.prefs.getAll().keySet()) {
+//            View v = includeArea.findViewWithTag(key);
+//            if (v instanceof EditText) {
+//                Keyboard.hide(v);
+//            }
+//        }
+//        Show.show(R.id.main_frame_applications);
     }
 
     private static void toSettings() {
@@ -63,45 +63,45 @@ public class SettingsMenu {
     }
 
     private static void setValues() {
-        for (String key : Startup.prefs.getAll().keySet()) {
-            View v = includeArea.findViewWithTag(key);
-            if (v != null) {
-                if (v instanceof CheckBox) {
-                    ((CheckBox) v).setChecked(Startup.prefs.getBoolean(key, true));
-                    Log.d("PREFS", key + "=" + String.valueOf(Startup.prefs.getBoolean(key, true)));
-                } else if (v instanceof EditText) {
-                    EditText e = (EditText) v;
-                    if (e.getInputType() == InputType.TYPE_CLASS_NUMBER) {
-                        e.setText(String.valueOf(Startup.prefs.getInt(key, 0)));
-                        Log.d("PREFS", key + "=" + String.valueOf(Startup.prefs.getInt(key, 0)));
-                    } else {
-                        e.setText(Startup.prefs.getString(key, ""));
-                        Log.d("PREFS", key + "=" + Startup.prefs.getString(key, ""));
-                    }
-                } else if (v instanceof TextView) {
-                    ((TextView) v).setText(Startup.prefs.getString(key, ""));
-                    Log.d("PREFS", key + "=" + Startup.prefs.getString(key, ""));
-                }
-            }
-        }
+//        for (String key : Startup.prefs.getAll().keySet()) {
+//            View v = includeArea.findViewWithTag(key);
+//            if (v != null) {
+//                if (v instanceof CheckBox) {
+//                    ((CheckBox) v).setChecked(Startup.prefs.getBoolean(key, true));
+//                    Log.d("PREFS", key + "=" + String.valueOf(Startup.prefs.getBoolean(key, true)));
+//                } else if (v instanceof EditText) {
+//                    EditText e = (EditText) v;
+//                    if (e.getInputType() == InputType.TYPE_CLASS_NUMBER) {
+//                        e.setText(String.valueOf(Startup.prefs.getInt(key, 0)));
+//                        Log.d("PREFS", key + "=" + String.valueOf(Startup.prefs.getInt(key, 0)));
+//                    } else {
+//                        e.setText(Startup.prefs.getString(key, ""));
+//                        Log.d("PREFS", key + "=" + Startup.prefs.getString(key, ""));
+//                    }
+//                } else if (v instanceof TextView) {
+//                    ((TextView) v).setText(Startup.prefs.getString(key, ""));
+//                    Log.d("PREFS", key + "=" + Startup.prefs.getString(key, ""));
+//                }
+//            }
+//        }
     }
 
     private static void submit() {
-        for (String key : Startup.prefs.getAll().keySet()) {
-            View v = includeArea.findViewWithTag(key);
-            if (v != null) {
-                if (v instanceof CheckBox) {
-                    Startup.prefs.edit().putBoolean(key, ((CheckBox) v).isChecked()).commit();
-                } else if (v instanceof EditText) {
-                    EditText e = (EditText) v;
-                    if (e.getInputType() == InputType.TYPE_CLASS_NUMBER) {
-                        Startup.prefs.edit().putInt(key, Integer.parseInt(e.getText().toString())).commit();
-                    } else {
-                        Startup.prefs.edit().putString(key, e.getText().toString()).commit();
-                    }
-                }
-            }
-        }
+//        for (String key : Startup.prefs.getAll().keySet()) {
+//            View v = includeArea.findViewWithTag(key);
+//            if (v != null) {
+//                if (v instanceof CheckBox) {
+//                    Startup.prefs.edit().putBoolean(key, ((CheckBox) v).isChecked()).commit();
+//                } else if (v instanceof EditText) {
+//                    EditText e = (EditText) v;
+//                    if (e.getInputType() == InputType.TYPE_CLASS_NUMBER) {
+//                        Startup.prefs.edit().putInt(key, Integer.parseInt(e.getText().toString())).commit();
+//                    } else {
+//                        Startup.prefs.edit().putString(key, e.getText().toString()).commit();
+//                    }
+//                }
+//            }
+//        }
         MCAccidents.redraw(Startup.context);
         cancel();
     }
