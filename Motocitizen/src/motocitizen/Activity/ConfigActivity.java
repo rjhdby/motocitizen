@@ -3,25 +3,17 @@ package motocitizen.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceCategory;
-import android.preference.PreferenceScreen;
-import android.widget.Button;
 
-import motocitizen.app.mc.MCSelectSound;
 import motocitizen.main.R;
 import motocitizen.startup.Startup;
-import motocitizen.utils.Show;
-import motocitizen.utils.Text;
 
 /**
  * Created by elagin on 26.03.15.
  */
 public class ConfigActivity extends PreferenceActivity implements
-        Preference.OnPreferenceChangeListener
-        /*,Preference.OnPreferenceClickListener*/ {
+        Preference.OnPreferenceChangeListener {
 
     public static final String MC_DISTANCE_SHOW = "mc.distance.show";
     public static final String MC_DISTANCE_ALARM = "mc.distance.alarm";
@@ -38,8 +30,17 @@ public class ConfigActivity extends PreferenceActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        Preference editTextPref = (Preference) findPreference(getResources().getString(R.string.mc_settings_auth_button));
-        editTextPref.setSummary(Startup.prefsDef.getString("mc.login", ""));
+        Preference authPreference = (Preference) findPreference(getResources().getString(R.string.mc_settings_auth_button));
+        authPreference.setSummary(Startup.prefsDef.getString("mc.login", ""));
+
+        Preference nottifSoundPreference = (Preference) findPreference(getResources().getString(R.string.mc_notif_sound));
+        nottifSoundPreference.setSummary(Startup.prefsDef.getString("mc.notification.sound.title", getString(R.string.mc_notif_system)));
+
+        Preference nottifDistPreference = (Preference) findPreference(MC_DISTANCE_SHOW);
+        nottifDistPreference.setSummary(Startup.prefsDef.getString("mc.distance.show", "0"));
+
+        Preference nottifAlarmPreference = (Preference) findPreference(MC_DISTANCE_ALARM);
+        nottifAlarmPreference.setSummary(Startup.prefsDef.getString("mc.distance.alarm", "0"));
     }
 
     public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,17 @@ public class ConfigActivity extends PreferenceActivity implements
 //                Text.set(R.id.mc_auth_login, login);
 //                Text.set(R.id.mc_auth_password, password);
 //                Show.show(R.id.mc_auth);
+                return true;
+            }
+        });
+
+        Preference buttonSound = (Preference)findPreference(getResources().getString(R.string.mc_notif_sound));
+        buttonSound.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference arg0) {
+                Intent i = new Intent(Startup.context, SelectSoundActivity.class);
+                Startup.context.startActivity(i);
+                //new MCSelectSound(Startup.context);
                 return true;
             }
         });

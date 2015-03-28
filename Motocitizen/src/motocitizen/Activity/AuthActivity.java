@@ -98,7 +98,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
                 if (anonim.isChecked()) {
                     MCAccidents.auth.anonim = true;
                     Text.set(R.id.auth_error_helper, "");
-                    Show.show(R.id.main_frame_settings);
+                    //Show.show(R.id.main_frame_settings);
                     finish();
                 } else {
                     MCAccidents.auth.anonim = false;

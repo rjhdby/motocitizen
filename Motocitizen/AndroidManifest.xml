@@ -90,6 +90,10 @@
             android:name="motocitizen.Activity.AuthActivity"
             android:label="AuthActivity" >
         </activity>
+        <activity
+            android:name="motocitizen.Activity.SelectSoundActivity"
+            android:label="@string/title_activity_select_sound" >
+        </activity>
     </application>
 
 </manifest>

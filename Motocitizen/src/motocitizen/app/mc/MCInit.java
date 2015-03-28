@@ -44,21 +44,21 @@ public class MCInit {
 
     public static void addListeners() {
         //MCObjects.authConfirmButton.setOnClickListener(MCListeners.authConfirmListener);
-        MCObjects.authButton.setOnClickListener(MCListeners.authButtonListener);
+        //MCObjects.authButton.setOnClickListener(MCListeners.authButtonListener);
         //MCObjects.authCancelButton.setOnClickListener(MCListeners.authCancelListener);
         MCObjects.dialButton.setOnClickListener(MCListeners.dialButtonListener);
         MCObjects.createAccButton.setOnClickListener(MCListeners.createAccButtonListener);
         MCObjects.firstLoginButton.setOnClickListener(MCListeners.firstloginButtonListener);
         MCObjects.anonimButton.setOnClickListener(MCListeners.anonimButtonListener);
         MCObjects.authAnonimCheckBox.setOnCheckedChangeListener(MCListeners.authAnonimCheckBoxListener);
-        MCObjects.selectSoundButton.setOnClickListener(MCListeners.selectSoundButtonListener);
+        //MCObjects.selectSoundButton.setOnClickListener(MCListeners.selectSoundButtonListener);
         MCObjects.mainTabsGroup.setOnCheckedChangeListener(MCListeners.mainTabsListener);
         MCObjects.newMessageButton.setOnClickListener(MCListeners.newMessageButtonListener);
         MCObjects.mcDetTabsGroup.setOnCheckedChangeListener(MCListeners.accDetTabsListener);
         MCObjects.onwayButton.setOnClickListener(MCListeners.onwayButtonListener);
         ((EditText) MCObjects.mcNewMessageText).addTextChangedListener(MCListeners.mcNewMessageTextListener);
-        MCObjects.valueAppMcaccidentsDistance.setFilters(new InputFilter[]{new InputFilterMinMax(0, 20050)});
-        MCObjects.valueAppMcaccidentsDistanceAlarm.setFilters(new InputFilter[]{new InputFilterMinMax(0, 20050)});
+//        MCObjects.valueAppMcaccidentsDistance.setFilters(new InputFilter[]{new InputFilterMinMax(0, 20050)});
+//        MCObjects.valueAppMcaccidentsDistanceAlarm.setFilters(new InputFilter[]{new InputFilterMinMax(0, 20050)});
     }
 
     public static void setupAccess(Context context, MCAuth auth) {

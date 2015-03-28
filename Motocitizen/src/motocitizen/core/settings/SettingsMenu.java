@@ -17,17 +17,17 @@ import motocitizen.utils.Show;
 
 public class SettingsMenu {
     private static final Activity act = (Activity) Startup.context;
-    private static final View includeArea = act.findViewById(R.id.settings_include_area);
+    //private static final View includeArea = act.findViewById(R.id.settings_include_area);
 
-    public SettingsMenu() {
-        addListeners();
-        setValues();
-    }
+//    public SettingsMenu() {
+//        addListeners();
+//        setValues();
+//    }
 
-    public static void open() {
-        toSettings();
-        setValues();
-    }
+//    public static void open() {
+//        toSettings();
+//        setValues();
+//    }
 
     public static void refresh() {
         setValues();
@@ -43,24 +43,24 @@ public class SettingsMenu {
 //        Show.show(R.id.main_frame_applications);
     }
 
-    private static void toSettings() {
-        Show.show(R.id.main_frame_settings);
-    }
+//    private static void toSettings() {
+//        Show.show(R.id.main_frame_settings);
+//    }
 
-    private static void addListeners() {
-        Button confirm = (Button) act.findViewById(R.id.settings_confirm_button);
-        confirm.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-                submit();
-            }
-        });
-        Button cancel = (Button) act.findViewById(R.id.settings_cancel_button);
-        cancel.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-                cancel();
-            }
-        });
-    }
+//    private static void addListeners() {
+//        Button confirm = (Button) act.findViewById(R.id.settings_confirm_button);
+//        confirm.setOnClickListener(new Button.OnClickListener() {
+//            public void onClick(View v) {
+//                submit();
+//            }
+//        });
+//        Button cancel = (Button) act.findViewById(R.id.settings_cancel_button);
+//        cancel.setOnClickListener(new Button.OnClickListener() {
+//            public void onClick(View v) {
+//                cancel();
+//            }
+//        });
+//    }
 
     private static void setValues() {
 //        for (String key : Startup.prefs.getAll().keySet()) {

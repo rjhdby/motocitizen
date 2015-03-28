@@ -55,21 +55,23 @@ class MCListeners {
             Show.show(R.id.mc_auth);
         }
     };
-    public static final Button.OnClickListener authCancelListener = new Button.OnClickListener() {
-        public void onClick(View v) {
-            if (MCAccidents.auth.name.equals("")) {
-                MCAccidents.auth.setAnonim(v.getContext(), true);
-                MCInit.setupAccess(v.getContext(), MCAccidents.auth);
-                MCInit.setupValues(MCAccidents.auth);
-            } else {
-                String login = Startup.prefsDef.getString("mc.login", "");
-                String password = Startup.prefsDef.getString("mc.password", "");
-                Text.set(R.id.mc_auth_login, login);
-                Text.set(R.id.mc_auth_password, password);
-            }
-            Show.show(R.id.main_frame_settings);
-        }
-    };
+
+//    public static final Button.OnClickListener authCancelListener = new Button.OnClickListener() {
+//        public void onClick(View v) {
+//            if (MCAccidents.auth.name.equals("")) {
+//                MCAccidents.auth.setAnonim(v.getContext(), true);
+//                MCInit.setupAccess(v.getContext(), MCAccidents.auth);
+//                MCInit.setupValues(MCAccidents.auth);
+//            } else {
+//                String login = Startup.prefsDef.getString("mc.login", "");
+//                String password = Startup.prefsDef.getString("mc.password", "");
+//                Text.set(R.id.mc_auth_login, login);
+//                Text.set(R.id.mc_auth_password, password);
+//            }
+//            Show.show(R.id.main_frame_settings);
+//        }
+//    };
+
     public static final Button.OnClickListener dialButtonListener = new Button.OnClickListener() {
         public void onClick(View v) {
             Intent intent = new Intent(Intent.ACTION_DIAL);
@@ -126,12 +128,12 @@ class MCListeners {
             }
         }
     };
-    public static final Button.OnClickListener selectSoundButtonListener = new Button.OnClickListener() {
-        public void onClick(View v) {
-            Show.show(R.id.mc_select_sound_screen);
-            new MCSelectSound(v.getContext());
-        }
-    };
+//    public static final Button.OnClickListener selectSoundButtonListener = new Button.OnClickListener() {
+//        public void onClick(View v) {
+//            Show.show(R.id.mc_select_sound_screen);
+//            new MCSelectSound(v.getContext());
+//        }
+//    };
 
     public static final Button.OnClickListener onwayButtonListener = new Button.OnClickListener() {
         @Override
