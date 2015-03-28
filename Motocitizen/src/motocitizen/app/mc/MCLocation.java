@@ -82,18 +82,21 @@ public class MCLocation {
             last = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         }
         if (last == null) {
-            SharedPreferences prefs = context.getSharedPreferences("motocitizen.startup", Context.MODE_PRIVATE);
+            //TODO Грязный хак, нужно придумать как работать без имени файла
+            SharedPreferences prefs = context.getSharedPreferences("motocitizen.main_preferences", Context.MODE_PRIVATE);
             last = new Location(LocationManager.NETWORK_PROVIDER);
-            if (prefs == null) {
+/*            if (prefs == null) {
                 lastLon = 37.622735;
                 lastLat = 55.752295;
                 Log.d(TAG, "FAKE");
-            } else {
+            } else {*/
+
+            //TODO Понять для чего это нужно, т.к. больше ни где не используется.
                 lastLon = (double) prefs.getFloat("lastLon", 37.622735f);
                 lastLat = (double) prefs.getFloat("lastLat", 55.752295f);
                 if (lastLon == 37.622735f) {
                     Log.d(TAG, "FAKE");
-                }
+//                }
             }
             last.setLatitude(lastLat);
             last.setLongitude(lastLon);
