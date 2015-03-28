@@ -58,7 +58,7 @@ public class MCPoints {
         selector.put("distance", ConfigActivity.getShowDistance(prefs));
         selector.put("lon", String.valueOf(userLocation.getLongitude()));
         selector.put("lat", String.valueOf(userLocation.getLatitude()));
-        String user = Startup.prefsDef.getString("mc.login", "");
+        String user = Startup.prefs.getString("mc.login", "");
         if (!user.equals("")) {
             selector.put("user", user);
         }

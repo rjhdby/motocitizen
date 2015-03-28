@@ -28,8 +28,7 @@ import motocitizen.utils.Show;
 public class Startup extends Activity {
     public static Props props;
     public static Context context;
-    //public static SharedPreferences prefs;
-    public static SharedPreferences prefsDef;
+    public static SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,14 +39,14 @@ public class Startup extends Activity {
         setContentView(R.layout.main);
         context = this;
 
-        prefsDef = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         new Const();
 
         //prefs = getSharedPreferences("motocitizen.startup", MODE_PRIVATE);
         //prefs.edit().clear().commit();
         props = new Props();
-        new MCAccidents(this, prefsDef);
+        new MCAccidents(this, prefs);
         new MCMap(this);
         // zz
         // new SettingsMenu();

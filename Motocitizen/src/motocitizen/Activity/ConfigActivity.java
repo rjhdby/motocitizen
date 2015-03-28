@@ -22,6 +22,8 @@ public class ConfigActivity extends PreferenceActivity implements
     public static final String MC_SHOW_STEAL = "mc.show.steal";
     public static final String MC_SHOW_OTHER = "mc.show.other";
 
+    //TODO вызывать setSummary при изменении значений дистанций оповещений
+
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         return false;
@@ -30,17 +32,19 @@ public class ConfigActivity extends PreferenceActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+
+        //TODO Сделать однообразно
         Preference authPreference = (Preference) findPreference(getResources().getString(R.string.mc_settings_auth_button));
-        authPreference.setSummary(Startup.prefsDef.getString("mc.login", ""));
+        authPreference.setSummary(Startup.prefs.getString("mc.login", ""));
 
         Preference nottifSoundPreference = (Preference) findPreference(getResources().getString(R.string.mc_notif_sound));
-        nottifSoundPreference.setSummary(Startup.prefsDef.getString("mc.notification.sound.title", getString(R.string.mc_notif_system)));
+        nottifSoundPreference.setSummary(Startup.prefs.getString("mc.notification.sound.title", getString(R.string.mc_notif_system)));
 
         Preference nottifDistPreference = (Preference) findPreference(MC_DISTANCE_SHOW);
-        nottifDistPreference.setSummary(Startup.prefsDef.getString("mc.distance.show", "0"));
+        nottifDistPreference.setSummary(Startup.prefs.getString("mc.distance.show", "0"));
 
         Preference nottifAlarmPreference = (Preference) findPreference(MC_DISTANCE_ALARM);
-        nottifAlarmPreference.setSummary(Startup.prefsDef.getString("mc.distance.alarm", "0"));
+        nottifAlarmPreference.setSummary(Startup.prefs.getString("mc.distance.alarm", "0"));
     }
 
     public void onCreate(Bundle savedInstanceState) {

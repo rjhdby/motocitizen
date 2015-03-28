@@ -83,7 +83,7 @@ public class MCGCMRegistration {
 
     private String getRegistrationId() {
         // final SharedPreferences prefs = getGCMPreferences(Startup.context);
-        String registrationId = Startup.prefsDef.getString(PROPERTY_REG_ID, "");
+        String registrationId = Startup.prefs.getString(PROPERTY_REG_ID, "");
         if (registrationId.isEmpty()) {
             Log.d(TAG, "Registration not found.");
             return "";
@@ -91,7 +91,7 @@ public class MCGCMRegistration {
         // Check if app was updated; if so, it must clear the registration ID
         // since the existing registration ID is not guaranteed to work with
         // the new app version.
-        int registeredVersion = Startup.prefsDef.getInt(PROPERTY_APP_VERSION, Integer.MIN_VALUE);
+        int registeredVersion = Startup.prefs.getInt(PROPERTY_APP_VERSION, Integer.MIN_VALUE);
         int currentVersion = getAppVersion();
         if (registeredVersion != currentVersion) {
             Log.d(TAG, "App version changed.");
@@ -131,7 +131,7 @@ public class MCGCMRegistration {
     private void storeRegistrationId(String regId) {
         int appVersion = getAppVersion();
         Log.i(TAG, "Saving regId on app version " + appVersion);
-        SharedPreferences.Editor editor = Startup.prefsDef.edit();
+        SharedPreferences.Editor editor = Startup.prefs.edit();
         editor.putString(PROPERTY_REG_ID, regId);
         editor.putInt(PROPERTY_APP_VERSION, appVersion);
         editor.commit();

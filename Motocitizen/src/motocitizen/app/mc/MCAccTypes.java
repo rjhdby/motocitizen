@@ -27,13 +27,13 @@ public class MCAccTypes {
     }
 
     public static void refresh() {
-        type.get("acc_b").enabled = ConfigActivity.isShowBreak(Startup.prefsDef);
-        type.get("acc_m").enabled = ConfigActivity.isShowAcc(Startup.prefsDef);
-        type.get("acc_m_m").enabled = ConfigActivity.isShowAcc(Startup.prefsDef);
-        type.get("acc_m_a").enabled = ConfigActivity.isShowAcc(Startup.prefsDef);
-        type.get("acc_m_p").enabled = ConfigActivity.isShowAcc(Startup.prefsDef);
-        type.get("acc_o").enabled = ConfigActivity.isShowOther(Startup.prefsDef);
-        type.get("acc_s").enabled = ConfigActivity.isShowSteal(Startup.prefsDef);
+        type.get("acc_b").enabled = ConfigActivity.isShowBreak(Startup.prefs);
+        type.get("acc_m").enabled = ConfigActivity.isShowAcc(Startup.prefs);
+        type.get("acc_m_m").enabled = ConfigActivity.isShowAcc(Startup.prefs);
+        type.get("acc_m_a").enabled = ConfigActivity.isShowAcc(Startup.prefs);
+        type.get("acc_m_p").enabled = ConfigActivity.isShowAcc(Startup.prefs);
+        type.get("acc_o").enabled = ConfigActivity.isShowOther(Startup.prefs);
+        type.get("acc_s").enabled = ConfigActivity.isShowSteal(Startup.prefs);
     }
 
     public static BitmapDescriptor getBitmapDescriptor(String name) {

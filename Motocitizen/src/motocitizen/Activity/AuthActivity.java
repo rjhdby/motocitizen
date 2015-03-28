@@ -85,11 +85,11 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
 
             @Override
             public void onClick(View v) {
-                if(Startup.prefsDef.getString("mc.name", "").length() > 0) {
+                if(Startup.prefs.getString("mc.name", "").length() > 0) {
                     //TODO Добавить запрос подтверждения на выход.
-                    Startup.prefsDef.edit().putString("mc.login", "").commit();
-                    Startup.prefsDef.edit().putString("mc.password", "").commit();
-                    Startup.prefsDef.edit().putString("mc.name", "").commit();
+                    Startup.prefs.edit().putString("mc.login", "").commit();
+                    Startup.prefs.edit().putString("mc.password", "").commit();
+                    Startup.prefs.edit().putString("mc.name", "").commit();
                     //TODO Ни чего не забыл?
                     fillCtrls();
                     return;
@@ -121,13 +121,13 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
 
     protected void fillCtrls() {
 
-        login.setText(Startup.prefsDef.getString("mc.login", ""));
-        password.setText(Startup.prefsDef.getString("mc.password", ""));
+        login.setText(Startup.prefs.getString("mc.login", ""));
+        password.setText(Startup.prefs.getString("mc.password", ""));
 
         View accListYesterdayLine = findViewById(R.id.accListYesterdayLine);
 
         //Авторизованы?
-        if(Startup.prefsDef.getString("mc.name", "").length() > 0) {
+        if(Startup.prefs.getString("mc.name", "").length() > 0) {
             actionBtn.setText(getString(R.string.logout_button));
             anonim.setVisibility(View.INVISIBLE);
             accListYesterdayLine.setVisibility(View.INVISIBLE);

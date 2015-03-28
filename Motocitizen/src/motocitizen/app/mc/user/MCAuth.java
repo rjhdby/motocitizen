@@ -27,9 +27,9 @@ public class MCAuth {
 
     public MCAuth() {
         reset();
-        anonim = Startup.prefsDef.getBoolean("mc.anonim", false);
+        anonim = Startup.prefs.getBoolean("mc.anonim", false);
         if (!anonim) {
-            auth(Startup.prefsDef.getString("mc.login", ""), Startup.prefsDef.getString("mc.password", ""));
+            auth(Startup.prefs.getString("mc.login", ""), Startup.prefs.getString("mc.password", ""));
         }
     }
 
@@ -40,7 +40,7 @@ public class MCAuth {
     }
 
     public String getLogin() {
-        return Startup.prefsDef.getString("mc.login", "");
+        return Startup.prefs.getString("mc.login", "");
     }
 
     public String makePassHash(String pass) {
@@ -69,7 +69,7 @@ public class MCAuth {
 
     // Ну нету в java параметров по-умолчанию.
     public String makePassHash() {
-        return makePassHash(Startup.prefsDef.getString("mc.password", ""));
+        return makePassHash(Startup.prefs.getString("mc.password", ""));
     }
 
     public boolean isFirstRun() {
@@ -78,7 +78,7 @@ public class MCAuth {
 
     public void setAnonim(Context context, Boolean value) {
         anonim = value;
-        Startup.prefsDef.edit().putBoolean("mc.anonim", value).commit();
+        Startup.prefs.edit().putBoolean("mc.anonim", value).commit();
         reset();
         setAccess(context);
     }
@@ -92,9 +92,9 @@ public class MCAuth {
         JSONObject json = new JSONCall("mcaccidents", "auth").request(post);
         parseJSON(json);
         if(name.length() > 0 ) {
-            Startup.prefsDef.edit().putString("mc.name", name).commit();
-            Startup.prefsDef.edit().putString("mc.login", login).commit();
-            Startup.prefsDef.edit().putString("mc.password", password).commit();
+            Startup.prefs.edit().putString("mc.name", name).commit();
+            Startup.prefs.edit().putString("mc.login", login).commit();
+            Startup.prefs.edit().putString("mc.password", password).commit();
             return true;
         } else {
             return false;

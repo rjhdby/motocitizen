@@ -64,15 +64,15 @@ public class SelectSoundActivity extends ActionBarActivity {
         rm = new RingtoneManager(this);
         rm.setType(RingtoneManager.TYPE_NOTIFICATION);
         String defaultUri = RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_NOTIFICATION).toString();
-        currentUri = Startup.prefsDef.getString("mc.notification.sound", defaultUri);
-        currentTitle = Startup.prefsDef.getString("mc.notification.sound.title", "default system");
+        currentUri = Startup.prefs.getString("mc.notification.sound", defaultUri);
+        currentTitle = Startup.prefs.getString("mc.notification.sound.title", "default system");
 
         selectSoundConfirmButton = (Button) findViewById(R.id.select_sound_save_button);
         selectSoundConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Startup.prefsDef.edit().putString("mc.notification.sound", currentUri).commit();
-                Startup.prefsDef.edit().putString("mc.notification.sound.title", currentTitle).commit();
+                Startup.prefs.edit().putString("mc.notification.sound", currentUri).commit();
+                Startup.prefs.edit().putString("mc.notification.sound.title", currentTitle).commit();
                 finish();
             }
         });

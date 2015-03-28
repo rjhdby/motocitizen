@@ -48,8 +48,8 @@ class MCListeners {
 
     public static final Button.OnClickListener authButtonListener = new Button.OnClickListener() {
         public void onClick(View v) {
-            String login = Startup.prefsDef.getString("mc_login", "");
-            String password = Startup.prefsDef.getString("mc_password", "");
+            String login = Startup.prefs.getString("mc_login", "");
+            String password = Startup.prefs.getString("mc_password", "");
             Text.set(R.id.mc_auth_login, login);
             Text.set(R.id.mc_auth_password, password);
             Show.show(R.id.mc_auth);
