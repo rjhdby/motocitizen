@@ -6,14 +6,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.view.KeyEvent;
 import android.view.Window;
 
+import motocitizen.Activity.AuthActivity;
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCLocation;
 import motocitizen.app.mc.gcm.GcmBroadcastReceiver;
-import motocitizen.core.settings.SettingsMenu;
+// zz
+// import motocitizen.core.settings.SettingsMenu;
 import motocitizen.main.R;
 import motocitizen.maps.general.MCMap;
 import motocitizen.utils.Const;
@@ -36,17 +39,22 @@ public class Startup extends Activity {
         setContentView(R.layout.main);
         context = this;
 
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
         new Const();
 
-        prefs = getSharedPreferences("motocitizen.startup", MODE_PRIVATE);
-        // prefs.edit().clear().commit();
+        //prefs = getSharedPreferences("motocitizen.startup", MODE_PRIVATE);
+        //prefs.edit().clear().commit();
         props = new Props();
-        new MCAccidents(this);
+        new MCAccidents(this, prefs);
         new MCMap(this);
-        new SettingsMenu();
+        // zz
+        // new SettingsMenu();
         new SmallSettingsMenu();
         if (MCAccidents.auth.isFirstRun()) {
-            Show.show(R.id.main_frame, R.id.first_auth_screen);
+            //Show.show(R.id.main_frame, R.id.first_auth_screen);
+            Intent i = new Intent(Startup.context, AuthActivity.class);
+            Startup.context.startActivity(i);
         } else {
             Show.show(R.id.main_frame, R.id.main_frame_applications);
         }
@@ -62,6 +70,8 @@ public class Startup extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        Show.show(R.id.main_frame, R.id.main_frame_applications);
         MCLocation.wakeup(this);
         Intent intent = getIntent();
         context = this;

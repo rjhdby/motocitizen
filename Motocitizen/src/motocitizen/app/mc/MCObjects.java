@@ -14,9 +14,9 @@ import motocitizen.main.R;
 import motocitizen.startup.Startup;
 
 public class MCObjects {
-    public static final Button authButton = (Button) findView(R.id.app_mcaccidents_register_button);
-    public static final Button authConfirmButton = (Button) findView(R.id.mc_auth_confirm_button);
-    public static final Button authCancelButton = (Button) findView(R.id.mc_auth_cancel_button);
+    //public static final Button authButton = (Button) findView(R.id.app_mcaccidents_register_button);
+    //public static final Button authConfirmButton = (Button) findView(R.id.mc_auth_confirm_button);
+    //public static final Button authCancelButton = (Button) findView(R.id.mc_auth_cancel_button);
     public static final Button newMessageButton = (Button) findView(R.id.mc_new_message_send);
     public static final ImageButton dialButton = (ImageButton) findView(R.id.dial_button);
     public static final ImageButton createAccButton = (ImageButton) findView(R.id.mc_add_point_button);
@@ -63,8 +63,8 @@ public class MCObjects {
     /*
      * Объекты в меню settings
      */
-    public static final EditText valueAppMcaccidentsDistance = (EditText) findView(R.id.value_app_mcaccidents_distance);
-    public static final EditText valueAppMcaccidentsDistanceAlarm = (EditText) findView(R.id.value_app_mcaccidents_distance_alarm);
+    //public static final EditText valueAppMcaccidentsDistance = (EditText) findView(R.id.value_app_mcaccidents_distance);
+    //public static final EditText valueAppMcaccidentsDistanceAlarm = (EditText) findView(R.id.value_app_mcaccidents_distance_alarm);
 
     private static View findView(int id) {
         return ((Activity) Startup.context).findViewById(id);

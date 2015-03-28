@@ -9,6 +9,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+import motocitizen.Activity.ConfigActivity;
 import motocitizen.main.R;
 import motocitizen.startup.Startup;
 
@@ -26,13 +27,13 @@ public class MCAccTypes {
     }
 
     public static void refresh() {
-        type.get("acc_b").enabled = Startup.prefs.getBoolean("mc.show.break", true);
-        type.get("acc_m").enabled = Startup.prefs.getBoolean("mc.show.acc", true);
-        type.get("acc_m_m").enabled = Startup.prefs.getBoolean("mc.show.acc", true);
-        type.get("acc_m_a").enabled = Startup.prefs.getBoolean("mc.show.acc", true);
-        type.get("acc_m_p").enabled = Startup.prefs.getBoolean("mc.show.acc", true);
-        type.get("acc_o").enabled = Startup.prefs.getBoolean("mc.show.other", true);
-        type.get("acc_s").enabled = Startup.prefs.getBoolean("mc.show.steal", true);
+        type.get("acc_b").enabled = ConfigActivity.isShowBreak(Startup.prefs);
+        type.get("acc_m").enabled = ConfigActivity.isShowAcc(Startup.prefs);
+        type.get("acc_m_m").enabled = ConfigActivity.isShowAcc(Startup.prefs);
+        type.get("acc_m_a").enabled = ConfigActivity.isShowAcc(Startup.prefs);
+        type.get("acc_m_p").enabled = ConfigActivity.isShowAcc(Startup.prefs);
+        type.get("acc_o").enabled = ConfigActivity.isShowOther(Startup.prefs);
+        type.get("acc_s").enabled = ConfigActivity.isShowSteal(Startup.prefs);
     }
 
     public static BitmapDescriptor getBitmapDescriptor(String name) {

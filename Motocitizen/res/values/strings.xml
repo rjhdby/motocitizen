@@ -11,8 +11,8 @@
 	<string name="mc_accidents_details_owner">Сообщил</string>
 	<string name="mc_accidents_details_status">Статус</string>
 	<string name="mc_accidents_details_begin">Начало</string>
-	<string name="mc_settings_distance">Текст(км)</string>
-	<string name="mc_settings_distance_alarm">Звук(км)</string>
+	<string name="mc_settings_distance">Текстом (км)</string>
+	<string name="mc_settings_distance_alarm">Звуком (км)</string>
 	<string name="mc_settings_accidents">ДТП</string>
 	<string name="settings_confirm_button">Сохранить</string>
 	<string name="settings_cancel_button">Отменить</string>
@@ -21,7 +21,7 @@
 	<string name="small_menu_settings">Настройки</string>
 	<string name="small_menu_exit">Выйти</string>
 	<string name="mc_settings_auth_button">Авторизация</string>
-	<string name="mc_auth_header">Для авторизации необходимо ввести логин и пароль такие же как и для захода на форум</string>
+	<string name="mc_auth_header">Для авторизации необходимо ввести логин и пароль такие же как и для захода на форум.</string>
 	<string name="mc_auth_login">Логин</string>
 	<string name="mc_auth_password">Пароль</string>
 	<string name="mc_auth_confirm_button">ОК</string>
@@ -66,7 +66,7 @@
 	<string name="first_auth_login">Войти</string>
 	<string name="first_auth_anonim">Запустить анонимно</string>
 	<string name="mc_notif_system">default system</string>
-	<string name="mc_notif_sound">Выбрать звук</string>
+	<string name="mc_notif_sound">Выбрать звук уведомления</string>
 	<string name="tab_accidents">События</string>
 	<string name="tab_acc_details">Детали</string>
 	<string name="tab_map">Карта</string>
@@ -77,4 +77,14 @@
 	<string name="onway_delimiter">В пути</string>
 	<string name="onway_button">Еду!</string>
 	<string name="fine_address">Уточнить адрес</string>
+    <string name="small_menu_settings2">Настройки2</string>
+    <string name="title_activity_about">AboutActivity</string>
+    <string name="config_title_notify_category">Дистанции оповещений</string>
+    <string name="config_acc_type_category">Типы инцидентов</string>
+    <string name="small_menu_about">О приложении</string>
+    <string name="about_info">Motocitizen - Программа взаимопомощи мотоциклистов на дорогах.</string>
+    <string name="config_other_category">Другое</string>
+    <string name="logout_button">Завершить сеанс</string>
+    <string name="login_button">Войти</string>
+    <string name="title_activity_select_sound">SelectSoundActivity</string>
 </resources>

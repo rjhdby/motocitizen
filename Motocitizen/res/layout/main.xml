@@ -11,8 +11,6 @@
 
     <include layout="@layout/main_frame_applications" />
 
-    <include layout="@layout/settings" />
-
     <include layout="@layout/mc_auth" />
 
     <include layout="@layout/mc_auth_first_check" />

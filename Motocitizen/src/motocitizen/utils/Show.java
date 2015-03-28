@@ -35,12 +35,12 @@ public class Show {
             show(R.id.main_frame, R.id.main_frame_applications);
         } else {
             if (current.first == R.id.main_frame) {
-                if (current.second == R.id.mc_select_sound_screen || current.second == R.id.mc_auth) {
+                /*if (current.second == R.id.mc_select_sound_screen || current.second == R.id.mc_auth) {
                     show(R.id.main_frame, R.id.main_frame_settings);
                 } else if (current.second == R.id.mc_create_main || current.second == R.id.main_frame_settings) {
 
                     show(R.id.main_frame, R.id.main_frame_applications);
-                } else if (current.second == R.id.main_frame_applications) {
+                } else*/ if (current.second == R.id.main_frame_applications) {
 
                     MCObjects.tabAccidentsButton.setChecked(true);
                 }

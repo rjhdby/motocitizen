@@ -11,8 +11,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 
+import motocitizen.Activity.AboutActivity;
+import motocitizen.Activity.AuthActivity;
+import motocitizen.Activity.ConfigActivity;
 import motocitizen.app.mc.MCAccidents;
-import motocitizen.core.settings.SettingsMenu;
+// zz
+// import motocitizen.core.settings.SettingsMenu;
 import motocitizen.main.R;
 
 @SuppressLint("RtlHardcoded")
@@ -21,7 +25,7 @@ public class SmallSettingsMenu {
     public static PopupMenu popupBL;
 
     public SmallSettingsMenu() {
-        Activity act = (Activity) Startup.context;
+        final Activity act = (Activity) Startup.context;
         ImageButton b = (ImageButton) act.findViewById(R.id.statusBarButton);
         View v = act.findViewById(R.id.footer_menu_anchor);
         popupBL = new PopupMenu(act, v, Gravity.LEFT);
@@ -36,17 +40,18 @@ public class SmallSettingsMenu {
                 if (id == R.id.small_menu_refresh) {
 
                     MCAccidents.refresh(Startup.context);
-                } else if (id == R.id.small_menu_settings) {
-
-                    SettingsMenu.open();
+                } else if(id == R.id.small_menu_settings) {
+                    Intent i = new Intent(act, ConfigActivity.class);
+                    Startup.context.startActivity(i);
+                } else if(id == R.id.small_menu_about) {
+                    Intent i = new Intent(act, AboutActivity.class);
+                    Startup.context.startActivity(i);
                 } else if (id == R.id.small_menu_exit) {
-
                     Intent intent = new Intent(Intent.ACTION_MAIN);
                     intent.addCategory(Intent.CATEGORY_HOME);
                     Startup.context.startActivity(intent);
                     int pid = android.os.Process.myPid();
                     android.os.Process.killProcess(pid);
-
                 }
                 return true;
             }

@@ -1,6 +1,5 @@
-package motocitizen.app.mc;
+package motocitizen.Activity;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
@@ -8,7 +7,11 @@ import android.graphics.Color;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.support.v7.app.ActionBarActivity;
+import android.os.Bundle;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -18,21 +21,24 @@ import android.widget.TextView;
 import java.util.HashMap;
 import java.util.Map;
 
-// zz
-// import motocitizen.core.settings.SettingsMenu;
+import motocitizen.app.mc.MCObjects;
 import motocitizen.main.R;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 import motocitizen.utils.NewID;
-import motocitizen.utils.Show;
 
-@SuppressLint("UseSparseArrays")
-public class MCSelectSound {
+public class SelectSoundActivity extends ActionBarActivity {
+
     private static Map<Integer, Uri> notifications;
     private static int currentId;
     private static ViewGroup vg;
     private static String currentUri;
     private static String currentTitle;
+    private static RingtoneManager rm;
+
+    private static Button selectSoundConfirmButton;
+    private static Button selectSoundCancelButton;
+
     private final Button.OnClickListener play = new Button.OnClickListener() {
 
         @Override
@@ -48,40 +54,42 @@ public class MCSelectSound {
             currentTitle = current.getTitle(v.getContext());
         }
     };
-    private static RingtoneManager rm;
-    private static Boolean firstrun;
-    private static final Button.OnClickListener saveListener = new Button.OnClickListener() {
 
-        @Override
-        public void onClick(View v) {
-            Startup.prefs.edit().putString("mc.notification.sound", currentUri).commit();
-            Startup.prefs.edit().putString("mc.notification.sound.title", currentTitle).commit();
-            //zz
-            //SettingsMenu.refresh();
-            //Show.showLast();
-        }
-    };
-    private static final Button.OnClickListener cancelListener = new Button.OnClickListener() {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.mc_select_sound);
 
-        @Override
-        public void onClick(View v) {
-            //Show.showLast();
-        }
-    };
-
-    public MCSelectSound(Context context) {
-        vg = (ViewGroup) ((Activity) context).findViewById(R.id.sound_select_table);
-        rm = new RingtoneManager(context);
+        vg = (ViewGroup)findViewById(R.id.sound_select_table);
+        rm = new RingtoneManager(this);
         rm.setType(RingtoneManager.TYPE_NOTIFICATION);
-        String defaultUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION).toString();
+        String defaultUri = RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_NOTIFICATION).toString();
         currentUri = Startup.prefs.getString("mc.notification.sound", defaultUri);
         currentTitle = Startup.prefs.getString("mc.notification.sound.title", "default system");
-        if (firstrun == null) {
-            drawList(context);
-            firstrun = true;
-        }
-        MCObjects.selectSoundConfirmButton.setOnClickListener(saveListener);
-        MCObjects.selectSoundCancelButton.setOnClickListener(cancelListener);
+
+        selectSoundConfirmButton = (Button) findViewById(R.id.select_sound_save_button);
+        selectSoundConfirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Startup.prefs.edit().putString("mc.notification.sound", currentUri).commit();
+                Startup.prefs.edit().putString("mc.notification.sound.title", currentTitle).commit();
+                finish();
+            }
+        });
+
+        selectSoundCancelButton = (Button) findViewById(R.id.select_sound_cancel_button);
+        selectSoundCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        drawList(this);
     }
 
     private void drawList(Context context) {
@@ -125,5 +133,21 @@ public class MCSelectSound {
         tv.setBackgroundColor(Color.GRAY);
         tr.addView(tv);
         return tr;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        //getMenuInflater().inflate(R.menu.menu_select_sound, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        return super.onOptionsItemSelected(item);
     }
 }
