@@ -66,6 +66,7 @@
             android:layout_height="wrap_content" >
 
             <TextView
+                android:id="@+id/mc_auth_anonim_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -96,34 +97,9 @@
         </TableRow>
     </TableLayout>
     <Button
-            android:id="@+id/logout_button"
+            android:id="@+id/action_button"
             style="?android:attr/buttonBarButtonStyle"
-            android:text="@string/logout_button"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="invisible" >
+            android:layout_height="wrap_content" >
     </Button>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:gravity="bottom" >
-
-
-    <Button
-            android:id="@+id/mc_auth_cancel_button"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight=".5"
-            android:text="@string/mc_auth_cancel_button" />
-
-        <Button
-            android:id="@+id/mc_auth_confirm_button"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight=".5"
-            android:text="@string/mc_auth_confirm_button" />
-    </LinearLayout>
-
 </LinearLayout>

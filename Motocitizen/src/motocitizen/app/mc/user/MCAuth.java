@@ -29,7 +29,7 @@ public class MCAuth {
         reset();
         anonim = Startup.prefsDef.getBoolean("mc.anonim", false);
         if (!anonim) {
-            auth();
+            auth(Startup.prefsDef.getString("mc.login", ""), Startup.prefsDef.getString("mc.password", ""));
         }
     }
 
@@ -43,14 +43,17 @@ public class MCAuth {
         return Startup.prefsDef.getString("mc.login", "");
     }
 
-    public String makePassHash() {
+    public String makePassHash(String pass) {
         String hash = "";
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
-            String pass = Startup.prefsDef.getString("mc.password", "");
-            if (pass.equals("")) {
-                Startup.prefsDef.edit().putString("mc.password", "").commit();
-            }
+//          String pass = Startup.prefsDef.getString("mc.password", "");
+
+//Это зачем? ----
+//            if (pass.equals("")) {
+//                Startup.prefsDef.edit().putString("mc.password", "").commit();
+//            }
+//Это зачем? ----
             md.update(pass.getBytes());
             byte[] digest = md.digest();
             StringBuilder sb = new StringBuilder();
@@ -64,6 +67,11 @@ public class MCAuth {
         return hash;
     }
 
+    // Ну нету в java параметров по-умолчанию.
+    public String makePassHash() {
+        return makePassHash(Startup.prefsDef.getString("mc.password", ""));
+    }
+
     public boolean isFirstRun() {
         return !anonim && getLogin().equals("");
     }
@@ -75,15 +83,22 @@ public class MCAuth {
         setAccess(context);
     }
 
-    public void auth() {
+    public Boolean auth(String login, String password) {
         String ident = ((TelephonyManager) Startup.context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
         Map<String, String> post = new HashMap<>();
         post.put("ident", ident);
-        post.put("login", getLogin());
-        post.put("passwordHash", makePassHash());
+        post.put("login", login);
+        post.put("passwordHash", makePassHash(password));
         JSONObject json = new JSONCall("mcaccidents", "auth").request(post);
         parseJSON(json);
-        Startup.prefsDef.edit().putString("mc.name", name).commit();
+        if(name.length() > 0 ) {
+            Startup.prefsDef.edit().putString("mc.name", name).commit();
+            Startup.prefsDef.edit().putString("mc.login", login).commit();
+            Startup.prefsDef.edit().putString("mc.password", password).commit();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void parseJSON(JSONObject json) {

@@ -43,9 +43,9 @@ public class MCInit {
     }
 
     public static void addListeners() {
-        MCObjects.authConfirmButton.setOnClickListener(MCListeners.authConfirmListener);
+        //MCObjects.authConfirmButton.setOnClickListener(MCListeners.authConfirmListener);
         MCObjects.authButton.setOnClickListener(MCListeners.authButtonListener);
-        MCObjects.authCancelButton.setOnClickListener(MCListeners.authCancelListener);
+        //MCObjects.authCancelButton.setOnClickListener(MCListeners.authCancelListener);
         MCObjects.dialButton.setOnClickListener(MCListeners.dialButtonListener);
         MCObjects.createAccButton.setOnClickListener(MCListeners.createAccButtonListener);
         MCObjects.firstLoginButton.setOnClickListener(MCListeners.firstloginButtonListener);

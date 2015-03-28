@@ -21,7 +21,7 @@
 	<string name="small_menu_settings">Настройки</string>
 	<string name="small_menu_exit">Выйти</string>
 	<string name="mc_settings_auth_button">Авторизация</string>
-	<string name="mc_auth_header">Для авторизации необходимо ввести логин и пароль такие же как и для захода на форум</string>
+	<string name="mc_auth_header">Для авторизации необходимо ввести логин и пароль такие же как и для захода на форум.</string>
 	<string name="mc_auth_login">Логин</string>
 	<string name="mc_auth_password">Пароль</string>
 	<string name="mc_auth_confirm_button">ОК</string>
@@ -83,6 +83,7 @@
     <string name="config_acc_type_category">Типы инцидентов</string>
     <string name="small_menu_about">О приложении</string>
     <string name="about_info">Motocitizen - Программа взаимопомощи мотоциклистов на дорогах.</string>
-  <string name="config_other_category">Другое</string>
-  <string name="logout_button">Завершить сеанс</string>
+    <string name="config_other_category">Другое</string>
+    <string name="logout_button">Завершить сеанс</string>
+    <string name="login_button">Войти</string>
 </resources>

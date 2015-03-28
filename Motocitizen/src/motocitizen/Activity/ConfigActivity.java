@@ -35,6 +35,13 @@ public class ConfigActivity extends PreferenceActivity implements
         return false;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Preference editTextPref = (Preference) findPreference(getResources().getString(R.string.mc_settings_auth_button));
+        editTextPref.setSummary(Startup.prefsDef.getString("mc.login", ""));
+    }
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -56,8 +63,6 @@ public class ConfigActivity extends PreferenceActivity implements
             }
         });
 
-        Preference editTextPref = (Preference) findPreference(getResources().getString(R.string.mc_settings_auth_button));
-        editTextPref.setSummary(Startup.prefsDef.getString("mc.login", ""));
         return;
     }
 

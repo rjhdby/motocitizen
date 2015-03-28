@@ -25,7 +25,7 @@
         android:key="@string/config_acc_type_category"
         android:title="@string/config_acc_type_category">
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:dialogTitle="@string/mc_settings_accidents"
             android:key="mc.show.acc"
             android:summaryOff="Disable"
@@ -34,7 +34,7 @@
             android:id="@+id/value_app_mcaccidents_accidents"
             android:tag="mc.show.acc" />
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:dialogTitle="@string/mc_settings_breaks"
             android:key="mc.show.break"
             android:summaryOff="Disable"
@@ -43,7 +43,7 @@
             android:id="@+id/value_app_mcaccidents_breaks"
             android:tag="mc.show.break" />
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:dialogTitle="@string/mc_settings_steal"
             android:key="mc.show.steal"
             android:summaryOff="Disable"
@@ -52,7 +52,7 @@
             android:id="@+id/value_app_mcaccidents_steal"
             android:tag="mc.show.steal" />
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:dialogTitle="@string/mc_settings_other"
             android:key="mc.show.other"
             android:summaryOff="Disable"
