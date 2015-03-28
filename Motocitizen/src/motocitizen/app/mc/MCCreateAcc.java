@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -162,10 +161,6 @@ class MCCreateAcc {
                 }
                 exit();
                 MCAccidents.refresh(v.getContext());
-            }
-            else {
-              //TODO Перенести в ресурсы
-                Toast.makeText(act, "Запрос не был отправлен, возможно нет связи.", Toast.LENGTH_SHORT).show();
             }
         }
     };

@@ -16,7 +16,6 @@ import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCInit;
 import motocitizen.main.R;
 import motocitizen.startup.Startup;
-import motocitizen.utils.Show;
 import motocitizen.utils.Text;
 
 /**
