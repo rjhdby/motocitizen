@@ -3,79 +3,24 @@ package motocitizen.maps.general;
 import android.content.Context;
 import android.location.Location;
 
-import motocitizen.maps.google.MCGoogleMap;
-import motocitizen.maps.osm.MCOSMMap;
+    public abstract class MCMap {
 
-public class MCMap {
-    private final static int OSM = 1;
-    private final static int GOOGLE = 2;
-    private final static int YANDEX = 3;
+        private String name;
 
-    private static int CURRENT;
+        public abstract void placeUser(Context context);
 
-    public MCMap(Context context) {
-        CURRENT = GOOGLE;
-        switch (CURRENT) {
-            //noinspection ConstantConditions
-            case OSM:
-                new MCOSMMap(context);
-                break;
-            case GOOGLE:
-                new MCGoogleMap(context);
-                break;
-            case YANDEX:
-        }
-    }
+        public abstract void jumpToPoint(Location location);
 
-    public static void placeUser(Context context) {
-        switch (CURRENT) {
-            case OSM:
-                MCOSMMap.placeUser(context);
-                break;
-            case GOOGLE:
-                MCGoogleMap.placeUser(context);
-                break;
-            case YANDEX:
+        public abstract void zoom(int zoom);
+
+        public abstract void placeAcc(Context context);
+
+        public String getName() {
+            return name;
         }
 
-    }
-
-    public static void jumpToPoint(Location location) {
-        switch (CURRENT) {
-            case OSM:
-                MCOSMMap.jumpToPoint(location);
-                break;
-            case GOOGLE:
-                MCGoogleMap.jumpToPoint(location);
-                break;
-            case YANDEX:
+        protected void setName(String name) {
+            this.name = name;
         }
+   }
 
-    }
-
-    public static void zoom(int zoom) {
-        switch (CURRENT) {
-            case OSM:
-                MCOSMMap.zoom(zoom);
-                break;
-            case GOOGLE:
-                MCGoogleMap.zoom(zoom);
-                break;
-            case YANDEX:
-        }
-
-    }
-
-    public static void placeAcc(Context context) {
-        switch (CURRENT) {
-            case OSM:
-                MCOSMMap.placeAcc(context);
-                break;
-            case GOOGLE:
-                MCGoogleMap.placeAcc(context);
-                break;
-            case YANDEX:
-        }
-
-    }
-}

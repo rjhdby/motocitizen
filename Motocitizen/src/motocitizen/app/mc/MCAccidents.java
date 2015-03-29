@@ -26,6 +26,7 @@ import motocitizen.app.mc.popups.MCAccListPopup;
 import motocitizen.app.mc.user.MCAuth;
 import motocitizen.main.R;
 import motocitizen.maps.general.MCMap;
+import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 import motocitizen.utils.Text;
 
@@ -212,15 +213,15 @@ public class MCAccidents {
         for (int i : p.getSortedHistoryKeys()) {
             logView.addView(p.history.get(i).createRow(context));
         }
-        MCMap.zoom(16);
-        MCMap.jumpToPoint(p.location);
+        Startup.map.zoom(16);
+        Startup.map.jumpToPoint(p.location);
     }
 
     public static void refresh(Context context) {
         points.load();
-        MCMap.placeAcc(context);
+        Startup.map.placeAcc(context);
         redraw(context);
-        MCMap.placeAcc(context);
+        Startup.map.placeAcc(context);
     }
 
     public static void redraw(Context context) {

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="mapProvider">
+        <item>OpenStreetMap</item>
+        <item>GoogleMaps</item>
+    </string-array>
+    <string-array name="mapProviderValues">
+        <item>osm</item>
+        <item>google</item>
+    </string-array>
+</resources>

@@ -21,18 +21,20 @@ import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCLocation;
 import motocitizen.app.mc.MCPoint;
 import motocitizen.main.R;
+import motocitizen.maps.general.MCMap;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Inflate;
 import motocitizen.utils.MCUtils;
 
 @SuppressLint("UseSparseArrays")
-public class MCGoogleMap {
+public class MCGoogleMap extends MCMap {
     private static GoogleMap map;
     private static Marker user;
     private static Map<String, Integer> accidents;
     private static String selected;
 
     public MCGoogleMap(Context context) {
+        setName("google");
         selected = "";
         Inflate.add(R.id.map_container, R.layout.google_maps_view);
         map = ((MapFragment) ((Activity) context).getFragmentManager().findFragmentById(R.id.google_map)).getMap();
@@ -54,7 +56,7 @@ public class MCGoogleMap {
     }
 
     @SuppressWarnings("UnusedParameters")
-    public static void placeUser(Context context) {
+    public void placeUser(Context context) {
         if (user != null) {
             user.remove();
         }
@@ -62,12 +64,12 @@ public class MCGoogleMap {
                 .icon(MCAccTypes.getBitmapDescriptor("user")));
     }
 
-    public static void jumpToPoint(Location location) {
+    public void jumpToPoint(Location location) {
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(MCUtils.LocationToLatLng(location), 16));
     }
 
     @SuppressWarnings("UnusedParameters")
-    public static void placeAcc(Context context) {
+    public void placeAcc(Context context) {
         if (accidents == null) {
             accidents = new HashMap<>();
         }
@@ -103,7 +105,7 @@ public class MCGoogleMap {
         map.getUiSettings().setZoomControlsEnabled(true);
     }
 
-    public static void zoom(int zoom) {
+    public void zoom(int zoom) {
         map.animateCamera(CameraUpdateFactory.zoomTo(zoom));
     }
 }

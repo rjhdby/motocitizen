@@ -72,7 +72,8 @@ public class MCLocation {
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         current = getBestFusionLocation(context);
         setAddress(context);
-        MCMap.jumpToPoint(current);
+        //zz
+        //Startup.map.jumpToPoint(current);
     }
 
     public static Location getBestFusionLocation(Context context) {
@@ -132,7 +133,7 @@ public class MCLocation {
             name += ": ";
         }
         Text.set(R.id.statusBarText, name + address);
-        MCMap.placeUser(context);
+        Startup.map.placeUser(context);
     }
 
     public static String getAddress(Location location) {

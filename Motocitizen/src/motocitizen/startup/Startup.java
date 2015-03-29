@@ -19,6 +19,8 @@ import motocitizen.app.mc.gcm.GcmBroadcastReceiver;
 // import motocitizen.core.settings.SettingsMenu;
 import motocitizen.main.R;
 import motocitizen.maps.general.MCMap;
+import motocitizen.maps.google.MCGoogleMap;
+import motocitizen.maps.osm.MCOSMMap;
 import motocitizen.utils.Const;
 import motocitizen.utils.Keyboard;
 import motocitizen.utils.MCUtils;
@@ -29,6 +31,7 @@ public class Startup extends Activity {
     public static Props props;
     public static Context context;
     public static SharedPreferences prefs;
+    public static MCMap map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +49,14 @@ public class Startup extends Activity {
         //prefs = getSharedPreferences("motocitizen.startup", MODE_PRIVATE);
         //prefs.edit().clear().commit();
         props = new Props();
+
+        //map = new MCGoogleMap(this);
         new MCAccidents(this, prefs);
-        new MCMap(this);
+
+        //map = new MCOSMMap(this);
+        changeMap(prefs.getString("map_pref", "osm"));
+        //map.jumpToPoint(MCLocation.current);
+        //new MCMap(this);
         // zz
         // new SettingsMenu();
         new SmallSettingsMenu();
@@ -115,5 +124,17 @@ public class Startup extends Activity {
             MCAccidents.points.setSelected(this, id);
             MCAccidents.toDetails(this, id);
         }
+    }
+
+    public static void changeMap(String name) {
+        if (map != null && !map.getName().equals(name))
+            map = null;
+
+        if (name.equals("osm")) {
+            map = new MCOSMMap(context);
+        } else if (name.equals("google")) {
+            map = new MCGoogleMap(context);
+        }
+        map.jumpToPoint(MCLocation.current);
     }
 }
