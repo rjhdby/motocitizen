@@ -61,66 +61,73 @@ public class JSONCall {
     }
 
     public JSONObject request(Map<String, String> post) {
-        post.put("calledMethod", method);
-        // Log.d("JSON CALL", "|" + url.toString() + "|");
-        HttpURLConnection connection = null;
-        StringBuilder response = new StringBuilder();
-        CustomTrustManager.allowAllSSL();
-        try {
-            // URL url = new URL(server);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Accept-Charset", CHARSET);
-            connection.setRequestProperty("Accept-Encoding", "gzip");
-            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + CHARSET);
-            connection.setRequestProperty("Content-Language", "ru-RU");
-            connection.setRequestProperty("User-Agent", USERAGENT);
-            connection.setUseCaches(false);
-
-            if (!post.isEmpty()) {
-                String POST = makePOST(post);
-                Log.d("POST", url.toString() + "?" + POST);
-                connection.setDoOutput(true);
-                connection.setRequestProperty("Content-Length", Integer.toString((POST).getBytes().length));
-                DataOutputStream os = new DataOutputStream(connection.getOutputStream());
-                os.writeBytes(POST);
-            }
-            InputStream is;
+        if(Startup.isOnline()) {
+            post.put("calledMethod", method);
+            // Log.d("JSON CALL", "|" + url.toString() + "|");
+            HttpURLConnection connection = null;
+            StringBuilder response = new StringBuilder();
+            CustomTrustManager.allowAllSSL();
             try {
-                is = connection.getInputStream();
-                is = new GZIPInputStream(is);
-                int responseCode = connection.getResponseCode();
-                Log.d("JSON ERROR", String.valueOf(responseCode));
-                if (responseCode == 200) {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(is));
-                    String inputLine;
-                    while ((inputLine = in.readLine()) != null) {
-                        response.append(inputLine);
-                    }
-                    in.close();
-                } else {
-                    Log.d("JSON ERROR", String.valueOf(responseCode));
+                // URL url = new URL(server);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Accept-Charset", CHARSET);
+                connection.setRequestProperty("Accept-Encoding", "gzip");
+                connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + CHARSET);
+                connection.setRequestProperty("Content-Language", "ru-RU");
+                connection.setRequestProperty("User-Agent", USERAGENT);
+                connection.setUseCaches(false);
+
+                if (!post.isEmpty()) {
+                    String POST = makePOST(post);
+                    Log.d("POST", url.toString() + "?" + POST);
+                    connection.setDoOutput(true);
+                    connection.setRequestProperty("Content-Length", Integer.toString((POST).getBytes().length));
+                    DataOutputStream os = new DataOutputStream(connection.getOutputStream());
+                    os.writeBytes(POST);
                 }
-            } catch (FileNotFoundException e) {
+                InputStream is;
+                try {
+                    is = connection.getInputStream();
+                    is = new GZIPInputStream(is);
+                    int responseCode = connection.getResponseCode();
+                    Log.d("JSON ERROR", String.valueOf(responseCode));
+                    if (responseCode == 200) {
+                        BufferedReader in = new BufferedReader(new InputStreamReader(is));
+                        String inputLine;
+                        while ((inputLine = in.readLine()) != null) {
+                            response.append(inputLine);
+                        }
+                        in.close();
+                    } else {
+                        Log.d("JSON ERROR", String.valueOf(responseCode));
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+            } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
+            JSONObject reader;
+            try {
+                reader = new JSONObject(response.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+                reader = new JSONObject();
             }
+            Log.d("JSON RESPONSE", reader.toString());
+            return reader;
+        } else {
+            //TODO Перенести в ресурсы
+            Toast.makeText(Startup.context, "Не могу отправить запрос, пожалуйста, проверьте доступность Internet.", Toast.LENGTH_LONG).show();
+            return new JSONObject();
         }
-        JSONObject reader;
-        try {
-            reader = new JSONObject(response.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-            reader = new JSONObject();
-        }
-        Log.d("JSON RESPONSE", reader.toString());
-        return reader;
     }
 
     private String makePOST(Map<String, String> post) {

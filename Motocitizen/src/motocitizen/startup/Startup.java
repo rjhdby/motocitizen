@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
@@ -115,5 +117,11 @@ public class Startup extends Activity {
             MCAccidents.points.setSelected(this, id);
             MCAccidents.toDetails(this, id);
         }
+    }
+
+    public static boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager)Startup.context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }
