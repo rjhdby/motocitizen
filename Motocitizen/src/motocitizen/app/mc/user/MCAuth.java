@@ -1,10 +1,8 @@
 package motocitizen.app.mc.user;
 
-import android.app.Activity;
 import android.content.Context;
 import android.telephony.TelephonyManager;
-import android.view.View;
-import android.widget.CheckBox;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -84,19 +82,25 @@ public class MCAuth {
     }
 
     public Boolean auth(String login, String password) {
-        String ident = ((TelephonyManager) Startup.context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
-        Map<String, String> post = new HashMap<>();
-        post.put("ident", ident);
-        post.put("login", login);
-        post.put("passwordHash", makePassHash(password));
-        JSONObject json = new JSONCall("mcaccidents", "auth").request(post);
-        parseJSON(json);
-        if(name.length() > 0 ) {
-            Startup.prefs.edit().putString("mc.name", name).commit();
-            Startup.prefs.edit().putString("mc.login", login).commit();
-            Startup.prefs.edit().putString("mc.password", password).commit();
-            return true;
+        if(Startup.isOnline()) {
+            String ident = ((TelephonyManager) Startup.context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+            Map<String, String> post = new HashMap<>();
+            post.put("ident", ident);
+            post.put("login", login);
+            post.put("passwordHash", makePassHash(password));
+            JSONObject json = new JSONCall("mcaccidents", "auth").request(post);
+            parseJSON(json);
+            if (name.length() > 0) {
+                Startup.prefs.edit().putString("mc.name", name).commit();
+                Startup.prefs.edit().putString("mc.login", login).commit();
+                Startup.prefs.edit().putString("mc.password", password).commit();
+                return true;
+            } else {
+                return false;
+            }
         } else {
+            //TODO Перенести в ресурсы
+            Toast.makeText(Startup.context, "Авторизация не возможна, пожалуйста, проверьте доступность Internet.", Toast.LENGTH_LONG).show();
             return false;
         }
     }
