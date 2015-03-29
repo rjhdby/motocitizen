@@ -56,8 +56,8 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyDAAUQJJB1qY_IpGJBUwfmDdIbeL9LkRP4" />
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDfQZrnHvn-fNCYmFQSMBa-1ClE0ZCWUQ4" />
 
         <activity
             android:name="motocitizen.startup.Startup"
