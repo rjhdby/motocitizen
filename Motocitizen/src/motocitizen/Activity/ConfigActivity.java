@@ -3,6 +3,7 @@ package motocitizen.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 
@@ -21,6 +22,8 @@ public class ConfigActivity extends PreferenceActivity implements
     public static final String MC_SHOW_ACC = "mc.show.acc";
     public static final String MC_SHOW_STEAL = "mc.show.steal";
     public static final String MC_SHOW_OTHER = "mc.show.other";
+
+    private ListPreference mapProviderPreference;
 
     //TODO вызывать setSummary при изменении значений дистанций оповещений
 
@@ -79,6 +82,16 @@ public class ConfigActivity extends PreferenceActivity implements
             }
         });
 
+        mapProviderPreference = (ListPreference)getPreferenceScreen().findPreference("map_pref");
+        mapProviderPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                mapProviderPreference.setValue(newValue.toString());
+                Startup.createMap(newValue.toString());
+                preference.setSummary(mapProviderPreference.getEntry());
+                return true;
+            }
+        });
         return;
     }
 

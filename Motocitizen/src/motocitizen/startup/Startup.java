@@ -21,6 +21,8 @@ import motocitizen.app.mc.gcm.GcmBroadcastReceiver;
 // import motocitizen.core.settings.SettingsMenu;
 import motocitizen.main.R;
 import motocitizen.maps.general.MCMap;
+import motocitizen.maps.google.MCGoogleMap;
+import motocitizen.maps.osm.MCOSMMap;
 import motocitizen.utils.Const;
 import motocitizen.utils.Keyboard;
 import motocitizen.utils.MCUtils;
@@ -31,6 +33,7 @@ public class Startup extends Activity {
     public static Props props;
     public static Context context;
     public static SharedPreferences prefs;
+    public static MCMap map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +51,10 @@ public class Startup extends Activity {
         //prefs = getSharedPreferences("motocitizen.startup", MODE_PRIVATE);
         //prefs.edit().clear().commit();
         props = new Props();
+
         new MCAccidents(this, prefs);
-        new MCMap(this);
+
+        createMap(prefs.getString("map_pref", MCMap.OSM));
         // zz
         // new SettingsMenu();
         new SmallSettingsMenu();
@@ -123,5 +128,17 @@ public class Startup extends Activity {
         ConnectivityManager cm = (ConnectivityManager)Startup.context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    public static void createMap(String name) {
+        if (map != null && !map.getName().equals(name))
+            map = null;
+
+        if (name.equals(MCMap.OSM)) {
+            map = new MCOSMMap(context);
+        } else if (name.equals(MCMap.GOOGLE)) {
+            map = new MCGoogleMap(context);
+        }
+        map.jumpToPoint(MCLocation.current);
     }
 }

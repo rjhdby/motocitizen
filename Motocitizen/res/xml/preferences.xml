@@ -61,6 +61,17 @@
             android:id="@+id/value_app_mcaccidents_other"
             android:tag="mc.show.other" />
     </PreferenceCategory>
+    <PreferenceCategory
+        android:key="@string/map_provider_category"
+        android:title="@string/map_provider_category">
+        <ListPreference
+            android:title="@string/config_map_title"
+            android:key="map_pref"
+            android:defaultValue="osm"
+            android:summary="%s"
+            android:entries="@array/mapProvider"
+            android:entryValues="@array/mapProviderValues" />
+    </PreferenceCategory>
   <PreferenceCategory
       android:key="@string/config_other_category"
       android:title="@string/config_other_category">

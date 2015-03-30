@@ -87,4 +87,6 @@
     <string name="logout_button">Завершить сеанс</string>
     <string name="login_button">Войти</string>
     <string name="title_activity_select_sound">SelectSoundActivity</string>
+    <string name="map_provider_category">Карта</string>
+    <string name="config_map_title">Провайдер</string>
 </resources>

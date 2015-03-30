@@ -18,14 +18,16 @@ import org.osmdroid.views.overlay.ScaleBarOverlay;
 
 import motocitizen.app.mc.MCLocation;
 import motocitizen.main.R;
+import motocitizen.maps.general.MCMap;
 import motocitizen.utils.Inflate;
 
-public class MCOSMMap {
+public class MCOSMMap extends MCMap {
     private static MapView map;
     private static ItemizedIconOverlay<OverlayItem> userOverlay, accOverlay;
 
     public MCOSMMap(Context context) {
-        Inflate.add(R.id.map_container, R.layout.osm_view_content);
+        setName(MCMap.OSM);
+        Inflate.set(R.id.map_container, R.layout.osm_view_content);
         userOverlay = OSMUserOverlay.getUserOverlay();
         accOverlay = OSMAccOverlay.getOverlay(context);
         Activity act = (Activity) context;
@@ -43,7 +45,7 @@ public class MCOSMMap {
         goToUser();
     }
 
-    public static void placeAcc(Context context) {
+    public void placeAcc(Context context) {
         map.getOverlays().remove(accOverlay);
         accOverlay = OSMAccOverlay.getOverlay(context);
         map.getOverlays().add(accOverlay);
@@ -51,7 +53,7 @@ public class MCOSMMap {
     }
 
     @SuppressWarnings("UnusedParameters")
-    public static void placeUser(Context context) {
+    public void placeUser(Context context) {
         map.getOverlays().remove(userOverlay);
         userOverlay = OSMUserOverlay.getUserOverlay();
         map.getOverlays().add(userOverlay);
@@ -64,11 +66,11 @@ public class MCOSMMap {
         map.invalidate();
     }
 
-    public static void zoom(int zoom) {
+    public void zoom(int zoom) {
         map.getController().setZoom(zoom);
     }
 
-    public static void jumpToPoint(Location location) {
+    public void jumpToPoint(Location location) {
         GeoPoint gp = new GeoPoint(location);
         map.getController().animateTo(gp);
     }
@@ -121,5 +123,4 @@ public class MCOSMMap {
             canvas.drawLine(cx - r, cy, cx + r, cy, paint);
         }
     }
-
 }
