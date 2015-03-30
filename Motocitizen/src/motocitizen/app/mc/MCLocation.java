@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import motocitizen.main.R;
-import motocitizen.maps.general.MCMap;
 import motocitizen.network.JSONCall;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Text;

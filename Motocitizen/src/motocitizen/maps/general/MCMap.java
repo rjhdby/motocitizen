@@ -5,6 +5,9 @@ import android.location.Location;
 
     public abstract class MCMap {
 
+        public static final String OSM = "osm";
+        public static final String GOOGLE = "google";
+
         private String name;
 
         public abstract void placeUser(Context context);

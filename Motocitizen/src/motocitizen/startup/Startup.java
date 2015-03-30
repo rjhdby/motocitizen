@@ -52,13 +52,9 @@ public class Startup extends Activity {
         //prefs.edit().clear().commit();
         props = new Props();
 
-        //map = new MCGoogleMap(this);
         new MCAccidents(this, prefs);
 
-        //map = new MCOSMMap(this);
-        changeMap(prefs.getString("map_pref", "osm"));
-        //map.jumpToPoint(MCLocation.current);
-        //new MCMap(this);
+        createMap(prefs.getString("map_pref", MCMap.OSM));
         // zz
         // new SettingsMenu();
         new SmallSettingsMenu();
@@ -134,13 +130,13 @@ public class Startup extends Activity {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-    public static void changeMap(String name) {
+    public static void createMap(String name) {
         if (map != null && !map.getName().equals(name))
             map = null;
 
-        if (name.equals("osm")) {
+        if (name.equals(MCMap.OSM)) {
             map = new MCOSMMap(context);
-        } else if (name.equals("google")) {
+        } else if (name.equals(MCMap.GOOGLE)) {
             map = new MCGoogleMap(context);
         }
         map.jumpToPoint(MCLocation.current);

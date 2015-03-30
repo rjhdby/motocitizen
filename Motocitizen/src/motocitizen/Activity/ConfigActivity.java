@@ -87,7 +87,7 @@ public class ConfigActivity extends PreferenceActivity implements
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 mapProviderPreference.setValue(newValue.toString());
-                Startup.changeMap(newValue.toString());
+                Startup.createMap(newValue.toString());
                 preference.setSummary(mapProviderPreference.getEntry());
                 return true;
             }
