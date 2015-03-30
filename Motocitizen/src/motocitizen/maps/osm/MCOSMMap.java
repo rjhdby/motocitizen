@@ -26,7 +26,7 @@ public class MCOSMMap extends MCMap {
     private static ItemizedIconOverlay<OverlayItem> userOverlay, accOverlay;
 
     public MCOSMMap(Context context) {
-        setName("osm");
+        setName(MCMap.OSM);
         Inflate.set(R.id.map_container, R.layout.osm_view_content);
         userOverlay = OSMUserOverlay.getUserOverlay();
         accOverlay = OSMAccOverlay.getOverlay(context);
