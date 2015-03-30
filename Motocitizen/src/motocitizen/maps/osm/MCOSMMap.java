@@ -27,7 +27,7 @@ public class MCOSMMap extends MCMap {
 
     public MCOSMMap(Context context) {
         setName("osm");
-        Inflate.add(R.id.map_container, R.layout.osm_view_content);
+        Inflate.set(R.id.map_container, R.layout.osm_view_content);
         userOverlay = OSMUserOverlay.getUserOverlay();
         accOverlay = OSMAccOverlay.getOverlay(context);
         Activity act = (Activity) context;
