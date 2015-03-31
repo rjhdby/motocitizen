@@ -16,6 +16,8 @@ import android.widget.ScrollView;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,7 +27,7 @@ import motocitizen.app.mc.gcm.MCGCMRegistration;
 import motocitizen.app.mc.popups.MCAccListPopup;
 import motocitizen.app.mc.user.MCAuth;
 import motocitizen.main.R;
-import motocitizen.maps.general.MCMap;
+import motocitizen.network.JsonRequest;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 import motocitizen.utils.Text;
@@ -38,7 +40,6 @@ public class MCAccidents {
     public static MCPoints points;
     public static MCAuth auth;
     private static Integer[] sorted;
-    private SharedPreferences prefs;
 
     private static final OnLongClickListener detLongClick = new OnLongClickListener() {
         @Override
@@ -51,7 +52,6 @@ public class MCAccidents {
     };
 
     public MCAccidents(Context context, SharedPreferences prefs) {
-        this.prefs = prefs;
         onway = 0;
         inplace = 0;
         MCInit.readProperties();
@@ -223,6 +223,13 @@ public class MCAccidents {
         Startup.map.placeAcc(context);
     }
 
+    public static void refreshNew(Context context, JSONArray data) {
+        points.update(data);
+        Startup.map.placeAcc(context);
+        redraw(context);
+        Startup.map.placeAcc(context);
+    }
+
     public static void redraw(Context context) {
         currentPoint = getCurrent();
         if (currentPoint == null) {
@@ -247,5 +254,9 @@ public class MCAccidents {
         makeDetails(context, id);
         points.setSelected(context, id);
         redraw(context);
+    }
+
+    public static JsonRequest getLoadPointsRequest() {
+        return points.getLoadRequet();
     }
 }

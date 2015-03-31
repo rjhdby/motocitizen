@@ -18,6 +18,10 @@ import motocitizen.app.mc.MCAccidents;
 // zz
 // import motocitizen.core.settings.SettingsMenu;
 import motocitizen.main.R;
+import motocitizen.network.HttpClient;
+import motocitizen.network.JsonRequest;
+//import motocitizen.network.HttpClient;
+//import motocitizen.network.JsonRequest;
 
 @SuppressLint("RtlHardcoded")
 public class SmallSettingsMenu {
@@ -38,8 +42,11 @@ public class SmallSettingsMenu {
                 int id = item.getItemId();
 
                 if (id == R.id.small_menu_refresh) {
-
-                    MCAccidents.refresh(Startup.context);
+                    //MCAccidents.refresh(Startup.context);
+                    JsonRequest request = MCAccidents.getLoadPointsRequest();
+                    if(request != null ) {
+                        (new HttpClient()).execute(request);
+                    }
                 } else if(id == R.id.small_menu_settings) {
                     Intent i = new Intent(act, ConfigActivity.class);
                     Startup.context.startActivity(i);

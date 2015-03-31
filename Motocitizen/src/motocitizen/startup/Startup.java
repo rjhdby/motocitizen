@@ -13,6 +13,10 @@ import android.support.annotation.NonNull;
 import android.view.KeyEvent;
 import android.view.Window;
 
+import org.json.JSONArray;
+
+import java.util.Map;
+
 import motocitizen.Activity.AuthActivity;
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCLocation;
@@ -23,6 +27,8 @@ import motocitizen.main.R;
 import motocitizen.maps.general.MCMap;
 import motocitizen.maps.google.MCGoogleMap;
 import motocitizen.maps.osm.MCOSMMap;
+import motocitizen.network.HttpClient;
+import motocitizen.network.JsonRequest;
 import motocitizen.utils.Const;
 import motocitizen.utils.Keyboard;
 import motocitizen.utils.MCUtils;
@@ -34,6 +40,8 @@ public class Startup extends Activity {
     public static Context context;
     public static SharedPreferences prefs;
     public static MCMap map;
+
+    private static HttpClient req;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +90,12 @@ public class Startup extends Activity {
         MCLocation.wakeup(this);
         Intent intent = getIntent();
         context = this;
-        MCAccidents.refresh(this);
+        //MCAccidents.refresh(this);
+
+        JsonRequest request = MCAccidents.getLoadPointsRequest();
+        if(request != null ) {
+            (new HttpClient()).execute(request);
+        }
         catchIntent(intent);
     }
 
