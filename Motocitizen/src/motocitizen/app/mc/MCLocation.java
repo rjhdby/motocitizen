@@ -18,7 +18,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import motocitizen.main.R;
+import motocitizen.network.HttpClient;
 import motocitizen.network.JSONCall;
+import motocitizen.network.JsonRequest;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Text;
 
@@ -151,6 +153,23 @@ public class MCLocation {
             e.printStackTrace();
         }
         return address;
+    }
+
+    public static JsonRequest getAddressRequest(Location location) {
+        String address;
+        Map<String, String> post = new HashMap<>();
+        post.put("lat", String.valueOf(location.getLatitude()));
+        post.put("lon", String.valueOf(location.getLongitude()));
+
+        JsonRequest res = new JsonRequest("mcaccidents", "geocode", post, "", true);
+        return res;
+    }
+
+    public static void getAddressNew(Location location) {
+        JsonRequest request = getAddressRequest(location);
+        if (request != null) {
+            (new HttpClient()).execute(request);
+        }
     }
 
     private static void setAddress(Context context) {

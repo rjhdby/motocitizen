@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import motocitizen.Activity.AboutActivity;
 import motocitizen.Activity.AuthActivity;
@@ -42,15 +43,20 @@ public class SmallSettingsMenu {
                 int id = item.getItemId();
 
                 if (id == R.id.small_menu_refresh) {
-                    //MCAccidents.refresh(Startup.context);
-                    JsonRequest request = MCAccidents.getLoadPointsRequest();
-                    if(request != null ) {
-                        (new HttpClient()).execute(request);
+                    MCAccidents.refresh(Startup.context);
+                    if (Startup.isOnline()) {
+                        JsonRequest request = MCAccidents.getLoadPointsRequest();
+                        if (request != null) {
+                            (new HttpClient()).execute(request);
+                        }
+                    } else {
+                        //TODO Перенести в ресурсы
+                        Toast.makeText(Startup.context, "Не могу отправить запрос, пожалуйста, проверьте доступность Internet.", Toast.LENGTH_LONG).show();
                     }
-                } else if(id == R.id.small_menu_settings) {
+                } else if (id == R.id.small_menu_settings) {
                     Intent i = new Intent(act, ConfigActivity.class);
                     Startup.context.startActivity(i);
-                } else if(id == R.id.small_menu_about) {
+                } else if (id == R.id.small_menu_about) {
                     Intent i = new Intent(act, AboutActivity.class);
                     Startup.context.startActivity(i);
                 } else if (id == R.id.small_menu_exit) {

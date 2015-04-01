@@ -91,11 +91,12 @@ public class Startup extends Activity {
         Intent intent = getIntent();
         context = this;
         //MCAccidents.refresh(this);
-
+/*
         JsonRequest request = MCAccidents.getLoadPointsRequest();
         if(request != null ) {
             (new HttpClient()).execute(request);
         }
+*/
         catchIntent(intent);
     }
 

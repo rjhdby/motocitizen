@@ -223,11 +223,13 @@ public class MCAccidents {
         Startup.map.placeAcc(context);
     }
 
-    public static void refreshNew(Context context, JSONArray data) {
-        points.update(data);
-        Startup.map.placeAcc(context);
-        redraw(context);
-        Startup.map.placeAcc(context);
+    public static void refreshPoints(Context context, JSONArray data) {
+        if(data != null) {
+            points.update(data);
+            Startup.map.placeAcc(context);
+            redraw(context);
+            Startup.map.placeAcc(context);
+        }
     }
 
     public static void redraw(Context context) {
