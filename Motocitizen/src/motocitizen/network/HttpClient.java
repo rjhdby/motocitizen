@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,13 +22,12 @@ import java.net.URLEncoder;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
-import motocitizen.app.mc.MCAccidents;
 import motocitizen.startup.Startup;
 
 /**
  * Created by elagin on 31.03.15.
  */
-public class HttpClient extends AsyncTask<JsonRequest, Void, JSONArray> {
+public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
 
     public ProgressDialog dialog;
 
@@ -47,21 +45,15 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONArray> {
         dialog.show();
     }
 
-
     @Override
-    protected JSONArray doInBackground(JsonRequest... params) {
-        JSONArray result = null;
+    protected JSONObject doInBackground(JsonRequest... params) {
+        JSONObject result = null;
         if (params.length > 0) {
             JsonRequest item = params[0];
             //result = new JSONCall(item.app, item.method, false).request(item.params).getJSONArray(item.arrayName);
             createUrl(item.app, item.method, false);
-            JSONObject obj = requestNew(item.params);
-            try {
-                result = obj.getJSONArray(item.arrayName);
-                //return result;
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            JSONObject obj = request(item.params);
+            result = obj;
         }
         return result;
     }
@@ -89,7 +81,7 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONArray> {
         }
     }
 
-    public JSONObject requestNew(Map<String, String> post) {
+    public JSONObject request(Map<String, String> post) {
             post.put("calledMethod", method);
             // Log.d("JSON CALL", "|" + url.toString() + "|");
             HttpURLConnection connection = null;
@@ -175,12 +167,5 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONArray> {
         }
         // Log.d("JSON POST", result.toString());
         return result.toString();
-    }
-
-    // как только получили ответ от сервера, выключаем ProgressBar
-    protected void onPostExecute(JSONArray result) {
-        super.onPostExecute(result);
-        dialog.dismiss();
-        MCAccidents.refreshPoints(Startup.context, result);
     }
 }

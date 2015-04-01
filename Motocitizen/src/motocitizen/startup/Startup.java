@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.view.KeyEvent;
 import android.view.Window;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 
@@ -27,7 +28,7 @@ import motocitizen.main.R;
 import motocitizen.maps.general.MCMap;
 import motocitizen.maps.google.MCGoogleMap;
 import motocitizen.maps.osm.MCOSMMap;
-import motocitizen.network.HttpClient;
+import motocitizen.network.IncidentRequest;
 import motocitizen.network.JsonRequest;
 import motocitizen.utils.Const;
 import motocitizen.utils.Keyboard;
@@ -41,7 +42,7 @@ public class Startup extends Activity {
     public static SharedPreferences prefs;
     public static MCMap map;
 
-    private static HttpClient req;
+    //private static GeoCodeRequest req;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,13 +92,16 @@ public class Startup extends Activity {
         Intent intent = getIntent();
         context = this;
         //MCAccidents.refresh(this);
-/*
-        JsonRequest request = MCAccidents.getLoadPointsRequest();
-        if(request != null ) {
-            (new HttpClient()).execute(request);
+
+        if (isOnline()) {
+            JsonRequest request = MCAccidents.getLoadPointsRequest();
+            if (request != null) {
+                (new IncidentRequest()).execute(request);
+            }
+            catchIntent(intent);
+        } else {
+            Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
         }
-*/
-        catchIntent(intent);
     }
 
     @Override
@@ -139,7 +143,7 @@ public class Startup extends Activity {
     }
 
     public static boolean isOnline() {
-        ConnectivityManager cm = (ConnectivityManager)Startup.context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) Startup.context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }

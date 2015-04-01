@@ -17,6 +17,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -223,12 +225,18 @@ public class MCAccidents {
         Startup.map.placeAcc(context);
     }
 
-    public static void refreshPoints(Context context, JSONArray data) {
+    public static void refreshPoints(Context context, JSONObject data) {
         if(data != null) {
-            points.update(data);
-            Startup.map.placeAcc(context);
-            redraw(context);
-            Startup.map.placeAcc(context);
+            try {
+                JSONArray arr  = data.getJSONArray("list");
+                points.update(arr);
+                Startup.map.placeAcc(context);
+                redraw(context);
+                Startup.map.placeAcc(context);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 

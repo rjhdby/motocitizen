@@ -89,4 +89,5 @@
     <string name="title_activity_select_sound">SelectSoundActivity</string>
     <string name="map_provider_category">Карта</string>
     <string name="config_map_title">Провайдер</string>
+    <string name="inet_not_avaible">Не могу отправить запрос, пожалуйста, проверьте доступность Internet.</string>
 </resources>

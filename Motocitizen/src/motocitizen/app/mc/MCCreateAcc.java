@@ -1,12 +1,14 @@
 package motocitizen.app.mc;
 
 import android.app.Activity;
+import android.content.Context;
 import android.location.Location;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -15,6 +17,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,7 +27,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import motocitizen.main.R;
+import motocitizen.network.GeoCodeNewRequest;
+import motocitizen.network.GeoCodeRequest;
 import motocitizen.network.JSONCall;
+import motocitizen.network.JsonRequest;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 import motocitizen.utils.Keyboard;
@@ -32,7 +38,7 @@ import motocitizen.utils.MCUtils;
 import motocitizen.utils.Show;
 import motocitizen.utils.Text;
 
-class MCCreateAcc {
+public class MCCreateAcc {
     private static final Activity act = (Activity) Startup.context;
     private static final Button back = (Button) act.findViewById(R.id.mc_create_back);
     private static final Button confirm = (Button) act.findViewById(R.id.mc_create_create);
@@ -50,7 +56,7 @@ class MCCreateAcc {
     private static String globalText;
     private static String medText;
     private static String ownerText;
-    private static String addressText;
+    public static String addressText;
     private static String timeText;
     private static String type, med;
     private static Location location;
@@ -141,11 +147,37 @@ class MCCreateAcc {
                 if (distance > radius)
                     return;
                 location = MCUtils.LatLngToLocation(map.getCameraPosition().target);
-                addressText = MCLocation.getAddress(location);
+                // zz Пока не заработает у меня карта Google
+                // LatLng latlng = new LatLng(55.624713, 38.079641);
+                // location = MCUtils.LatLngToLocation(latlng);
+                requestAddress(location);
             }
             writeGlobal();
         }
     };
+
+    private static JsonRequest getAddressRequest(Location location) {
+        Map<String, String> post = new HashMap<>();
+        post.put("lat", String.valueOf(location.getLatitude()));
+        post.put("lon", String.valueOf(location.getLongitude()));
+
+        JsonRequest res = new JsonRequest("mcaccidents", "geocode", post, "", true);
+        return res;
+    }
+
+    private static void requestAddress(Location location) {
+        if(Startup.isOnline()) {
+            //Location location = MCLocation.getBestFusionLocation(Startup.context);
+            JsonRequest request = getAddressRequest(location);
+            if (request != null) {
+                (new GeoCodeNewRequest()).execute(request);
+            }
+        } else {
+            Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
+        }
+    }
+
+
     private static final OnClickListener confirmListener = new Button.OnClickListener() {
         public void onClick(View v) {
             JSONObject json = new JSONCall("mcaccidents", "createAcc").request(createPOST());
@@ -209,7 +241,7 @@ class MCCreateAcc {
         map.setOnCameraChangeListener(cameraListener);
     }
 
-    private static void writeGlobal() {
+    public static void writeGlobal() {
         if (!medText.equals("mc_m_na")) {
             Text.set(globalView, R.id.mc_create_what, globalText + ". " + medText);
         } else {

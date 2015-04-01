@@ -19,10 +19,8 @@ import motocitizen.app.mc.MCAccidents;
 // zz
 // import motocitizen.core.settings.SettingsMenu;
 import motocitizen.main.R;
-import motocitizen.network.HttpClient;
+import motocitizen.network.IncidentRequest;
 import motocitizen.network.JsonRequest;
-//import motocitizen.network.HttpClient;
-//import motocitizen.network.JsonRequest;
 
 @SuppressLint("RtlHardcoded")
 public class SmallSettingsMenu {
@@ -47,11 +45,10 @@ public class SmallSettingsMenu {
                     if (Startup.isOnline()) {
                         JsonRequest request = MCAccidents.getLoadPointsRequest();
                         if (request != null) {
-                            (new HttpClient()).execute(request);
+                            (new IncidentRequest()).execute(request);
                         }
                     } else {
-                        //TODO Перенести в ресурсы
-                        Toast.makeText(Startup.context, "Не могу отправить запрос, пожалуйста, проверьте доступность Internet.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
                     }
                 } else if (id == R.id.small_menu_settings) {
                     Intent i = new Intent(act, ConfigActivity.class);

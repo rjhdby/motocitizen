@@ -20,6 +20,7 @@ import java.net.URLEncoder;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
+import motocitizen.main.R;
 import motocitizen.startup.Startup;
 
 public class JSONCall {
@@ -124,8 +125,7 @@ public class JSONCall {
             Log.d("JSON RESPONSE", reader.toString());
             return reader;
         } else {
-            //TODO Перенести в ресурсы
-            Toast.makeText(Startup.context, "Не могу отправить запрос, пожалуйста, проверьте доступность Internet.", Toast.LENGTH_LONG).show();
+            Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
             return new JSONObject();
         }
     }

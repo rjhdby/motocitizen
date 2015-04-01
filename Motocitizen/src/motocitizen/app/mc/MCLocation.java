@@ -6,20 +6,17 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import motocitizen.main.R;
-import motocitizen.network.HttpClient;
-import motocitizen.network.JSONCall;
+import motocitizen.network.GeoCodeRequest;
 import motocitizen.network.JsonRequest;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Text;
@@ -31,7 +28,8 @@ public class MCLocation {
         @Override
         public void onLocationChanged(Location location) {
             current = location;
-            performAction(Startup.context);
+            requestAddress(Startup.context);
+            //updateStatusBar(Startup.context);
         }
     };
     public static String address;
@@ -72,7 +70,8 @@ public class MCLocation {
         mLocationRequest.setSmallestDisplacement(10);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         current = getBestFusionLocation(context);
-        setAddress(context);
+        // zz
+        // requestAddress(context);
         //zz
         //Startup.map.jumpToPoint(current);
     }
@@ -94,10 +93,10 @@ public class MCLocation {
             } else {*/
 
             //TODO Понять для чего это нужно, т.к. больше ни где не используется.
-                lastLon = (double) prefs.getFloat("lastLon", 37.622735f);
-                lastLat = (double) prefs.getFloat("lastLat", 55.752295f);
-                if (lastLon == 37.622735f) {
-                    Log.d(TAG, "FAKE");
+            lastLon = (double) prefs.getFloat("lastLon", 37.622735f);
+            lastLat = (double) prefs.getFloat("lastLat", 55.752295f);
+            if (lastLon == 37.622735f) {
+                Log.d(TAG, "FAKE");
 //                }
             }
             last.setLatitude(lastLat);
@@ -129,34 +128,16 @@ public class MCLocation {
         }
     }
 
-    private static void performAction(Context context) {
-        String name;
-        setAddress(context);
-        name = MCAccidents.auth.name;
-        if (!name.equals("")) {
+    public static void updateStatusBar() {
+        String name = MCAccidents.auth.name;
+        if (name.length() > 0) {
             name += ": ";
         }
         Text.set(R.id.statusBarText, name + address);
-        Startup.map.placeUser(context);
+        Startup.map.placeUser(Startup.context);
     }
 
-    public static String getAddress(Location location) {
-        String address;
-        Map<String, String> post = new HashMap<>();
-        post.put("lat", String.valueOf(location.getLatitude()));
-        post.put("lon", String.valueOf(location.getLongitude()));
-        JSONObject json = new JSONCall("mcaccidents", "geocode").request(post);
-        try {
-            address = json.getString("address");
-        } catch (JSONException e) {
-            address = "Ошибка геокодирования";
-            e.printStackTrace();
-        }
-        return address;
-    }
-
-    public static JsonRequest getAddressRequest(Location location) {
-        String address;
+    private static JsonRequest getAddressRequest(Location location) {
         Map<String, String> post = new HashMap<>();
         post.put("lat", String.valueOf(location.getLatitude()));
         post.put("lon", String.valueOf(location.getLongitude()));
@@ -165,18 +146,19 @@ public class MCLocation {
         return res;
     }
 
-    public static void getAddressNew(Location location) {
-        JsonRequest request = getAddressRequest(location);
-        if (request != null) {
-            (new HttpClient()).execute(request);
+    private static void requestAddress(Context context) {
+        if (Startup.isOnline()) {
+            Location location = getBestFusionLocation(context);
+            if (current == location) {
+                return;
+            }
+            JsonRequest request = getAddressRequest(location);
+            if (request != null) {
+                (new GeoCodeRequest()).execute(request);
+            }
+        } else {
+            Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
         }
-    }
-
-    private static void setAddress(Context context) {
-        Location temp = getBestFusionLocation(context);
-        if (current == temp) {
-            return;
-        }
-        address = getAddress(current);
     }
 }
+
