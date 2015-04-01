@@ -95,6 +95,14 @@
             android:name="motocitizen.Activity.SelectSoundActivity"
             android:label="@string/title_activity_select_sound" >
         </activity>
+        <activity
+            android:name="motocitizen.Activity.CreateAccActivity"
+            android:label="@string/title_activity_create_acc"
+            android:parentActivityName="motocitizen.startup.Startup" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="motocitizen.startup.Startup" />
+        </activity>
     </application>
 
 </manifest>

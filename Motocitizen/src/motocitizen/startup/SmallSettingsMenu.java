@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import motocitizen.Activity.AboutActivity;
 import motocitizen.Activity.AuthActivity;
 import motocitizen.Activity.ConfigActivity;
+import motocitizen.Activity.CreateAccActivity;
 import motocitizen.app.mc.MCAccidents;
 // zz
 // import motocitizen.core.settings.SettingsMenu;
@@ -38,7 +39,6 @@ public class SmallSettingsMenu {
                 int id = item.getItemId();
 
                 if (id == R.id.small_menu_refresh) {
-
                     MCAccidents.refresh(Startup.context);
                 } else if(id == R.id.small_menu_settings) {
                     Intent i = new Intent(act, ConfigActivity.class);
@@ -52,6 +52,8 @@ public class SmallSettingsMenu {
                     Startup.context.startActivity(intent);
                     int pid = android.os.Process.myPid();
                     android.os.Process.killProcess(pid);
+                } else if( id == R.id.small_menu_create_acc) {
+                    Startup.context.startActivity(new Intent(act, CreateAccActivity.class));
                 }
                 return true;
             }
