@@ -141,7 +141,6 @@ public class MCLocation {
         Map<String, String> post = new HashMap<>();
         post.put("lat", String.valueOf(location.getLatitude()));
         post.put("lon", String.valueOf(location.getLongitude()));
-
         JsonRequest res = new JsonRequest("mcaccidents", "geocode", post, "", true);
         return res;
     }

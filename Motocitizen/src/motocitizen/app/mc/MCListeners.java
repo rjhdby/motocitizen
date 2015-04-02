@@ -14,6 +14,7 @@ import android.widget.RadioGroup;
 import java.util.HashMap;
 import java.util.Map;
 
+import motocitizen.Activity.CreateAccActivity;
 import motocitizen.main.R;
 import motocitizen.network.JSONCall;
 import motocitizen.startup.Startup;
@@ -79,12 +80,13 @@ class MCListeners {
             Startup.context.startActivity(intent);
         }
     };
+
     public static final Button.OnClickListener createAccButtonListener = new Button.OnClickListener() {
         public void onClick(View v) {
-            Show.show(R.id.mc_create_main);
-            MCCreateAcc.init();
+            Startup.context.startActivity(new Intent(Startup.context, CreateAccActivity.class));
         }
     };
+
     public static final Button.OnClickListener newMessageButtonListener = new Button.OnClickListener() {
         public void onClick(View v) {
             String text = Text.get(R.id.mc_new_message_text);

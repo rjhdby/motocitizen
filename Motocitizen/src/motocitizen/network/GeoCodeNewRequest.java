@@ -3,8 +3,8 @@ package motocitizen.network;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import motocitizen.app.mc.MCCreateAcc;
-import motocitizen.app.mc.MCLocation;
+import motocitizen.Activity.CreateAccActivity;
+import motocitizen.startup.Startup;
 
 /**
  * Created by elagin on 01.04.15.
@@ -15,13 +15,10 @@ public class GeoCodeNewRequest extends HttpClient {
     protected void onPostExecute(JSONObject result) {
         super.onPostExecute(result);
         dialog.dismiss();
-
         try {
-            MCCreateAcc.addressText = result.getString("address");
-            MCCreateAcc.writeGlobal();
+            CreateAccActivity.updateAddress(result.getString("address"));
         } catch (JSONException e) {
-            MCLocation.address = "Ошибка геокодирования";
-            MCCreateAcc.writeGlobal();
+            CreateAccActivity.updateAddress("Ошибка геокодирования");
             e.printStackTrace();
         }
     }

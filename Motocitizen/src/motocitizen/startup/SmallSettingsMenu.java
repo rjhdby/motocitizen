@@ -13,7 +13,6 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import motocitizen.Activity.AboutActivity;
-import motocitizen.Activity.AuthActivity;
 import motocitizen.Activity.ConfigActivity;
 import motocitizen.app.mc.MCAccidents;
 // zz

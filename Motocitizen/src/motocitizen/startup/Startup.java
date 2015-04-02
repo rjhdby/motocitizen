@@ -42,8 +42,6 @@ public class Startup extends Activity {
     public static SharedPreferences prefs;
     public static MCMap map;
 
-    //private static GeoCodeRequest req;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
