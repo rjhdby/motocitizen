@@ -37,9 +37,9 @@
 	<string name="mc_create_acc_solo_button">Один участник</string>
 	<string name="mc_create_acc_ma_button">Мот/авто</string>
 	<string name="mc_create_acc_mm_button">Мот/мот</string>
-	<string name="mc_create_acc_mp_button">Сбили пешехода</string>
-	<string name="mc_create_people_ok_button">Пара царапин</string>
-	<string name="mc_create_people_light_button">Ушибы, потертости</string>
+	<string name="mc_create_acc_mp_button">Наезд на пешехода</string>
+	<string name="mc_create_people_ok_button">Без травм</string>
+	<string name="mc_create_people_light_button">Ушибы</string>
 	<string name="mc_create_people_hard_button">Серьезные травмы</string>
 	<string name="mc_create_people_death_button">Летальный исход</string>
 	<string name="mc_create_create">Готово</string>

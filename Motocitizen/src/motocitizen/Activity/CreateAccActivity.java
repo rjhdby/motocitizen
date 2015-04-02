@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -38,11 +39,30 @@ import motocitizen.utils.MCUtils;
 import motocitizen.utils.Show;
 import motocitizen.utils.Text;
 
-public class CreateAccActivity extends ActionBarActivity {
+public class CreateAccActivity extends ActionBarActivity implements View.OnClickListener {
     private Button back;
     private Button confirm;
     private Button cancel;
-    private View includeArea;
+
+    private Button typeOtherButton;
+    private Button typeStealButton;
+    private Button typeBreakButton;
+    private Button typeAccButton;
+
+    private Button accMmButton;
+    private Button accMpButton;
+    private Button accSoloButton;
+    private Button accMaButton;
+
+    private Button peopleDeathButton;
+    private Button peopleHardButton;
+    private Button peopleLightButton;
+    private Button peopleNaButton;
+    private Button peopleOkButton;
+
+    private Button fineAddressButton;
+    private Button fineAddressConfirm;
+
     private View globalView;
     private EditText details;
     private int TYPE;
@@ -78,120 +98,10 @@ public class CreateAccActivity extends ActionBarActivity {
         }
     };
 
-    private final View.OnClickListener listener = new Button.OnClickListener() {
-        public void onClick(View v) {
-            back.setEnabled(true);
-            confirm.setEnabled(true);
-            med = "mc_m_na";
-            int id = v.getId();
-            if (id == R.id.mc_create_type_acc_button) {
-                show(ACC);
-                isAcc = true;
-                confirm.setEnabled(false);
-                globalText = "ДТП";
-            } else if (id == R.id.mc_create_type_break_button) {
-                globalText = "Поломка";
-                type = "acc_b";
-                show(FINAL);
-            } else if (id == R.id.mc_create_type_steal_button) {
-                globalText = "Угон";
-                type = "acc_s";
-                show(FINAL);
-            } else if (id == R.id.mc_create_type_other_button) {
-                globalText = "Прочее";
-                type = "acc_o";
-                show(FINAL);
-            } else if (id == R.id.mc_create_acc_ma_button) {
-                globalText = "ДТП мот/авто";
-                type = "acc_m_a";
-                show(PEOPLE);
-            } else if (id == R.id.mc_create_acc_solo_button) {
-                globalText = "ДТП один участник";
-                type = "acc_m";
-                show(PEOPLE);
-            } else if (id == R.id.mc_create_acc_mm_button) {
-                globalText = "ДТП мот/мот";
-                type = "acc_m_m";
-                show(PEOPLE);
-            } else if (id == R.id.mc_create_acc_mp_button) {
-                globalText = "Наезд на пешехода";
-                type = "acc_m_p";
-                show(PEOPLE);
-            } else if (id == R.id.mc_create_people_ok_button) {
-                medText = "Без травм.";
-                med = "mc_m_wo";
-                show(FINAL);
-            } else if (id == R.id.mc_create_people_light_button) {
-                medText = "Ушибы.";
-                med = "mc_m_l";
-                show(FINAL);
-            } else if (id == R.id.mc_create_people_hard_button) {
-                medText = "Тяжелый.";
-                med = "mc_m_h";
-                show(FINAL);
-            } else if (id == R.id.mc_create_people_death_button) {
-                medText = "Летальный.";
-                med = "mc_m_d";
-                show(FINAL);
-            } else if (id == R.id.mc_create_people_na_button) {
-                medText = "";
-                med = "mc_m_na";
-                show(FINAL);
-            } else if (id == R.id.mc_create_fine_address_button) {
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(MCUtils.LocationToLatLng(location), 16));
-                MCObjects.mcCreateMapPointer.setImageDrawable(MCAccTypes.getDrawable(Startup.context, type));
-                show(FINEADDRESS);
-            } else if (id == R.id.mc_create_fine_address_confirm) {
-                double distance = MCUtils.LatLngToLocation(map.getCameraPosition().target).distanceTo(initialLocation);
-                if (distance > radius)
-                    return;
-                location = MCUtils.LatLngToLocation(map.getCameraPosition().target);
-                addressText = MCLocation.getAddress(location);
-            }
-            writeGlobal();
-        }
-    };
-
-    private final View.OnClickListener confirmListener = new Button.OnClickListener() {
-        public void onClick(View v) {
-            JSONObject json = new JSONCall("mcaccidents", "createAcc").request(createPOST());
-            if (json.has("result")) {
-                String result = "error";
-                try {
-                    result = json.getString("result");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                if (!result.equals("OK")) {
-                    Log.d("CREATE ACC ERROR", json.toString());
-                }
-                exit();
-                MCAccidents.refresh(v.getContext());
-            }
-        }
-    };
-
-    private final View.OnClickListener backListener = new Button.OnClickListener() {
-        public void onClick(View v) {
-            backButton();
-        }
-    };
-    private final View.OnClickListener cancelListener = new Button.OnClickListener() {
-        public void onClick(View v) {
-            exit();
-        }
-    };
-
-    private void exit() {
-//        Show.show(R.id.main_frame_applications);
-//        Keyboard.hide(details);
-        finish();
-    }
-
     private void backButton() {
         confirm.setEnabled(false);
         if (CURRENT == TYPE) {
-            exit();
+            finish();
         } else if (CURRENT == FINAL) {
             if (isAcc) {
                 med = "mc_m_na";
@@ -227,11 +137,50 @@ public class CreateAccActivity extends ActionBarActivity {
         setContentView(R.layout.mc_app_create_point);
 
         back = (Button) findViewById(R.id.mc_create_back);
+        back.setOnClickListener(this);
         confirm = (Button) findViewById(R.id.mc_create_create);
+        confirm.setOnClickListener(this);
         cancel = (Button) findViewById(R.id.mc_create_cancel);
-        includeArea = (View) findViewById(R.id.mc_create_main_frame);
+        cancel.setOnClickListener(this);
+
+        fineAddressButton = (Button) findViewById(R.id.mc_create_fine_address_button);
+        fineAddressButton.setOnClickListener(this);
+        fineAddressConfirm = (Button)findViewById(R.id.mc_create_fine_address_confirm);
+        fineAddressConfirm.setOnClickListener(this);
+
+        typeOtherButton = (Button) findViewById(R.id.mc_create_type_other_button);
+        typeOtherButton.setOnClickListener(this);
+        typeStealButton = (Button) findViewById(R.id.mc_create_type_steal_button);
+        typeStealButton.setOnClickListener(this);
+        typeBreakButton = (Button) findViewById(R.id.mc_create_type_break_button);
+        typeBreakButton.setOnClickListener(this);
+        typeAccButton = (Button) findViewById(R.id.mc_create_type_acc_button);
+        typeAccButton.setOnClickListener(this);
+
+        accMmButton = (Button)findViewById(R.id.mc_create_acc_mm_button);
+        accMmButton.setOnClickListener(this);
+
+        accMpButton = (Button)findViewById(R.id.mc_create_acc_mp_button);
+        accMpButton.setOnClickListener(this);
+        accSoloButton= (Button)findViewById(R.id.mc_create_acc_solo_button);
+        accSoloButton.setOnClickListener(this);
+        accMaButton= (Button)findViewById(R.id.mc_create_acc_ma_button);
+        accMaButton.setOnClickListener(this);
+
+        peopleDeathButton= (Button)findViewById(R.id.mc_create_people_death_button);
+        peopleDeathButton.setOnClickListener(this);
+        peopleHardButton= (Button)findViewById(R.id.mc_create_people_hard_button);
+        peopleHardButton.setOnClickListener(this);
+        peopleLightButton= (Button)findViewById(R.id.mc_create_people_light_button);
+        peopleLightButton.setOnClickListener(this);
+        peopleNaButton= (Button)findViewById(R.id.mc_create_people_na_button);
+        peopleNaButton.setOnClickListener(this);
+        peopleOkButton = (Button)findViewById(R.id.mc_create_people_ok_button);
+        peopleOkButton.setOnClickListener(this);
+
         globalView = (View) findViewById(R.id.mc_create_main);
         details = (EditText) findViewById(R.id.mc_create_final_text);
+
         TYPE = R.id.mc_create_type_frame;
         FINAL = R.id.mc_create_final_frame;
         ACC = R.id.mc_create_acc_frame;
@@ -248,7 +197,7 @@ public class CreateAccActivity extends ActionBarActivity {
         CURRENT = TYPE;
         isAcc = false;
         writeGlobal();
-        show(CURRENT);
+        //show(CURRENT);
 
         map = ((MapFragment) ((Activity) Startup.context).getFragmentManager().findFragmentById(R.id.mc_create_map_container)).getMap();
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(MCUtils.LocationToLatLng(location), 16));
@@ -280,13 +229,33 @@ public class CreateAccActivity extends ActionBarActivity {
     }
 
     private void show(int page) {
+        //TODO Правильное решение http://android-er.blogspot.ru/2012/05/add-and-remove-view-dynamically.html
         CURRENT = page;
-        Show.show(includeArea.getId(), page);
-        if (page == FINAL) {
-            details.requestFocus();
-            Keyboard.show(details);
-        } else {
-            Keyboard.hide(details);
+        FrameLayout frame = (FrameLayout) findViewById(R.id.mc_create_main_frame);
+
+        for (int i = 0; i < frame.getChildCount(); i++) {
+            View tmp = frame.getChildAt(i);
+            if (tmp.getId() == page) {
+                tmp.setVisibility(View.VISIBLE);
+            } else {
+                tmp.setVisibility(View.INVISIBLE);
+            }
+        }
+    }
+
+    private void OnConfirm() {
+        JSONObject json = new JSONCall("mcaccidents", "createAcc").request(createPOST());
+        if (json.has("result")) {
+            String result = "error";
+            try {
+                result = json.getString("result");
+                finish();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if (!result.equals("OK")) {
+                Log.d("CREATE ACC ERROR", json.toString());
+            }
         }
     }
 
@@ -310,7 +279,7 @@ public class CreateAccActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_create_acc, menu);
+        //getMenuInflater().inflate(R.menu.menu_create_acc, menu);
         return true;
     }
 
@@ -327,5 +296,89 @@ public class CreateAccActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View v) {
+        back.setEnabled(true);
+        confirm.setEnabled(true);
+        med = "mc_m_na";
+        int id = v.getId();
+        Button btn = (Button)findViewById(id);
+
+        //TODO switch case
+        if (id == R.id.mc_create_type_acc_button) {
+            show(ACC);
+            isAcc = true;
+            confirm.setEnabled(false);
+            globalText = "ДТП";
+        } else if (id == R.id.mc_create_type_break_button) {
+            globalText = btn.getText().toString();
+            type = "acc_b";
+            show(FINAL);
+        } else if (id == R.id.mc_create_type_steal_button) {
+            globalText = btn.getText().toString();
+            type = "acc_s";
+            show(FINAL);
+        } else if (id == R.id.mc_create_type_other_button) {
+            globalText = btn.getText().toString();
+            type = "acc_o";
+            show(FINAL);
+        } else if (id == R.id.mc_create_acc_ma_button) {
+            globalText = "ДТП " + btn.getText().toString();
+            type = "acc_m_a";
+            show(PEOPLE);
+        } else if (id == R.id.mc_create_acc_solo_button) {
+            globalText = "ДТП " + btn.getText().toString();
+            type = "acc_m";
+            show(PEOPLE);
+        } else if (id == R.id.mc_create_acc_mm_button) {
+            globalText = "ДТП " + btn.getText().toString();
+            type = "acc_m_m";
+            show(PEOPLE);
+        } else if (id == R.id.mc_create_acc_mp_button) {
+            globalText = "ДТП " + btn.getText().toString();
+            type = "acc_m_p";
+            show(PEOPLE);
+        } else if (id == R.id.mc_create_people_ok_button) {
+            medText = btn.getText().toString();
+            med = "mc_m_wo";
+            show(FINAL);
+        } else if (id == R.id.mc_create_people_light_button) {
+            medText = btn.getText().toString();
+            med = "mc_m_l";
+            show(FINAL);
+        } else if (id == R.id.mc_create_people_hard_button) {
+            medText = btn.getText().toString();
+            med = "mc_m_h";
+            show(FINAL);
+        } else if (id == R.id.mc_create_people_death_button) {
+            globalText = btn.getText().toString();
+            med = "mc_m_d";
+            show(FINAL);
+        } else if (id == R.id.mc_create_people_na_button) {
+            medText = "";
+            med = "mc_m_na";
+            show(FINAL);
+        } else if (id == R.id.mc_create_fine_address_button) {
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(MCUtils.LocationToLatLng(location), 16));
+            MCObjects.mcCreateMapPointer.setImageDrawable(MCAccTypes.getDrawable(Startup.context, type));
+            Keyboard.hide(details);
+            show(FINEADDRESS);
+        } else if (id == R.id.mc_create_fine_address_confirm) {
+            double distance = MCUtils.LatLngToLocation(map.getCameraPosition().target).distanceTo(initialLocation);
+            if (distance > radius)
+                return;
+            location = MCUtils.LatLngToLocation(map.getCameraPosition().target);
+            addressText = MCLocation.getAddress(location);
+        } else if (id == R.id.mc_create_back) {
+            backButton();
+        } else if (id == R.id.mc_create_cancel) {
+            //TODO Добавить подтверждение
+            finish();
+        } else if(id == R.id.mc_create_create) {
+            OnConfirm();
+        }
+        writeGlobal();
     }
 }
