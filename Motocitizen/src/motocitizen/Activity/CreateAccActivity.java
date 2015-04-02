@@ -276,7 +276,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
         POST.put("lon", String.valueOf(location.getLongitude()));
         POST.put("created", Const.dateFormat.format(date));
         POST.put("address", addressText);
-        POST.put("descr", Text.get(details.getId()) + "");
+        POST.put("descr", details.getText().toString());
         POST.put("login", MCAccidents.auth.getLogin());
         POST.put("passhash", MCAccidents.auth.makePassHash());
         POST.put("calledMethod", "createAcc");
