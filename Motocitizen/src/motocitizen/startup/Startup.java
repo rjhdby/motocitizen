@@ -14,10 +14,6 @@ import android.view.KeyEvent;
 import android.view.Window;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-
-import java.util.Map;
-
 import motocitizen.Activity.AuthActivity;
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCLocation;

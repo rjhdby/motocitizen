@@ -1,7 +1,6 @@
 package motocitizen.Activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.location.Location;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -20,7 +19,6 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
-import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,14 +33,12 @@ import motocitizen.app.mc.MCLocation;
 import motocitizen.app.mc.MCObjects;
 import motocitizen.main.R;
 import motocitizen.network.GeoCodeNewRequest;
-import motocitizen.network.GeoCodeRequest;
 import motocitizen.network.JSONCall;
 import motocitizen.network.JsonRequest;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 import motocitizen.utils.Keyboard;
 import motocitizen.utils.MCUtils;
-import motocitizen.utils.Show;
 import motocitizen.utils.Text;
 
 public class CreateAccActivity extends ActionBarActivity implements View.OnClickListener {
@@ -296,16 +292,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-
         return super.onOptionsItemSelected(item);
     }
 

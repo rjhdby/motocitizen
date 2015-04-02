@@ -29,7 +29,6 @@ public class MCLocation {
         public void onLocationChanged(Location location) {
             current = location;
             requestAddress(Startup.context);
-            //updateStatusBar(Startup.context);
         }
     };
     public static String address;
