@@ -10,15 +10,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import motocitizen.Activity.AboutActivity;
-import motocitizen.Activity.AuthActivity;
 import motocitizen.Activity.ConfigActivity;
-import motocitizen.Activity.CreateAccActivity;
 import motocitizen.app.mc.MCAccidents;
 // zz
 // import motocitizen.core.settings.SettingsMenu;
 import motocitizen.main.R;
+import motocitizen.network.IncidentRequest;
+import motocitizen.network.JsonRequest;
 
 @SuppressLint("RtlHardcoded")
 public class SmallSettingsMenu {
@@ -40,10 +41,18 @@ public class SmallSettingsMenu {
 
                 if (id == R.id.small_menu_refresh) {
                     MCAccidents.refresh(Startup.context);
-                } else if(id == R.id.small_menu_settings) {
+                    if (Startup.isOnline()) {
+                        JsonRequest request = MCAccidents.getLoadPointsRequest();
+                        if (request != null) {
+                            (new IncidentRequest()).execute(request);
+                        }
+                    } else {
+                        Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
+                    }
+                } else if (id == R.id.small_menu_settings) {
                     Intent i = new Intent(act, ConfigActivity.class);
                     Startup.context.startActivity(i);
-                } else if(id == R.id.small_menu_about) {
+                } else if (id == R.id.small_menu_about) {
                     Intent i = new Intent(act, AboutActivity.class);
                     Startup.context.startActivity(i);
                 } else if (id == R.id.small_menu_exit) {
@@ -52,8 +61,6 @@ public class SmallSettingsMenu {
                     Startup.context.startActivity(intent);
                     int pid = android.os.Process.myPid();
                     android.os.Process.killProcess(pid);
-                } else if( id == R.id.small_menu_create_acc) {
-                    Startup.context.startActivity(new Intent(act, CreateAccActivity.class));
                 }
                 return true;
             }

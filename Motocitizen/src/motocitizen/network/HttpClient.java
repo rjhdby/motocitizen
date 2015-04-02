@@ -1,5 +1,7 @@
 package motocitizen.network;
 
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -20,25 +22,43 @@ import java.net.URLEncoder;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
-import motocitizen.main.R;
 import motocitizen.startup.Startup;
 
-public class JSONCall {
+/**
+ * Created by elagin on 31.03.15.
+ */
+public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
+
+    public ProgressDialog dialog;
+
     private final static String APP = Startup.props.get("default.app");
     private final static String CHARSET = "UTF-8";
     private final static String USERAGENT = "Mozilla/5.0 (Linux; Android 4.4; Nexus 5 Build/_BuildID_) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/30.0.0.0 Mobile Safari/537.36";
     private URL url;
-    private final String method;
+    private String method = null;
 
-    public JSONCall(String method) {
-        this(APP, method);
+    protected void onPreExecute() {
+        dialog = new ProgressDialog(Startup.context);
+        dialog.setMessage("Обмен данными...");
+        dialog.setIndeterminate(true);
+        dialog.setCancelable(true);
+        dialog.show();
     }
 
-    public JSONCall(String app, String method) {
-        this(app, method, true);
+    @Override
+    protected JSONObject doInBackground(JsonRequest... params) {
+        JSONObject result = null;
+        if (params.length > 0) {
+            JsonRequest item = params[0];
+            //result = new JSONCall(item.app, item.method, false).request(item.params).getJSONArray(item.arrayName);
+            createUrl(item.app, item.method, false);
+            JSONObject obj = request(item.params);
+            result = obj;
+        }
+        return result;
     }
 
-    public JSONCall(String app, String method, Boolean https) {
+    public void createUrl(String app, String method, Boolean https) {
         String protocol;
         if (https) {
             protocol = "https";
@@ -62,7 +82,6 @@ public class JSONCall {
     }
 
     public JSONObject request(Map<String, String> post) {
-        if(Startup.isOnline()) {
             post.put("calledMethod", method);
             // Log.d("JSON CALL", "|" + url.toString() + "|");
             HttpURLConnection connection = null;
@@ -124,10 +143,6 @@ public class JSONCall {
             }
             Log.d("JSON RESPONSE", reader.toString());
             return reader;
-        } else {
-            Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
-            return new JSONObject();
-        }
     }
 
     private String makePOST(Map<String, String> post) {

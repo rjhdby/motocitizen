@@ -19,6 +19,7 @@ import java.util.Set;
 import motocitizen.Activity.ConfigActivity;
 import motocitizen.main.R;
 import motocitizen.network.JSONCall;
+import motocitizen.network.JsonRequest;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 
@@ -65,12 +66,40 @@ public class MCPoints {
         if (!points.isEmpty()) {
             selector.put("update", "1");
         }
+
         try {
             parseJSON(new JSONCall("mcaccidents", "getlist", false).request(selector).getJSONArray("list"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
+
+    public void update(JSONArray data) {
+        try {
+            parseJSON(data);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public JsonRequest getLoadRequet() {
+        Map<String, String> selector = new HashMap<>();
+        Location userLocation = MCLocation.current;
+        selector.put("distance", ConfigActivity.getShowDistance(prefs));
+        selector.put("lon", String.valueOf(userLocation.getLongitude()));
+        selector.put("lat", String.valueOf(userLocation.getLatitude()));
+        String user = Startup.prefs.getString("mc.login", "");
+        if (!user.equals("")) {
+            selector.put("user", user);
+        }
+        if (!points.isEmpty()) {
+            selector.put("update", "1");
+        }
+
+        JsonRequest res = new JsonRequest("mcaccidents", "getlist", selector, "list", false);
+        return  res;
+    }
+
 
     private void parseJSON(JSONArray json) throws JSONException {
         for (int i = 0; i < json.length(); i++) {

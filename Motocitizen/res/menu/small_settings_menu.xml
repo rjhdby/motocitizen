@@ -12,11 +12,6 @@
         android:layout_height="wrap_content"
         android:title="@string/small_menu_settings"/>
     <item
-            android:id="@+id/small_menu_create_acc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:title="@string/small_menu_create_acc"/>
-    <item
         android:id="@+id/small_menu_about"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

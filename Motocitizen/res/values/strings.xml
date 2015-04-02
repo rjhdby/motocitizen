@@ -89,8 +89,6 @@
     <string name="title_activity_select_sound">SelectSoundActivity</string>
     <string name="map_provider_category">Карта</string>
     <string name="config_map_title">Провайдер</string>
+    <string name="inet_not_avaible">Не могу отправить запрос, пожалуйста, проверьте доступность Internet.</string>
     <string name="title_activity_create_acc">CreateAccActivity</string>
-
-    <string name="hello_world">Hello world!</string>
-    <string name="small_menu_create_acc">Создать новый инцидент</string>
 </resources>

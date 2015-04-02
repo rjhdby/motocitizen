@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.view.KeyEvent;
 import android.view.Window;
+import android.widget.Toast;
 
 import motocitizen.Activity.AuthActivity;
 import motocitizen.app.mc.MCAccidents;
@@ -23,6 +24,8 @@ import motocitizen.main.R;
 import motocitizen.maps.general.MCMap;
 import motocitizen.maps.google.MCGoogleMap;
 import motocitizen.maps.osm.MCOSMMap;
+import motocitizen.network.IncidentRequest;
+import motocitizen.network.JsonRequest;
 import motocitizen.utils.Const;
 import motocitizen.utils.Keyboard;
 import motocitizen.utils.MCUtils;
@@ -82,8 +85,17 @@ public class Startup extends Activity {
         MCLocation.wakeup(this);
         Intent intent = getIntent();
         context = this;
-        MCAccidents.refresh(this);
-        catchIntent(intent);
+        //MCAccidents.refresh(this);
+
+        if (isOnline()) {
+            JsonRequest request = MCAccidents.getLoadPointsRequest();
+            if (request != null) {
+                (new IncidentRequest()).execute(request);
+            }
+            catchIntent(intent);
+        } else {
+            Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -125,7 +137,7 @@ public class Startup extends Activity {
     }
 
     public static boolean isOnline() {
-        ConnectivityManager cm = (ConnectivityManager)Startup.context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) Startup.context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }

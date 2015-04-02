@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -31,12 +32,13 @@ import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCLocation;
 import motocitizen.app.mc.MCObjects;
 import motocitizen.main.R;
+import motocitizen.network.GeoCodeNewRequest;
 import motocitizen.network.JSONCall;
+import motocitizen.network.JsonRequest;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 import motocitizen.utils.Keyboard;
 import motocitizen.utils.MCUtils;
-import motocitizen.utils.Show;
 import motocitizen.utils.Text;
 
 public class CreateAccActivity extends ActionBarActivity implements View.OnClickListener {
@@ -63,7 +65,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
     private Button fineAddressButton;
     private Button fineAddressConfirm;
 
-    private View globalView;
+    private static View globalView;
     private EditText details;
     private int TYPE;
     private int FINAL;
@@ -75,7 +77,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
     private String globalText;
     private String medText;
     private String ownerText;
-    private String addressText;
+    private static String addressText;
     private String timeText;
     private String type, med;
     private Location location;
@@ -228,6 +230,11 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
         Text.set(globalView, R.id.mc_create_when, timeText);
     }
 
+    public static void updateAddress(String address) {
+        addressText = address;
+        Text.set(globalView, R.id.mc_create_where, addressText);
+    }
+
     private void show(int page) {
         //TODO Правильное решение http://android-er.blogspot.ru/2012/05/add-and-remove-view-dynamically.html
         CURRENT = page;
@@ -285,16 +292,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -370,7 +368,10 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
             if (distance > radius)
                 return;
             location = MCUtils.LatLngToLocation(map.getCameraPosition().target);
-            addressText = MCLocation.getAddress(location);
+            // zz Пока не заработает у меня карта Google
+            //LatLng latlng = new LatLng(55.624713, 38.079641);
+            //location = MCUtils.LatLngToLocation(latlng);
+            getAddress(location);
         } else if (id == R.id.mc_create_back) {
             backButton();
         } else if (id == R.id.mc_create_cancel) {
@@ -380,5 +381,25 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
             OnConfirm();
         }
         writeGlobal();
+    }
+
+    private void getAddress(Location location) {
+        if (Startup.isOnline()) {
+            JsonRequest request = getAddressRequest(location);
+            if (request != null) {
+                (new GeoCodeNewRequest()).execute(request);
+            }
+        } else {
+            Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private JsonRequest getAddressRequest(Location location) {
+        Map<String, String> post = new HashMap<>();
+        post.put("lat", String.valueOf(location.getLatitude()));
+        post.put("lon", String.valueOf(location.getLongitude()));
+
+        JsonRequest res = new JsonRequest("mcaccidents", "geocode", post, "", true);
+        return res;
     }
 }
