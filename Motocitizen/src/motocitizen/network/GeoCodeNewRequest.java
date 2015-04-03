@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import motocitizen.Activity.CreateAccActivity;
+import motocitizen.main.R;
 import motocitizen.startup.Startup;
 
 /**
@@ -11,6 +12,9 @@ import motocitizen.startup.Startup;
  */
 public class GeoCodeNewRequest extends HttpClient {
 
+    public GeoCodeNewRequest() {
+        super(Startup.context.getString(R.string.request_geocode));
+    }
     // как только получили ответ от сервера, выключаем ProgressBar
     protected void onPostExecute(JSONObject result) {
         super.onPostExecute(result);
