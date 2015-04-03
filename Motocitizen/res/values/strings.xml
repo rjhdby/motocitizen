@@ -91,4 +91,12 @@
     <string name="config_map_title">Провайдер</string>
     <string name="inet_not_avaible">Не могу отправить запрос, пожалуйста, проверьте доступность Internet.</string>
     <string name="title_activity_create_acc">CreateAccActivity</string>
+    <string name="send_succsess">Сообщение было успешно отправлено.</string>
+    <string name="send_error">Произошла ошибка при отправке сообщения.</string>
+    <string name="request_create_acc">Создание инцидента.</string>
+    <string name="request_send_message">Отправка сообщения.</string>
+    <string name="request_get_incidents">Получение инцидентов.</string>
+    <string name="request_google_gcm">Регистрация GoogleCloudMessaging.</string>
+    <string name="request_onway">Отправка \'выехал\'.</string>
+    <string name="request_geocode">Геокодирование.</string>
 </resources>

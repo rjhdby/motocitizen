@@ -4,26 +4,27 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import motocitizen.Activity.CreateAccActivity;
+import motocitizen.app.mc.MCLocation;
 import motocitizen.main.R;
 import motocitizen.startup.Startup;
 
 /**
- * Created by elagin on 01.04.15.
+ * Created by elagin on 03.04.15.
  */
-public class GeoCodeNewRequest extends HttpClient {
+public class CreateAccidentRequest extends HttpClient  {
 
-    public GeoCodeNewRequest() {
-        super(Startup.context.getString(R.string.request_geocode));
+    private CreateAccActivity activity;
+
+    public CreateAccidentRequest(CreateAccActivity activity) {
+        super(Startup.context.getString(R.string.request_create_acc));
+        this.activity = activity;
     }
+
     // как только получили ответ от сервера, выключаем ProgressBar
     protected void onPostExecute(JSONObject result) {
         super.onPostExecute(result);
         dialog.dismiss();
-        try {
-            CreateAccActivity.updateAddress(result.getString("address"));
-        } catch (JSONException e) {
-            CreateAccActivity.updateAddress("Ошибка геокодирования");
-            e.printStackTrace();
-        }
+
+        activity.parseResponse(result);
     }
 }

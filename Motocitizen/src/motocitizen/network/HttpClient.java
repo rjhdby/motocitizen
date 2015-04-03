@@ -30,6 +30,11 @@ import motocitizen.startup.Startup;
 public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
 
     public ProgressDialog dialog;
+    private String info;
+
+    public HttpClient(String info) {
+        this.info = info;
+    }
 
     private final static String APP = Startup.props.get("default.app");
     private final static String CHARSET = "UTF-8";
@@ -39,7 +44,7 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
 
     protected void onPreExecute() {
         dialog = new ProgressDialog(Startup.context);
-        dialog.setMessage("Обмен данными...");
+        dialog.setMessage("Обмен данными...\n" + info);
         dialog.setIndeterminate(true);
         dialog.setCancelable(true);
         dialog.show();
