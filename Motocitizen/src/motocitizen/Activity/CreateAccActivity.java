@@ -32,7 +32,9 @@ import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCLocation;
 import motocitizen.app.mc.MCObjects;
 import motocitizen.main.R;
+import motocitizen.network.CreateAccidentRequest;
 import motocitizen.network.GeoCodeNewRequest;
+import motocitizen.network.GeoCodeRequest;
 import motocitizen.network.JSONCall;
 import motocitizen.network.JsonRequest;
 import motocitizen.startup.Startup;
@@ -250,12 +252,12 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
         }
     }
 
-    private void OnConfirm() {
-        JSONObject json = new JSONCall("mcaccidents", "createAcc").request(createPOST());
+    public void parseResponse(JSONObject json) {
         if (json.has("result")) {
             String result = "error";
             try {
                 result = json.getString("result");
+                Toast.makeText(Startup.context, Startup.context.getString(R.string.send_succsess), Toast.LENGTH_LONG).show();
                 finish();
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -263,6 +265,20 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
             if (!result.equals("OK")) {
                 Log.d("CREATE ACC ERROR", json.toString());
             }
+        } else {
+            Toast.makeText(Startup.context, Startup.context.getString(R.string.send_error), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void OnConfirm() {
+        if (Startup.isOnline()) {
+            Map<String, String> post = createPOST();
+            JsonRequest request = new JsonRequest("mcaccidents", "createAcc", post, "", true);
+            if (request != null) {
+                (new CreateAccidentRequest(this)).execute(request);
+            }
+        } else {
+            Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
         }
     }
 

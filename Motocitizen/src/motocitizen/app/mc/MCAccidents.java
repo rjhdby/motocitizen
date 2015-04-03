@@ -15,6 +15,7 @@ import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -236,6 +237,7 @@ public class MCAccidents {
 
             } catch (JSONException e) {
                 e.printStackTrace();
+                Toast.makeText(Startup.context, e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
     }

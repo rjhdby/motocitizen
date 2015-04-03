@@ -91,4 +91,6 @@
     <string name="config_map_title">Провайдер</string>
     <string name="inet_not_avaible">Не могу отправить запрос, пожалуйста, проверьте доступность Internet.</string>
     <string name="title_activity_create_acc">CreateAccActivity</string>
+    <string name="send_succsess">Сообщение было успешно отправлено.</string>
+    <string name="send_error">Произошла ошибка при отправке сообщения.</string>
 </resources>

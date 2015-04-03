@@ -20,6 +20,7 @@ public class GeoCodeRequest extends HttpClient {
             MCLocation.updateStatusBar();
         } catch (JSONException e) {
             MCLocation.address = "Ошибка геокодирования";
+            MCLocation.updateStatusBar();
             e.printStackTrace();
         }
     }
