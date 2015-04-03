@@ -19,6 +19,7 @@ import motocitizen.Activity.CreateAccActivity;
 import motocitizen.main.R;
 import motocitizen.network.JSONCall;
 import motocitizen.network.JsonRequest;
+import motocitizen.network.OnwayRequest;
 import motocitizen.network.SendMessageRequest;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
@@ -154,17 +155,31 @@ public class MCListeners {
     public static final Button.OnClickListener onwayButtonListener = new Button.OnClickListener() {
         @Override
         public void onClick(View v) {
-            int currentId = MCAccidents.currentPoint.id;
-            Map<String, String> post = new HashMap<>();
-            post.put("login", MCAccidents.auth.getLogin());
-            post.put("passhash", MCAccidents.auth.makePassHash());
-            post.put("id", String.valueOf(currentId));
-            new JSONCall("mcaccidents", "onway").request(post);
-            MCAccidents.onway = currentId;
-            MCAccidents.refresh(v.getContext());
-            MCAccidents.toDetails(v.getContext(), currentId);
+            if (Startup.isOnline()) {
+                int currentId = MCAccidents.currentPoint.id;
+                Map<String, String> post = new HashMap<>();
+                post.put("login", MCAccidents.auth.getLogin());
+                post.put("passhash", MCAccidents.auth.makePassHash());
+                post.put("id", String.valueOf(currentId));
+                JsonRequest request = new JsonRequest("mcaccidents", "onway", post, "", true);
+                if (request != null) {
+                    (new OnwayRequest(currentId)).execute(request);
+                }
+
+                MCAccidents.onway = currentId;
+                MCAccidents.refresh(v.getContext());
+                MCAccidents.toDetails(v.getContext(), currentId);
+            } else {
+                Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
+            }
         }
     };
+
+    public static void parseOnwayResponse(int currentId) {
+        MCAccidents.onway = currentId;
+        MCAccidents.refresh(Startup.context);
+        MCAccidents.toDetails(Startup.context, currentId);
+    }
 
     public static final RadioGroup.OnCheckedChangeListener mainTabsListener = new RadioGroup.OnCheckedChangeListener() {
         public void onCheckedChanged(RadioGroup group, int checkedId) {
