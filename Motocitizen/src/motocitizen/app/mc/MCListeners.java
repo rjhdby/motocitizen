@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,13 +18,15 @@ import java.util.Map;
 import motocitizen.Activity.CreateAccActivity;
 import motocitizen.main.R;
 import motocitizen.network.JSONCall;
+import motocitizen.network.JsonRequest;
+import motocitizen.network.SendMessageRequest;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 import motocitizen.utils.Keyboard;
 import motocitizen.utils.Show;
 import motocitizen.utils.Text;
 
-class MCListeners {
+public class MCListeners {
 //    public static final Button.OnClickListener authConfirmListener = new Button.OnClickListener() {
 //        public void onClick(View v) {
 //            if (MCAccidents.auth.anonim) {
@@ -89,20 +92,31 @@ class MCListeners {
 
     public static final Button.OnClickListener newMessageButtonListener = new Button.OnClickListener() {
         public void onClick(View v) {
-            String text = Text.get(R.id.mc_new_message_text);
-            int currentId = MCAccidents.currentPoint.id;
-            Map<String, String> post = new HashMap<>();
-            post.put("login", MCAccidents.auth.getLogin());
-            post.put("passhash", MCAccidents.auth.makePassHash());
-            post.put("id", String.valueOf(currentId));
-            post.put("text", text);
-            new JSONCall("mcaccidents", "message").request(post);
-            MCAccidents.refresh(v.getContext());
-            MCAccidents.toDetails(v.getContext(), currentId);
-            Text.set(R.id.mc_new_message_text, "");
-            Keyboard.hide(((Activity) Startup.context).findViewById(R.id.mc_new_message_text));
+            if (Startup.isOnline()) {
+                String text = Text.get(R.id.mc_new_message_text);
+                int currentId = MCAccidents.currentPoint.id;
+                Map<String, String> post = new HashMap<>();
+                post.put("login", MCAccidents.auth.getLogin());
+                post.put("passhash", MCAccidents.auth.makePassHash());
+                post.put("id", String.valueOf(currentId));
+                post.put("text", text);
+                JsonRequest request = new JsonRequest("mcaccidents", "message", post, "", true);
+                if (request != null) {
+                    (new SendMessageRequest(currentId)).execute(request);
+                }
+            } else {
+                Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
+            }
         }
     };
+
+    public static void parseSendMessageResponse(int currentId) {
+        MCAccidents.refresh(Startup.context);
+        MCAccidents.toDetails(Startup.context, currentId);
+        Text.set(R.id.mc_new_message_text, "");
+        Keyboard.hide(((Activity) Startup.context).findViewById(R.id.mc_new_message_text));
+    }
+
     public static final Button.OnClickListener firstloginButtonListener = new Button.OnClickListener() {
         public void onClick(View v) {
             Show.show(R.id.mc_auth);
@@ -167,13 +181,13 @@ class MCListeners {
             if (id == R.id.tab_accidents_button) {
                 MCObjects.accListView.animate().translationX(0);
                 MCObjects.accDetailsView.animate().translationX(Const.width);
-                MCObjects.mapContainer.animate().translationX(Const.width*2);
+                MCObjects.mapContainer.animate().translationX(Const.width * 2);
             } else if (id == R.id.tab_acc_details_button) {
                 MCObjects.accListView.animate().translationX(-Const.width);
                 MCObjects.accDetailsView.animate().translationX(0);
                 MCObjects.mapContainer.animate().translationX(Const.width);
             } else if (id == R.id.tab_map_button) {
-                MCObjects.accListView.animate().translationX(-Const.width*2);
+                MCObjects.accListView.animate().translationX(-Const.width * 2);
                 MCObjects.accDetailsView.animate().translationX(-Const.width);
                 MCObjects.mapContainer.animate().translationX(0);
             }
