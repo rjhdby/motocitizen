@@ -5,12 +5,16 @@ import android.content.Intent;
 import android.net.Uri;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -111,11 +115,25 @@ public class MCListeners {
         }
     };
 
-    public static void parseSendMessageResponse(int currentId) {
-        MCAccidents.refresh(Startup.context);
-        MCAccidents.toDetails(Startup.context, currentId);
-        Text.set(R.id.mc_new_message_text, "");
-        Keyboard.hide(((Activity) Startup.context).findViewById(R.id.mc_new_message_text));
+    public static void parseSendMessageResponse(JSONObject json, int currentId) {
+        if (json.has("result")) {
+            try {
+                String result = json.getString("result");
+                if (result.equals("OK")) {
+                    Toast.makeText(Startup.context, Startup.context.getString(R.string.send_succsess), Toast.LENGTH_LONG).show();
+                    MCAccidents.refresh(Startup.context);
+                    MCAccidents.toDetails(Startup.context, currentId);
+                    Text.set(R.id.mc_new_message_text, "");
+                    Keyboard.hide(((Activity) Startup.context).findViewById(R.id.mc_new_message_text));
+                    return;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Log.e("Send message failed", json.toString());
+        } else {
+            Toast.makeText(Startup.context, Startup.context.getString(R.string.send_error), Toast.LENGTH_LONG).show();
+        }
     }
 
     public static final Button.OnClickListener firstloginButtonListener = new Button.OnClickListener() {
@@ -165,20 +183,30 @@ public class MCListeners {
                 if (request != null) {
                     (new OnwayRequest(currentId)).execute(request);
                 }
-
-                MCAccidents.onway = currentId;
-                MCAccidents.refresh(v.getContext());
-                MCAccidents.toDetails(v.getContext(), currentId);
             } else {
                 Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
             }
         }
     };
 
-    public static void parseOnwayResponse(int currentId) {
-        MCAccidents.onway = currentId;
-        MCAccidents.refresh(Startup.context);
-        MCAccidents.toDetails(Startup.context, currentId);
+    public static void parseOnwayResponse(JSONObject json, int currentId) {
+        if (json.has("result")) {
+            try {
+                String result = json.getString("result");
+                if (result.equals("OK")) {
+                    Toast.makeText(Startup.context, Startup.context.getString(R.string.send_succsess), Toast.LENGTH_LONG).show();
+                    MCAccidents.onway = currentId;
+                    MCAccidents.refresh(Startup.context);
+                    MCAccidents.toDetails(Startup.context, currentId);
+                    return;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Log.e("Send message failed", json.toString());
+        } else {
+            Toast.makeText(Startup.context, Startup.context.getString(R.string.send_error), Toast.LENGTH_LONG).show();
+        }
     }
 
     public static final RadioGroup.OnCheckedChangeListener mainTabsListener = new RadioGroup.OnCheckedChangeListener() {

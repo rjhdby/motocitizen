@@ -23,6 +23,6 @@ public class SendMessageRequest extends HttpClient {
         super.onPostExecute(result);
         dialog.dismiss();
 
-        MCListeners.parseSendMessageResponse(currentId);
+        MCListeners.parseSendMessageResponse(result, currentId);
     }
 }
