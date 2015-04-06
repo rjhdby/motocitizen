@@ -1,7 +1,9 @@
 package motocitizen.Activity;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -28,6 +30,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
     private EditText login;
     private EditText password;
     private CheckBox anonim;
+    private SharedPreferences prefs;
 
     public static Context context;
 
@@ -42,7 +45,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
         setContentView(R.layout.mc_auth);
 
         context = this;
-
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         login = (EditText)findViewById(R.id.mc_auth_login);
         login.addTextChangedListener(new TextWatcher() {
 
@@ -84,11 +87,11 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
 
             @Override
             public void onClick(View v) {
-                if(Startup.prefs.getString("mc.name", "").length() > 0) {
+                if(prefs.getString("mc.name", "").length() > 0) {
                     //TODO Добавить запрос подтверждения на выход.
-                    Startup.prefs.edit().putString("mc.login", "").commit();
-                    Startup.prefs.edit().putString("mc.password", "").commit();
-                    Startup.prefs.edit().putString("mc.name", "").commit();
+                    prefs.edit().putString("mc.login", "").commit();
+                    prefs.edit().putString("mc.password", "").commit();
+                    prefs.edit().putString("mc.name", "").commit();
                     //TODO Ни чего не забыл?
                     fillCtrls();
                     return;
@@ -103,6 +106,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
                     MCAccidents.auth.anonim = false;
                     if(MCAccidents.auth.auth(login.getText().toString(), password.getText().toString())) {
                         MCAccidents.auth.setAccess(context);
+                        //TODO Попробовать избавиться от Startup.context
                         MCInit.setupAccess(Startup.context, MCAccidents.auth);
                         MCInit.setupValues(MCAccidents.auth);
                         Text.set(R.id.auth_error_helper, "");
@@ -120,13 +124,13 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
 
     protected void fillCtrls() {
 
-        login.setText(Startup.prefs.getString("mc.login", ""));
-        password.setText(Startup.prefs.getString("mc.password", ""));
+        login.setText(prefs.getString("mc.login", ""));
+        password.setText(prefs.getString("mc.password", ""));
 
         View accListYesterdayLine = findViewById(R.id.accListYesterdayLine);
 
         //Авторизованы?
-        if(Startup.prefs.getString("mc.name", "").length() > 0) {
+        if(prefs.getString("mc.name", "").length() > 0) {
             actionBtn.setText(getString(R.string.logout_button));
             anonim.setVisibility(View.INVISIBLE);
             accListYesterdayLine.setVisibility(View.INVISIBLE);

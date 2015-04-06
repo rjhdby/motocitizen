@@ -6,9 +6,12 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
 import motocitizen.main.R;
 import motocitizen.startup.Startup;
+import motocitizen.utils.Const;
 
 /**
  * Created by elagin on 26.03.15.
@@ -23,31 +26,49 @@ public class ConfigActivity extends PreferenceActivity implements
     public static final String MC_SHOW_STEAL = "mc.show.steal";
     public static final String MC_SHOW_OTHER = "mc.show.other";
 
+    private SharedPreferences prefs;
     private ListPreference mapProviderPreference;
 
     //TODO вызывать setSummary при изменении значений дистанций оповещений
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        return false;
+        String value;
+
+        try {
+            if (Integer.parseInt((String) newValue) > Const.EQUATOR) {
+                value = String.valueOf(Const.EQUATOR);
+            }else{
+                value = (String) newValue;
+            }
+        }
+        catch(Exception e){
+            value = "200";
+        }
+        preference.setSummary(value);
+        preference.setDefaultValue(value);
+        return true;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //TODO Сделать однообразно
         Preference authPreference = (Preference) findPreference(getResources().getString(R.string.mc_settings_auth_button));
-        authPreference.setSummary(Startup.prefs.getString("mc.login", ""));
+        authPreference.setSummary(prefs.getString("mc.login", ""));
 
         Preference nottifSoundPreference = (Preference) findPreference(getResources().getString(R.string.mc_notif_sound));
-        nottifSoundPreference.setSummary(Startup.prefs.getString("mc.notification.sound.title", getString(R.string.mc_notif_system)));
+        nottifSoundPreference.setSummary(prefs.getString("mc.notification.sound.title", getString(R.string.mc_notif_system)));
 
         Preference nottifDistPreference = (Preference) findPreference(MC_DISTANCE_SHOW);
-        nottifDistPreference.setSummary(Startup.prefs.getString("mc.distance.show", "0"));
+        nottifDistPreference.setSummary(prefs.getString("mc.distance.show", "200"));
 
         Preference nottifAlarmPreference = (Preference) findPreference(MC_DISTANCE_ALARM);
-        nottifAlarmPreference.setSummary(Startup.prefs.getString("mc.distance.alarm", "0"));
+        nottifAlarmPreference.setSummary(prefs.getString("mc.distance.alarm", "20"));
+
+        nottifDistPreference.setOnPreferenceChangeListener(this);
+        nottifAlarmPreference.setOnPreferenceChangeListener(this);
     }
 
     public void onCreate(Bundle savedInstanceState) {
@@ -96,7 +117,7 @@ public class ConfigActivity extends PreferenceActivity implements
     }
 
     public static int getAlarmDistance(SharedPreferences prefs) {
-        String periodString = prefs.getString(ConfigActivity.MC_DISTANCE_ALARM, "100");
+        String periodString = prefs.getString(MC_DISTANCE_ALARM, "100");
         int res = 100;
 
         try {
@@ -107,21 +128,21 @@ public class ConfigActivity extends PreferenceActivity implements
     }
 
     public static String getShowDistance(SharedPreferences prefs) {
-        return prefs.getString(ConfigActivity.MC_DISTANCE_SHOW, "100");
+        return prefs.getString(MC_DISTANCE_SHOW, "100");
     }
 
     public static Boolean isShowAcc(SharedPreferences prefs) {
-        return prefs.getBoolean(ConfigActivity.MC_SHOW_ACC, true);
+        return prefs.getBoolean(MC_SHOW_ACC, true);
     }
 
     public static Boolean isShowBreak(SharedPreferences prefs) {
-        return prefs.getBoolean(ConfigActivity.MC_SHOW_BREAK, true);
+        return prefs.getBoolean(MC_SHOW_BREAK, true);
     }
 
     public static Boolean isShowSteal(SharedPreferences prefs) {
-        return prefs.getBoolean(ConfigActivity.MC_SHOW_STEAL, true);
+        return prefs.getBoolean(MC_SHOW_STEAL, true);
     }
     public static Boolean isShowOther(SharedPreferences prefs) {
-        return prefs.getBoolean(ConfigActivity.MC_SHOW_OTHER, true);
+        return prefs.getBoolean(MC_SHOW_OTHER, true);
     }
 }

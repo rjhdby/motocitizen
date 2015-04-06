@@ -25,6 +25,7 @@ public class Const {
     public static int defaultColor, defaultBGColor;
     public static Map<String, String> med_text, status_text, type_text;
     public static int width, height;
+    public final static int EQUATOR = 20038;
 
     @SuppressWarnings("deprecation")
     public Const() {

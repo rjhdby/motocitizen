@@ -203,7 +203,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
         writeGlobal();
         //show(CURRENT);
 
-        map = ((MapFragment) ((Activity) Startup.context).getFragmentManager().findFragmentById(R.id.mc_create_map_container)).getMap();
+        map = ((MapFragment) this.getFragmentManager().findFragmentById(R.id.mc_create_map_container)).getMap();
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(MCUtils.LocationToLatLng(location), 16));
         // map.setMyLocationEnabled(true);
         map.getUiSettings().setMyLocationButtonEnabled(true);
@@ -257,7 +257,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
             String result = "error";
             try {
                 result = json.getString("result");
-                Toast.makeText(Startup.context, Startup.context.getString(R.string.send_succsess), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, this.getString(R.string.send_succsess), Toast.LENGTH_LONG).show();
                 finish();
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -266,7 +266,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
                 Log.d("CREATE ACC ERROR", json.toString());
             }
         } else {
-            Toast.makeText(Startup.context, Startup.context.getString(R.string.send_error), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, this.getString(R.string.send_error), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -278,7 +278,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
                 (new CreateAccidentRequest(this)).execute(request);
             }
         } else {
-            Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, this.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -376,7 +376,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
             show(FINAL);
         } else if (id == R.id.mc_create_fine_address_button) {
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(MCUtils.LocationToLatLng(location), 16));
-            MCObjects.mcCreateMapPointer.setImageDrawable(MCAccTypes.getDrawable(Startup.context, type));
+            MCObjects.mcCreateMapPointer.setImageDrawable(MCAccTypes.getDrawable(this, type));
             Keyboard.hide(details);
             show(FINEADDRESS);
         } else if (id == R.id.mc_create_fine_address_confirm) {
@@ -406,7 +406,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
                 (new GeoCodeNewRequest()).execute(request);
             }
         } else {
-            Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, this.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
         }
     }
 

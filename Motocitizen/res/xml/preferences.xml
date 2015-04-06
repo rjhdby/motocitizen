@@ -5,7 +5,7 @@
         android:key="@string/config_title_notify_category"
         android:title="@string/config_title_notify_category">
         <EditTextPreference
-            android:defaultValue="10"
+            android:defaultValue="200"
             android:dialogTitle="@string/mc_settings_distance"
             android:key="mc.distance.show"
             android:summary="@string/mc_settings_distance"
@@ -13,7 +13,7 @@
             android:inputType="number"
             android:tag="mc.distance.show" />
         <EditTextPreference
-            android:defaultValue="10"
+            android:defaultValue="20"
             android:dialogTitle="@string/mc_settings_distance_alarm"
             android:key="mc.distance.alarm"
             android:summary="@string/mc_settings_distance_alarm"
@@ -28,8 +28,8 @@
             android:defaultValue="true"
             android:dialogTitle="@string/mc_settings_accidents"
             android:key="mc.show.acc"
-            android:summaryOff="Disable"
-            android:summaryOn="Enable"
+            android:summaryOff="@string/settings_summary_off"
+            android:summaryOn="@string/settings_summary_on"
             android:title="@string/mc_settings_accidents"
             android:id="@+id/value_app_mcaccidents_accidents"
             android:tag="mc.show.acc" />
@@ -37,8 +37,8 @@
             android:defaultValue="true"
             android:dialogTitle="@string/mc_settings_breaks"
             android:key="mc.show.break"
-            android:summaryOff="Disable"
-            android:summaryOn="Enable"
+            android:summaryOff="@string/settings_summary_off"
+            android:summaryOn="@string/settings_summary_on"
             android:title="@string/mc_settings_breaks"
             android:id="@+id/value_app_mcaccidents_breaks"
             android:tag="mc.show.break" />
@@ -46,8 +46,8 @@
             android:defaultValue="true"
             android:dialogTitle="@string/mc_settings_steal"
             android:key="mc.show.steal"
-            android:summaryOff="Disable"
-            android:summaryOn="Enable"
+            android:summaryOff="@string/settings_summary_off"
+            android:summaryOn="@string/settings_summary_on"
             android:title="@string/mc_settings_steal"
             android:id="@+id/value_app_mcaccidents_steal"
             android:tag="mc.show.steal" />
@@ -55,8 +55,8 @@
             android:defaultValue="true"
             android:dialogTitle="@string/mc_settings_other"
             android:key="mc.show.other"
-            android:summaryOff="Disable"
-            android:summaryOn="Enable"
+            android:summaryOff="@string/settings_summary_off"
+            android:summaryOn="@string/settings_summary_on"
             android:title="@string/mc_settings_other"
             android:id="@+id/value_app_mcaccidents_other"
             android:tag="mc.show.other" />

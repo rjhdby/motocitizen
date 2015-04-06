@@ -99,4 +99,6 @@
     <string name="request_google_gcm">Регистрация GoogleCloudMessaging.</string>
     <string name="request_onway">Отправка \'выехал\'.</string>
     <string name="request_geocode">Геокодирование.</string>
+    <string name="settings_summary_off">Скрыты</string>
+    <string name="settings_summary_on">Показаны</string>
 </resources>

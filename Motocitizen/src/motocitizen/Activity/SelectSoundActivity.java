@@ -2,11 +2,13 @@ package motocitizen.Activity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -21,9 +23,7 @@ import android.widget.TextView;
 import java.util.HashMap;
 import java.util.Map;
 
-import motocitizen.app.mc.MCObjects;
 import motocitizen.main.R;
-import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 import motocitizen.utils.NewID;
 
@@ -35,6 +35,7 @@ public class SelectSoundActivity extends ActionBarActivity {
     private static String currentUri;
     private static String currentTitle;
     private static RingtoneManager rm;
+    private SharedPreferences prefs;
 
     private static Button selectSoundConfirmButton;
     private static Button selectSoundCancelButton;
@@ -60,19 +61,20 @@ public class SelectSoundActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mc_select_sound);
 
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         vg = (ViewGroup)findViewById(R.id.sound_select_table);
         rm = new RingtoneManager(this);
         rm.setType(RingtoneManager.TYPE_NOTIFICATION);
         String defaultUri = RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_NOTIFICATION).toString();
-        currentUri = Startup.prefs.getString("mc.notification.sound", defaultUri);
-        currentTitle = Startup.prefs.getString("mc.notification.sound.title", "default system");
+        currentUri = prefs.getString("mc.notification.sound", defaultUri);
+        currentTitle = prefs.getString("mc.notification.sound.title", "default system");
 
         selectSoundConfirmButton = (Button) findViewById(R.id.select_sound_save_button);
         selectSoundConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Startup.prefs.edit().putString("mc.notification.sound", currentUri).commit();
-                Startup.prefs.edit().putString("mc.notification.sound.title", currentTitle).commit();
+                prefs.edit().putString("mc.notification.sound", currentUri).commit();
+                prefs.edit().putString("mc.notification.sound.title", currentTitle).commit();
                 finish();
             }
         });
