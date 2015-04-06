@@ -22,6 +22,6 @@ public class OnwayRequest extends HttpClient {
         super.onPostExecute(result);
         dialog.dismiss();
 
-        MCListeners.parseOnwayResponse(currentId);
+        MCListeners.parseOnwayResponse(result, currentId);
     }
 }
