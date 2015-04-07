@@ -80,10 +80,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="motocitizen.Activity.ConfigActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
             android:name="motocitizen.Activity.AboutActivity"
             android:label="@string/title_activity_about" >
         </activity>

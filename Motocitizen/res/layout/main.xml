@@ -8,6 +8,12 @@
     android:paddingRight="0dp"
     android:paddingTop="0dp"
     tools:context="motocitizen.startup.Startup" >
-        <include layout="@layout/main_frame_applications" />
+    <fragment
+        android:name="motocitizen.Activity.MainScreenFragment"
+        android:id="@+id/main_screen_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:tag="main_screen">
 
+        </fragment>
 </FrameLayout>

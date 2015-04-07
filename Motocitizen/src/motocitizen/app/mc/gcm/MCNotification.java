@@ -14,11 +14,11 @@ import android.os.Bundle;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import motocitizen.Activity.ConfigActivity;
 import motocitizen.app.mc.MCAccTypes;
 import motocitizen.app.mc.MCLocation;
 import motocitizen.main.R;
 import motocitizen.startup.Startup;
+import motocitizen.utils.Configuration;
 import motocitizen.utils.MCUtils;
 
 class MCNotification {
@@ -45,7 +45,7 @@ class MCNotification {
         //TODO Грязный хак, нужно придумать как работать без имени файла
         SharedPreferences prefs = context.getSharedPreferences("motocitizen.main_preferences", Context.MODE_PRIVATE);
 
-        if (ConfigActivity.getAlarmDistance(prefs) < distance) {
+        if (Configuration.getAlarmDistance(prefs) < distance) {
             return;
         }
         if (!MCAccTypes.get(type).enabled) {

@@ -16,11 +16,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import motocitizen.Activity.ConfigActivity;
 import motocitizen.main.R;
 import motocitizen.network.JSONCall;
 import motocitizen.network.JsonRequest;
 import motocitizen.startup.Startup;
+import motocitizen.utils.Configuration;
 import motocitizen.utils.Const;
 
 @SuppressLint("UseSparseArrays")
@@ -56,7 +56,7 @@ public class MCPoints {
     public void load() {
         Map<String, String> selector = new HashMap<>();
         Location userLocation = MCLocation.current;
-        selector.put("distance", ConfigActivity.getShowDistance(prefs));
+        selector.put("distance", Configuration.getShowDistance(prefs));
         selector.put("lon", String.valueOf(userLocation.getLongitude()));
         selector.put("lat", String.valueOf(userLocation.getLatitude()));
         String user = Startup.prefs.getString("mc.login", "");
@@ -85,7 +85,7 @@ public class MCPoints {
     public JsonRequest getLoadRequet() {
         Map<String, String> selector = new HashMap<>();
         Location userLocation = MCLocation.current;
-        selector.put("distance", ConfigActivity.getShowDistance(prefs));
+        selector.put("distance", Configuration.getShowDistance(prefs));
         selector.put("lon", String.valueOf(userLocation.getLongitude()));
         selector.put("lat", String.valueOf(userLocation.getLatitude()));
         String user = Startup.prefs.getString("mc.login", "");
