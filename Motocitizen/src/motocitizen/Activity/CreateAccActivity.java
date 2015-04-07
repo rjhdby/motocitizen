@@ -317,7 +317,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
         back.setEnabled(true);
         confirm.setEnabled(true);
         med = "mc_m_na";
-        int id = v.getId();
+            int id = v.getId();
         Button btn = (Button)findViewById(id);
 
         //TODO switch case
@@ -403,7 +403,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
         if (Startup.isOnline()) {
             JsonRequest request = getAddressRequest(location);
             if (request != null) {
-                (new GeoCodeNewRequest()).execute(request);
+                (new GeoCodeNewRequest(this)).execute(request);
             }
         } else {
             Toast.makeText(this, this.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();

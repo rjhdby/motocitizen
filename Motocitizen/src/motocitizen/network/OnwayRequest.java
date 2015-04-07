@@ -2,6 +2,7 @@ package motocitizen.network;
 
 import org.json.JSONObject;
 
+import motocitizen.Activity.AccidentDetails;
 import motocitizen.app.mc.MCListeners;
 import motocitizen.main.R;
 import motocitizen.startup.Startup;
@@ -11,17 +12,19 @@ import motocitizen.startup.Startup;
  */
 public class OnwayRequest extends HttpClient {
 
+    private AccidentDetails activity;
     private int currentId;
 
-    public OnwayRequest(int currentId) {
-        super(Startup.context.getString(R.string.request_onway));
+    public OnwayRequest(AccidentDetails activity, int currentId) {
+        super(activity, activity.getString(R.string.request_onway));
         this.currentId = currentId;
+        this.activity = activity;
     }
 
     protected void onPostExecute(JSONObject result) {
         super.onPostExecute(result);
         dialog.dismiss();
 
-        MCListeners.parseOnwayResponse(result, currentId);
+        activity.parseOnwayResponse(result, currentId);
     }
 }

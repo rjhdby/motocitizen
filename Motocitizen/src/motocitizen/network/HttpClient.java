@@ -1,6 +1,7 @@
 package motocitizen.network;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -31,9 +32,11 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
 
     public ProgressDialog dialog;
     private String info;
+    private Context context;
 
-    public HttpClient(String info) {
+    public HttpClient(Context context, String info) {
         this.info = info;
+        this.context = context;
     }
 
     private final static String APP = Startup.props.get("default.app");
@@ -43,7 +46,7 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
     private String method = null;
 
     protected void onPreExecute() {
-        dialog = new ProgressDialog(Startup.context);
+        dialog = new ProgressDialog(context);
         dialog.setMessage("Обмен данными...\n" + info);
         dialog.setIndeterminate(true);
         dialog.setCancelable(true);

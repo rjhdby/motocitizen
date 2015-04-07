@@ -46,7 +46,7 @@ public class SmallSettingsMenu {
                     if (Startup.isOnline()) {
                         JsonRequest request = MCAccidents.getLoadPointsRequest();
                         if (request != null) {
-                            (new IncidentRequest()).execute(request);
+                            (new IncidentRequest(Startup.context)).execute(request);
                         }
                     } else {
                         Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();

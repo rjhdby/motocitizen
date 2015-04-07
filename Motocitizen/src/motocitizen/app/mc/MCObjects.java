@@ -30,11 +30,11 @@ public class MCObjects {
     public static final EditText inputCommentField = (EditText) findView(R.id.mc_new_message_text);
     //zz
     // public static final Button onwayButton = (Button) findView(R.id.onway_button);
-    public static final View onwayContent = findView(R.id.acc_onway_table);
-    public static final View inplaceContent = findView(R.id.acc_inplace_table);
-    public static final View mcDetMessagesTable = findView(R.id.mc_det_messages_table);
-    public static final View mcNewMessageText = findView(R.id.mc_new_message_text);
-    public static final View mcDetLogContent = findView(R.id.mc_det_log_content);
+//    public static final View onwayContent = findView(R.id.acc_onway_table);
+//    public static final View inplaceContent = findView(R.id.acc_inplace_table);
+//    public static final View mcDetMessagesTable = findView(R.id.mc_det_messages_table);
+//    public static final View mcNewMessageText = findView(R.id.mc_new_message_text);
+//    public static final View mcDetLogContent = findView(R.id.mc_det_log_content);
     /*
      * Описание группы основных закладок
      */
@@ -50,13 +50,13 @@ public class MCObjects {
     /*
      * Описание группы закладок внутри деталей происшествия
      */
-    public static final RadioGroup mcDetTabsGroup = (RadioGroup) findView(R.id.mc_det_tabs_group);
-    public static final RadioButton mcDetTabMessages = (RadioButton) findView(R.id.mc_det_tab_messages);
-    public static final RadioButton mcDetTabHistory = (RadioButton) findView(R.id.mc_det_tab_history);
-    public static final RadioButton mcDetTabPeople = (RadioButton) findView(R.id.mc_det_tab_people);
-    public static final View detMessages = findView(R.id.det_messages);
-    public static final View detHistory = findView(R.id.det_history);
-    public static final View detVolunteers = findView(R.id.det_volunteers);
+//    public static final RadioGroup mcDetTabsGroup = (RadioGroup) findView(R.id.mc_det_tabs_group);
+//    public static final RadioButton mcDetTabMessages = (RadioButton) findView(R.id.mc_det_tab_messages);
+//    public static final RadioButton mcDetTabHistory = (RadioButton) findView(R.id.mc_det_tab_history);
+//    public static final RadioButton mcDetTabPeople = (RadioButton) findView(R.id.mc_det_tab_people);
+//    public static final View detMessages = findView(R.id.det_messages);
+//    public static final View detHistory = findView(R.id.det_history);
+//    public static final View detVolunteers = findView(R.id.det_volunteers);
     /*
      * Объекты в активности создания события
      */

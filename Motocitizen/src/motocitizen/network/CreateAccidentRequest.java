@@ -16,7 +16,7 @@ public class CreateAccidentRequest extends HttpClient  {
     private CreateAccActivity activity;
 
     public CreateAccidentRequest(CreateAccActivity activity) {
-        super(Startup.context.getString(R.string.request_create_acc));
+        super(activity, Startup.context.getString(R.string.request_create_acc));
         this.activity = activity;
     }
 

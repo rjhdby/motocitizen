@@ -90,7 +90,7 @@ public class Startup extends Activity {
         if (isOnline()) {
             JsonRequest request = MCAccidents.getLoadPointsRequest();
             if (request != null) {
-                (new IncidentRequest()).execute(request);
+                (new IncidentRequest(this)).execute(request);
             }
             catchIntent(intent);
         } else {

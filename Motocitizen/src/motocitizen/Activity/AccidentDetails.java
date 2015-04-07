@@ -1,11 +1,10 @@
 package motocitizen.Activity;
 
-import android.app.Activity;
-import android.content.Context;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,17 +17,17 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import motocitizen.app.mc.MCAccidents;
-import motocitizen.app.mc.MCListeners;
-import motocitizen.app.mc.MCObjects;
 import motocitizen.app.mc.MCPoint;
 import motocitizen.app.mc.MCPointHistory;
 import motocitizen.app.mc.MCVolunteer;
 import motocitizen.app.mc.popups.MCAccListPopup;
-import motocitizen.app.mc.user.MCAuth;
 import motocitizen.app.mc.user.MCRole;
 import motocitizen.main.R;
 import motocitizen.network.JsonRequest;
@@ -36,18 +35,16 @@ import motocitizen.network.OnwayRequest;
 import motocitizen.network.SendMessageRequest;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
-import motocitizen.utils.Text;
 
 import static motocitizen.app.mc.MCAccidents.getDelimiterRow;
 
-public class AccidentDetails extends ActionBarActivity {
+public class AccidentDetails extends ActionBarActivity implements View.OnClickListener {
 
     private int id;
     private MCPoint currentPoint;
 
     private Button newMessageButton;
     private EditText mcNewMessageText;
-
     private Button onwayButton;
 
     private RadioGroup mcDetTabsGroup;
@@ -55,26 +52,40 @@ public class AccidentDetails extends ActionBarActivity {
     private View detHistory;
     private View detVolunteers;
 
+    private View mcDetMessagesTable;
+    private View onwayContent;
+    private View inplaceContent;
+    private View mcDetLogContent;
+
+    private TextView generalType;
+    private TextView generalStatus;
+    private TextView generalTime;
+    private TextView generalOwner;
+    private TextView generalAddress;
+    private TextView generalDescription;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accident_details);
 
-        // makeDetails
-        currentPoint = MCAccidents.points.getPoint(MCAccidents.currentPoint.id);
-
         newMessageButton = (Button) findViewById(R.id.mc_new_message_send);
-        newMessageButton.setOnClickListener(newMessageButtonListener);
+        newMessageButton.setOnClickListener(this);
 
-        mcNewMessageText = (EditText)findViewById(R.id.mc_new_message_text);
+        mcNewMessageText = (EditText) findViewById(R.id.mc_new_message_text);
         mcNewMessageText.addTextChangedListener(mcNewMessageTextListener);
 
         onwayButton = (Button) findViewById(R.id.onway_button);
-        onwayButton.setOnClickListener(onwayButtonListener);
+        onwayButton.setOnClickListener(this);
 
-            /*
-     * Описание группы закладок внутри деталей происшествия
-     */
+        mcDetMessagesTable = findViewById(R.id.mc_det_messages_table);
+        onwayContent = findViewById(R.id.acc_onway_table);
+        inplaceContent = findViewById(R.id.acc_inplace_table);
+        mcDetLogContent = findViewById(R.id.mc_det_log_content);
+
+        /*
+        * Описание группы закладок внутри деталей происшествия
+        */
         mcDetTabsGroup = (RadioGroup) findViewById(R.id.mc_det_tabs_group);
         mcDetTabsGroup.setOnCheckedChangeListener(accDetTabsListener);
 
@@ -82,22 +93,26 @@ public class AccidentDetails extends ActionBarActivity {
         detHistory = findViewById(R.id.det_history);
         detVolunteers = findViewById(R.id.det_volunteers);
 
-        TextView generalType = (TextView) findViewById(R.id.acc_details_general_type);
+        generalType = (TextView) findViewById(R.id.acc_details_general_type);
+        generalStatus = (TextView) findViewById(R.id.acc_details_general_status);
+        generalTime = (TextView) findViewById(R.id.acc_details_general_time);
+        generalOwner = (TextView) findViewById(R.id.acc_details_general_owner);
+        generalAddress = (TextView) findViewById(R.id.acc_details_general_address);
+        generalDescription = (TextView) findViewById(R.id.acc_details_general_description);
+        ((ScrollView) findViewById(R.id.mc_det_messages_scroll)).fullScroll(View.FOCUS_UP);
+
+        update();
+    }
+
+    private void update() {
+
+        currentPoint = MCAccidents.points.getPoint(MCAccidents.currentPoint.id);
+
         generalType.setText(currentPoint.getTypeText() + ". " + currentPoint.getMedText());
-
-        TextView generalStatus = (TextView) findViewById(R.id.acc_details_general_status);
         generalStatus.setText(currentPoint.getStatusText());
-
-        TextView generalTime = (TextView) findViewById(R.id.acc_details_general_time);
         generalTime.setText(Const.timeFormat.format(currentPoint.created.getTime()));
-
-        TextView generalOwner = (TextView) findViewById(R.id.acc_details_general_owner);
         generalOwner.setText(currentPoint.owner);
-
-        TextView generalAddress = (TextView) findViewById(R.id.acc_details_general_address);
         generalAddress.setText("(" + currentPoint.getDistanceText() + ") " + currentPoint.address);
-
-        TextView generalDescription = (TextView) findViewById(R.id.acc_details_general_description);
         generalDescription.setText(currentPoint.descr);
 
         if (currentPoint.id == MCAccidents.getOnwayID() || currentPoint.id == MCAccidents.getInplaceID()) {
@@ -105,8 +120,9 @@ public class AccidentDetails extends ActionBarActivity {
         } else {
             onwayButton.setVisibility(View.VISIBLE);
         }
+
         /*
-		 * Выводим список сообщений
+         * Выводим список сообщений
 		 */
         findViewById(R.id.mc_acc_details_general).setOnLongClickListener(detLongClick);
         ViewGroup messageView = (ViewGroup) mcDetMessagesTable;
@@ -114,7 +130,7 @@ public class AccidentDetails extends ActionBarActivity {
         for (int i : currentPoint.getSortedMessagesKeys()) {
             messageView.addView(currentPoint.messages.get(i).createRow(this));
         }
-        ((ScrollView)findViewById(R.id.mc_det_messages_scroll)).fullScroll(View.FOCUS_UP);
+
 		/*
 		 * Выводим список волонтеров
 		 */
@@ -134,6 +150,7 @@ public class AccidentDetails extends ActionBarActivity {
                 vg_onway.addView(current.createRow(this));
             }
         }
+
 		/*
 		 * Выводим историю
 		 */
@@ -171,7 +188,7 @@ public class AccidentDetails extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void setupAccess() {
+    private void setupAccess() {
         View newMessageArea = findViewById(R.id.mc_new_message_area);
 
         if (MCRole.isStandart()) {
@@ -181,7 +198,7 @@ public class AccidentDetails extends ActionBarActivity {
         }
     }
 
-    private static final View.OnLongClickListener detLongClick = new View.OnLongClickListener() {
+    private final View.OnLongClickListener detLongClick = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
             PopupWindow pw;
@@ -191,46 +208,7 @@ public class AccidentDetails extends ActionBarActivity {
         }
     };
 
-    public static final Button.OnClickListener newMessageButtonListener = new Button.OnClickListener() {
-        public void onClick(View v) {
-            if (Startup.isOnline()) {
-                String text = Text.get(R.id.mc_new_message_text);
-                int currentId = MCAccidents.currentPoint.id;
-                Map<String, String> post = new HashMap<>();
-                post.put("login", MCAccidents.auth.getLogin());
-                post.put("passhash", MCAccidents.auth.makePassHash());
-                post.put("id", String.valueOf(currentId));
-                post.put("text", text);
-                JsonRequest request = new JsonRequest("mcaccidents", "message", post, "", true);
-                if (request != null) {
-                    (new SendMessageRequest(currentId)).execute(request);
-                }
-            } else {
-                Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
-            }
-        }
-    };
-
-    public static final Button.OnClickListener onwayButtonListener = new Button.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (Startup.isOnline()) {
-                int currentId = MCAccidents.currentPoint.id;
-                Map<String, String> post = new HashMap<>();
-                post.put("login", MCAccidents.auth.getLogin());
-                post.put("passhash", MCAccidents.auth.makePassHash());
-                post.put("id", String.valueOf(currentId));
-                JsonRequest request = new JsonRequest("mcaccidents", "onway", post, "", true);
-                if (request != null) {
-                    (new OnwayRequest(currentId)).execute(request);
-                }
-            } else {
-                Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
-            }
-        }
-    };
-
-    public final TextWatcher mcNewMessageTextListener = new TextWatcher() {
+    private final TextWatcher mcNewMessageTextListener = new TextWatcher() {
 
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -249,7 +227,6 @@ public class AccidentDetails extends ActionBarActivity {
         @Override
         public void afterTextChanged(Editable s) {
         }
-
     };
 
     public final RadioGroup.OnCheckedChangeListener accDetTabsListener = new RadioGroup.OnCheckedChangeListener() {
@@ -261,13 +238,102 @@ public class AccidentDetails extends ActionBarActivity {
             if (id == R.id.mc_det_tab_messages) {
                 detMessages.setVisibility(View.VISIBLE);
             } else if (id == R.id.mc_det_tab_history) {
-
                 detHistory.setVisibility(View.VISIBLE);
             } else if (id == R.id.mc_det_tab_people) {
-
                 detVolunteers.setVisibility(View.VISIBLE);
-
             }
         }
     };
+
+    public void parseSendMessageResponse(JSONObject json, int currentId) {
+        if (json.has("result")) {
+            try {
+                String result = json.getString("result");
+                if (result.equals("OK")) {
+                    Toast.makeText(Startup.context, Startup.context.getString(R.string.send_succsess), Toast.LENGTH_LONG).show();
+                    MCAccidents.refresh(Startup.context);
+                    update();
+                    mcNewMessageText.setText("");
+                    //Keyboard.hide(findViewById(R.id.mc_new_message_text));
+                    return;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Log.e("Send message failed", json.toString());
+        } else {
+            Toast.makeText(Startup.context, Startup.context.getString(R.string.send_error), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void parseOnwayResponse(JSONObject json, int currentId) {
+        if (json.has("result")) {
+            try {
+                String result = json.getString("result");
+                if (result.equals("OK")) {
+                    Toast.makeText(Startup.context, Startup.context.getString(R.string.send_succsess), Toast.LENGTH_LONG).show();
+                    MCAccidents.setOnwayID(currentId);
+                    MCAccidents.refresh(Startup.context);
+                    update();
+                    return;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Log.e("Set onway failed", json.toString());
+        } else {
+            Toast.makeText(Startup.context, Startup.context.getString(R.string.send_error), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+
+        switch (id) {
+            case R.id.mc_new_message_send:
+                OnNewMessageSendButton();
+                break;
+            case R.id.onway_button:
+                OnWayButton();
+                break;
+            default:
+                Log.e("AccidentDetails", "Unknow button pressed");
+                break;
+        }
+    }
+
+    public void OnNewMessageSendButton() {
+        if (Startup.isOnline()) {
+            String text = mcNewMessageText.getText().toString();
+            int currentId = MCAccidents.currentPoint.id;
+            Map<String, String> post = new HashMap<>();
+            post.put("login", MCAccidents.auth.getLogin());
+            post.put("passhash", MCAccidents.auth.makePassHash());
+            post.put("id", String.valueOf(currentId));
+            post.put("text", text);
+            JsonRequest request = new JsonRequest("mcaccidents", "message", post, "", true);
+            if (request != null) {
+                (new SendMessageRequest(this, currentId)).execute(request);
+            }
+        } else {
+            Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void OnWayButton() {
+        if (Startup.isOnline()) {
+            int currentId = MCAccidents.currentPoint.id;
+            Map<String, String> post = new HashMap<>();
+            post.put("login", MCAccidents.auth.getLogin());
+            post.put("passhash", MCAccidents.auth.makePassHash());
+            post.put("id", String.valueOf(currentId));
+            JsonRequest request = new JsonRequest("mcaccidents", "onway", post, "", true);
+            if (request != null) {
+                (new OnwayRequest(this, currentId)).execute(request);
+            }
+        } else {
+            Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
+        }
+    }
 }
