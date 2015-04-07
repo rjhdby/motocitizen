@@ -46,12 +46,15 @@ public class MCInit {
         //MCObjects.authConfirmButton.setOnClickListener(MCListeners.authConfirmListener);
         //MCObjects.authButton.setOnClickListener(MCListeners.authButtonListener);
         //MCObjects.authCancelButton.setOnClickListener(MCListeners.authCancelListener);
+
         MCObjects.dialButton.setOnClickListener(MCListeners.dialButtonListener);
         MCObjects.createAccButton.setOnClickListener(MCListeners.createAccButtonListener);
-        MCObjects.firstLoginButton.setOnClickListener(MCListeners.firstloginButtonListener);
-        MCObjects.anonimButton.setOnClickListener(MCListeners.anonimButtonListener);
-        MCObjects.authAnonimCheckBox.setOnCheckedChangeListener(MCListeners.authAnonimCheckBoxListener);
+
+        //MCObjects.firstLoginButton.setOnClickListener(MCListeners.firstloginButtonListener);
+        //MCObjects.anonimButton.setOnClickListener(MCListeners.anonimButtonListener);
+        //MCObjects.authAnonimCheckBox.setOnCheckedChangeListener(MCListeners.authAnonimCheckBoxListener);
         //MCObjects.selectSoundButton.setOnClickListener(MCListeners.selectSoundButtonListener);
+
         MCObjects.mainTabsGroup.setOnCheckedChangeListener(MCListeners.mainTabsListener);
         MCObjects.newMessageButton.setOnClickListener(MCListeners.newMessageButtonListener);
         MCObjects.mcDetTabsGroup.setOnCheckedChangeListener(MCListeners.accDetTabsListener);
@@ -63,9 +66,9 @@ public class MCInit {
 
     public static void setupAccess(Context context, MCAuth auth) {
         View newMessageArea = ((Activity) context).findViewById(R.id.mc_new_message_area);
-        View loginField = ((Activity) context).findViewById(R.id.mc_auth_login);
-        View passwordField = ((Activity) context).findViewById(R.id.mc_auth_password);
-        CheckBox anonimCheckBox = ((CheckBox) ((Activity) context).findViewById(R.id.mc_auth_anonim));
+        //View loginField = ((Activity) context).findViewById(R.id.mc_auth_login);
+        //View passwordField = ((Activity) context).findViewById(R.id.mc_auth_password);
+        //CheckBox anonimCheckBox = ((CheckBox) ((Activity) context).findViewById(R.id.mc_auth_anonim));
         ImageButton createButton = (ImageButton) ((Activity) context).findViewById(R.id.mc_add_point_button);
 
         if (MCRole.isStandart()) {
@@ -77,14 +80,14 @@ public class MCInit {
         }
 
         if (auth.anonim) {
-            anonimCheckBox.setChecked(true);
-            loginField.setVisibility(View.INVISIBLE);
-            passwordField.setVisibility(View.INVISIBLE);
+            //anonimCheckBox.setChecked(true);
+            //loginField.setVisibility(View.INVISIBLE);
+            //passwordField.setVisibility(View.INVISIBLE);
             auth.reset();
         } else {
-            anonimCheckBox.setChecked(false);
-            loginField.setVisibility(View.VISIBLE);
-            passwordField.setVisibility(View.VISIBLE);
+            //anonimCheckBox.setChecked(false);
+            //loginField.setVisibility(View.VISIBLE);
+            //passwordField.setVisibility(View.VISIBLE);
         }
     }
 

@@ -57,9 +57,9 @@ public class MCObjects {
      * Объекты в активности создания события
      */
     public static final Button mcCreateFineAddressButton = (Button) findView(R.id.mc_create_fine_address_button);
-    public static final Button mcCreateFineAddressConfirm = (Button) findView(R.id.mc_create_fine_address_confirm);
+    //public static final Button mcCreateFineAddressConfirm = (Button) findView(R.id.mc_create_fine_address_confirm);
     public static final View mcCreateMap = findView(R.id.mc_create_map);
-    public static final ImageView mcCreateMapPointer = (ImageView) findView(R.id.mc_create_map_pointer);
+    //public static final ImageView mcCreateMapPointer = (ImageView) findView(R.id.mc_create_map_pointer);
     /*
      * Объекты в меню settings
      */
