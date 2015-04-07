@@ -38,7 +38,7 @@ import motocitizen.utils.Const;
 
 import static motocitizen.app.mc.MCAccidents.getDelimiterRow;
 
-public class AccidentDetails extends ActionBarActivity implements View.OnClickListener {
+public class AccidentDetailsActivity extends ActionBarActivity implements View.OnClickListener {
 
     private int id;
     private MCPoint currentPoint;
@@ -298,7 +298,7 @@ public class AccidentDetails extends ActionBarActivity implements View.OnClickLi
                 OnWayButton();
                 break;
             default:
-                Log.e("AccidentDetails", "Unknow button pressed");
+                Log.e("AccidentDetailsActivity", "Unknow button pressed");
                 break;
         }
     }

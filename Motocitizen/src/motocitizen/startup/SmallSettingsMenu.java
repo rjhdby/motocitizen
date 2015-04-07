@@ -14,7 +14,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import motocitizen.Activity.AboutActivity;
-import motocitizen.Activity.AccidentDetails;
+import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.Activity.ConfigActivity;
 import motocitizen.app.mc.MCAccidents;
 // zz
@@ -58,7 +58,7 @@ public class SmallSettingsMenu {
                     Intent i = new Intent(act, AboutActivity.class);
                     Startup.context.startActivity(i);
                 } else if (id == R.id.show_acc_details) {
-                    Intent intent = new Intent(act, AccidentDetails.class);
+                    Intent intent = new Intent(act, AccidentDetailsActivity.class);
                     Bundle b = new Bundle();
                     b.putInt("key", 1);
                     intent.putExtras(b);

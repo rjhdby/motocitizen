@@ -6,7 +6,7 @@
               android:layout_height="match_parent"
               android:layout_weight="1"
               android:orientation="vertical"
-              tools:context="motocitizen.Activity.AccidentDetails">
+              tools:context="motocitizen.Activity.AccidentDetailsActivity">
 
 <TableLayout
         android:id="@+id/mc_acc_details_general"

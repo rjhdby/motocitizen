@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnLongClickListener;
@@ -14,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.ScrollView;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +26,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import motocitizen.Activity.AccidentDetails;
+import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.app.mc.gcm.MCGCMRegistration;
 import motocitizen.app.mc.popups.MCAccListPopup;
 import motocitizen.app.mc.user.MCAuth;
@@ -36,7 +34,6 @@ import motocitizen.main.R;
 import motocitizen.network.JsonRequest;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
-import motocitizen.utils.Text;
 
 public class MCAccidents {
 
@@ -291,7 +288,7 @@ public class MCAccidents {
         //makeDetails(context, id);
         points.setSelected(context, id);
         //redraw(context);
-        Intent intent = new Intent(Startup.context, AccidentDetails.class);
+        Intent intent = new Intent(Startup.context, AccidentDetailsActivity.class);
         Startup.context.startActivity(intent);
     }
 

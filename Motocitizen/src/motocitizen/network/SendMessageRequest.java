@@ -2,7 +2,7 @@ package motocitizen.network;
 
 import org.json.JSONObject;
 
-import motocitizen.Activity.AccidentDetails;
+import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.main.R;
 
 /**
@@ -10,10 +10,10 @@ import motocitizen.main.R;
  */
 public class SendMessageRequest extends HttpClient {
 
-    private AccidentDetails activity;
+    private AccidentDetailsActivity activity;
     private int currentId;
 
-    public SendMessageRequest(AccidentDetails activity, int currentId) {
+    public SendMessageRequest(AccidentDetailsActivity activity, int currentId) {
         super(activity, activity.getString(R.string.request_send_message));
         this.currentId = currentId;
         this.activity = activity;

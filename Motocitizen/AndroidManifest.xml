@@ -104,7 +104,7 @@
                 android:value="motocitizen.startup.Startup" />
         </activity>
         <activity
-            android:name="motocitizen.Activity.AccidentDetails"
+            android:name="motocitizen.Activity.AccidentDetailsActivity"
             android:parentActivityName="motocitizen.startup.Startup" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
