@@ -101,4 +101,7 @@
     <string name="request_geocode">Геокодирование.</string>
     <string name="settings_summary_off">Скрыты</string>
     <string name="settings_summary_on">Показаны</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

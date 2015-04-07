@@ -40,7 +40,7 @@ public class SettingsMenu {
 //                Keyboard.hide(v);
 //            }
 //        }
-//        Show.show(R.id.main_frame_applications);
+//        Show.show(R.id.main_screen_fragment);
     }
 
 //    private static void toSettings() {

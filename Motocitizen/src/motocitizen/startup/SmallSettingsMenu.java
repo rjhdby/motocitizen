@@ -2,6 +2,8 @@ package motocitizen.startup;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
@@ -15,7 +17,7 @@ import android.widget.Toast;
 
 import motocitizen.Activity.AboutActivity;
 import motocitizen.Activity.AccidentDetailsActivity;
-import motocitizen.Activity.ConfigActivity;
+import motocitizen.Activity.SettingsFragment;
 import motocitizen.app.mc.MCAccidents;
 // zz
 // import motocitizen.core.settings.SettingsMenu;
@@ -52,8 +54,20 @@ public class SmallSettingsMenu {
                         Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
                     }
                 } else if (id == R.id.small_menu_settings) {
+/*
                     Intent i = new Intent(act, ConfigActivity.class);
                     Startup.context.startActivity(i);
+*/
+
+                    FragmentManager fm = ((Activity) Startup.context).getFragmentManager();
+                    Fragment pf, mf;
+                    pf = fm.findFragmentByTag("settings");
+                    mf = fm.findFragmentByTag("main_screen");
+                    if(pf == null){
+                        pf = new SettingsFragment();
+                        fm.beginTransaction().add(R.id.main_frame,pf,"settings").commit();
+                    }
+                    fm.beginTransaction().hide(mf).show(pf).commit();
                 } else if (id == R.id.small_menu_about) {
                     Intent i = new Intent(act, AboutActivity.class);
                     Startup.context.startActivity(i);

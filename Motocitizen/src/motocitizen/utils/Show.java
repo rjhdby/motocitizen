@@ -39,7 +39,7 @@ public class Show {
                     show(R.id.main_frame, R.id.main_frame_settings);
                 } else if (current.second == R.id.mc_create_main || current.second == R.id.main_frame_settings) {
 
-                    show(R.id.main_frame, R.id.main_frame_applications);
+                    show(R.id.main_frame, R.id.main_screen_fragment);
                 } else*/ if (current.second == R.id.main_frame_applications) {
 
                     MCObjects.tabAccidentsButton.setChecked(true);
