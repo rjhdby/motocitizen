@@ -152,7 +152,7 @@ public class MCLocation {
             }
             JsonRequest request = getAddressRequest(location);
             if (request != null) {
-                (new GeoCodeRequest()).execute(request);
+                (new GeoCodeRequest(Startup.context)).execute(request);
             }
         } else {
             Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();

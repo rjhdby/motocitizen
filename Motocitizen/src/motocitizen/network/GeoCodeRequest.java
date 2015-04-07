@@ -1,5 +1,7 @@
 package motocitizen.network;
 
+import android.content.Context;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,8 +15,8 @@ import motocitizen.startup.Startup;
 public class GeoCodeRequest extends HttpClient {
 
 
-    public GeoCodeRequest () {
-        super(Startup.context.getString(R.string.request_geocode));
+    public GeoCodeRequest (Context context) {
+        super(context, context.getString(R.string.request_geocode));
     }
     // как только получили ответ от сервера, выключаем ProgressBar
     protected void onPostExecute(JSONObject result) {

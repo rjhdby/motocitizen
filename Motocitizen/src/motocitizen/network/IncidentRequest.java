@@ -1,5 +1,7 @@
 package motocitizen.network;
 
+import android.content.Context;
+
 import org.json.JSONObject;
 
 import motocitizen.app.mc.MCAccidents;
@@ -11,8 +13,8 @@ import motocitizen.startup.Startup;
  */
 public class IncidentRequest extends HttpClient  {
 
-    public IncidentRequest() {
-        super(Startup.context.getString(R.string.request_get_incidents));
+    public IncidentRequest(Context context) {
+        super(context, context.getString(R.string.request_get_incidents));
     }
 
     // как только получили ответ от сервера, выключаем ProgressBar
