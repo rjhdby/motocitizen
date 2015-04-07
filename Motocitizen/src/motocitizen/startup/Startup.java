@@ -132,8 +132,6 @@ public class Startup extends Activity {
         int id = Integer.parseInt(idString);
         if (type.equals("acc") && id != 0) {
             MCAccidents.points.setSelected(this, id);
-            //zz
-            // MCAccidents.toDetails(this, id);
         }
     }
 

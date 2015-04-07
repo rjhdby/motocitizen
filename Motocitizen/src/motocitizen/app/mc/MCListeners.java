@@ -134,8 +134,6 @@ public class MCListeners {
             int id = group.getCheckedRadioButtonId();
 
             MCObjects.accListView.setVisibility(View.VISIBLE);
-            //zz
-            // MCObjects.accDetailsView.setVisibility(View.VISIBLE);
             MCObjects.mapContainer.setVisibility(View.VISIBLE);
 
             if (Show.currentGeneral == null) {

@@ -147,18 +147,10 @@ public class MCAccidents {
             }
             if (sorted.length == 0) {
                 view.addView(noAccidentsNotification(context));
-                //zz
-                // ((Activity) context).findViewById(R.id.tab_acc_details_button).setEnabled(false);
             } else if (currentPoint.id == 0) {
-                //zz
-                // ((Activity) context).findViewById(R.id.tab_acc_details_button).setEnabled(false);
                 points.setSelected(context, currentPoint.id);
             } else {
-                //zz
-                // makeDetails(context, currentPoint.id);
                 points.setSelected(context, currentPoint.id);
-                //zz
-                // ((Activity) context).findViewById(R.id.tab_acc_details_button).setEnabled(true);
             }
         } else {
             // TODO Сюда вкрячить сообщение об ошибке

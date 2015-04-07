@@ -28,24 +28,14 @@ public class MCObjects {
     public static final Button selectSoundConfirmButton = (Button) findView(R.id.select_sound_save_button);
     public static final Button selectSoundCancelButton = (Button) findView(R.id.select_sound_cancel_button);
     public static final EditText inputCommentField = (EditText) findView(R.id.mc_new_message_text);
-    //zz
-    // public static final Button onwayButton = (Button) findView(R.id.onway_button);
-//    public static final View onwayContent = findView(R.id.acc_onway_table);
-//    public static final View inplaceContent = findView(R.id.acc_inplace_table);
-//    public static final View mcDetMessagesTable = findView(R.id.mc_det_messages_table);
-//    public static final View mcNewMessageText = findView(R.id.mc_new_message_text);
-//    public static final View mcDetLogContent = findView(R.id.mc_det_log_content);
+
     /*
      * Описание группы основных закладок
      */
     public static final RadioGroup mainTabsGroup = (RadioGroup) findView(R.id.main_tabs_group);
     public static final RadioButton tabAccidentsButton = (RadioButton) findView(R.id.tab_accidents_button);
-    //zz
-    //public static final RadioButton tabDetailsButton = (RadioButton) findView(R.id.tab_acc_details_button);
     public static final RadioButton tabMapButton = (RadioButton) findView(R.id.tab_map_button);
     public static final View accListView = findView(R.id.mc_acc_list);
-    //zz
-    // public static final View accDetailsView = findView(R.id.mc_acc_details);
     public static final View mapContainer = findView(R.id.map_container);
     /*
      * Описание группы закладок внутри деталей происшествия
