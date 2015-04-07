@@ -1,6 +1,7 @@
 package motocitizen.Activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.location.Location;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -30,7 +32,6 @@ import java.util.Map;
 import motocitizen.app.mc.MCAccTypes;
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCLocation;
-import motocitizen.app.mc.MCObjects;
 import motocitizen.main.R;
 import motocitizen.network.CreateAccidentRequest;
 import motocitizen.network.GeoCodeNewRequest;
@@ -90,14 +91,17 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
     private Circle circle;
     private int radius;
 
+    private Context context;
+
     private final GoogleMap.OnCameraChangeListener cameraListener = new GoogleMap.OnCameraChangeListener() {
         @Override
         public void onCameraChange(CameraPosition camera) {
             double distance = MCUtils.LatLngToLocation(camera.target).distanceTo(initialLocation);
+            Button mcCreateFineAddressConfirm = (Button) ((Activity) context).findViewById(R.id.mc_create_fine_address_confirm);
             if (distance > radius) {
-                MCObjects.mcCreateFineAddressConfirm.setEnabled(false);
+                mcCreateFineAddressConfirm.setEnabled(false);
             } else {
-                MCObjects.mcCreateFineAddressConfirm.setEnabled(true);
+                mcCreateFineAddressConfirm.setEnabled(true);
             }
         }
     };
@@ -138,6 +142,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = this;
         setContentView(R.layout.mc_app_create_point);
 
         back = (Button) findViewById(R.id.mc_create_back);
@@ -376,7 +381,8 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
             show(FINAL);
         } else if (id == R.id.mc_create_fine_address_button) {
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(MCUtils.LocationToLatLng(location), 16));
-            MCObjects.mcCreateMapPointer.setImageDrawable(MCAccTypes.getDrawable(this, type));
+            ImageView mapPointer = (ImageView) ((Activity) this).findViewById(R.id.mc_create_map_pointer);
+            mapPointer.setImageDrawable(MCAccTypes.getDrawable(this, type));
             Keyboard.hide(details);
             show(FINEADDRESS);
         } else if (id == R.id.mc_create_fine_address_confirm) {

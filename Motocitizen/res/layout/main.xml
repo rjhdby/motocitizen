@@ -8,15 +8,6 @@
     android:paddingRight="0dp"
     android:paddingTop="0dp"
     tools:context="motocitizen.startup.Startup" >
-
-    <include layout="@layout/main_frame_applications" />
-
-    <include layout="@layout/mc_auth" />
-
-    <include layout="@layout/mc_auth_first_check" />
-
-    <include layout="@layout/mc_app_create_point" />
-
-    <include layout="@layout/mc_select_sound" />
+        <include layout="@layout/main_frame_applications" />
 
 </FrameLayout>

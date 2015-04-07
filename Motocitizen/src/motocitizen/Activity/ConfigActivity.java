@@ -28,25 +28,27 @@ public class ConfigActivity extends PreferenceActivity implements
 
     private SharedPreferences prefs;
     private ListPreference mapProviderPreference;
+    private Preference nottifDistPreference;
+    private Preference nottifAlarmPreference;
 
     //TODO вызывать setSummary при изменении значений дистанций оповещений
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        String value;
-
-        try {
-            if (Integer.parseInt((String) newValue) > Const.EQUATOR) {
-                value = String.valueOf(Const.EQUATOR);
-            }else{
-                value = (String) newValue;
-            }
+        String value = (String) newValue;
+        String key = preference.getKey();
+        if(value.length()>6){
+            value = value.substring(0,6);
         }
-        catch(Exception e){
+        try {
+            if (Integer.parseInt(value) > Const.EQUATOR) {
+                value = String.valueOf(Const.EQUATOR);
+            }
+        } catch(Exception e){
             value = "200";
         }
         preference.setSummary(value);
-        preference.setDefaultValue(value);
+        preference.getEditor().putString(key, value).commit();
         return true;
     }
 
@@ -61,10 +63,10 @@ public class ConfigActivity extends PreferenceActivity implements
         Preference nottifSoundPreference = (Preference) findPreference(getResources().getString(R.string.mc_notif_sound));
         nottifSoundPreference.setSummary(prefs.getString("mc.notification.sound.title", getString(R.string.mc_notif_system)));
 
-        Preference nottifDistPreference = (Preference) findPreference(MC_DISTANCE_SHOW);
+        nottifDistPreference = (Preference) findPreference(MC_DISTANCE_SHOW);
         nottifDistPreference.setSummary(prefs.getString("mc.distance.show", "200"));
 
-        Preference nottifAlarmPreference = (Preference) findPreference(MC_DISTANCE_ALARM);
+        nottifAlarmPreference = (Preference) findPreference(MC_DISTANCE_ALARM);
         nottifAlarmPreference.setSummary(prefs.getString("mc.distance.alarm", "20"));
 
         nottifDistPreference.setOnPreferenceChangeListener(this);
