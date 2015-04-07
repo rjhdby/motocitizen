@@ -71,9 +71,6 @@ public class SmallSettingsMenu {
                 } else if (id == R.id.small_menu_about) {
                     Intent i = new Intent(act, AboutActivity.class);
                     Startup.context.startActivity(i);
-                } else if (id == R.id.show_acc_details) {
-                    Intent intent = new Intent(act, AccidentDetailsActivity.class);
-                    Startup.context.startActivity(intent);
                 } else if (id == R.id.small_menu_exit) {
                     Intent intent = new Intent(Intent.ACTION_MAIN);
                     intent.addCategory(Intent.CATEGORY_HOME);
