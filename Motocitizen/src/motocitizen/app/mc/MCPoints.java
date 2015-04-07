@@ -100,7 +100,6 @@ public class MCPoints {
         return  res;
     }
 
-
     private void parseJSON(JSONArray json) throws JSONException {
         for (int i = 0; i < json.length(); i++) {
             JSONObject acc = json.getJSONObject(i);

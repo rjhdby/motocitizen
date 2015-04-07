@@ -54,9 +54,6 @@
         <include
             layout="@layout/mc_acc_list"/>
 
-        <include
-            layout="@layout/mc_acc_details"/>
-
         <LinearLayout
             android:id="@+id/map_container"
             android:layout_width="match_parent"
@@ -126,7 +123,7 @@
                         android:layout_width="1dp"
                         android:layout_height="fill_parent"
                         android:background="#00000000" />
-
+<!--
                     <RadioButton
                         android:id="@+id/tab_acc_details_button"
                         style="@style/statusText"
@@ -137,7 +134,7 @@
                         android:checked="false"
                         android:text="@string/tab_acc_details" >
                     </RadioButton>
-
+-->
                     <View
                         android:layout_width="1dp"
                         android:layout_height="fill_parent"

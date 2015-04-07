@@ -21,7 +21,7 @@ import motocitizen.app.mc.popups.MCMessagesPopup;
 import motocitizen.utils.Const;
 import motocitizen.utils.MCUtils;
 
-class MCPointHistory {
+public class MCPointHistory {
     private static final Map<String, String> actions;
     static {
         Map<String, String> m = new HashMap<>();
