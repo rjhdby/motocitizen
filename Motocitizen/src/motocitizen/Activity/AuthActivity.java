@@ -72,7 +72,6 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
 
         anonim = (CheckBox)findViewById(R.id.mc_auth_anonim);
         anonim.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View view) {
                 CheckBox checkBox = (CheckBox)view;
