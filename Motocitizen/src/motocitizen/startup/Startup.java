@@ -121,8 +121,8 @@ public class Startup extends FragmentActivity {
                     Fragment mf = fm.findFragmentByTag("main_screen");
                     fm.beginTransaction().show(mf).hide(pf).commit();
                     MCAccidents.redraw(this);
-                }else{
-                    Show.showLast();
+                }else {
+                    //Show.showLast();
                 }
                 Keyboard.hide();
                 return true;

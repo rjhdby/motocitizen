@@ -1,23 +1,23 @@
 package motocitizen.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
 import motocitizen.startup.Startup;
 
 public class Text {
-    private static final Activity act = (Activity) Startup.context;
 
-    public static void set(final int id, final String text) {
+    public static void set(final Context context, final int id, final String text) {
         Runnable update = new Runnable() {
             @Override
             public void run() {
-                TextView v = (TextView) act.findViewById(id);
+                TextView v = (TextView) ((Activity) context).findViewById(id);
                 v.setText(text);
             }
         };
-        act.runOnUiThread(update);
+        ((Activity) Startup.context).runOnUiThread(update);
     }
 
     public static void set(final View view, final int id, final String text) {
@@ -28,11 +28,11 @@ public class Text {
                 v.setText(text);
             }
         };
-        act.runOnUiThread(update);
+        ((Activity) Startup.context).runOnUiThread(update);
     }
 
     public static String get(int id) {
-        TextView v = (TextView) act.findViewById(id);
+        TextView v = (TextView) ((Activity) Startup.context).findViewById(id);
         return v.getText().toString();
     }
 }

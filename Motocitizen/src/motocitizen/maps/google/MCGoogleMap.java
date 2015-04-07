@@ -36,7 +36,7 @@ public class MCGoogleMap extends MCMap {
     public MCGoogleMap(Context context) {
         setName(MCMap.GOOGLE);
         selected = "";
-        Inflate.set(R.id.map_container, R.layout.google_maps_view);
+        Inflate.set(context, R.id.map_container, R.layout.google_maps_view);
         map = ((MapFragment) ((Activity) context).getFragmentManager().findFragmentById(R.id.google_map)).getMap();
         init();
         map.setOnMarkerClickListener(new OnMarkerClickListener() {

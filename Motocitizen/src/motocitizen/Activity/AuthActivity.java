@@ -99,7 +99,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
 
                 if (anonim.isChecked()) {
                     MCAccidents.auth.anonim = true;
-                    Text.set(R.id.auth_error_helper, "");
+                    Text.set(context, R.id.auth_error_helper, "");
                     //Show.show(R.id.main_frame_settings);
                     finish();
                 } else {
@@ -109,7 +109,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
                         //TODO Попробовать избавиться от Startup.context
                         MCInit.setupAccess(Startup.context, MCAccidents.auth);
                         MCInit.setupValues(MCAccidents.auth);
-                        Text.set(R.id.auth_error_helper, "");
+                        Text.set(context, R.id.auth_error_helper, "");
                         //Show.show(R.id.main_frame_settings);
                         finish();
                     } else {

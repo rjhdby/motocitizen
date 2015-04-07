@@ -35,6 +35,7 @@ public class MCLocation {
     private static GoogleApiClient mGoogleApiClient;
     private static LocationRequest mLocationRequest;
     private static boolean disconnectRequest;
+    private static Context context;
     private static final GoogleApiClient.ConnectionCallbacks connectionCallback = new GoogleApiClient.ConnectionCallbacks() {
 
         @Override
@@ -62,6 +63,7 @@ public class MCLocation {
     };
 
     public MCLocation(Context context) {
+        this.context = context;
         disconnectRequest = false;
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(5000);
@@ -132,7 +134,7 @@ public class MCLocation {
         if (name.length() > 0) {
             name += ": ";
         }
-        Text.set(R.id.statusBarText, name + address);
+        Text.set(context, R.id.statusBarText, name + address);
         Startup.map.placeUser(Startup.context);
     }
 

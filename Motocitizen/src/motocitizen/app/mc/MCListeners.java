@@ -59,8 +59,8 @@ public class MCListeners {
         public void onClick(View v) {
             String login = Startup.prefs.getString("mc_login", "");
             String password = Startup.prefs.getString("mc_password", "");
-            Text.set(R.id.mc_auth_login, login);
-            Text.set(R.id.mc_auth_password, password);
+            Text.set(Startup.context, R.id.mc_auth_login, login);
+            Text.set(Startup.context, R.id.mc_auth_password, password);
             Show.show(R.id.mc_auth);
         }
     };
