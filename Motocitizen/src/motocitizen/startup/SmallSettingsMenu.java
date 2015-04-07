@@ -59,9 +59,6 @@ public class SmallSettingsMenu {
                     Startup.context.startActivity(i);
                 } else if (id == R.id.show_acc_details) {
                     Intent intent = new Intent(act, AccidentDetailsActivity.class);
-                    Bundle b = new Bundle();
-                    b.putInt("key", 1);
-                    intent.putExtras(b);
                     Startup.context.startActivity(intent);
                 } else if (id == R.id.small_menu_exit) {
                     Intent intent = new Intent(Intent.ACTION_MAIN);

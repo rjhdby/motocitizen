@@ -169,64 +169,6 @@ public class MCAccidents {
         tr.addView(tw);
         return tr;
     }
-// zz
-//
-//    private static void makeDetails(Context context, int id) {
-//        MCPoint p = points.getPoint(id);
-//        currentPoint = p;
-//        Text.set(R.id.mc_acc_details_general_type, p.getTypeText() + ". " + p.getMedText());
-//        Text.set(R.id.mc_acc_details_general_status, p.getStatusText());
-//        Text.set(R.id.mc_acc_details_general_time, Const.timeFormat.format(p.created.getTime()));
-//        Text.set(R.id.mc_acc_details_general_owner, p.owner);
-//        Text.set(R.id.mc_acc_details_general_address, "(" + p.getDistanceText() + ") " + p.address);
-//        Text.set(R.id.mc_acc_details_general_description, p.descr);
-//
-//        if (currentPoint.id == onway || currentPoint.id == inplace) {
-//            MCObjects.onwayButton.setVisibility(View.INVISIBLE);
-//        } else {
-//            MCObjects.onwayButton.setVisibility(View.VISIBLE);
-//        }
-//        /*
-//		 * Выводим список сообщений
-//		 */
-//        ((Activity) context).findViewById(R.id.mc_acc_details_general).setOnLongClickListener(detLongClick);
-//        ViewGroup messageView = (ViewGroup) MCObjects.mcDetMessagesTable;
-//        messageView.removeAllViews();
-//        for (int i : p.getSortedMessagesKeys()) {
-//            messageView.addView(p.messages.get(i).createRow(context));
-//        }
-//        ((ScrollView) ((Activity) context).findViewById(R.id.mc_det_messages_scroll)).fullScroll(View.FOCUS_UP);
-//		/*
-//		 * Выводим список волонтеров
-//		 */
-//        ViewGroup vg_onway = (ViewGroup) MCObjects.onwayContent;
-//        ViewGroup vg_inplace = (ViewGroup) MCObjects.inplaceContent;
-//        vg_onway.setVisibility(View.INVISIBLE);
-//        vg_inplace.setVisibility(View.INVISIBLE);
-//        vg_onway.removeAllViews();
-//        vg_inplace.removeAllViews();
-//        for (int i : p.getSortedVolunteersKeys()) {
-//            MCVolunteer current = p.volunteers.get(i);
-//            if (current.status.equals("onway")) {
-//                if (vg_onway.getVisibility() == View.INVISIBLE) {
-//                    vg_onway.setVisibility(View.VISIBLE);
-//                    vg_onway.addView(getDelimiterRow(context, "В пути"));
-//                }
-//                vg_onway.addView(current.createRow(context));
-//            }
-//        }
-//		/*
-//		 * Выводим историю
-//		 */
-//        ViewGroup logView = (ViewGroup) MCObjects.mcDetLogContent;
-//        logView.removeAllViews();
-//        logView.addView(MCPointHistory.createHeader(context));
-//        for (int i : p.getSortedHistoryKeys()) {
-//            logView.addView(p.history.get(i).createRow(context));
-//        }
-//        Startup.map.zoom(16);
-//        Startup.map.jumpToPoint(p.location);
-//    }
 
     public static void refresh(Context context) {
         points.load();
@@ -258,15 +200,7 @@ public class MCAccidents {
         }
         drawList(context);
     }
-/*
-    public static void toDetails(Context context) {
-        currentPoint = getCurrent();
-        if (currentPoint == null) {
-            return;
-        }
-        toDetails(context, currentPoint.id);
-    }
-*/
+
     public static void toDetails(Context context, int id) {
 
         MCPoint p = points.getPoint(id);
@@ -276,8 +210,6 @@ public class MCAccidents {
             return;
         }
 */
-        //MCObjects.tabDetailsButton.setChecked(true);
-        //makeDetails(context, id);
         points.setSelected(context, id);
         //redraw(context);
         Intent intent = new Intent(Startup.context, AccidentDetailsActivity.class);

@@ -37,16 +37,7 @@ public class MCObjects {
     public static final RadioButton tabMapButton = (RadioButton) findView(R.id.tab_map_button);
     public static final View accListView = findView(R.id.mc_acc_list);
     public static final View mapContainer = findView(R.id.map_container);
-    /*
-     * Описание группы закладок внутри деталей происшествия
-     */
-//    public static final RadioGroup mcDetTabsGroup = (RadioGroup) findView(R.id.mc_det_tabs_group);
-//    public static final RadioButton mcDetTabMessages = (RadioButton) findView(R.id.mc_det_tab_messages);
-//    public static final RadioButton mcDetTabHistory = (RadioButton) findView(R.id.mc_det_tab_history);
-//    public static final RadioButton mcDetTabPeople = (RadioButton) findView(R.id.mc_det_tab_people);
-//    public static final View detMessages = findView(R.id.det_messages);
-//    public static final View detHistory = findView(R.id.det_history);
-//    public static final View detVolunteers = findView(R.id.det_volunteers);
+
     /*
      * Объекты в активности создания события
      */

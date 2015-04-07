@@ -317,7 +317,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
         back.setEnabled(true);
         confirm.setEnabled(true);
         med = "mc_m_na";
-            int id = v.getId();
+        int id = v.getId();
         Button btn = (Button)findViewById(id);
 
         //TODO switch case
