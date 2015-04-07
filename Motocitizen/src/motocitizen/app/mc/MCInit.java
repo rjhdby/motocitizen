@@ -20,41 +20,16 @@ import motocitizen.utils.Props;
 import motocitizen.utils.Text;
 
 public class MCInit {
-    public static void readProperties() {
-//        Properties props = Props.readAssets("mcaccidents.properties");
-//        for (Object key : props.keySet()) {
-//            String value = (String) props.get(key);
-//            // Log.d((String) key,(String) props.get(key));
-//            if (!Startup.prefs.contains((String) key)) {
-//                if (value.equals("true") || value.equals("false")) {
-//                    Startup.prefs.edit().putBoolean((String) key, Boolean.parseBoolean(value)).commit();
-//                } else {
-//                    try {
-//                        Integer pref = Integer.parseInt(value);
-//                        Startup.prefs.edit().putInt((String) key, pref).commit();
-//                    } catch (NumberFormatException e) {
-//                        Startup.prefs.edit().putString((String) key, value).commit();
-//                    }
-//                }
-//            }
-//        }
-        MCObjects.mapContainer.setTranslationX(Const.width);
-    }
+//    public static void readProperties() {
+//        MCObjects.mapContainer.setTranslationX(Const.width);
+//    }
 
     public static void addListeners() {
-        //MCObjects.authConfirmButton.setOnClickListener(MCListeners.authConfirmListener);
-        //MCObjects.authButton.setOnClickListener(MCListeners.authButtonListener);
-        //MCObjects.authCancelButton.setOnClickListener(MCListeners.authCancelListener);
-
-        MCObjects.dialButton.setOnClickListener(MCListeners.dialButtonListener);
-        MCObjects.createAccButton.setOnClickListener(MCListeners.createAccButtonListener);
 
         //MCObjects.firstLoginButton.setOnClickListener(MCListeners.firstloginButtonListener);
-        //MCObjects.anonimButton.setOnClickListener(MCListeners.anonimButtonListener);
         //MCObjects.authAnonimCheckBox.setOnCheckedChangeListener(MCListeners.authAnonimCheckBoxListener);
-        //MCObjects.selectSoundButton.setOnClickListener(MCListeners.selectSoundButtonListener);
 
-        MCObjects.mainTabsGroup.setOnCheckedChangeListener(MCListeners.mainTabsListener);
+        //MCObjects.mainTabsGroup.setOnCheckedChangeListener(MCListeners.mainTabsListener);
 //        MCObjects.valueAppMcaccidentsDistance.setFilters(new InputFilter[]{new InputFilterMinMax(0, 20050)});
 //        MCObjects.valueAppMcaccidentsDistanceAlarm.setFilters(new InputFilter[]{new InputFilterMinMax(0, 20050)});
     }

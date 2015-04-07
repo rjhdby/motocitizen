@@ -69,8 +69,8 @@ public class MCAccidents {
     public MCAccidents(Context context, SharedPreferences prefs) {
         onway = 0;
         inplace = 0;
-        MCInit.readProperties();
-        MCInit.addListeners();
+        //MCInit.readProperties();
+        //MCInit.addListeners();
         auth = new MCAuth();
         new MCLocation(context);
         MCInit.setupAccess(context, auth);
