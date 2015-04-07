@@ -86,6 +86,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
         actionBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
+
             public void onClick(View v) {
                 if(prefs.getString("mc.name", "").length() > 0) {
                     //TODO Добавить запрос подтверждения на выход.

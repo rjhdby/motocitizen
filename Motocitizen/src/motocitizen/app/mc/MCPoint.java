@@ -50,6 +50,7 @@ public class MCPoint {
             MCAccidents.toDetails(v.getContext(), id);
         }
     };
+
     private final OnLongClickListener rowLongClick = new OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {

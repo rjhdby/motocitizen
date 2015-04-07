@@ -3,6 +3,7 @@ package motocitizen.startup;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.view.Gravity;
@@ -13,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import motocitizen.Activity.AboutActivity;
+import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.Activity.ConfigActivity;
 import motocitizen.app.mc.MCAccidents;
 // zz
@@ -44,7 +46,7 @@ public class SmallSettingsMenu {
                     if (Startup.isOnline()) {
                         JsonRequest request = MCAccidents.getLoadPointsRequest();
                         if (request != null) {
-                            (new IncidentRequest()).execute(request);
+                            (new IncidentRequest(Startup.context)).execute(request);
                         }
                     } else {
                         Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
@@ -55,6 +57,9 @@ public class SmallSettingsMenu {
                 } else if (id == R.id.small_menu_about) {
                     Intent i = new Intent(act, AboutActivity.class);
                     Startup.context.startActivity(i);
+                } else if (id == R.id.show_acc_details) {
+                    Intent intent = new Intent(act, AccidentDetailsActivity.class);
+                    Startup.context.startActivity(intent);
                 } else if (id == R.id.small_menu_exit) {
                     Intent intent = new Intent(Intent.ACTION_MAIN);
                     intent.addCategory(Intent.CATEGORY_HOME);

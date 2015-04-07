@@ -409,7 +409,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
         if (Startup.isOnline()) {
             JsonRequest request = getAddressRequest(location);
             if (request != null) {
-                (new GeoCodeNewRequest()).execute(request);
+                (new GeoCodeNewRequest(this)).execute(request);
             }
         } else {
             Toast.makeText(this, this.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();

@@ -95,47 +95,6 @@ public class MCListeners {
         }
     };
 
-    public static final Button.OnClickListener newMessageButtonListener = new Button.OnClickListener() {
-        public void onClick(View v) {
-            if (Startup.isOnline()) {
-                String text = Text.get(R.id.mc_new_message_text);
-                int currentId = MCAccidents.currentPoint.id;
-                Map<String, String> post = new HashMap<>();
-                post.put("login", MCAccidents.auth.getLogin());
-                post.put("passhash", MCAccidents.auth.makePassHash());
-                post.put("id", String.valueOf(currentId));
-                post.put("text", text);
-                JsonRequest request = new JsonRequest("mcaccidents", "message", post, "", true);
-                if (request != null) {
-                    (new SendMessageRequest(currentId)).execute(request);
-                }
-            } else {
-                Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
-            }
-        }
-    };
-
-    public static void parseSendMessageResponse(JSONObject json, int currentId) {
-        if (json.has("result")) {
-            try {
-                String result = json.getString("result");
-                if (result.equals("OK")) {
-                    Toast.makeText(Startup.context, Startup.context.getString(R.string.send_succsess), Toast.LENGTH_LONG).show();
-                    MCAccidents.refresh(Startup.context);
-                    MCAccidents.toDetails(Startup.context, currentId);
-                    Text.set(R.id.mc_new_message_text, "");
-                    Keyboard.hide(((Activity) Startup.context).findViewById(R.id.mc_new_message_text));
-                    return;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            Log.e("Send message failed", json.toString());
-        } else {
-            Toast.makeText(Startup.context, Startup.context.getString(R.string.send_error), Toast.LENGTH_LONG).show();
-        }
-    }
-
     public static final Button.OnClickListener firstloginButtonListener = new Button.OnClickListener() {
         public void onClick(View v) {
             Show.show(R.id.mc_auth);
@@ -170,51 +129,11 @@ public class MCListeners {
 //        }
 //    };
 
-    public static final Button.OnClickListener onwayButtonListener = new Button.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (Startup.isOnline()) {
-                int currentId = MCAccidents.currentPoint.id;
-                Map<String, String> post = new HashMap<>();
-                post.put("login", MCAccidents.auth.getLogin());
-                post.put("passhash", MCAccidents.auth.makePassHash());
-                post.put("id", String.valueOf(currentId));
-                JsonRequest request = new JsonRequest("mcaccidents", "onway", post, "", true);
-                if (request != null) {
-                    (new OnwayRequest(currentId)).execute(request);
-                }
-            } else {
-                Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
-            }
-        }
-    };
-
-    public static void parseOnwayResponse(JSONObject json, int currentId) {
-        if (json.has("result")) {
-            try {
-                String result = json.getString("result");
-                if (result.equals("OK")) {
-                    Toast.makeText(Startup.context, Startup.context.getString(R.string.send_succsess), Toast.LENGTH_LONG).show();
-                    MCAccidents.onway = currentId;
-                    MCAccidents.refresh(Startup.context);
-                    MCAccidents.toDetails(Startup.context, currentId);
-                    return;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            Log.e("Send message failed", json.toString());
-        } else {
-            Toast.makeText(Startup.context, Startup.context.getString(R.string.send_error), Toast.LENGTH_LONG).show();
-        }
-    }
-
     public static final RadioGroup.OnCheckedChangeListener mainTabsListener = new RadioGroup.OnCheckedChangeListener() {
         public void onCheckedChanged(RadioGroup group, int checkedId) {
             int id = group.getCheckedRadioButtonId();
 
             MCObjects.accListView.setVisibility(View.VISIBLE);
-            MCObjects.accDetailsView.setVisibility(View.VISIBLE);
             MCObjects.mapContainer.setVisibility(View.VISIBLE);
 
             if (Show.currentGeneral == null) {
@@ -223,57 +142,12 @@ public class MCListeners {
 
             if (id == R.id.tab_accidents_button) {
                 MCObjects.accListView.animate().translationX(0);
-                MCObjects.accDetailsView.animate().translationX(Const.width);
                 MCObjects.mapContainer.animate().translationX(Const.width * 2);
-            } else if (id == R.id.tab_acc_details_button) {
-                MCObjects.accListView.animate().translationX(-Const.width);
-                MCObjects.accDetailsView.animate().translationX(0);
-                MCObjects.mapContainer.animate().translationX(Const.width);
             } else if (id == R.id.tab_map_button) {
                 MCObjects.accListView.animate().translationX(-Const.width * 2);
-                MCObjects.accDetailsView.animate().translationX(-Const.width);
                 MCObjects.mapContainer.animate().translationX(0);
             }
             Show.currentGeneral = id;
         }
-    };
-    public static final RadioGroup.OnCheckedChangeListener accDetTabsListener = new RadioGroup.OnCheckedChangeListener() {
-        public void onCheckedChanged(RadioGroup group, int checkedId) {
-            int id = group.getCheckedRadioButtonId();
-            MCObjects.detMessages.setVisibility(View.INVISIBLE);
-            MCObjects.detHistory.setVisibility(View.INVISIBLE);
-            MCObjects.detVolunteers.setVisibility(View.INVISIBLE);
-            if (id == R.id.mc_det_tab_messages) {
-                MCObjects.detMessages.setVisibility(View.VISIBLE);
-            } else if (id == R.id.mc_det_tab_history) {
-
-                MCObjects.detHistory.setVisibility(View.VISIBLE);
-            } else if (id == R.id.mc_det_tab_people) {
-
-                MCObjects.detVolunteers.setVisibility(View.VISIBLE);
-
-            }
-        }
-    };
-    public static final TextWatcher mcNewMessageTextListener = new TextWatcher() {
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            String temp = s.toString().replaceAll("\\s", "");
-            if (temp.length() == 0) {
-                MCObjects.newMessageButton.setEnabled(false);
-            } else {
-                MCObjects.newMessageButton.setEnabled(true);
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-        }
-
     };
 }

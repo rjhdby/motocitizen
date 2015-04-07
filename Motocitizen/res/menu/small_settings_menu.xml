@@ -16,6 +16,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:title="@string/small_menu_about"/>
+
+    <item
+            android:id="@+id/show_acc_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:title="Подробнее"/>
     <item
         android:id="@+id/small_menu_exit"
         android:layout_width="wrap_content"

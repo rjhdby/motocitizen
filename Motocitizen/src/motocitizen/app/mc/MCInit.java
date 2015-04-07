@@ -38,7 +38,6 @@ public class MCInit {
 //                }
 //            }
 //        }
-        MCObjects.accDetailsView.setTranslationX(Const.width);
         MCObjects.mapContainer.setTranslationX(Const.width);
     }
 
@@ -56,26 +55,16 @@ public class MCInit {
         //MCObjects.selectSoundButton.setOnClickListener(MCListeners.selectSoundButtonListener);
 
         MCObjects.mainTabsGroup.setOnCheckedChangeListener(MCListeners.mainTabsListener);
-        MCObjects.newMessageButton.setOnClickListener(MCListeners.newMessageButtonListener);
-        MCObjects.mcDetTabsGroup.setOnCheckedChangeListener(MCListeners.accDetTabsListener);
-        MCObjects.onwayButton.setOnClickListener(MCListeners.onwayButtonListener);
-        ((EditText) MCObjects.mcNewMessageText).addTextChangedListener(MCListeners.mcNewMessageTextListener);
 //        MCObjects.valueAppMcaccidentsDistance.setFilters(new InputFilter[]{new InputFilterMinMax(0, 20050)});
 //        MCObjects.valueAppMcaccidentsDistanceAlarm.setFilters(new InputFilter[]{new InputFilterMinMax(0, 20050)});
     }
 
     public static void setupAccess(Context context, MCAuth auth) {
-        View newMessageArea = ((Activity) context).findViewById(R.id.mc_new_message_area);
-        //View loginField = ((Activity) context).findViewById(R.id.mc_auth_login);
-        //View passwordField = ((Activity) context).findViewById(R.id.mc_auth_password);
-        //CheckBox anonimCheckBox = ((CheckBox) ((Activity) context).findViewById(R.id.mc_auth_anonim));
         ImageButton createButton = (ImageButton) ((Activity) context).findViewById(R.id.mc_add_point_button);
 
         if (MCRole.isStandart()) {
-            newMessageArea.setVisibility(View.VISIBLE);
             createButton.setVisibility(View.VISIBLE);
         } else {
-            newMessageArea.setVisibility(View.INVISIBLE);
             createButton.setVisibility(View.INVISIBLE);
         }
 

@@ -45,7 +45,8 @@ public class MCGoogleMap extends MCMap {
             public boolean onMarkerClick(Marker marker) {
                 String id = marker.getId();
                 if (selected.equals(id) && accidents.containsKey(id)) {
-                    MCAccidents.toDetails(Startup.context, accidents.get(selected));
+                    //TODO Уже не нужно
+                    // MCAccidents.toDetails(Startup.context, accidents.get(selected));
                 } else {
                     marker.showInfoWindow();
                     selected = id;
