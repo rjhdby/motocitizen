@@ -15,18 +15,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import motocitizen.app.mc.MCAccidents;
-import motocitizen.app.mc.MCInit;
 import motocitizen.main.R;
-import motocitizen.startup.Startup;
 import motocitizen.utils.Text;
 
 /**
  * Created by pavel on 26.03.15.
  */
-public class AuthActivity extends ActionBarActivity/* implements View.OnClickListener*/{
+public class AuthActivity extends ActionBarActivity/* implements View.OnClickListener*/ {
 
     //private Button btnAuthConfirm;
-    private Button actionBtn;
+    private Button logoutBtn;
+    private Button loginBtn;
+    private Button cancelBtn;
+
     private EditText login;
     private EditText password;
     private CheckBox anonim;
@@ -36,7 +37,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
 
     private void enableActionBtn() {
         Boolean logPasReady = login.getText().toString().length() > 0 && password.getText().toString().length() > 0;
-        actionBtn.setEnabled(anonim.isChecked() || logPasReady);
+        loginBtn.setEnabled(anonim.isChecked() || logPasReady);
     }
 
     @Override
@@ -46,74 +47,82 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
 
         context = this;
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        login = (EditText)findViewById(R.id.mc_auth_login);
+        login = (EditText) findViewById(R.id.mc_auth_login);
         login.addTextChangedListener(new TextWatcher() {
 
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
 
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 enableActionBtn();
             }
         });
 
-        password = (EditText)findViewById(R.id.mc_auth_password);
+        password = (EditText) findViewById(R.id.mc_auth_password);
         password.addTextChangedListener(new TextWatcher() {
 
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
 
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 enableActionBtn();
             }
         });
 
-        anonim = (CheckBox)findViewById(R.id.mc_auth_anonim);
+        anonim = (CheckBox) findViewById(R.id.mc_auth_anonim);
         anonim.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CheckBox checkBox = (CheckBox)view;
+                CheckBox checkBox = (CheckBox) view;
                 login.setEnabled(!checkBox.isChecked());
                 password.setEnabled(!checkBox.isChecked());
                 enableActionBtn();
             }
         });
 
-        actionBtn = (Button) findViewById(R.id.action_button);
-        actionBtn.setOnClickListener(new View.OnClickListener() {
-
+        cancelBtn = (Button) findViewById(R.id.cancel_button);
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-
             public void onClick(View v) {
-                if(prefs.getString("mc.name", "").length() > 0) {
-                    //TODO Добавить запрос подтверждения на выход.
-                    prefs.edit().putString("mc.login", "").commit();
-                    prefs.edit().putString("mc.password", "").commit();
-                    prefs.edit().putString("mc.name", "").commit();
-                    //TODO Ни чего не забыл?
-                    fillCtrls();
-                    return;
-                }
+                finish();
+            }
+        });
 
+        logoutBtn = (Button) findViewById(R.id.logout_button);
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO Добавить запрос подтверждения на выход.
+                prefs.edit().remove("mc.login").commit();
+                prefs.edit().remove("mc.password").commit();
+                prefs.edit().remove("mc.name").commit();
+                MCAccidents.auth.setAnonim(true);
+                fillCtrls();
+                return;
+            }
+        });
+
+        loginBtn = (Button) findViewById(R.id.login_button);
+        loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Анонимный вход
                 if (anonim.isChecked()) {
-                    MCAccidents.auth.anonim = true;
+                    MCAccidents.auth.setAnonim(true);
                     Text.set(context, R.id.auth_error_helper, "");
-                    //Show.show(R.id.main_frame_settings);
                     finish();
-                } else {
-                    MCAccidents.auth.anonim = false;
-                    if(MCAccidents.auth.auth(login.getText().toString(), password.getText().toString())) {
-                        MCAccidents.auth.setAccess(context);
-                        //TODO Попробовать избавиться от Startup.context
-                        MCInit.setupAccess(Startup.context, MCAccidents.auth);
-                        MCInit.setupValues(MCAccidents.auth);
-                        Text.set(context, R.id.auth_error_helper, "");
-                        //Show.show(R.id.main_frame_settings);
+                } else { // Авторизация
+                    MCAccidents.auth.setAnonim(false);
+                    if (MCAccidents.auth.auth(login.getText().toString(), password.getText().toString())) {
                         finish();
                     } else {
-                        TextView authErrorHelper = (TextView)findViewById(R.id.auth_error_helper);
+                        TextView authErrorHelper = (TextView) findViewById(R.id.auth_error_helper);
                         authErrorHelper.setText("Не удалось авторизоваться. Возможно неверно введен логин или пароль.");
                     }
                 }
@@ -123,19 +132,20 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
     }
 
     protected void fillCtrls() {
-
         login.setText(prefs.getString("mc.login", ""));
         password.setText(prefs.getString("mc.password", ""));
 
         View accListYesterdayLine = findViewById(R.id.accListYesterdayLine);
 
         //Авторизованы?
-        if(prefs.getString("mc.name", "").length() > 0) {
-            actionBtn.setText(getString(R.string.logout_button));
+        if (prefs.getString("mc.name", "").length() > 0) {
+            loginBtn.setVisibility(View.INVISIBLE);
+            logoutBtn.setVisibility(View.VISIBLE);
             anonim.setVisibility(View.INVISIBLE);
             accListYesterdayLine.setVisibility(View.INVISIBLE);
         } else {
-            actionBtn.setText(getString(R.string.login_button));
+            loginBtn.setVisibility(View.VISIBLE);
+            logoutBtn.setVisibility(View.INVISIBLE);
             anonim.setVisibility(View.VISIBLE);
             accListYesterdayLine.setVisibility(View.VISIBLE);
         }
@@ -147,32 +157,4 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
         //getMenuInflater().inflate(R.menu.menu_about, menu);
         return true;
     }
-
-//    public void onClick(View v) {
-//        if (v == btnAuthConfirm) {
-//            if (MCAccidents.auth.anonim) {
-//                Text.set(R.id.auth_error_helper, "");
-//                Show.show(R.id.main_frame_settings);
-//            } else {
-//                Startup.prefsDef.edit().putString("mc.login", Text.get(R.id.mc_auth_login)).commit();
-//                Startup.prefsDef.edit().putString("mc.password", Text.get(R.id.mc_auth_password)).commit();
-//                MCAccidents.auth.auth();
-//                MCAccidents.auth.setAccess(v.getContext());
-//                MCInit.setupAccess(v.getContext(), MCAccidents.auth);
-//                MCInit.setupValues(MCAccidents.auth);
-//                if (MCAccidents.auth.name.equals("")) {
-//                    Text.set(R.id.value_mcaccidents_auth_name, Startup.prefsDef.getString("mc.name", ""));
-//                    Text.set(R.id.auth_error_helper, "Не удалось авторизоваться. Возможно неверно введен логин или пароль.");
-//                } else {
-//                    Text.set(R.id.auth_error_helper, "");
-//                    Show.show(R.id.main_frame_settings);
-//                }
-//            }
-//        }else if (v == actionBtn) {
-//            Startup.prefsDef.edit().putString("mc.login", "").commit();
-//            Startup.prefsDef.edit().putString("mc.password", "").commit();
-//            Startup.prefsDef.edit().putString("mc.name", "").commit();
-//            //TODO Ни чего не забыл?
-//        }
-//    }
 }

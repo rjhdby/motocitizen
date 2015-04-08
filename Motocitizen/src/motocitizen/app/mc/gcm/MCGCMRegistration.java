@@ -62,7 +62,7 @@ public class MCGCMRegistration {
     private static Map<String, String> createPOST(String regId) {
         String imei = ((TelephonyManager) Startup.context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
         Map<String, String> POST = new HashMap<>();
-        POST.put("owner_id", String.valueOf(MCAccidents.auth.id));
+        POST.put("owner_id", String.valueOf(MCAccidents.auth.getID()));
         POST.put("gcm_key", regId);
         POST.put("login", MCAccidents.auth.getLogin());
         POST.put("imei", imei);

@@ -11,7 +11,7 @@ public class MCRole {
     private static final String[] Admin = new String[]{"admin"};
 
     private static String getRole() {
-        String role = MCAccidents.auth.role;
+        String role = MCAccidents.auth.getRole();
         if (role == null) {
             return "";
         }

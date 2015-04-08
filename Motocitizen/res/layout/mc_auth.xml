@@ -96,10 +96,35 @@
             android:layout_height="wrap_content" >
         </TableRow>
     </TableLayout>
-    <Button
-            android:id="@+id/action_button"
-            style="?android:attr/buttonBarButtonStyle"
+
+    <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-    </Button>
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            android:weightSum="1.5" >
+
+        <Button
+                android:id="@+id/cancel_button"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="@string/mc_create_cancel" />
+        <Button
+                android:id="@+id/logout_button"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="@string/logout_button" />
+
+        <Button
+                android:id="@+id/login_button"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="@string/login_button" />
+    </LinearLayout>
+
 </LinearLayout>
