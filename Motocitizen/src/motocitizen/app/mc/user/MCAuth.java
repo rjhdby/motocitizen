@@ -112,6 +112,7 @@ public class MCAuth {
                 Startup.prefs.edit().putString("mc.name", name).commit();
                 Startup.prefs.edit().putString("mc.login", login).commit();
                 Startup.prefs.edit().putString("mc.password", password).commit();
+                Startup.prefs.edit().putBoolean("mc.anonim", false).commit();
                 return true;
             } else {
                 return false;
