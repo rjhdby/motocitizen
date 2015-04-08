@@ -20,17 +20,14 @@ public class MCObjects {
     /*
      * Описание группы основных закладок
      */
-    //public static final RadioGroup mainTabsGroup = (RadioGroup) findView(R.id.main_tabs_group);
     public static final RadioButton tabAccidentsButton = (RadioButton) findView(R.id.tab_accidents_button);
     public static final RadioButton tabMapButton = (RadioButton) findView(R.id.tab_map_button);
-    //public static final View accListView = findView(R.id.mc_acc_list);
-    //public static final View mapContainer = findView(R.id.map_container);
 
     /*
      * Объекты в активности создания события
      */
     public static final View mcCreateMap = findView(R.id.mc_create_map);
-    //public static final ImageView mcCreateMapPointer = (ImageView) findView(R.id.mc_create_map_pointer);
+
     /*
      * Объекты в меню settings
      */

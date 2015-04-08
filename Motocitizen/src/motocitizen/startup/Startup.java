@@ -1,6 +1,5 @@
 package motocitizen.startup;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -18,7 +17,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -27,10 +25,7 @@ import motocitizen.Activity.AuthActivity;
 import motocitizen.Activity.CreateAccActivity;
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCLocation;
-import motocitizen.app.mc.MCObjects;
 import motocitizen.app.mc.gcm.GcmBroadcastReceiver;
-// zz
-// import motocitizen.core.settings.SettingsMenu;
 import motocitizen.main.R;
 import motocitizen.maps.general.MCMap;
 import motocitizen.maps.google.MCGoogleMap;
