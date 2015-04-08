@@ -146,9 +146,9 @@ public class MCPoint {
     }
 
     boolean hasInOwners() {
-        if (MCAccidents.auth.anonim)
+        if (MCAccidents.auth.isAnonim())
             return false;
-        int user = MCAccidents.auth.id;
+        int user = MCAccidents.auth.getID();
         if (user == owner_id)
             return true;
         for (int key : messages.keySet()) {

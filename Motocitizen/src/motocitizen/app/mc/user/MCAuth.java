@@ -12,14 +12,15 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
+import motocitizen.app.mc.MCAccidents;
 import motocitizen.network.JSONCall;
 import motocitizen.startup.Startup;
 
 public class MCAuth {
-    public String role;
-    public String name;
-    public int id;
-    public boolean anonim;
+    private String role;
+    private String name;
+    private int id;
+    private boolean anonim;
 
     public MCAuth() {
         reset();
@@ -33,6 +34,18 @@ public class MCAuth {
         name = "";
         role = "";
         id = 0;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public int getID() {
+        return id;
     }
 
     public String getLogin() {
@@ -72,11 +85,18 @@ public class MCAuth {
         return !anonim && getLogin().equals("");
     }
 
-    public void setAnonim(Context context, Boolean value) {
-        anonim = value;
-        Startup.prefs.edit().putBoolean("mc.anonim", value).commit();
-        reset();
-        setAccess(context);
+    public void setAnonim(boolean value) {
+        this.anonim = value;
+        if(value) {
+            Startup.prefs.edit().putBoolean("mc.anonim", value).commit();
+            Startup.prefs.edit().remove("mc.login").commit();
+            Startup.prefs.edit().remove("mc.password").commit();
+            reset();
+        }
+    }
+
+    public boolean isAnonim() {
+        return this.anonim;
     }
 
     public Boolean auth(String login, String password) {
@@ -113,21 +133,7 @@ public class MCAuth {
         }
     }
 
-    public void setAccess(Context context) {
-        //auth();
-//        View loginField = ((Activity) context).findViewById(R.id.mc_auth_login);
-//        View passwordField = ((Activity) context).findViewById(R.id.mc_auth_password);
-//        CheckBox anonimCheckBox = ((CheckBox) ((Activity) context).findViewById(R.id.mc_auth_anonim));
-        if (anonim) {
-//            anonimCheckBox.setChecked(true);
-//            loginField.setVisibility(View.INVISIBLE);
-//            passwordField.setVisibility(View.INVISIBLE);
-            role = "";
-        } else {
-//            anonimCheckBox.setChecked(false);
-//            loginField.setVisibility(View.VISIBLE);
-//            passwordField.setVisibility(View.VISIBLE);
-//            Text.set(R.id.value_mcaccidents_auth_name, Startup.prefsDef.getString("mc.name", ""));
-        }
+    public void setName() {
+        Startup.prefs.edit().putString("mc.name", name).commit();
     }
 }

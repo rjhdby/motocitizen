@@ -130,7 +130,7 @@ public class MCLocation {
     }
 
     public static void updateStatusBar() {
-        String name = MCAccidents.auth.name;
+        String name = MCAccidents.auth.getName();
         if (name.length() > 0) {
             name += ": ";
         }

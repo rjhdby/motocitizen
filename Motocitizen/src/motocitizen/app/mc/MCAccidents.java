@@ -71,8 +71,6 @@ public class MCAccidents {
         inplace = 0;
         auth = new MCAuth();
         new MCLocation(context);
-        MCInit.setupAccess(context, auth);
-        MCInit.setupValues(auth);
         points = new MCPoints(prefs);
         new MCGCMRegistration();
         currentPoint = new MCPoint();

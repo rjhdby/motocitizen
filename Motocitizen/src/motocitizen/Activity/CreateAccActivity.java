@@ -289,7 +289,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
 
     private Map<String, String> createPOST() {
         Map<String, String> POST = new HashMap<>();
-        POST.put("owner_id", String.valueOf(MCAccidents.auth.id));
+        POST.put("owner_id", String.valueOf(MCAccidents.auth.getID()));
         POST.put("type", type);
         POST.put("med", med);
         POST.put("status", "acc_status_act");

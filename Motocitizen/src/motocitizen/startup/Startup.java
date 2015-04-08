@@ -26,6 +26,7 @@ import motocitizen.Activity.CreateAccActivity;
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCLocation;
 import motocitizen.app.mc.gcm.GcmBroadcastReceiver;
+import motocitizen.app.mc.user.MCRole;
 import motocitizen.main.R;
 import motocitizen.maps.general.MCMap;
 import motocitizen.maps.google.MCGoogleMap;
@@ -112,6 +113,12 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
         Intent intent = getIntent();
         context = this;
         //MCAccidents.refresh(this);
+
+        if (MCRole.isStandart()) {
+            createAccButton.setVisibility(View.VISIBLE);
+        } else {
+            createAccButton.setVisibility(View.INVISIBLE);
+        }
 
         if (isOnline()) {
             JsonRequest request = MCAccidents.getLoadPointsRequest();
