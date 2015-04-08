@@ -1,9 +1,11 @@
 package motocitizen.network;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -46,11 +48,19 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
     private String method = null;
 
     protected void onPreExecute() {
-        dialog = new ProgressDialog(context);
-        dialog.setMessage("Обмен данными...\n" + info);
-        dialog.setIndeterminate(true);
-        dialog.setCancelable(true);
-        dialog.show();
+        Runnable execute = new Runnable() {
+            @Override
+            public void run() {
+                dialog = new ProgressDialog(context);
+                dialog.setMessage("Обмен данными...\n" + info);
+                dialog.setIndeterminate(true);
+                dialog.setCancelable(true);
+                dialog.show();
+            }
+        };
+        ((Activity) Startup.context).runOnUiThread(execute);
+
+
     }
 
     @Override
