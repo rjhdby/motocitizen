@@ -12,10 +12,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
-import motocitizen.main.R;
 import motocitizen.network.JSONCall;
 import motocitizen.startup.Startup;
-import motocitizen.utils.Text;
 
 public class MCAuth {
     public String role;

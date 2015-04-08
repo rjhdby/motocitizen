@@ -1,6 +1,5 @@
 package motocitizen.startup;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -8,21 +7,25 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.Window;
+import android.widget.ImageButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import motocitizen.Activity.AuthActivity;
+import motocitizen.Activity.CreateAccActivity;
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCLocation;
 import motocitizen.app.mc.gcm.GcmBroadcastReceiver;
-// zz
-// import motocitizen.core.settings.SettingsMenu;
 import motocitizen.main.R;
 import motocitizen.maps.general.MCMap;
 import motocitizen.maps.google.MCGoogleMap;
@@ -35,11 +38,19 @@ import motocitizen.utils.MCUtils;
 import motocitizen.utils.Props;
 import motocitizen.utils.Show;
 
-public class Startup extends FragmentActivity {
+public class Startup extends FragmentActivity implements View.OnClickListener {
     public static Props props;
     public static Context context;
     public static SharedPreferences prefs;
     public static MCMap map;
+
+    private ImageButton dialButton;
+    private ImageButton createAccButton;
+
+    private RadioGroup mainTabsGroup;
+
+    private View accListView;
+    private View mapContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +62,20 @@ public class Startup extends FragmentActivity {
         context = this;
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
         new Const();
+
+        dialButton = (ImageButton) findViewById(R.id.dial_button);
+        dialButton.setOnClickListener(this);
+
+        createAccButton = (ImageButton) findViewById(R.id.mc_add_point_button);
+        createAccButton.setOnClickListener(this);
+
+        mainTabsGroup = (RadioGroup) findViewById(R.id.main_tabs_group);
+        mainTabsGroup.setOnCheckedChangeListener(mainTabsListener);
+
+        accListView = findViewById(R.id.mc_acc_list);
+        mapContainer = findViewById(R.id.map_container);
+        mapContainer.setTranslationX(Const.width);
 
         //prefs = getSharedPreferences("motocitizen.startup", MODE_PRIVATE);
         //prefs.edit().clear().commit();
@@ -163,4 +186,45 @@ public class Startup extends FragmentActivity {
         }
         map.jumpToPoint(MCLocation.current);
     }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+
+        switch (id) {
+            case R.id.dial_button:
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:+74957447350"));
+                Startup.context.startActivity(intent);
+                break;
+            case R.id.mc_add_point_button:
+                startActivity(new Intent(Startup.context, CreateAccActivity.class));
+                break;
+            default:
+                Log.e("AccidentDetailsActivity", "Unknow button pressed");
+                break;
+        }
+    }
+
+    public final RadioGroup.OnCheckedChangeListener mainTabsListener = new RadioGroup.OnCheckedChangeListener() {
+        public void onCheckedChanged(RadioGroup group, int checkedId) {
+            int id = group.getCheckedRadioButtonId();
+
+            accListView.setVisibility(View.VISIBLE);
+            mapContainer.setVisibility(View.VISIBLE);
+
+            if (Show.currentGeneral == null) {
+                Show.currentGeneral = R.id.tab_accidents_button;
+            }
+
+            if (id == R.id.tab_accidents_button) {
+                accListView.animate().translationX(0);
+                mapContainer.animate().translationX(Const.width * 2);
+            } else if (id == R.id.tab_map_button) {
+                accListView.animate().translationX(-Const.width * 2);
+                mapContainer.animate().translationX(0);
+            }
+            Show.currentGeneral = id;
+        }
+    };
 }
