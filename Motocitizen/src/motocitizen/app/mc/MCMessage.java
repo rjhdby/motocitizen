@@ -33,7 +33,6 @@ public class MCMessage {
         owner = json.getString("owner");
         status = json.getString("status");
         text = json.getString("text");
-        text = json.getString("text");
         time = new Date(Long.parseLong(json.getString("uxtime"), 10)*1000);
     }
 
