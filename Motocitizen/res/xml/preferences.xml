@@ -2,26 +2,6 @@
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
-        android:key="@string/config_title_notify_category"
-        android:title="@string/config_title_notify_category">
-        <EditTextPreference
-            android:defaultValue="200"
-            android:dialogTitle="@string/mc_settings_distance"
-            android:key="mc.distance.show"
-            android:summary="@string/mc_settings_distance"
-            android:title="@string/mc_settings_distance"
-            android:inputType="number"
-            android:tag="mc.distance.show" />
-        <EditTextPreference
-            android:defaultValue="20"
-            android:dialogTitle="@string/mc_settings_distance_alarm"
-            android:key="mc.distance.alarm"
-            android:summary="@string/mc_settings_distance_alarm"
-            android:title="@string/mc_settings_distance_alarm"
-            android:inputType="number"
-            android:tag="mc.distance.alarm" />
-    </PreferenceCategory>
-    <PreferenceCategory
         android:key="@string/config_acc_type_category"
         android:title="@string/config_acc_type_category">
         <CheckBoxPreference
@@ -62,12 +42,32 @@
             android:tag="mc.show.other" />
     </PreferenceCategory>
     <PreferenceCategory
+        android:key="@string/config_title_notify_category"
+        android:title="@string/config_title_notify_category">
+        <EditTextPreference
+            android:defaultValue="200"
+            android:dialogTitle="@string/mc_settings_distance"
+            android:key="mc.distance.show"
+            android:summary="@string/mc_settings_distance"
+            android:title="@string/mc_settings_distance"
+            android:inputType="number"
+            android:tag="mc.distance.show" />
+        <EditTextPreference
+            android:defaultValue="20"
+            android:dialogTitle="@string/mc_settings_distance_alarm"
+            android:key="mc.distance.alarm"
+            android:summary="@string/mc_settings_distance_alarm"
+            android:title="@string/mc_settings_distance_alarm"
+            android:inputType="number"
+            android:tag="mc.distance.alarm" />
+    </PreferenceCategory>
+    <PreferenceCategory
         android:key="@string/map_provider_category"
         android:title="@string/map_provider_category">
         <ListPreference
             android:title="@string/config_map_title"
             android:key="map_pref"
-            android:defaultValue="osm"
+            android:defaultValue="google"
             android:summary="%s"
             android:entries="@array/mapProvider"
             android:entryValues="@array/mapProviderValues" />

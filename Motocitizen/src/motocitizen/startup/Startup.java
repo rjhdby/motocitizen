@@ -84,7 +84,7 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
 
         new MCAccidents(this, prefs);
 
-        createMap(prefs.getString("map_pref", MCMap.OSM));
+        createMap(prefs.getString("map_pref", MCMap.GOOGLE));
         // zz
         // new SettingsMenu();
         new SmallSettingsMenu();

@@ -139,15 +139,28 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
 
         //Авторизованы?
         if (prefs.getString("mc.name", "").length() > 0) {
+            /*
             loginBtn.setVisibility(View.INVISIBLE);
             logoutBtn.setVisibility(View.VISIBLE);
             anonim.setVisibility(View.INVISIBLE);
             accListYesterdayLine.setVisibility(View.INVISIBLE);
+            */
+            loginBtn.setEnabled(false);
+            logoutBtn.setEnabled(true);
+            anonim.setEnabled(false);
+            accListYesterdayLine.setEnabled(false);
         } else {
+            /*
             loginBtn.setVisibility(View.VISIBLE);
             logoutBtn.setVisibility(View.INVISIBLE);
             anonim.setVisibility(View.VISIBLE);
             accListYesterdayLine.setVisibility(View.VISIBLE);
+            */
+            loginBtn.setEnabled(true);
+            logoutBtn.setEnabled(false);
+            anonim.setEnabled(true);
+            accListYesterdayLine.setEnabled(true);
+            enableActionBtn();
         }
     }
 
