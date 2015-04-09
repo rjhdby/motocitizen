@@ -33,11 +33,7 @@ public class MCMessage {
         owner = json.getString("owner");
         status = json.getString("status");
         text = json.getString("text");
-        try {
-            time = Const.dateFormat.parse(json.getString("modified"));
-        } catch (ParseException e) {
-            time = new Date();
-        }
+        time = new Date(Long.parseLong(json.getString("uxtime"), 10)*1000);
     }
 
     public TableRow createRow(Context context) {
