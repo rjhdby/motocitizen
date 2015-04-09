@@ -44,19 +44,19 @@ public class MCMessage {
         owner = json.getString("owner");
         status = json.getString("status");
         text = json.getString("text");
-        try {
-            time = Const.dateFormat.parse(json.getString("modified"));
-        } catch (ParseException e) {
-            time = new Date();
-        }
+        text = json.getString("text");
+        time = new Date(Long.parseLong(json.getString("uxtime"), 10)*1000);
     }
 
     public TableRow createRow(Context context) {
         TableRow tr = new TableRow(context);
         TableRow.LayoutParams lp = new TableRow.LayoutParams();
+        TextView tvDate = new TextView(tr.getContext());
         TextView tvOwner = new TextView(tr.getContext());
         TextView tvText = new TextView(tr.getContext());
         lp.setMargins(0, 0, 5, 0);
+
+        tvDate.setText(Const.timeFormat.format(time.getTime()));
         tvOwner.setLayoutParams(lp);
         tvOwner.setText(owner);
         if (owner.equals(MCAccidents.auth.getLogin())) {
@@ -68,6 +68,7 @@ public class MCMessage {
         tvText.setSingleLine(false);
         tvText.setText(text);
         tr.setTag(String.valueOf(id));
+        tr.addView(tvDate);
         tr.addView(tvOwner);
         tr.addView(tvText);
         tr.setOnLongClickListener(rowLongClick);
