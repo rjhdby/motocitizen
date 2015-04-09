@@ -136,7 +136,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
         }
 
 		/*
-		 * Выводим список волонтеров
+         * Выводим список волонтеров
 		 */
         ViewGroup vg_onway = (ViewGroup) onwayContent;
         ViewGroup vg_inplace = (ViewGroup) inplaceContent;
@@ -186,12 +186,19 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_map) {
-                Intent intent = new Intent(this, Startup.class);
-                intent.putExtra("toMap",MCAccidents.currentPoint.id);
-                this.startActivity(intent);
+            Intent intent = new Intent(this, Startup.class);
+            intent.putExtra("toMap", MCAccidents.currentPoint.id);
+            this.startActivity(intent);
+            return true;
+        } else if (id == R.id.action_newMessage) {
+            Intent intent = new Intent(this, MessagesActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt("messageID", MCAccidents.currentPoint.id);
+            intent.putExtras(bundle);
+            startActivity(intent);
+            return true;
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
