@@ -58,11 +58,7 @@ public class MCPointHistory {
         owner_id = json.getInt("id_user");
         owner = json.getString("owner");
         action = json.getString("action");
-        try {
-            time = Const.dateFormat.parse(json.getString("time"));
-        } catch (ParseException e) {
-            time = new Date();
-        }
+        time = new Date(Long.parseLong(json.getString("uxtime"), 10)*1000);
     }
 
     public static TableRow createHeader(Context context) {

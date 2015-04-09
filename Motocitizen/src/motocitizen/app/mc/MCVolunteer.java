@@ -22,12 +22,7 @@ public class MCVolunteer {
         id = json.getInt("id");
         name = json.getString("name");
         status = json.getString("status");
-        try {
-            time = Const.dateFormat.parse(json.getString("timest"));
-        } catch (ParseException e) {
-            time = new Date();
-            e.printStackTrace();
-        }
+        time = new Date(Long.parseLong(json.getString("uxtime"), 10)*1000);
     }
 
     public TableRow createRow(Context context) {
