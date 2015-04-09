@@ -58,9 +58,7 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
                 dialog.show();
             }
         };
-        ((Activity) Startup.context).runOnUiThread(execute);
-
-
+        ((Activity)context).runOnUiThread(execute);
     }
 
     @Override
@@ -173,7 +171,7 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
                 else
                     result.append("&");
                 if (post.get(key) == null) {
-                    Toast.makeText(Startup.context, "Не задано " + key, Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Не задано " + key, Toast.LENGTH_LONG).show();
                     return "ERROR";
                 }
                 result.append(URLEncoder.encode(key, "UTF-8"));
