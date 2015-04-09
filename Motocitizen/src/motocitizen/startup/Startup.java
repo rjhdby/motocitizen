@@ -21,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.Activity.AuthActivity;
 import motocitizen.Activity.CreateAccActivity;
 import motocitizen.app.mc.MCAccidents;
@@ -112,6 +113,7 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
         MCLocation.wakeup(this);
         Intent intent = getIntent();
         Integer toMap = intent.getIntExtra("toMap", 0);
+        Integer toDetails = intent.getIntExtra("toDetails", 0);
 
         context = this;
         //MCAccidents.refresh(this);
@@ -132,7 +134,12 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
             Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
         }
         if(toMap != 0){
+            intent.removeExtra("toMap");
             mainTabsGroup.check(R.id.tab_map_button);
+        } else if(toDetails != 0){
+            intent.removeExtra("toDetails");
+            MCAccidents.refresh(this);
+            MCAccidents.toDetails(this, toDetails);
         }
     }
 
