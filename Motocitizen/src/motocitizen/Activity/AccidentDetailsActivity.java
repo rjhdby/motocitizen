@@ -50,6 +50,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
     private Button newMessageButton;
     private EditText mcNewMessageText;
     private Button onwayButton;
+    private Button toMapButton;
 
     private RadioGroup mcDetTabsGroup;
     private View detMessages;
@@ -87,6 +88,8 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
         inplaceContent = findViewById(R.id.acc_inplace_table);
         mcDetLogContent = findViewById(R.id.mc_det_log_content);
 
+        toMapButton = (Button) findViewById(R.id.details_to_map_button);
+        toMapButton.setOnClickListener(this);
         /*
         * Описание группы закладок внутри деталей происшествия
         */
@@ -186,9 +189,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_map) {
-                Intent intent = new Intent(this, Startup.class);
-                intent.putExtra("toMap",MCAccidents.currentPoint.id);
-                this.startActivity(intent);
+            jumpToMap();
             return true;
         }
 
@@ -304,10 +305,19 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
             case R.id.onway_button:
                 OnWayButton();
                 break;
+            case R.id.details_to_map_button:
+                jumpToMap();
+                break;
             default:
                 Log.e("AccidentDetailsActivity", "Unknow button pressed");
                 break;
         }
+    }
+
+    private void jumpToMap(){
+        Intent intent = new Intent(this, Startup.class);
+        intent.putExtra("toMap",MCAccidents.currentPoint.id);
+        this.startActivity(intent);
     }
 
     public void OnNewMessageSendButton() {

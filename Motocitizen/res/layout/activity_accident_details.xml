@@ -233,12 +233,28 @@
                 android:layout_gravity="bottom"
                 android:gravity="bottom" >
 
-            <Button
-                    android:id="@+id/onway_button"
-                    android:layout_width="match_parent"
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="bottom">
+
+                <Button
+                        android:id="@+id/onway_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:text="@string/onway_button"
+                    android:layout_weight="0.5" />
+
+                <Button
+                    android:id="@+id/details_to_map_button"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:text="@string/onway_button" />
+                    android:text="@string/to_map"
+                    android:layout_weight="0.5"/>
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 
