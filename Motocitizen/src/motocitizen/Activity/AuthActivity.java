@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.main.R;
+import motocitizen.startup.Startup;
 import motocitizen.utils.Text;
 
 /**
@@ -119,7 +120,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
                     finish();
                 } else { // Авторизация
                     MCAccidents.auth.setAnonim(false);
-                    if (MCAccidents.auth.auth(login.getText().toString(), password.getText().toString())) {
+                    if (MCAccidents.auth.auth(Startup.context, login.getText().toString(), password.getText().toString())) {
                         finish();
                     } else {
                         TextView authErrorHelper = (TextView) findViewById(R.id.auth_error_helper);

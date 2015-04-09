@@ -58,7 +58,7 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
                 dialog.show();
             }
         };
-        ((Activity)context).runOnUiThread(execute);
+        ((Activity) context).runOnUiThread(execute);
     }
 
     @Override

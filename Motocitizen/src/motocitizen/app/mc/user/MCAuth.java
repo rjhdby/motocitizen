@@ -26,7 +26,7 @@ public class MCAuth {
         reset();
         anonim = Startup.prefs.getBoolean("mc.anonim", false);
         if (!anonim) {
-            auth(Startup.prefs.getString("mc.login", ""), Startup.prefs.getString("mc.password", ""));
+            auth(Startup.context, Startup.prefs.getString("mc.login", ""), Startup.prefs.getString("mc.password", ""));
         }
     }
 
@@ -99,9 +99,9 @@ public class MCAuth {
         return this.anonim;
     }
 
-    public Boolean auth(String login, String password) {
+    public Boolean auth(Context context, String login, String password) {
         if(Startup.isOnline()) {
-            String ident = ((TelephonyManager) Startup.context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+            String ident = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
             Map<String, String> post = new HashMap<>();
             post.put("ident", ident);
             post.put("login", login);
@@ -119,7 +119,7 @@ public class MCAuth {
             }
         } else {
             //TODO Перенести в ресурсы
-            Toast.makeText(Startup.context, "Авторизация не возможна, пожалуйста, проверьте доступность Internet.", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Авторизация не возможна, пожалуйста, проверьте доступность Internet.", Toast.LENGTH_LONG).show();
             return false;
         }
     }
