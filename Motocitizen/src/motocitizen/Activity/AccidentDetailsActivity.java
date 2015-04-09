@@ -1,10 +1,14 @@
 package motocitizen.Activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -182,6 +186,9 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_map) {
+                Intent intent = new Intent(this, Startup.class);
+                intent.putExtra("toMap",MCAccidents.currentPoint.id);
+                this.startActivity(intent);
             return true;
         }
 
@@ -250,7 +257,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
             try {
                 String result = json.getString("result");
                 if (result.equals("OK")) {
-                    Toast.makeText(Startup.context, Startup.context.getString(R.string.send_succsess), Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, Startup.context.getString(R.string.send_succsess), Toast.LENGTH_LONG).show();
                     MCAccidents.refresh(Startup.context);
                     update();
                     mcNewMessageText.setText("");
@@ -262,7 +269,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
             }
             Log.e("Send message failed", json.toString());
         } else {
-            Toast.makeText(Startup.context, Startup.context.getString(R.string.send_error), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, Startup.context.getString(R.string.send_error), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -271,7 +278,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
             try {
                 String result = json.getString("result");
                 if (result.equals("OK")) {
-                    Toast.makeText(Startup.context, Startup.context.getString(R.string.send_succsess), Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, Startup.context.getString(R.string.send_succsess), Toast.LENGTH_LONG).show();
                     MCAccidents.setOnwayID(currentId);
                     MCAccidents.refresh(Startup.context);
                     update();
@@ -282,7 +289,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
             }
             Log.e("Set onway failed", json.toString());
         } else {
-            Toast.makeText(Startup.context, Startup.context.getString(R.string.send_error), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, Startup.context.getString(R.string.send_error), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -317,7 +324,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
                 (new SendMessageRequest(this, currentId)).execute(request);
             }
         } else {
-            Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -333,7 +340,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
                 (new OnwayRequest(this, currentId)).execute(request);
             }
         } else {
-            Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
         }
     }
 }
