@@ -1,10 +1,14 @@
 package motocitizen.Activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -182,6 +186,9 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_map) {
+                Intent intent = new Intent(this, Startup.class);
+                intent.putExtra("toMap",MCAccidents.currentPoint.id);
+                this.startActivity(intent);
             return true;
         }
 

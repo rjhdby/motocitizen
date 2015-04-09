@@ -111,6 +111,8 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
 //        Show.show(R.id.main_frame, R.id.main_screen_fragment);
         MCLocation.wakeup(this);
         Intent intent = getIntent();
+        Integer toMap = intent.getIntExtra("toMap", 0);
+
         context = this;
         //MCAccidents.refresh(this);
 
@@ -128,6 +130,9 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
             catchIntent(intent);
         } else {
             Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
+        }
+        if(toMap != 0){
+            mainTabsGroup.check(R.id.tab_map_button);
         }
     }
 
