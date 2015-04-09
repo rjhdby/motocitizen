@@ -263,8 +263,10 @@
                     android:id="@+id/mc_det_messages_table"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:shrinkColumns="1"
-                    android:stretchColumns="1,2" >
+                    android:shrinkColumns="2"
+                    android:stretchColumns="2"
+                android:visibility="visible">
+
             </TableLayout>
         </ScrollView>
 

@@ -20,18 +20,7 @@ import motocitizen.utils.Const;
 public class MCMessage {
     public int id;
     public int owner_id;
-    public int table_row;
     public final int acc_id;
-    private final OnLongClickListener rowLongClick = new OnLongClickListener() {
-
-        @Override
-        public boolean onLongClick(View v) {
-            PopupWindow pw;
-            pw = MCMessagesPopup.getPopupWindow(id, acc_id);
-            pw.showAsDropDown(v, 20, -20);
-            return true;
-        }
-    };
     public String owner, status, text;
     public Date time;
     public Boolean unread;
@@ -51,12 +40,11 @@ public class MCMessage {
     public TableRow createRow(Context context) {
         TableRow tr = new TableRow(context);
         TableRow.LayoutParams lp = new TableRow.LayoutParams();
-        TextView tvDate = new TextView(tr.getContext());
+        TextView tvTime = new TextView(tr.getContext());
         TextView tvOwner = new TextView(tr.getContext());
         TextView tvText = new TextView(tr.getContext());
         lp.setMargins(0, 0, 5, 0);
-
-        tvDate.setText(Const.timeFormat.format(time.getTime()));
+        tvTime.setText(Const.timeFormat.format(time.getTime()));
         tvOwner.setLayoutParams(lp);
         tvOwner.setText(owner);
         if (owner.equals(MCAccidents.auth.getLogin())) {
@@ -68,10 +56,20 @@ public class MCMessage {
         tvText.setSingleLine(false);
         tvText.setText(text);
         tr.setTag(String.valueOf(id));
-        tr.addView(tvDate);
+        tr.addView(tvTime);
         tr.addView(tvOwner);
         tr.addView(tvText);
         tr.setOnLongClickListener(rowLongClick);
         return tr;
     }
+    private final OnLongClickListener rowLongClick = new OnLongClickListener() {
+
+        @Override
+        public boolean onLongClick(View v) {
+            PopupWindow pw;
+            pw = MCMessagesPopup.getPopupWindow(id, acc_id);
+            pw.showAsDropDown(v, 20, -20);
+            return true;
+        }
+    };
 }
