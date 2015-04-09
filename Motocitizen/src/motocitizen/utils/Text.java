@@ -17,10 +17,10 @@ public class Text {
                 v.setText(text);
             }
         };
-        ((Activity) Startup.context).runOnUiThread(update);
+        ((Activity) context).runOnUiThread(update);
     }
 
-    public static void set(final View view, final int id, final String text) {
+    public static void set(final Context context, final View view, final int id, final String text) {
         Runnable update = new Runnable() {
             @Override
             public void run() {
@@ -28,11 +28,11 @@ public class Text {
                 v.setText(text);
             }
         };
-        ((Activity) Startup.context).runOnUiThread(update);
+        ((Activity) context).runOnUiThread(update);
     }
 
-    public static String get(int id) {
-        TextView v = (TextView) ((Activity) Startup.context).findViewById(id);
+    public static String get(final Context context, int id) {
+        TextView v = (TextView) ((Activity) context).findViewById(id);
         return v.getText().toString();
     }
 }

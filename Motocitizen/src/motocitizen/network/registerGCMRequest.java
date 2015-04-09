@@ -12,7 +12,7 @@ import motocitizen.startup.Startup;
  */
 public class registerGCMRequest extends HttpClient {
     public registerGCMRequest(Context context) {
-        super(context, Startup.context.getString(R.string.request_google_gcm));
+        super(context, context.getString(R.string.request_google_gcm));
     }
 
     protected void onPostExecute(JSONObject result) {

@@ -91,7 +91,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
     private Circle circle;
     private int radius;
 
-    private Context context;
+    private static Context context;
 
     private final GoogleMap.OnCameraChangeListener cameraListener = new GoogleMap.OnCameraChangeListener() {
         @Override
@@ -228,18 +228,18 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
 
     private void writeGlobal() {
         if (!medText.equals("mc_m_na")) {
-            Text.set(globalView, R.id.mc_create_what, globalText + ". " + medText);
+            Text.set(this, globalView, R.id.mc_create_what, globalText + ". " + medText);
         } else {
-            Text.set(globalView, R.id.mc_create_what, globalText);
+            Text.set(this, globalView, R.id.mc_create_what, globalText);
         }
-        Text.set(globalView, R.id.mc_create_who, ownerText);
-        Text.set(globalView, R.id.mc_create_where, addressText);
-        Text.set(globalView, R.id.mc_create_when, timeText);
+        Text.set(this, globalView, R.id.mc_create_who, ownerText);
+        Text.set(this, globalView, R.id.mc_create_where, addressText);
+        Text.set(this, globalView, R.id.mc_create_when, timeText);
     }
 
     public static void updateAddress(String address) {
         addressText = address;
-        Text.set(globalView, R.id.mc_create_where, addressText);
+        Text.set(context, globalView, R.id.mc_create_where, addressText);
     }
 
     private void show(int page) {
