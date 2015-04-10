@@ -6,22 +6,24 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import motocitizen.app.mc.MCAccidents;
+import motocitizen.app.mc.MCMessage;
+import motocitizen.app.mc.MCPoint;
 import motocitizen.main.R;
+import motocitizen.messages.MessageListAdapter;
 import motocitizen.network.JsonRequest;
 import motocitizen.network.SendMessageRequest;
 import motocitizen.startup.Startup;
@@ -40,6 +42,8 @@ public class DetailMessagesFragment extends Fragment implements XmlClickable {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    //View viewMain;
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -49,6 +53,16 @@ public class DetailMessagesFragment extends Fragment implements XmlClickable {
     private Button newMessageButton;
     private EditText mcNewMessageText;
 
+    /// Сообщения
+    private List<MCMessage> records = new ArrayList();
+
+    /* Список сообщений */
+    private ListView listView;
+
+    /// Адаптер для отображения сообщений
+    private MessageListAdapter adapter;
+
+    private MCPoint currentPoint;
 
     /**
      * Use this factory method to create a new instance of
@@ -90,13 +104,12 @@ public class DetailMessagesFragment extends Fragment implements XmlClickable {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_detail_messages, container, false);
-        newMessageButton = (Button) view.findViewById(R.id.mc_new_message_send);
+        View viewMain = inflater.inflate(R.layout.fragment_detail_messages, container, false);
+        newMessageButton = (Button) viewMain.findViewById(R.id.mc_new_message_send);
         newMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (Startup.isOnline()) {
-                    /*
                     String text = mcNewMessageText.getText().toString();
                     int currentId = MCAccidents.currentPoint.id;
                     Map<String, String> post = new HashMap<>();
@@ -106,16 +119,16 @@ public class DetailMessagesFragment extends Fragment implements XmlClickable {
                     post.put("text", text);
                     JsonRequest request = new JsonRequest("mcaccidents", "message", post, "", true);
                     if (request != null) {
-                        (new SendMessageRequest(this, currentId)).execute(request);
-                    }*/
+                        (new SendMessageRequest((AccidentDetailsActivity)getActivity(), currentId)).execute(request);
+                    }
                 } else {
-                    //Toast.makeText(this, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), getActivity().getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
                 }
 
             }
         });
 
-        mcNewMessageText = (EditText) view.findViewById(R.id.mc_new_message_text);
+        mcNewMessageText = (EditText) viewMain.findViewById(R.id.mc_new_message_text);
         mcNewMessageText.addTextChangedListener(mcNewMessageTextListener);
 
 
@@ -124,7 +137,37 @@ public class DetailMessagesFragment extends Fragment implements XmlClickable {
 
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_detail_messages, container, false);
-        return view;
+
+
+        //currentPoint = MCAccidents.currentPoint;
+        loadData();
+//        for(Map.Entry<Integer, MCMessage> entry : currentPoint.messages.entrySet()) {
+//            MCMessage value = entry.getValue();
+//            records.add(value);
+//        }
+
+        listView = (ListView)viewMain.findViewById(R.id.message_list);
+        adapter = new MessageListAdapter(getActivity(), records);
+        listView.setAdapter(adapter);
+
+        return viewMain;
+    }
+
+    private void loadData() {
+
+        currentPoint = MCAccidents.currentPoint;
+        if(records.size() > 0) {
+            records.clear();
+        }
+        for(Map.Entry<Integer, MCMessage> entry : currentPoint.messages.entrySet()) {
+            MCMessage value = entry.getValue();
+            records.add(value);
+        }
+    }
+
+    public void notifyDataSetChanged () {
+        loadData();
+        adapter.notifyDataSetChanged();
     }
 
     private final TextWatcher mcNewMessageTextListener = new TextWatcher() {

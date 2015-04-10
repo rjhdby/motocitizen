@@ -4,24 +4,13 @@
              android:layout_height="match_parent"
              tools:context="motocitizen.Activity.DetailMessagesFragment">
 
-    <ScrollView
-            android:id="@+id/mc_det_messages_scroll"
+    <ListView
+            android:id="@+id/message_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:tag="mc_det_messages_content"
-            android:visibility="visible" >
-
-        <TableLayout
-                android:id="@+id/mc_det_messages_table"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:shrinkColumns="2"
-                android:stretchColumns="2"
-                android:visibility="visible">
-
-        </TableLayout>
-    </ScrollView>
+            android:layout_height="228dp"
+            android:dividerHeight="1dip"
+            android:padding="4dip"
+            android:layout_gravity="top|bottom|center_vertical"/>
 
     <LinearLayout
             android:id="@+id/mc_new_message_area"
@@ -49,6 +38,6 @@
                 android:layout_weight="1"
                 android:enabled="false"
                 android:text="@string/mc_auth_confirm_button" />
-    </LinearLayout> 
+    </LinearLayout>
 
 </FrameLayout>

@@ -22,7 +22,6 @@ public class SendMessageRequest extends HttpClient {
     protected void onPostExecute(JSONObject result) {
         super.onPostExecute(result);
         dialog.dismiss();
-        // zz
-        //activity.parseSendMessageResponse(result, currentId);
+        activity.parseSendMessageResponse(result, currentId);
     }
 }

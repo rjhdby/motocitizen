@@ -114,7 +114,7 @@ public class AccidentDetailsActivity extends FragmentActivity implements View.On
         generalDescription = (TextView) findViewById(R.id.acc_details_general_description);
 //        ((ScrollView) findViewById(R.id.mc_det_messages_scroll)).fullScroll(View.FOCUS_UP);
 
-        getFragmentManager().beginTransaction().add(detailMessagesFragment, "DEtaill").commit();
+        getFragmentManager().beginTransaction().replace(R.id.mc_det_tab_content, detailMessagesFragment).commit();
     }
 
     @Override
@@ -152,7 +152,7 @@ public class AccidentDetailsActivity extends FragmentActivity implements View.On
             messageView.addView(currentPoint.messages.get(i).createRow(this));
         }
 */
-		/*
+        /*
          * Выводим список волонтеров
 		 */
         /*
@@ -256,6 +256,28 @@ public class AccidentDetailsActivity extends FragmentActivity implements View.On
             */
         }
     };
+
+    public void parseSendMessageResponse(JSONObject json, int currentId) {
+        if (json.has("result")) {
+            try {
+                String result = json.getString("result");
+                if (result.equals("OK")) {
+                    Toast.makeText(this, Startup.context.getString(R.string.send_succsess), Toast.LENGTH_LONG).show();
+                    MCAccidents.refresh(Startup.context);
+                    update();
+                    detailMessagesFragment.notifyDataSetChanged();
+                    //mcNewMessageText.setText("");
+                    //Keyboard.hide(findViewById(R.id.mc_new_message_text));
+                    return;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Log.e("Send message failed", json.toString());
+        } else {
+            Toast.makeText(this, Startup.context.getString(R.string.send_error), Toast.LENGTH_LONG).show();
+        }
+    }
 
     public void parseOnwayResponse(JSONObject json, int currentId) {
         if (json.has("result")) {
