@@ -45,6 +45,7 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
     public static Context context;
     public static SharedPreferences prefs;
     public static MCMap map;
+    public static boolean fromDetails;
 
     private ImageButton dialButton;
     private ImageButton createAccButton;
@@ -114,7 +115,6 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
         Intent intent = getIntent();
         Integer toMap = intent.getIntExtra("toMap", 0);
         Integer toDetails = intent.getIntExtra("toDetails", 0);
-
         context = this;
         //MCAccidents.refresh(this);
 
@@ -136,6 +136,7 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
         if(toMap != 0){
             intent.removeExtra("toMap");
             mainTabsGroup.check(R.id.tab_map_button);
+            fromDetails = intent.getBooleanExtra("fromDetails", false);
         } else if(toDetails != 0){
             intent.removeExtra("toDetails");
             MCAccidents.refresh(this);
@@ -157,6 +158,9 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
                 Keyboard.hide();
                 return true;
             case KeyEvent.KEYCODE_BACK:
+                if(fromDetails){
+                    MCAccidents.toDetails(this);
+                }
                 FragmentManager fm = getFragmentManager();
                 Fragment pf = fm.findFragmentByTag("settings");
                 if(pf != null && pf.isVisible()){
@@ -228,7 +232,7 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
     public final RadioGroup.OnCheckedChangeListener mainTabsListener = new RadioGroup.OnCheckedChangeListener() {
         public void onCheckedChanged(RadioGroup group, int checkedId) {
             int id = group.getCheckedRadioButtonId();
-
+            fromDetails = false;
             accListView.setVisibility(View.VISIBLE);
             mapContainer.setVisibility(View.VISIBLE);
 

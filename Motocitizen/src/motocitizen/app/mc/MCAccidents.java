@@ -197,6 +197,10 @@ public class MCAccidents {
         drawList(context);
     }
 
+    public static void toDetails(Context context) {
+        toDetails(context, currentPoint.id);
+    }
+
     public static void toDetails(Context context, int id) {
 
         MCPoint p = points.getPoint(id);

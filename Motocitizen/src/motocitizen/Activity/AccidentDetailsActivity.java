@@ -319,6 +319,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
     private void jumpToMap(){
         Intent intent = new Intent(this, Startup.class);
         intent.putExtra("toMap",MCAccidents.currentPoint.id);
+        intent.putExtra("fromDetails",true);
         this.startActivity(intent);
     }
 
