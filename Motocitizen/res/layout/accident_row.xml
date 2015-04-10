@@ -46,7 +46,7 @@
         android:id="@+id/i_was_here"
         android:layout_width="2dp"
         android:layout_height="match_parent"
-        android:layout_gravity="right|end"
+        android:layout_gravity="end|right"
         android:background="#00000000"
         android:gravity="end|right"
         android:orientation="vertical" >

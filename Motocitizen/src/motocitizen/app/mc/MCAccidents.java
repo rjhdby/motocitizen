@@ -203,8 +203,7 @@ public class MCAccidents {
 
     public static void toDetails(Context context, int id) {
 
-        MCPoint p = points.getPoint(id);
-        currentPoint = p;
+        currentPoint = points.getPoint(id);
 /*
         if (!points.containsKey(id)) {
             return;

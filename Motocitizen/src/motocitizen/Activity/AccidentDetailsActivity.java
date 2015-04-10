@@ -1,14 +1,11 @@
 package motocitizen.Activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,14 +42,11 @@ import static motocitizen.app.mc.MCAccidents.getDelimiterRow;
 public class AccidentDetailsActivity extends ActionBarActivity implements View.OnClickListener {
 
     private int id;
-    private MCPoint currentPoint;
 
     private Button newMessageButton;
     private EditText mcNewMessageText;
     private Button onwayButton;
-    private Button toMapButton;
 
-    private RadioGroup mcDetTabsGroup;
     private View detMessages;
     private View detHistory;
     private View detVolunteers;
@@ -88,12 +82,12 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
         inplaceContent = findViewById(R.id.acc_inplace_table);
         mcDetLogContent = findViewById(R.id.mc_det_log_content);
 
-        toMapButton = (Button) findViewById(R.id.details_to_map_button);
+        Button toMapButton = (Button) findViewById(R.id.details_to_map_button);
         toMapButton.setOnClickListener(this);
         /*
         * Описание группы закладок внутри деталей происшествия
         */
-        mcDetTabsGroup = (RadioGroup) findViewById(R.id.mc_det_tabs_group);
+        RadioGroup mcDetTabsGroup = (RadioGroup) findViewById(R.id.mc_det_tabs_group);
         mcDetTabsGroup.setOnCheckedChangeListener(accDetTabsListener);
 
         detMessages = findViewById(R.id.det_messages);
@@ -115,7 +109,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
     }
     private void update() {
 
-        currentPoint = MCAccidents.currentPoint;
+        MCPoint currentPoint = MCAccidents.currentPoint;
 
         generalType.setText(currentPoint.getTypeText() + ". " + currentPoint.getMedText());
         generalStatus.setText(currentPoint.getStatusText());
@@ -239,7 +233,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
         }
     };
 
-    public final RadioGroup.OnCheckedChangeListener accDetTabsListener = new RadioGroup.OnCheckedChangeListener() {
+    private final RadioGroup.OnCheckedChangeListener accDetTabsListener = new RadioGroup.OnCheckedChangeListener() {
         public void onCheckedChanged(RadioGroup group, int checkedId) {
             int id = group.getCheckedRadioButtonId();
             detMessages.setVisibility(View.INVISIBLE);
@@ -323,7 +317,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
         this.startActivity(intent);
     }
 
-    public void OnNewMessageSendButton() {
+    void OnNewMessageSendButton() {
         if (Startup.isOnline()) {
             String text = mcNewMessageText.getText().toString();
             int currentId = MCAccidents.currentPoint.id;
@@ -341,7 +335,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
         }
     }
 
-    public void OnWayButton() {
+    void OnWayButton() {
         if (Startup.isOnline()) {
             int currentId = MCAccidents.currentPoint.id;
             Map<String, String> post = new HashMap<>();

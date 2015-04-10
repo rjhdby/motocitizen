@@ -10,7 +10,7 @@ import motocitizen.main.R;
  */
 public class OnwayRequest extends HttpClient {
 
-    private AccidentDetailsActivity activity;
+    private final AccidentDetailsActivity activity;
     private int currentId;
 
     public OnwayRequest(AccidentDetailsActivity activity, int currentId) {

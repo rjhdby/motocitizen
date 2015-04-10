@@ -9,13 +9,14 @@ import android.widget.TableLayout;
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCPoint;
 import motocitizen.app.mc.user.MCRole;
+import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 import motocitizen.utils.MCUtils;
 
 public class MCAccListPopup extends MCPopupWindow {
     public static PopupWindow getPopupWindow(int id) {
         MCPoint p = MCAccidents.points.getPoint(id);
-        content = new TableLayout(act);
+        content = new TableLayout(Startup.context);
         content.setOrientation(LinearLayout.HORIZONTAL);
         content.setBackgroundColor(0xFF202020);
         content.setLayoutParams(lp);

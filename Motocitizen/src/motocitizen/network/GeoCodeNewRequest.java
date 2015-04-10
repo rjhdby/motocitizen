@@ -7,7 +7,6 @@ import org.json.JSONObject;
 
 import motocitizen.Activity.CreateAccActivity;
 import motocitizen.main.R;
-import motocitizen.startup.Startup;
 
 /**
  * Created by elagin on 01.04.15.

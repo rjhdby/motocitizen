@@ -21,7 +21,6 @@ import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.Activity.AuthActivity;
 import motocitizen.Activity.CreateAccActivity;
 import motocitizen.app.mc.MCAccidents;
@@ -94,8 +93,6 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
             //Show.show(R.id.main_frame, R.id.first_auth_screen);
             Intent i = new Intent(Startup.context, AuthActivity.class);
             Startup.context.startActivity(i);
-        } else {
-//            Show.show(R.id.main_frame, R.id.main_screen_fragment);
         }
         new GcmBroadcastReceiver();
     }
@@ -167,8 +164,6 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
                     Fragment mf = fm.findFragmentByTag("main_screen");
                     fm.beginTransaction().show(mf).hide(pf).commit();
                     MCAccidents.redraw(this);
-                }else {
-                    //Show.showLast();
                 }
                 Keyboard.hide();
                 return true;
@@ -229,7 +224,7 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
         }
     }
 
-    public final RadioGroup.OnCheckedChangeListener mainTabsListener = new RadioGroup.OnCheckedChangeListener() {
+    private final RadioGroup.OnCheckedChangeListener mainTabsListener = new RadioGroup.OnCheckedChangeListener() {
         public void onCheckedChanged(RadioGroup group, int checkedId) {
             int id = group.getCheckedRadioButtonId();
             fromDetails = false;

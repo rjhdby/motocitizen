@@ -6,8 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import motocitizen.startup.Startup;
-
 public class Inflate {
     /** Устанавливаем карту в контейнер.*/
     public static void set(Context context, int parentId, int childId) {

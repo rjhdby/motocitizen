@@ -5,7 +5,6 @@ import android.content.Context;
 import org.json.JSONObject;
 
 import motocitizen.main.R;
-import motocitizen.startup.Startup;
 
 /**
  * Created by elagin on 03.04.15.
