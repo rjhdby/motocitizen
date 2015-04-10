@@ -107,13 +107,15 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
         generalAddress = (TextView) findViewById(R.id.acc_details_general_address);
         generalDescription = (TextView) findViewById(R.id.acc_details_general_description);
         ((ScrollView) findViewById(R.id.mc_det_messages_scroll)).fullScroll(View.FOCUS_UP);
-
+    }
+    @Override
+    protected void onResume(){
+        super.onResume();
         update();
     }
-
     private void update() {
 
-        currentPoint = MCAccidents.points.getPoint(MCAccidents.currentPoint.id);
+        currentPoint = MCAccidents.currentPoint;
 
         generalType.setText(currentPoint.getTypeText() + ". " + currentPoint.getMedText());
         generalStatus.setText(currentPoint.getStatusText());
