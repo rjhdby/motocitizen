@@ -35,8 +35,6 @@ import motocitizen.app.mc.MCLocation;
 import motocitizen.main.R;
 import motocitizen.network.CreateAccidentRequest;
 import motocitizen.network.GeoCodeNewRequest;
-import motocitizen.network.GeoCodeRequest;
-import motocitizen.network.JSONCall;
 import motocitizen.network.JsonRequest;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
@@ -91,7 +89,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
     private Circle circle;
     private int radius;
 
-    private Context context;
+    private static Context context;
 
     private final GoogleMap.OnCameraChangeListener cameraListener = new GoogleMap.OnCameraChangeListener() {
         @Override
@@ -187,7 +185,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
         peopleOkButton = (Button)findViewById(R.id.mc_create_people_ok_button);
         peopleOkButton.setOnClickListener(this);
 
-        globalView = (View) findViewById(R.id.mc_create_main);
+        globalView = findViewById(R.id.mc_create_main);
         details = (EditText) findViewById(R.id.mc_create_final_text);
 
         TYPE = R.id.mc_create_type_frame;
@@ -228,18 +226,18 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
 
     private void writeGlobal() {
         if (!medText.equals("mc_m_na")) {
-            Text.set(globalView, R.id.mc_create_what, globalText + ". " + medText);
+            Text.set(this, globalView, R.id.mc_create_what, globalText + ". " + medText);
         } else {
-            Text.set(globalView, R.id.mc_create_what, globalText);
+            Text.set(this, globalView, R.id.mc_create_what, globalText);
         }
-        Text.set(globalView, R.id.mc_create_who, ownerText);
-        Text.set(globalView, R.id.mc_create_where, addressText);
-        Text.set(globalView, R.id.mc_create_when, timeText);
+        Text.set(this, globalView, R.id.mc_create_who, ownerText);
+        Text.set(this, globalView, R.id.mc_create_where, addressText);
+        Text.set(this, globalView, R.id.mc_create_when, timeText);
     }
 
     public static void updateAddress(String address) {
         addressText = address;
-        Text.set(globalView, R.id.mc_create_where, addressText);
+        Text.set(context, globalView, R.id.mc_create_where, addressText);
     }
 
     private void show(int page) {
@@ -381,7 +379,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
             show(FINAL);
         } else if (id == R.id.mc_create_fine_address_button) {
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(MCUtils.LocationToLatLng(location), 16));
-            ImageView mapPointer = (ImageView) ((Activity) this).findViewById(R.id.mc_create_map_pointer);
+            ImageView mapPointer = (ImageView) this.findViewById(R.id.mc_create_map_pointer);
             mapPointer.setImageDrawable(MCAccTypes.getDrawable(this, type));
             Keyboard.hide(details);
             show(FINEADDRESS);
@@ -420,8 +418,6 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
         Map<String, String> post = new HashMap<>();
         post.put("lat", String.valueOf(location.getLatitude()));
         post.put("lon", String.valueOf(location.getLongitude()));
-
-        JsonRequest res = new JsonRequest("mcaccidents", "geocode", post, "", true);
-        return res;
+        return new JsonRequest("mcaccidents", "geocode", post, "", true);
     }
 }

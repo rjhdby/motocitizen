@@ -32,6 +32,7 @@ class MCNotification {
         String idString = extras.getString("id");
         String latString = extras.getString("lat");
         String lngString = extras.getString("lng");
+        extras.putInt("toDetails", Integer.parseInt(idString));
         int id;
         double lat, lng;
         if (MCUtils.isInteger(idString)) {

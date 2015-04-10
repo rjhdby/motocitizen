@@ -10,7 +10,7 @@ import motocitizen.main.R;
  */
 public class SendMessageRequest extends HttpClient {
 
-    private AccidentDetailsActivity activity;
+    private final AccidentDetailsActivity activity;
     private int currentId;
 
     public SendMessageRequest(AccidentDetailsActivity activity, int currentId) {

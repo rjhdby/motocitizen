@@ -96,8 +96,7 @@ public class MCPoints {
             selector.put("update", "1");
         }
 
-        JsonRequest res = new JsonRequest("mcaccidents", "getlist", selector, "list", false);
-        return  res;
+        return  new JsonRequest("mcaccidents", "getlist", selector, "list", false);
     }
 
     private void parseJSON(JSONArray json) throws JSONException {

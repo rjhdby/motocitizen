@@ -11,14 +11,12 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import motocitizen.app.mc.popups.MCMessagesPopup;
-import motocitizen.utils.Const;
 import motocitizen.utils.MCUtils;
 
 public class MCPointHistory {

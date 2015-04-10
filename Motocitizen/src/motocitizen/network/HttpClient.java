@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -58,7 +57,7 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
                 dialog.show();
             }
         };
-        ((Activity)context).runOnUiThread(execute);
+        ((Activity) context).runOnUiThread(execute);
     }
 
     @Override
@@ -66,10 +65,8 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
         JSONObject result = null;
         if (params.length > 0) {
             JsonRequest item = params[0];
-            //result = new JSONCall(item.app, item.method, false).request(item.params).getJSONArray(item.arrayName);
             createUrl(item.app, item.method, false);
-            JSONObject obj = request(item.params);
-            result = obj;
+            result = request(item.params);
         }
         return result;
     }

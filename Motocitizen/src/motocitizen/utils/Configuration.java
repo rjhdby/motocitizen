@@ -2,9 +2,7 @@ package motocitizen.utils;
 
 import android.content.SharedPreferences;
 
-/**
- * Created by U_60A9 on 07.04.2015.
- */
+@SuppressWarnings("WeakerAccess")
 public class Configuration {
     public static final String MC_DISTANCE_SHOW = "mc.distance.show";
     public static final String MC_DISTANCE_ALARM = "mc.distance.alarm";
@@ -34,11 +32,12 @@ public class Configuration {
 
     public static int getAlarmDistance(SharedPreferences prefs) {
         String periodString = prefs.getString(MC_DISTANCE_ALARM, "100");
-        int res = 100;
+        int res;
 
         try {
             res = Integer.parseInt(periodString);
         } catch (Exception e) {
+            res = 100;
         }
         return res;
     }

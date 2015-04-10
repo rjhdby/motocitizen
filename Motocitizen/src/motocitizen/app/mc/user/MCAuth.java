@@ -12,7 +12,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
-import motocitizen.app.mc.MCAccidents;
 import motocitizen.network.JSONCall;
 import motocitizen.startup.Startup;
 
@@ -26,7 +25,7 @@ public class MCAuth {
         reset();
         anonim = Startup.prefs.getBoolean("mc.anonim", false);
         if (!anonim) {
-            auth(Startup.prefs.getString("mc.login", ""), Startup.prefs.getString("mc.password", ""));
+            auth(Startup.context, Startup.prefs.getString("mc.login", ""), Startup.prefs.getString("mc.password", ""));
         }
     }
 
@@ -52,7 +51,7 @@ public class MCAuth {
         return Startup.prefs.getString("mc.login", "");
     }
 
-    public String makePassHash(String pass) {
+    String makePassHash(String pass) {
         String hash = "";
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
@@ -88,7 +87,7 @@ public class MCAuth {
     public void setAnonim(boolean value) {
         this.anonim = value;
         if(value) {
-            Startup.prefs.edit().putBoolean("mc.anonim", value).commit();
+            Startup.prefs.edit().putBoolean("mc.anonim", true).commit();
             Startup.prefs.edit().remove("mc.login").commit();
             Startup.prefs.edit().remove("mc.password").commit();
             reset();
@@ -99,9 +98,9 @@ public class MCAuth {
         return this.anonim;
     }
 
-    public Boolean auth(String login, String password) {
+    public Boolean auth(Context context, String login, String password) {
         if(Startup.isOnline()) {
-            String ident = ((TelephonyManager) Startup.context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+            String ident = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
             Map<String, String> post = new HashMap<>();
             post.put("ident", ident);
             post.put("login", login);
@@ -119,7 +118,7 @@ public class MCAuth {
             }
         } else {
             //TODO Перенести в ресурсы
-            Toast.makeText(Startup.context, "Авторизация не возможна, пожалуйста, проверьте доступность Internet.", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Авторизация не возможна, пожалуйста, проверьте доступность Internet.", Toast.LENGTH_LONG).show();
             return false;
         }
     }

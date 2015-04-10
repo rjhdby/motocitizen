@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="create_acc"/>
+    <string name="call_operator"/>
     <string name="app_name">Motocitizen</string>
-    <string name="action_settings">Settings</string>
 	<string name="status_top_address">адрес</string>
-	<string name="mc_acc_list"/>
-	<string name="mc_acc_details"/>
-	<string name="call_operator"/>
-	<string name="create_acc"/>
 	<string name="mc_accidents_details_address">Адрес</string>
 	<string name="mc_accidents_details_owner">Сообщил</string>
 	<string name="mc_accidents_details_status">Статус</string>
@@ -68,7 +65,6 @@
 	<string name="mc_notif_system">default system</string>
 	<string name="mc_notif_sound">Выбрать звук уведомления</string>
 	<string name="tab_accidents">События</string>
-	<string name="tab_acc_details">Детали</string>
 	<string name="tab_map">Карта</string>
 	<string name="mc_add_point_button">Создать событие</string>
 	<string name="dial_button">Звонок оператору</string>
@@ -101,11 +97,13 @@
     <string name="request_geocode">Геокодирование.</string>
     <string name="settings_summary_off">Скрыты</string>
     <string name="settings_summary_on">Показаны</string>
-
-<!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_messages">MessagesActivity</string>
-
-   <string name="new_message">Новое сообщение</string>
+    <string name="new_message">Новое сообщение</string>
     <string name="message">Сообщения</string>
+    <string name="to_map">На карту</string>
+    <string name="tab_onway">Едут/на месте</string>
+    <string name="tab_messages">Сообщения</string>
+    <string name="tab_log">История</string>
+    <string name="action_new_message">Новое сообщение</string>
 </resources>

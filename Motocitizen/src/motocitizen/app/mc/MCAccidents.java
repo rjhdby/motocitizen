@@ -184,7 +184,7 @@ public class MCAccidents {
 
             } catch (JSONException e) {
                 e.printStackTrace();
-                Toast.makeText(Startup.context, e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -197,10 +197,13 @@ public class MCAccidents {
         drawList(context);
     }
 
+    public static void toDetails(Context context) {
+        toDetails(context, currentPoint.id);
+    }
+
     public static void toDetails(Context context, int id) {
 
-        MCPoint p = points.getPoint(id);
-        currentPoint = p;
+        currentPoint = points.getPoint(id);
 /*
         if (!points.containsKey(id)) {
             return;
@@ -208,8 +211,8 @@ public class MCAccidents {
 */
         points.setSelected(context, id);
         //redraw(context);
-        Intent intent = new Intent(Startup.context, AccidentDetailsActivity.class);
-        Startup.context.startActivity(intent);
+        Intent intent = new Intent(context, AccidentDetailsActivity.class);
+        context.startActivity(intent);
     }
 
     public static JsonRequest getLoadPointsRequest() {

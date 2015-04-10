@@ -8,12 +8,13 @@ import android.widget.TableLayout;
 
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCMessage;
+import motocitizen.startup.Startup;
 import motocitizen.utils.MCUtils;
 
 public class MCMessagesPopup extends MCPopupWindow {
     public static PopupWindow getPopupWindow(int id, int acc_id) {
         MCMessage m = MCAccidents.points.getPoint(acc_id).messages.get(id);
-        content = new TableLayout(act);
+        content = new TableLayout(Startup.context);
         content.setOrientation(LinearLayout.HORIZONTAL);
         content.setBackgroundColor(0xFF202020);
         content.setLayoutParams(lp);

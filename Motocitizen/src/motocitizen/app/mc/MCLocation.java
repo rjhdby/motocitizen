@@ -63,7 +63,7 @@ public class MCLocation {
     };
 
     public MCLocation(Context context) {
-        this.context = context;
+        MCLocation.context = context;
         disconnectRequest = false;
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(5000);
@@ -142,8 +142,7 @@ public class MCLocation {
         Map<String, String> post = new HashMap<>();
         post.put("lat", String.valueOf(location.getLatitude()));
         post.put("lon", String.valueOf(location.getLongitude()));
-        JsonRequest res = new JsonRequest("mcaccidents", "geocode", post, "", true);
-        return res;
+        return new JsonRequest("mcaccidents", "geocode", post, "", true);
     }
 
     private static void requestAddress(Context context) {

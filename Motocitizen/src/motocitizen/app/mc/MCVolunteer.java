@@ -7,7 +7,6 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
 import java.util.Date;
 
 import motocitizen.utils.Const;

@@ -1,6 +1,5 @@
 package motocitizen.Activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -20,7 +19,6 @@ public class SettingsFragment extends PreferenceFragment{
     private ListPreference mapProviderPreference;
     private Preference nottifDistPreference, nottifAlarmPreference;
     private Preference authPreference,nottifSoundPreference;
-    private Preference showAccidents, showSteals, showBreaks, showOther;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,7 +26,7 @@ public class SettingsFragment extends PreferenceFragment{
         addPreferencesFromResource(R.xml.preferences);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(Startup.context);
-        Preference buttonAuth = (Preference)findPreference(getResources().getString(R.string.mc_settings_auth_button));
+        Preference buttonAuth = findPreference(getResources().getString(R.string.mc_settings_auth_button));
         buttonAuth.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference arg0) {
@@ -37,7 +35,7 @@ public class SettingsFragment extends PreferenceFragment{
                 return true;
             }
         });
-        Preference buttonSound = (Preference)findPreference(getResources().getString(R.string.mc_notif_sound));
+        Preference buttonSound = findPreference(getResources().getString(R.string.mc_notif_sound));
         buttonSound.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference arg0) {
@@ -50,10 +48,6 @@ public class SettingsFragment extends PreferenceFragment{
         nottifAlarmPreference = findPreference(Configuration.MC_DISTANCE_ALARM);
         nottifSoundPreference = findPreference(getResources().getString(R.string.mc_notif_sound));
         authPreference = findPreference(getResources().getString(R.string.mc_settings_auth_button));
-        showAccidents = findPreference(Configuration.MC_SHOW_ACC);
-        showSteals = findPreference(Configuration.MC_SHOW_STEAL);
-        showBreaks = findPreference(Configuration.MC_SHOW_BREAK);
-        showOther = findPreference(Configuration.MC_SHOW_OTHER);
 
         mapProviderPreference = (ListPreference)getPreferenceScreen().findPreference("map_pref");
         mapProviderPreference.setOnPreferenceChangeListener(mapProviderListener);
@@ -71,7 +65,7 @@ public class SettingsFragment extends PreferenceFragment{
         nottifAlarmPreference.setSummary(prefs.getString("mc.distance.alarm", "20"));
     }
 
-    Preference.OnPreferenceChangeListener mapProviderListener = new Preference.OnPreferenceChangeListener() {
+    final Preference.OnPreferenceChangeListener mapProviderListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             mapProviderPreference.setValue(newValue.toString());
@@ -81,7 +75,7 @@ public class SettingsFragment extends PreferenceFragment{
         }
     };
 
-    Preference.OnPreferenceChangeListener distanceListener = new Preference.OnPreferenceChangeListener() {
+    final Preference.OnPreferenceChangeListener distanceListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             String value = (String) newValue;
