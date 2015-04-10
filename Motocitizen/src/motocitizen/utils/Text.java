@@ -5,8 +5,6 @@ import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
-import motocitizen.startup.Startup;
-
 public class Text {
 
     public static void set(final Context context, final int id, final String text) {

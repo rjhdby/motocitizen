@@ -1,6 +1,5 @@
 package motocitizen.Activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -73,8 +72,9 @@ public class SelectSoundActivity extends ActionBarActivity {
         selectSoundConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                prefs.edit().putString("mc.notification.sound", currentUri).commit();
-                prefs.edit().putString("mc.notification.sound.title", currentTitle).commit();
+                prefs.edit().putString("mc.notification.sound", currentUri).apply();
+                prefs.edit().putString("mc.notification.sound.title", currentTitle).apply();
+                prefs.edit().apply();
                 finish();
             }
         });
@@ -85,7 +85,7 @@ public class SelectSoundActivity extends ActionBarActivity {
             public void onClick(View v) {
                 finish();
             }
-        });;
+        });
     }
 
     @Override

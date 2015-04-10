@@ -21,7 +21,6 @@ import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.Activity.AuthActivity;
 import motocitizen.Activity.CreateAccActivity;
 import motocitizen.app.mc.MCAccidents;
@@ -45,6 +44,7 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
     public static Context context;
     public static SharedPreferences prefs;
     public static MCMap map;
+    public static boolean fromDetails;
 
     private ImageButton dialButton;
     private ImageButton createAccButton;
@@ -93,8 +93,6 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
             //Show.show(R.id.main_frame, R.id.first_auth_screen);
             Intent i = new Intent(Startup.context, AuthActivity.class);
             Startup.context.startActivity(i);
-        } else {
-//            Show.show(R.id.main_frame, R.id.main_screen_fragment);
         }
         new GcmBroadcastReceiver();
     }
@@ -114,7 +112,6 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
         Intent intent = getIntent();
         Integer toMap = intent.getIntExtra("toMap", 0);
         Integer toDetails = intent.getIntExtra("toDetails", 0);
-
         context = this;
         //MCAccidents.refresh(this);
 
@@ -136,6 +133,7 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
         if(toMap != 0){
             intent.removeExtra("toMap");
             mainTabsGroup.check(R.id.tab_map_button);
+            fromDetails = intent.getBooleanExtra("fromDetails", false);
         } else if(toDetails != 0){
             intent.removeExtra("toDetails");
             MCAccidents.refresh(this);
@@ -157,14 +155,15 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
                 Keyboard.hide();
                 return true;
             case KeyEvent.KEYCODE_BACK:
+                if(fromDetails){
+                    MCAccidents.toDetails(this);
+                }
                 FragmentManager fm = getFragmentManager();
                 Fragment pf = fm.findFragmentByTag("settings");
                 if(pf != null && pf.isVisible()){
                     Fragment mf = fm.findFragmentByTag("main_screen");
                     fm.beginTransaction().show(mf).hide(pf).commit();
                     MCAccidents.redraw(this);
-                }else {
-                    //Show.showLast();
                 }
                 Keyboard.hide();
                 return true;
@@ -225,10 +224,10 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
         }
     }
 
-    public final RadioGroup.OnCheckedChangeListener mainTabsListener = new RadioGroup.OnCheckedChangeListener() {
+    private final RadioGroup.OnCheckedChangeListener mainTabsListener = new RadioGroup.OnCheckedChangeListener() {
         public void onCheckedChanged(RadioGroup group, int checkedId) {
             int id = group.getCheckedRadioButtonId();
-
+            fromDetails = false;
             accListView.setVisibility(View.VISIBLE);
             mapContainer.setVisibility(View.VISIBLE);
 

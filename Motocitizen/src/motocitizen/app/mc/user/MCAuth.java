@@ -12,7 +12,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
-import motocitizen.app.mc.MCAccidents;
 import motocitizen.network.JSONCall;
 import motocitizen.startup.Startup;
 
@@ -52,7 +51,7 @@ public class MCAuth {
         return Startup.prefs.getString("mc.login", "");
     }
 
-    public String makePassHash(String pass) {
+    String makePassHash(String pass) {
         String hash = "";
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
@@ -88,7 +87,7 @@ public class MCAuth {
     public void setAnonim(boolean value) {
         this.anonim = value;
         if(value) {
-            Startup.prefs.edit().putBoolean("mc.anonim", value).commit();
+            Startup.prefs.edit().putBoolean("mc.anonim", true).commit();
             Startup.prefs.edit().remove("mc.login").commit();
             Startup.prefs.edit().remove("mc.password").commit();
             reset();

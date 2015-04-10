@@ -1,5 +1,6 @@
 package motocitizen.Activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
     //private Button btnAuthConfirm;
     private Button logoutBtn;
     private Button loginBtn;
+    @SuppressWarnings("FieldCanBeLocal")
     private Button cancelBtn;
 
     private EditText login;
@@ -34,7 +36,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
     private CheckBox anonim;
     private SharedPreferences prefs;
 
-    public static Context context;
+    private static Context context;
 
     private void enableActionBtn() {
         Boolean logPasReady = login.getText().toString().length() > 0 && password.getText().toString().length() > 0;
@@ -97,15 +99,16 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
 
         logoutBtn = (Button) findViewById(R.id.logout_button);
         logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("CommitPrefEdits")
             @Override
             public void onClick(View v) {
                 //TODO Добавить запрос подтверждения на выход.
-                prefs.edit().remove("mc.login").commit();
-                prefs.edit().remove("mc.password").commit();
-                prefs.edit().remove("mc.name").commit();
+                prefs.edit().remove("mc.login").apply();
+                prefs.edit().remove("mc.password").apply();
+                prefs.edit().remove("mc.name").apply();
+                prefs.edit().commit();
                 MCAccidents.auth.setAnonim(true);
                 fillCtrls();
-                return;
             }
         });
 
@@ -132,7 +135,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
         fillCtrls();
     }
 
-    protected void fillCtrls() {
+    void fillCtrls() {
         login.setText(prefs.getString("mc.login", ""));
         password.setText(prefs.getString("mc.password", ""));
 

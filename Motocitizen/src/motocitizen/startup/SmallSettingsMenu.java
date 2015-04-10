@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.view.Gravity;
@@ -16,7 +15,6 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import motocitizen.Activity.AboutActivity;
-import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.Activity.SettingsFragment;
 import motocitizen.app.mc.MCAccidents;
 // zz
