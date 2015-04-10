@@ -128,7 +128,7 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
             }
             catchIntent(intent);
         } else {
-            Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
+            Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
         }
         if(toMap != 0){
             intent.removeExtra("toMap");
@@ -219,7 +219,7 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
                 startActivity(new Intent(Startup.context, CreateAccActivity.class));
                 break;
             default:
-                Log.e("AccidentDetailsActivity", "Unknow button pressed");
+                Log.e("AccidentDetailsActivity", "Unknown button pressed");
                 break;
         }
     }

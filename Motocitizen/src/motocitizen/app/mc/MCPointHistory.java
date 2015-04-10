@@ -76,7 +76,7 @@ public class MCPointHistory {
         return tr;
     }
 
-    public String getAction() {
+    String getAction() {
         if (actions.containsKey(action)) {
             return actions.get(action);
         } else {

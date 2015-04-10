@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 public class Inflate {
     /** Устанавливаем карту в контейнер.*/
+    @SuppressWarnings("SameParameterValue")
     public static void set(Context context, int parentId, int childId) {
         LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         ViewGroup parent = (ViewGroup) ((Activity) context).findViewById(parentId);

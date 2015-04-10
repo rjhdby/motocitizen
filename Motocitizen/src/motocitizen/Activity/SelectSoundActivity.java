@@ -36,9 +36,6 @@ public class SelectSoundActivity extends ActionBarActivity {
     private static RingtoneManager rm;
     private SharedPreferences prefs;
 
-    private static Button selectSoundConfirmButton;
-    private static Button selectSoundCancelButton;
-
     private final Button.OnClickListener play = new Button.OnClickListener() {
 
         @Override
@@ -68,7 +65,7 @@ public class SelectSoundActivity extends ActionBarActivity {
         currentUri = prefs.getString("mc.notification.sound", defaultUri);
         currentTitle = prefs.getString("mc.notification.sound.title", "default system");
 
-        selectSoundConfirmButton = (Button) findViewById(R.id.select_sound_save_button);
+        Button selectSoundConfirmButton = (Button) findViewById(R.id.select_sound_save_button);
         selectSoundConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,7 +76,7 @@ public class SelectSoundActivity extends ActionBarActivity {
             }
         });
 
-        selectSoundCancelButton = (Button) findViewById(R.id.select_sound_cancel_button);
+        Button selectSoundCancelButton = (Button) findViewById(R.id.select_sound_cancel_button);
         selectSoundCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,10 +143,6 @@ public class SelectSoundActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
         return super.onOptionsItemSelected(item);
     }
 }

@@ -12,7 +12,7 @@ import motocitizen.app.mc.MCAccTypes;
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCPoint;
 
-public class OSMAccOverlay {
+class OSMAccOverlay {
     public static ItemizedIconOverlay<OverlayItem> getOverlay(Context context) {
         ArrayList<OverlayItem> items = new ArrayList<>();
         OverlayItem acc;

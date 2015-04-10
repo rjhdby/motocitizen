@@ -25,7 +25,6 @@ import motocitizen.utils.Text;
  */
 public class AuthActivity extends ActionBarActivity/* implements View.OnClickListener*/ {
 
-    //private Button btnAuthConfirm;
     private Button logoutBtn;
     private Button loginBtn;
     @SuppressWarnings("FieldCanBeLocal")

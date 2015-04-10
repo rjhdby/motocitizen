@@ -11,7 +11,7 @@ import motocitizen.main.R;
 public class OnwayRequest extends HttpClient {
 
     private final AccidentDetailsActivity activity;
-    private int currentId;
+    private final int currentId;
 
     public OnwayRequest(AccidentDetailsActivity activity, int currentId) {
         super(activity, activity.getString(R.string.request_onway));

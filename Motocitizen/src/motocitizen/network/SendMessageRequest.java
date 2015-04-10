@@ -11,7 +11,7 @@ import motocitizen.main.R;
 public class SendMessageRequest extends HttpClient {
 
     private final AccidentDetailsActivity activity;
-    private int currentId;
+    private final int currentId;
 
     public SendMessageRequest(AccidentDetailsActivity activity, int currentId) {
         super(activity, activity.getString(R.string.request_send_message));

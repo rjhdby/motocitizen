@@ -24,7 +24,7 @@ import motocitizen.network.IncidentRequest;
 import motocitizen.network.JsonRequest;
 
 @SuppressLint("RtlHardcoded")
-public class SmallSettingsMenu {
+class SmallSettingsMenu {
     private static PopupMenu popupTR;
     public static PopupMenu popupBL;
 
@@ -49,7 +49,7 @@ public class SmallSettingsMenu {
                             (new IncidentRequest(Startup.context)).execute(request);
                         }
                     } else {
-                        Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
+                        Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
                     }
                 } else if (id == R.id.small_menu_settings) {
 /*

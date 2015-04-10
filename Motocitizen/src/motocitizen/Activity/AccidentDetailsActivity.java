@@ -41,8 +41,6 @@ import static motocitizen.app.mc.MCAccidents.getDelimiterRow;
 
 public class AccidentDetailsActivity extends ActionBarActivity implements View.OnClickListener {
 
-    private int id;
-
     private Button newMessageButton;
     private EditText mcNewMessageText;
     private Button onwayButton;
@@ -254,11 +252,10 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
             try {
                 String result = json.getString("result");
                 if (result.equals("OK")) {
-                    Toast.makeText(this, Startup.context.getString(R.string.send_succsess), Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, Startup.context.getString(R.string.send_success), Toast.LENGTH_LONG).show();
                     MCAccidents.refresh(Startup.context);
                     update();
                     mcNewMessageText.setText("");
-                    //Keyboard.hide(findViewById(R.id.mc_new_message_text));
                     return;
                 }
             } catch (JSONException e) {
@@ -275,7 +272,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
             try {
                 String result = json.getString("result");
                 if (result.equals("OK")) {
-                    Toast.makeText(this, Startup.context.getString(R.string.send_succsess), Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, Startup.context.getString(R.string.send_success), Toast.LENGTH_LONG).show();
                     MCAccidents.setOnwayID(currentId);
                     MCAccidents.refresh(Startup.context);
                     update();
@@ -305,7 +302,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
                 jumpToMap();
                 break;
             default:
-                Log.e("AccidentDetailsActivity", "Unknow button pressed");
+                Log.e("AccidentDetailsActivity", "Unknown button pressed");
                 break;
         }
     }
@@ -331,7 +328,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
                 (new SendMessageRequest(this, currentId)).execute(request);
             }
         } else {
-            Toast.makeText(this, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -347,7 +344,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
                 (new OnwayRequest(this, currentId)).execute(request);
             }
         } else {
-            Toast.makeText(this, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
         }
     }
 }

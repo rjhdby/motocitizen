@@ -59,9 +59,6 @@
 	<string name="unfinish">Отменить отбой</string>
 	<string name="show">Показать</string>
 	<string name="hide">Скрыть</string>
-	<string name="fisrst_auth_check">Для доступа ко всем функциям приложения необходимо пройти авторизацию. В анонимном режиме доступен только просмотр.</string>
-	<string name="first_auth_login">Войти</string>
-	<string name="first_auth_anonim">Запустить анонимно</string>
 	<string name="mc_notif_system">default system</string>
 	<string name="mc_notif_sound">Выбрать звук уведомления</string>
 	<string name="tab_accidents">События</string>
@@ -85,9 +82,9 @@
     <string name="title_activity_select_sound">SelectSoundActivity</string>
     <string name="map_provider_category">Карта</string>
     <string name="config_map_title">Провайдер</string>
-    <string name="inet_not_avaible">Не могу отправить запрос, пожалуйста, проверьте доступность Internet.</string>
+    <string name="inet_not_available">Не могу отправить запрос, пожалуйста, проверьте доступность Internet.</string>
     <string name="title_activity_create_acc">CreateAccActivity</string>
-    <string name="send_succsess">Сообщение было успешно отправлено.</string>
+    <string name="send_success">Сообщение было успешно отправлено.</string>
     <string name="send_error">Произошла ошибка при отправке сообщения.</string>
     <string name="request_create_acc">Создание инцидента.</string>
     <string name="request_send_message">Отправка сообщения.</string>
