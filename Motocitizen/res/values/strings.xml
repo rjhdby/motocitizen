@@ -78,7 +78,7 @@
 	<string name="onway_button">Еду!</string>
 	<string name="fine_address">Уточнить адрес</string>
     <string name="small_menu_settings2">Настройки2</string>
-    <string name="title_activity_about">AboutActivity</string>
+    <string name="title_activity_about">О приложении</string>
     <string name="config_title_notify_category">Дистанции оповещений</string>
     <string name="config_acc_type_category">Типы инцидентов</string>
     <string name="small_menu_about">О приложении</string>
@@ -105,4 +105,6 @@
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="ui_menu_search">menuSearch</string>
+    <string name="ui_menu_send">menuSend</string>
 </resources>
