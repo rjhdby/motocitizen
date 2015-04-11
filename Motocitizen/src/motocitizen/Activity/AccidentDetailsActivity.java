@@ -44,7 +44,11 @@ import static motocitizen.app.mc.MCAccidents.getDelimiterRow;
 
 public class AccidentDetailsActivity extends FragmentActivity implements View.OnClickListener, DetailMessagesFragment.OnFragmentInteractionListener {
 
-    private int id;
+    /*
+    Инцидент с которым работаем
+     */
+    private int accidentID;
+
 
     //DetailVolunteersFragment detailVolunteersFragment;
     DetailMessagesFragment detailMessagesFragment;
@@ -75,8 +79,11 @@ public class AccidentDetailsActivity extends FragmentActivity implements View.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accident_details);
 
+        Bundle b = getIntent().getExtras();
+        accidentID = b.getInt("accidentID");
+
         //detailVolunteersFragment = new DetailVolunteersFragment();
-        detailMessagesFragment = new DetailMessagesFragment();
+        detailMessagesFragment = detailMessagesFragment.newInstance(accidentID);
         //DetailHistoryFragment = new DetailHistoryFragment();
 
 //        newMessageButton = (Button) findViewById(R.id.mc_new_message_send);
@@ -124,9 +131,7 @@ public class AccidentDetailsActivity extends FragmentActivity implements View.On
     }
 
     private void update() {
-
-        MCPoint currentPoint = MCAccidents.currentPoint;
-
+        MCPoint currentPoint = MCAccidents.points.getPoint(accidentID);
         generalType.setText(currentPoint.getTypeText() + ". " + currentPoint.getMedText());
         generalStatus.setText(currentPoint.getStatusText());
         generalTime.setText(Const.timeFormat.format(currentPoint.created.getTime()));
@@ -372,5 +377,9 @@ public class AccidentDetailsActivity extends FragmentActivity implements View.On
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    public int getAccidentID() {
+        return accidentID;
     }
 }

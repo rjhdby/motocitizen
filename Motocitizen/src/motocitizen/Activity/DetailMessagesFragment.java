@@ -39,14 +39,10 @@ import motocitizen.startup.Startup;
 public class DetailMessagesFragment extends Fragment implements XmlClickable {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    //View viewMain;
+    private static final String ACCIDENT_ID = "accidentID";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private int accidentID;
 
     private OnFragmentInteractionListener mListener;
 
@@ -69,15 +65,13 @@ public class DetailMessagesFragment extends Fragment implements XmlClickable {
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment DetailMessagesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DetailMessagesFragment newInstance(String param1, String param2) {
+    public static DetailMessagesFragment newInstance(int param1) {
         DetailMessagesFragment fragment = new DetailMessagesFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putInt(ACCIDENT_ID, param1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -90,8 +84,7 @@ public class DetailMessagesFragment extends Fragment implements XmlClickable {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            accidentID = getArguments().getInt(ACCIDENT_ID);
         }
 
         //newMessageButton = (Button) getActivity().findViewById(R.id.mc_new_message_send);
@@ -103,6 +96,10 @@ public class DetailMessagesFragment extends Fragment implements XmlClickable {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        if (getArguments() != null) {
+            accidentID = getArguments().getInt(ACCIDENT_ID);
+        }
 
         View viewMain = inflater.inflate(R.layout.fragment_detail_messages, container, false);
         newMessageButton = (Button) viewMain.findViewById(R.id.mc_new_message_send);
@@ -154,8 +151,7 @@ public class DetailMessagesFragment extends Fragment implements XmlClickable {
     }
 
     private void loadData() {
-
-        currentPoint = MCAccidents.currentPoint;
+        currentPoint = MCAccidents.points.getPoint(accidentID);
         if(records.size() > 0) {
             records.clear();
         }
@@ -168,6 +164,7 @@ public class DetailMessagesFragment extends Fragment implements XmlClickable {
     public void notifyDataSetChanged () {
         loadData();
         adapter.notifyDataSetChanged();
+        mcNewMessageText.setText("");
     }
 
     private final TextWatcher mcNewMessageTextListener = new TextWatcher() {
