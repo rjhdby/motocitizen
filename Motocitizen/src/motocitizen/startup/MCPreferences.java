@@ -13,15 +13,15 @@ import java.util.Arrays;
 import motocitizen.utils.Const;
 
 public class MCPreferences {
-    private final static String showAcc = "mc.show.acc";
-    private final static String showBreak = "mc.show.break";
-    private final static String showSteal = "mc.show.steal";
-    private final static String showOther = "mc.show.other";
-    private final static String distanceShow = "mc.distance.show";
-    private final static String distanceAlarm = "mc.distance.alarm";
+    public final String showAcc = "mc.show.acc";
+    public final String showBreak = "mc.show.break";
+    public final String showSteal = "mc.show.steal";
+    public final String showOther = "mc.show.other";
+    public final String distanceShow = "mc.distance.show";
+    public final String distanceAlarm = "mc.distance.alarm";
     private final static String soundTitle = "mc.notification.sound.title";
     private final static String soundURI = "mc.notification.sound";
-    private final static String mapProvider = "mc.map.provider";
+    public final String mapProvider = "mc.map.provider";
     private final static String login = "mc.login";
     private final static String password = "mc.password";
     private final static String anonim = "mc.anonim";
@@ -38,6 +38,10 @@ public class MCPreferences {
     public MCPreferences(Context context) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
         this.context = context;
+    }
+
+    public void putBoolean(String name, boolean value){
+        preferences.edit().putBoolean(name, value).commit();
     }
 
     public LatLng getSavedLatLng() {
