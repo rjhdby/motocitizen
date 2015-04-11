@@ -21,6 +21,7 @@ import motocitizen.utils.MCUtils;
 
 public class MCPointHistory {
     private static final Map<String, String> actions;
+
     static {
         Map<String, String> m = new HashMap<>();
         m.put("create_mc_acc", "создал");
@@ -33,6 +34,7 @@ public class MCPointHistory {
         m.put("acc_status_end", "отбой");
         actions = Collections.unmodifiableMap(m);
     }
+
     public int id;
     public int owner_id;
     public int table_row;
@@ -56,7 +58,7 @@ public class MCPointHistory {
         owner_id = json.getInt("id_user");
         owner = json.getString("owner");
         action = json.getString("action");
-        time = new Date(Long.parseLong(json.getString("uxtime"), 10)*1000);
+        time = new Date(Long.parseLong(json.getString("uxtime"), 10) * 1000);
     }
 
     public static TableRow createHeader(Context context) {

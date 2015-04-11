@@ -26,9 +26,6 @@ import java.util.zip.GZIPInputStream;
 
 import motocitizen.startup.Startup;
 
-/**
- * Created by elagin on 31.03.15.
- */
 public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
 
     ProgressDialog dialog;
@@ -46,17 +43,19 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
     private String method = null;
 
     protected void onPreExecute() {
-        Runnable execute = new Runnable() {
-            @Override
-            public void run() {
-                dialog = new ProgressDialog(context);
-                dialog.setMessage("Обмен данными...\n" + info);
-                dialog.setIndeterminate(true);
-                dialog.setCancelable(true);
-                dialog.show();
-            }
-        };
-        ((Activity) context).runOnUiThread(execute);
+        if (!info.equals("")) {
+            Runnable execute = new Runnable() {
+                @Override
+                public void run() {
+                    dialog = new ProgressDialog(context);
+                    dialog.setMessage("Обмен данными...\n" + info);
+                    dialog.setIndeterminate(true);
+                    dialog.setCancelable(true);
+                    dialog.show();
+                }
+            };
+            ((Activity) context).runOnUiThread(execute);
+        }
     }
 
     @Override
@@ -95,67 +94,67 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
     }
 
     public JSONObject request(Map<String, String> post) {
-            post.put("calledMethod", method);
-            // Log.d("JSON CALL", "|" + url.toString() + "|");
-            HttpURLConnection connection = null;
-            StringBuilder response = new StringBuilder();
-            CustomTrustManager.allowAllSSL();
-            try {
-                // URL url = new URL(server);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("POST");
-                connection.setRequestProperty("Accept-Charset", CHARSET);
-                connection.setRequestProperty("Accept-Encoding", "gzip");
-                connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + CHARSET);
-                connection.setRequestProperty("Content-Language", "ru-RU");
-                connection.setRequestProperty("User-Agent", USERAGENT);
-                connection.setUseCaches(false);
+        post.put("calledMethod", method);
+        // Log.d("JSON CALL", "|" + url.toString() + "|");
+        HttpURLConnection connection = null;
+        StringBuilder response = new StringBuilder();
+        CustomTrustManager.allowAllSSL();
+        try {
+            // URL url = new URL(server);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Accept-Charset", CHARSET);
+            connection.setRequestProperty("Accept-Encoding", "gzip");
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + CHARSET);
+            connection.setRequestProperty("Content-Language", "ru-RU");
+            connection.setRequestProperty("User-Agent", USERAGENT);
+            connection.setUseCaches(false);
 
-                if (!post.isEmpty()) {
-                    String POST = makePOST(post);
-                    Log.d("POST", url.toString() + "?" + POST);
-                    connection.setDoOutput(true);
-                    connection.setRequestProperty("Content-Length", Integer.toString((POST).getBytes().length));
-                    DataOutputStream os = new DataOutputStream(connection.getOutputStream());
-                    os.writeBytes(POST);
-                }
-                InputStream is;
-                try {
-                    is = connection.getInputStream();
-                    is = new GZIPInputStream(is);
-                    int responseCode = connection.getResponseCode();
-                    Log.d("JSON ERROR", String.valueOf(responseCode));
-                    if (responseCode == 200) {
-                        BufferedReader in = new BufferedReader(new InputStreamReader(is));
-                        String inputLine;
-                        while ((inputLine = in.readLine()) != null) {
-                            response.append(inputLine);
-                        }
-                        in.close();
-                    } else {
-                        Log.d("JSON ERROR", String.valueOf(responseCode));
+            if (!post.isEmpty()) {
+                String POST = makePOST(post);
+                Log.d("POST", url.toString() + "?" + POST);
+                connection.setDoOutput(true);
+                connection.setRequestProperty("Content-Length", Integer.toString((POST).getBytes().length));
+                DataOutputStream os = new DataOutputStream(connection.getOutputStream());
+                os.writeBytes(POST);
+            }
+            InputStream is;
+            try {
+                is = connection.getInputStream();
+                is = new GZIPInputStream(is);
+                int responseCode = connection.getResponseCode();
+                Log.d("JSON ERROR", String.valueOf(responseCode));
+                if (responseCode == 200) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(is));
+                    String inputLine;
+                    while ((inputLine = in.readLine()) != null) {
+                        response.append(inputLine);
                     }
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                    in.close();
+                } else {
+                    Log.d("JSON ERROR", String.valueOf(responseCode));
                 }
-
-            } catch (IOException e) {
+            } catch (FileNotFoundException e) {
                 e.printStackTrace();
-            } finally {
-                if (connection != null) {
-                    connection.disconnect();
-                }
             }
 
-            JSONObject reader;
-            try {
-                reader = new JSONObject(response.toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
-                reader = new JSONObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
             }
-            Log.d("JSON RESPONSE", reader.toString());
-            return reader;
+        }
+
+        JSONObject reader;
+        try {
+            reader = new JSONObject(response.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            reader = new JSONObject();
+        }
+        Log.d("JSON RESPONSE", reader.toString());
+        return reader;
     }
 
     private String makePOST(Map<String, String> post) {

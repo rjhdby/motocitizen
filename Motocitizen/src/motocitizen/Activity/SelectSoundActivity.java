@@ -1,15 +1,13 @@
 package motocitizen.Activity;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import motocitizen.main.R;
+import motocitizen.startup.MCPreferences;
 import motocitizen.utils.Const;
 import motocitizen.utils.NewID;
 
@@ -31,10 +30,10 @@ public class SelectSoundActivity extends ActionBarActivity {
     private static Map<Integer, Uri> notifications;
     private static int currentId;
     private static ViewGroup vg;
-    private static String currentUri;
+    private static Uri currentUri;
     private static String currentTitle;
     private static RingtoneManager rm;
-    private SharedPreferences prefs;
+    private MCPreferences prefs;
 
     private final Button.OnClickListener play = new Button.OnClickListener() {
 
@@ -47,7 +46,7 @@ public class SelectSoundActivity extends ActionBarActivity {
             vg.findViewById(currentId).setBackgroundColor(Color.GRAY);
             Ringtone current = RingtoneManager.getRingtone(v.getContext(), notifications.get(v.getId()));
             current.play();
-            currentUri = notifications.get(v.getId()).toString();
+            currentUri = notifications.get(v.getId());
             currentTitle = current.getTitle(v.getContext());
         }
     };
@@ -57,21 +56,20 @@ public class SelectSoundActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mc_select_sound);
 
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        vg = (ViewGroup)findViewById(R.id.sound_select_table);
+        prefs = new MCPreferences(this);
+        vg = (ViewGroup) findViewById(R.id.sound_select_table);
         rm = new RingtoneManager(this);
         rm.setType(RingtoneManager.TYPE_NOTIFICATION);
-        String defaultUri = RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_NOTIFICATION).toString();
-        currentUri = prefs.getString("mc.notification.sound", defaultUri);
-        currentTitle = prefs.getString("mc.notification.sound.title", "default system");
+        currentUri = prefs.getAlarmSoundUri();
+        currentTitle = prefs.getAlarmSoundTitle();
 
         Button selectSoundConfirmButton = (Button) findViewById(R.id.select_sound_save_button);
         selectSoundConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                prefs.edit().putString("mc.notification.sound", currentUri).apply();
-                prefs.edit().putString("mc.notification.sound.title", currentTitle).apply();
-                prefs.edit().apply();
+                if (currentTitle.equals("default system")) {
+                    prefs.setDefaultSoundAlarm();
+                } else prefs.setSoundAlarm(currentTitle, currentUri);
                 finish();
             }
         });
@@ -136,8 +134,6 @@ public class SelectSoundActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_select_sound, menu);
         return true;
     }
 

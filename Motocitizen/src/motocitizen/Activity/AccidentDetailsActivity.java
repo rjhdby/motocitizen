@@ -37,6 +37,7 @@ import motocitizen.main.R;
 import motocitizen.network.JsonRequest;
 import motocitizen.network.OnwayRequest;
 import motocitizen.network.SendMessageRequest;
+import motocitizen.startup.MCPreferences;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 
@@ -73,6 +74,8 @@ public class AccidentDetailsActivity extends FragmentActivity implements View.On
     private TextView generalOwner;
     private TextView generalAddress;
     private TextView generalDescription;
+
+    MCPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +130,7 @@ public class AccidentDetailsActivity extends FragmentActivity implements View.On
     @Override
     protected void onResume() {
         super.onResume();
+        prefs = new MCPreferences(this);
         update();
     }
 
@@ -159,7 +163,7 @@ public class AccidentDetailsActivity extends FragmentActivity implements View.On
 */
         /*
          * Выводим список волонтеров
-		 */
+         */
         /*
         ViewGroup vg_onway = (ViewGroup) onwayContent;
         ViewGroup vg_inplace = (ViewGroup) inplaceContent;
@@ -334,12 +338,30 @@ public class AccidentDetailsActivity extends FragmentActivity implements View.On
         intent.putExtra("fromDetails", true);
         this.startActivity(intent);
     }
-
+/*
+    void OnNewMessageSendButton() {
+        if (Startup.isOnline()) {
+            String text = mcNewMessageText.getText().toString();
+            int currentId = MCAccidents.currentPoint.id;
+            Map<String, String> post = new HashMap<>();
+            post.put("login", prefs.getLogin());
+            post.put("passhash", MCAccidents.auth.makePassHash());
+            post.put("id", String.valueOf(currentId));
+            post.put("text", text);
+            JsonRequest request = new JsonRequest("mcaccidents", "message", post, "", true);
+            if (request != null) {
+                (new SendMessageRequest(this, currentId)).execute(request);
+            }
+        } else {
+            Toast.makeText(this, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
+        }
+    }
+*/
     void OnWayButton() {
         if (Startup.isOnline()) {
             int currentId = MCAccidents.currentPoint.id;
             Map<String, String> post = new HashMap<>();
-            post.put("login", MCAccidents.auth.getLogin());
+            post.put("login", prefs.getLogin());
             post.put("passhash", MCAccidents.auth.makePassHash());
             post.put("id", String.valueOf(currentId));
             JsonRequest request = new JsonRequest("mcaccidents", "onway", post, "", true);

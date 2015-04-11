@@ -29,6 +29,7 @@ class MCPopupWindow {
     static TableLayout content;
     static PopupWindow pw;
     static String textToCopy;
+    private static Context context;
     private static final OnClickListener copyButtonListener = new OnClickListener() {
         @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         @Override
@@ -82,6 +83,28 @@ class MCPopupWindow {
             MCAccidents.refresh(v.getContext());
         }
     };
+
+    private static final OnClickListener shareButtonListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, textToCopy);
+            sendIntent.setType("text/plain");
+            context.startActivity(sendIntent);
+            pw.dismiss();
+        }
+    };
+
+    static TableRow shareMessage(Context outherContext){
+        context = outherContext;
+        TableRow tr = new TableRow(content.getContext());
+        Button b = new Button(content.getContext());
+        b.setText(R.string.share);
+        b.setOnClickListener(shareButtonListener);
+        tr.addView(b, lp);
+        return tr;
+    }
 
     static TableRow copyButtonRow() {
         TableRow tr = new TableRow(content.getContext());

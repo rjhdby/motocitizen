@@ -7,6 +7,7 @@ import android.location.Location;
 
         public static final String OSM = "osm";
         public static final String GOOGLE = "google";
+        public static final String YANDEX = "yandex";
 
         private String name;
 

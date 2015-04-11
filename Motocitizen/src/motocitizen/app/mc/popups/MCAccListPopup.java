@@ -26,13 +26,11 @@ public class MCAccListPopup extends MCPopupWindow {
         for (String phone : MCUtils.getPhonesFromText(p.descr)) {
             content.addView(phoneButtonRow(phone), lp);
         }
-
-        if (MCRole.isStandart()) {
-            content.addView(finishButtonRow(p));
-        }
         if (MCRole.isModerator()) {
+            content.addView(finishButtonRow(p));
             content.addView(hideButtonRow(p));
         }
+        content.addView(shareMessage(Startup.context));
         pw = new PopupWindow(content, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         pw.setBackgroundDrawable(new ColorDrawable(android.R.color.transparent));
         pw.setOutsideTouchable(true);

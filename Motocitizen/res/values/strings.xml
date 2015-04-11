@@ -103,4 +103,8 @@
     <string name="tab_messages">Сообщения</string>
     <string name="tab_log">История</string>
     <string name="action_new_message">Новое сообщение</string>
+    <string name="share">Поделиться</string>
+    <string name="unknown_code_version">Не определено</string>
+    <string name="code_version_prefix">Текущая версия</string>
+    <string name="no_one_accident_visible">Никакие события показаны не будут</string>
 </resources>

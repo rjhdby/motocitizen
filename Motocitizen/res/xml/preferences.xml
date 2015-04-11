@@ -50,7 +50,7 @@
             android:key="mc.distance.show"
             android:summary="@string/mc_settings_distance"
             android:title="@string/mc_settings_distance"
-            android:inputType="number"
+            android:numeric="integer"
             android:tag="mc.distance.show" />
         <EditTextPreference
             android:defaultValue="20"
@@ -58,7 +58,7 @@
             android:key="mc.distance.alarm"
             android:summary="@string/mc_settings_distance_alarm"
             android:title="@string/mc_settings_distance_alarm"
-            android:inputType="number"
+            android:numeric="integer"
             android:tag="mc.distance.alarm" />
     </PreferenceCategory>
     <PreferenceCategory
@@ -66,7 +66,7 @@
         android:title="@string/map_provider_category">
         <ListPreference
             android:title="@string/config_map_title"
-            android:key="map_pref"
+            android:key="mc.map.provider"
             android:defaultValue="google"
             android:summary="%s"
             android:entries="@array/mapProvider"
