@@ -36,6 +36,7 @@ import motocitizen.main.R;
 import motocitizen.network.CreateAccidentRequest;
 import motocitizen.network.GeoCodeNewRequest;
 import motocitizen.network.JsonRequest;
+import motocitizen.startup.MCPreferences;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 import motocitizen.utils.Keyboard;
@@ -91,6 +92,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
     private int radius;
 
     private static Context context;
+    private MCPreferences prefs;
 
     private final GoogleMap.OnCameraChangeListener cameraListener = new GoogleMap.OnCameraChangeListener() {
         @Override
@@ -142,6 +144,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
+        prefs = new MCPreferences(this);
         setContentView(R.layout.mc_app_create_point);
 
         back = (Button) findViewById(R.id.mc_create_back);
@@ -197,7 +200,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
 
         date = new Date();
         medText = "mc_m_na";
-        ownerText = Startup.prefs.getString("mc.login", "");
+        ownerText = prefs.getLogin();
         addressText = MCLocation.address;
         timeText = Const.timeFormat.format((date).getTime());
         location = MCLocation.current;

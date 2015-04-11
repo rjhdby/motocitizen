@@ -8,9 +8,6 @@ import org.json.JSONObject;
 import motocitizen.Activity.CreateAccActivity;
 import motocitizen.main.R;
 
-/**
- * Created by elagin on 01.04.15.
- */
 public class GeoCodeNewRequest extends HttpClient {
 
     public GeoCodeNewRequest(Context context) {

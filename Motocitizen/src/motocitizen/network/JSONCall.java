@@ -23,6 +23,7 @@ import java.util.zip.GZIPInputStream;
 import motocitizen.main.R;
 import motocitizen.startup.Startup;
 
+//TODO Уйти от использования Startup.props
 public class JSONCall {
     private final static String APP = Startup.props.get("default.app");
     private final static String CHARSET = "UTF-8";

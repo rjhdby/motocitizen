@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
@@ -28,8 +29,8 @@ class SmallSettingsMenu {
     private static PopupMenu popupTR;
     public static PopupMenu popupBL;
 
-    public SmallSettingsMenu() {
-        final Activity act = (Activity) Startup.context;
+    public SmallSettingsMenu(final Context context) {
+        final Activity act = (Activity) context;
         ImageButton b = (ImageButton) act.findViewById(R.id.statusBarButton);
         View v = act.findViewById(R.id.footer_menu_anchor);
         popupBL = new PopupMenu(act, v, Gravity.LEFT);
@@ -42,14 +43,14 @@ class SmallSettingsMenu {
                 int id = item.getItemId();
 
                 if (id == R.id.small_menu_refresh) {
-                    MCAccidents.refresh(Startup.context);
+                    MCAccidents.refresh(context);
                     if (Startup.isOnline()) {
                         JsonRequest request = MCAccidents.getLoadPointsRequest();
                         if (request != null) {
-                            (new IncidentRequest(Startup.context)).execute(request);
+                            (new IncidentRequest(context)).execute(request);
                         }
                     } else {
-                        Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
                     }
                 } else if (id == R.id.small_menu_settings) {
 /*
@@ -57,7 +58,7 @@ class SmallSettingsMenu {
                     Startup.context.startActivity(i);
 */
 
-                    FragmentManager fm = ((Activity) Startup.context).getFragmentManager();
+                    FragmentManager fm = ((Activity) context).getFragmentManager();
                     Fragment pf, mf;
                     pf = fm.findFragmentByTag("settings");
                     mf = fm.findFragmentByTag("main_screen");
@@ -68,11 +69,11 @@ class SmallSettingsMenu {
                     fm.beginTransaction().hide(mf).show(pf).commit();
                 } else if (id == R.id.small_menu_about) {
                     Intent i = new Intent(act, AboutActivity.class);
-                    Startup.context.startActivity(i);
+                    context.startActivity(i);
                 } else if (id == R.id.small_menu_exit) {
                     Intent intent = new Intent(Intent.ACTION_MAIN);
                     intent.addCategory(Intent.CATEGORY_HOME);
-                    Startup.context.startActivity(intent);
+                    context.startActivity(intent);
                     int pid = android.os.Process.myPid();
                     android.os.Process.killProcess(pid);
                 }

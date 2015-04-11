@@ -50,7 +50,7 @@
             android:key="mc.distance.show"
             android:summary="@string/mc_settings_distance"
             android:title="@string/mc_settings_distance"
-            android:inputType="number"
+            android:numeric="integer"
             android:tag="mc.distance.show" />
         <EditTextPreference
             android:defaultValue="20"
@@ -58,7 +58,7 @@
             android:key="mc.distance.alarm"
             android:summary="@string/mc_settings_distance_alarm"
             android:title="@string/mc_settings_distance_alarm"
-            android:inputType="number"
+            android:numeric="integer"
             android:tag="mc.distance.alarm" />
     </PreferenceCategory>
     <PreferenceCategory

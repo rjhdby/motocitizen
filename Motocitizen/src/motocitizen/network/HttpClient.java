@@ -26,9 +26,6 @@ import java.util.zip.GZIPInputStream;
 
 import motocitizen.startup.Startup;
 
-/**
- * Created by elagin on 31.03.15.
- */
 public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
 
     ProgressDialog dialog;

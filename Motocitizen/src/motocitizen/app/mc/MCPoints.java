@@ -19,7 +19,8 @@ import java.util.Set;
 import motocitizen.main.R;
 import motocitizen.network.JSONCall;
 import motocitizen.network.JsonRequest;
-import motocitizen.startup.Startup;
+import motocitizen.startup.MCPreferences;
+//import motocitizen.startup.Startup;
 import motocitizen.utils.Configuration;
 import motocitizen.utils.Const;
 
@@ -30,15 +31,16 @@ public class MCPoints {
     private static final int ENDED = R.drawable.accident_row_gradient_ended;
     public final String error;
     private Map<Integer, MCPoint> points;
-    private final SharedPreferences prefs;
+    private MCPreferences prefs;
+    private static Context context;
 
-  public MCPoints(SharedPreferences prefs) {
+  public MCPoints(Context context) {
         error = "ok";
         if (points == null) {
             points = new HashMap<>();
         }
-
-      this.prefs = prefs;
+this.context = context;
+      prefs = new MCPreferences(context);
     }
 
     public boolean containsKey(int id) {
@@ -56,10 +58,10 @@ public class MCPoints {
     public void load() {
         Map<String, String> selector = new HashMap<>();
         Location userLocation = MCLocation.current;
-        selector.put("distance", Configuration.getShowDistance(prefs));
+        selector.put("distance", String.valueOf(prefs.getVisibleDistance()));
         selector.put("lon", String.valueOf(userLocation.getLongitude()));
         selector.put("lat", String.valueOf(userLocation.getLatitude()));
-        String user = Startup.prefs.getString("mc.login", "");
+        String user = prefs.getLogin();
         if (!user.equals("")) {
             selector.put("user", user);
         }
@@ -85,10 +87,10 @@ public class MCPoints {
     public JsonRequest getLoadRequest() {
         Map<String, String> selector = new HashMap<>();
         Location userLocation = MCLocation.current;
-        selector.put("distance", Configuration.getShowDistance(prefs));
+        selector.put("distance", String.valueOf(prefs.getVisibleDistance()));
         selector.put("lon", String.valueOf(userLocation.getLongitude()));
         selector.put("lat", String.valueOf(userLocation.getLatitude()));
-        String user = Startup.prefs.getString("mc.login", "");
+        String user = prefs.getLogin();
         if (!user.equals("")) {
             selector.put("user", user);
         }
@@ -103,7 +105,7 @@ public class MCPoints {
         for (int i = 0; i < json.length(); i++) {
             JSONObject acc = json.getJSONObject(i);
             try {
-                MCPoint current = new MCPoint(acc);
+                MCPoint current = new MCPoint(acc, context);
                 if (points.containsKey(current.id)) {
                     current.messages.putAll(points.get(current.id).messages);
                 }

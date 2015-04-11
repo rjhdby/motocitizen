@@ -5,7 +5,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
@@ -17,8 +16,8 @@ import com.google.android.gms.maps.model.LatLng;
 import motocitizen.app.mc.MCAccTypes;
 import motocitizen.app.mc.MCLocation;
 import motocitizen.main.R;
+import motocitizen.startup.MCPreferences;
 import motocitizen.startup.Startup;
-import motocitizen.utils.Configuration;
 import motocitizen.utils.MCUtils;
 
 class MCNotification {
@@ -44,12 +43,13 @@ class MCNotification {
         }
         double distance = MCLocation.getBestFusionLocation(context).distanceTo(MCUtils.LatLngToLocation(new LatLng(lat, lng))) / 1000;
         //TODO Грязный хак, нужно придумать как работать без имени файла
-        SharedPreferences prefs = context.getSharedPreferences("motocitizen.main_preferences", Context.MODE_PRIVATE);
-
-        if (Configuration.getAlarmDistance(prefs) < distance) {
+//        SharedPreferences prefs = context.getSharedPreferences("motocitizen.main_preferences", Context.MODE_PRIVATE);
+        MCPreferences prefs = new MCPreferences(context);
+//        if (Configuration.getAlarmDistance(prefs) < distance) {
+        if (prefs.getAlarmDistance() < distance) {
             return;
         }
-        if (!MCAccTypes.get(type).enabled) {
+        if (!prefs.toShowAccType(type)) {
             return;
         }
         Intent notificationIntent = new Intent(context, Startup.class);
@@ -63,11 +63,10 @@ class MCNotification {
         builder.setContentIntent(contentIntent).setSmallIcon(R.drawable.logo).setLargeIcon(BitmapFactory.decodeResource(res, R.drawable.logo))
                 .setTicker(title).setWhen(System.currentTimeMillis()).setAutoCancel(true).setContentTitle(title).setContentText(message);
 
-        String sound = prefs.getString("mc.notification.sound", "default system");
-        if (sound.equals("default system")) {
+        if (prefs.getAlarmSoundTitle().equals("default system")) {
             builder.setDefaults(Notification.DEFAULT_ALL);
         } else {
-            builder.setSound(Uri.parse(sound), AudioManager.STREAM_NOTIFICATION);
+            builder.setSound(prefs.getAlarmSoundUri(), AudioManager.STREAM_NOTIFICATION);
             builder.setVibrate(new long[]{1000, 1000, 1000});
         }
         Notification notification = builder.getNotification();

@@ -42,7 +42,7 @@ import motocitizen.utils.Show;
 public class Startup extends FragmentActivity implements View.OnClickListener {
     public static Props props;
     public static Context context;
-    public static SharedPreferences prefs;
+    public static MCPreferences prefs;
     public static MCMap map;
     public static boolean fromDetails;
 
@@ -63,7 +63,8 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
         setContentView(R.layout.main);
         context = this;
 
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        //prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs = new MCPreferences(this);
         new Const();
 
         dialButton = (ImageButton) findViewById(R.id.dial_button);
@@ -83,12 +84,12 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
         //prefs.edit().clear().commit();
         props = new Props();
 
-        new MCAccidents(this, prefs);
+        new MCAccidents(this);
 
-        createMap(prefs.getString("map_pref", MCMap.GOOGLE));
+        createMap(prefs.getMapProvider());
         // zz
         // new SettingsMenu();
-        new SmallSettingsMenu();
+        new SmallSettingsMenu(this);
         if (MCAccidents.auth.isFirstRun()) {
             //Show.show(R.id.main_frame, R.id.first_auth_screen);
             Intent i = new Intent(Startup.context, AuthActivity.class);

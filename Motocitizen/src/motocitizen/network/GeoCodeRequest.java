@@ -8,9 +8,6 @@ import org.json.JSONObject;
 import motocitizen.app.mc.MCLocation;
 import motocitizen.main.R;
 
-/**
- * Created by elagin on 01.04.15.
- */
 public class GeoCodeRequest extends HttpClient {
 
 

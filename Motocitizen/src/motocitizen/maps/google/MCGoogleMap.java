@@ -22,7 +22,7 @@ import motocitizen.app.mc.MCLocation;
 import motocitizen.app.mc.MCPoint;
 import motocitizen.main.R;
 import motocitizen.maps.general.MCMap;
-import motocitizen.startup.Startup;
+//import motocitizen.startup.Startup;
 import motocitizen.utils.Inflate;
 import motocitizen.utils.MCUtils;
 
@@ -33,7 +33,7 @@ public class MCGoogleMap extends MCMap {
     private static Map<String, Integer> accidents;
     private static String selected;
 
-    public MCGoogleMap(Context context) {
+    public MCGoogleMap(final Context context) {
         setName(MCMap.GOOGLE);
         selected = "";
         Inflate.set(context, R.id.map_container, R.layout.google_maps_view);
@@ -45,7 +45,7 @@ public class MCGoogleMap extends MCMap {
             public boolean onMarkerClick(Marker marker) {
                 String id = marker.getId();
                 if (selected.equals(id) && accidents.containsKey(id)) {
-                    MCAccidents.toDetails(Startup.context, accidents.get(selected));
+                    MCAccidents.toDetails(context, accidents.get(selected));
                 } else {
                     marker.showInfoWindow();
                     selected = id;
