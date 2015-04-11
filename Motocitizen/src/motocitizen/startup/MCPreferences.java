@@ -10,6 +10,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Arrays;
 
+import motocitizen.main.R;
 import motocitizen.utils.Const;
 
 public class MCPreferences {
@@ -19,9 +20,11 @@ public class MCPreferences {
     public final String showOther = "mc.show.other";
     public final String distanceShow = "mc.distance.show";
     public final String distanceAlarm = "mc.distance.alarm";
+    public final String mapProvider = "mc.map.provider";
+    public final String currentVersion = "version";
+
     private final static String soundTitle = "mc.notification.sound.title";
     private final static String soundURI = "mc.notification.sound";
-    public final String mapProvider = "mc.map.provider";
     private final static String login = "mc.login";
     private final static String password = "mc.password";
     private final static String anonim = "mc.anonim";
@@ -48,6 +51,14 @@ public class MCPreferences {
         double lat = (double) preferences.getFloat(savedlat, 55.752295f);
         double lng = (double) preferences.getFloat(savedlng, 37.622735f);
         return new LatLng(lat, lng);
+    }
+
+    public String getCurrentVersion(){
+        return preferences.getString(currentVersion, context.getString(R.string.unknown_code_version));
+    }
+
+    public void setCurrentVersion(String version){
+        preferences.edit().putString(currentVersion, version).commit();
     }
 
     public void saveLatLng(LatLng latlng) {

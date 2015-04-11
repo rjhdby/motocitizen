@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.widget.TextView;
 
 import motocitizen.main.R;
+import motocitizen.startup.MCPreferences;
 
 public class AboutActivity extends ActionBarActivity {
 
@@ -15,16 +16,7 @@ public class AboutActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-        PackageManager manager = this.getPackageManager();
-        String version;
-        try {
-            PackageInfo info = manager.getPackageInfo(this.getPackageName(), 0);
-            version = info.versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            version = getString(R.string.unknown_code_version);
-        }
-
-        ((TextView) this.findViewById(R.id.about_code_version)).setText(getString(R.string.code_version_prefix) + ": " + version);
+        ((TextView) this.findViewById(R.id.about_code_version)).setText(getString(R.string.code_version_prefix) + ": " + (new MCPreferences(this)).getCurrentVersion());
     }
 
     @Override
