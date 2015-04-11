@@ -22,6 +22,7 @@ public class MCPreferences {
     public final String distanceAlarm = "mc.distance.alarm";
     public final String mapProvider = "mc.map.provider";
     public final String currentVersion = "version";
+    public final String doNotDistrub = "do.not.distrub";
 
     private final static String soundTitle = "mc.notification.sound.title";
     private final static String soundURI = "mc.notification.sound";
@@ -51,6 +52,14 @@ public class MCPreferences {
         double lat = (double) preferences.getFloat(savedlat, 55.752295f);
         double lng = (double) preferences.getFloat(savedlng, 37.622735f);
         return new LatLng(lat, lng);
+    }
+
+    public void setDoNotDistrub(boolean value){
+        preferences.edit().putBoolean(doNotDistrub, value).commit();
+    }
+
+    public boolean getDoNotDistrub(){
+        return preferences.getBoolean(doNotDistrub, false);
     }
 
     public String getCurrentVersion(){

@@ -67,6 +67,7 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
 
         //prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs = new MCPreferences(this);
+        prefs.setDoNotDistrub(false);
         new Const();
 
         checkUpdate();

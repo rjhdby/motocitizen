@@ -21,6 +21,10 @@ import motocitizen.utils.MCUtils;
 class MCNotification {
     @SuppressWarnings("deprecation")
     public MCNotification(Context context, Intent intent) {
+        MCPreferences prefs = new MCPreferences(context);
+        if(prefs.getDoNotDistrub()){
+            return;
+        }
         Bundle extras = intent.getExtras();
 
         String type = extras.getString("type");
@@ -40,7 +44,7 @@ class MCNotification {
             return;
         }
         double distance = MCLocation.getBestFusionLocation().distanceTo(MCUtils.LatLngToLocation(new LatLng(lat, lng))) / 1000;
-        MCPreferences prefs = new MCPreferences(context);
+
         if (prefs.getAlarmDistance() < distance) {
             return;
         }

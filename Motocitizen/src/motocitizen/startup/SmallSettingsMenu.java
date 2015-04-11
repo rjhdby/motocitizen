@@ -76,6 +76,15 @@ class SmallSettingsMenu {
                     context.startActivity(intent);
                     int pid = android.os.Process.myPid();
                     android.os.Process.killProcess(pid);
+                } else if(id == R.id.do_not_distrub){
+                    MCPreferences prefs = new MCPreferences(Startup.context);
+                    if(prefs.getDoNotDistrub()){
+                        prefs.setDoNotDistrub(false);
+                        item.setTitle(Startup.context.getString(R.string.do_not_distrub));
+                    } else {
+                        prefs.setDoNotDistrub(true);
+                        item.setTitle(Startup.context.getString(R.string.cancel_do_not_distrub));
+                    }
                 }
                 return true;
             }
