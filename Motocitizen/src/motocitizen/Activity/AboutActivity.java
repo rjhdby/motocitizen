@@ -19,12 +19,12 @@ public class AboutActivity extends ActionBarActivity {
         String version;
         try {
             PackageInfo info = manager.getPackageInfo(this.getPackageName(), 0);
-            version = getString(R.string.code_version_prefix) + ": " + info.versionName;
+            version = info.versionName;
         } catch (PackageManager.NameNotFoundException e) {
             version = getString(R.string.unknown_code_version);
         }
 
-        ((TextView) this.findViewById(R.id.about_code_version)).setText(version);
+        ((TextView) this.findViewById(R.id.about_code_version)).setText(getString(R.string.code_version_prefix) + ": " + version);
     }
 
     @Override
