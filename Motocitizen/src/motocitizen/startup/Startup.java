@@ -111,6 +111,9 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
         } catch (PackageManager.NameNotFoundException e) {
             version = getString(R.string.unknown_code_version);
         }
+        if(!prefs.getCurrentVersion().equals(version)){
+            ChangeLog.getDialog(this, true).show();
+        }
         prefs.setCurrentVersion(version);
     }
 
