@@ -30,6 +30,7 @@ public class MCAccListPopup extends MCPopupWindow {
             content.addView(finishButtonRow(p));
             content.addView(hideButtonRow(p));
         }
+        content.addView(shareMessage(Startup.context));
         pw = new PopupWindow(content, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         pw.setBackgroundDrawable(new ColorDrawable(android.R.color.transparent));
         pw.setOutsideTouchable(true);

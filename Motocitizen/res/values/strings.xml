@@ -98,4 +98,5 @@
     <string name="tab_onway">Едут/на месте</string>
     <string name="tab_messages">Сообщения</string>
     <string name="tab_log">История</string>
+    <string name="share">Поделиться</string>
 </resources>
