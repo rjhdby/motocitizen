@@ -103,12 +103,14 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
         generalDescription = (TextView) findViewById(R.id.acc_details_general_description);
         ((ScrollView) findViewById(R.id.mc_det_messages_scroll)).fullScroll(View.FOCUS_UP);
     }
+
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         prefs = new MCPreferences(this);
         update();
     }
+
     private void update() {
 
         MCPoint currentPoint = MCAccidents.currentPoint;
@@ -137,7 +139,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
         }
 
 		/*
-		 * Выводим список волонтеров
+         * Выводим список волонтеров
 		 */
         ViewGroup vg_onway = (ViewGroup) onwayContent;
         ViewGroup vg_inplace = (ViewGroup) inplaceContent;
@@ -311,10 +313,10 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
         }
     }
 
-    private void jumpToMap(){
+    private void jumpToMap() {
         Intent intent = new Intent(this, Startup.class);
-        intent.putExtra("toMap",MCAccidents.currentPoint.id);
-        intent.putExtra("fromDetails",true);
+        intent.putExtra("toMap", MCAccidents.currentPoint.id);
+        intent.putExtra("fromDetails", true);
         this.startActivity(intent);
     }
 

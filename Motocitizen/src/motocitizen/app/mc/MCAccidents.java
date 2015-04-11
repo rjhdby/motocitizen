@@ -3,7 +3,6 @@ package motocitizen.app.mc;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.Gravity;
@@ -179,9 +178,9 @@ public class MCAccidents {
     }
 
     public static void refreshPoints(Context context, JSONObject data) {
-        if(data != null) {
+        if (data != null) {
             try {
-                JSONArray arr  = data.getJSONArray("list");
+                JSONArray arr = data.getJSONArray("list");
                 points.update(arr);
                 Startup.map.placeAcc(context);
                 redraw(context);

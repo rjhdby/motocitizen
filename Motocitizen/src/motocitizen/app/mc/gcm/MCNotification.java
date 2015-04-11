@@ -8,12 +8,10 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
-import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import motocitizen.app.mc.MCAccTypes;
 import motocitizen.app.mc.MCLocation;
 import motocitizen.main.R;
 import motocitizen.startup.MCPreferences;
@@ -41,11 +39,8 @@ class MCNotification {
         } else {
             return;
         }
-        double distance = MCLocation.getBestFusionLocation(context).distanceTo(MCUtils.LatLngToLocation(new LatLng(lat, lng))) / 1000;
-        //TODO Грязный хак, нужно придумать как работать без имени файла
-//        SharedPreferences prefs = context.getSharedPreferences("motocitizen.main_preferences", Context.MODE_PRIVATE);
+        double distance = MCLocation.getBestFusionLocation().distanceTo(MCUtils.LatLngToLocation(new LatLng(lat, lng))) / 1000;
         MCPreferences prefs = new MCPreferences(context);
-//        if (Configuration.getAlarmDistance(prefs) < distance) {
         if (prefs.getAlarmDistance() < distance) {
             return;
         }

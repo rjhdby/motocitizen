@@ -21,7 +21,7 @@ public class MCVolunteer {
         id = json.getInt("id");
         name = json.getString("name");
         status = json.getString("status");
-        time = new Date(Long.parseLong(json.getString("uxtime"), 10)*1000);
+        time = new Date(Long.parseLong(json.getString("uxtime"), 10) * 1000);
     }
 
     public TableRow createRow(Context context) {

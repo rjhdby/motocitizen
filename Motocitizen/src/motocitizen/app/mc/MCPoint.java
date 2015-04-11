@@ -199,7 +199,7 @@ public class MCPoint {
         return counter;
     }
 
-     public void resetMessagesUnreadFlag() {
+    public void resetMessagesUnreadFlag() {
         for (int i : messages.keySet()) {
             messages.get(i).unread = false;
         }
@@ -319,7 +319,7 @@ public class MCPoint {
         }
     }
 
-    public boolean isVisible(){
-        return (getDistanceFromUser() < prefs.getVisibleDistance()*1000) && prefs.toShowAccType(type);
+    public boolean isVisible() {
+        return (getDistanceFromUser() < prefs.getVisibleDistance() * 1000) && prefs.toShowAccType(type);
     }
 }

@@ -3,8 +3,8 @@ package motocitizen.Activity;
 import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -156,7 +156,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
 
         fineAddressButton = (Button) findViewById(R.id.mc_create_fine_address_button);
         fineAddressButton.setOnClickListener(this);
-        fineAddressConfirm = (Button)findViewById(R.id.mc_create_fine_address_confirm);
+        fineAddressConfirm = (Button) findViewById(R.id.mc_create_fine_address_confirm);
         fineAddressConfirm.setOnClickListener(this);
 
         typeOtherButton = (Button) findViewById(R.id.mc_create_type_other_button);
@@ -168,25 +168,25 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
         typeAccButton = (Button) findViewById(R.id.mc_create_type_acc_button);
         typeAccButton.setOnClickListener(this);
 
-        accMmButton = (Button)findViewById(R.id.mc_create_acc_mm_button);
+        accMmButton = (Button) findViewById(R.id.mc_create_acc_mm_button);
         accMmButton.setOnClickListener(this);
 
-        accMpButton = (Button)findViewById(R.id.mc_create_acc_mp_button);
+        accMpButton = (Button) findViewById(R.id.mc_create_acc_mp_button);
         accMpButton.setOnClickListener(this);
-        accSoloButton= (Button)findViewById(R.id.mc_create_acc_solo_button);
+        accSoloButton = (Button) findViewById(R.id.mc_create_acc_solo_button);
         accSoloButton.setOnClickListener(this);
-        accMaButton= (Button)findViewById(R.id.mc_create_acc_ma_button);
+        accMaButton = (Button) findViewById(R.id.mc_create_acc_ma_button);
         accMaButton.setOnClickListener(this);
 
-        peopleDeathButton= (Button)findViewById(R.id.mc_create_people_death_button);
+        peopleDeathButton = (Button) findViewById(R.id.mc_create_people_death_button);
         peopleDeathButton.setOnClickListener(this);
-        peopleHardButton= (Button)findViewById(R.id.mc_create_people_hard_button);
+        peopleHardButton = (Button) findViewById(R.id.mc_create_people_hard_button);
         peopleHardButton.setOnClickListener(this);
-        peopleLightButton= (Button)findViewById(R.id.mc_create_people_light_button);
+        peopleLightButton = (Button) findViewById(R.id.mc_create_people_light_button);
         peopleLightButton.setOnClickListener(this);
-        peopleNaButton= (Button)findViewById(R.id.mc_create_people_na_button);
+        peopleNaButton = (Button) findViewById(R.id.mc_create_people_na_button);
         peopleNaButton.setOnClickListener(this);
-        peopleOkButton = (Button)findViewById(R.id.mc_create_people_ok_button);
+        peopleOkButton = (Button) findViewById(R.id.mc_create_people_ok_button);
         peopleOkButton.setOnClickListener(this);
 
         globalView = findViewById(R.id.mc_create_main);
@@ -324,7 +324,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
         confirm.setEnabled(true);
         med = "mc_m_na";
         int id = v.getId();
-        Button btn = (Button)findViewById(id);
+        Button btn = (Button) findViewById(id);
 
         //TODO switch case
         if (id == R.id.mc_create_type_acc_button) {
@@ -400,7 +400,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
         } else if (id == R.id.mc_create_cancel) {
             //TODO Добавить подтверждение
             finish();
-        } else if(id == R.id.mc_create_create) {
+        } else if (id == R.id.mc_create_create) {
             OnConfirm();
         }
         writeGlobal();

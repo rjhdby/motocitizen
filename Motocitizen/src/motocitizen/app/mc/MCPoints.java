@@ -3,7 +3,6 @@ package motocitizen.app.mc;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.location.Location;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -20,9 +19,9 @@ import motocitizen.main.R;
 import motocitizen.network.JSONCall;
 import motocitizen.network.JsonRequest;
 import motocitizen.startup.MCPreferences;
-//import motocitizen.startup.Startup;
-import motocitizen.utils.Configuration;
 import motocitizen.utils.Const;
+
+//import motocitizen.startup.Startup;
 
 @SuppressLint("UseSparseArrays")
 public class MCPoints {
@@ -34,13 +33,13 @@ public class MCPoints {
     private MCPreferences prefs;
     private static Context context;
 
-  public MCPoints(Context context) {
+    public MCPoints(Context context) {
         error = "ok";
         if (points == null) {
             points = new HashMap<>();
         }
-this.context = context;
-      prefs = new MCPreferences(context);
+        this.context = context;
+        prefs = new MCPreferences(context);
     }
 
     public boolean containsKey(int id) {
@@ -98,7 +97,7 @@ this.context = context;
             selector.put("update", "1");
         }
 
-        return  new JsonRequest("mcaccidents", "getlist", selector, "list", false);
+        return new JsonRequest("mcaccidents", "getlist", selector, "list", false);
     }
 
     private void parseJSON(JSONArray json) throws JSONException {

@@ -1,7 +1,6 @@
 package motocitizen.app.mc;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -19,8 +18,8 @@ import java.util.Map;
 import motocitizen.main.R;
 import motocitizen.network.GeoCodeRequest;
 import motocitizen.network.JsonRequest;
-import motocitizen.startup.Startup;
 import motocitizen.startup.MCPreferences;
+import motocitizen.startup.Startup;
 import motocitizen.utils.Text;
 
 public class MCLocation {
