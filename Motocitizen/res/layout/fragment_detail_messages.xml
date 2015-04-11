@@ -55,8 +55,8 @@
                     android:layout_gravity="bottom"
                     android:layout_weight="1"
                     android:enabled="false"
+                    android:visibility="visible"
                     android:text="@string/mc_auth_confirm_button" />
         </LinearLayout>
     </LinearLayout>
-
 </FrameLayout>

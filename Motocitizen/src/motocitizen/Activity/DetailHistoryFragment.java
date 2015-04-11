@@ -3,47 +3,24 @@ package motocitizen.Activity;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import motocitizen.app.mc.MCAccidents;
+import motocitizen.app.mc.MCPointHistory;
 import motocitizen.main.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link DetailHistoryFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link DetailHistoryFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class DetailHistoryFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+public class DetailHistoryFragment extends AccidentDetailsFragments {
 
     private OnFragmentInteractionListener mListener;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DetailHistoryFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static DetailHistoryFragment newInstance(String param1, String param2) {
+    private View mcDetLogContent;
+
+    public static DetailHistoryFragment newInstance(int param1) {
         DetailHistoryFragment fragment = new DetailHistoryFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putInt(ACCIDENT_ID, param1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,23 +33,21 @@ public class DetailHistoryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            accidentID = getArguments().getInt(ACCIDENT_ID);
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_detail_history, container, false);
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (getArguments() != null) {
+            accidentID = getArguments().getInt(ACCIDENT_ID);
         }
+
+        View viewMain = inflater.inflate(R.layout.fragment_detail_history, container, false);
+        mcDetLogContent = viewMain.findViewById(R.id.mc_det_log_content);
+
+        update();
+        return viewMain;
     }
 
     @Override
@@ -107,4 +82,14 @@ public class DetailHistoryFragment extends Fragment {
         public void onFragmentInteraction(Uri uri);
     }
 
+    protected void update() {
+        super.update();
+        currentPoint = MCAccidents.points.getPoint(accidentID);
+        ViewGroup logView = (ViewGroup) mcDetLogContent;
+        logView.removeAllViews();
+        logView.addView(MCPointHistory.createHeader(getActivity()));
+        for (int i : currentPoint.getSortedHistoryKeys()) {
+            logView.addView(currentPoint.history.get(i).createRow(getActivity()));
+        }
+    }
 }

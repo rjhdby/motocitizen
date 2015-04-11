@@ -1,49 +1,34 @@
 package motocitizen.Activity;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.ActionBarActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.RadioGroup;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCPoint;
-import motocitizen.app.mc.MCPointHistory;
-import motocitizen.app.mc.MCVolunteer;
 import motocitizen.app.mc.popups.MCAccListPopup;
-import motocitizen.app.mc.user.MCRole;
 import motocitizen.main.R;
-import motocitizen.network.JsonRequest;
-import motocitizen.network.OnwayRequest;
-import motocitizen.network.SendMessageRequest;
 import motocitizen.startup.MCPreferences;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 
-import static motocitizen.app.mc.MCAccidents.getDelimiterRow;
-
-public class AccidentDetailsActivity extends FragmentActivity implements View.OnClickListener, DetailMessagesFragment.OnFragmentInteractionListener {
+public class AccidentDetailsActivity
+        extends FragmentActivity
+        implements DetailMessagesFragment.OnFragmentInteractionListener,
+        DetailHistoryFragment.OnFragmentInteractionListener,
+        DetailVolunteersFragment.OnFragmentInteractionListener {
 
     /*
     Инцидент с которым работаем
@@ -51,11 +36,11 @@ public class AccidentDetailsActivity extends FragmentActivity implements View.On
     private int accidentID;
 
 
-    //DetailVolunteersFragment detailVolunteersFragment;
+    DetailVolunteersFragment detailVolunteersFragment;
     DetailMessagesFragment detailMessagesFragment;
-    //DetailHistoryFragment DetailHistoryFragment;
+    DetailHistoryFragment detailHistoryFragment;
 
-    private Button onwayButton;
+    //private Button onwayButton;
     //private Button newMessageButton;
     //private EditText mcNewMessageText;
 /*
@@ -85,9 +70,9 @@ public class AccidentDetailsActivity extends FragmentActivity implements View.On
         Bundle b = getIntent().getExtras();
         accidentID = b.getInt("accidentID");
 
-        //detailVolunteersFragment = new DetailVolunteersFragment();
+        detailVolunteersFragment = detailVolunteersFragment.newInstance(accidentID);
         detailMessagesFragment = detailMessagesFragment.newInstance(accidentID);
-        //DetailHistoryFragment = new DetailHistoryFragment();
+        detailHistoryFragment = detailHistoryFragment.newInstance(accidentID);
 
 //        newMessageButton = (Button) findViewById(R.id.mc_new_message_send);
 //        newMessageButton.setOnClickListener(this);
@@ -108,9 +93,8 @@ public class AccidentDetailsActivity extends FragmentActivity implements View.On
         /*
         * Описание группы закладок внутри деталей происшествия
         */
-
-//        RadioGroup mcDetTabsGroup = (RadioGroup) findViewById(R.id.mc_det_tabs_group);
-//        mcDetTabsGroup.setOnCheckedChangeListener(accDetTabsListener);
+        RadioGroup mcDetTabsGroup = (RadioGroup) findViewById(R.id.mc_det_tabs_group);
+        mcDetTabsGroup.setOnCheckedChangeListener(accDetTabsListener);
 /*
         detMessages = findViewById(R.id.det_messages);
         detHistory = findViewById(R.id.det_history);
@@ -124,7 +108,7 @@ public class AccidentDetailsActivity extends FragmentActivity implements View.On
         generalDescription = (TextView) findViewById(R.id.acc_details_general_description);
 //        ((ScrollView) findViewById(R.id.mc_det_messages_scroll)).fullScroll(View.FOCUS_UP);
 
-        getFragmentManager().beginTransaction().replace(R.id.mc_det_tab_content, detailMessagesFragment).commit();
+        getFragmentManager().beginTransaction().replace(R.id.mc_det_tab_content, detailVolunteersFragment).commit();
     }
 
     @Override
@@ -192,11 +176,9 @@ public class AccidentDetailsActivity extends FragmentActivity implements View.On
         for (int i : currentPoint.getSortedHistoryKeys()) {
             logView.addView(currentPoint.history.get(i).createRow(this));
         }
+*/
         Startup.map.zoom(16);
         Startup.map.jumpToPoint(currentPoint.location);
-
-        setupAccess();
-        */
     }
 
     @Override
@@ -228,15 +210,15 @@ public class AccidentDetailsActivity extends FragmentActivity implements View.On
         return super.onOptionsItemSelected(item);
     }
 
-    private void setupAccess() {
-        View newMessageArea = findViewById(R.id.mc_new_message_area);
-
-        if (MCRole.isStandart()) {
-            newMessageArea.setVisibility(View.VISIBLE);
-        } else {
-            newMessageArea.setVisibility(View.INVISIBLE);
-        }
-    }
+//    private void setupAccess() {
+//        View newMessageArea = findViewById(R.id.mc_new_message_area);
+//
+//        if (MCRole.isStandart()) {
+//            newMessageArea.setVisibility(View.VISIBLE);
+//        } else {
+//            newMessageArea.setVisibility(View.INVISIBLE);
+//        }
+//    }
 
     private final View.OnLongClickListener detLongClick = new View.OnLongClickListener() {
         @Override
@@ -251,18 +233,14 @@ public class AccidentDetailsActivity extends FragmentActivity implements View.On
     private final RadioGroup.OnCheckedChangeListener accDetTabsListener = new RadioGroup.OnCheckedChangeListener() {
         public void onCheckedChanged(RadioGroup group, int checkedId) {
             int id = group.getCheckedRadioButtonId();
-            /*
-            detMessages.setVisibility(View.INVISIBLE);
-            detHistory.setVisibility(View.INVISIBLE);
-            detVolunteers.setVisibility(View.INVISIBLE);
+
             if (id == R.id.mc_det_tab_messages) {
-                detMessages.setVisibility(View.VISIBLE);
+                getFragmentManager().beginTransaction().replace(R.id.mc_det_tab_content, detailMessagesFragment).commit();
             } else if (id == R.id.mc_det_tab_history) {
-                detHistory.setVisibility(View.VISIBLE);
+                getFragmentManager().beginTransaction().replace(R.id.mc_det_tab_content, detailHistoryFragment).commit();
             } else if (id == R.id.mc_det_tab_people) {
-                detVolunteers.setVisibility(View.VISIBLE);
+                getFragmentManager().beginTransaction().replace(R.id.mc_det_tab_content, detailVolunteersFragment).commit();
             }
-            */
         }
     };
 
@@ -297,6 +275,7 @@ public class AccidentDetailsActivity extends FragmentActivity implements View.On
                     MCAccidents.setOnwayID(currentId);
                     MCAccidents.refresh(Startup.context);
                     update();
+                    detailVolunteersFragment.notifyDataSetChanged();
                     return;
                 }
             } catch (JSONException e) {
@@ -307,15 +286,12 @@ public class AccidentDetailsActivity extends FragmentActivity implements View.On
             Toast.makeText(this, Startup.context.getString(R.string.send_error), Toast.LENGTH_LONG).show();
         }
     }
-
+/*
     @Override
     public void onClick(View v) {
         int id = v.getId();
 
         switch (id) {
-            case R.id.mc_new_message_send:
-                OnNewMessageSendButton(v);
-                break;
             case R.id.onway_button:
                 OnWayButton();
                 break;
@@ -327,81 +303,55 @@ public class AccidentDetailsActivity extends FragmentActivity implements View.On
                 break;
         }
     }
+*/
+//    public void OnNewMessageSendButton(View v) {
+//        detailMessagesFragment.myClickMethod(v);
+//    }
 
-    public void OnNewMessageSendButton(View v) {
-        detailMessagesFragment.myClickMethod(v);
-    }
-
-    private void jumpToMap() {
+    public void jumpToMap() {
         Intent intent = new Intent(this, Startup.class);
         intent.putExtra("toMap", MCAccidents.currentPoint.id);
         intent.putExtra("fromDetails", true);
         this.startActivity(intent);
     }
-/*
-    void OnNewMessageSendButton() {
-        if (Startup.isOnline()) {
-            String text = mcNewMessageText.getText().toString();
-            int currentId = MCAccidents.currentPoint.id;
-            Map<String, String> post = new HashMap<>();
-            post.put("login", prefs.getLogin());
-            post.put("passhash", MCAccidents.auth.makePassHash());
-            post.put("id", String.valueOf(currentId));
-            post.put("text", text);
-            JsonRequest request = new JsonRequest("mcaccidents", "message", post, "", true);
-            if (request != null) {
-                (new SendMessageRequest(this, currentId)).execute(request);
-            }
-        } else {
-            Toast.makeText(this, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
-        }
-    }
-*/
-    void OnWayButton() {
-        if (Startup.isOnline()) {
-            int currentId = MCAccidents.currentPoint.id;
-            Map<String, String> post = new HashMap<>();
-            post.put("login", prefs.getLogin());
-            post.put("passhash", MCAccidents.auth.makePassHash());
-            post.put("id", String.valueOf(currentId));
-            JsonRequest request = new JsonRequest("mcaccidents", "onway", post, "", true);
-            if (request != null) {
-                (new OnwayRequest(this, currentId)).execute(request);
-            }
-        } else {
-            Toast.makeText(this, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
-        }
-    }
 
     /*
-        private final TextWatcher mcNewMessageTextListener = new TextWatcher() {
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String temp = s.toString().replaceAll("\\s", "");
-                if (temp.length() == 0) {
-                    newMessageButton.setEnabled(false);
-                } else {
-                    newMessageButton.setEnabled(true);
+        void OnNewMessageSendButton() {
+            if (Startup.isOnline()) {
+                String text = mcNewMessageText.getText().toString();
+                int currentId = MCAccidents.currentPoint.id;
+                Map<String, String> post = new HashMap<>();
+                post.put("login", prefs.getLogin());
+                post.put("passhash", MCAccidents.auth.makePassHash());
+                post.put("id", String.valueOf(currentId));
+                post.put("text", text);
+                JsonRequest request = new JsonRequest("mcaccidents", "message", post, "", true);
+                if (request != null) {
+                    (new SendMessageRequest(this, currentId)).execute(request);
                 }
+            } else {
+                Toast.makeText(this, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
             }
+        }
 
-            @Override
-            public void afterTextChanged(Editable s) {
+        void OnWayButton() {
+            if (Startup.isOnline()) {
+                int currentId = MCAccidents.currentPoint.id;
+                Map<String, String> post = new HashMap<>();
+                post.put("login", prefs.getLogin());
+                post.put("passhash", MCAccidents.auth.makePassHash());
+                post.put("id", String.valueOf(currentId));
+                JsonRequest request = new JsonRequest("mcaccidents", "onway", post, "", true);
+                if (request != null) {
+                    (new OnwayRequest(this, currentId)).execute(request);
+                }
+            } else {
+                Toast.makeText(this, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
             }
-        };
+        }
     */
-
     @Override
     public void onFragmentInteraction(Uri uri) {
 
-    }
-
-    public int getAccidentID() {
-        return accidentID;
     }
 }

@@ -3,7 +3,6 @@ package motocitizen.Activity;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -11,43 +10,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import motocitizen.app.mc.MCAccidents;
-import motocitizen.app.mc.MCMessage;
-import motocitizen.app.mc.MCPoint;
+import motocitizen.app.mc.user.MCRole;
 import motocitizen.main.R;
-import motocitizen.messages.MessageListAdapter;
 import motocitizen.network.JsonRequest;
 import motocitizen.network.SendMessageRequest;
 import motocitizen.startup.Startup;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link DetailMessagesFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link DetailMessagesFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class DetailMessagesFragment extends Fragment implements XmlClickable {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ACCIDENT_ID = "accidentID";
-
-    // TODO: Rename and change types of parameters
-    private int accidentID;
+public class DetailMessagesFragment extends AccidentDetailsFragments {
 
     private OnFragmentInteractionListener mListener;
 
     private Button newMessageButton;
     private EditText mcNewMessageText;
+
+    View newMessageArea;
 
     /// Сообщения
     //private List<MCMessage> records = new ArrayList();
@@ -56,18 +38,8 @@ public class DetailMessagesFragment extends Fragment implements XmlClickable {
     /// Адаптер для отображения сообщений
     //private MessageListAdapter adapter;
 
-    private MCPoint currentPoint;
     private View mcDetMessagesTable;
 
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @return A new instance of fragment DetailMessagesFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static DetailMessagesFragment newInstance(int param1) {
         DetailMessagesFragment fragment = new DetailMessagesFragment();
         Bundle args = new Bundle();
@@ -86,12 +58,6 @@ public class DetailMessagesFragment extends Fragment implements XmlClickable {
         if (getArguments() != null) {
             accidentID = getArguments().getInt(ACCIDENT_ID);
         }
-
-        //newMessageButton = (Button) getActivity().findViewById(R.id.mc_new_message_send);
-
-        //mcNewMessageText = (EditText) getActivity().findViewById(R.id.mc_new_message_text);
-        //mcNewMessageText.addTextChangedListener(mcNewMessageTextListener);
-
     }
 
     @Override
@@ -116,7 +82,7 @@ public class DetailMessagesFragment extends Fragment implements XmlClickable {
                     post.put("text", text);
                     JsonRequest request = new JsonRequest("mcaccidents", "message", post, "", true);
                     if (request != null) {
-                        (new SendMessageRequest((AccidentDetailsActivity)getActivity(), currentId)).execute(request);
+                        (new SendMessageRequest((AccidentDetailsActivity) getActivity(), currentId)).execute(request);
                     }
                 } else {
                     Toast.makeText(getActivity(), getActivity().getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
@@ -130,20 +96,9 @@ public class DetailMessagesFragment extends Fragment implements XmlClickable {
 
         mcDetMessagesTable = viewMain.findViewById(R.id.mc_det_messages_table);
 
+        newMessageArea = viewMain.findViewById(R.id.mc_new_message_area);
 
-//        newMessageButton = (Button) findViewById(R.id.mc_new_message_send);
-//        newMessageButton.setOnClickListener(this);
-
-        // Inflate the layout for this fragment
-        //return inflater.inflate(R.layout.fragment_detail_messages, container, false);
-
-
-        //currentPoint = MCAccidents.currentPoint;
         update();
-//        for(Map.Entry<Integer, MCMessage> entry : currentPoint.messages.entrySet()) {
-//            MCMessage value = entry.getValue();
-//            records.add(value);
-//        }
 
 //  ListAdapter
 /*
@@ -155,8 +110,8 @@ public class DetailMessagesFragment extends Fragment implements XmlClickable {
         return viewMain;
     }
 
-    private void update() {
-        currentPoint = MCAccidents.points.getPoint(accidentID);
+    protected void update() {
+        super.update();
 //  ListAdapter
 /*
         if(records.size() > 0) {
@@ -172,9 +127,10 @@ public class DetailMessagesFragment extends Fragment implements XmlClickable {
         for (int i : currentPoint.getSortedMessagesKeys()) {
             messageView.addView(currentPoint.messages.get(i).createRow(getActivity()));
         }
+        setupAccess();
     }
 
-    public void notifyDataSetChanged () {
+    public void notifyDataSetChanged() {
         update();
 //  ListAdapter
 //        adapter.notifyDataSetChanged();
@@ -218,15 +174,6 @@ public class DetailMessagesFragment extends Fragment implements XmlClickable {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-
-/*        View view = inflater.inflate(R.layout.fragment_detail_messages, container, false);
-        view.findViewById(R.id.mc_acc_details_general).setOnLongClickListener(detLongClick);
-        ViewGroup messageView = (ViewGroup) mcDetMessagesTable;
-        messageView.removeAllViews();
-        for (int i : currentPoint.getSortedMessagesKeys()) {
-            messageView.addView(currentPoint.messages.get(i).createRow(this));
-        }
-*/
     }
 
     @Override
@@ -250,24 +197,11 @@ public class DetailMessagesFragment extends Fragment implements XmlClickable {
         public void onFragmentInteraction(Uri uri);
     }
 
-    public void myClickMethod(View v) {
-            /*
-
-        if (Startup.isOnline()) {
-            String text = mcNewMessageText.getText().toString();
-            int currentId = MCAccidents.currentPoint.id;
-            Map<String, String> post = new HashMap<>();
-            post.put("login", MCAccidents.auth.getLogin());
-            post.put("passhash", MCAccidents.auth.makePassHash());
-            post.put("id", String.valueOf(currentId));
-            post.put("text", text);
-            JsonRequest request = new JsonRequest("mcaccidents", "message", post, "", true);
-            if (request != null) {
-                (new SendMessageRequest(this, currentId)).execute(request);
-            }
+    public void setupAccess() {
+        if (MCRole.isStandart()) {
+            newMessageArea.setVisibility(View.VISIBLE);
         } else {
-            Toast.makeText(this, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
+            newMessageArea.setVisibility(View.INVISIBLE);
         }
-        */
     }
 }
