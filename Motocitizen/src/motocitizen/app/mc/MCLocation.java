@@ -26,10 +26,12 @@ import motocitizen.utils.Text;
 public class MCLocation {
     private static final String TAG = "LOCATION";
     public static Location current;
+    private static MCPreferences prefs;
     private static final com.google.android.gms.location.LocationListener FusionLocationListener = new com.google.android.gms.location.LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
             current = location;
+            prefs.saveLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
             requestAddress(context);
         }
     };
@@ -55,7 +57,7 @@ public class MCLocation {
             }
             Log.d(TAG, "Connected");
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, FusionLocationListener);
-            current = getBestFusionLocation(context);
+            current = getBestFusionLocation();
         }
 
         @Override
@@ -66,20 +68,22 @@ public class MCLocation {
 
     public MCLocation(Context context) {
         MCLocation.context = context;
+        prefs = new MCPreferences(context);
         disconnectRequest = false;
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(5000);
         mLocationRequest.setFastestInterval(1000);
         mLocationRequest.setSmallestDisplacement(10);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        current = getBestFusionLocation(context);
+        current = getBestFusionLocation();
+
         // zz
         // requestAddress(context);
         //zz
         //Startup.map.jumpToPoint(current);
     }
 
-    public static Location getBestFusionLocation(Context context) {
+    public static Location getBestFusionLocation() {
         Location last = null;
         double lastLon, lastLat;
         if (mGoogleApiClient != null) {
@@ -88,7 +92,6 @@ public class MCLocation {
         if (last == null) {
             //TODO Грязный хак, нужно придумать как работать без имени файла
             //SharedPreferences prefs = context.getSharedPreferences("motocitizen.main_preferences", Context.MODE_PRIVATE);
-            MCPreferences prefs = new MCPreferences(context);
             last = new Location(LocationManager.NETWORK_PROVIDER);
 /*            if (prefs == null) {
                 lastLon = 37.622735;
@@ -147,7 +150,7 @@ public class MCLocation {
 
     private static void requestAddress(Context context) {
         if (Startup.isOnline()) {
-            Location location = getBestFusionLocation(context);
+            Location location = getBestFusionLocation();
             if (current == location) {
                 return;
             }
