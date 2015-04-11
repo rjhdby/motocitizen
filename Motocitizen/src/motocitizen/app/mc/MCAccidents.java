@@ -153,6 +153,7 @@ public class MCAccidents {
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     public static TableRow getDelimiterRow(Context context, String text) {
         TableRow tr = new TableRow(context);
         TextView tw = new TextView(tr.getContext());
@@ -216,6 +217,6 @@ public class MCAccidents {
     }
 
     public static JsonRequest getLoadPointsRequest() {
-        return points.getLoadRequet();
+        return points.getLoadRequest();
     }
 }

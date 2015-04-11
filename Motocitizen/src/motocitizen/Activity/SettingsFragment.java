@@ -65,7 +65,7 @@ public class SettingsFragment extends PreferenceFragment{
         nottifAlarmPreference.setSummary(prefs.getString("mc.distance.alarm", "20"));
     }
 
-    final Preference.OnPreferenceChangeListener mapProviderListener = new Preference.OnPreferenceChangeListener() {
+    private final Preference.OnPreferenceChangeListener mapProviderListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             mapProviderPreference.setValue(newValue.toString());
@@ -75,7 +75,7 @@ public class SettingsFragment extends PreferenceFragment{
         }
     };
 
-    final Preference.OnPreferenceChangeListener distanceListener = new Preference.OnPreferenceChangeListener() {
+    private final Preference.OnPreferenceChangeListener distanceListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             String value = (String) newValue;

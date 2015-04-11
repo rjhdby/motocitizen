@@ -262,7 +262,7 @@ public class AccidentDetailsActivity extends FragmentActivity implements View.On
             try {
                 String result = json.getString("result");
                 if (result.equals("OK")) {
-                    Toast.makeText(this, Startup.context.getString(R.string.send_succsess), Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, Startup.context.getString(R.string.send_success), Toast.LENGTH_LONG).show();
                     MCAccidents.refresh(Startup.context);
                     update();
                     detailMessagesFragment.notifyDataSetChanged();
@@ -284,7 +284,7 @@ public class AccidentDetailsActivity extends FragmentActivity implements View.On
             try {
                 String result = json.getString("result");
                 if (result.equals("OK")) {
-                    Toast.makeText(this, Startup.context.getString(R.string.send_succsess), Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, Startup.context.getString(R.string.send_success), Toast.LENGTH_LONG).show();
                     MCAccidents.setOnwayID(currentId);
                     MCAccidents.refresh(Startup.context);
                     update();
@@ -314,7 +314,7 @@ public class AccidentDetailsActivity extends FragmentActivity implements View.On
                 jumpToMap();
                 break;
             default:
-                Log.e("AccidentDetailsActivity", "Unknow button pressed");
+                Log.e("AccidentDetailsActivity", "Unknown button pressed");
                 break;
         }
     }
@@ -330,7 +330,6 @@ public class AccidentDetailsActivity extends FragmentActivity implements View.On
         this.startActivity(intent);
     }
 
-
     void OnWayButton() {
         if (Startup.isOnline()) {
             int currentId = MCAccidents.currentPoint.id;
@@ -343,7 +342,7 @@ public class AccidentDetailsActivity extends FragmentActivity implements View.On
                 (new OnwayRequest(this, currentId)).execute(request);
             }
         } else {
-            Toast.makeText(this, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
         }
     }
 

@@ -28,9 +28,4 @@ public class Text {
         };
         ((Activity) context).runOnUiThread(update);
     }
-
-    public static String get(final Context context, int id) {
-        TextView v = (TextView) ((Activity) context).findViewById(id);
-        return v.getText().toString();
-    }
 }

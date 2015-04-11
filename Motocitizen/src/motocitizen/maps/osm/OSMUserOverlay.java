@@ -10,7 +10,7 @@ import motocitizen.app.mc.MCLocation;
 import motocitizen.main.R;
 import motocitizen.startup.Startup;
 
-public class OSMUserOverlay {
+class OSMUserOverlay {
     public static ItemizedIconOverlay<OverlayItem> getUserOverlay() {
         ArrayList<OverlayItem> items;
         OverlayItem user;

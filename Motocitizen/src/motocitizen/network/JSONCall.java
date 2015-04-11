@@ -125,7 +125,7 @@ public class JSONCall {
             Log.d("JSON RESPONSE", reader.toString());
             return reader;
         } else {
-            Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
+            Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
             return new JSONObject();
         }
     }

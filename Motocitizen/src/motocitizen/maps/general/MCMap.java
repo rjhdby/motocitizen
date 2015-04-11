@@ -14,6 +14,7 @@ import android.location.Location;
 
         public abstract void jumpToPoint(Location location);
 
+        @SuppressWarnings("SameParameterValue")
         public abstract void zoom(int zoom);
 
         public abstract void placeAcc(Context context);

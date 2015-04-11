@@ -122,7 +122,7 @@ public class DetailMessagesFragment extends Fragment implements XmlClickable {
                         (new SendMessageRequest((AccidentDetailsActivity)getActivity(), currentId)).execute(request);
                     }
                 } else {
-                    Toast.makeText(getActivity(), getActivity().getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), getActivity().getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
                 }
 
             }

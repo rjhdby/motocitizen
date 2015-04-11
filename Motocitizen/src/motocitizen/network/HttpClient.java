@@ -31,16 +31,15 @@ import motocitizen.startup.Startup;
  */
 public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
 
-    public ProgressDialog dialog;
-    private String info;
-    private Context context;
+    ProgressDialog dialog;
+    private final String info;
+    private final Context context;
 
     public HttpClient(Context context, String info) {
         this.info = info;
         this.context = context;
     }
 
-    private final static String APP = Startup.props.get("default.app");
     private final static String CHARSET = "UTF-8";
     private final static String USERAGENT = "Mozilla/5.0 (Linux; Android 4.4; Nexus 5 Build/_BuildID_) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/30.0.0.0 Mobile Safari/537.36";
     private URL url;
@@ -71,6 +70,7 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
         return result;
     }
 
+    @SuppressWarnings("SameParameterValue")
     public void createUrl(String app, String method, Boolean https) {
         String protocol;
         if (https) {

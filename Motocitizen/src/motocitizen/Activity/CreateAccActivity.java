@@ -42,6 +42,7 @@ import motocitizen.utils.Keyboard;
 import motocitizen.utils.MCUtils;
 import motocitizen.utils.Text;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class CreateAccActivity extends ActionBarActivity implements View.OnClickListener {
     private Button back;
     private Button confirm;
@@ -260,7 +261,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
             String result = "error";
             try {
                 result = json.getString("result");
-                Toast.makeText(this, this.getString(R.string.send_succsess), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, this.getString(R.string.send_success), Toast.LENGTH_LONG).show();
                 finish();
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -281,7 +282,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
                 (new CreateAccidentRequest(this)).execute(request);
             }
         } else {
-            Toast.makeText(this, this.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, this.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -311,7 +312,6 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
         return super.onOptionsItemSelected(item);
     }
 
@@ -410,7 +410,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
                 (new GeoCodeNewRequest(this)).execute(request);
             }
         } else {
-            Toast.makeText(this, this.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, this.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
         }
     }
 

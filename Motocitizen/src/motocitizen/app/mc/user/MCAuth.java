@@ -29,7 +29,7 @@ public class MCAuth {
         }
     }
 
-    public void reset() {
+    void reset() {
         name = "";
         role = "";
         id = 0;
@@ -131,9 +131,5 @@ public class MCAuth {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    public void setName() {
-        Startup.prefs.edit().putString("mc.name", name).commit();
     }
 }

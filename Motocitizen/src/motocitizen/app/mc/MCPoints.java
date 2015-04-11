@@ -30,7 +30,7 @@ public class MCPoints {
     private static final int ENDED = R.drawable.accident_row_gradient_ended;
     public final String error;
     private Map<Integer, MCPoint> points;
-    private SharedPreferences prefs;
+    private final SharedPreferences prefs;
 
   public MCPoints(SharedPreferences prefs) {
         error = "ok";
@@ -82,7 +82,7 @@ public class MCPoints {
         }
     }
 
-    public JsonRequest getLoadRequet() {
+    public JsonRequest getLoadRequest() {
         Map<String, String> selector = new HashMap<>();
         Location userLocation = MCLocation.current;
         selector.put("distance", Configuration.getShowDistance(prefs));

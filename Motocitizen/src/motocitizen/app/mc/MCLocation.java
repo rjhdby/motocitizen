@@ -156,7 +156,7 @@ public class MCLocation {
                 (new GeoCodeRequest(Startup.context)).execute(request);
             }
         } else {
-            Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
+            Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
         }
     }
 }
