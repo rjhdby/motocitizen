@@ -2,15 +2,15 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
+             android:orientation="vertical"
+             android:weightSum="1"
              tools:context="motocitizen.Activity.DetailMessagesFragment">
 
     <ListView
             android:id="@+id/message_list"
             android:layout_width="match_parent"
-            android:layout_height="228dp"
-            android:dividerHeight="1dip"
-            android:padding="4dip"
-            android:layout_gravity="top|bottom|center_vertical"/>
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
 
     <LinearLayout
             android:id="@+id/mc_new_message_area"
