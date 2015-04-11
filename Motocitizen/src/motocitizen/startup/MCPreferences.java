@@ -173,14 +173,14 @@ public class MCPreferences {
         if (distance > Const.EQUATOR) {
             distance = Const.EQUATOR;
         }
-        preferences.edit().putInt(distanceShow, distance).commit();
+        preferences.edit().putString(distanceShow, String.valueOf(distance)).commit();
     }
 
     public void setAlarmDistance(int distance) {
         if (distance > Const.EQUATOR) {
             distance = Const.EQUATOR;
         }
-        preferences.edit().putInt(distanceAlarm, distance).commit();
+        preferences.edit().putString(distanceAlarm, String.valueOf(distance)).commit();
     }
 
     public void setLogin(String value) {

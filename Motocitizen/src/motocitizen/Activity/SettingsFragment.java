@@ -9,23 +9,28 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
 import motocitizen.main.R;
+import motocitizen.startup.MCPreferences;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Configuration;
 import motocitizen.utils.Const;
 
 public class SettingsFragment extends PreferenceFragment{
 
-    private SharedPreferences prefs;
     private ListPreference mapProviderPreference;
     private Preference nottifDistPreference, nottifAlarmPreference;
     private Preference authPreference,nottifSoundPreference;
+    private MCPreferences prefs;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.preferences);
+        prefs = new MCPreferences(Startup.context);
+        update();
+    }
 
-        prefs = PreferenceManager.getDefaultSharedPreferences(Startup.context);
+    private void update(){
+        setPreferenceScreen(null);
+        addPreferencesFromResource(R.xml.preferences);
         Preference buttonAuth = findPreference(getResources().getString(R.string.mc_settings_auth_button));
         buttonAuth.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -53,16 +58,16 @@ public class SettingsFragment extends PreferenceFragment{
         mapProviderPreference.setOnPreferenceChangeListener(mapProviderListener);
         nottifDistPreference.setOnPreferenceChangeListener(distanceListener);
         nottifAlarmPreference.setOnPreferenceChangeListener(distanceListener);
+        authPreference.setSummary(prefs.getLogin());
+        nottifSoundPreference.setSummary(prefs.getAlarmSoundTitle());
+        nottifDistPreference.setSummary(String.valueOf(prefs.getVisibleDistance()));
+        nottifAlarmPreference.setSummary(String.valueOf(prefs.getAlarmDistance()));
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        //TODO Сделать однообразно
-        authPreference.setSummary(prefs.getString("mc.login", ""));
-        nottifSoundPreference.setSummary(prefs.getString("mc.notification.sound.title", getString(R.string.mc_notif_system)));
-        nottifDistPreference.setSummary(prefs.getString("mc.distance.show", "200"));
-        nottifAlarmPreference.setSummary(prefs.getString("mc.distance.alarm", "20"));
+        update();
     }
 
     private final Preference.OnPreferenceChangeListener mapProviderListener = new Preference.OnPreferenceChangeListener() {
@@ -78,22 +83,23 @@ public class SettingsFragment extends PreferenceFragment{
     private final Preference.OnPreferenceChangeListener distanceListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
-            String value = (String) newValue;
+            String valueText = (String) newValue;
+            int value;
             String key = preference.getKey();
-            if (value.length() > 6) {
-                value = value.substring(0, 6);
+            if (valueText.length() > 6) {
+                valueText = valueText.substring(0, 6);
             }
-            try {
-                if (Integer.parseInt(value) > Const.EQUATOR) {
-                    value = String.valueOf(Const.EQUATOR);
+                value = Integer.parseInt(valueText);
+                if (value > Const.EQUATOR) {
+                    value = Const.EQUATOR;
                 }
-            } catch (Exception e) {
-                value = "200";
+
+            if(preference.equals(nottifDistPreference)){
+                prefs.setVisibleDistance(value);
+            } else if (preference.equals(nottifAlarmPreference)){
+                prefs.setAlarmDistance(value);
             }
-            preference.getSharedPreferences().edit().putString(key, value).commit();
-            preference.setSummary(value);
-            preference.getEditor().putString(key, value).commit();
-            preference.getLayoutResource();
+            update();
             return true;
         }
     };
