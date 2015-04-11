@@ -50,15 +50,15 @@ public class DetailMessagesFragment extends Fragment implements XmlClickable {
     private EditText mcNewMessageText;
 
     /// Сообщения
-    private List<MCMessage> records = new ArrayList();
-
+    //private List<MCMessage> records = new ArrayList();
     /* Список сообщений */
-    private ListView listView;
-
+    //private ListView listView;
     /// Адаптер для отображения сообщений
-    private MessageListAdapter adapter;
+    //private MessageListAdapter adapter;
 
     private MCPoint currentPoint;
+    private View mcDetMessagesTable;
+
 
     /**
      * Use this factory method to create a new instance of
@@ -128,6 +128,8 @@ public class DetailMessagesFragment extends Fragment implements XmlClickable {
         mcNewMessageText = (EditText) viewMain.findViewById(R.id.mc_new_message_text);
         mcNewMessageText.addTextChangedListener(mcNewMessageTextListener);
 
+        mcDetMessagesTable = viewMain.findViewById(R.id.mc_det_messages_table);
+
 
 //        newMessageButton = (Button) findViewById(R.id.mc_new_message_send);
 //        newMessageButton.setOnClickListener(this);
@@ -137,21 +139,26 @@ public class DetailMessagesFragment extends Fragment implements XmlClickable {
 
 
         //currentPoint = MCAccidents.currentPoint;
-        loadData();
+        update();
 //        for(Map.Entry<Integer, MCMessage> entry : currentPoint.messages.entrySet()) {
 //            MCMessage value = entry.getValue();
 //            records.add(value);
 //        }
 
+//  ListAdapter
+/*
+
         listView = (ListView)viewMain.findViewById(R.id.message_list);
         adapter = new MessageListAdapter(getActivity(), records);
         listView.setAdapter(adapter);
-
+*/
         return viewMain;
     }
 
-    private void loadData() {
+    private void update() {
         currentPoint = MCAccidents.points.getPoint(accidentID);
+//  ListAdapter
+/*
         if(records.size() > 0) {
             records.clear();
         }
@@ -159,11 +166,18 @@ public class DetailMessagesFragment extends Fragment implements XmlClickable {
             MCMessage value = entry.getValue();
             records.add(value);
         }
+*/
+        ViewGroup messageView = (ViewGroup) mcDetMessagesTable;
+        messageView.removeAllViews();
+        for (int i : currentPoint.getSortedMessagesKeys()) {
+            messageView.addView(currentPoint.messages.get(i).createRow(getActivity()));
+        }
     }
 
     public void notifyDataSetChanged () {
-        loadData();
-        adapter.notifyDataSetChanged();
+        update();
+//  ListAdapter
+//        adapter.notifyDataSetChanged();
         mcNewMessageText.setText("");
     }
 

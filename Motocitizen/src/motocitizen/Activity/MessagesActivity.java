@@ -46,10 +46,12 @@ public class MessagesActivity extends ActionBarActivity {
             MCMessage value = entry.getValue();
             records.add(value);
         }
-
+        // zz
+        /*
         listView = (ListView)findViewById(R.id.message_list);
         adapter = new MessageListAdapter(this,records);
         listView.setAdapter(adapter);
+        */
     }
 
 
