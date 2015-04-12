@@ -199,13 +199,6 @@ public class AccidentDetailsActivity
         if (id == R.id.action_map) {
             jumpToMap();
             return true;
-        } else if (id == R.id.action_newMessage) {
-            Intent intent = new Intent(this, MessagesActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putInt("messageID", MCAccidents.currentPoint.id);
-            intent.putExtras(bundle);
-            startActivity(intent);
-            return true;
         }
         return super.onOptionsItemSelected(item);
     }

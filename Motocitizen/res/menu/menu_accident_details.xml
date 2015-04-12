@@ -7,9 +7,4 @@
           android:title="@string/tab_map"
           android:orderInCategory="100"
           app:showAsAction="never"/>
-
-    <item android:id="@+id/action_newMessage"
-          android:title="@string/message"
-          android:orderInCategory="100"
-          app:showAsAction="never"/>
 </menu>
