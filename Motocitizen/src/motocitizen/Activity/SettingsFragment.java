@@ -110,7 +110,7 @@ public class SettingsFragment extends PreferenceFragment {
                 prefs.setAlarmDistance(value);
             }
             update();
-            return true;
+            return false;
         }
     };
 
@@ -123,7 +123,8 @@ public class SettingsFragment extends PreferenceFragment {
                 Toast toast = Toast.makeText(Startup.context, getString(R.string.no_one_accident_visible), Toast.LENGTH_LONG);
                 toast.show();
             }
-            return true;
+            update();
+            return false;
         }
     };
 }

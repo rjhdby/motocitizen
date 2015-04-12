@@ -152,7 +152,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     }
 
     public void setupAccess() {
-        if (currentPoint.id == MCAccidents.getOnwayID() || currentPoint.id == MCAccidents.getInplaceID()) {
+        if (currentPoint.id == prefs.getOnWay() || currentPoint.id == MCAccidents.getInplaceID()) {
             onwayButton.setVisibility(View.INVISIBLE);
         } else {
             onwayButton.setVisibility(View.VISIBLE);
