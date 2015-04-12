@@ -19,13 +19,11 @@ import motocitizen.utils.Const;
  */
 public class MessageListAdapter extends ArrayAdapter<MCMessage> {
 
-
     /// the Android Activity owning the ListView
     private final Activity activity;
 
     /// a list of gasoline records for display
     private final List<MCMessage> records;
-
 
     public MessageListAdapter(Activity activity, List<MCMessage> records) {
         super(activity, R.layout.row_message_list, records);

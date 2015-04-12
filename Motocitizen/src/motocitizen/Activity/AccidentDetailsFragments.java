@@ -18,6 +18,6 @@ public class AccidentDetailsFragments extends Fragment {
 
     protected void update() {
         currentPoint = MCAccidents.points.getPoint(accidentID);
-        ((AccidentDetailsActivity)getActivity()).getPref();
+        prefs = ((AccidentDetailsActivity)getActivity()).getPref();
     }
 }

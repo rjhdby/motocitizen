@@ -53,10 +53,6 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (getArguments() != null) {
-            accidentID = getArguments().getInt(ACCIDENT_ID);
-        }
-
         View viewMain = inflater.inflate(R.layout.fragment_detail_volunteers, container, false);
 
         onwayButton = (Button) viewMain.findViewById(R.id.onway_button);
@@ -126,6 +122,8 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
 
     protected void update() {
         super.update();
+        setupAccess();
+
         ViewGroup vg_onway = (ViewGroup) onwayContent;
         ViewGroup vg_inplace = (ViewGroup) inplaceContent;
         vg_onway.setVisibility(View.INVISIBLE);
@@ -146,16 +144,18 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
 
     public void notifyDataSetChanged() {
         update();
-        setupAccess();
 //  ListAdapter
 //        adapter.notifyDataSetChanged();
     }
 
     public void setupAccess() {
-        if (currentPoint.id == prefs.getOnWay() || currentPoint.id == MCAccidents.getInplaceID()) {
-            onwayButton.setVisibility(View.INVISIBLE);
-        } else {
-            onwayButton.setVisibility(View.VISIBLE);
+         // TODO При создании фрагмента prefs еще null, надо придумать как его получать, а пока кнопка выключена до тех пор пока не будет создан заново AccidentDetailsActivity
+        if(prefs != null) {
+            if (currentPoint.id == prefs.getOnWay() || currentPoint.id == MCAccidents.getInplaceID()) {
+                onwayButton.setVisibility(View.INVISIBLE);
+            } else {
+                onwayButton.setVisibility(View.VISIBLE);
+            }
         }
     }
 }

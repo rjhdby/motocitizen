@@ -62,11 +62,6 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        if (getArguments() != null) {
-            accidentID = getArguments().getInt(ACCIDENT_ID);
-        }
-
         View viewMain = inflater.inflate(R.layout.fragment_detail_messages, container, false);
         newMessageButton = (Button) viewMain.findViewById(R.id.mc_new_message_send);
         newMessageButton.setOnClickListener(new View.OnClickListener() {

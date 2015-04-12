@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,7 +26,7 @@ import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 
 public class AccidentDetailsActivity
-        extends FragmentActivity
+        extends ActionBarActivity
         implements DetailMessagesFragment.OnFragmentInteractionListener,
         DetailHistoryFragment.OnFragmentInteractionListener,
         DetailVolunteersFragment.OnFragmentInteractionListener {
@@ -301,7 +302,7 @@ public class AccidentDetailsActivity
 //        detailMessagesFragment.myClickMethod(v);
 //    }
 
-    public void jumpToMap() {
+    void jumpToMap() {
         Intent intent = new Intent(this, Startup.class);
         intent.putExtra("toMap", MCAccidents.currentPoint.id);
         intent.putExtra("fromDetails", true);

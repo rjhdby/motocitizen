@@ -94,15 +94,10 @@
     <string name="request_geocode">Геокодирование.</string>
     <string name="settings_summary_off">Скрыты</string>
     <string name="settings_summary_on">Показаны</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_messages">MessagesActivity</string>
-    <string name="new_message">Новое сообщение</string>
-    <string name="message">Сообщения</string>
     <string name="to_map">На карту</string>
     <string name="tab_onway">Едут/на месте</string>
     <string name="tab_messages">Сообщения</string>
     <string name="tab_log">История</string>
-    <string name="action_new_message">Новое сообщение</string>
     <string name="share">Поделиться</string>
     <string name="unknown_code_version">Не определено</string>
     <string name="code_version_prefix">Текущая версия</string>
