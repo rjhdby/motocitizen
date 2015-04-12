@@ -7,21 +7,20 @@ import org.json.JSONObject;
 
 import motocitizen.app.mc.MCLocation;
 import motocitizen.main.R;
-import motocitizen.startup.Startup;
 
-/**
- * Created by elagin on 01.04.15.
- */
 public class GeoCodeRequest extends HttpClient {
 
 
     public GeoCodeRequest (Context context) {
-        super(context, context.getString(R.string.request_geocode));
+        //super(context, context.getString(R.string.request_geocode));
+        super(context, "");
     }
     // как только получили ответ от сервера, выключаем ProgressBar
     protected void onPostExecute(JSONObject result) {
         super.onPostExecute(result);
-        dialog.dismiss();
+        if(dialog != null) {
+            dialog.dismiss();
+        }
 
         try {
             MCLocation.address = result.getString("address");

@@ -1,0 +1,20 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="motocitizen.Activity.DetailHistoryFragment">
+
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:tag="mc_det_log_content" >
+
+        <TableLayout
+                android:id="@+id/mc_det_log_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:shrinkColumns="*"
+                android:stretchColumns="*" >
+        </TableLayout>
+    </ScrollView>
+</FrameLayout>

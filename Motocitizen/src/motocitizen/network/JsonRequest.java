@@ -6,12 +6,13 @@ import java.util.Map;
  * Created by elagin on 31.03.15.
  */
 public class JsonRequest {
-    public String app;
-    public String method;
-    public Boolean isHttps;
-    public Map<String, String> params;
-    public String arrayName;
+    public final String app;
+    public final String method;
+    public final Boolean isHttps;
+    public final Map<String, String> params;
+    public final String arrayName;
 
+    @SuppressWarnings("SameParameterValue")
     public JsonRequest(String app, String method, Map<String, String> params, String arrayName, Boolean isHttps) {
         this.app = app;
         this.method = method;

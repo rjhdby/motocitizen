@@ -8,9 +8,6 @@ import motocitizen.app.mc.MCAccidents;
 import motocitizen.main.R;
 import motocitizen.startup.Startup;
 
-/**
- * Created by elagin on 01.04.15.
- */
 public class IncidentRequest extends HttpClient  {
 
     public IncidentRequest(Context context) {

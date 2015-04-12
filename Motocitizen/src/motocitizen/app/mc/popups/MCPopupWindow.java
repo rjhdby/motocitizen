@@ -1,7 +1,6 @@
 package motocitizen.app.mc.popups;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -25,18 +24,18 @@ import motocitizen.main.R;
 import motocitizen.network.JSONCall;
 import motocitizen.startup.Startup;
 
-public class MCPopupWindow {
-    protected final static Activity act = (Activity) Startup.context;
-    protected static final TableRow.LayoutParams lp = new TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-    protected static TableLayout content;
-    protected static PopupWindow pw;
-    protected static String textToCopy;
+class MCPopupWindow {
+    static final TableRow.LayoutParams lp = new TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+    static TableLayout content;
+    static PopupWindow pw;
+    static String textToCopy;
+    private static Context context;
     private static final OnClickListener copyButtonListener = new OnClickListener() {
         @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         @Override
         public void onClick(View v) {
             ClipboardManager myClipboard;
-            myClipboard = (ClipboardManager) act.getSystemService(Context.CLIPBOARD_SERVICE);
+            myClipboard = (ClipboardManager) Startup.context.getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData myClip;
             myClip = ClipData.newPlainText("text", textToCopy);
             myClipboard.setPrimaryClip(myClip);
@@ -49,7 +48,7 @@ public class MCPopupWindow {
             pw.dismiss();
             Intent intent = new Intent(Intent.ACTION_DIAL);
             intent.setData(Uri.parse("tel:" + ((Button) v).getText()));
-            act.startActivity(intent);
+            Startup.context.startActivity(intent);
         }
     };
     private static final OnClickListener finishButtonListener = new OnClickListener() {
@@ -85,7 +84,29 @@ public class MCPopupWindow {
         }
     };
 
-    protected static TableRow copyButtonRow() {
+    private static final OnClickListener shareButtonListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, textToCopy);
+            sendIntent.setType("text/plain");
+            context.startActivity(sendIntent);
+            pw.dismiss();
+        }
+    };
+
+    static TableRow shareMessage(Context outherContext){
+        context = outherContext;
+        TableRow tr = new TableRow(content.getContext());
+        Button b = new Button(content.getContext());
+        b.setText(R.string.share);
+        b.setOnClickListener(shareButtonListener);
+        tr.addView(b, lp);
+        return tr;
+    }
+
+    static TableRow copyButtonRow() {
         TableRow tr = new TableRow(content.getContext());
         Button b = new Button(content.getContext());
         b.setText(R.string.copy);
@@ -94,7 +115,7 @@ public class MCPopupWindow {
         return tr;
     }
 
-    protected static TableRow phoneButtonRow(String raw) {
+    static TableRow phoneButtonRow(String raw) {
         String phone = "+7" + raw.substring(1);
         Button dial = new Button(content.getContext());
         dial.setText(phone);
@@ -104,7 +125,7 @@ public class MCPopupWindow {
         return tr;
     }
 
-    protected static TableRow finishButtonRow(MCPoint p) {
+    static TableRow finishButtonRow(MCPoint p) {
         point = p;
         Button finish = new Button(content.getContext());
         if (point.status.equals("acc_status_end")) {
@@ -119,7 +140,7 @@ public class MCPopupWindow {
         return tr;
     }
 
-    protected static TableRow hideButtonRow(MCPoint p) {
+    static TableRow hideButtonRow(MCPoint p) {
         point = p;
         Button finish = new Button(content.getContext());
         if (point.status.equals("acc_status_hide")) {

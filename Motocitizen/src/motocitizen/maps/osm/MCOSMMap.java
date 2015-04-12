@@ -28,7 +28,7 @@ public class MCOSMMap extends MCMap {
     public MCOSMMap(Context context) {
         setName(MCMap.OSM);
         Inflate.set(context, R.id.map_container, R.layout.osm_view_content);
-        userOverlay = OSMUserOverlay.getUserOverlay();
+        userOverlay = OSMUserOverlay.getUserOverlay(context);
         accOverlay = OSMAccOverlay.getOverlay(context);
         Activity act = (Activity) context;
         map = (MapView) act.findViewById(R.id.osm_mapview);
@@ -55,7 +55,7 @@ public class MCOSMMap extends MCMap {
     @SuppressWarnings("UnusedParameters")
     public void placeUser(Context context) {
         map.getOverlays().remove(userOverlay);
-        userOverlay = OSMUserOverlay.getUserOverlay();
+        userOverlay = OSMUserOverlay.getUserOverlay(context);
         map.getOverlays().add(userOverlay);
         map.invalidate();
     }

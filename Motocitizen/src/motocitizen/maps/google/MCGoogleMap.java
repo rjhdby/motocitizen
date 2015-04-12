@@ -3,17 +3,21 @@ package motocitizen.maps.google;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import motocitizen.app.mc.MCAccTypes;
@@ -22,7 +26,7 @@ import motocitizen.app.mc.MCLocation;
 import motocitizen.app.mc.MCPoint;
 import motocitizen.main.R;
 import motocitizen.maps.general.MCMap;
-import motocitizen.startup.Startup;
+//import motocitizen.startup.Startup;
 import motocitizen.utils.Inflate;
 import motocitizen.utils.MCUtils;
 
@@ -33,7 +37,7 @@ public class MCGoogleMap extends MCMap {
     private static Map<String, Integer> accidents;
     private static String selected;
 
-    public MCGoogleMap(Context context) {
+    public MCGoogleMap(final Context context) {
         setName(MCMap.GOOGLE);
         selected = "";
         Inflate.set(context, R.id.map_container, R.layout.google_maps_view);
@@ -45,13 +49,20 @@ public class MCGoogleMap extends MCMap {
             public boolean onMarkerClick(Marker marker) {
                 String id = marker.getId();
                 if (selected.equals(id) && accidents.containsKey(id)) {
-                    //TODO Уже не нужно
-                    // MCAccidents.toDetails(Startup.context, accidents.get(selected));
+                    MCAccidents.toDetails(context, accidents.get(selected));
                 } else {
                     marker.showInfoWindow();
                     selected = id;
                 }
                 return true;
+            }
+        });
+        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                String uri = String.format(Locale.ENGLISH, "geo:0,0?q="+latLng.latitude+","+latLng.longitude+"("+"Destination"+")");
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                context.startActivity(intent);
             }
         });
     }

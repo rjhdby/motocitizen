@@ -11,7 +11,6 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
 import java.util.Date;
 
 import motocitizen.app.mc.popups.MCMessagesPopup;
@@ -33,7 +32,7 @@ public class MCMessage {
         owner = json.getString("owner");
         status = json.getString("status");
         text = json.getString("text");
-        time = new Date(Long.parseLong(json.getString("uxtime"), 10)*1000);
+        time = new Date(Long.parseLong(json.getString("uxtime"), 10) * 1000);
     }
 
     public TableRow createRow(Context context) {
@@ -61,6 +60,7 @@ public class MCMessage {
         tr.setOnLongClickListener(rowLongClick);
         return tr;
     }
+
     private final OnLongClickListener rowLongClick = new OnLongClickListener() {
 
         @Override

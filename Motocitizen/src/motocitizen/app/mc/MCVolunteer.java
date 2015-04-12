@@ -7,7 +7,6 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
 import java.util.Date;
 
 import motocitizen.utils.Const;
@@ -22,7 +21,7 @@ public class MCVolunteer {
         id = json.getInt("id");
         name = json.getString("name");
         status = json.getString("status");
-        time = new Date(Long.parseLong(json.getString("uxtime"), 10)*1000);
+        time = new Date(Long.parseLong(json.getString("uxtime"), 10) * 1000);
     }
 
     public TableRow createRow(Context context) {

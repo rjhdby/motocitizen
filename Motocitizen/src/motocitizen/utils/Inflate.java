@@ -6,10 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import motocitizen.startup.Startup;
-
 public class Inflate {
     /** Устанавливаем карту в контейнер.*/
+    @SuppressWarnings("SameParameterValue")
     public static void set(Context context, int parentId, int childId) {
         LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         ViewGroup parent = (ViewGroup) ((Activity) context).findViewById(parentId);

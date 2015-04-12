@@ -44,18 +44,6 @@ public class Props {
         return current;
     }
 
-    public static Properties readAssets(String fileName) {
-        InputStream is;
-        Properties current = new Properties();
-        try {
-            is = as.open(fileName);
-            current = read(is);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return current;
-    }
-
     private void makeGlobal() {
         InputStream is;
         try {

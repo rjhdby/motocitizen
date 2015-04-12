@@ -12,25 +12,24 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
-import motocitizen.app.mc.MCAccidents;
 import motocitizen.network.JSONCall;
+import motocitizen.startup.MCPreferences;
 import motocitizen.startup.Startup;
 
 public class MCAuth {
     private String role;
     private String name;
     private int id;
-    private boolean anonim;
-
-    public MCAuth() {
+    private MCPreferences prefs;
+    public MCAuth(Context context) {
+        prefs = new MCPreferences(context);
         reset();
-        anonim = Startup.prefs.getBoolean("mc.anonim", false);
-        if (!anonim) {
-            auth(Startup.context, Startup.prefs.getString("mc.login", ""), Startup.prefs.getString("mc.password", ""));
+        if (!prefs.isAnonim()) {
+            auth(context, prefs.getLogin(), prefs.getPassword());
         }
     }
 
-    public void reset() {
+    void reset() {
         name = "";
         role = "";
         id = 0;
@@ -49,20 +48,13 @@ public class MCAuth {
     }
 
     public String getLogin() {
-        return Startup.prefs.getString("mc.login", "");
+        return prefs.getLogin();
     }
 
-    public String makePassHash(String pass) {
+    String makePassHash(String pass) {
         String hash = "";
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
-//          String pass = Startup.prefsDef.getString("mc.password", "");
-
-//Это зачем? ----
-//            if (pass.equals("")) {
-//                Startup.prefsDef.edit().putString("mc.password", "").commit();
-//            }
-//Это зачем? ----
             md.update(pass.getBytes());
             byte[] digest = md.digest();
             StringBuilder sb = new StringBuilder();
@@ -78,25 +70,15 @@ public class MCAuth {
 
     // Ну нету в java параметров по-умолчанию.
     public String makePassHash() {
-        return makePassHash(Startup.prefs.getString("mc.password", ""));
+        return makePassHash(prefs.getPassword());
     }
 
     public boolean isFirstRun() {
-        return !anonim && getLogin().equals("");
-    }
-
-    public void setAnonim(boolean value) {
-        this.anonim = value;
-        if(value) {
-            Startup.prefs.edit().putBoolean("mc.anonim", value).commit();
-            Startup.prefs.edit().remove("mc.login").commit();
-            Startup.prefs.edit().remove("mc.password").commit();
-            reset();
-        }
+        return !prefs.isAnonim() && prefs.getLogin().equals("");
     }
 
     public boolean isAnonim() {
-        return this.anonim;
+        return prefs.isAnonim();
     }
 
     public Boolean auth(Context context, String login, String password) {
@@ -109,10 +91,9 @@ public class MCAuth {
             JSONObject json = new JSONCall("mcaccidents", "auth").request(post);
             parseJSON(json);
             if (name.length() > 0) {
-                Startup.prefs.edit().putString("mc.name", name).commit();
-                Startup.prefs.edit().putString("mc.login", login).commit();
-                Startup.prefs.edit().putString("mc.password", password).commit();
-                Startup.prefs.edit().putBoolean("mc.anonim", false).commit();
+                prefs.setLogin(login);
+                prefs.setPassword(password);
+                prefs.setAnonim(false);
                 return true;
             } else {
                 return false;
@@ -132,9 +113,5 @@ public class MCAuth {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    public void setName() {
-        Startup.prefs.edit().putString("mc.name", name).commit();
     }
 }

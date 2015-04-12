@@ -10,8 +10,8 @@ import motocitizen.main.R;
  */
 public class SendMessageRequest extends HttpClient {
 
-    private AccidentDetailsActivity activity;
-    private int currentId;
+    private final AccidentDetailsActivity activity;
+    private final int currentId;
 
     public SendMessageRequest(AccidentDetailsActivity activity, int currentId) {
         super(activity, activity.getString(R.string.request_send_message));
@@ -22,7 +22,6 @@ public class SendMessageRequest extends HttpClient {
     protected void onPostExecute(JSONObject result) {
         super.onPostExecute(result);
         dialog.dismiss();
-
         activity.parseSendMessageResponse(result, currentId);
     }
 }

@@ -3,9 +3,9 @@ package motocitizen.app.mc;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnLongClickListener;
@@ -32,6 +32,7 @@ import motocitizen.app.mc.popups.MCAccListPopup;
 import motocitizen.app.mc.user.MCAuth;
 import motocitizen.main.R;
 import motocitizen.network.JsonRequest;
+import motocitizen.startup.MCPreferences;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 
@@ -43,14 +44,7 @@ public class MCAccidents {
     public static MCPoints points;
     public static MCAuth auth;
     private static Integer[] sorted;
-
-    public static int getOnwayID() {
-        return onway;
-    }
-
-    public static void setOnwayID(int id) {
-        onway = id;
-    }
+    private static MCPreferences prefs;
 
     public static int getInplaceID() {
         return inplace;
@@ -66,13 +60,14 @@ public class MCAccidents {
         }
     };
 
-    public MCAccidents(Context context, SharedPreferences prefs) {
+    public MCAccidents(Context context) {
+        prefs = new MCPreferences(context);
         onway = 0;
         inplace = 0;
-        auth = new MCAuth();
+        auth = new MCAuth(context);
         new MCLocation(context);
-        points = new MCPoints(prefs);
-        new MCGCMRegistration();
+        points = new MCPoints(context);
+        new MCGCMRegistration(context);
         currentPoint = new MCPoint();
     }
 
@@ -124,13 +119,13 @@ public class MCAccidents {
     private static void drawList(Context context) {
         ViewGroup view = (ViewGroup) ((Activity) context).findViewById(R.id.accListContent);
         view.removeAllViews();
-        MCAccTypes.refresh();
+        //MCAccTypes.refresh();
         boolean noYesterday = true;
         if (points.error.equals("ok") || points.error.equals("no_new")) {
             makeSortedList();
             for (Integer aSorted : sorted) {
                 MCPoint acc = points.getPoint(aSorted);
-                if (MCAccTypes.get(acc.type).enabled) {
+                if (acc.isVisible()) {
                     if (!acc.isToday() && noYesterday) {
                         view.addView(yesterdayRow(context));
                         noYesterday = false;
@@ -153,6 +148,7 @@ public class MCAccidents {
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     public static TableRow getDelimiterRow(Context context, String text) {
         TableRow tr = new TableRow(context);
         TextView tw = new TextView(tr.getContext());
@@ -174,9 +170,9 @@ public class MCAccidents {
     }
 
     public static void refreshPoints(Context context, JSONObject data) {
-        if(data != null) {
+        if (data != null) {
             try {
-                JSONArray arr  = data.getJSONArray("list");
+                JSONArray arr = data.getJSONArray("list");
                 points.update(arr);
                 Startup.map.placeAcc(context);
                 redraw(context);
@@ -197,10 +193,13 @@ public class MCAccidents {
         drawList(context);
     }
 
+    public static void toDetails(Context context) {
+        toDetails(context, currentPoint.id);
+    }
+
     public static void toDetails(Context context, int id) {
 
-        MCPoint p = points.getPoint(id);
-        currentPoint = p;
+        currentPoint = points.getPoint(id);
 /*
         if (!points.containsKey(id)) {
             return;
@@ -209,10 +208,13 @@ public class MCAccidents {
         points.setSelected(context, id);
         //redraw(context);
         Intent intent = new Intent(context, AccidentDetailsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("accidentID", currentPoint.id);
+        intent.putExtras(bundle);
         context.startActivity(intent);
     }
 
     public static JsonRequest getLoadPointsRequest() {
-        return points.getLoadRequet();
+        return points.getLoadRequest();
     }
 }

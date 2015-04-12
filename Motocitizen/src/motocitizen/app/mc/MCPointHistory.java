@@ -11,18 +11,17 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import motocitizen.app.mc.popups.MCMessagesPopup;
-import motocitizen.utils.Const;
 import motocitizen.utils.MCUtils;
 
 public class MCPointHistory {
     private static final Map<String, String> actions;
+
     static {
         Map<String, String> m = new HashMap<>();
         m.put("create_mc_acc", "создал");
@@ -35,6 +34,7 @@ public class MCPointHistory {
         m.put("acc_status_end", "отбой");
         actions = Collections.unmodifiableMap(m);
     }
+
     public int id;
     public int owner_id;
     public int table_row;
@@ -58,7 +58,7 @@ public class MCPointHistory {
         owner_id = json.getInt("id_user");
         owner = json.getString("owner");
         action = json.getString("action");
-        time = new Date(Long.parseLong(json.getString("uxtime"), 10)*1000);
+        time = new Date(Long.parseLong(json.getString("uxtime"), 10) * 1000);
     }
 
     public static TableRow createHeader(Context context) {
@@ -78,7 +78,7 @@ public class MCPointHistory {
         return tr;
     }
 
-    public String getAction() {
+    String getAction() {
         if (actions.containsKey(action)) {
             return actions.get(action);
         } else {

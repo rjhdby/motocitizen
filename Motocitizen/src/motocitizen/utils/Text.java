@@ -5,8 +5,6 @@ import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
-import motocitizen.startup.Startup;
-
 public class Text {
 
     public static void set(final Context context, final int id, final String text) {
@@ -29,10 +27,5 @@ public class Text {
             }
         };
         ((Activity) context).runOnUiThread(update);
-    }
-
-    public static String get(final Context context, int id) {
-        TextView v = (TextView) ((Activity) context).findViewById(id);
-        return v.getText().toString();
     }
 }

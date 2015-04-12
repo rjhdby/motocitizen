@@ -1,0 +1,62 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:orientation="vertical"
+             android:weightSum="1"
+             tools:context="motocitizen.Activity.DetailMessagesFragment">
+    <LinearLayout
+            android:id="@+id/det_messages"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:tag="mc_det_messages_content"
+            android:weightSum="1" >
+
+        <ScrollView
+                android:id="@+id/mc_det_messages_scroll"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:tag="mc_det_messages_content" >
+
+            <TableLayout
+                    android:id="@+id/mc_det_messages_table"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:shrinkColumns="2"
+                    android:stretchColumns="2">
+
+            </TableLayout>
+        </ScrollView>
+
+        <LinearLayout
+                android:id="@+id/mc_new_message_area"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom" >
+
+            <EditText
+                    android:id="@+id/mc_new_message_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:ems="10"
+                    android:inputType="text"
+                    android:lines="1" >
+
+                <requestFocus />
+            </EditText>
+
+            <Button
+                    android:id="@+id/mc_new_message_send"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="1"
+                    android:enabled="false"
+                    android:visibility="visible"
+                    android:text="@string/mc_auth_confirm_button" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

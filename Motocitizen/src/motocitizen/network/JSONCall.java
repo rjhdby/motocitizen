@@ -23,6 +23,7 @@ import java.util.zip.GZIPInputStream;
 import motocitizen.main.R;
 import motocitizen.startup.Startup;
 
+//TODO Уйти от использования Startup.props
 public class JSONCall {
     private final static String APP = Startup.props.get("default.app");
     private final static String CHARSET = "UTF-8";
@@ -125,7 +126,7 @@ public class JSONCall {
             Log.d("JSON RESPONSE", reader.toString());
             return reader;
         } else {
-            Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_avaible), Toast.LENGTH_LONG).show();
+            Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
             return new JSONObject();
         }
     }

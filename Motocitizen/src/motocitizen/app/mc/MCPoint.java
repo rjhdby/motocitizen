@@ -29,6 +29,7 @@ import java.util.Map;
 
 import motocitizen.app.mc.popups.MCAccListPopup;
 import motocitizen.main.R;
+import motocitizen.startup.MCPreferences;
 import motocitizen.utils.Const;
 import motocitizen.utils.MCUtils;
 import motocitizen.utils.NewID;
@@ -45,6 +46,9 @@ public class MCPoint {
     public Date created;
 
     public int id, owner_id, row_id;
+
+    private MCPreferences prefs;
+
     private final View.OnClickListener accRowClick = new View.OnClickListener() {
         public void onClick(View v) {
             MCAccidents.toDetails(v.getContext(), id);
@@ -65,8 +69,9 @@ public class MCPoint {
         id = 0;
     }
 
-    public MCPoint(JSONObject json) throws MCPointException {
+    public MCPoint(JSONObject json, Context context) throws MCPointException {
         Map<String, String> data = buildDataSet(json);
+        prefs = new MCPreferences(context);
         if (!checkPrerequisites(data))
             throw new MCPointException();
         attributes = new HashMap<>();
@@ -194,7 +199,7 @@ public class MCPoint {
         return counter;
     }
 
-     public void resetMessagesUnreadFlag() {
+    public void resetMessagesUnreadFlag() {
         for (int i : messages.keySet()) {
             messages.get(i).unread = false;
         }
@@ -286,7 +291,7 @@ public class MCPoint {
     }
 
     public String getDistanceText() {
-        double d = distanceFromUser();
+        double d = getDistanceFromUser();
         if (d > 1000) {
             return String.valueOf(Math.round(d / 10) / 100) + "км";
         } else {
@@ -294,7 +299,7 @@ public class MCPoint {
         }
     }
 
-    public double distanceFromUser() {
+    public double getDistanceFromUser() {
         return MCLocation.current.distanceTo(location);
     }
 
@@ -312,5 +317,9 @@ public class MCPoint {
         public MCPointException() {
             super();
         }
+    }
+
+    public boolean isVisible() {
+        return (getDistanceFromUser() < prefs.getVisibleDistance() * 1000) && prefs.toShowAccType(type);
     }
 }
