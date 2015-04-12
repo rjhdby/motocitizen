@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnLongClickListener;
@@ -207,6 +208,9 @@ public class MCAccidents {
         points.setSelected(context, id);
         //redraw(context);
         Intent intent = new Intent(context, AccidentDetailsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("accidentID", currentPoint.id);
+        intent.putExtras(bundle);
         context.startActivity(intent);
     }
 

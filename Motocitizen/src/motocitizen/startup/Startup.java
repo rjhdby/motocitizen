@@ -240,7 +240,7 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
                 startActivity(new Intent(Startup.context, CreateAccActivity.class));
                 break;
             default:
-                Log.e("AccidentDetailsActivity", "Unknown button pressed");
+                Log.e("Startup", "Unknown button pressed");
                 break;
         }
     }
