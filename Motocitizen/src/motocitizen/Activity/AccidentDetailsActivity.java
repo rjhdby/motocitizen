@@ -122,7 +122,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
         generalAddress.setText("(" + currentPoint.getDistanceText() + ") " + currentPoint.address);
         generalDescription.setText(currentPoint.descr);
 
-        if (currentPoint.id == MCAccidents.getOnwayID() || currentPoint.id == MCAccidents.getInplaceID()) {
+        if (currentPoint.id == prefs.getOnWay() || currentPoint.id == MCAccidents.getInplaceID()) {
             onwayButton.setVisibility(View.INVISIBLE);
         } else {
             onwayButton.setVisibility(View.VISIBLE);
@@ -279,7 +279,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements View.O
                 String result = json.getString("result");
                 if (result.equals("OK")) {
                     Toast.makeText(this, Startup.context.getString(R.string.send_success), Toast.LENGTH_LONG).show();
-                    MCAccidents.setOnwayID(currentId);
+                    prefs.setOnWay(currentId);
                     MCAccidents.refresh(Startup.context);
                     update();
                     return;

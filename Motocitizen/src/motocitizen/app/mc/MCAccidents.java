@@ -45,15 +45,6 @@ public class MCAccidents {
     private static Integer[] sorted;
     private static MCPreferences prefs;
 
-
-    public static int getOnwayID() {
-        return onway;
-    }
-
-    public static void setOnwayID(int id) {
-        onway = id;
-    }
-
     public static int getInplaceID() {
         return inplace;
     }
