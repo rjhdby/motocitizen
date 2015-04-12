@@ -34,5 +34,6 @@ public class AboutActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //getMenuInflater().inflate(R.menu.menu_about, menu);
-        return super.onCreateOptionsMenu(menu);
+        return true;
     }
+}
