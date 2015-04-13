@@ -82,7 +82,8 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
     private String ownerText;
     private static String addressText;
     private String timeText;
-    private String type, med;
+    private String type;
+    private String med = "mc_m_na";
     private Location location;
     private Location initialLocation;
     private int CURRENT;
@@ -322,7 +323,6 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
     public void onClick(View v) {
         back.setEnabled(true);
         confirm.setEnabled(true);
-        med = "mc_m_na";
         int id = v.getId();
         Button btn = (Button) findViewById(id);
 
@@ -391,9 +391,6 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
             if (distance > radius)
                 return;
             location = MCUtils.LatLngToLocation(map.getCameraPosition().target);
-            // zz Пока не заработает у меня карта Google
-            //LatLng latlng = new LatLng(55.624713, 38.079641);
-            //location = MCUtils.LatLngToLocation(latlng);
             getAddress(location);
         } else if (id == R.id.mc_create_back) {
             backButton();
