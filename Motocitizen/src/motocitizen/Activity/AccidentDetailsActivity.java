@@ -130,9 +130,9 @@ public class AccidentDetailsActivity
         generalType.setText(currentPoint.getTypeText() + ". " + currentPoint.getMedText());
         generalStatus.setText(currentPoint.getStatusText());
         generalTime.setText(Const.timeFormat.format(currentPoint.created.getTime()));
-        generalOwner.setText(currentPoint.owner);
-        generalAddress.setText("(" + currentPoint.getDistanceText() + ") " + currentPoint.address);
-        generalDescription.setText(currentPoint.descr);
+        generalOwner.setText(currentPoint.getOwner());
+        generalAddress.setText("(" + currentPoint.getDistanceText() + ") " + currentPoint.getAddress());
+        generalDescription.setText(currentPoint.getDescription());
 /*
         if (currentPoint.id == prefs.getOnWay() || currentPoint.id == MCAccidents.getInplaceID()) {
             onwayButton.setVisibility(View.INVISIBLE);
@@ -185,7 +185,7 @@ public class AccidentDetailsActivity
         }
 */
         Startup.map.zoom(16);
-        Startup.map.jumpToPoint(currentPoint.location);
+        Startup.map.jumpToPoint(currentPoint.getLocation());
     }
 
     @Override
@@ -226,7 +226,7 @@ public class AccidentDetailsActivity
         @Override
         public boolean onLongClick(View v) {
             PopupWindow pw;
-            pw = MCAccListPopup.getPopupWindow(MCAccidents.currentPoint.id);
+            pw = MCAccListPopup.getPopupWindow(MCAccidents.getCurrentPointID());
             pw.showAsDropDown(v, 20, -20);
             return true;
         }
@@ -312,7 +312,7 @@ public class AccidentDetailsActivity
 
     void jumpToMap() {
         Intent intent = new Intent(this, Startup.class);
-        intent.putExtra("toMap", MCAccidents.currentPoint.id);
+        intent.putExtra("toMap", MCAccidents.getCurrentPointID());
         intent.putExtra("fromDetails", true);
         this.startActivity(intent);
     }

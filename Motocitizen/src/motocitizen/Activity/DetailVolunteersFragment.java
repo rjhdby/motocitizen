@@ -60,7 +60,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
             @Override
             public void onClick(View v) {
                 if (Startup.isOnline()) {
-                    int currentId = MCAccidents.currentPoint.id;
+                    int currentId = MCAccidents.getCurrentPointID();
                     Map<String, String> post = new HashMap<>();
                     post.put("login", MCAccidents.auth.getLogin());
                     post.put("passhash", MCAccidents.auth.makePassHash());
@@ -151,7 +151,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     public void setupAccess() {
          // TODO При создании фрагмента prefs еще null, надо придумать как его получать, а пока кнопка выключена до тех пор пока не будет создан заново AccidentDetailsActivity
         if(prefs != null) {
-            if (currentPoint.id == prefs.getOnWay() || currentPoint.id == MCAccidents.getInplaceID()) {
+            if (currentPoint.getId() == prefs.getOnWay() || currentPoint.getId() == MCAccidents.getInplaceID()) {
                 onwayButton.setVisibility(View.INVISIBLE);
             } else {
                 onwayButton.setVisibility(View.VISIBLE);

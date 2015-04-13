@@ -104,8 +104,8 @@ public class MCGoogleMap extends MCMap {
             } else {
                 alpha = 0.2f;
             }
-            Marker marker = map.addMarker(new MarkerOptions().position(MCUtils.LocationToLatLng(p.location)).title(title)
-                    .icon(MCAccTypes.getBitmapDescriptor(p.type)).alpha(alpha));
+            Marker marker = map.addMarker(new MarkerOptions().position(MCUtils.LocationToLatLng(p.getLocation())).title(title)
+                    .icon(MCAccTypes.getBitmapDescriptor(p.getType())).alpha(alpha));
             accidents.put(marker.getId(), id);
         }
     }

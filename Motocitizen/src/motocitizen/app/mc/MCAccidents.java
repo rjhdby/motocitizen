@@ -40,7 +40,7 @@ public class MCAccidents {
 
     private static int onway;
     private static int inplace;
-    public static MCPoint currentPoint;
+    private static MCPoint currentPoint;
     public static MCPoints points;
     public static MCAuth auth;
     private static Integer[] sorted;
@@ -54,11 +54,19 @@ public class MCAccidents {
         @Override
         public boolean onLongClick(View v) {
             PopupWindow pw;
-            pw = MCAccListPopup.getPopupWindow(currentPoint.id);
+            pw = MCAccListPopup.getPopupWindow(currentPoint.getId());
             pw.showAsDropDown(v, 20, -20);
             return true;
         }
     };
+
+    public static int getCurrentPointID() {
+        return currentPoint.getId();
+    }
+
+    public static void setCurrentPoint(MCPoint point) {
+        currentPoint = point;
+    }
 
     public MCAccidents(Context context) {
         prefs = new MCPreferences(context);
@@ -68,7 +76,6 @@ public class MCAccidents {
         new MCLocation(context);
         points = new MCPoints(context);
         new MCGCMRegistration(context);
-        currentPoint = new MCPoint();
     }
 
     private static MCPoint getCurrent() {
@@ -138,10 +145,10 @@ public class MCAccidents {
             }
             if (sorted.length == 0) {
                 view.addView(noAccidentsNotification(context));
-            } else if (currentPoint.id == 0) {
-                points.setSelected(context, currentPoint.id);
+            } else if (currentPoint.getId() == 0) {
+                points.setSelected(context, currentPoint.getId());
             } else {
-                points.setSelected(context, currentPoint.id);
+                points.setSelected(context, currentPoint.getId());
             }
         } else {
             // TODO Сюда вкрячить сообщение об ошибке
@@ -194,7 +201,7 @@ public class MCAccidents {
     }
 
     public static void toDetails(Context context) {
-        toDetails(context, currentPoint.id);
+        toDetails(context, currentPoint.getId());
     }
 
     public static void toDetails(Context context, int id) {
@@ -209,7 +216,7 @@ public class MCAccidents {
         //redraw(context);
         Intent intent = new Intent(context, AccidentDetailsActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putInt("accidentID", currentPoint.id);
+        bundle.putInt("accidentID", currentPoint.getId());
         intent.putExtras(bundle);
         context.startActivity(intent);
     }

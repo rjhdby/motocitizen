@@ -40,12 +40,55 @@ public class MCPoint {
     public Map<Integer, MCMessage> messages;
     public Map<Integer, MCVolunteer> volunteers;
     public Map<Integer, MCPointHistory> history;
-    public Location location;
+    private Location location;
 
-    public String type, status, med, address, owner, descr;
+    private String type, status, med, address, owner, descr;
+
     public Date created;
 
-    public int id, owner_id, row_id;
+    private int id, owner_id;
+    public int row_id;
+
+    public int getId() {
+        return id;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public String getType () {
+        return type;
+    }
+
+    public String getAddress () {
+        return address;
+    }
+
+    public String getDescription () {
+        return descr;
+    }
+
+    public String getOwner () {
+        return owner;
+    }
+
+    public String getStatus () {
+        return status;
+    }
+
+    public String getTextToCopy() {
+        StringBuffer res = new StringBuffer();
+        res.append(Const.dateFormat.format(created) + ". ");
+        res.append(getTypeText() + ". ");
+        String med = getMedText();
+        if(med.length() > 0 ) {
+            res.append(med + ". ");
+        }
+        res.append(address + ". ");
+        res.append(descr + ".");
+        return res.toString();
+    }
 
     private MCPreferences prefs;
 
@@ -286,7 +329,7 @@ public class MCPoint {
         return Const.status_text.get(status);
     }
 
-    public String getTypeText() {
+    public String  getTypeText() {
         return Const.type_text.get(type);
     }
 

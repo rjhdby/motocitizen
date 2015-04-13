@@ -69,7 +69,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
             public void onClick(View v) {
                 if (Startup.isOnline()) {
                     String text = mcNewMessageText.getText().toString();
-                    int currentId = MCAccidents.currentPoint.id;
+                    int currentId = MCAccidents.getCurrentPointID();
                     Map<String, String> post = new HashMap<>();
                     post.put("login", MCAccidents.auth.getLogin());
                     post.put("passhash", MCAccidents.auth.makePassHash());
