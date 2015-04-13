@@ -49,7 +49,7 @@ public class ChangeLog {
 
     ;
 
-    private static String getLog(Context context, boolean full) {
+    public static String getLog(Context context, boolean full) {
         lastVersion = (new MCPreferences(context).getCurrentVersion());
         sb = new StringBuffer();
         try {

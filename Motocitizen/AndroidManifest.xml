@@ -81,7 +81,12 @@
         </activity>
         <activity
             android:name="motocitizen.Activity.AboutActivity"
+            android:theme="@style/Theme.AppCompat"
+            android:parentActivityName="motocitizen.startup.Startup"
             android:label="@string/title_activity_about" >
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="motocitizen.startup.Startup" />
         </activity>
         <activity
             android:name="motocitizen.Activity.AuthActivity"
