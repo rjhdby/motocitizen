@@ -101,6 +101,7 @@
         </activity>
         <activity
             android:name="motocitizen.Activity.AccidentDetailsActivity"
+            android:theme="@style/Theme.AppCompat"
             android:parentActivityName="motocitizen.startup.Startup" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

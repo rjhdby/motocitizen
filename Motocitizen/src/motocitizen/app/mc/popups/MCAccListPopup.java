@@ -20,7 +20,7 @@ public class MCAccListPopup extends MCPopupWindow {
         content.setOrientation(LinearLayout.HORIZONTAL);
         content.setBackgroundColor(0xFF202020);
         content.setLayoutParams(lp);
-        textToCopy = Const.dateFormat.format(p.created) + ". " + p.getTypeText() + ". " + p.getMedText() + ". " + p.address + ". " + p.descr;
+        textToCopy = MCAccidents.points.getTextToCopy(id);
         content.addView(copyButtonRow(), lp);
 
         for (String phone : MCUtils.getPhonesFromText(p.descr)) {

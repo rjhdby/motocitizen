@@ -169,4 +169,9 @@ public class MCPoints {
         }
         return NORMAL;
     }
+
+    public String getTextToCopy(int id) {
+        MCPoint p = points.get(id);
+        return Const.dateFormat.format(p.created) + ". " + p.getTypeText() + ". " + p.getMedText() + ". " + p.address + ". " + p.descr;
+    }
 }
