@@ -18,9 +18,9 @@ class OSMAccOverlay {
         OverlayItem acc;
         for (int id : MCAccidents.points.keySet()) {
             MCPoint p = MCAccidents.points.getPoint(id);
-            if (p.location != null) {
-                acc = new OverlayItem(p.getTypeText(), p.address, new GeoPoint(p.location));
-                acc.setMarker(MCAccTypes.getDrawable(context, p.type));
+            if (p.getLocation() != null) {
+                acc = new OverlayItem(p.getTypeText(), p.getAddress(), new GeoPoint(p.getLocation()));
+                acc.setMarker(MCAccTypes.getDrawable(context, p.getType()));
                 items.add(acc);
             }
         }

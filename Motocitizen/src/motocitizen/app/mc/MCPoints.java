@@ -31,7 +31,7 @@ public class MCPoints {
     public final String error;
     private Map<Integer, MCPoint> points;
     private MCPreferences prefs;
-    private static Context context;
+    private Context context;
 
     public MCPoints(Context context) {
         error = "ok";
@@ -105,10 +105,10 @@ public class MCPoints {
             JSONObject acc = json.getJSONObject(i);
             try {
                 MCPoint current = new MCPoint(acc, context);
-                if (points.containsKey(current.id)) {
-                    current.messages.putAll(points.get(current.id).messages);
+                if (points.containsKey(current.getId())) {
+                    current.messages.putAll(points.get(current.getId()).messages);
                 }
-                points.put(current.id, current);
+                points.put(current.getId(), current);
             } catch (Exception e) {
                 // e.printStackTrace();
             }
@@ -131,7 +131,7 @@ public class MCPoints {
                 continue;
             }
             View row = ((Activity) context).findViewById(p.row_id);
-            row.setBackgroundResource(getBackground(p.status));
+            row.setBackgroundResource(getBackground(p.getStatus()));
         }
         MCPoint selected = points.get(id);
         if (selected == null) {
@@ -144,7 +144,7 @@ public class MCPoints {
                 return;
             } else {
                 setSelected(context, nnid);
-                MCAccidents.currentPoint = points.get(nnid);
+                MCAccidents.setCurrentPoint(points.get(nnid));
                 MCAccidents.redraw(context);
             }
         } else {
@@ -171,7 +171,6 @@ public class MCPoints {
     }
 
     public String getTextToCopy(int id) {
-        MCPoint p = points.get(id);
-        return Const.dateFormat.format(p.created) + ". " + p.getTypeText() + ". " + p.getMedText() + ". " + p.address + ". " + p.descr;
+        return points.get(id).getTextToCopy();
     }
 }

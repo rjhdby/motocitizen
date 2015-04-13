@@ -57,12 +57,12 @@ class MCPopupWindow {
             Map<String, String> params = new HashMap<>();
             params.put("login", MCAccidents.auth.getLogin());
             params.put("passhash", MCAccidents.auth.makePassHash());
-            if (point.status.equals("acc_status_end")) {
+            if (point.getStatus().equals("acc_status_end")) {
                 params.put("state", "acc_status_act");
             } else {
                 params.put("state", "acc_status_end");
             }
-            params.put("id", String.valueOf(point.id));
+            params.put("id", String.valueOf(point.getId()));
             new JSONCall("mcaccidents", "changeState").request(params);
             MCAccidents.refresh(v.getContext());
         }
@@ -73,12 +73,12 @@ class MCPopupWindow {
             Map<String, String> params = new HashMap<>();
             params.put("login", MCAccidents.auth.getLogin());
             params.put("passhash", MCAccidents.auth.makePassHash());
-            if (point.status.equals("acc_status_hide")) {
+            if (point.getStatus().equals("acc_status_hide")) {
                 params.put("state", "acc_status_act");
             } else {
                 params.put("state", "acc_status_hide");
             }
-            params.put("id", String.valueOf(point.id));
+            params.put("id", String.valueOf(point.getId()));
             new JSONCall("mcaccidents", "changeState").request(params);
             MCAccidents.refresh(v.getContext());
         }
@@ -128,7 +128,7 @@ class MCPopupWindow {
     static TableRow finishButtonRow(MCPoint p) {
         point = p;
         Button finish = new Button(content.getContext());
-        if (point.status.equals("acc_status_end")) {
+        if (point.getStatus().equals("acc_status_end")) {
             finish.setText(R.string.unfinish);
         } else {
             finish.setText(R.string.finish);
@@ -143,7 +143,7 @@ class MCPopupWindow {
     static TableRow hideButtonRow(MCPoint p) {
         point = p;
         Button finish = new Button(content.getContext());
-        if (point.status.equals("acc_status_hide")) {
+        if (point.getStatus().equals("acc_status_hide")) {
             finish.setText(R.string.show);
         } else {
             finish.setText(R.string.hide);
