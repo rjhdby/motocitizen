@@ -86,7 +86,7 @@ public class MCPoint {
             res.append(med + ". ");
         }
         res.append(address + ". ");
-        res.append(descr + ". ");
+        res.append(descr + ".");
         return res.toString();
     }
 
