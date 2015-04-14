@@ -51,14 +51,6 @@ public class MCLocation {
                     e.printStackTrace();
                 }
             }
-            /*
-            if (disconnectRequest) {
-                mGoogleApiClient.disconnect();
-                return;
-            }
-            Log.d(TAG, "Connected");
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, FusionLocationListener);
-            */
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, FusionLocationListener);
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, FusionLocationListener);
             current = getBestFusionLocation();
@@ -74,20 +66,8 @@ public class MCLocation {
         MCLocation.context = context;
         prefs = new MCPreferences(context);
         disconnectRequest = false;
-        /*
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(5000);
-        mLocationRequest.setFastestInterval(1000);
-        mLocationRequest.setSmallestDisplacement(10);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        */
         mLocationRequest = getProvider(LocationRequest.PRIORITY_HIGH_ACCURACY);
         current = getBestFusionLocation();
-
-        // zz
-        // requestAddress(context);
-        //zz
-        //Startup.map.jumpToPoint(current);
     }
 
     private static LocationRequest getProvider(int accuracy){
@@ -127,6 +107,9 @@ public class MCLocation {
              * Это нужно для получения хотя бы какой-то точки, пока LocationListener не прочухается
              * Цепляем либо последнюю определенную точку, либо координаты центра Москвы.
             */
+            if(prefs == null){
+                prefs = new MCPreferences(context);
+            }
             LatLng latlng = prefs.getSavedLatLng();
             last.setLatitude(latlng.latitude);
             last.setLongitude(latlng.longitude);
@@ -138,56 +121,25 @@ public class MCLocation {
     private static void runLocationService(int accuracy){
         mLocationRequest = getProvider(accuracy);
         if(mGoogleApiClient == null){
-            Log.d("LOCATION","NULL");
             mGoogleApiClient = new GoogleApiClient.Builder(context).addConnectionCallbacks(connectionCallback).addApi(LocationServices.API).build();
             mGoogleApiClient.connect();
         }
         if(mGoogleApiClient.isConnected()) {
-            Log.d("LOCATION","CONNECTED");
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, FusionLocationListener);
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, FusionLocationListener);
         } else {
             if (!mGoogleApiClient.isConnecting()) {
                 mGoogleApiClient.connect();
             }
-            Log.d("LOCATION","CONNECTING");
-            /*
-            while (!mGoogleApiClient.isConnected()) {
-                Log.d("STATUS", "Connected: " + String.valueOf(mGoogleApiClient.isConnected()) + " Connecting: " + String.valueOf(mGoogleApiClient.isConnecting()));
-
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            */
          }
     }
 
     public static void sleep() {
         runLocationService(LocationRequest.PRIORITY_LOW_POWER);
-        /*
-        if (mGoogleApiClient.isConnected()) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, FusionLocationListener);
-            mGoogleApiClient.disconnect();
-        } else if (mGoogleApiClient.isConnecting()) {
-            disconnectRequest = true;
-        }
-        */
     }
 
     public static void wakeup(Context context) {
         runLocationService(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        /*
-        disconnectRequest = false;
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(context).addConnectionCallbacks(connectionCallback).addApi(LocationServices.API).build();
-        }
-        if (!mGoogleApiClient.isConnecting()) {
-            mGoogleApiClient.connect();
-        }
-        */
     }
 
     public static void updateStatusBar() {

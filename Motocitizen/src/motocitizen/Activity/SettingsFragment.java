@@ -1,5 +1,6 @@
 package motocitizen.Activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -19,11 +20,13 @@ public class SettingsFragment extends PreferenceFragment {
     private Preference authPreference, nottifSoundPreference;
     private Preference showAcc, showBreak, showSteal, showOther;
     private MCPreferences prefs;
+    private static Activity act;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        prefs = new MCPreferences(Startup.context);
+        act = getActivity();
+        prefs = new MCPreferences(act);
         update();
     }
 
@@ -34,8 +37,8 @@ public class SettingsFragment extends PreferenceFragment {
         buttonAuth.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference arg0) {
-                Intent i = new Intent(Startup.context, AuthActivity.class);
-                Startup.context.startActivity(i);
+                Intent i = new Intent(act, AuthActivity.class);
+                act.startActivity(i);
                 return true;
             }
         });
@@ -43,8 +46,8 @@ public class SettingsFragment extends PreferenceFragment {
         buttonSound.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference arg0) {
-                Intent i = new Intent(Startup.context, SelectSoundActivity.class);
-                Startup.context.startActivity(i);
+                Intent i = new Intent(act, SelectSoundActivity.class);
+                act.startActivity(i);
                 return true;
             }
         });
@@ -120,7 +123,7 @@ public class SettingsFragment extends PreferenceFragment {
             prefs.putBoolean(preference.getKey(), (boolean) newValue);
             boolean visible = prefs.toShowAcc() | prefs.toShowBreak() | prefs.toShowOther() | prefs.toShowSteal();
             if (!visible) {
-                Toast toast = Toast.makeText(Startup.context, getString(R.string.no_one_accident_visible), Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(act, getString(R.string.no_one_accident_visible), Toast.LENGTH_LONG);
                 toast.show();
             }
             update();
