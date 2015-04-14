@@ -26,7 +26,6 @@ import motocitizen.app.mc.MCLocation;
 import motocitizen.app.mc.MCPoint;
 import motocitizen.main.R;
 import motocitizen.maps.general.MCMap;
-//import motocitizen.startup.Startup;
 import motocitizen.utils.Inflate;
 import motocitizen.utils.MCUtils;
 
@@ -60,7 +59,7 @@ public class MCGoogleMap extends MCMap {
         map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
-                String uri = String.format(Locale.ENGLISH, "geo:0,0?q="+latLng.latitude+","+latLng.longitude+"("+"Destination"+")");
+                String uri = String.format(Locale.ENGLISH, "geo:"+latLng.latitude+","+latLng.longitude);
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                 context.startActivity(intent);
             }

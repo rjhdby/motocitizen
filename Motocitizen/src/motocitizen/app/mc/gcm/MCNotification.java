@@ -43,7 +43,7 @@ class MCNotification {
         } else {
             return;
         }
-        double distance = MCLocation.getBestFusionLocation().distanceTo(MCUtils.LatLngToLocation(new LatLng(lat, lng))) / 1000;
+        double distance = MCLocation.getBestFusionLocation(context).distanceTo(MCUtils.LatLngToLocation(new LatLng(lat, lng))) / 1000;
 
         if (prefs.getAlarmDistance() < distance) {
             return;

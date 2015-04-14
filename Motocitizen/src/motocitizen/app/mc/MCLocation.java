@@ -53,7 +53,7 @@ public class MCLocation {
             }
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, FusionLocationListener);
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, FusionLocationListener);
-            current = getBestFusionLocation();
+            current = getBestFusionLocation(context);
         }
 
         @Override
@@ -67,7 +67,7 @@ public class MCLocation {
         prefs = new MCPreferences(context);
         disconnectRequest = false;
         mLocationRequest = getProvider(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        current = getBestFusionLocation();
+        current = getBestFusionLocation(context);
     }
 
     private static LocationRequest getProvider(int accuracy){
@@ -96,7 +96,7 @@ public class MCLocation {
         return lr;
     }
 
-    public static Location getBestFusionLocation() {
+    public static Location getBestFusionLocation(Context context) {
         Location last = null;
         if (mGoogleApiClient != null) {
             last = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
@@ -160,7 +160,7 @@ public class MCLocation {
 
     private static void requestAddress(Context context) {
         if (Startup.isOnline()) {
-            Location location = getBestFusionLocation();
+            Location location = getBestFusionLocation(context);
             if (current == location) {
                 return;
             }
