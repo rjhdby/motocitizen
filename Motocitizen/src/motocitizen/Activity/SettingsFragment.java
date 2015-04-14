@@ -23,7 +23,7 @@ public class SettingsFragment extends PreferenceFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        prefs = new MCPreferences(Startup.context);
+        prefs = new MCPreferences(getActivity());
         update();
     }
 
