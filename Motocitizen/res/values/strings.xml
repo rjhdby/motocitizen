@@ -105,4 +105,5 @@
     <string name="do_not_distrub">Не беспокоить</string>
     <string name="cancel_do_not_distrub">Отключить \"не беспокоить\"</string>
     <string name="no_one_accident_visible">Никакие события показаны не будут</string>
+    <string name="cant_open_incident">Не могу открыть инцидент.</string>
 </resources>

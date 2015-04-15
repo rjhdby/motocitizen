@@ -205,20 +205,24 @@ public class MCAccidents {
     }
 
     public static void toDetails(Context context, int id) {
-
         currentPoint = points.getPoint(id);
+        if (currentPoint != null) {
 /*
         if (!points.containsKey(id)) {
             return;
         }
 */
-        points.setSelected(context, id);
-        //redraw(context);
-        Intent intent = new Intent(context, AccidentDetailsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putInt("accidentID", currentPoint.getId());
-        intent.putExtras(bundle);
-        context.startActivity(intent);
+            points.setSelected(context, id);
+            //redraw(context);
+            Intent intent = new Intent(context, AccidentDetailsActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt("accidentID", currentPoint.getId());
+            intent.putExtras(bundle);
+            context.startActivity(intent);
+
+        } else {
+            Toast.makeText(context, Startup.context.getString(R.string.cant_open_incident), Toast.LENGTH_LONG).show();
+        }
     }
 
     public static JsonRequest getLoadPointsRequest() {
