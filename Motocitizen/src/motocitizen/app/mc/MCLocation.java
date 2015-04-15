@@ -24,7 +24,7 @@ import motocitizen.utils.Text;
 
 public class MCLocation {
     private static final String TAG = "LOCATION";
-    public static Location current;
+    private static Location current;
     private static MCPreferences prefs;
     private static final com.google.android.gms.location.LocationListener FusionLocationListener = new com.google.android.gms.location.LocationListener() {
         @Override
@@ -171,6 +171,10 @@ public class MCLocation {
         } else {
             Toast.makeText(context, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
         }
+    }
+
+    public static Location getLocation() {
+        return current;
     }
 }
 

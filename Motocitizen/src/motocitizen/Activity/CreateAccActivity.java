@@ -21,6 +21,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -98,12 +99,16 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
     private final GoogleMap.OnCameraChangeListener cameraListener = new GoogleMap.OnCameraChangeListener() {
         @Override
         public void onCameraChange(CameraPosition camera) {
-            double distance = MCUtils.LatLngToLocation(camera.target).distanceTo(initialLocation);
             Button mcCreateFineAddressConfirm = (Button) ((Activity) context).findViewById(R.id.mc_create_fine_address_confirm);
-            if (distance > radius) {
-                mcCreateFineAddressConfirm.setEnabled(false);
+            if (initialLocation != null) {
+                double distance = MCUtils.LatLngToLocation(camera.target).distanceTo(initialLocation);
+                if (distance > radius) {
+                    mcCreateFineAddressConfirm.setEnabled(false);
+                } else {
+                    mcCreateFineAddressConfirm.setEnabled(true);
+                }
             } else {
-                mcCreateFineAddressConfirm.setEnabled(true);
+                mcCreateFineAddressConfirm.setEnabled(false);
             }
         }
     };
@@ -204,29 +209,32 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
         ownerText = prefs.getLogin();
         addressText = MCLocation.address;
         timeText = Const.timeFormat.format((date).getTime());
-        location = MCLocation.current;
+        location = MCLocation.getLocation();
         initialLocation = location;
         CURRENT = TYPE;
         isAcc = false;
         writeGlobal();
         //show(CURRENT);
 
-        map = ((MapFragment) this.getFragmentManager().findFragmentById(R.id.mc_create_map_container)).getMap();
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(MCUtils.LocationToLatLng(location), 16));
-        // map.setMyLocationEnabled(true);
-        map.getUiSettings().setMyLocationButtonEnabled(true);
-        map.getUiSettings().setZoomControlsEnabled(true);
-        // if (!MCRole.isModerator()) {
-        // radius = 30000000;
-        // } else {
-        radius = 1000;
-        CircleOptions circleOptions = new CircleOptions().center(MCUtils.LocationToLatLng(initialLocation)).radius(radius).fillColor(0x20FF0000);
-        if (circle != null) {
-            circle.remove();
+        //TODO Зачем это вообще все нужно, если юзер не будет корректировать адрес?
+        if (location != null) {
+            map = ((MapFragment) this.getFragmentManager().findFragmentById(R.id.mc_create_map_container)).getMap();
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(MCUtils.LocationToLatLng(location), 16));
+            // map.setMyLocationEnabled(true);
+            map.getUiSettings().setMyLocationButtonEnabled(true);
+            map.getUiSettings().setZoomControlsEnabled(true);
+            // if (!MCRole.isModerator()) {
+            // radius = 30000000;
+            // } else {
+            radius = 1000;
+            CircleOptions circleOptions = new CircleOptions().center(MCUtils.LocationToLatLng(initialLocation)).radius(radius).fillColor(0x20FF0000);
+            if (circle != null) {
+                circle.remove();
+            }
+            circle = map.addCircle(circleOptions);
+            // }
+            map.setOnCameraChangeListener(cameraListener);
         }
-        circle = map.addCircle(circleOptions);
-        // }
-        map.setOnCameraChangeListener(cameraListener);
     }
 
     private void writeGlobal() {
@@ -279,15 +287,18 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
     }
 
     private void OnConfirm() {
-        if (Startup.isOnline()) {
-            Map<String, String> post = createPOST();
-            JsonRequest request = new JsonRequest("mcaccidents", "createAcc", post, "", true);
-            if (request != null) {
-                (new CreateAccidentRequest(this)).execute(request);
+        if (location != null) {
+            if (Startup.isOnline()) {
+                Map<String, String> post = createPOST();
+                JsonRequest request = new JsonRequest("mcaccidents", "createAcc", post, "", true);
+                if (request != null) {
+                    (new CreateAccidentRequest(this)).execute(request);
+                }
+            } else {
+                Toast.makeText(this, this.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
             }
-        } else {
-            Toast.makeText(this, this.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
         }
+        Toast.makeText(this, this.getString(R.string.position_not_available), Toast.LENGTH_LONG).show();
     }
 
     private Map<String, String> createPOST() {
@@ -381,12 +392,15 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
             med = "mc_m_na";
             show(FINAL);
         } else if (id == R.id.mc_create_fine_address_button) {
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(MCUtils.LocationToLatLng(location), 16));
+            if (location != null) {
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(MCUtils.LocationToLatLng(location), 16));
+            }
             ImageView mapPointer = (ImageView) this.findViewById(R.id.mc_create_map_pointer);
             mapPointer.setImageDrawable(MCAccTypes.getDrawable(this, type));
             Keyboard.hide(details);
             show(FINEADDRESS);
         } else if (id == R.id.mc_create_fine_address_confirm) {
+            //TODO Если вдруг initialLocation == null, но не получается взять координаты после тыка юзера, т.к. map.getCameraPosition() падает.
             double distance = MCUtils.LatLngToLocation(map.getCameraPosition().target).distanceTo(initialLocation);
             if (distance > radius)
                 return;

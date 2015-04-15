@@ -56,10 +56,12 @@ public class MCPoints {
 
     public void load() {
         Map<String, String> selector = new HashMap<>();
-        Location userLocation = MCLocation.current;
-        selector.put("distance", String.valueOf(prefs.getVisibleDistance()));
-        selector.put("lon", String.valueOf(userLocation.getLongitude()));
-        selector.put("lat", String.valueOf(userLocation.getLatitude()));
+        Location userLocation = MCLocation.getLocation();
+        if(userLocation != null ) {
+            selector.put("distance", String.valueOf(prefs.getVisibleDistance()));
+            selector.put("lon", String.valueOf(userLocation.getLongitude()));
+            selector.put("lat", String.valueOf(userLocation.getLatitude()));
+        }
         String user = prefs.getLogin();
         if (!user.equals("")) {
             selector.put("user", user);
@@ -85,10 +87,13 @@ public class MCPoints {
 
     public JsonRequest getLoadRequest() {
         Map<String, String> selector = new HashMap<>();
-        Location userLocation = MCLocation.current;
-        selector.put("distance", String.valueOf(prefs.getVisibleDistance()));
-        selector.put("lon", String.valueOf(userLocation.getLongitude()));
-        selector.put("lat", String.valueOf(userLocation.getLatitude()));
+        Location userLocation = MCLocation.getLocation();
+
+        if(userLocation != null) {
+            selector.put("distance", String.valueOf(prefs.getVisibleDistance()));
+            selector.put("lon", String.valueOf(userLocation.getLongitude()));
+            selector.put("lat", String.valueOf(userLocation.getLatitude()));
+        }
         String user = prefs.getLogin();
         if (!user.equals("")) {
             selector.put("user", user);
