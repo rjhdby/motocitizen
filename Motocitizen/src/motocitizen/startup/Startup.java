@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -223,7 +224,10 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
         } else if (name.equals(MCMap.GOOGLE)) {
             map = new MCGoogleMap(context);
         }
-        map.jumpToPoint(MCLocation.current);
+
+        Location location = MCLocation.getLocation();
+        if(location != null)
+            map.jumpToPoint(location);
     }
 
     @Override

@@ -61,9 +61,13 @@ public class MCOSMMap extends MCMap {
     }
 
     private static void goToUser() {
-        GeoPoint gp = new GeoPoint(MCLocation.current);
-        map.getController().animateTo(gp);
-        map.invalidate();
+
+        Location location = MCLocation.getLocation();
+        if( location != null) {
+            GeoPoint gp = new GeoPoint(location);
+            map.getController().animateTo(gp);
+            map.invalidate();
+        }
     }
 
     public void zoom(int zoom) {

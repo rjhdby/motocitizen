@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -71,8 +72,15 @@ public class MCGoogleMap extends MCMap {
         if (user != null) {
             user.remove();
         }
-        user = map.addMarker(new MarkerOptions().position(MCUtils.LocationToLatLng(MCLocation.current)).title("Вы")
-                .icon(MCAccTypes.getBitmapDescriptor("user")));
+
+        Location location = MCLocation.getLocation();
+        if(location != null) {
+            user = map.addMarker(new MarkerOptions().position(MCUtils.LocationToLatLng(location)).title("Вы")
+                    .icon(MCAccTypes.getBitmapDescriptor("user")));
+        } else {
+            //TODO Отобразить сообщение?
+            //Toast.makeText(this, Startup.context.getString(R.string.position_not_available), Toast.LENGTH_LONG).show();
+        }
     }
 
     public void jumpToPoint(Location location) {

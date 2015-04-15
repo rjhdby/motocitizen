@@ -334,16 +334,26 @@ public class MCPoint {
     }
 
     public String getDistanceText() {
-        double d = getDistanceFromUser();
-        if (d > 1000) {
-            return String.valueOf(Math.round(d / 10) / 100) + "км";
+        Double dist = getDistanceFromUser();
+        if(dist != null) {
+            if (dist > 1000) {
+                return String.valueOf(Math.round(dist / 10) / 100) + "км";
+            } else {
+                return String.valueOf(dist) + "м";
+            }
         } else {
-            return String.valueOf((int) d) + "м";
+            //TODO Унести в ресурсы
+            return "Не доступно";
         }
     }
 
-    public double getDistanceFromUser() {
-        return MCLocation.current.distanceTo(location);
+    private Double getDistanceFromUser() {
+        Location loc = MCLocation.getLocation();
+        if(loc != null )
+            return (double)loc.distanceTo(location);
+        else {
+            return null;
+        }
     }
 
     public boolean isToday() {
@@ -363,6 +373,11 @@ public class MCPoint {
     }
 
     public boolean isVisible() {
-        return (getDistanceFromUser() < prefs.getVisibleDistance() * 1000) && prefs.toShowAccType(type);
+        Double dist = getDistanceFromUser();
+        if(dist == null ) {
+            return true;
+        } else {
+            return (dist < prefs.getVisibleDistance() * 1000) && prefs.toShowAccType(type);
+        }
     }
 }
