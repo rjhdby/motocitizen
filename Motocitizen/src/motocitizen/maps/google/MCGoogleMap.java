@@ -73,14 +73,14 @@ public class MCGoogleMap extends MCMap {
             user.remove();
         }
 
-        Location location = MCLocation.getLocation();
-        if(location != null) {
+        Location location = MCLocation.getLocation(context);
+        //if(location != null) {
             user = map.addMarker(new MarkerOptions().position(MCUtils.LocationToLatLng(location)).title("Вы")
                     .icon(MCAccTypes.getBitmapDescriptor("user")));
-        } else {
+        //} else {
             //TODO Отобразить сообщение?
             //Toast.makeText(this, Startup.context.getString(R.string.position_not_available), Toast.LENGTH_LONG).show();
-        }
+        //}
     }
 
     public void jumpToPoint(Location location) {

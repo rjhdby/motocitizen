@@ -17,17 +17,17 @@ class OSMUserOverlay {
         ArrayList<OverlayItem> items;
         OverlayItem user;
 
-        Location location = MCLocation.getLocation();
-        if( location != null) {
+        Location location = MCLocation.getLocation(context);
+        //if( location != null) {
             user = new OverlayItem("Ваша позиция", "Ваша позиция", new GeoPoint(location));
             user.setMarker(context.getResources().getDrawable(R.drawable.osm_moto_icon));
             items = new ArrayList<>();
             items.add(user);
             return new ItemizedIconOverlay<>(context, items, null);
-        } else {
+        //} else {
             //TODO Отобразить сообщение?
             //Toast.makeText(this, Startup.context.getString(R.string.position_not_available), Toast.LENGTH_LONG).show();
-            return null;
-        }
+        //    return null;
+        //}
     }
 }

@@ -48,7 +48,7 @@ public class MCPoint {
 
     private int id, owner_id;
     public int row_id;
-
+    private Context context;
     public int getId() {
         return id;
     }
@@ -113,6 +113,7 @@ public class MCPoint {
     }
 
     public MCPoint(JSONObject json, Context context) throws MCPointException {
+        this.context = context;
         Map<String, String> data = buildDataSet(json);
         prefs = new MCPreferences(context);
         if (!checkPrerequisites(data))
@@ -348,12 +349,12 @@ public class MCPoint {
     }
 
     private Double getDistanceFromUser() {
-        Location loc = MCLocation.getLocation();
-        if(loc != null )
+        Location loc = MCLocation.getLocation(context);
+        //if(loc != null )
             return (double)loc.distanceTo(location);
-        else {
-            return null;
-        }
+        //else {
+        //    return null;
+        //}
     }
 
     public boolean isToday() {

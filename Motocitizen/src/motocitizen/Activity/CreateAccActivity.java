@@ -209,7 +209,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
         ownerText = prefs.getLogin();
         addressText = MCLocation.address;
         timeText = Const.timeFormat.format((date).getTime());
-        location = MCLocation.getLocation();
+        location = MCLocation.getLocation(context);
         initialLocation = location;
         CURRENT = TYPE;
         isAcc = false;
@@ -217,7 +217,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
         //show(CURRENT);
 
         //TODO Зачем это вообще все нужно, если юзер не будет корректировать адрес?
-        if (location != null) {
+        //if (location != null) {
             map = ((MapFragment) this.getFragmentManager().findFragmentById(R.id.mc_create_map_container)).getMap();
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(MCUtils.LocationToLatLng(location), 16));
             // map.setMyLocationEnabled(true);
@@ -234,7 +234,7 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
             circle = map.addCircle(circleOptions);
             // }
             map.setOnCameraChangeListener(cameraListener);
-        }
+        //}
     }
 
     private void writeGlobal() {

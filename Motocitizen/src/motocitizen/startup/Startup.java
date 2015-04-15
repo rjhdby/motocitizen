@@ -225,8 +225,8 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
             map = new MCGoogleMap(context);
         }
 
-        Location location = MCLocation.getLocation();
-        if(location != null)
+        Location location = MCLocation.getLocation(context);
+        //if(location != null)
             map.jumpToPoint(location);
     }
 
