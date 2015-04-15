@@ -59,6 +59,9 @@ public class AccidentDetailsActivity
     private TextView generalOwner;
     private TextView generalAddress;
     private TextView generalDescription;
+    private View generalLayout;
+
+    private Menu mMenu;
 
     MCPreferences prefs;
 
@@ -103,6 +106,7 @@ public class AccidentDetailsActivity
         detHistory = findViewById(R.id.det_history);
         detVolunteers = findViewById(R.id.det_volunteers);
 */
+        generalLayout = findViewById(R.id.mc_acc_details_general);
         generalType = (TextView) findViewById(R.id.acc_details_general_type);
         generalStatus = (TextView) findViewById(R.id.acc_details_general_status);
         generalTime = (TextView) findViewById(R.id.acc_details_general_time);
@@ -192,7 +196,19 @@ public class AccidentDetailsActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_accident_details, menu);
+        mMenu = menu;
         return super.onCreateOptionsMenu(menu);
+    }
+
+    private void showGeneralLayout(int state) {
+        MenuItem menuItem = mMenu.findItem(R.id.action_hide_info);
+        if(state == View.INVISIBLE ) {
+            generalLayout.setVisibility(View.GONE);
+            menuItem.setIcon(R.drawable.ic_panel_down);
+        } else {
+            generalLayout.setVisibility(View.VISIBLE);
+            menuItem.setIcon(R.drawable.ic_panel_up);
+        }
     }
 
     @Override
@@ -207,6 +223,12 @@ public class AccidentDetailsActivity
                 sendIntent.putExtra(Intent.EXTRA_TEXT, MCAccidents.points.getTextToCopy(accidentID));
                 sendIntent.setType("text/plain");
                 this.startActivity(sendIntent);
+                return true;
+            case R.id.action_hide_info:
+                if(generalLayout.getVisibility() == View.VISIBLE)
+                    showGeneralLayout(View.INVISIBLE);
+                else
+                    showGeneralLayout(View.VISIBLE);
                 return true;
         }
         return false;
