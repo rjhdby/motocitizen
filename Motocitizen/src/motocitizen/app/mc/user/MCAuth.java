@@ -21,6 +21,8 @@ public class MCAuth {
     private String name;
     private int id;
     private MCPreferences prefs;
+    private boolean isAuthorized = false;
+
     public MCAuth(Context context) {
         prefs = new MCPreferences(context);
         reset();
@@ -94,14 +96,17 @@ public class MCAuth {
                 prefs.setLogin(login);
                 prefs.setPassword(password);
                 prefs.setAnonim(false);
-                return true;
+                isAuthorized = true;
+                return isAuthorized;
             } else {
-                return false;
+                isAuthorized = false;
+                return isAuthorized;
             }
         } else {
             //TODO Перенести в ресурсы
             Toast.makeText(context, "Авторизация не возможна, пожалуйста, проверьте доступность Internet.", Toast.LENGTH_LONG).show();
-            return false;
+            isAuthorized = false;
+            return isAuthorized;
         }
     }
 
@@ -113,5 +118,9 @@ public class MCAuth {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean isAuthorized() {
+        return isAuthorized;
     }
 }

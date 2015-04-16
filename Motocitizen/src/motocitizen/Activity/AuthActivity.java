@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.main.R;
@@ -115,12 +116,17 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
                     Text.set(context, R.id.auth_error_helper, "");
                     finish();
                 } else { // Авторизация
-                    prefs.setAnonim(false);
-                    if (MCAccidents.auth.auth(Startup.context, login.getText().toString(), password.getText().toString())) {
-                        finish();
+                    if(Startup.isOnline()) {
+                        prefs.setAnonim(false);
+                        if (MCAccidents.auth.auth(Startup.context, login.getText().toString(), password.getText().toString())) {
+                            finish();
+                        } else {
+                            TextView authErrorHelper = (TextView) findViewById(R.id.auth_error_helper);
+                            authErrorHelper.setText("Не удалось авторизоваться. Возможно неверно введен логин или пароль.");
+                        }
                     } else {
-                        TextView authErrorHelper = (TextView) findViewById(R.id.auth_error_helper);
-                        authErrorHelper.setText("Не удалось авторизоваться. Возможно неверно введен логин или пароль.");
+                        //TODO Перенести в ресурсы
+                        Toast.makeText(context, "Авторизация не возможна, пожалуйста, проверьте доступность Internet.", Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -135,17 +141,18 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
         View accListYesterdayLine = findViewById(R.id.accListYesterdayLine);
 
         //Авторизованы?
-        if (prefs.isAnonim()) {
+        if (MCAccidents.auth.isAuthorized()) {
+            loginBtn.setEnabled(false);
+            logoutBtn.setEnabled(true);
+            anonim.setEnabled(false);
+            accListYesterdayLine.setEnabled(false);
+        } else {
+//        if (prefs.isAnonim()) {
             loginBtn.setEnabled(true);
             logoutBtn.setEnabled(false);
             anonim.setEnabled(true);
             accListYesterdayLine.setEnabled(true);
             enableActionBtn();
-        } else {
-            loginBtn.setEnabled(false);
-            logoutBtn.setEnabled(true);
-            anonim.setEnabled(false);
-            accListYesterdayLine.setEnabled(false);
         }
     }
 
