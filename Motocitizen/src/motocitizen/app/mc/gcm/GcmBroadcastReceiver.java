@@ -1,5 +1,6 @@
 package motocitizen.app.mc.gcm;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
@@ -7,6 +8,7 @@ import android.support.v4.content.WakefulBroadcastReceiver;
 public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        new MCNotification(context, intent);
+        new MCNewAccReceived(context, intent);
+        setResultCode(Activity.RESULT_OK);
     }
 }

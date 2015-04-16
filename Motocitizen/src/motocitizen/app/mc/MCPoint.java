@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -49,6 +50,7 @@ public class MCPoint {
     private int id, owner_id;
     public int row_id;
     private Context context;
+
     public int getId() {
         return id;
     }
@@ -57,23 +59,23 @@ public class MCPoint {
         return location;
     }
 
-    public String getType () {
+    public String getType() {
         return type;
     }
 
-    public String getAddress () {
+    public String getAddress() {
         return address;
     }
 
-    public String getDescription () {
+    public String getDescription() {
         return descr;
     }
 
-    public String getOwner () {
+    public String getOwner() {
         return owner;
     }
 
-    public String getStatus () {
+    public String getStatus() {
         return status;
     }
 
@@ -82,7 +84,7 @@ public class MCPoint {
         res.append(Const.dateFormat.format(created) + ". ");
         res.append(getTypeText() + ". ");
         String med = getMedText();
-        if(med.length() > 0 ) {
+        if (med.length() > 0) {
             res.append(med + ". ");
         }
         res.append(address + ". ");
@@ -108,13 +110,32 @@ public class MCPoint {
         }
     };
 
-    public MCPoint() {
-        id = 0;
+    public MCPoint(Bundle extras, Context context) throws MCPointException {
+        this.context = context;
+        Map<String, String> data = new HashMap<>();
+        for (String key : extras.keySet()) {
+            data.put(key, extras.getString(key));
+        }
+        createPoint(data);
+        makeHistory(null);
+        makeMessages(null);
+        makeVolunteers(null);
     }
 
     public MCPoint(JSONObject json, Context context) throws MCPointException {
         this.context = context;
-        Map<String, String> data = buildDataSet(json);
+        createPoint(buildDataSet(json));
+        try {
+            makeHistory(json.getJSONArray("history"));
+            makeMessages(json.getJSONArray("messages"));
+            makeVolunteers(json.getJSONArray("onway"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            throw new MCPointException();
+        }
+    }
+
+    private void createPoint(Map<String, String> data) throws MCPointException {
         prefs = new MCPreferences(context);
         if (!checkPrerequisites(data))
             throw new MCPointException();
@@ -149,9 +170,7 @@ public class MCPoint {
             for (String key : data.keySet()) {
                 attributes.put(key, data.get(key));
             }
-            makeMessages(json.getJSONArray("messages"));
-            makeVolunteers(json.getJSONArray("onway"));
-            makeHistory(json.getJSONArray("history"));
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new MCPointException();
@@ -218,11 +237,13 @@ public class MCPoint {
     private void makeMessages(JSONArray json) {
         if (messages == null)
             messages = new HashMap<>();
+        if (json == null) {
+            return;
+        }
         Map<Integer, MCMessage> newMessages = new HashMap<>();
         for (int i = 0; i < json.length(); i++) {
             try {
                 MCMessage current = new MCMessage(json.getJSONObject(i), id);
-                // current.acc_id = id;
                 if (messages.containsKey(current.id)) {
                     current.unread = messages.get(current.id).unread;
                 }
@@ -252,6 +273,9 @@ public class MCPoint {
     private void makeVolunteers(JSONArray json) {
         if (volunteers == null)
             volunteers = new HashMap<>();
+        if (json == null) {
+            return;
+        }
         Map<Integer, MCVolunteer> newVolunteers = new HashMap<>();
         for (int i = 0; i < json.length(); i++) {
             try {
@@ -267,6 +291,9 @@ public class MCPoint {
     private void makeHistory(JSONArray json) {
         if (history == null)
             history = new HashMap<>();
+        if (json == null) {
+            return;
+        }
         history.clear();
         for (int i = 0; i < json.length(); i++) {
             try {
@@ -299,7 +326,6 @@ public class MCPoint {
         }
         sb.append("(").append(getDistanceText()).append(")\n").append(address).append("\n").append(descr);
         general.setText(sb);
-        // time.setText(Const.timeFormat.format(created.getTime()));
         time.setText(MCUtils.getIntervalFromNowInText(created));
         int unread = countUnreadMessages();
         String msgText = "<b>" + String.valueOf(messages.size()) + "</b>";
@@ -315,7 +341,7 @@ public class MCPoint {
                 "descr"};
         for (String key : prereq) {
             if (!data.containsKey(key)) {
-                Log.d("PARSE ERROR", data.get(key));
+                Log.d("PARSE ERROR", key);
                 return false;
             }
         }
@@ -330,13 +356,13 @@ public class MCPoint {
         return Const.status_text.get(status);
     }
 
-    public String  getTypeText() {
+    public String getTypeText() {
         return Const.type_text.get(type);
     }
 
     public String getDistanceText() {
         Double dist = getDistanceFromUser();
-        if(dist != null) {
+        if (dist != null) {
             if (dist > 1000) {
                 return String.valueOf(Math.round(dist / 10) / 100) + "км";
             } else {
@@ -350,11 +376,7 @@ public class MCPoint {
 
     private Double getDistanceFromUser() {
         Location loc = MCLocation.getLocation(context);
-        //if(loc != null )
-            return (double)loc.distanceTo(location);
-        //else {
-        //    return null;
-        //}
+        return (double) loc.distanceTo(location);
     }
 
     public boolean isToday() {
@@ -375,7 +397,7 @@ public class MCPoint {
 
     public boolean isVisible() {
         Double dist = getDistanceFromUser();
-        if(dist == null ) {
+        if (dist == null) {
             return true;
         } else {
             return (dist < prefs.getVisibleDistance() * 1000) && prefs.toShowAccType(type);

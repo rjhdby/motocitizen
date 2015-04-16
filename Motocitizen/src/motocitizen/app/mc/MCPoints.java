@@ -113,11 +113,15 @@ public class MCPoints {
                 if (points.containsKey(current.getId())) {
                     current.messages.putAll(points.get(current.getId()).messages);
                 }
-                points.put(current.getId(), current);
+                addPoint(current);
             } catch (Exception e) {
-                // e.printStackTrace();
+                e.printStackTrace();
             }
         }
+    }
+
+    public void addPoint(MCPoint point){
+        points.put(point.getId(), point);
     }
 
     int getFirstNonNull() {

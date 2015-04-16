@@ -12,26 +12,34 @@ import android.os.Bundle;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCLocation;
+import motocitizen.app.mc.MCPoint;
 import motocitizen.main.R;
 import motocitizen.startup.MCPreferences;
 import motocitizen.startup.Startup;
 import motocitizen.utils.MCUtils;
 
-class MCNotification {
-    public MCNotification(Context context, Intent intent) {
+
+public class MCNewAccReceived {
+    public MCNewAccReceived(Context context, Intent intent) {
         MCPreferences prefs = new MCPreferences(context);
         if(prefs.getDoNotDistrub()){
             return;
         }
-        Bundle extras = intent.getExtras();
 
+        Bundle extras = intent.getExtras();
+        try {
+            MCAccidents.points.addPoint(new MCPoint(extras, context));
+        } catch (MCPoint.MCPointException e) {
+            e.printStackTrace();
+        }
         String type = extras.getString("type");
         String message = extras.getString("message");
         String title = extras.getString("title");
         String idString = extras.getString("id");
         String latString = extras.getString("lat");
-        String lngString = extras.getString("lng");
+        String lngString = extras.getString("lon");
         extras.putInt("toDetails", Integer.parseInt(idString));
         int id;
         double lat, lng;
