@@ -167,6 +167,8 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
                 else
                     result.append("&");
                 if (post.get(key) == null) {
+                    //TODO Caused by: java.lang.RuntimeException: Can't create handler inside thread that has not called Looper.prepare()
+                    /*
                     Runnable execute = new Runnable() {
                         @Override
                         public void run() {
@@ -174,7 +176,7 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
                         }
                     };
                     ((Activity) context).runOnUiThread(execute);
-
+*/
                     return "ERROR";
                 }
                 result.append(URLEncoder.encode(key, "UTF-8"));
