@@ -47,10 +47,10 @@ public class MCUtils {
 
     public static List<String> getPhonesFromText(String in) {
         List<String> out = new ArrayList<>();
-        String phonesString = in.replaceAll("[^0-9]", "");
-        Matcher matcher = Pattern.compile("[7|8][0-9]{10}").matcher(phonesString);
+        in = in + ".";
+        Matcher matcher = Pattern.compile("[7|8][ \\(-]?[\\d]{3}[ \\)-]?[\\d]{3}[ -]?[\\d]{2}[ -]?[\\d]{2}[\\D]").matcher(in);
         while (matcher.find()) {
-            out.add(matcher.group());
+            out.add(matcher.group().replaceAll("[^0-9]", ""));
         }
         return out;
     }

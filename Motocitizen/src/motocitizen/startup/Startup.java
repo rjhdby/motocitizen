@@ -41,6 +41,7 @@ import motocitizen.utils.Keyboard;
 import motocitizen.utils.MCUtils;
 import motocitizen.utils.Props;
 import motocitizen.utils.Show;
+import motocitizen.utils.Text;
 
 public class Startup extends FragmentActivity implements View.OnClickListener {
     public static Props props;
@@ -270,4 +271,13 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
             Show.currentGeneral = id;
         }
     };
+
+    public static void updateStatusBar(String address) {
+        String name = MCAccidents.auth.getName();
+        if (name.length() > 0) {
+            name += ": ";
+        }
+        Text.set(context, R.id.statusBarText, name + address);
+        map.placeUser(context);
+    }
 }

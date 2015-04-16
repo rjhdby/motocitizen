@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import motocitizen.app.mc.MCLocation;
 import motocitizen.main.R;
+import motocitizen.startup.Startup;
 
 public class GeoCodeRequest extends HttpClient {
 
@@ -24,10 +25,10 @@ public class GeoCodeRequest extends HttpClient {
 
         try {
             MCLocation.address = result.getString("address");
-            MCLocation.updateStatusBar();
+            Startup.updateStatusBar(MCLocation.address);
         } catch (JSONException e) {
             MCLocation.address = "Ошибка геокодирования";
-            MCLocation.updateStatusBar();
+            Startup.updateStatusBar(MCLocation.address);
             e.printStackTrace();
         }
     }
