@@ -107,6 +107,16 @@ public class AccidentDetailsActivity
         detVolunteers = findViewById(R.id.det_volunteers);
 */
         generalLayout = findViewById(R.id.mc_acc_details_general);
+        generalLayout.setOnLongClickListener(new View.OnLongClickListener(){
+            @Override
+            public boolean onLongClick(View v) {
+                PopupWindow pw;
+                pw = MCAccListPopup.getPopupWindow(MCAccidents.getCurrentPointID());
+                pw.showAsDropDown(v, 20, -20);
+                return true;
+            }
+        });
+
         generalType = (TextView) findViewById(R.id.acc_details_general_type);
         generalStatus = (TextView) findViewById(R.id.acc_details_general_status);
         generalTime = (TextView) findViewById(R.id.acc_details_general_time);
@@ -243,16 +253,6 @@ public class AccidentDetailsActivity
 //            newMessageArea.setVisibility(View.INVISIBLE);
 //        }
 //    }
-
-    private final View.OnLongClickListener detLongClick = new View.OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View v) {
-            PopupWindow pw;
-            pw = MCAccListPopup.getPopupWindow(MCAccidents.getCurrentPointID());
-            pw.showAsDropDown(v, 20, -20);
-            return true;
-        }
-    };
 
     private final RadioGroup.OnCheckedChangeListener accDetTabsListener = new RadioGroup.OnCheckedChangeListener() {
         public void onCheckedChanged(RadioGroup group, int checkedId) {

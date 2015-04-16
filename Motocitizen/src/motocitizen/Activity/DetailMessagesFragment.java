@@ -82,7 +82,6 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
                 } else {
                     Toast.makeText(getActivity(), getActivity().getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
                 }
-
             }
         });
 
