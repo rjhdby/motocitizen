@@ -160,14 +160,21 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
     private String makePOST(Map<String, String> post) {
         StringBuilder result = new StringBuilder();
         boolean first = true;
-        for (String key : post.keySet()) {
+        for (final String key : post.keySet())
             try {
                 if (first)
                     first = false;
                 else
                     result.append("&");
                 if (post.get(key) == null) {
-                    Toast.makeText(context, "Не задано " + key, Toast.LENGTH_LONG).show();
+                    Runnable execute = new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(context, "Не задано " + key, Toast.LENGTH_LONG).show();
+                        }
+                    };
+                    ((Activity) context).runOnUiThread(execute);
+
                     return "ERROR";
                 }
                 result.append(URLEncoder.encode(key, "UTF-8"));
@@ -176,7 +183,6 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-        }
         // Log.d("JSON POST", result.toString());
         return result.toString();
     }
