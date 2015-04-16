@@ -137,15 +137,6 @@ public class MCLocation {
         runLocationService(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
-    public static void updateStatusBar() {
-        String name = MCAccidents.auth.getName();
-        if (name.length() > 0) {
-            name += ": ";
-        }
-        Text.set(context, R.id.statusBarText, name + address);
-        Startup.map.placeUser(context);
-    }
-
     private static JsonRequest getAddressRequest(Location location) {
         Map<String, String> post = new HashMap<>();
         post.put("lat", String.valueOf(location.getLatitude()));
