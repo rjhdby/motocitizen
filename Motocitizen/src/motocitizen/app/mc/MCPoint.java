@@ -340,7 +340,7 @@ public class MCPoint {
             if (dist > 1000) {
                 return String.valueOf(Math.round(dist / 10) / 100) + "км";
             } else {
-                return String.valueOf(dist) + "м";
+                return String.valueOf(Math.round(dist)) + "м";
             }
         } else {
             //TODO Унести в ресурсы
