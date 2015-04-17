@@ -131,7 +131,9 @@ public class AccidentDetailsActivity
     @Override
     protected void onResume() {
         super.onResume();
-        prefs = new MCPreferences(this);
+        //TODO Вероятно теперь ни когда null не будет.
+        if(prefs == null)
+            prefs = new MCPreferences(this);
         update();
     }
 
@@ -380,6 +382,8 @@ public class AccidentDetailsActivity
     }
 
     MCPreferences getPref() {
+        if(prefs == null)
+            prefs = new MCPreferences(this);
         return prefs;
     }
 }
