@@ -123,4 +123,9 @@ public class MCAuth {
     public boolean isAuthorized() {
         return isAuthorized;
     }
+
+    public void logoff() {
+        reset();
+        this.isAuthorized = false;
+    }
 }

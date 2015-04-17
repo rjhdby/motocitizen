@@ -34,7 +34,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
 
     private static Context context;
 
-    private void enableActionBtn() {
+    private void enableLoginBtn() {
         Boolean logPasReady = login.getText().toString().length() > 0 && password.getText().toString().length() > 0;
         loginBtn.setEnabled(anonim.isChecked() || logPasReady);
     }
@@ -57,7 +57,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
             }
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                enableActionBtn();
+                enableLoginBtn();
             }
         });
 
@@ -71,7 +71,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
             }
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                enableActionBtn();
+                enableLoginBtn();
             }
         });
 
@@ -82,7 +82,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
                 CheckBox checkBox = (CheckBox) view;
                 login.setEnabled(!checkBox.isChecked());
                 password.setEnabled(!checkBox.isChecked());
-                enableActionBtn();
+                enableLoginBtn();
             }
         });
 
@@ -102,6 +102,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
                 //TODO Добавить запрос подтверждения на выход.
                 prefs.resetAuth();
                 prefs.setAnonim(true);
+                MCAccidents.auth.logoff();
                 fillCtrls();
             }
         });
@@ -117,8 +118,8 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
                     finish();
                 } else { // Авторизация
                     if(Startup.isOnline()) {
-                        prefs.setAnonim(false);
                         if (MCAccidents.auth.auth(Startup.context, login.getText().toString(), password.getText().toString())) {
+                            prefs.setAnonim(false);
                             finish();
                         } else {
                             TextView authErrorHelper = (TextView) findViewById(R.id.auth_error_helper);
@@ -138,6 +139,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
 
         login.setText(prefs.getLogin());
         password.setText(prefs.getPassword());
+        anonim.setChecked(prefs.isAnonim());
         View accListYesterdayLine = findViewById(R.id.accListYesterdayLine);
 
         //Авторизованы?
@@ -146,13 +148,17 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
             logoutBtn.setEnabled(true);
             anonim.setEnabled(false);
             accListYesterdayLine.setEnabled(false);
+            login.setEnabled(false);
+            password.setEnabled(false);
         } else {
 //        if (prefs.isAnonim()) {
             loginBtn.setEnabled(true);
             logoutBtn.setEnabled(false);
             anonim.setEnabled(true);
+            login.setEnabled(!anonim.isChecked());
+            password.setEnabled(!anonim.isChecked());
             accListYesterdayLine.setEnabled(true);
-            enableActionBtn();
+            enableLoginBtn();
         }
     }
 
