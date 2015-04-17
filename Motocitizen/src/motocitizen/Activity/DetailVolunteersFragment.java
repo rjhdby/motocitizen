@@ -149,13 +149,13 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     }
 
     public void setupAccess() {
-         // TODO При создании фрагмента prefs еще null, надо придумать как его получать, а пока кнопка выключена до тех пор пока не будет создан заново AccidentDetailsActivity
-        if(prefs != null) {
-            if (currentPoint.getId() == prefs.getOnWay() || currentPoint.getId() == MCAccidents.getInplaceID()) {
-                onwayButton.setVisibility(View.INVISIBLE);
-            } else {
-                onwayButton.setVisibility(View.VISIBLE);
-            }
+        if (prefs == null) {
+            prefs = ((AccidentDetailsActivity) getActivity()).getPref();
+        }
+        if (currentPoint.getId() == prefs.getOnWay() || currentPoint.getId() == MCAccidents.getInplaceID() || !MCAccidents.auth.isAuthorized()) {
+            onwayButton.setVisibility(View.INVISIBLE);
+        } else {
+            onwayButton.setVisibility(View.VISIBLE);
         }
     }
 }
