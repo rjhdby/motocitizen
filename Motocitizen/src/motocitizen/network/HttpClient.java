@@ -188,4 +188,17 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
         // Log.d("JSON POST", result.toString());
         return result.toString();
     }
+
+    protected void dismiss() {
+        try {
+            if (dialog != null && dialog.isShowing())
+                dialog.dismiss();
+        } catch (final IllegalArgumentException e) {
+            // Handle or log or ignore
+        } catch (final Exception e) {
+            // Handle or log or ignore
+        } finally {
+            dialog = null;
+        }
+    }
 }

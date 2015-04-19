@@ -20,7 +20,7 @@ public class CreateAccidentRequest extends HttpClient  {
     // как только получили ответ от сервера, выключаем ProgressBar
     protected void onPostExecute(JSONObject result) {
         super.onPostExecute(result);
-        dialog.dismiss();
+        super.dismiss();
         activity.parseResponse(result);
     }
 }
