@@ -17,7 +17,7 @@ import java.util.Map;
 import motocitizen.startup.Startup;
 
 public class Const {
-    public static final float dp = Startup.context.getResources().getDisplayMetrics().density;
+public float dp;
     public static SimpleDateFormat timeFormat, fullTimeFormat, dateFormat;
     public static LayoutInflater li;
     public static TableRow.LayoutParams trlp;
@@ -64,5 +64,9 @@ public class Const {
         type_text.put("acc_m_m", "ДТП мот/мот");
         type_text.put("acc_m_p", "Наезд на пешехода");
         type_text.put("acc_s", "Угон");
+    }
+
+    public static float getDP(Context context){
+        return context.getResources().getDisplayMetrics().density;
     }
 }

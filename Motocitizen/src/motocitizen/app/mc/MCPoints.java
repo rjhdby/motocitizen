@@ -160,7 +160,7 @@ public class MCPoints {
             View row = ((Activity) context).findViewById(selected.row_id);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
-            int margin = (int) (4 * Const.dp);
+            int margin = (int) (4 * Const.getDP(context));
             lp.setMargins(margin, 0, margin, 0);
             row.setLayoutParams(lp);
             row.setPadding(0, margin, 0, margin);

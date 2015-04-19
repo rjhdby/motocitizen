@@ -99,7 +99,7 @@ public class MCAccidents {
 
     private static TextView yesterdayRow(Context context) {
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        int margin = (int) (8 * Const.dp);
+        int margin = (int) (8 * Const.getDP(context));
         lp.setMargins(margin, 0, margin, 0);
         TextView tv = new TextView(context);
         tv.setText("Вчера");
