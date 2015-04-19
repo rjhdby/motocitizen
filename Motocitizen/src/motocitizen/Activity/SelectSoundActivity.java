@@ -34,13 +34,14 @@ public class SelectSoundActivity extends ActionBarActivity {
     private static String currentTitle;
     private static RingtoneManager rm;
     private MCPreferences prefs;
+    private Context context;
 
     private final Button.OnClickListener play = new Button.OnClickListener() {
 
         @Override
         public void onClick(View v) {
             if (currentId != 0) {
-                vg.findViewById(currentId).setBackgroundColor(Const.defaultBGColor);
+                vg.findViewById(currentId).setBackgroundColor(Const.getDefaultBGColor(context));
             }
             currentId = v.getId();
             vg.findViewById(currentId).setBackgroundColor(Color.GRAY);
@@ -53,6 +54,7 @@ public class SelectSoundActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        context = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mc_select_sound);
 

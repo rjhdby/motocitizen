@@ -85,7 +85,7 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
 
         accListView = findViewById(R.id.mc_acc_list);
         mapContainer = findViewById(R.id.map_container);
-        mapContainer.setTranslationX(Const.width);
+        mapContainer.setTranslationX(Const.getWidth(context));
 
         //prefs = getSharedPreferences("motocitizen.startup", MODE_PRIVATE);
         //prefs.edit().clear().commit();
@@ -263,9 +263,9 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
 
             if (id == R.id.tab_accidents_button) {
                 accListView.animate().translationX(0);
-                mapContainer.animate().translationX(Const.width * 2);
+                mapContainer.animate().translationX(Const.getWidth(context) * 2);
             } else if (id == R.id.tab_map_button) {
-                accListView.animate().translationX(-Const.width * 2);
+                accListView.animate().translationX(-Const.getWidth(context) * 2);
                 mapContainer.animate().translationX(0);
             }
             Show.currentGeneral = id;

@@ -307,7 +307,7 @@ public class MCPoint {
 
     public FrameLayout createAccRow(Context context) {
         ViewGroup vg = (ViewGroup) ((Activity) context).findViewById(R.id.accListContent);
-        FrameLayout fl = (FrameLayout) Const.li.inflate(R.layout.accident_row, vg, false);
+        FrameLayout fl = (FrameLayout) Const.getLayoutInflater(context).inflate(R.layout.accident_row, vg, false);
         TextView general = (TextView) fl.findViewById(R.id.accident_row_content);
         TextView time = (TextView) fl.findViewById(R.id.accident_row_time);
         TextView unreadView = (TextView) fl.findViewById(R.id.accident_row_unread);

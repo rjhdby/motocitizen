@@ -17,32 +17,19 @@ import java.util.Map;
 import motocitizen.startup.Startup;
 
 public class Const {
-public float dp;
     public static SimpleDateFormat timeFormat, fullTimeFormat, dateFormat;
-    public static LayoutInflater li;
     public static TableRow.LayoutParams trlp;
     public static LayoutParams lp;
-    public static int defaultColor, defaultBGColor;
     public static Map<String, String> med_text, status_text, type_text;
-    public static int width, height;
     public final static int EQUATOR = 20038;
 
     @SuppressWarnings("deprecation")
     public Const() {
-        Display display = ((Activity) Startup.context).getWindowManager().getDefaultDisplay();
-        width = display.getWidth();
-        height = display.getHeight();
         timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
         fullTimeFormat = new SimpleDateFormat("dd.MM.yy HH:mm", Locale.getDefault());
         dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-        Activity act = (Activity) Startup.context;
         lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         trlp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
-        li = (LayoutInflater) act.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        TypedArray ta = Startup.context.obtainStyledAttributes(new int[]{android.R.attr.colorBackground, android.R.attr.textColorPrimary});
-        defaultBGColor = ta.getIndex(0);
-        defaultColor = ta.getIndex(1);
-        ta.recycle();
         med_text = new HashMap<>();
         status_text = new HashMap<>();
         type_text = new HashMap<>();
@@ -68,5 +55,33 @@ public float dp;
 
     public static float getDP(Context context){
         return context.getResources().getDisplayMetrics().density;
+    }
+    public static int getHeight(Context context){
+        Display display = ((Activity) context).getWindowManager().getDefaultDisplay();
+        return display.getHeight();
+    }
+
+    public static int getWidth(Context context){
+        Display display = ((Activity) context).getWindowManager().getDefaultDisplay();
+        return display.getWidth();
+    }
+
+    public static int getDefaultBGColor(Context context){
+        TypedArray ta = context.obtainStyledAttributes(new int[]{android.R.attr.colorBackground, android.R.attr.textColorPrimary});
+        int color = ta.getIndex(0);
+        ta.recycle();
+        return color;
+    }
+
+    public static int getDefaultColor(Context context){
+        TypedArray ta = context.obtainStyledAttributes(new int[]{android.R.attr.colorBackground, android.R.attr.textColorPrimary});
+        int color = ta.getIndex(1);
+        ta.recycle();
+        return color;
+    }
+
+    public static LayoutInflater getLayoutInflater(Context context){
+        Activity act = (Activity) context;
+        return (LayoutInflater) act.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 }
