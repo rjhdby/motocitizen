@@ -19,9 +19,7 @@ public class GeoCodeRequest extends HttpClient {
     // как только получили ответ от сервера, выключаем ProgressBar
     protected void onPostExecute(JSONObject result) {
         super.onPostExecute(result);
-        if(dialog != null) {
-            dialog.dismiss();
-        }
+        super.dismiss();
 
         try {
             MCLocation.address = result.getString("address");

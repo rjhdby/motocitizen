@@ -21,7 +21,7 @@ public class OnwayRequest extends HttpClient {
 
     protected void onPostExecute(JSONObject result) {
         super.onPostExecute(result);
-        dialog.dismiss();
+        super.dismiss();
 
         activity.parseOnwayResponse(result, currentId);
     }
