@@ -289,16 +289,19 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
     private void OnConfirm() {
         if (location != null) {
             if (Startup.isOnline()) {
+                confirm.setEnabled(false);
                 Map<String, String> post = createPOST();
                 JsonRequest request = new JsonRequest("mcaccidents", "createAcc", post, "", true);
                 if (request != null) {
                     (new CreateAccidentRequest(this)).execute(request);
                 }
             } else {
+                confirm.setEnabled(true);
                 Toast.makeText(this, this.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
             }
+        } else {
+            Toast.makeText(this, this.getString(R.string.position_not_available), Toast.LENGTH_LONG).show();
         }
-        Toast.makeText(this, this.getString(R.string.position_not_available), Toast.LENGTH_LONG).show();
     }
 
     private Map<String, String> createPOST() {
