@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="motocitizen.main"
-    android:versionCode="216"
-    android:versionName="0.216" >
+    android:versionCode="217"
+    android:versionName="0.217" >
 
     <uses-sdk
         android:minSdkVersion="12"
@@ -110,7 +110,6 @@
         </activity>
         <activity
             android:name="motocitizen.Activity.AccidentDetailsActivity"
-<<<<<<< HEAD
             android:parentActivityName="motocitizen.startup.Startup"
             android:theme="@style/Theme.AppCompat" >
             <meta-data
@@ -119,10 +118,8 @@
         </activity>
         <activity
             android:name="motocitizen.Activity.SettingsActivity"
-=======
             android:theme="@style/Theme.AppCompat"
             android:screenOrientation="portrait"
->>>>>>> master
             android:parentActivityName="motocitizen.startup.Startup" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
