@@ -7,10 +7,13 @@
           android:orderInCategory="100"
           app:showAsAction="never"/>
     <item
+            android:id="@+id/menu_hide_info"
+            android:title="@string/hide_info_details"/>
+    <item
             android:id="@+id/action_hide_info"
             android:icon="@drawable/ic_panel_up"
             yourapp:showAsAction="ifRoom"
-            android:title="@string/share"/>
+            android:title="@string/hide_info_details"/>
     <item
             android:id="@+id/action_share"
             android:icon="@android:drawable/ic_menu_share"

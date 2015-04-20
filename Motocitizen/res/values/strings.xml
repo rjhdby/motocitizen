@@ -107,4 +107,6 @@
     <string name="no_one_accident_visible">Никакие события показаны не будут</string>
     <string name="cant_open_incident">Не могу открыть инцидент.</string>
     <string name="position_not_available">Местоположение определить не удалось.</string>
+    <string name="hide_info_details">Скрыть подробности</string>
+    <string name="show_info_details">Показать подробности</string>
 </resources>
