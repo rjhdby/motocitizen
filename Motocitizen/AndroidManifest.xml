@@ -81,13 +81,13 @@
         </activity>
         <activity
             android:name="motocitizen.Activity.AboutActivity"
-            android:theme="@style/Theme.AppCompat"
+            android:label="@string/title_activity_about"
             android:parentActivityName="motocitizen.startup.Startup"
             android:screenOrientation="portrait"
-            android:label="@string/title_activity_about" >
+            android:theme="@style/Theme.AppCompat" >
             <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value="motocitizen.startup.Startup" />
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="motocitizen.startup.Startup" />
         </activity>
         <activity
             android:name="motocitizen.Activity.AuthActivity"
@@ -110,8 +110,19 @@
         </activity>
         <activity
             android:name="motocitizen.Activity.AccidentDetailsActivity"
+<<<<<<< HEAD
+            android:parentActivityName="motocitizen.startup.Startup"
+            android:theme="@style/Theme.AppCompat" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="motocitizen.startup.Startup" />
+        </activity>
+        <activity
+            android:name="motocitizen.Activity.SettingsActivity"
+=======
             android:theme="@style/Theme.AppCompat"
             android:screenOrientation="portrait"
+>>>>>>> master
             android:parentActivityName="motocitizen.startup.Startup" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

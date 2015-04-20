@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import motocitizen.Activity.AboutActivity;
+import motocitizen.Activity.SettingsActivity;
 import motocitizen.Activity.SettingsFragment;
 import motocitizen.app.mc.MCAccidents;
 // zz
@@ -53,20 +54,19 @@ class SmallSettingsMenu {
                         Toast.makeText(context, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
                     }
                 } else if (id == R.id.small_menu_settings) {
-/*
-                    Intent i = new Intent(act, ConfigActivity.class);
-                    Startup.context.startActivity(i);
-*/
 
-                    FragmentManager fm = ((Activity) context).getFragmentManager();
-                    Fragment pf, mf;
-                    pf = fm.findFragmentByTag("settings");
-                    mf = fm.findFragmentByTag("main_screen");
-                    if (pf == null) {
-                        pf = new SettingsFragment();
-                        fm.beginTransaction().add(R.id.main_frame, pf, "settings").commit();
-                    }
-                    fm.beginTransaction().hide(mf).show(pf).commit();
+                    Intent i = new Intent(act, SettingsActivity.class);
+                    Startup.context.startActivity(i);
+
+//                    FragmentManager fm = ((Activity) context).getFragmentManager();
+//                    Fragment pf, mf;
+//                    pf = fm.findFragmentByTag("settings");
+//                    mf = fm.findFragmentByTag("main_screen");
+//                    if (pf == null) {
+//                        pf = new SettingsFragment();
+//                        fm.beginTransaction().add(R.id.main_frame, pf, "settings").commit();
+//                    }
+//                    fm.beginTransaction().hide(mf).show(pf).commit();
                 } else if (id == R.id.small_menu_about) {
                     Intent i = new Intent(act, AboutActivity.class);
                     context.startActivity(i);
