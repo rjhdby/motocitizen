@@ -1,343 +1,323 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/mc_acc_details"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:layout_weight="1"
-              android:orientation="vertical"
-              tools:context="motocitizen.Activity.AccidentDetailsActivity">
-
-<TableLayout
-        android:id="@+id/mc_acc_details_general"
+<LinearLayout
+        android:id="@+id/mc_acc_details"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:shrinkColumns="1"
-        android:stretchColumns="1,2" >
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        tools:context="motocitizen.Activity.AccidentDetailsActivity">
 
-    <TableRow
-            android:layout_width="wrap_content"
+    <TableLayout
+            android:id="@+id/mc_acc_details_general"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#f0f0f0" >
+            android:shrinkColumns="1"
+            android:stretchColumns="1,2">
 
-        <TextView
-                android:id="@+id/acc_details_general_type"
+        <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#f0f0f0">
+
+            <TextView
+                    android:id="@+id/acc_details_general_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_span="2"
+                    android:textColor="#ff000000"/>
+        </TableRow>
+
+        <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_span="2"
-                android:textColor="#ff000000" />
-    </TableRow>
+                android:layout_weight="3"
+                android:background="#e0e0e0">
 
-    <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#e0e0e0" >
+            <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-        <TextView
-                android:layout_width="match_parent"
+                <TextView
+                        android:id="@+id/acc_details_general_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="12:63"
+                        android:textColor="#0000A0"/>
+
+                <TextView
+                        android:id="@+id/acc_details_general_owner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_toLeftOf="@+id/acc_details_general_status"
+                        android:layout_toRightOf="@+id/acc_details_general_time"
+                        android:ellipsize="end"
+                        android:lines="1"
+                        android:scrollHorizontally="true"
+                        android:text="user_name"
+                        android:textColor="#000000"/>
+
+                <TextView
+                        android:id="@+id/acc_details_general_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:text="Open"
+                        android:textColor="#000000"/>
+            </RelativeLayout>
+        </TableRow>
+
+        <TableRow
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:layout_marginRight="4dp"
-                android:text="@string/mc_accidents_details_status"
-                android:textColor="#0000A0" />
+                android:background="#f0f0f0">
 
-        <TextView
-                android:id="@+id/acc_details_general_status"
-                android:layout_width="match_parent"
+            <TextView
+                    android:id="@+id/acc_details_general_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="2"
+                    android:text="Address"
+                    android:textColor="#ff000000"/>
+        </TableRow>
+
+        <TableRow
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#ff000000" />
-    </TableRow>
+                android:background="#e0e0e0">
 
-    <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#f0f0f0" >
+            <TextView
+                    android:id="@+id/acc_details_general_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_span="2"
+                    android:textColor="#ff000000"/>
+        </TableRow>
+    </TableLayout>
 
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/mc_accidents_details_begin"
-                android:textColor="#0000A0" />
+    <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#000000"/>
 
-        <TextView
-                android:id="@+id/acc_details_general_time"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#ff000000" />
-    </TableRow>
-
-    <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#e0e0e0" >
-
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:layout_marginRight="4dp"
-                android:text="@string/mc_accidents_details_owner"
-                android:textColor="#0000A0" />
-
-        <TextView
-                android:id="@+id/acc_details_general_owner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#ff000000" />
-    </TableRow>
-
-    <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#f0f0f0" >
-
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:text="@string/mc_accidents_details_address"
-                android:textColor="#0000A0" />
-
-        <TextView
-                android:id="@+id/acc_details_general_address"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="2"
-                android:textColor="#ff000000" />
-    </TableRow>
-
-    <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#e0e0e0" >
-
-        <TextView
-                android:id="@+id/acc_details_general_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_span="2"
-                android:textColor="#ff000000" />
-    </TableRow>
-</TableLayout>
-
-<View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="#000000" />
-
-<HorizontalScrollView
-        android:id="@+id/mc_acc_list_scroll_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:layout_marginBottom="5dp"
-        android:scrollbars="none" >
-
-    <RadioGroup
-            android:id="@+id/mc_det_tabs_group"
+    <HorizontalScrollView
+            android:id="@+id/mc_acc_list_scroll_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
-            android:gravity="top"
-            android:orientation="horizontal" >
+            android:layout_marginBottom="5dp"
+            android:scrollbars="none">
 
-        <RadioButton
-                android:id="@+id/mc_det_tab_people"
-                style="@style/statusText"
+        <RadioGroup
+                android:id="@+id/mc_det_tabs_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/tab"
-                android:button="@color/statusBarTextColor"
-                android:checked="true"
-                android:tag="mc_det_people_content"
-                android:text="@string/tab_onway" />
+                android:layout_gravity="top"
+                android:gravity="top"
+                android:orientation="horizontal">
 
-        <View
-                android:layout_width="1dp"
-                android:layout_height="fill_parent"
-                android:background="#00000000" />
-
-        <RadioButton
-                android:id="@+id/mc_det_tab_messages"
-                style="@style/statusText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/tab"
-                android:button="@color/statusBarTextColor"
-                android:checked="false"
-                android:tag="mc_det_messages_content"
-                android:text="@string/tab_messages" />
-
-        <View
-                android:layout_width="1dp"
-                android:layout_height="fill_parent"
-                android:background="#00000000" />
-
-        <RadioButton
-                android:id="@+id/mc_det_tab_history"
-                style="@style/statusText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/tab"
-                android:button="@color/statusBarTextColor"
-                android:checked="false"
-                android:tag="mc_det_log_content"
-                android:text="@string/tab_log" />
-    </RadioGroup>
-</HorizontalScrollView>
-
-<FrameLayout
-        android:id="@+id/mc_det_tab_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    <!--
-        <LinearLayout
-                android:id="@+id/det_volunteers"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:visibility="visible" >
-
-            <ScrollView
-                    android:layout_width="match_parent"
+            <RadioButton
+                    android:id="@+id/mc_det_tab_people"
+                    style="@style/statusText"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:tag="mc_det_people_content" >
+                    android:background="@drawable/tab"
+                    android:button="@color/statusBarTextColor"
+                    android:checked="true"
+                    android:tag="mc_det_people_content"
+                    android:text="@string/tab_onway"/>
+
+            <View
+                    android:layout_width="1dp"
+                    android:layout_height="fill_parent"
+                    android:background="#00000000"/>
+
+            <RadioButton
+                    android:id="@+id/mc_det_tab_messages"
+                    style="@style/statusText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/tab"
+                    android:button="@color/statusBarTextColor"
+                    android:checked="false"
+                    android:tag="mc_det_messages_content"
+                    android:text="@string/tab_messages"/>
+
+            <View
+                    android:layout_width="1dp"
+                    android:layout_height="fill_parent"
+                    android:background="#00000000"/>
+
+            <RadioButton
+                    android:id="@+id/mc_det_tab_history"
+                    style="@style/statusText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/tab"
+                    android:button="@color/statusBarTextColor"
+                    android:checked="false"
+                    android:tag="mc_det_log_content"
+                    android:text="@string/tab_log"/>
+        </RadioGroup>
+    </HorizontalScrollView>
+
+    <FrameLayout
+            android:id="@+id/mc_det_tab_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <!--
+            <LinearLayout
+                    android:id="@+id/det_volunteers"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="visible" >
+
+                <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:tag="mc_det_people_content" >
+
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical" >
+
+                        <TableLayout
+                                android:id="@+id/acc_inplace_table"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:stretchColumns="*"
+                                android:visibility="invisible" >
+                        </TableLayout>
+
+                        <TableLayout
+                                android:id="@+id/acc_onway_table"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:stretchColumns="*"
+                                android:visibility="invisible" >
+                        </TableLayout>
+                    </LinearLayout>
+                </ScrollView>
 
                 <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="vertical" >
+                        android:layout_gravity="bottom"
+                        android:gravity="bottom" >
 
-                    <TableLayout
-                            android:id="@+id/acc_inplace_table"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:stretchColumns="*"
-                            android:visibility="invisible" >
-                    </TableLayout>
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:gravity="bottom">
 
-                    <TableLayout
-                            android:id="@+id/acc_onway_table"
-                            android:layout_width="match_parent"
+                        <Button
+                                android:id="@+id/onway_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:text="@string/onway_button"
+                            style="?android:attr/buttonBarButtonStyle"
+                            android:layout_weight="0.5" />
+
+                        <Button
+                            android:id="@+id/details_to_map_button"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:stretchColumns="*"
-                            android:visibility="invisible" >
-                    </TableLayout>
+                            android:text="@string/to_map"
+                            style="?android:attr/buttonBarButtonStyle"
+                            android:layout_weight="0.5"/>
+                    </LinearLayout>
+
                 </LinearLayout>
-            </ScrollView>
+            </LinearLayout>
 
             <LinearLayout
+                    android:id="@+id/det_messages"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_gravity="bottom"
-                    android:gravity="bottom" >
+                    android:orientation="vertical"
+                    android:tag="mc_det_messages_content"
+                    android:visibility="invisible"
+                    android:weightSum="1" >
+
+                <ScrollView
+                        android:id="@+id/mc_det_messages_scroll"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:tag="mc_det_messages_content"
+                        android:visibility="visible" >
+
+                    <TableLayout
+                            android:id="@+id/mc_det_messages_table"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:shrinkColumns="2"
+                            android:stretchColumns="2"
+                        android:visibility="visible">
+
+                    </TableLayout>
+                </ScrollView>
 
                 <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:gravity="bottom">
+                        android:id="@+id/mc_new_message_area"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom" >
 
-                    <Button
-                            android:id="@+id/onway_button"
+                    <EditText
+                            android:id="@+id/mc_new_message_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
-                            android:text="@string/onway_button"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_weight="0.5" />
+                            android:ems="10"
+                            android:inputType="text"
+                            android:lines="1" >
+
+                        <requestFocus />
+                    </EditText>
 
                     <Button
-                        android:id="@+id/details_to_map_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/to_map"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_weight="0.5"/>
+                            android:id="@+id/mc_new_message_send"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_weight="1"
+                            android:enabled="false"
+                            android:text="@string/mc_auth_confirm_button" />
                 </LinearLayout>
-
             </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-                android:id="@+id/det_messages"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:tag="mc_det_messages_content"
-                android:visibility="invisible"
-                android:weightSum="1" >
-
-            <ScrollView
-                    android:id="@+id/mc_det_messages_scroll"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:tag="mc_det_messages_content"
-                    android:visibility="visible" >
-
-                <TableLayout
-                        android:id="@+id/mc_det_messages_table"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:shrinkColumns="2"
-                        android:stretchColumns="2"
-                    android:visibility="visible">
-
-                </TableLayout>
-            </ScrollView>
 
             <LinearLayout
-                    android:id="@+id/mc_new_message_area"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom" >
-
-                <EditText
-                        android:id="@+id/mc_new_message_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:ems="10"
-                        android:inputType="text"
-                        android:lines="1" >
-
-                    <requestFocus />
-                </EditText>
-
-                <Button
-                        android:id="@+id/mc_new_message_send"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:layout_weight="1"
-                        android:enabled="false"
-                        android:text="@string/mc_auth_confirm_button" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-                android:id="@+id/det_history"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:visibility="invisible" >
-
-            <ScrollView
+                    android:id="@+id/det_history"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:tag="mc_det_log_content" >
+                    android:orientation="vertical"
+                    android:visibility="invisible" >
 
-                <TableLayout
-                        android:id="@+id/mc_det_log_content"
+                <ScrollView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:shrinkColumns="*"
-                        android:stretchColumns="*" >
-                </TableLayout>
-            </ScrollView>
-        </LinearLayout>
-    -->
+                        android:tag="mc_det_log_content" >
+
+                    <TableLayout
+                            android:id="@+id/mc_det_log_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:shrinkColumns="*"
+                            android:stretchColumns="*" >
+                    </TableLayout>
+                </ScrollView>
+            </LinearLayout>
+        -->
     </FrameLayout>
 </LinearLayout>
