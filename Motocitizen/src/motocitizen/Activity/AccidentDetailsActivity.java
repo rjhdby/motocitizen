@@ -213,13 +213,16 @@ public class AccidentDetailsActivity
     }
 
     private void showGeneralLayout(int state) {
-        MenuItem menuItem = mMenu.findItem(R.id.action_hide_info);
+        MenuItem menuItemActionHideInfo = mMenu.findItem(R.id.action_hide_info);
+        MenuItem menuItemMenuHideInfo = mMenu.findItem(R.id.menu_hide_info);
         if(state == View.INVISIBLE ) {
             generalLayout.setVisibility(View.GONE);
-            menuItem.setIcon(R.drawable.ic_panel_down);
+            menuItemActionHideInfo.setIcon(R.drawable.ic_panel_down);
+            menuItemMenuHideInfo.setTitle(getString(R.string.show_info_details));
         } else {
             generalLayout.setVisibility(View.VISIBLE);
-            menuItem.setIcon(R.drawable.ic_panel_up);
+            menuItemActionHideInfo.setIcon(R.drawable.ic_panel_up);
+            menuItemMenuHideInfo.setTitle(getString(R.string.hide_info_details));
         }
     }
 
@@ -237,6 +240,7 @@ public class AccidentDetailsActivity
                 this.startActivity(sendIntent);
                 return true;
             case R.id.action_hide_info:
+            case R.id.menu_hide_info:
                 if(generalLayout.getVisibility() == View.VISIBLE)
                     showGeneralLayout(View.INVISIBLE);
                 else
