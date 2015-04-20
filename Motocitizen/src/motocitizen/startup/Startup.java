@@ -1,7 +1,6 @@
 package motocitizen.startup;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,9 +12,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -43,7 +40,7 @@ import motocitizen.utils.Props;
 import motocitizen.utils.Show;
 import motocitizen.utils.Text;
 
-public class Startup extends FragmentActivity implements View.OnClickListener {
+public class Startup extends Activity implements View.OnClickListener {
     public static Props props;
     public static Context context;
     public static MCPreferences prefs;
@@ -181,13 +178,13 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
                 if(fromDetails){
                     MCAccidents.toDetails(this);
                 }
-                FragmentManager fm = getFragmentManager();
-                Fragment pf = fm.findFragmentByTag("settings");
-                if(pf != null && pf.isVisible()){
-                    Fragment mf = fm.findFragmentByTag("main_screen");
-                    fm.beginTransaction().show(mf).hide(pf).commit();
+//                FragmentManager fm = getFragmentManager();
+//                Fragment pf = fm.findFragmentByTag("settings");
+//                if(pf != null && pf.isVisible()){
+//                    Fragment mf = fm.findFragmentByTag("main_screen");
+//                    fm.beginTransaction().show(mf).hide(pf).commit();
                     MCAccidents.redraw(this);
-                }
+//                }
                 Keyboard.hide();
                 return true;
         }
