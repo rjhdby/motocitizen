@@ -403,4 +403,8 @@ public class MCPoint {
             return (dist < prefs.getVisibleDistance() * 1000) && prefs.toShowAccType(type);
         }
     }
+
+    public boolean isActive() {
+        return  (!status.equals("acc_status_end")) || (status.equals("acc_status_hide"));
+    }
 }

@@ -152,7 +152,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         if (prefs == null) {
             prefs = ((AccidentDetailsActivity) getActivity()).getPref();
         }
-        if (currentPoint.getId() == prefs.getOnWay() || currentPoint.getId() == MCAccidents.getInplaceID() || !MCAccidents.auth.isAuthorized()) {
+        if (currentPoint.getId() == prefs.getOnWay() || currentPoint.getId() == MCAccidents.getInplaceID() || !MCAccidents.auth.isAuthorized() || !currentPoint.isActive()) {
             onwayButton.setVisibility(View.INVISIBLE);
         } else {
             onwayButton.setVisibility(View.VISIBLE);
