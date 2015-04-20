@@ -83,6 +83,7 @@
             android:name="motocitizen.Activity.AboutActivity"
             android:theme="@style/Theme.AppCompat"
             android:parentActivityName="motocitizen.startup.Startup"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_about" >
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
@@ -90,15 +91,18 @@
         </activity>
         <activity
             android:name="motocitizen.Activity.AuthActivity"
+            android:screenOrientation="portrait"
             android:label="AuthActivity" >
         </activity>
         <activity
             android:name="motocitizen.Activity.SelectSoundActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_select_sound" >
         </activity>
         <activity
             android:name="motocitizen.Activity.CreateAccActivity"
             android:label="@string/title_activity_create_acc"
+            android:screenOrientation="portrait"
             android:parentActivityName="motocitizen.startup.Startup" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -107,6 +111,7 @@
         <activity
             android:name="motocitizen.Activity.AccidentDetailsActivity"
             android:theme="@style/Theme.AppCompat"
+            android:screenOrientation="portrait"
             android:parentActivityName="motocitizen.startup.Startup" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
