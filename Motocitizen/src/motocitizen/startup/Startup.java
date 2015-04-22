@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -40,7 +41,7 @@ import motocitizen.utils.Props;
 import motocitizen.utils.Show;
 import motocitizen.utils.Text;
 
-public class Startup extends Activity implements View.OnClickListener {
+public class Startup extends FragmentActivity implements View.OnClickListener {
     public static Props props;
     public static Context context;
     public static MCPreferences prefs;
