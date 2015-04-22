@@ -148,10 +148,16 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
 //        adapter.notifyDataSetChanged();
     }
 
-    public void setupAccess() {
+    private void setupAccess() {
         if (prefs == null) {
             prefs = ((AccidentDetailsActivity) getActivity()).getPref();
         }
+
+        if(prefs == null )
+            throw new NullPointerException("prefs == null");
+        if(currentPoint == null )
+            throw new NullPointerException("currentPoint == null");
+
         if (currentPoint.getId() == prefs.getOnWay() || currentPoint.getId() == MCAccidents.getInplaceID() || !MCAccidents.auth.isAuthorized() || !currentPoint.isActive()) {
             onwayButton.setVisibility(View.INVISIBLE);
         } else {

@@ -80,7 +80,6 @@ public class DetailHistoryFragment extends AccidentDetailsFragments {
 
     protected void update() {
         super.update();
-        currentPoint = MCAccidents.points.getPoint(accidentID);
         ViewGroup logView = (ViewGroup) mcDetLogContent;
         logView.removeAllViews();
         logView.addView(MCPointHistory.createHeader(getActivity()));
