@@ -6,12 +6,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
+import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -40,8 +44,13 @@ public class MCGoogleMap extends MCMap {
     public MCGoogleMap(final Context context) {
         setName(MCMap.GOOGLE);
         selected = "";
+
         Inflate.set(context, R.id.map_container, R.layout.google_maps_view);
-        map = ((MapFragment) ((Activity) context).getFragmentManager().findFragmentById(R.id.google_map)).getMap();
+
+        android.support.v4.app.FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+        final SupportMapFragment mapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.google_map);
+        map = mapFragment.getMap();
+
         init();
         map.setOnMarkerClickListener(new OnMarkerClickListener() {
 
@@ -60,7 +69,7 @@ public class MCGoogleMap extends MCMap {
         map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
-                String uri = String.format(Locale.ENGLISH, "geo:"+latLng.latitude+","+latLng.longitude);
+                String uri = String.format(Locale.ENGLISH, "geo:" + latLng.latitude + "," + latLng.longitude);
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                 context.startActivity(intent);
             }
@@ -75,11 +84,11 @@ public class MCGoogleMap extends MCMap {
 
         Location location = MCLocation.getLocation(context);
         //if(location != null) {
-            user = map.addMarker(new MarkerOptions().position(MCUtils.LocationToLatLng(location)).title("Вы")
-                    .icon(MCAccTypes.getBitmapDescriptor("user")));
+        user = map.addMarker(new MarkerOptions().position(MCUtils.LocationToLatLng(location)).title("Вы")
+                .icon(MCAccTypes.getBitmapDescriptor("user")));
         //} else {
-            //TODO Отобразить сообщение?
-            //Toast.makeText(this, Startup.context.getString(R.string.position_not_available), Toast.LENGTH_LONG).show();
+        //TODO Отобразить сообщение?
+        //Toast.makeText(this, Startup.context.getString(R.string.position_not_available), Toast.LENGTH_LONG).show();
         //}
     }
 

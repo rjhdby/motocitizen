@@ -274,7 +274,7 @@
 
                 <fragment
                     android:id="@+id/mc_create_map_container"
-                    android:name="com.google.android.gms.maps.MapFragment"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
