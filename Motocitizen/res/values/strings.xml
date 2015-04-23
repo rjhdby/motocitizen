@@ -103,7 +103,6 @@
     <string name="unknown_code_version">Не определено</string>
     <string name="code_version_prefix">Текущая версия</string>
     <string name="do_not_distrub">Не беспокоить</string>
-    <string name="cancel_do_not_distrub">Отключить \"не беспокоить\"</string>
     <string name="no_one_accident_visible">Никакие события показаны не будут</string>
     <string name="cant_open_incident">Не могу открыть инцидент.</string>
     <string name="position_not_available">Местоположение определить не удалось.</string>
