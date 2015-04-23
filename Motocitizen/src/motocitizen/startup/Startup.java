@@ -281,6 +281,14 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.small_settings_menu, menu);
         mMenu = menu;
+
+        MenuItem itemMenuNotDistrub = mMenu.findItem(R.id.do_not_distrub);
+
+        if(prefs.getDoNotDistrub())
+            itemMenuNotDistrub.setIcon(R.drawable.ic_lock_ringer_on_alpha);
+        else
+            itemMenuNotDistrub.setIcon(R.drawable.ic_lock_ringer_off_alpha);
+
         return super.onCreateOptionsMenu(menu);
     }
 
