@@ -58,7 +58,9 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="false"
                     android:layout_alignWithParentIfMissing="false"
-                    android:layout_centerVertical="true"/>
+                    android:layout_alignParentTop="true"
+                    android:nestedScrollingEnabled="false"
+                    android:minWidth="90dp"/>
         </RelativeLayout>
     </LinearLayout>
 </FrameLayout>
