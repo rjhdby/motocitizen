@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -45,7 +47,7 @@ import motocitizen.utils.MCUtils;
 import motocitizen.utils.Text;
 
 @SuppressWarnings("FieldCanBeLocal")
-public class CreateAccActivity extends ActionBarActivity implements View.OnClickListener {
+public class CreateAccActivity extends FragmentActivity implements View.OnClickListener {
     private Button back;
     private Button confirm;
     private Button cancel;
@@ -218,7 +220,12 @@ public class CreateAccActivity extends ActionBarActivity implements View.OnClick
 
         //TODO Зачем это вообще все нужно, если юзер не будет корректировать адрес?
         //if (location != null) {
-            map = ((MapFragment) this.getFragmentManager().findFragmentById(R.id.mc_create_map_container)).getMap();
+            //map = ((MapFragment) this.getFragmentManager().findFragmentById(R.id.mc_create_map_container)).getMap();
+
+            android.support.v4.app.FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+            final SupportMapFragment mapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.mc_create_map_container);
+            map = mapFragment.getMap();
+
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(MCUtils.LocationToLatLng(location), 16));
             // map.setMyLocationEnabled(true);
             map.getUiSettings().setMyLocationButtonEnabled(true);
