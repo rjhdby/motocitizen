@@ -35,6 +35,7 @@ import java.util.Map;
 import motocitizen.app.mc.MCAccTypes;
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCLocation;
+import motocitizen.app.mc.user.MCRole;
 import motocitizen.main.R;
 import motocitizen.network.CreateAccidentRequest;
 import motocitizen.network.GeoCodeNewRequest;
