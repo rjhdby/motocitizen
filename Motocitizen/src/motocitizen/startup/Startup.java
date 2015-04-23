@@ -1,12 +1,9 @@
 package motocitizen.startup;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -17,15 +14,12 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import motocitizen.Activity.AboutActivity;
@@ -47,7 +41,6 @@ import motocitizen.utils.Keyboard;
 import motocitizen.utils.MCUtils;
 import motocitizen.utils.Props;
 import motocitizen.utils.Show;
-import motocitizen.utils.Text;
 
 public class Startup extends ActionBarActivity implements View.OnClickListener {
     public static Props props;
