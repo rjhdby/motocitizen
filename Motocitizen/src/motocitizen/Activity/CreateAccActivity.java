@@ -5,7 +5,6 @@ import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,12 +17,10 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
-import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,42 +46,37 @@ import motocitizen.utils.Text;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class CreateAccActivity extends FragmentActivity implements View.OnClickListener {
+    private static View globalView;
+    private static String addressText;
+    private static Context context;
     private Button back;
     private Button confirm;
     private Button cancel;
-
     private Button typeOtherButton;
     private Button typeStealButton;
     private Button typeBreakButton;
     private Button typeAccButton;
-
     private Button accMmButton;
     private Button accMpButton;
     private Button accSoloButton;
     private Button accMaButton;
-
     private Button peopleDeathButton;
     private Button peopleHardButton;
     private Button peopleLightButton;
     private Button peopleNaButton;
     private Button peopleOkButton;
-
     private Button fineAddressButton;
     private Button fineAddressConfirm;
-
-    private static View globalView;
     private EditText details;
     private int TYPE;
     private int FINAL;
     private int ACC;
     private int PEOPLE;
     private int FINEADDRESS;
-
     private Date date;
     private String globalText;
     private String medText;
     private String ownerText;
-    private static String addressText;
     private String timeText;
     private String type;
     private String med = "mc_m_na";
@@ -95,10 +87,6 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     private GoogleMap map;
     private Circle circle;
     private int radius;
-
-    private static Context context;
-    private MCPreferences prefs;
-
     private final GoogleMap.OnCameraChangeListener cameraListener = new GoogleMap.OnCameraChangeListener() {
         @Override
         public void onCameraChange(CameraPosition camera) {
@@ -115,6 +103,12 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             }
         }
     };
+    private MCPreferences prefs;
+
+    public static void updateAddress(String address) {
+        addressText = address;
+        Text.set(context, globalView, R.id.mc_create_where, addressText);
+    }
 
     private void backButton() {
         confirm.setEnabled(false);
@@ -221,27 +215,27 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
 
         //TODO Зачем это вообще все нужно, если юзер не будет корректировать адрес?
         //if (location != null) {
-            //map = ((MapFragment) this.getFragmentManager().findFragmentById(R.id.mc_create_map_container)).getMap();
+        //map = ((MapFragment) this.getFragmentManager().findFragmentById(R.id.mc_create_map_container)).getMap();
 
-            android.support.v4.app.FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
-            final SupportMapFragment mapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.mc_create_map_container);
-            map = mapFragment.getMap();
+        android.support.v4.app.FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+        final SupportMapFragment mapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.mc_create_map_container);
+        map = mapFragment.getMap();
 
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(MCUtils.LocationToLatLng(location), 16));
-            // map.setMyLocationEnabled(true);
-            map.getUiSettings().setMyLocationButtonEnabled(true);
-            map.getUiSettings().setZoomControlsEnabled(true);
-            if (!MCRole.isModerator()) {
-                radius = 30000000;
-            } else {
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(MCUtils.LocationToLatLng(location), 16));
+        // map.setMyLocationEnabled(true);
+        map.getUiSettings().setMyLocationButtonEnabled(true);
+        map.getUiSettings().setZoomControlsEnabled(true);
+        if (!MCRole.isModerator()) {
+            radius = 30000000;
+        } else {
             radius = 1000;
             CircleOptions circleOptions = new CircleOptions().center(MCUtils.LocationToLatLng(initialLocation)).radius(radius).fillColor(0x20FF0000);
             if (circle != null) {
                 circle.remove();
             }
             circle = map.addCircle(circleOptions);
-            }
-            map.setOnCameraChangeListener(cameraListener);
+        }
+        map.setOnCameraChangeListener(cameraListener);
         //}
     }
 
@@ -254,11 +248,6 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         Text.set(this, globalView, R.id.mc_create_who, ownerText);
         Text.set(this, globalView, R.id.mc_create_where, addressText);
         Text.set(this, globalView, R.id.mc_create_when, timeText);
-    }
-
-    public static void updateAddress(String address) {
-        addressText = address;
-        Text.set(context, globalView, R.id.mc_create_where, addressText);
     }
 
     private void show(int page) {
