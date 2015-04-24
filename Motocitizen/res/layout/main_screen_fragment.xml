@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
+<!--
     <LinearLayout
         android:id="@+id/status_bar"
         android:layout_width="match_parent"
@@ -43,7 +43,7 @@
             android:minWidth="1dp"
             android:src="@drawable/gear" />
     </LinearLayout>
-
+-->
     <FrameLayout
         android:id="@+id/tab_content"
         android:layout_width="match_parent"
