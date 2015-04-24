@@ -30,7 +30,7 @@
             </TableLayout>
         </ScrollView>
 
-        <LinearLayout
+        <RelativeLayout
                 android:id="@+id/mc_new_message_area"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -38,25 +38,29 @@
 
             <EditText
                     android:id="@+id/mc_new_message_text"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:ems="10"
                     android:inputType="text"
+                    android:layout_toLeftOf="@+id/mc_new_message_send"
                     android:lines="1" >
-
                 <requestFocus />
             </EditText>
 
-            <Button
+            <ImageButton
                     android:id="@+id/mc_new_message_send"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_weight="1"
                     android:enabled="false"
                     android:visibility="visible"
-                    android:text="@string/mc_auth_confirm_button" />
-        </LinearLayout>
+                    android:src="@android:drawable/ic_menu_send"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="false"
+                    android:layout_alignWithParentIfMissing="false"
+                    android:layout_alignParentTop="true"
+                    android:nestedScrollingEnabled="false"
+                    android:minWidth="90dp"/>
+        </RelativeLayout>
     </LinearLayout>
 </FrameLayout>
