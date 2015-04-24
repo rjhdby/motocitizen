@@ -25,6 +25,7 @@ public class MCAccListPopup extends MCPopupWindow {
 
         for (String phone : MCUtils.getPhonesFromText(p.getDescription())) {
             content.addView(phoneButtonRow(phone), lp);
+            content.addView(smsButtonRow(phone), lp);
         }
         if (MCRole.isModerator()) {
             content.addView(finishButtonRow(p));
