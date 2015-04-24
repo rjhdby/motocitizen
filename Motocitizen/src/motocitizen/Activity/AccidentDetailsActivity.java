@@ -286,13 +286,18 @@ public class AccidentDetailsActivity
                     //mcNewMessageText.setText("");
                     //Keyboard.hide(findViewById(R.id.mc_new_message_text));
                     return;
+                } else if (result.equals("READONLY")) {
+                    Toast.makeText(this, this.getString(R.string.not_have_rights_error), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, result, Toast.LENGTH_LONG).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+                Toast.makeText(this, this.getString(R.string.parce_error), Toast.LENGTH_LONG).show();
             }
             Log.e("Send message failed", json.toString());
         } else {
-            Toast.makeText(this, Startup.context.getString(R.string.send_error), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, Startup.context.getString(R.string.message_send_error), Toast.LENGTH_LONG).show();
         }
     }
 
