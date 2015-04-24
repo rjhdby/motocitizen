@@ -87,6 +87,7 @@
     <string name="title_activity_create_acc">CreateAccActivity</string>
     <string name="send_success">Сообщение было успешно отправлено.</string>
     <string name="send_error">Произошла ошибка при отправке сообщения.</string>
+    <string name="message_send_error">Произошла ошибка при отправке сообщения.</string>
     <string name="request_create_acc">Создание инцидента.</string>
     <string name="request_send_message">Отправка сообщения.</string>
     <string name="request_get_incidents">Получение инцидентов.</string>
