@@ -1,9 +1,7 @@
 package motocitizen.startup;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -13,17 +11,21 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import motocitizen.Activity.AboutActivity;
 import motocitizen.Activity.AuthActivity;
 import motocitizen.Activity.CreateAccActivity;
+import motocitizen.Activity.SettingsActivity;
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCLocation;
 import motocitizen.app.mc.gcm.GcmBroadcastReceiver;
@@ -39,9 +41,10 @@ import motocitizen.utils.Keyboard;
 import motocitizen.utils.MCUtils;
 import motocitizen.utils.Props;
 import motocitizen.utils.Show;
-import motocitizen.utils.Text;
 
-public class Startup extends FragmentActivity implements View.OnClickListener {
+import java.lang.*;
+
+public class Startup extends ActionBarActivity implements View.OnClickListener {
     public static Props props;
     public static Context context;
     public static MCPreferences prefs;
@@ -56,14 +59,20 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
     private View accListView;
     private View mapContainer;
 
+    private Menu mMenu;
+
+    private static ActionBar actionBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        //requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.main);
         context = this;
+
+        actionBar = getSupportActionBar();
 
         //prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs = new MCPreferences(this);
@@ -94,7 +103,6 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
         createMap(prefs.getMapProvider());
         // zz
         // new SettingsMenu();
-        new SmallSettingsMenu(this);
         if (MCAccidents.auth.isFirstRun()) {
             //Show.show(R.id.main_frame, R.id.first_auth_screen);
             Intent i = new Intent(Startup.context, AuthActivity.class);
@@ -167,14 +175,9 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
         super.onNewIntent(intent);
         setIntent(intent);
     }
-
     @Override
     public boolean onKeyUp(int keycode, @NonNull KeyEvent e) {
         switch (keycode) {
-            case KeyEvent.KEYCODE_MENU:
-                SmallSettingsMenu.popupBL.show();
-                Keyboard.hide();
-                return true;
             case KeyEvent.KEYCODE_BACK:
                 if(fromDetails){
                     MCAccidents.toDetails(this);
@@ -271,11 +274,80 @@ public class Startup extends FragmentActivity implements View.OnClickListener {
     };
 
     public static void updateStatusBar(String address) {
-        String name = MCAccidents.auth.getName();
-        if (name.length() > 0) {
-            name += ": ";
+
+        String subTitle = "";
+        //Делим примерно пополам, учитывая пробел или запятую
+        int commaPos = address.lastIndexOf(",", address.length() / 2);
+        int spacePos = address.lastIndexOf(" ", address.length() / 2);
+
+        if(commaPos != -1 || spacePos != -1) {
+            subTitle = address.substring(Math.max(commaPos, spacePos) + 1);
+            address = address.substring(0,Math.max(commaPos, spacePos));
         }
-        Text.set(context, R.id.statusBarText, name + address);
+
+        actionBar.setTitle(address);
+        if(!subTitle.isEmpty())
+            actionBar.setSubtitle(subTitle);
+//        Text.set(context, R.id.statusBarText, name + address);
         map.placeUser(context);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.small_settings_menu, menu);
+        mMenu = menu;
+
+        MenuItem itemMenuNotDistrub = mMenu.findItem(R.id.do_not_distrub);
+
+        if(prefs.getDoNotDistrub())
+            itemMenuNotDistrub.setIcon(R.drawable.ic_lock_ringer_on_alpha);
+        else
+            itemMenuNotDistrub.setIcon(R.drawable.ic_lock_ringer_off_alpha);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.small_menu_refresh:
+                MCAccidents.refresh(context);
+                if (Startup.isOnline()) {
+                    JsonRequest request = MCAccidents.getLoadPointsRequest();
+                    if (request != null) {
+                        (new IncidentRequest(context)).execute(request);
+                    }
+                } else {
+                    Toast.makeText(context, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
+                }
+                return true;
+            case R.id.small_menu_settings:
+                Intent intentSettings = new Intent(this, SettingsActivity.class);
+                Startup.context.startActivity(intentSettings);
+                return true;
+            case R.id.small_menu_about:
+                Intent intentAbout = new Intent(this, AboutActivity.class);
+                context.startActivity(intentAbout);
+                return true;
+            case R.id.small_menu_exit:
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                context.startActivity(intent);
+                int pid = android.os.Process.myPid();
+                android.os.Process.killProcess(pid);
+                return true;
+            case R.id.do_not_distrub:
+                MCPreferences prefs = new MCPreferences(Startup.context);
+                MenuItem menuItemActionDistrub = mMenu.findItem(R.id.do_not_distrub);
+                if(prefs.getDoNotDistrub()){
+                    item.setIcon(R.drawable.ic_lock_ringer_on_alpha);
+                    prefs.setDoNotDistrub(false);
+                } else {
+                    item.setIcon(R.drawable.ic_lock_ringer_off_alpha);
+                    prefs.setDoNotDistrub(true);
+                }
+                return true;
+        }
+        return false;
     }
 }

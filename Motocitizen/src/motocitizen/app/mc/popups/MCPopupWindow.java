@@ -25,6 +25,10 @@ import motocitizen.network.JSONCall;
 import motocitizen.startup.Startup;
 
 class MCPopupWindow {
+
+    static final String CALL_PREFIX = "Вызов :";
+    static final String SMS_PREFIX = "СМС: ";
+
     static final TableRow.LayoutParams lp = new TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
     static TableLayout content;
     static PopupWindow pw;
@@ -47,7 +51,17 @@ class MCPopupWindow {
         public void onClick(View v) {
             pw.dismiss();
             Intent intent = new Intent(Intent.ACTION_DIAL);
-            intent.setData(Uri.parse("tel:" + ((Button) v).getText()));
+            String number = (String) ((Button) v).getText();
+            intent.setData(Uri.parse("tel:" + number.replace(CALL_PREFIX, "")));
+            Startup.context.startActivity(intent);
+        }
+    };
+    private static final OnClickListener smsButtonListener = new OnClickListener() {
+        public void onClick(View v) {
+            pw.dismiss();
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            String number = (String) ((Button) v).getText();
+            intent.setData(Uri.parse("sms:" + number.replace(SMS_PREFIX, "")));
             Startup.context.startActivity(intent);
         }
     };
@@ -118,8 +132,18 @@ class MCPopupWindow {
     static TableRow phoneButtonRow(String raw) {
         String phone = "+7" + raw.substring(1);
         Button dial = new Button(content.getContext());
-        dial.setText(phone);
+        dial.setText(CALL_PREFIX + phone);
         dial.setOnClickListener(dialButtonListener);
+        TableRow tr = new TableRow(content.getContext());
+        tr.addView(dial, lp);
+        return tr;
+    }
+
+    static TableRow smsButtonRow(String raw) {
+        String phone = "+7" + raw.substring(1);
+        Button dial = new Button(content.getContext());
+        dial.setText(SMS_PREFIX + phone);
+        dial.setOnClickListener(smsButtonListener);
         TableRow tr = new TableRow(content.getContext());
         tr.addView(dial, lp);
         return tr;

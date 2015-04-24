@@ -270,13 +270,19 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             String result = "error";
             try {
                 result = json.getString("result");
-                Toast.makeText(this, this.getString(R.string.send_success), Toast.LENGTH_LONG).show();
-                finish();
+                if (result.equals("OK")) {
+                    Toast.makeText(this, this.getString(R.string.send_success), Toast.LENGTH_LONG).show();
+                    finish();
+                } else if (!result.equals("READONLY")) {
+                    Toast.makeText(this, this.getString(R.string.not_have_rights_error), Toast.LENGTH_LONG).show();
+                } else if (!result.equals("PROBABLY SPAM")) {
+                    Toast.makeText(this, this.getString(R.string.too_often_acts), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
-            }
-            if (!result.equals("OK")) {
-                Log.d("CREATE ACC ERROR", json.toString());
+                Toast.makeText(this, this.getString(R.string.parce_error), Toast.LENGTH_LONG).show();
             }
         } else {
             Toast.makeText(this, this.getString(R.string.send_error), Toast.LENGTH_LONG).show();

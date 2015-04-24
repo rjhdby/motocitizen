@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.util.HashMap;
@@ -25,7 +26,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
 
     private OnFragmentInteractionListener mListener;
 
-    private Button onwayButton;
+    private ImageButton onwayButton;
     private View toMap;
     private View onwayContent;
     private View inplaceContent;
@@ -55,7 +56,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View viewMain = inflater.inflate(R.layout.fragment_detail_volunteers, container, false);
 
-        onwayButton = (Button) viewMain.findViewById(R.id.onway_button);
+        onwayButton = (ImageButton) viewMain.findViewById(R.id.onway_button);
         onwayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
