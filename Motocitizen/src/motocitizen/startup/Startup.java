@@ -42,6 +42,8 @@ import motocitizen.utils.MCUtils;
 import motocitizen.utils.Props;
 import motocitizen.utils.Show;
 
+import java.lang.*;
+
 public class Startup extends ActionBarActivity implements View.OnClickListener {
     public static Props props;
     public static Context context;
@@ -272,7 +274,20 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     };
 
     public static void updateStatusBar(String address) {
+
+        String subTitle = "";
+        //Делим примерно пополам, учитывая пробел или запятую
+        int commaPos = address.lastIndexOf(",", address.length() / 2);
+        int spacePos = address.lastIndexOf(" ", address.length() / 2);
+
+        if(commaPos != -1 || spacePos != -1) {
+            subTitle = address.substring(Math.max(commaPos, spacePos) + 1);
+            address = address.substring(0,Math.max(commaPos, spacePos));
+        }
+
         actionBar.setTitle(address);
+        if(!subTitle.isEmpty())
+            actionBar.setSubtitle(subTitle);
 //        Text.set(context, R.id.statusBarText, name + address);
         map.placeUser(context);
     }
