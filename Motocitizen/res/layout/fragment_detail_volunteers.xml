@@ -52,12 +52,13 @@
                     android:layout_height="fill_parent"
                     android:gravity="bottom">
 
-                <Button
+                <ImageButton
                         android:id="@+id/onway_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
                         android:text="@string/onway_button"
+                        android:src="@drawable/onway"
                         style="?android:attr/buttonBarButtonStyle"
                         android:layout_weight="0.5" />
 
@@ -69,7 +70,6 @@
                         style="?android:attr/buttonBarButtonStyle"
                         android:layout_weight="0.5"/>
             </LinearLayout>
-
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>
