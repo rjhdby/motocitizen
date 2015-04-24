@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.util.HashMap;
@@ -26,7 +27,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
 
     private OnFragmentInteractionListener mListener;
 
-    private Button newMessageButton;
+    private ImageButton newMessageButton;
     private EditText mcNewMessageText;
 
     View newMessageArea;
@@ -63,7 +64,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View viewMain = inflater.inflate(R.layout.fragment_detail_messages, container, false);
-        newMessageButton = (Button) viewMain.findViewById(R.id.mc_new_message_send);
+        newMessageButton = (ImageButton) viewMain.findViewById(R.id.mc_new_message_send);
         newMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
