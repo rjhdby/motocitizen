@@ -86,6 +86,8 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
             }
         });
 
+        newMessageButton.setEnabled(false);
+
         mcNewMessageText = (EditText) viewMain.findViewById(R.id.mc_new_message_text);
         mcNewMessageText.addTextChangedListener(mcNewMessageTextListener);
 
