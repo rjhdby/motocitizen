@@ -117,7 +117,7 @@ public class AccidentDetailsActivity
             @Override
             public boolean onLongClick(View v) {
                 PopupWindow pw;
-                pw = MCAccListPopup.getPopupWindow(MCAccidents.getCurrentPointID());
+                pw = MCAccListPopup.getPopupWindow(MCAccidents.getCurrentPointID(), true);
                 pw.showAsDropDown(v, 20, -20);
                 return true;
             }
