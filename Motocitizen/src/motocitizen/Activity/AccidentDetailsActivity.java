@@ -8,7 +8,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -18,6 +20,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import motocitizen.app.mc.MCAccidents;
@@ -32,12 +35,16 @@ import motocitizen.network.JsonRequest;
 import motocitizen.startup.MCPreferences;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
+import motocitizen.utils.MCUtils;
 
 public class AccidentDetailsActivity
         extends ActionBarActivity
         implements DetailMessagesFragment.OnFragmentInteractionListener,
         DetailHistoryFragment.OnFragmentInteractionListener,
         DetailVolunteersFragment.OnFragmentInteractionListener {
+
+    static final int SMS_MENU_PREFIX = 123;
+    static final int CALL_MENU_PREFIX = 456;
 
     /*
     Инцидент с которым работаем
@@ -220,6 +227,17 @@ public class AccidentDetailsActivity
         getMenuInflater().inflate(R.menu.menu_accident_details, menu);
         mMenu = menu;
         menuReconstriction();
+
+        MCPoint currentPoint = MCAccidents.points.getPoint(accidentID);
+        List<String> contactNumbers = MCUtils.getPhonesFromText(currentPoint.getDescription());
+        if(!contactNumbers.isEmpty()) {
+            SubMenu smsSub = mMenu.addSubMenu(getString(R.string.send_sms));
+            SubMenu callSub = mMenu.addSubMenu(getString(R.string.make_call));
+            for(int i=0;i<contactNumbers.size();i++){
+                smsSub.add(0, SMS_MENU_PREFIX + i, 0, "+7" + contactNumbers.get(i));
+                callSub.add(0, CALL_MENU_PREFIX + i, 0, "+7" + contactNumbers.get(i));
+            }
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -291,6 +309,17 @@ public class AccidentDetailsActivity
             case R.id.menu_acc_hide:
                 sendHideRequest();
                 return true;
+        }
+        if( (item.getItemId() & SMS_MENU_PREFIX ) == SMS_MENU_PREFIX) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            String number = (String) item.getTitle();
+            intent.setData(Uri.parse("sms:" + number));
+            Startup.context.startActivity(intent);
+        } else if( (item.getItemId() & CALL_MENU_PREFIX ) == CALL_MENU_PREFIX) {
+            Intent intent = new Intent(Intent.ACTION_DIAL);
+            String number = (String) item.getTitle();
+            intent.setData(Uri.parse("tel:" + number));
+            Startup.context.startActivity(intent);
         }
         return false;
     }
