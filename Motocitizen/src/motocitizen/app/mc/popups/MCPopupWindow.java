@@ -26,7 +26,7 @@ import motocitizen.startup.Startup;
 
 class MCPopupWindow {
 
-    static final String CALL_PREFIX = "Вызов :";
+    static final String CALL_PREFIX = "Вызов: ";
     static final String SMS_PREFIX = "СМС: ";
 
     static final TableRow.LayoutParams lp = new TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);

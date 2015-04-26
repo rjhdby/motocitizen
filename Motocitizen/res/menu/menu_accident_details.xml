@@ -16,6 +16,11 @@
             android:title="@string/finish"/>
 
     <item
+            android:id="@+id/menu_acc_hide"
+            android:visible="false"
+            android:title="@string/hide"/>
+
+    <item
             android:id="@+id/action_hide_info"
             android:icon="@drawable/ic_panel_up"
             yourapp:showAsAction="ifRoom"

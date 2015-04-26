@@ -30,8 +30,8 @@ public class MCAccListPopup extends MCPopupWindow {
         if (MCRole.isModerator()) {
             if(!disableOldItems) {
                 content.addView(finishButtonRow(p));
+                content.addView(hideButtonRow(p));
             }
-            content.addView(hideButtonRow(p));
         }
         content.addView(shareMessage(Startup.context));
         pw = new PopupWindow(content, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
