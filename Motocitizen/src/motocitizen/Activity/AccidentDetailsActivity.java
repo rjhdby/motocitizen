@@ -17,10 +17,18 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCPoint;
 import motocitizen.app.mc.popups.MCAccListPopup;
+import motocitizen.app.mc.user.MCRole;
 import motocitizen.main.R;
+import motocitizen.network.AccidentFinishRequest;
+import motocitizen.network.AccidentHideRequest;
+import motocitizen.network.JSONCall;
+import motocitizen.network.JsonRequest;
 import motocitizen.startup.MCPreferences;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
@@ -111,7 +119,7 @@ public class AccidentDetailsActivity
             @Override
             public boolean onLongClick(View v) {
                 PopupWindow pw;
-                pw = MCAccListPopup.getPopupWindow(MCAccidents.getCurrentPointID());
+                pw = MCAccListPopup.getPopupWindow(MCAccidents.getCurrentPointID(), true);
                 pw.showAsDropDown(v, 20, -20);
                 return true;
             }
@@ -149,6 +157,8 @@ public class AccidentDetailsActivity
         generalOwner.setText(currentPoint.getOwner());
         generalAddress.setText("(" + currentPoint.getDistanceText() + ") " + currentPoint.getAddress());
         generalDescription.setText(currentPoint.getDescription());
+
+        menuReconstriction();
 /*
         if (currentPoint.id == prefs.getOnWay() || currentPoint.id == MCAccidents.getInplaceID()) {
             onwayButton.setVisibility(View.INVISIBLE);
@@ -209,7 +219,36 @@ public class AccidentDetailsActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_accident_details, menu);
         mMenu = menu;
+        menuReconstriction();
         return super.onCreateOptionsMenu(menu);
+    }
+
+    private void menuReconstriction() {
+        if(mMenu != null) {
+            MCPoint currentPoint = MCAccidents.points.getPoint(accidentID);
+            MenuItem finish = mMenu.findItem(R.id.menu_acc_finish);
+            MenuItem hide = mMenu.findItem(R.id.menu_acc_hide);
+            if (MCRole.isModerator()) {
+
+                finish.setVisible(true);
+                if (currentPoint.getStatus().equals("acc_status_end")) {
+                    finish.setTitle(R.string.unfinish);
+                } else {
+                    finish.setTitle(R.string.finish);
+                }
+
+                hide.setVisible(true);
+                if (currentPoint.getStatus().equals("acc_status_hide")) {
+                    hide.setTitle(R.string.show);
+                } else {
+                    hide.setTitle(R.string.hide);
+                }
+
+            } else {
+                finish.setVisible(false);
+                hide.setVisible(false);
+            }
+        }
     }
 
     private void showGeneralLayout(int state) {
@@ -246,8 +285,56 @@ public class AccidentDetailsActivity
                 else
                     showGeneralLayout(View.VISIBLE);
                 return true;
+            case R.id.menu_acc_finish:
+                sendFinishRequest();
+                return true;
+            case R.id.menu_acc_hide:
+                sendHideRequest();
+                return true;
         }
         return false;
+    }
+
+    private void sendFinishRequest() {
+        if (Startup.isOnline()) {
+            Map<String, String> params = new HashMap<>();
+            params.put("login", MCAccidents.auth.getLogin());
+            params.put("passhash", MCAccidents.auth.makePassHash());
+            MCPoint point = MCAccidents.points.getPoint(accidentID);
+            if (point.getStatus().equals("acc_status_end")) {
+                params.put("state", "acc_status_act");
+            } else {
+                params.put("state", "acc_status_end");
+            }
+            params.put("id", String.valueOf(point.getId()));
+            JsonRequest request = new JsonRequest("mcaccidents", "changeState", params, "", true);
+            if (request != null) {
+                (new AccidentFinishRequest(this, accidentID)).execute(request);
+            }
+        } else {
+            Toast.makeText(this, getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void sendHideRequest() {
+        if (Startup.isOnline()) {
+            MCPoint point = MCAccidents.points.getPoint(accidentID);
+            Map<String, String> params = new HashMap<>();
+            params.put("login", MCAccidents.auth.getLogin());
+            params.put("passhash", MCAccidents.auth.makePassHash());
+            if (point.getStatus().equals("acc_status_hide")) {
+                params.put("state", "acc_status_act");
+            } else {
+                params.put("state", "acc_status_hide");
+            }
+            params.put("id", String.valueOf(point.getId()));
+            JsonRequest request = new JsonRequest("mcaccidents", "changeState", params, "", true);
+            if (request != null) {
+                (new AccidentHideRequest(this, accidentID)).execute(request);
+            }
+        } else {
+            Toast.makeText(this, getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
+        }
     }
 
 //    private void setupAccess() {
@@ -274,6 +361,31 @@ public class AccidentDetailsActivity
         }
     };
 
+    public void parseFinishResponse(JSONObject json, int currentId) {
+        if (json.has("result")) {
+            try {
+                String result = json.getString("result");
+                if (result.equals("OK")) {
+                    Toast.makeText(this, Startup.context.getString(R.string.send_success), Toast.LENGTH_LONG).show();
+                    MCAccidents.refresh(Startup.context);
+                    menuReconstriction();
+                    detailHistoryFragment.notifyDataSetChanged();
+                    return;
+                } else if (result.equals("READONLY") || result.equals("NO RIGHTS") ) {
+                    Toast.makeText(this, this.getString(R.string.not_have_rights_error), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Toast.makeText(this, this.getString(R.string.parce_error), Toast.LENGTH_LONG).show();
+            }
+            Log.e("Send message failed", json.toString());
+        } else {
+            Toast.makeText(this, Startup.context.getString(R.string.message_send_error), Toast.LENGTH_LONG).show();
+        }
+    }
+
     public void parseSendMessageResponse(JSONObject json, int currentId) {
         if (json.has("result")) {
             try {
@@ -281,7 +393,6 @@ public class AccidentDetailsActivity
                 if (result.equals("OK")) {
                     Toast.makeText(this, Startup.context.getString(R.string.send_success), Toast.LENGTH_LONG).show();
                     MCAccidents.refresh(Startup.context);
-                    update();
                     detailMessagesFragment.notifyDataSetChanged();
                     //mcNewMessageText.setText("");
                     //Keyboard.hide(findViewById(R.id.mc_new_message_text));

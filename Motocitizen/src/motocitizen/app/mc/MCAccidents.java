@@ -54,7 +54,7 @@ public class MCAccidents {
         @Override
         public boolean onLongClick(View v) {
             PopupWindow pw;
-            pw = MCAccListPopup.getPopupWindow(currentPoint.getId());
+            pw = MCAccListPopup.getPopupWindow(currentPoint.getId(), false);
             pw.showAsDropDown(v, 20, -20);
             return true;
         }

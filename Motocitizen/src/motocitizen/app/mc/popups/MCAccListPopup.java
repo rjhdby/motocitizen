@@ -14,7 +14,7 @@ import motocitizen.utils.Const;
 import motocitizen.utils.MCUtils;
 
 public class MCAccListPopup extends MCPopupWindow {
-    public static PopupWindow getPopupWindow(int id) {
+    public static PopupWindow getPopupWindow(int id, boolean disableOldItems) {
         MCPoint p = MCAccidents.points.getPoint(id);
         content = new TableLayout(Startup.context);
         content.setOrientation(LinearLayout.HORIZONTAL);
@@ -28,8 +28,10 @@ public class MCAccListPopup extends MCPopupWindow {
             content.addView(smsButtonRow(phone), lp);
         }
         if (MCRole.isModerator()) {
-            content.addView(finishButtonRow(p));
-            content.addView(hideButtonRow(p));
+            if(!disableOldItems) {
+                content.addView(finishButtonRow(p));
+                content.addView(hideButtonRow(p));
+            }
         }
         content.addView(shareMessage(Startup.context));
         pw = new PopupWindow(content, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);

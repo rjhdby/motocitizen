@@ -104,7 +104,7 @@ public class MCPoint {
         @Override
         public boolean onLongClick(View v) {
             PopupWindow pw;
-            pw = MCAccListPopup.getPopupWindow(id);
+            pw = MCAccListPopup.getPopupWindow(id, false);
             pw.showAsDropDown(v, 20, -20);
             return true;
         }
