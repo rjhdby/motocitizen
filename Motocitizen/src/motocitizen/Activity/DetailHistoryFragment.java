@@ -87,4 +87,8 @@ public class DetailHistoryFragment extends AccidentDetailsFragments {
             logView.addView(currentPoint.history.get(i).createRow(getActivity()));
         }
     }
+
+    public void notifyDataSetChanged() {
+        update();
+    }
 }
