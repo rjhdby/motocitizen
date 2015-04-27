@@ -121,6 +121,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
             version = getString(R.string.unknown_code_version);
         }
         if(!prefs.getCurrentVersion().equals(version)){
+
             ChangeLog.getDialog(this, true).show();
         }
         prefs.setCurrentVersion(version);

@@ -121,7 +121,7 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
             InputStream is;
             try {
                 is = connection.getInputStream();
-                is = new GZIPInputStream(is);
+//                is = new GZIPInputStream(is);
                 int responseCode = connection.getResponseCode();
                 Log.d("JSON ERROR", String.valueOf(responseCode));
                 if (responseCode == 200) {
