@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
-import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -30,7 +29,6 @@ import motocitizen.app.mc.user.MCRole;
 import motocitizen.main.R;
 import motocitizen.network.AccidentFinishRequest;
 import motocitizen.network.AccidentHideRequest;
-import motocitizen.network.JSONCall;
 import motocitizen.network.JsonRequest;
 import motocitizen.startup.MCPreferences;
 import motocitizen.startup.Startup;
@@ -43,8 +41,11 @@ public class AccidentDetailsActivity
         DetailHistoryFragment.OnFragmentInteractionListener,
         DetailVolunteersFragment.OnFragmentInteractionListener {
 
-    static final int SMS_MENU_PREFIX = 123;
-    static final int CALL_MENU_PREFIX = 456;
+    static final int SMS_MENU_MIN_ID = 100;
+    static final int SMS_MENU_MAX_ID = 200;
+
+    static final int CALL_MENU_MIN_ID = 400;
+    static final int CALL_MENU_MAX_ID = 500;
 
     /*
     Инцидент с которым работаем
@@ -122,7 +123,7 @@ public class AccidentDetailsActivity
         detVolunteers = findViewById(R.id.det_volunteers);
 */
         generalLayout = findViewById(R.id.mc_acc_details_general);
-        generalLayout.setOnLongClickListener(new View.OnLongClickListener(){
+        generalLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 PopupWindow pw;
@@ -147,7 +148,7 @@ public class AccidentDetailsActivity
     protected void onResume() {
         super.onResume();
         //TODO Вероятно теперь ни когда null не будет.
-        if(prefs == null)
+        if (prefs == null)
             prefs = new MCPreferences(this);
         update();
     }
@@ -230,19 +231,19 @@ public class AccidentDetailsActivity
 
         MCPoint currentPoint = MCAccidents.points.getPoint(accidentID);
         List<String> contactNumbers = MCUtils.getPhonesFromText(currentPoint.getDescription());
-        if(!contactNumbers.isEmpty()) {
+        if (!contactNumbers.isEmpty()) {
             SubMenu smsSub = mMenu.addSubMenu(getString(R.string.send_sms));
             SubMenu callSub = mMenu.addSubMenu(getString(R.string.make_call));
-            for(int i=0;i<contactNumbers.size();i++){
-                smsSub.add(0, SMS_MENU_PREFIX + i, 0, "+7" + contactNumbers.get(i));
-                callSub.add(0, CALL_MENU_PREFIX + i, 0, "+7" + contactNumbers.get(i));
+            for (int i = 0; i < contactNumbers.size(); i++) {
+                smsSub.add(0, SMS_MENU_MIN_ID + i, 0, "+7" + contactNumbers.get(i));
+                callSub.add(0, CALL_MENU_MIN_ID + i, 0, "+7" + contactNumbers.get(i));
             }
         }
         return super.onCreateOptionsMenu(menu);
     }
 
     private void menuReconstriction() {
-        if(mMenu != null) {
+        if (mMenu != null) {
             MCPoint currentPoint = MCAccidents.points.getPoint(accidentID);
             MenuItem finish = mMenu.findItem(R.id.menu_acc_finish);
             MenuItem hide = mMenu.findItem(R.id.menu_acc_hide);
@@ -272,7 +273,7 @@ public class AccidentDetailsActivity
     private void showGeneralLayout(int state) {
         MenuItem menuItemActionHideInfo = mMenu.findItem(R.id.action_hide_info);
         MenuItem menuItemMenuHideInfo = mMenu.findItem(R.id.menu_hide_info);
-        if(state == View.INVISIBLE ) {
+        if (state == View.INVISIBLE) {
             generalLayout.setVisibility(View.GONE);
             menuItemActionHideInfo.setIcon(R.drawable.ic_panel_down);
             menuItemMenuHideInfo.setTitle(getString(R.string.show_info_details));
@@ -298,7 +299,7 @@ public class AccidentDetailsActivity
                 return true;
             case R.id.action_hide_info:
             case R.id.menu_hide_info:
-                if(generalLayout.getVisibility() == View.VISIBLE)
+                if (generalLayout.getVisibility() == View.VISIBLE)
                     showGeneralLayout(View.INVISIBLE);
                 else
                     showGeneralLayout(View.VISIBLE);
@@ -310,12 +311,12 @@ public class AccidentDetailsActivity
                 sendHideRequest();
                 return true;
         }
-        if( (item.getItemId() & SMS_MENU_PREFIX ) == SMS_MENU_PREFIX) {
+        if (item.getItemId() >= SMS_MENU_MIN_ID && item.getItemId() < SMS_MENU_MAX_ID) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             String number = (String) item.getTitle();
             intent.setData(Uri.parse("sms:" + number));
             Startup.context.startActivity(intent);
-        } else if( (item.getItemId() & CALL_MENU_PREFIX ) == CALL_MENU_PREFIX) {
+        } else if (item.getItemId() >= CALL_MENU_MIN_ID && item.getItemId() < CALL_MENU_MAX_ID) {
             Intent intent = new Intent(Intent.ACTION_DIAL);
             String number = (String) item.getTitle();
             intent.setData(Uri.parse("tel:" + number));
@@ -400,7 +401,7 @@ public class AccidentDetailsActivity
                     menuReconstriction();
                     detailHistoryFragment.notifyDataSetChanged();
                     return;
-                } else if (result.equals("READONLY") || result.equals("NO RIGHTS") ) {
+                } else if (result.equals("READONLY") || result.equals("NO RIGHTS")) {
                     Toast.makeText(this, this.getString(R.string.not_have_rights_error), Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(this, result, Toast.LENGTH_LONG).show();
@@ -531,7 +532,7 @@ public class AccidentDetailsActivity
     }
 
     MCPreferences getPref() {
-        if(prefs == null)
+        if (prefs == null)
             prefs = new MCPreferences(this);
         return prefs;
     }
