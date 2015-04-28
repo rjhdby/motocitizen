@@ -270,7 +270,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             String result = "error";
             try {
                 result = json.getString("result");
-                if (result.equals("OK")) {
+                if (result.contains("ID")) {
                     Toast.makeText(this, this.getString(R.string.send_success), Toast.LENGTH_LONG).show();
                     finish();
                 } else if (!result.equals("READONLY")) {
