@@ -232,11 +232,16 @@ public class AccidentDetailsActivity
         MCPoint currentPoint = MCAccidents.points.getPoint(accidentID);
         List<String> contactNumbers = MCUtils.getPhonesFromText(currentPoint.getDescription());
         if (!contactNumbers.isEmpty()) {
-            SubMenu smsSub = mMenu.addSubMenu(getString(R.string.send_sms));
-            SubMenu callSub = mMenu.addSubMenu(getString(R.string.make_call));
-            for (int i = 0; i < contactNumbers.size(); i++) {
-                smsSub.add(0, SMS_MENU_MIN_ID + i, 0, "+7" + contactNumbers.get(i));
-                callSub.add(0, CALL_MENU_MIN_ID + i, 0, "+7" + contactNumbers.get(i));
+            if(contactNumbers.size() == 1) {
+                mMenu.add(0, SMS_MENU_MIN_ID, 0, getString(R.string.send_sms) + "+7" + contactNumbers.get(0).substring(1));
+                mMenu.add(0, CALL_MENU_MIN_ID, 0, getString(R.string.make_call) + "+7" + contactNumbers.get(0).substring(1));
+            } else {
+                SubMenu smsSub = mMenu.addSubMenu(getString(R.string.send_sms));
+                SubMenu callSub = mMenu.addSubMenu(getString(R.string.make_call));
+                for (int i = 0; i < contactNumbers.size(); i++) {
+                    smsSub.add(0, SMS_MENU_MIN_ID + i, 0, "+7" + contactNumbers.get(i).substring(1));
+                    callSub.add(0, CALL_MENU_MIN_ID + i, 0, "+7" + contactNumbers.get(i).substring(1));
+                }
             }
         }
         return super.onCreateOptionsMenu(menu);
@@ -248,7 +253,6 @@ public class AccidentDetailsActivity
             MenuItem finish = mMenu.findItem(R.id.menu_acc_finish);
             MenuItem hide = mMenu.findItem(R.id.menu_acc_hide);
             if (MCRole.isModerator()) {
-
                 finish.setVisible(true);
                 if (currentPoint.getStatus().equals("acc_status_end")) {
                     finish.setTitle(R.string.unfinish);
@@ -262,7 +266,6 @@ public class AccidentDetailsActivity
                 } else {
                     hide.setTitle(R.string.hide);
                 }
-
             } else {
                 finish.setVisible(false);
                 hide.setVisible(false);
@@ -313,12 +316,18 @@ public class AccidentDetailsActivity
         }
         if (item.getItemId() >= SMS_MENU_MIN_ID && item.getItemId() < SMS_MENU_MAX_ID) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
+            String smsPrefix = getString(R.string.send_sms);
             String number = (String) item.getTitle();
+            if(number.indexOf(smsPrefix) != -1)
+                number = number.substring( smsPrefix.length(), number.length());
             intent.setData(Uri.parse("sms:" + number));
             Startup.context.startActivity(intent);
         } else if (item.getItemId() >= CALL_MENU_MIN_ID && item.getItemId() < CALL_MENU_MAX_ID) {
             Intent intent = new Intent(Intent.ACTION_DIAL);
+            String callPrefix = getString(R.string.make_call);
             String number = (String) item.getTitle();
+            if(number.indexOf(callPrefix) != -1)
+                number = number.substring( callPrefix.length(), number.length());
             intent.setData(Uri.parse("tel:" + number));
             Startup.context.startActivity(intent);
         }
