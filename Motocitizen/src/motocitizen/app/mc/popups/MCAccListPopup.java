@@ -23,12 +23,14 @@ public class MCAccListPopup extends MCPopupWindow {
         textToCopy = MCAccidents.points.getTextToCopy(id);
         content.addView(copyButtonRow(), lp);
 
-        for (String phone : MCUtils.getPhonesFromText(p.getDescription())) {
-            content.addView(phoneButtonRow(phone), lp);
-            content.addView(smsButtonRow(phone), lp);
+        if (!disableOldItems) {
+            for (String phone : MCUtils.getPhonesFromText(p.getDescription())) {
+                content.addView(phoneButtonRow(phone), lp);
+                content.addView(smsButtonRow(phone), lp);
+            }
         }
         if (MCRole.isModerator()) {
-            if(!disableOldItems) {
+            if (!disableOldItems) {
                 content.addView(finishButtonRow(p));
                 content.addView(hideButtonRow(p));
             }
