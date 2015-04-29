@@ -498,6 +498,7 @@ public class AccidentDetailsActivity
         intent.putExtra("toMap", MCAccidents.getCurrentPointID());
         intent.putExtra("fromDetails", true);
         this.startActivity(intent);
+        finish();
     }
 
     /*
