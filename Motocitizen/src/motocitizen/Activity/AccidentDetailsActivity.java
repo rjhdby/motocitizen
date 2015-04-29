@@ -408,7 +408,8 @@ public class AccidentDetailsActivity
                     Toast.makeText(this, Startup.context.getString(R.string.send_success), Toast.LENGTH_LONG).show();
                     MCAccidents.refresh(Startup.context);
                     menuReconstriction();
-                    detailHistoryFragment.notifyDataSetChanged();
+                    if(detailHistoryFragment.isResumed())
+                        detailHistoryFragment.notifyDataSetChanged();
                     return;
                 } else if (result.equals("READONLY") || result.equals("NO RIGHTS")) {
                     Toast.makeText(this, this.getString(R.string.not_have_rights_error), Toast.LENGTH_LONG).show();
@@ -432,7 +433,8 @@ public class AccidentDetailsActivity
                 if (result.equals("OK")) {
                     Toast.makeText(this, Startup.context.getString(R.string.send_success), Toast.LENGTH_LONG).show();
                     MCAccidents.refresh(Startup.context);
-                    detailMessagesFragment.notifyDataSetChanged();
+                    if(detailMessagesFragment.isResumed())
+                        detailMessagesFragment.notifyDataSetChanged();
                     //mcNewMessageText.setText("");
                     //Keyboard.hide(findViewById(R.id.mc_new_message_text));
                     return;
@@ -460,7 +462,8 @@ public class AccidentDetailsActivity
                     prefs.setOnWay(currentId);
                     MCAccidents.refresh(Startup.context);
                     update();
-                    detailVolunteersFragment.notifyDataSetChanged();
+                    if(detailVolunteersFragment.isResumed())
+                        detailVolunteersFragment.notifyDataSetChanged();
                     return;
                 }
             } catch (JSONException e) {
