@@ -50,7 +50,7 @@ public class MCUtils {
         in = in + ".";
         Matcher matcher = Pattern.compile("[7|8][ \\(-]?[\\d]{3}[ \\)-]?[\\d]{3}[ -]?[\\d]{2}[ -]?[\\d]{2}[\\D]").matcher(in);
         while (matcher.find()) {
-            out.add(matcher.group().replaceAll("[^0-9]", ""));
+            out.add("+7" + matcher.group().replaceAll("[^0-9]", "").substring(1));
         }
         return out;
     }

@@ -129,8 +129,7 @@ class MCPopupWindow {
         return tr;
     }
 
-    static TableRow phoneButtonRow(String raw) {
-        String phone = "+7" + raw.substring(1);
+    static TableRow phoneButtonRow(String phone) {
         Button dial = new Button(content.getContext());
         dial.setText(CALL_PREFIX + phone);
         dial.setOnClickListener(dialButtonListener);
