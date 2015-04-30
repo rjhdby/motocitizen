@@ -25,6 +25,13 @@
             android:icon="@drawable/ic_panel_up"
             yourapp:showAsAction="ifRoom"
             android:title="@string/hide_info_details"/>
+
+    <item
+            android:id="@+id/action_to_map"
+            android:icon="@android:drawable/ic_menu_mapmode"
+            yourapp:showAsAction="ifRoom"
+            android:title="@string/tab_map"/>
+
     <item
             android:id="@+id/action_share"
             android:icon="@android:drawable/ic_menu_share"
