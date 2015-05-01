@@ -407,7 +407,7 @@ public class AccidentDetailsActivity
                 if (result.equals("OK")) {
                     Toast.makeText(this, Startup.context.getString(R.string.send_success), Toast.LENGTH_LONG).show();
                     MCAccidents.refresh(Startup.context);
-                    menuReconstriction();
+                    update();
                     if(detailHistoryFragment.isResumed())
                         detailHistoryFragment.notifyDataSetChanged();
                     return;
@@ -433,6 +433,7 @@ public class AccidentDetailsActivity
                 if (result.equals("OK")) {
                     Toast.makeText(this, Startup.context.getString(R.string.send_success), Toast.LENGTH_LONG).show();
                     MCAccidents.refresh(Startup.context);
+                    update();
                     if(detailMessagesFragment.isResumed())
                         detailMessagesFragment.notifyDataSetChanged();
                     //mcNewMessageText.setText("");
