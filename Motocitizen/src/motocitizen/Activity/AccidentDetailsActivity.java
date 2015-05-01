@@ -254,14 +254,14 @@ public class AccidentDetailsActivity
             MenuItem hide = mMenu.findItem(R.id.menu_acc_hide);
             if (MCRole.isModerator()) {
                 finish.setVisible(true);
-                if (currentPoint.getStatus().equals("acc_status_end")) {
+                if (currentPoint.isEnded()) {
                     finish.setTitle(R.string.unfinish);
                 } else {
                     finish.setTitle(R.string.finish);
                 }
 
                 hide.setVisible(true);
-                if (currentPoint.getStatus().equals("acc_status_hide")) {
+                if (currentPoint.isHidden()) {
                     hide.setTitle(R.string.show);
                 } else {
                     hide.setTitle(R.string.hide);
@@ -340,7 +340,7 @@ public class AccidentDetailsActivity
             params.put("login", MCAccidents.auth.getLogin());
             params.put("passhash", MCAccidents.auth.makePassHash());
             MCPoint point = MCAccidents.points.getPoint(accidentID);
-            if (point.getStatus().equals("acc_status_end")) {
+            if (point.isEnded()) {
                 params.put("state", "acc_status_act");
             } else {
                 params.put("state", "acc_status_end");
@@ -361,7 +361,7 @@ public class AccidentDetailsActivity
             Map<String, String> params = new HashMap<>();
             params.put("login", MCAccidents.auth.getLogin());
             params.put("passhash", MCAccidents.auth.makePassHash());
-            if (point.getStatus().equals("acc_status_hide")) {
+            if (point.isHidden()) {
                 params.put("state", "acc_status_act");
             } else {
                 params.put("state", "acc_status_hide");
@@ -407,7 +407,7 @@ public class AccidentDetailsActivity
                 if (result.equals("OK")) {
                     Toast.makeText(this, Startup.context.getString(R.string.send_success), Toast.LENGTH_LONG).show();
                     MCAccidents.refresh(Startup.context);
-                    menuReconstriction();
+                    update();
                     if(detailHistoryFragment.isResumed())
                         detailHistoryFragment.notifyDataSetChanged();
                     return;
@@ -433,6 +433,7 @@ public class AccidentDetailsActivity
                 if (result.equals("OK")) {
                     Toast.makeText(this, Startup.context.getString(R.string.send_success), Toast.LENGTH_LONG).show();
                     MCAccidents.refresh(Startup.context);
+                    update();
                     if(detailMessagesFragment.isResumed())
                         detailMessagesFragment.notifyDataSetChanged();
                     //mcNewMessageText.setText("");

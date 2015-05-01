@@ -141,7 +141,7 @@ public class MCPoints {
                 continue;
             }
             View row = ((Activity) context).findViewById(p.row_id);
-            row.setBackgroundResource(getBackground(p.getStatus()));
+            row.setBackgroundResource(getBackground(p.getStatusString()));
         }
         MCPoint selected = points.get(id);
         if (selected == null) {

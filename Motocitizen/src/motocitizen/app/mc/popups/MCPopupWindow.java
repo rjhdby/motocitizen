@@ -71,7 +71,7 @@ class MCPopupWindow {
             Map<String, String> params = new HashMap<>();
             params.put("login", MCAccidents.auth.getLogin());
             params.put("passhash", MCAccidents.auth.makePassHash());
-            if (point.getStatus().equals("acc_status_end")) {
+            if (point.isEnded()) {
                 params.put("state", "acc_status_act");
             } else {
                 params.put("state", "acc_status_end");
@@ -87,7 +87,7 @@ class MCPopupWindow {
             Map<String, String> params = new HashMap<>();
             params.put("login", MCAccidents.auth.getLogin());
             params.put("passhash", MCAccidents.auth.makePassHash());
-            if (point.getStatus().equals("acc_status_hide")) {
+            if (point.isHidden()) {
                 params.put("state", "acc_status_act");
             } else {
                 params.put("state", "acc_status_hide");
@@ -151,7 +151,7 @@ class MCPopupWindow {
     static TableRow finishButtonRow(MCPoint p) {
         point = p;
         Button finish = new Button(content.getContext());
-        if (point.getStatus().equals("acc_status_end")) {
+        if (point.isEnded()) {
             finish.setText(R.string.unfinish);
         } else {
             finish.setText(R.string.finish);
@@ -166,7 +166,7 @@ class MCPopupWindow {
     static TableRow hideButtonRow(MCPoint p) {
         point = p;
         Button finish = new Button(content.getContext());
-        if (point.getStatus().equals("acc_status_hide")) {
+        if (point.isHidden()) {
             finish.setText(R.string.show);
         } else {
             finish.setText(R.string.hide);
