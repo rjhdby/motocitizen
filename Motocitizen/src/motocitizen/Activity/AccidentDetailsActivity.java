@@ -291,6 +291,7 @@ public class AccidentDetailsActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_map:
+            case R.id.action_to_map:
                 jumpToMap();
                 return true;
             case R.id.action_share:
