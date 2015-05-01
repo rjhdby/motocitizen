@@ -43,7 +43,13 @@ public class MCPoint {
     public Map<Integer, MCPointHistory> history;
     private Location location;
 
-    private String type, status, med, address, owner, descr;
+    private String type, med, address, owner, descr;
+
+    private enum PointStatus {
+        ACTIVE, HIDEN, ENDED,
+    }
+
+    public PointStatus status;
 
     public Date created;
 
@@ -75,8 +81,14 @@ public class MCPoint {
         return owner;
     }
 
-    public String getStatus() {
-        return status;
+    public String getStatusString() {
+        if(status == PointStatus.ACTIVE)
+            return "acc_status_act";
+        if(status == PointStatus.HIDEN)
+            return "acc_status_hide";
+        if(status == PointStatus.ENDED)
+            return "acc_status_end";
+        return "";
     }
 
     public String getTextToCopy() {
@@ -147,7 +159,7 @@ public class MCPoint {
             location.setLongitude(Float.parseFloat(data.get("lon")));
             location.setAccuracy(0);
             type = data.get("mc_accident_orig_type");
-            status = data.get("status");
+            setStatus(data.get("status"));
             med = data.get("mc_accident_orig_med");
             id = Integer.parseInt(data.get("id"));
             address = data.get("address");
@@ -174,6 +186,20 @@ public class MCPoint {
         } catch (Exception e) {
             e.printStackTrace();
             throw new MCPointException();
+        }
+    }
+
+    private void setStatus(String status) {
+        if(status.equals("acc_status_act"))
+            this.status = PointStatus.ACTIVE;
+        else if(status.equals("acc_status_end"))
+            this.status = PointStatus.ENDED;
+        else if(status.equals("acc_status_hide"))
+            this.status = PointStatus.HIDEN;
+        else {
+            //TODO Придумать, как сделать более правильно
+            Log.e("MCPoint", "Unkown point status");
+            this.status = PointStatus.HIDEN;
         }
     }
 
@@ -353,7 +379,8 @@ public class MCPoint {
     }
 
     public String getStatusText() {
-        return Const.status_text.get(status);
+        //TODO Масло маслянное
+        return Const.status_text.get(getStatusString());
     }
 
     public String getTypeText() {
@@ -405,6 +432,14 @@ public class MCPoint {
     }
 
     public boolean isActive() {
-        return  (!status.equals("acc_status_end")) || (status.equals("acc_status_hide"));
+        return  (status == PointStatus.ACTIVE);
+    }
+
+    public boolean isHidden() {
+        return  (status == PointStatus.HIDEN);
+    }
+
+    public boolean isEnded() {
+        return  (status == PointStatus.ENDED);
     }
 }
