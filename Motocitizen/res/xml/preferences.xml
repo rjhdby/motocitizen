@@ -70,6 +70,7 @@
             android:defaultValue="google"
             android:summary="%s"
             android:entries="@array/mapProvider"
+            android:enabled="false"
             android:entryValues="@array/mapProviderValues" />
     </PreferenceCategory>
   <PreferenceCategory

@@ -100,7 +100,8 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
 
         new MCAccidents(this);
 
-        createMap(prefs.getMapProvider());
+        //createMap(prefs.getMapProvider());
+        createMap(MCMap.GOOGLE);
         // zz
         // new SettingsMenu();
         if (MCAccidents.auth.isFirstRun()) {
