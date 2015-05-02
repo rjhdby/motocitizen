@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -132,6 +133,10 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
                 }
             }
         });
+
+        TextView accListYesterdayLine = (TextView) findViewById(R.id.accListYesterdayLine);
+        accListYesterdayLine.setMovementMethod(LinkMovementMethod.getInstance());
+
         fillCtrls();
     }
 

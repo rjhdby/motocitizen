@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.webkit.WebView;
 import android.widget.TextView;
@@ -29,6 +30,9 @@ public class AboutActivity extends ActionBarActivity {
         WebView wv = (WebView) findViewById(R.id.change_log);
         wv.setBackgroundColor(Color.rgb(48, 48, 48));
         wv.loadDataWithBaseURL(null, ChangeLog.getLog(this, true), "text/html", "UTF-8", null);
+
+        TextView url_support = (TextView) findViewById(R.id.about_url_support);
+        url_support.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     @Override
