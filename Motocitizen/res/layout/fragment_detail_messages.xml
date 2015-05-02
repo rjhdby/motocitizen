@@ -30,10 +30,11 @@
             </TableLayout>
         </ScrollView>
 
-        <RelativeLayout
+        <LinearLayout
                 android:id="@+id/mc_new_message_area"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_gravity="bottom" >
 
             <EditText
@@ -43,7 +44,7 @@
                     android:layout_gravity="bottom"
                     android:ems="10"
                     android:inputType="text"
-                    android:layout_toLeftOf="@+id/mc_new_message_send"
+                    android:layout_weight="1"
                     android:lines="1" >
                 <requestFocus />
             </EditText>
@@ -61,6 +62,6 @@
                     android:layout_alignParentTop="true"
                     android:nestedScrollingEnabled="false"
                     android:minWidth="90dp"/>
-        </RelativeLayout>
+        </LinearLayout>
     </LinearLayout>
 </FrameLayout>
