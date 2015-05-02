@@ -104,11 +104,6 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         createMap(MCMap.GOOGLE);
         // zz
         // new SettingsMenu();
-        if (MCAccidents.auth.isFirstRun()) {
-            //Show.show(R.id.main_frame, R.id.first_auth_screen);
-            Intent i = new Intent(Startup.context, AuthActivity.class);
-            Startup.context.startActivity(i);
-        }
         new GcmBroadcastReceiver();
     }
 
