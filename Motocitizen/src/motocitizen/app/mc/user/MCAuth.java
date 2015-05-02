@@ -1,6 +1,7 @@
 package motocitizen.app.mc.user;
 
 import android.content.Context;
+import android.content.Intent;
 import android.telephony.TelephonyManager;
 import android.widget.Toast;
 
@@ -12,6 +13,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
+import motocitizen.Activity.AuthActivity;
+import motocitizen.app.mc.MCAccidents;
 import motocitizen.network.JSONCall;
 import motocitizen.startup.MCPreferences;
 import motocitizen.startup.Startup;
@@ -26,8 +29,14 @@ public class MCAuth {
     public MCAuth(Context context) {
         prefs = new MCPreferences(context);
         reset();
-        if (!prefs.isAnonim()) {
-            auth(context, prefs.getLogin(), prefs.getPassword());
+
+        if (!prefs.isAnonim() ) {
+          if(!prefs.getLogin().isEmpty()) {
+              auth(context, prefs.getLogin(), prefs.getPassword());
+          } else {
+              Intent i = new Intent(Startup.context, AuthActivity.class);
+              Startup.context.startActivity(i);
+          }
         }
     }
 
@@ -73,10 +82,6 @@ public class MCAuth {
     // Ну нету в java параметров по-умолчанию.
     public String makePassHash() {
         return makePassHash(prefs.getPassword());
-    }
-
-    public boolean isFirstRun() {
-        return !prefs.isAnonim() && prefs.getLogin().equals("");
     }
 
     public boolean isAnonim() {
