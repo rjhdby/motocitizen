@@ -21,7 +21,6 @@ import motocitizen.main.R;
 
 public class ChangeLog {
 
-
     private static final String EOCL = "END_OF_CHANGE_LOG";
     private static String lastVersion;
     private static StringBuffer sb = null;
@@ -42,8 +41,6 @@ public class ChangeLog {
                                         int which) {
                     }
                 });
-
-
         return builder.create();
     }
 

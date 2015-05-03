@@ -10,8 +10,8 @@ import motocitizen.startup.Startup;
 
 public class IncidentRequest extends HttpClient {
 
-    public IncidentRequest(Context context) {
-        super(context, context.getString(R.string.request_get_incidents));
+    public IncidentRequest(Context context, boolean isCreateDialog) {
+        super(context, context.getString(R.string.request_get_incidents), isCreateDialog);
     }
 
     // как только получили ответ от сервера, выключаем ProgressBar

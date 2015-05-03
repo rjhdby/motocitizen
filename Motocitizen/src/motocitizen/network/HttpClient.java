@@ -31,10 +31,18 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
     ProgressDialog dialog;
     private final String info;
     private final Context context;
+    private final boolean isCreateDialog;
 
     public HttpClient(Context context, String info) {
         this.info = info;
         this.context = context;
+        this.isCreateDialog = true;
+    }
+
+    public HttpClient(Context context, String info, boolean isCreateDialog) {
+        this.info = info;
+        this.context = context;
+        this.isCreateDialog = isCreateDialog;
     }
 
     private final static String CHARSET = "UTF-8";
@@ -43,7 +51,7 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
     private String method = null;
 
     protected void onPreExecute() {
-        if (!info.equals("")) {
+        if (isCreateDialog && !info.equals("")) {
             Runnable execute = new Runnable() {
                 @Override
                 public void run() {

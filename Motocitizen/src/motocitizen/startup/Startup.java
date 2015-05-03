@@ -1,5 +1,6 @@
 package motocitizen.startup;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -63,6 +64,8 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
 
     private static ActionBar actionBar;
 
+    private static AlertDialog changeLogDlg = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,8 +120,8 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
             version = getString(R.string.unknown_code_version);
         }
         if(!prefs.getCurrentVersion().equals(version)){
-
-            ChangeLog.getDialog(this, true).show();
+            changeLogDlg = ChangeLog.getDialog(this, true);
+            changeLogDlg.show();
         }
         prefs.setCurrentVersion(version);
     }
@@ -150,7 +153,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         if (isOnline()) {
             JsonRequest request = MCAccidents.getLoadPointsRequest();
             if (request != null) {
-                (new IncidentRequest(this)).execute(request);
+                (new IncidentRequest(this, !isChangeLogDlgShowing())).execute(request);
             }
             catchIntent(intent);
         } else {
@@ -312,7 +315,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
                 if (Startup.isOnline()) {
                     JsonRequest request = MCAccidents.getLoadPointsRequest();
                     if (request != null) {
-                        (new IncidentRequest(context)).execute(request);
+                        (new IncidentRequest(context, true)).execute(request);
                     }
                 } else {
                     Toast.makeText(context, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
@@ -346,5 +349,9 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
                 return true;
         }
         return false;
+    }
+
+    public static boolean isChangeLogDlgShowing() {
+        return (changeLogDlg != null && changeLogDlg.isShowing());
     }
 }
