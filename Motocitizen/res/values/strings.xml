@@ -18,7 +18,7 @@
 	<string name="small_menu_settings">Настройки</string>
 	<string name="small_menu_exit">Выйти</string>
 	<string name="mc_settings_auth_button">Авторизация</string>
-	<string name="mc_auth_header">Для авторизации необходимо ввести логин и пароль такие же как и для захода на <a href="http://forum.moto.msk.ru/">forum.moto.msk.ru</a>. <a href="http://forum.moto.msk.ru/index.php?app=core&amp;module=global&amp;section=register">Регистрация</a>.</string>
+	<string name="mc_auth_header">Для авторизации необходимо ввести логин и пароль такие же как и для захода на <a href="http://motodtp.info/">motodtp.info</a>. <a href="http://forum.moto.msk.ru/index.php?app=core&amp;module=global&amp;section=register">Регистрация</a>.</string>
 	<string name="mc_auth_login">Логин</string>
 	<string name="mc_auth_password">Пароль</string>
 	<string name="mc_auth_confirm_button">ОК</string>
