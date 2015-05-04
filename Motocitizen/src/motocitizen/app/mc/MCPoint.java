@@ -29,11 +29,14 @@ import java.util.List;
 import java.util.Map;
 
 import motocitizen.app.mc.popups.MCAccListPopup;
+import motocitizen.app.mc.user.MCAuth;
 import motocitizen.main.R;
 import motocitizen.startup.MCPreferences;
 import motocitizen.utils.Const;
 import motocitizen.utils.MCUtils;
 import motocitizen.utils.NewID;
+
+import static motocitizen.app.mc.user.MCAuth.*;
 
 @SuppressLint({"UseSparseArrays", "RtlHardcoded"})
 public class MCPoint {
@@ -42,6 +45,7 @@ public class MCPoint {
     public Map<Integer, MCVolunteer> volunteers;
     public Map<Integer, MCPointHistory> history;
     private Location location;
+    private boolean onway, inplace, leave, hashere;
 
     private String type, med, address, owner, descr;
 
@@ -124,6 +128,7 @@ public class MCPoint {
 
     public MCPoint(Bundle extras, Context context) throws MCPointException {
         this.context = context;
+        prefs = new MCPreferences(context);
         Map<String, String> data = new HashMap<>();
         for (String key : extras.keySet()) {
             data.put(key, extras.getString(key));
@@ -136,6 +141,7 @@ public class MCPoint {
 
     public MCPoint(JSONObject json, Context context) throws MCPointException {
         this.context = context;
+        prefs = new MCPreferences(context);
         createPoint(buildDataSet(json));
         try {
             makeHistory(json.getJSONArray("history"));
@@ -148,7 +154,6 @@ public class MCPoint {
     }
 
     private void createPoint(Map<String, String> data) throws MCPointException {
-        prefs = new MCPreferences(context);
         if (!checkPrerequisites(data))
             throw new MCPointException();
         attributes = new HashMap<>();
@@ -167,7 +172,10 @@ public class MCPoint {
             owner = data.get("owner");
             owner_id = Integer.parseInt(data.get("owner_id"));
             descr = data.get("descr");
-
+            onway = false;
+            inplace = false;
+            leave = false;
+            hashere = false;
             data.remove("lat");
             data.remove("lon");
             data.remove("mc_accident_orig_type");
@@ -302,16 +310,28 @@ public class MCPoint {
         if (json == null) {
             return;
         }
-        Map<Integer, MCVolunteer> newVolunteers = new HashMap<>();
+//        Map<Integer, MCVolunteer> newVolunteers = new HashMap<>();
         for (int i = 0; i < json.length(); i++) {
             try {
                 MCVolunteer current = new MCVolunteer(json.getJSONObject(i));
-                newVolunteers.put(current.id, current);
+                volunteers.put(current.id, current);
+                //newVolunteers.put(current.id, current);
+                if(current.id == MCAccidents.auth.getID()){
+                    if(current.status.equals("onway")){
+                        setOnWay();
+                        MCAccidents.onway = current.id;
+                    } else if(current.status.equals("inplace")){
+                        setInPlace();
+                        MCAccidents.inplace = current.id;
+                    } else if(current.status.equals("leave")){
+                        setLeave();
+                    }
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-        volunteers.putAll(newVolunteers);
+//        volunteers.putAll(newVolunteers);
     }
 
     private void makeHistory(JSONArray json) {
@@ -441,5 +461,66 @@ public class MCPoint {
 
     public boolean isEnded() {
         return  (status == PointStatus.ENDED);
+    }
+
+    public void setOnWay(){
+        int userId = MCAccidents.auth.getID();
+        if ( userId == 0 ) return;
+        MCVolunteer user = volunteers.get(userId);
+        if(user == null){
+            volunteers.put(userId, new MCVolunteer(userId, prefs.getLogin(), "onway"));
+        } else {
+            volunteers.get(userId).status = "onway";
+        }
+        onway = true;
+        inplace = false;
+        leave = false;
+    }
+
+    public void setInPlace(){
+        int userId = MCAccidents.auth.getID();
+        if ( userId == 0 ) return;
+        MCVolunteer user = volunteers.get(userId);
+        if(user == null){
+            volunteers.put(userId, new MCVolunteer(userId, prefs.getLogin(), "inplace"));
+        } else {
+            volunteers.get(userId).status = "inplace";
+        }
+        onway = false;
+        inplace = true;
+        leave = false;
+        hashere = true;
+    }
+
+    public void setLeave(){
+        int userId = MCAccidents.auth.getID();
+        if ( userId == 0 ) return;
+        MCVolunteer user = volunteers.get(userId);
+        if(user == null){
+            volunteers.put(userId, new MCVolunteer(userId, prefs.getLogin(), "leave"));
+        } else {
+            volunteers.get(userId).status = "leave";
+        }
+        onway = false;
+        inplace = false;
+        leave = true;
+    }
+
+    public boolean isOnWay(){
+        return onway;
+    }
+
+    public boolean isInPlace(){
+        return inplace;
+    }
+
+    public boolean isLeave(){
+        return leave;
+    }
+
+    public void resetStatus(){
+        onway = false;
+        inplace = false;
+        leave = false;
     }
 }

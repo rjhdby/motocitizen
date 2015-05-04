@@ -62,6 +62,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
             public void onClick(View v) {
                 if (Startup.isOnline()) {
                     int currentId = MCAccidents.getCurrentPointID();
+                    MCAccidents.setOnWay(currentId);
                     Map<String, String> post = new HashMap<>();
                     post.put("login", MCAccidents.auth.getLogin());
                     post.put("passhash", MCAccidents.auth.makePassHash());
@@ -137,6 +138,18 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
                 if (vg_onway.getVisibility() == View.INVISIBLE) {
                     vg_onway.setVisibility(View.VISIBLE);
                     vg_onway.addView(getDelimiterRow(getActivity(), "В пути"));
+                }
+                vg_onway.addView(current.createRow(getActivity()));
+            } else if (current.status.equals("inplace")) {
+                if (vg_onway.getVisibility() == View.INVISIBLE) {
+                    vg_onway.setVisibility(View.VISIBLE);
+                    vg_onway.addView(getDelimiterRow(getActivity(), "На месте"));
+                }
+                vg_onway.addView(current.createRow(getActivity()));
+            } else if (current.status.equals("leave")) {
+                if (vg_onway.getVisibility() == View.INVISIBLE) {
+                    vg_onway.setVisibility(View.VISIBLE);
+                    vg_onway.addView(getDelimiterRow(getActivity(), "Были"));
                 }
                 vg_onway.addView(current.createRow(getActivity()));
             }

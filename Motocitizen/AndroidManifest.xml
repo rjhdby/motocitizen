@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="motocitizen.main"
-    android:versionCode="223"
-    android:versionName="0.223" >
+    android:versionCode="900"
+    android:versionName="0.9" >
 
     <uses-sdk
         android:minSdkVersion="12"

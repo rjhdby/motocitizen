@@ -2,7 +2,7 @@
 <resources>
     <string name="create_acc"/>
     <string name="call_operator"/>
-    <string name="app_name">Motocitizen</string>
+    <string name="app_name">Moto.dtp.info</string>
 	<string name="status_top_address">адрес</string>
 	<string name="mc_accidents_details_address">Адрес</string>
 	<string name="mc_accidents_details_owner">Сообщил</string>
@@ -75,7 +75,7 @@
     <string name="config_title_notify_category">Дистанции оповещений</string>
     <string name="config_acc_type_category">Типы инцидентов</string>
     <string name="small_menu_about">О приложении</string>
-    <string name="about_info">Мотограждане - Программа взаимопомощи мотоциклистов на дорогах.</string>
+    <string name="about_info">Мото ДТП инфо - программа взаимопомощи на дорогах</string>
     <string name="about_authors">Авторы: rjhdby, Азимут.</string>
     <string name="config_other_category">Другое</string>
     <string name="logout_button">Завершить сеанс</string>

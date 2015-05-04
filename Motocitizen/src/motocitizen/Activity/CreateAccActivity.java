@@ -225,7 +225,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         // map.setMyLocationEnabled(true);
         map.getUiSettings().setMyLocationButtonEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
-        if (!MCRole.isModerator()) {
+        if (MCRole.isModerator()) {
             radius = 30000000;
         } else {
             radius = 1000;
@@ -236,7 +236,6 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             circle = map.addCircle(circleOptions);
         }
         map.setOnCameraChangeListener(cameraListener);
-        //}
     }
 
     private void writeGlobal() {

@@ -236,7 +236,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         switch (id) {
             case R.id.dial_button:
                 Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:+74957447350"));
+                intent.setData(Uri.parse("tel:+78007751734"));
                 Startup.context.startActivity(intent);
                 break;
             case R.id.mc_add_point_button:

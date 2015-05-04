@@ -38,8 +38,8 @@ import motocitizen.utils.Const;
 
 public class MCAccidents {
 
-    private static int onway;
-    private static int inplace;
+    public static int onway;
+    public static int inplace;
     private static MCPoint currentPoint;
     public static MCPoints points;
     public static MCAuth auth;
@@ -48,6 +48,36 @@ public class MCAccidents {
 
     public static int getInplaceID() {
         return inplace;
+    }
+
+    public static void setInPlace(int id){
+        inplace = id;
+        for(int key:points.keySet()){
+            if(points.getPoint(key).isInPlace()){
+                points.getPoint(key).setLeave();
+            }
+        }
+        points.getPoint(id).setInPlace();
+    }
+
+    public static int getOnway(){
+        return onway;
+    }
+
+    public static void setLeave(int id){
+        if(points.getPoint(id).isInPlace()){
+            points.getPoint(id).setLeave();
+        }
+    }
+
+    public static void setOnWay(int id) {
+        for(int key:points.keySet()){
+            if(points.getPoint(key).isOnWay()){
+                points.getPoint(key).resetStatus();
+            }
+        }
+        onway = id;
+        points.getPoint(id).setOnWay();
     }
 
     private static final OnLongClickListener detLongClick = new OnLongClickListener() {
