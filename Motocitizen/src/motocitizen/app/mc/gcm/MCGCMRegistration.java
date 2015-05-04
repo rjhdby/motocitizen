@@ -135,7 +135,7 @@ public class MCGCMRegistration {
             prefs.setGCMRegistrationCode(regId);
             JsonRequest request = new JsonRequest("mcaccidents", "registerGCM", createPOST(regId), "", true);
             if (request != null) {
-                (new registerGCMRequest(context)).execute(request);
+                (new registerGCMRequest(context, !Startup.isChangeLogDlgShowing())).execute(request);
             }
         } else {
             Toast.makeText(context, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
