@@ -167,7 +167,6 @@ public class MCLocation {
         Boolean alreadyNewInPlace = false;
         for (int key : MCAccidents.points.keySet()) {
             double meters = MCAccidents.points.getPoint(key).getLocation().distanceTo(location);
-            Log.d("INPLACE",String.valueOf(meters));
             double limit = Math.max(300, location.getAccuracy());
             if ((meters < limit) && key != MCAccidents.getInplaceID() && !alreadyNewInPlace) {
                 MCAccidents.setInPlace(key);
