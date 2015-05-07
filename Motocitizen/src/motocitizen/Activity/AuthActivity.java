@@ -30,7 +30,6 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
     private EditText login;
     private EditText password;
     private CheckBox anonim;
-    //private SharedPreferences prefs;
     private MCPreferences prefs;
 
     private static Context context;
@@ -46,7 +45,6 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
         setContentView(R.layout.mc_auth);
 
         context = this;
-        //prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs = new MCPreferences(this);
         login = (EditText) findViewById(R.id.mc_auth_login);
         login.addTextChangedListener(new TextWatcher() {
@@ -118,7 +116,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
                     Text.set(context, R.id.auth_error_helper, "");
                     finish();
                 } else { // Авторизация
-                    if(Startup.isOnline()) {
+                    if (Startup.isOnline()) {
                         if (MCAccidents.auth.auth(Startup.context, login.getText().toString(), password.getText().toString())) {
                             prefs.setAnonim(false);
                             finish();
