@@ -1,6 +1,10 @@
 package motocitizen.Activity;
 
 import android.app.Activity;
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,6 +27,9 @@ import motocitizen.startup.Startup;
 import static motocitizen.app.mc.MCAccidents.getDelimiterRow;
 
 public class DetailVolunteersFragment extends AccidentDetailsFragments {
+
+    int mStackLevel = 0;
+    public static final int DIALOG_ONWAY_CONFIRM = 1;
 
     private OnFragmentInteractionListener mListener;
 
@@ -47,6 +54,11 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mStackLevel = savedInstanceState.getInt("level");
+        }
+
         if (getArguments() != null) {
             accidentID = getArguments().getInt(ACCIDENT_ID);
         }
@@ -60,20 +72,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         onwayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Startup.isOnline()) {
-                    int currentId = MCAccidents.getCurrentPointID();
-                    MCAccidents.setOnWay(currentId);
-                    Map<String, String> post = new HashMap<>();
-                    post.put("login", MCAccidents.auth.getLogin());
-                    post.put("passhash", MCAccidents.auth.makePassHash());
-                    post.put("id", String.valueOf(currentId));
-                    JsonRequest request = new JsonRequest("mcaccidents", "onway", post, "", true);
-                    if (request != null) {
-                        (new OnwayRequest((AccidentDetailsActivity) getActivity(), currentId)).execute(request);
-                    }
-                } else {
-                    Toast.makeText(getActivity(), getActivity().getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
-                }
+                showDialog(DIALOG_ONWAY_CONFIRM);
             }
         });
 
@@ -167,15 +166,69 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
             prefs = ((AccidentDetailsActivity) getActivity()).getPref();
         }
 
-        if(prefs == null )
+        if (prefs == null)
             throw new NullPointerException("prefs == null");
-        if(currentPoint == null )
+        if (currentPoint == null)
             throw new NullPointerException("currentPoint == null");
 
         if (currentPoint.getId() == prefs.getOnWay() || currentPoint.getId() == MCAccidents.getInplaceID() || !MCAccidents.auth.isAuthorized() || !currentPoint.isActive()) {
             onwayButton.setVisibility(View.INVISIBLE);
         } else {
             onwayButton.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("level", mStackLevel);
+    }
+
+    void showDialog(int type) {
+        mStackLevel++;
+        FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+        Fragment prev = getActivity().getFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        switch (type) {
+            case DIALOG_ONWAY_CONFIRM:
+                DialogFragment dialogFrag = ConfirmDialog.newInstance(getActivity().getString(R.string.onway_title_confirm));
+                dialogFrag.setTargetFragment(this, DIALOG_ONWAY_CONFIRM);
+                dialogFrag.show(getFragmentManager().beginTransaction(), "dialog");
+                break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch(requestCode) {
+            case DIALOG_ONWAY_CONFIRM:
+                if (resultCode == Activity.RESULT_OK) {
+                    sendOnway();
+                } else if (resultCode == Activity.RESULT_CANCELED){
+                    // After Cancel code.
+                }
+                break;
+        }
+    }
+
+    private void sendOnway() {
+        if (Startup.isOnline()) {
+            int currentId = MCAccidents.getCurrentPointID();
+            MCAccidents.setOnWay(currentId);
+            Map<String, String> post = new HashMap<>();
+            post.put("login", MCAccidents.auth.getLogin());
+            post.put("passhash", MCAccidents.auth.makePassHash());
+            post.put("id", String.valueOf(currentId));
+            JsonRequest request = new JsonRequest("mcaccidents", "onway", post, "", true);
+            if (request != null) {
+                (new OnwayRequest((AccidentDetailsActivity) getActivity(), currentId)).execute(request);
+            }
+        } else {
+            Toast.makeText(getActivity(), getActivity().getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
         }
     }
 }
