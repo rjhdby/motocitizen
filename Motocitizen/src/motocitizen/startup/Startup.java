@@ -31,6 +31,7 @@ import motocitizen.Activity.AboutActivity;
 import motocitizen.Activity.AuthActivity;
 import motocitizen.Activity.CreateAccActivity;
 import motocitizen.Activity.SettingsActivity;
+import motocitizen.MyApp;
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCLocation;
 import motocitizen.app.mc.gcm.GcmBroadcastReceiver;
@@ -50,6 +51,9 @@ import motocitizen.utils.Show;
 import java.lang.*;
 
 public class Startup extends ActionBarActivity implements View.OnClickListener {
+
+    private MyApp myApp = null;
+
     public static Props props;
     public static Context context;
     public static MCPreferences prefs;
@@ -72,16 +76,17 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        myApp = (MyApp) getApplicationContext();
+
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         //requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.main);
         context = this;
-
         actionBar = getSupportActionBar();
 
-        //prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        prefs = new MCPreferences(this);
+        prefs = myApp.getPreferences();
         prefs.setDoNotDistrub(false);
         new Const();
 

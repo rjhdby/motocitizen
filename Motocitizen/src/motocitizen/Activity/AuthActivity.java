@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import motocitizen.MyApp;
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.main.R;
 import motocitizen.startup.MCPreferences;
@@ -22,6 +23,8 @@ import motocitizen.startup.Startup;
 import motocitizen.utils.Text;
 
 public class AuthActivity extends ActionBarActivity/* implements View.OnClickListener*/ {
+
+    private MyApp myApp = null;
 
     private Button logoutBtn;
     private Button loginBtn;
@@ -44,8 +47,10 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mc_auth);
 
+        myApp = (MyApp) getApplicationContext();
+
         context = this;
-        prefs = new MCPreferences(this);
+        prefs = myApp.getPreferences();
         login = (EditText) findViewById(R.id.mc_auth_login);
         login.addTextChangedListener(new TextWatcher() {
 

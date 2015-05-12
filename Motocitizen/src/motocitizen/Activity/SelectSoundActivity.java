@@ -20,12 +20,15 @@ import android.widget.TextView;
 import java.util.HashMap;
 import java.util.Map;
 
+import motocitizen.MyApp;
 import motocitizen.main.R;
 import motocitizen.startup.MCPreferences;
 import motocitizen.utils.Const;
 import motocitizen.utils.NewID;
 
 public class SelectSoundActivity extends ActionBarActivity {
+
+    private MyApp myApp = null;
 
     private static Map<Integer, Uri> notifications;
     private static int currentId;
@@ -58,7 +61,9 @@ public class SelectSoundActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mc_select_sound);
 
-        prefs = new MCPreferences(this);
+        myApp = (MyApp) getApplicationContext();
+
+        prefs = myApp.getPreferences();
         vg = (ViewGroup) findViewById(R.id.sound_select_table);
         rm = new RingtoneManager(this);
         rm.setType(RingtoneManager.TYPE_NOTIFICATION);
