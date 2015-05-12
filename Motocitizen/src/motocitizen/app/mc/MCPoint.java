@@ -318,13 +318,14 @@ public class MCPoint {
                 //newVolunteers.put(current.id, current);
                 if(current.id == MCAccidents.auth.getID()){
                     if(current.status.equals("onway")){
-                        setOnWay();
+                        //TODO Зачем храним эту информацию в двух местах? Думаю, что надо убрать MCAccidents.onway и т.д. заменив на getOnWay и т.д.
+                        setOnWay(current.id);
                         MCAccidents.onway = current.id;
                     } else if(current.status.equals("inplace")){
-                        setInPlace();
+                        setInPlace(current.id);
                         MCAccidents.inplace = current.id;
                     } else if(current.status.equals("leave")){
-                        setLeave();
+                        setLeave(current.id);
                     }
                 }
             } catch (JSONException e) {
@@ -463,8 +464,7 @@ public class MCPoint {
         return  (status == PointStatus.ENDED);
     }
 
-    public void setOnWay(){
-        int userId = MCAccidents.auth.getID();
+    public void setOnWay(int userId){
         if ( userId == 0 ) return;
         MCVolunteer user = volunteers.get(userId);
         if(user == null){
@@ -477,8 +477,7 @@ public class MCPoint {
         leave = false;
     }
 
-    public void setInPlace(){
-        int userId = MCAccidents.auth.getID();
+    public void setInPlace(int userId){
         if ( userId == 0 ) return;
         MCVolunteer user = volunteers.get(userId);
         if(user == null){
@@ -492,8 +491,7 @@ public class MCPoint {
         hashere = true;
     }
 
-    public void setLeave(){
-        int userId = MCAccidents.auth.getID();
+    public void setLeave(int userId){
         if ( userId == 0 ) return;
         MCVolunteer user = volunteers.get(userId);
         if(user == null){

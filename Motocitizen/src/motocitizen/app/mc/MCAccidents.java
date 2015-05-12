@@ -54,10 +54,10 @@ public class MCAccidents {
         inplace = id;
         for(int key:points.keySet()){
             if(points.getPoint(key).isInPlace()){
-                points.getPoint(key).setLeave();
+                points.getPoint(key).setLeave(MCAccidents.auth.getID());
             }
         }
-        points.getPoint(id).setInPlace();
+        points.getPoint(id).setInPlace(MCAccidents.auth.getID());
     }
 
     public static int getOnway(){
@@ -66,7 +66,7 @@ public class MCAccidents {
 
     public static void setLeave(int id){
         if(points.getPoint(id).isInPlace()){
-            points.getPoint(id).setLeave();
+            points.getPoint(id).setLeave(MCAccidents.auth.getID());
         }
     }
 
@@ -77,7 +77,7 @@ public class MCAccidents {
             }
         }
         onway = id;
-        points.getPoint(id).setOnWay();
+        points.getPoint(id).setOnWay(MCAccidents.auth.getID());
     }
 
     private static final OnLongClickListener detLongClick = new OnLongClickListener() {
