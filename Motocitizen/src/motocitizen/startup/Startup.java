@@ -16,10 +16,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -63,7 +67,6 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     private Menu mMenu;
 
     private static ActionBar actionBar;
-
     private static AlertDialog changeLogDlg = null;
 
     @Override
@@ -150,15 +153,16 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
             createAccButton.setVisibility(View.INVISIBLE);
         }
 
-        if (isOnline()) {
-            JsonRequest request = MCAccidents.getLoadPointsRequest();
-            if (request != null) {
-                (new IncidentRequest(this, !isChangeLogDlgShowing())).execute(request);
-            }
-            catchIntent(intent);
-        } else {
-            Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
-        }
+        getAccidents();
+//        if (isOnline()) {
+//            JsonRequest request = MCAccidents.getLoadPointsRequest();
+//            if (request != null) {
+//                (new IncidentRequest(this, !isChangeLogDlgShowing())).execute(request);
+//            }
+//            catchIntent(intent);
+//        } else {
+//            Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
+//        }
         if(toMap != 0){
             intent.removeExtra("toMap");
             mainTabsGroup.check(R.id.tab_map_button);
@@ -311,15 +315,8 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.small_menu_refresh:
-                MCAccidents.refresh(context);
-                if (Startup.isOnline()) {
-                    JsonRequest request = MCAccidents.getLoadPointsRequest();
-                    if (request != null) {
-                        (new IncidentRequest(context, true)).execute(request);
-                    }
-                } else {
-                    Toast.makeText(context, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
-                }
+                // Do animation start
+                getAccidents();
                 return true;
             case R.id.small_menu_settings:
                 Intent intentSettings = new Intent(this, SettingsActivity.class);
@@ -353,5 +350,43 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
 
     public static boolean isChangeLogDlgShowing() {
         return (changeLogDlg != null && changeLogDlg.isShowing());
+    }
+
+    public void resetUpdating()
+    {
+        // Get our refresh item from the menu
+        if(mMenu != null  ) {
+            MenuItem item = mMenu.findItem(R.id.action_refresh);
+            if (item.getActionView() != null) {
+                // Remove the animation.
+                item.getActionView().clearAnimation();
+                item.setActionView(null);
+            }
+            item.setVisible(false);
+        }
+    }
+
+    private void getAccidents() {
+        if (Startup.isOnline()) {
+
+            if(mMenu != null ) {
+                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                ImageView iv = (ImageView) inflater.inflate(R.layout.iv_refresh, null);
+                Animation rotation = AnimationUtils.loadAnimation(this, R.anim.rotate_refresh);
+                rotation.setRepeatCount(Animation.INFINITE);
+                iv.startAnimation(rotation);
+
+                MenuItem actionRefresh = mMenu.findItem(R.id.action_refresh);
+                actionRefresh.setActionView(iv);
+                actionRefresh.setVisible(true);
+            }
+
+            JsonRequest request = MCAccidents.getLoadPointsRequest();
+            if (request != null) {
+                (new IncidentRequest(this, false)).execute(request);
+            }
+        } else {
+            Toast.makeText(context, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
+        }
     }
 }

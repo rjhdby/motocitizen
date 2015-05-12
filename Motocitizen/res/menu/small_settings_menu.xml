@@ -4,6 +4,12 @@
       xmlns:app="http://schemas.android.com/tools">
 
     <item
+        android:id="@+id/action_refresh"
+        yourapp:showAsAction="ifRoom"
+        android:title="Refresh"
+        android:visible="false"
+        android:icon="@android:drawable/ic_menu_rotate" />
+    <item
         android:id="@+id/do_not_distrub"
         yourapp:showAsAction="ifRoom"
         android:icon="@drawable/ic_lock_ringer_on_alpha"
