@@ -4,7 +4,6 @@ import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -15,6 +14,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.HashMap;
 import java.util.Map;
 
+import motocitizen.MyApp;
 import motocitizen.main.R;
 import motocitizen.network.GeoCodeRequest;
 import motocitizen.network.JSONCall;
@@ -63,7 +63,7 @@ public class MCLocation {
 
     public MCLocation(Context context) {
         MCLocation.context = context;
-        prefs = new MCPreferences(context);
+        prefs = ((MyApp) context.getApplicationContext()).getPreferences();
         mLocationRequest = getProvider(LocationRequest.PRIORITY_HIGH_ACCURACY);
         current = getBestFusionLocation(context);
     }
@@ -178,7 +178,7 @@ public class MCLocation {
                 }
                 post.put("login", login);
                 post.put("id", String.valueOf(key));
-                new JSONCall("mcaccidents", "inplace").request(post);
+                new JSONCall(context, "mcaccidents", "inplace").request(post);
             } else if (meters > (location.getAccuracy() + 1000) && key == MCAccidents.getInplaceID()) {
                 MCAccidents.setLeave(key);
                 Map<String, String> post = new HashMap<>();
@@ -188,7 +188,7 @@ public class MCLocation {
                 }
                 post.put("login", login);
                 post.put("id", String.valueOf(key));
-                new JSONCall("mcaccidents", "leave").request(post);
+                new JSONCall(context, "mcaccidents", "leave").request(post);
             }
         }
     }

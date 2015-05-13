@@ -77,7 +77,7 @@ class MCPopupWindow {
                 params.put("state", "acc_status_end");
             }
             params.put("id", String.valueOf(point.getId()));
-            new JSONCall("mcaccidents", "changeState").request(params);
+            new JSONCall(context, "mcaccidents", "changeState").request(params);
             MCAccidents.refresh(v.getContext());
         }
     };
@@ -93,7 +93,7 @@ class MCPopupWindow {
                 params.put("state", "acc_status_hide");
             }
             params.put("id", String.valueOf(point.getId()));
-            new JSONCall("mcaccidents", "changeState").request(params);
+            new JSONCall(context, "mcaccidents", "changeState").request(params);
             MCAccidents.refresh(v.getContext());
         }
     };

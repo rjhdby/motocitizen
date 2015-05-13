@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import motocitizen.Activity.AuthActivity;
-import motocitizen.app.mc.MCAccidents;
 import motocitizen.network.JSONCall;
 import motocitizen.startup.MCPreferences;
 import motocitizen.startup.Startup;
@@ -95,7 +94,7 @@ public class MCAuth {
             post.put("ident", ident);
             post.put("login", login);
             post.put("passwordHash", makePassHash(password));
-            JSONObject json = new JSONCall("mcaccidents", "auth").request(post);
+            JSONObject json = new JSONCall(context, "mcaccidents", "auth").request(post);
             parseJSON(json);
             if (name.length() > 0) {
                 prefs.setLogin(login);

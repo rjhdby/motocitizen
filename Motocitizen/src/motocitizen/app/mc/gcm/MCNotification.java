@@ -12,6 +12,7 @@ import android.os.Bundle;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import motocitizen.MyApp;
 import motocitizen.app.mc.MCLocation;
 import motocitizen.main.R;
 import motocitizen.startup.MCPreferences;
@@ -20,7 +21,7 @@ import motocitizen.utils.MCUtils;
 
 class MCNotification {
     public MCNotification(Context context, Intent intent) {
-        MCPreferences prefs = new MCPreferences(context);
+        MCPreferences prefs = ((MyApp) context.getApplicationContext()).getPreferences();
         if(prefs.getDoNotDistrub()){
             return;
         }

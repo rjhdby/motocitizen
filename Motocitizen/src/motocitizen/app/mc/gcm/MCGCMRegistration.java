@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import motocitizen.MyApp;
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.main.R;
 import motocitizen.network.JsonRequest;
@@ -36,7 +37,7 @@ public class MCGCMRegistration {
 
     public MCGCMRegistration(Context context) {
         this.context = context;
-        prefs = new MCPreferences(context);
+        prefs = ((MyApp) context.getApplicationContext()).getPreferences();
         if (checkPlayServices()) {
             gcm = GoogleCloudMessaging.getInstance(context);
             regid = getRegistrationId();

@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import motocitizen.MyApp;
 import motocitizen.app.mc.MCAccTypes;
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCLocation;
@@ -87,6 +88,8 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     private GoogleMap map;
     private Circle circle;
     private int radius;
+    private MCPreferences prefs;
+
     private final GoogleMap.OnCameraChangeListener cameraListener = new GoogleMap.OnCameraChangeListener() {
         @Override
         public void onCameraChange(CameraPosition camera) {
@@ -103,7 +106,6 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             }
         }
     };
-    private MCPreferences prefs;
 
     public static void updateAddress(String address) {
         addressText = address;
@@ -147,7 +149,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
-        prefs = new MCPreferences(this);
+        prefs = ((MyApp) context.getApplicationContext()).getPreferences();
         setContentView(R.layout.mc_app_create_point);
 
         back = (Button) findViewById(R.id.mc_create_back);

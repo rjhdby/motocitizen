@@ -1,6 +1,7 @@
 package motocitizen.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.AssetManager;
 
 import java.io.IOException;
@@ -15,23 +16,23 @@ import java.util.Properties;
 import motocitizen.startup.Startup;
 
 public class Props {
-    private static final String GLOBAL = "global.properties";
-    private static final Activity act = (Activity) Startup.context;
-    private static final AssetManager as = act.getAssets();
-    private static final Properties summary = new Properties();
-    private static Properties global = new Properties();
+    private final String GLOBAL = "global.properties";
+    private AssetManager as = null;
+    private final Properties summary = new Properties();
+    private Properties global = new Properties();
 
-    public Props() {
+    public Props(Context context) {
+        as = context.getAssets();
         makeGlobal();
         makeSummary();
     }
 
-    private static void makeSummary() {
+    private void makeSummary() {
         summary.clear();
         summary.putAll(global);
     }
 
-    private static Properties read(InputStream is) {
+    private Properties read(InputStream is) {
         Reader reader;
         Properties current = new Properties();
         try {

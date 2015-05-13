@@ -31,6 +31,7 @@ import motocitizen.Activity.AboutActivity;
 import motocitizen.Activity.AuthActivity;
 import motocitizen.Activity.CreateAccActivity;
 import motocitizen.Activity.SettingsActivity;
+import motocitizen.MyApp;
 import motocitizen.app.mc.MCAccidents;
 import motocitizen.app.mc.MCLocation;
 import motocitizen.app.mc.gcm.GcmBroadcastReceiver;
@@ -50,7 +51,8 @@ import motocitizen.utils.Show;
 import java.lang.*;
 
 public class Startup extends ActionBarActivity implements View.OnClickListener {
-    public static Props props;
+
+    private MyApp myApp = null;
     public static Context context;
     public static MCPreferences prefs;
     public static MCMap map;
@@ -72,16 +74,15 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        myApp = (MyApp) getApplicationContext();
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         //requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.main);
         context = this;
-
         actionBar = getSupportActionBar();
 
-        //prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        prefs = new MCPreferences(this);
+        prefs = myApp.getPreferences();
         prefs.setDoNotDistrub(false);
         new Const();
 
@@ -102,7 +103,6 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
 
         //prefs = getSharedPreferences("motocitizen.startup", MODE_PRIVATE);
         //prefs.edit().clear().commit();
-        props = new Props();
 
         new MCAccidents(this);
 
@@ -334,8 +334,8 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
                 android.os.Process.killProcess(pid);
                 return true;
             case R.id.do_not_distrub:
-                MCPreferences prefs = new MCPreferences(Startup.context);
-                MenuItem menuItemActionDistrub = mMenu.findItem(R.id.do_not_distrub);
+                MCPreferences prefs = myApp.getPreferences();
+                //MenuItem menuItemActionDistrub = mMenu.findItem(R.id.do_not_distrub);
                 if(prefs.getDoNotDistrub()){
                     item.setIcon(R.drawable.ic_lock_ringer_on_alpha);
                     prefs.setDoNotDistrub(false);

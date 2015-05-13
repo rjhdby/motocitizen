@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 
 import motocitizen.Activity.AccidentDetailsActivity;
+import motocitizen.MyApp;
 import motocitizen.app.mc.gcm.MCGCMRegistration;
 import motocitizen.app.mc.popups.MCAccListPopup;
 import motocitizen.app.mc.user.MCAuth;
@@ -37,7 +38,7 @@ import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 
 public class MCAccidents {
-
+    private MyApp myApp = null;
     public static int onway;
     public static int inplace;
     private static MCPoint currentPoint;
@@ -99,10 +100,11 @@ public class MCAccidents {
     }
 
     public MCAccidents(Context context) {
-        prefs = new MCPreferences(context);
+        myApp = (MyApp) context.getApplicationContext();
+        prefs = myApp.getPreferences();
         onway = 0;
         inplace = 0;
-        auth = new MCAuth(context);
+        auth = myApp.getMCAuth();
         new MCLocation(context);
         points = new MCPoints(context);
         new MCGCMRegistration(context);

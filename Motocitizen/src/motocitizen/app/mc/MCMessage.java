@@ -35,7 +35,7 @@ public class MCMessage {
         time = new Date(Long.parseLong(json.getString("uxtime"), 10) * 1000);
     }
 
-    public TableRow createRow(Context context) {
+    public TableRow createRow(Context context, String login) {
         TableRow tr = new TableRow(context);
         TableRow.LayoutParams lp = new TableRow.LayoutParams();
         TextView tvTime = new TextView(tr.getContext());
@@ -45,7 +45,7 @@ public class MCMessage {
         tvTime.setText(Const.timeFormat.format(time.getTime()));
         tvOwner.setLayoutParams(lp);
         tvOwner.setText(owner);
-        if (owner.equals(MCAccidents.auth.getLogin())) {
+        if (owner.equals(login)) {
             tvOwner.setBackgroundColor(Color.DKGRAY);
         } else {
             tvOwner.setBackgroundColor(Color.GRAY);
