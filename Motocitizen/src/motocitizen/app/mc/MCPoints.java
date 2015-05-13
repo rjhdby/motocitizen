@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import motocitizen.MyApp;
 import motocitizen.main.R;
 import motocitizen.network.JSONCall;
 import motocitizen.network.JsonRequest;
@@ -39,7 +40,7 @@ public class MCPoints {
             points = new HashMap<>();
         }
         this.context = context;
-        prefs = new MCPreferences(context);
+        prefs = ((MyApp) context.getApplicationContext()).getPreferences();
     }
 
     public boolean containsKey(int id) {

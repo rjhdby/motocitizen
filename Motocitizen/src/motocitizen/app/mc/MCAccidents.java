@@ -101,7 +101,7 @@ public class MCAccidents {
 
     public MCAccidents(Context context) {
         myApp = (MyApp) context.getApplicationContext();
-        prefs = new MCPreferences(context);
+        prefs = myApp.getPreferences();
         onway = 0;
         inplace = 0;
         auth = myApp.getMCAuth();

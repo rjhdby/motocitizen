@@ -131,7 +131,7 @@ public class MCPoint {
     public MCPoint(Bundle extras, Context context) throws MCPointException {
         this.context = context;
         myApp = (MyApp) context.getApplicationContext();
-        prefs = new MCPreferences(context);
+        prefs = myApp.getPreferences();
         Map<String, String> data = new HashMap<>();
         for (String key : extras.keySet()) {
             data.put(key, extras.getString(key));
@@ -145,7 +145,7 @@ public class MCPoint {
     public MCPoint(JSONObject json, Context context) throws MCPointException {
         this.context = context;
         myApp = (MyApp) context.getApplicationContext();
-        prefs = new MCPreferences(context);
+        prefs = myApp.getPreferences();
         createPoint(buildDataSet(json));
         try {
             makeHistory(json.getJSONArray("history"));

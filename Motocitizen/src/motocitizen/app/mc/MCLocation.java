@@ -14,6 +14,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.HashMap;
 import java.util.Map;
 
+import motocitizen.MyApp;
 import motocitizen.main.R;
 import motocitizen.network.GeoCodeRequest;
 import motocitizen.network.JSONCall;
@@ -22,6 +23,7 @@ import motocitizen.startup.MCPreferences;
 import motocitizen.startup.Startup;
 
 public class MCLocation {
+    private MyApp myApp = null;
     public static String address;
     private static Location current;
     private static MCPreferences prefs;
@@ -62,7 +64,8 @@ public class MCLocation {
 
     public MCLocation(Context context) {
         MCLocation.context = context;
-        prefs = new MCPreferences(context);
+        myApp = (MyApp) context.getApplicationContext();
+        prefs = myApp.getPreferences();
         mLocationRequest = getProvider(LocationRequest.PRIORITY_HIGH_ACCURACY);
         current = getBestFusionLocation(context);
     }

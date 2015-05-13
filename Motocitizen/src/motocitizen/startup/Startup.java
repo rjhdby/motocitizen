@@ -336,8 +336,8 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
                 android.os.Process.killProcess(pid);
                 return true;
             case R.id.do_not_distrub:
-                MCPreferences prefs = new MCPreferences(Startup.context);
-                MenuItem menuItemActionDistrub = mMenu.findItem(R.id.do_not_distrub);
+                MCPreferences prefs = myApp.getPreferences();
+                //MenuItem menuItemActionDistrub = mMenu.findItem(R.id.do_not_distrub);
                 if(prefs.getDoNotDistrub()){
                     item.setIcon(R.drawable.ic_lock_ringer_on_alpha);
                     prefs.setDoNotDistrub(false);
