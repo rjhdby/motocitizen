@@ -2,6 +2,7 @@ package motocitizen;
 
 import android.app.Application;
 
+import motocitizen.app.mc.user.MCAuth;
 import motocitizen.startup.MCPreferences;
 import motocitizen.utils.Props;
 
@@ -13,6 +14,7 @@ public class MyApp extends Application {
     private MyApp instance;
     public MCPreferences prefs = null;
     private Props props = null;
+    private MCAuth auth = null;
 
     public MyApp() {
         instance = this;
@@ -28,5 +30,11 @@ public class MyApp extends Application {
         if(props == null)
             props = new Props(instance);
         return props;
+    }
+
+    public MCAuth getMCAuth() {
+        if(auth == null )
+            auth = new MCAuth(instance);
+        return auth;
     }
 }

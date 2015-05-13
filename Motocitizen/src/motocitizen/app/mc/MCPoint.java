@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import motocitizen.MyApp;
 import motocitizen.app.mc.popups.MCAccListPopup;
 import motocitizen.app.mc.user.MCAuth;
 import motocitizen.main.R;
@@ -40,6 +41,7 @@ import static motocitizen.app.mc.user.MCAuth.*;
 
 @SuppressLint({"UseSparseArrays", "RtlHardcoded"})
 public class MCPoint {
+    private MyApp myApp = null;
     public Map<String, String> attributes;
     public Map<Integer, MCMessage> messages;
     public Map<Integer, MCVolunteer> volunteers;
@@ -128,6 +130,7 @@ public class MCPoint {
 
     public MCPoint(Bundle extras, Context context) throws MCPointException {
         this.context = context;
+        myApp = (MyApp) context.getApplicationContext();
         prefs = new MCPreferences(context);
         Map<String, String> data = new HashMap<>();
         for (String key : extras.keySet()) {
@@ -141,6 +144,7 @@ public class MCPoint {
 
     public MCPoint(JSONObject json, Context context) throws MCPointException {
         this.context = context;
+        myApp = (MyApp) context.getApplicationContext();
         prefs = new MCPreferences(context);
         createPoint(buildDataSet(json));
         try {
@@ -248,9 +252,9 @@ public class MCPoint {
     }
 
     boolean hasInOwners() {
-        if (MCAccidents.auth.isAnonim())
+        if (myApp.getMCAuth().isAnonim())
             return false;
-        int user = MCAccidents.auth.getID();
+        int user = myApp.getMCAuth().getID();
         if (user == owner_id)
             return true;
         for (int key : messages.keySet()) {
@@ -316,7 +320,7 @@ public class MCPoint {
                 MCVolunteer current = new MCVolunteer(json.getJSONObject(i));
                 volunteers.put(current.id, current);
                 //newVolunteers.put(current.id, current);
-                if(current.id == MCAccidents.auth.getID()){
+                if(current.id == myApp.getMCAuth().getID()){
                     if(current.status.equals("onway")){
                         //TODO Зачем храним эту информацию в двух местах? Думаю, что надо убрать MCAccidents.onway и т.д. заменив на getOnWay и т.д.
                         setOnWay(current.id);
