@@ -58,9 +58,9 @@ public class MCPoints {
         Map<String, String> selector = new HashMap<>();
         Location userLocation = MCLocation.getLocation(context);
         //if(userLocation != null ) {
-            selector.put("distance", String.valueOf(prefs.getVisibleDistance()));
-            selector.put("lon", String.valueOf(userLocation.getLongitude()));
-            selector.put("lat", String.valueOf(userLocation.getLatitude()));
+        selector.put("distance", String.valueOf(prefs.getVisibleDistance()));
+        selector.put("lon", String.valueOf(userLocation.getLongitude()));
+        selector.put("lat", String.valueOf(userLocation.getLatitude()));
         //}
         String user = prefs.getLogin();
         if (!user.equals("")) {
@@ -71,7 +71,7 @@ public class MCPoints {
         }
 
         try {
-            parseJSON(new JSONCall("mcaccidents", "getlist", false).request(selector).getJSONArray("list"));
+            parseJSON(new JSONCall(context, "mcaccidents", "getlist", false).request(selector).getJSONArray("list"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -90,9 +90,9 @@ public class MCPoints {
         Location userLocation = MCLocation.getLocation(context);
 
         //if(userLocation != null) {
-            selector.put("distance", String.valueOf(prefs.getVisibleDistance()));
-            selector.put("lon", String.valueOf(userLocation.getLongitude()));
-            selector.put("lat", String.valueOf(userLocation.getLatitude()));
+        selector.put("distance", String.valueOf(prefs.getVisibleDistance()));
+        selector.put("lon", String.valueOf(userLocation.getLongitude()));
+        selector.put("lat", String.valueOf(userLocation.getLatitude()));
         //}
         String user = prefs.getLogin();
         if (!user.equals("")) {
@@ -106,7 +106,7 @@ public class MCPoints {
     }
 
     private void parseJSON(JSONArray json) throws JSONException {
-        if(((JSONObject) json.get(0)).has("error")) return;
+        if (((JSONObject) json.get(0)).has("error")) return;
         for (int i = 0; i < json.length(); i++) {
             JSONObject acc = json.getJSONObject(i);
             try {
@@ -121,7 +121,7 @@ public class MCPoints {
         }
     }
 
-    public void addPoint(MCPoint point){
+    public void addPoint(MCPoint point) {
         points.put(point.getId(), point);
     }
 

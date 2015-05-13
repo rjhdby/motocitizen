@@ -53,8 +53,6 @@ import java.lang.*;
 public class Startup extends ActionBarActivity implements View.OnClickListener {
 
     private MyApp myApp = null;
-
-    public static Props props;
     public static Context context;
     public static MCPreferences prefs;
     public static MCMap map;
@@ -107,7 +105,6 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
 
         //prefs = getSharedPreferences("motocitizen.startup", MODE_PRIVATE);
         //prefs.edit().clear().commit();
-        props = new Props();
 
         new MCAccidents(this);
 
