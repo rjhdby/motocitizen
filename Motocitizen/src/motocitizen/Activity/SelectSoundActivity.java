@@ -27,7 +27,6 @@ import motocitizen.utils.Const;
 import motocitizen.utils.NewID;
 
 public class SelectSoundActivity extends ActionBarActivity {
-    private MyApp myApp = null;
     private static Map<Integer, Uri> notifications;
     private static int currentId;
     private static ViewGroup vg;
@@ -58,10 +57,7 @@ public class SelectSoundActivity extends ActionBarActivity {
         context = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mc_select_sound);
-
-        myApp = (MyApp) getApplicationContext();
-
-        prefs = myApp.getPreferences();
+        prefs = ((MyApp) context.getApplicationContext()).getPreferences();
         vg = (ViewGroup) findViewById(R.id.sound_select_table);
         rm = new RingtoneManager(this);
         rm.setType(RingtoneManager.TYPE_NOTIFICATION);

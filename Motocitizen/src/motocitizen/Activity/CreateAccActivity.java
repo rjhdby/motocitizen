@@ -47,7 +47,6 @@ import motocitizen.utils.Text;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class CreateAccActivity extends FragmentActivity implements View.OnClickListener {
-    private MyApp myApp = null;
     private static View globalView;
     private static String addressText;
     private static Context context;
@@ -150,8 +149,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
-        myApp = (MyApp) getApplicationContext();
-        prefs = myApp.getPreferences();
+        prefs = ((MyApp) context.getApplicationContext()).getPreferences();
         setContentView(R.layout.mc_app_create_point);
 
         back = (Button) findViewById(R.id.mc_create_back);
