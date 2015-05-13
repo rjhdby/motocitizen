@@ -23,7 +23,6 @@ import motocitizen.startup.MCPreferences;
 import motocitizen.startup.Startup;
 
 public class MCLocation {
-    private MyApp myApp = null;
     public static String address;
     private static Location current;
     private static MCPreferences prefs;
@@ -64,8 +63,7 @@ public class MCLocation {
 
     public MCLocation(Context context) {
         MCLocation.context = context;
-        myApp = (MyApp) context.getApplicationContext();
-        prefs = myApp.getPreferences();
+        prefs = ((MyApp) context.getApplicationContext()).getPreferences();
         mLocationRequest = getProvider(LocationRequest.PRIORITY_HIGH_ACCURACY);
         current = getBestFusionLocation(context);
     }

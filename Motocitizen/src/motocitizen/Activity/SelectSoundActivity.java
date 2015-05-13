@@ -27,9 +27,7 @@ import motocitizen.utils.Const;
 import motocitizen.utils.NewID;
 
 public class SelectSoundActivity extends ActionBarActivity {
-
     private MyApp myApp = null;
-
     private static Map<Integer, Uri> notifications;
     private static int currentId;
     private static ViewGroup vg;

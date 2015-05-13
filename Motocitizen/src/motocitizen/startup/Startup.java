@@ -74,9 +74,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         myApp = (MyApp) getApplicationContext();
-
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         //requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
