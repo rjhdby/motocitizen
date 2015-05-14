@@ -11,14 +11,14 @@
     <ScrollView
         android:id="@+id/mc_det_messages_scroll"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1"
         android:tag="mc_det_messages_content">
 
         <TableLayout
             android:id="@+id/mc_det_messages_table"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:shrinkColumns="2"
             android:stretchColumns="2" />
 
@@ -33,7 +33,7 @@
 
         <EditText
             android:id="@+id/mc_new_message_text"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_weight="1"
@@ -56,6 +56,7 @@
             android:minWidth="90dp"
             android:nestedScrollingEnabled="false"
             android:src="@android:drawable/ic_menu_send"
+            android:contentDescription = "new_message_send"
             android:visibility="visible" />
     </LinearLayout>
 </LinearLayout>
