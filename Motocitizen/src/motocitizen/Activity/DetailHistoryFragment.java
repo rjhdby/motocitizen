@@ -85,7 +85,7 @@ public class DetailHistoryFragment extends AccidentDetailsFragments {
         logView.removeAllViews();
         logView.addView(AccidentHistory.createHeader(getActivity()));
         for (int i : currentPoint.getSortedHistoryKeys()) {
-            logView.addView(currentPoint.history.get(i).createRow(getActivity(), myApp.getMCAuth().getLogin()));
+            logView.addView(currentPoint.history.get(i).createRow(getActivity(), myApp.getPreferences().getLogin()));
         }
     }
 
