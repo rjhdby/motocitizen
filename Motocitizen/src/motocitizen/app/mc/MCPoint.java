@@ -30,14 +30,11 @@ import java.util.Map;
 
 import motocitizen.MyApp;
 import motocitizen.app.mc.popups.MCAccListPopup;
-import motocitizen.app.mc.user.MCAuth;
 import motocitizen.main.R;
 import motocitizen.startup.MCPreferences;
 import motocitizen.utils.Const;
 import motocitizen.utils.MCUtils;
 import motocitizen.utils.NewID;
-
-import static motocitizen.app.mc.user.MCAuth.*;
 
 @SuppressLint({"UseSparseArrays", "RtlHardcoded"})
 public class MCPoint {
@@ -47,12 +44,12 @@ public class MCPoint {
     public Map<Integer, MCVolunteer> volunteers;
     public Map<Integer, MCPointHistory> history;
     private Location location;
-    private boolean onway, inplace, leave, hashere;
+    private boolean onway, inplace, leave, hasHere;
 
     private String type, med, address, owner, descr;
 
     private enum PointStatus {
-        ACTIVE, HIDEN, ENDED,
+        ACTIVE, HIDDEN, ENDED,
     }
 
     public PointStatus status;
@@ -90,7 +87,7 @@ public class MCPoint {
     public String getStatusString() {
         if(status == PointStatus.ACTIVE)
             return "acc_status_act";
-        if(status == PointStatus.HIDEN)
+        if(status == PointStatus.HIDDEN)
             return "acc_status_hide";
         if(status == PointStatus.ENDED)
             return "acc_status_end";
@@ -179,7 +176,7 @@ public class MCPoint {
             onway = false;
             inplace = false;
             leave = false;
-            hashere = false;
+            hasHere = false;
             data.remove("lat");
             data.remove("lon");
             data.remove("mc_accident_orig_type");
@@ -202,16 +199,21 @@ public class MCPoint {
     }
 
     private void setStatus(String status) {
-        if(status.equals("acc_status_act"))
-            this.status = PointStatus.ACTIVE;
-        else if(status.equals("acc_status_end"))
-            this.status = PointStatus.ENDED;
-        else if(status.equals("acc_status_hide"))
-            this.status = PointStatus.HIDEN;
-        else {
-            //TODO Придумать, как сделать более правильно
-            Log.e("MCPoint", "Unkown point status");
-            this.status = PointStatus.HIDEN;
+        switch (status) {
+            case "acc_status_act":
+                this.status = PointStatus.ACTIVE;
+                break;
+            case "acc_status_end":
+                this.status = PointStatus.ENDED;
+                break;
+            case "acc_status_hide":
+                this.status = PointStatus.HIDDEN;
+                break;
+            default:
+                //TODO Придумать, как сделать более правильно
+                Log.e("MCPoint", "Unkown point status");
+                this.status = PointStatus.HIDDEN;
+                break;
         }
     }
 
@@ -461,7 +463,7 @@ public class MCPoint {
     }
 
     public boolean isHidden() {
-        return  (status == PointStatus.HIDEN);
+        return  (status == PointStatus.HIDDEN);
     }
 
     public boolean isEnded() {
@@ -492,7 +494,7 @@ public class MCPoint {
         onway = false;
         inplace = true;
         leave = false;
-        hashere = true;
+        hasHere = true;
     }
 
     public void setLeave(int userId){
