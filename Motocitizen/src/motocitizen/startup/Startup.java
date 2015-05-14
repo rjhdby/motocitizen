@@ -28,7 +28,6 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import motocitizen.Activity.AboutActivity;
-import motocitizen.Activity.AuthActivity;
 import motocitizen.Activity.CreateAccActivity;
 import motocitizen.Activity.SettingsActivity;
 import motocitizen.MyApp;
@@ -45,7 +44,6 @@ import motocitizen.network.JsonRequest;
 import motocitizen.utils.Const;
 import motocitizen.utils.Keyboard;
 import motocitizen.utils.MCUtils;
-import motocitizen.utils.Props;
 import motocitizen.utils.Show;
 
 import java.lang.*;
@@ -83,7 +81,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         actionBar = getSupportActionBar();
 
         prefs = myApp.getPreferences();
-        prefs.setDoNotDistrub(false);
+        prefs.setDoNotDisturb(false);
         new Const();
 
         checkUpdate();
@@ -140,7 +138,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         super.onResume();
 
 //        Show.show(R.id.main_frame, R.id.main_screen_fragment);
-        MCLocation.wakeup(this);
+        MCLocation.wakeup();
         Intent intent = getIntent();
         Integer toMap = intent.getIntExtra("toMap", 0);
         Integer toDetails = intent.getIntExtra("toDetails", 0);
@@ -303,7 +301,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
 
         MenuItem itemMenuNotDistrub = mMenu.findItem(R.id.do_not_distrub);
 
-        if(prefs.getDoNotDistrub())
+        if(prefs.getDoNotDisturb())
             itemMenuNotDistrub.setIcon(R.drawable.ic_lock_ringer_off_alpha);
         else
             itemMenuNotDistrub.setIcon(R.drawable.ic_lock_ringer_on_alpha);
@@ -336,12 +334,12 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
             case R.id.do_not_distrub:
                 MCPreferences prefs = myApp.getPreferences();
                 //MenuItem menuItemActionDistrub = mMenu.findItem(R.id.do_not_distrub);
-                if(prefs.getDoNotDistrub()){
+                if(prefs.getDoNotDisturb()){
                     item.setIcon(R.drawable.ic_lock_ringer_on_alpha);
-                    prefs.setDoNotDistrub(false);
+                    prefs.setDoNotDisturb(false);
                 } else {
                     item.setIcon(R.drawable.ic_lock_ringer_off_alpha);
-                    prefs.setDoNotDistrub(true);
+                    prefs.setDoNotDisturb(true);
                 }
                 return true;
         }

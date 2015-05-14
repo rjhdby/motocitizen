@@ -40,7 +40,7 @@ public class MCNewAccReceived extends IntentService {
     */
         Log.d("GCM RECEIVED", "3");
         MCPreferences prefs = new MCPreferences(this);
-        if(prefs.getDoNotDistrub()){
+        if(prefs.getDoNotDisturb()){
             GcmBroadcastReceiver.completeWakefulIntent(intent);
             return;
         }

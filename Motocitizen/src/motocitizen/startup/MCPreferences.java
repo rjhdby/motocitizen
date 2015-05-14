@@ -1,5 +1,6 @@
 package motocitizen.startup;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
@@ -12,7 +13,7 @@ import java.util.Arrays;
 
 import motocitizen.main.R;
 import motocitizen.utils.Const;
-
+@SuppressLint("CommitPrefEdits")
 public class MCPreferences {
     public final String showAcc = "mc.show.acc";
     public final String showBreak = "mc.show.break";
@@ -42,7 +43,7 @@ public class MCPreferences {
 
     public MCPreferences(Context context) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        this.context = context;
+        MCPreferences.context = context;
     }
 
     public void putBoolean(String name, boolean value){
@@ -63,11 +64,11 @@ public class MCPreferences {
         return new LatLng(lat, lng);
     }
 
-    public void setDoNotDistrub(boolean value){
+    public void setDoNotDisturb(boolean value){
         preferences.edit().putBoolean(doNotDistrub, value).commit();
     }
 
-    public boolean getDoNotDistrub(){
+    public boolean getDoNotDisturb(){
         return preferences.getBoolean(doNotDistrub, false);
     }
 
@@ -130,7 +131,7 @@ public class MCPreferences {
         Uri uri;
         String uriString = preferences.getString(soundURI, "default");
         if (uriString.equals("default")) {
-            uri = RingtoneManager.getActualDefaultRingtoneUri(this.context, RingtoneManager.TYPE_NOTIFICATION);
+            uri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION);
         } else
             uri = Uri.parse(uriString);
         return uri;
@@ -230,14 +231,15 @@ public class MCPreferences {
 
     public boolean toShowAccType(String type) {
         String globalType = type.substring(0, 5);
-        if (globalType.equals("acc_m")) {
-            return toShowAcc();
-        } else if (globalType.equals("acc_b")) {
-            return toShowBreak();
-        } else if (globalType.equals("acc_s")) {
-            return toShowSteal();
-        } else {
-            return toShowOther();
+        switch (globalType) {
+            case "acc_m":
+                return toShowAcc();
+            case "acc_b":
+                return toShowBreak();
+            case "acc_s":
+                return toShowSteal();
+            default:
+                return toShowOther();
         }
     }
 

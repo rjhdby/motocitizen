@@ -22,7 +22,7 @@ import motocitizen.utils.MCUtils;
 class MCNotification {
     public MCNotification(Context context, Intent intent) {
         MCPreferences prefs = ((MyApp) context.getApplicationContext()).getPreferences();
-        if(prefs.getDoNotDistrub()){
+        if(prefs.getDoNotDisturb()){
             return;
         }
         Bundle extras = intent.getExtras();

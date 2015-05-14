@@ -135,7 +135,7 @@ public class MCLocation {
         runLocationService(LocationRequest.PRIORITY_LOW_POWER);
     }
 
-    public static void wakeup(Context context) {
+    public static void wakeup() {
         runLocationService(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
@@ -162,39 +162,46 @@ public class MCLocation {
     }
 
     private static void checkInPlace(Context context, Location location) {
-        //TODO Убрать порнографию
-        //Заглушка от расколбаса, когда два инцидента рядом
-        Boolean alreadyNewInPlace = false;
-        for (int key : MCAccidents.points.keySet()) {
-            double meters = MCAccidents.points.getPoint(key).getLocation().distanceTo(location);
-            double limit = Math.max(300, location.getAccuracy());
-            if ((meters < limit) && key != MCAccidents.getInplaceID() && !alreadyNewInPlace) {
-                MCAccidents.setInPlace(key);
+        String login = prefs.getLogin();
+        if (login.equals("")) {
+            return;
+        }
+        int currentInplace = MCAccidents.getInplaceID();
+        if (currentInplace != 0) {
+            if (isInPlace(location, currentInplace)) {
+                return;
+            } else {
+                MCAccidents.setLeave(currentInplace);
                 Map<String, String> post = new HashMap<>();
-                String login = prefs.getLogin();
-                alreadyNewInPlace = true;
-                if (login.equals("")) {
-                    return;
-                }
                 post.put("login", login);
-                post.put("id", String.valueOf(key));
-                new JSONCall(context, "mcaccidents", "inplace").request(post);
-            } else if (meters > (location.getAccuracy() + 1000) && key == MCAccidents.getInplaceID()) {
-                MCAccidents.setLeave(key);
-                Map<String, String> post = new HashMap<>();
-                String login = prefs.getLogin();
-                if (login.equals("")) {
-                    return;
-                }
-                post.put("login", login);
-                post.put("id", String.valueOf(key));
+                post.put("id", String.valueOf(currentInplace));
                 new JSONCall(context, "mcaccidents", "leave").request(post);
             }
         }
+        for (int accId : MCAccidents.points.keySet()) {
+            if (isArrived(location, accId)) {
+                MCAccidents.setInPlace(accId);
+                Map<String, String> post = new HashMap<>();
+                post.put("login", login);
+                post.put("id", String.valueOf(accId));
+                new JSONCall(context, "mcaccidents", "inplace").request(post);
+            }
+        }
+    }
+
+    private static boolean isArrived(Location location, int accId) {
+        double meters = MCAccidents.points.getPoint(accId).getLocation().distanceTo(location);
+        double limit = Math.max(300, location.getAccuracy());
+        return meters < limit;
+    }
+
+    private static boolean isInPlace(Location location, int accId) {
+        double meters = MCAccidents.points.getPoint(accId).getLocation().distanceTo(location);
+        double limit = location.getAccuracy() * 2 + 1000;
+        return meters < limit;
     }
 
     public static Location getLocation(Context context) {
         return getBestFusionLocation(context);
     }
 }
-
