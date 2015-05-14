@@ -30,6 +30,7 @@ import java.util.Map;
 
 import motocitizen.MyApp;
 import motocitizen.app.mc.popups.MCAccListPopup;
+import motocitizen.app.mc.user.MCRole;
 import motocitizen.main.R;
 import motocitizen.startup.MCPreferences;
 import motocitizen.utils.Const;
@@ -451,6 +452,9 @@ public class MCPoint {
 
     public boolean isVisible() {
         Double dist = getDistanceFromUser();
+        if(isHidden()&& !MCRole.isModerator()){
+            return false;
+        }
         if (dist == null) {
             return true;
         } else {
