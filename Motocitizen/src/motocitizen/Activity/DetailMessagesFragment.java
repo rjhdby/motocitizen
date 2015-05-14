@@ -8,7 +8,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -17,8 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import motocitizen.MyApp;
-import motocitizen.app.mc.MCAccidents;
-import motocitizen.app.mc.user.MCRole;
+import motocitizen.app.general.AccidentsGeneral;
+import motocitizen.app.general.user.Role;
 import motocitizen.main.R;
 import motocitizen.network.JsonRequest;
 import motocitizen.network.SendMessageRequest;
@@ -35,7 +34,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
     View newMessageArea;
 
     /// Сообщения
-    //private List<MCMessage> records = new ArrayList();
+    //private List<AccidentMessage> records = new ArrayList();
     /* Список сообщений */
     //private ListView listView;
     /// Адаптер для отображения сообщений
@@ -73,10 +72,10 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
             public void onClick(View v) {
                 if (Startup.isOnline()) {
                     String text = mcNewMessageText.getText().toString();
-                    int currentId = MCAccidents.getCurrentPointID();
+                    int currentId = AccidentsGeneral.getCurrentPointID();
                     Map<String, String> post = new HashMap<>();
-                    post.put("login", MCAccidents.auth.getLogin());
-                    post.put("passhash", MCAccidents.auth.makePassHash());
+                    post.put("login", AccidentsGeneral.auth.getLogin());
+                    post.put("passhash", AccidentsGeneral.auth.makePassHash());
                     post.put("id", String.valueOf(currentId));
                     post.put("text", text);
                     JsonRequest request = new JsonRequest("mcaccidents", "message", post, "", true);
@@ -117,8 +116,8 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         if(records.size() > 0) {
             records.clear();
         }
-        for(Map.Entry<Integer, MCMessage> entry : currentPoint.messages.entrySet()) {
-            MCMessage value = entry.getValue();
+        for(Map.Entry<Integer, AccidentMessage> entry : currentPoint.messages.entrySet()) {
+            AccidentMessage value = entry.getValue();
             records.add(value);
         }
 */
@@ -194,12 +193,11 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
 
     public void setupAccess() {
-        if (MCRole.isStandart()) {
+        if (Role.isStandart()) {
             newMessageArea.setVisibility(View.VISIBLE);
         } else {
             newMessageArea.setVisibility(View.INVISIBLE);

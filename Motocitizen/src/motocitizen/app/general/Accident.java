@@ -1,4 +1,4 @@
-package motocitizen.app.mc;
+package motocitizen.app.general;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -29,21 +29,21 @@ import java.util.List;
 import java.util.Map;
 
 import motocitizen.MyApp;
-import motocitizen.app.mc.popups.MCAccListPopup;
-import motocitizen.app.mc.user.MCRole;
+import motocitizen.app.general.popups.AccidentListPopup;
+import motocitizen.app.general.user.Role;
 import motocitizen.main.R;
-import motocitizen.startup.MCPreferences;
+import motocitizen.startup.MyPreferences;
 import motocitizen.utils.Const;
-import motocitizen.utils.MCUtils;
+import motocitizen.utils.MyUtils;
 import motocitizen.utils.NewID;
 
 @SuppressLint({"UseSparseArrays", "RtlHardcoded"})
-public class MCPoint {
+public class Accident {
     private MyApp myApp = null;
     public Map<String, String> attributes;
-    public Map<Integer, MCMessage> messages;
-    public Map<Integer, MCVolunteer> volunteers;
-    public Map<Integer, MCPointHistory> history;
+    public Map<Integer, AccidentMessage> messages;
+    public Map<Integer, AccidentVolunteer> volunteers;
+    public Map<Integer, AccidentHistory> history;
     private Location location;
     private boolean onway, inplace, leave, hasHere;
 
@@ -86,33 +86,33 @@ public class MCPoint {
     }
 
     public String getStatusString() {
-        if(status == PointStatus.ACTIVE)
+        if (status == PointStatus.ACTIVE)
             return "acc_status_act";
-        if(status == PointStatus.HIDDEN)
+        if (status == PointStatus.HIDDEN)
             return "acc_status_hide";
-        if(status == PointStatus.ENDED)
+        if (status == PointStatus.ENDED)
             return "acc_status_end";
         return "";
     }
 
     public String getTextToCopy() {
-        StringBuffer res = new StringBuffer();
-        res.append(Const.dateFormat.format(created) + ". ");
-        res.append(getTypeText() + ". ");
+        StringBuilder res = new StringBuilder();
+        res.append(Const.dateFormat.format(created)).append(". ");
+        res.append(getTypeText()).append(". ");
         String med = getMedText();
         if (med.length() > 0) {
-            res.append(med + ". ");
+            res.append(med).append(". ");
         }
-        res.append(address + ". ");
-        res.append(descr + ".");
+        res.append(address).append(". ");
+        res.append(descr).append(".");
         return res.toString();
     }
 
-    private MCPreferences prefs;
+    private MyPreferences prefs;
 
     private final View.OnClickListener accRowClick = new View.OnClickListener() {
         public void onClick(View v) {
-            MCAccidents.toDetails(v.getContext(), id);
+            AccidentsGeneral.toDetails(v.getContext(), id);
         }
     };
 
@@ -120,13 +120,13 @@ public class MCPoint {
         @Override
         public boolean onLongClick(View v) {
             PopupWindow pw;
-            pw = MCAccListPopup.getPopupWindow(id, false);
+            pw = AccidentListPopup.getPopupWindow(id, false);
             pw.showAsDropDown(v, 20, -20);
             return true;
         }
     };
 
-    public MCPoint(Bundle extras, Context context) throws MCPointException {
+    public Accident(Bundle extras, Context context) throws MCPointException {
         this.context = context;
         myApp = (MyApp) context.getApplicationContext();
         prefs = myApp.getPreferences();
@@ -140,7 +140,7 @@ public class MCPoint {
         makeVolunteers(null);
     }
 
-    public MCPoint(JSONObject json, Context context) throws MCPointException {
+    public Accident(JSONObject json, Context context) throws MCPointException {
         this.context = context;
         myApp = (MyApp) context.getApplicationContext();
         prefs = myApp.getPreferences();
@@ -212,7 +212,7 @@ public class MCPoint {
                 break;
             default:
                 //TODO Придумать, как сделать более правильно
-                Log.e("MCPoint", "Unkown point status");
+                Log.e("Accident", "Unknown point status");
                 this.status = PointStatus.HIDDEN;
                 break;
         }
@@ -281,10 +281,10 @@ public class MCPoint {
         if (json == null) {
             return;
         }
-        Map<Integer, MCMessage> newMessages = new HashMap<>();
+        Map<Integer, AccidentMessage> newMessages = new HashMap<>();
         for (int i = 0; i < json.length(); i++) {
             try {
-                MCMessage current = new MCMessage(json.getJSONObject(i), id);
+                AccidentMessage current = new AccidentMessage(json.getJSONObject(i), id);
                 if (messages.containsKey(current.id)) {
                     current.unread = messages.get(current.id).unread;
                 }
@@ -317,22 +317,26 @@ public class MCPoint {
         if (json == null) {
             return;
         }
-//        Map<Integer, MCVolunteer> newVolunteers = new HashMap<>();
+//        Map<Integer, AccidentVolunteer> newVolunteers = new HashMap<>();
         for (int i = 0; i < json.length(); i++) {
             try {
-                MCVolunteer current = new MCVolunteer(json.getJSONObject(i));
+                AccidentVolunteer current = new AccidentVolunteer(json.getJSONObject(i));
                 volunteers.put(current.id, current);
                 //newVolunteers.put(current.id, current);
-                if(current.id == myApp.getMCAuth().getID()){
-                    if(current.status.equals("onway")){
-                        //TODO Зачем храним эту информацию в двух местах? Думаю, что надо убрать MCAccidents.onway и т.д. заменив на getOnWay и т.д.
-                        setOnWay(current.id);
-                        MCAccidents.onway = current.id;
-                    } else if(current.status.equals("inplace")){
-                        setInPlace(current.id);
-                        MCAccidents.inplace = current.id;
-                    } else if(current.status.equals("leave")){
-                        setLeave(current.id);
+                if (current.id == myApp.getMCAuth().getID()) {
+                    switch (current.status) {
+                        case "onway":
+                            //TODO Зачем храним эту информацию в двух местах? Думаю, что надо убрать AccidentsGeneral.onway и т.д. заменив на getOnWay и т.д.
+                            setOnWay(current.id);
+                            AccidentsGeneral.onway = current.id;
+                            break;
+                        case "inplace":
+                            setInPlace(current.id);
+                            AccidentsGeneral.inplace = current.id;
+                            break;
+                        case "leave":
+                            setLeave(current.id);
+                            break;
                     }
                 }
             } catch (JSONException e) {
@@ -351,7 +355,7 @@ public class MCPoint {
         history.clear();
         for (int i = 0; i < json.length(); i++) {
             try {
-                MCPointHistory current = new MCPointHistory(json.getJSONObject(i), id);
+                AccidentHistory current = new AccidentHistory(json.getJSONObject(i), id);
                 history.put(current.id, current);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -380,7 +384,7 @@ public class MCPoint {
         }
         sb.append("(").append(getDistanceText()).append(")\n").append(address).append("\n").append(descr);
         general.setText(sb);
-        time.setText(MCUtils.getIntervalFromNowInText(created));
+        time.setText(MyUtils.getIntervalFromNowInText(created));
         int unread = countUnreadMessages();
         String msgText = "<b>" + String.valueOf(messages.size()) + "</b>";
         if (unread > 0) {
@@ -430,7 +434,7 @@ public class MCPoint {
     }
 
     private Double getDistanceFromUser() {
-        Location loc = MCLocation.getLocation(context);
+        Location loc = MyLocationManager.getLocation(context);
         return (double) loc.distanceTo(location);
     }
 
@@ -452,33 +456,29 @@ public class MCPoint {
 
     public boolean isVisible() {
         Double dist = getDistanceFromUser();
-        if(isHidden()&& !MCRole.isModerator()){
+        if (isHidden() && !Role.isModerator()) {
             return false;
         }
-        if (dist == null) {
-            return true;
-        } else {
-            return (dist < prefs.getVisibleDistance() * 1000) && prefs.toShowAccType(type);
-        }
+        return dist == null || (dist < prefs.getVisibleDistance() * 1000) && prefs.toShowAccType(type);
     }
 
     public boolean isActive() {
-        return  (status == PointStatus.ACTIVE);
+        return (status == PointStatus.ACTIVE);
     }
 
     public boolean isHidden() {
-        return  (status == PointStatus.HIDDEN);
+        return (status == PointStatus.HIDDEN);
     }
 
     public boolean isEnded() {
-        return  (status == PointStatus.ENDED);
+        return (status == PointStatus.ENDED);
     }
 
-    public void setOnWay(int userId){
-        if ( userId == 0 ) return;
-        MCVolunteer user = volunteers.get(userId);
-        if(user == null){
-            volunteers.put(userId, new MCVolunteer(userId, prefs.getLogin(), "onway"));
+    public void setOnWay(int userId) {
+        if (userId == 0) return;
+        AccidentVolunteer user = volunteers.get(userId);
+        if (user == null) {
+            volunteers.put(userId, new AccidentVolunteer(userId, prefs.getLogin(), "onway"));
         } else {
             volunteers.get(userId).status = "onway";
         }
@@ -487,11 +487,11 @@ public class MCPoint {
         leave = false;
     }
 
-    public void setInPlace(int userId){
-        if ( userId == 0 ) return;
-        MCVolunteer user = volunteers.get(userId);
-        if(user == null){
-            volunteers.put(userId, new MCVolunteer(userId, prefs.getLogin(), "inplace"));
+    public void setInPlace(int userId) {
+        if (userId == 0) return;
+        AccidentVolunteer user = volunteers.get(userId);
+        if (user == null) {
+            volunteers.put(userId, new AccidentVolunteer(userId, prefs.getLogin(), "inplace"));
         } else {
             volunteers.get(userId).status = "inplace";
         }
@@ -501,11 +501,11 @@ public class MCPoint {
         hasHere = true;
     }
 
-    public void setLeave(int userId){
-        if ( userId == 0 ) return;
-        MCVolunteer user = volunteers.get(userId);
-        if(user == null){
-            volunteers.put(userId, new MCVolunteer(userId, prefs.getLogin(), "leave"));
+    public void setLeave(int userId) {
+        if (userId == 0) return;
+        AccidentVolunteer user = volunteers.get(userId);
+        if (user == null) {
+            volunteers.put(userId, new AccidentVolunteer(userId, prefs.getLogin(), "leave"));
         } else {
             volunteers.get(userId).status = "leave";
         }
@@ -514,19 +514,19 @@ public class MCPoint {
         leave = true;
     }
 
-    public boolean isOnWay(){
+    public boolean isOnWay() {
         return onway;
     }
 
-    public boolean isInPlace(){
+    public boolean isInPlace() {
         return inplace;
     }
 
-    public boolean isLeave(){
+    public boolean isLeave() {
         return leave;
     }
 
-    public void resetStatus(){
+    public void resetStatus() {
         onway = false;
         inplace = false;
         leave = false;

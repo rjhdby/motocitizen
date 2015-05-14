@@ -1,15 +1,10 @@
 package motocitizen.network;
 
-import android.content.Context;
-
 import org.json.JSONObject;
 
 import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.main.R;
 
-/**
- * Created by pavel on 26.04.15.
- */
 public class AccidentHideRequest extends HttpClient  {
     private final AccidentDetailsActivity activity;
     private final int currentId;

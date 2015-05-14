@@ -6,14 +6,14 @@
     <item
         android:id="@+id/action_refresh"
         yourapp:showAsAction="ifRoom"
-        android:title="Refresh"
+        android:title=""
         android:visible="false"
         android:icon="@android:drawable/ic_menu_rotate" />
     <item
-        android:id="@+id/do_not_distrub"
+        android:id="@+id/do_not_disturb"
         yourapp:showAsAction="ifRoom"
         android:icon="@drawable/ic_lock_ringer_on_alpha"
-        android:title="@string/do_not_distrub"/>
+        android:title="@string/do_not_disturb"/>
     <item
         android:id="@+id/small_menu_refresh"
         android:layout_width="wrap_content"

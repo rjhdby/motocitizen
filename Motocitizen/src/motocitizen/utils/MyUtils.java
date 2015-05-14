@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MCUtils {
+public class MyUtils {
     public static boolean isInteger(String s) {
         return isInteger(s, 10);
     }

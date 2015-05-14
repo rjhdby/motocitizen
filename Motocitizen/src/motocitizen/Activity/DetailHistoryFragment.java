@@ -8,8 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import motocitizen.MyApp;
-import motocitizen.app.mc.MCAccidents;
-import motocitizen.app.mc.MCPointHistory;
+import motocitizen.app.general.AccidentHistory;
 import motocitizen.main.R;
 
 public class DetailHistoryFragment extends AccidentDetailsFragments {
@@ -77,7 +76,6 @@ public class DetailHistoryFragment extends AccidentDetailsFragments {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
 
@@ -85,7 +83,7 @@ public class DetailHistoryFragment extends AccidentDetailsFragments {
         super.update();
         ViewGroup logView = (ViewGroup) mcDetLogContent;
         logView.removeAllViews();
-        logView.addView(MCPointHistory.createHeader(getActivity()));
+        logView.addView(AccidentHistory.createHeader(getActivity()));
         for (int i : currentPoint.getSortedHistoryKeys()) {
             logView.addView(currentPoint.history.get(i).createRow(getActivity(), myApp.getMCAuth().getLogin()));
         }

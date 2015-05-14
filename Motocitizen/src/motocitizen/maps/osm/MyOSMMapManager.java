@@ -16,19 +16,19 @@ import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
 
-import motocitizen.app.mc.MCLocation;
+import motocitizen.app.general.MyLocationManager;
 import motocitizen.main.R;
-import motocitizen.maps.general.MCMap;
+import motocitizen.maps.general.MyMapManager;
 import motocitizen.utils.Inflate;
 
-public class MCOSMMap extends MCMap {
+public class MyOSMMapManager extends MyMapManager {
     private static MapView map;
     private static ItemizedIconOverlay<OverlayItem> userOverlay, accOverlay;
     private static Context context;
 
-    public MCOSMMap(Context context) {
-        this.context = context;
-        setName(MCMap.OSM);
+    public MyOSMMapManager(Context context) {
+        MyOSMMapManager.context = context;
+        setName(MyMapManager.OSM);
         Inflate.set(context, R.id.map_container, R.layout.osm_view_content);
         userOverlay = OSMUserOverlay.getUserOverlay(context);
         accOverlay = OSMAccOverlay.getOverlay(context);
@@ -64,7 +64,7 @@ public class MCOSMMap extends MCMap {
 
     private static void goToUser() {
 
-        Location location = MCLocation.getLocation(context);
+        Location location = MyLocationManager.getLocation(context);
         //if( location != null) {
             GeoPoint gp = new GeoPoint(location);
             map.getController().animateTo(gp);

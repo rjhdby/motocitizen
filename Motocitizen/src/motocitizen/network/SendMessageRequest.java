@@ -5,9 +5,6 @@ import org.json.JSONObject;
 import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.main.R;
 
-/**
- * Created by elagin on 03.04.15.
- */
 public class SendMessageRequest extends HttpClient {
 
     private final AccidentDetailsActivity activity;

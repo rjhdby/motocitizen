@@ -1,20 +1,15 @@
 package motocitizen.maps.google;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -25,24 +20,24 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import motocitizen.app.mc.MCAccTypes;
-import motocitizen.app.mc.MCAccidents;
-import motocitizen.app.mc.MCLocation;
-import motocitizen.app.mc.MCPoint;
+import motocitizen.app.general.AccidentTypes;
+import motocitizen.app.general.Accident;
+import motocitizen.app.general.AccidentsGeneral;
+import motocitizen.app.general.MyLocationManager;
 import motocitizen.main.R;
-import motocitizen.maps.general.MCMap;
+import motocitizen.maps.general.MyMapManager;
 import motocitizen.utils.Inflate;
-import motocitizen.utils.MCUtils;
+import motocitizen.utils.MyUtils;
 
 @SuppressLint("UseSparseArrays")
-public class MCGoogleMap extends MCMap {
+public class MyGoogleMapManager extends MyMapManager {
     private static GoogleMap map;
     private static Marker user;
     private static Map<String, Integer> accidents;
     private static String selected;
 
-    public MCGoogleMap(final Context context) {
-        setName(MCMap.GOOGLE);
+    public MyGoogleMapManager(final Context context) {
+        setName(MyMapManager.GOOGLE);
         selected = "";
 
         Inflate.set(context, R.id.map_container, R.layout.google_maps_view);
@@ -66,7 +61,7 @@ public class MCGoogleMap extends MCMap {
             public boolean onMarkerClick(Marker marker) {
                 String id = marker.getId();
                 if (selected.equals(id) && accidents.containsKey(id)) {
-                    MCAccidents.toDetails(context, accidents.get(selected));
+                    AccidentsGeneral.toDetails(context, accidents.get(selected));
                 } else {
                     marker.showInfoWindow();
                     selected = id;
@@ -90,10 +85,10 @@ public class MCGoogleMap extends MCMap {
             user.remove();
         }
 
-        Location location = MCLocation.getLocation(context);
+        Location location = MyLocationManager.getLocation(context);
         //if(location != null) {
-        user = map.addMarker(new MarkerOptions().position(MCUtils.LocationToLatLng(location)).title("Вы")
-                .icon(MCAccTypes.getBitmapDescriptor("user")));
+        user = map.addMarker(new MarkerOptions().position(MyUtils.LocationToLatLng(location)).title("Вы")
+                .icon(AccidentTypes.getBitmapDescriptor("user")));
         //} else {
         //TODO Отобразить сообщение?
         //Toast.makeText(this, Startup.context.getString(R.string.position_not_available), Toast.LENGTH_LONG).show();
@@ -101,7 +96,7 @@ public class MCGoogleMap extends MCMap {
     }
 
     public void jumpToPoint(Location location) {
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(MCUtils.LocationToLatLng(location), 16));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(location), 16));
     }
 
     @SuppressWarnings("UnusedParameters")
@@ -111,13 +106,13 @@ public class MCGoogleMap extends MCMap {
         }
         init();
         accidents.clear();
-        for (int id : MCAccidents.points.keySet()) {
-            MCPoint p = MCAccidents.points.getPoint(id);
+        for (int id : AccidentsGeneral.points.keySet()) {
+            Accident p = AccidentsGeneral.points.getPoint(id);
             String title = p.getTypeText();
             if (!p.getMedText().equals("")) {
                 title += ", " + p.getMedText();
             }
-            title += ", " + MCUtils.getIntervalFromNowInText(p.created) + " назад";
+            title += ", " + MyUtils.getIntervalFromNowInText(p.created) + " назад";
 
             float alpha;
             int age = (int) (((new Date()).getTime() - p.created.getTime()) / 3600000);
@@ -128,8 +123,8 @@ public class MCGoogleMap extends MCMap {
             } else {
                 alpha = 0.2f;
             }
-            Marker marker = map.addMarker(new MarkerOptions().position(MCUtils.LocationToLatLng(p.getLocation())).title(title)
-                    .icon(MCAccTypes.getBitmapDescriptor(p.getType())).alpha(alpha));
+            Marker marker = map.addMarker(new MarkerOptions().position(MyUtils.LocationToLatLng(p.getLocation())).title(title)
+                    .icon(AccidentTypes.getBitmapDescriptor(p.getType())).alpha(alpha));
             accidents.put(marker.getId(), id);
         }
     }

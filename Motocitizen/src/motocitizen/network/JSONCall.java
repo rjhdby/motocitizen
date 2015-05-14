@@ -19,7 +19,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
-import java.util.zip.GZIPInputStream;
 
 import motocitizen.MyApp;
 import motocitizen.main.R;

@@ -43,7 +43,7 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.NoActionBar" >
         <receiver
-            android:name="motocitizen.app.mc.gcm.GcmBroadcastReceiver"
+            android:name="motocitizen.app.general.gcm.GCMBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
@@ -51,7 +51,7 @@
                 <category android:name="motocitizen.main" />
             </intent-filter>
         </receiver>
-        <service android:name="motocitizen.app.mc.gcm.MCNewAccReceived" />
+        <service android:name="motocitizen.app.general.gcm.NewAccidentReceived" />
 
         <meta-data
             android:name="com.google.android.gms.version"

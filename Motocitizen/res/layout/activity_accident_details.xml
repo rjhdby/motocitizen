@@ -32,7 +32,7 @@
                         android:id="@+id/acc_details_general_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="12:63"
+                        android:text=""
                         android:textColor="#0000A0"/>
 
                 <TextView
@@ -47,7 +47,7 @@
                         android:ellipsize="end"
                         android:lines="1"
                         android:scrollHorizontally="true"
-                        android:text="user_name"
+                        android:text=""
                         android:textColor="#000000"/>
 
                 <TextView
@@ -56,7 +56,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:text="Open"
+                        android:text=""
                         android:textColor="#000000"/>
             </RelativeLayout>
             <TextView
@@ -64,7 +64,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="2"
-                    android:text="Address"
+                    android:text=""
                     android:background="#f0f0f0"
                     android:textColor="#ff000000"/>
             <TextView

@@ -1,7 +1,6 @@
 package motocitizen.messages;
 
 import android.app.Activity;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,22 +9,19 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import motocitizen.app.mc.MCMessage;
+import motocitizen.app.general.AccidentMessage;
 import motocitizen.main.R;
 import motocitizen.utils.Const;
 
-/**
- * Created by elagin on 09.04.15.
- */
-public class MessageListAdapter extends ArrayAdapter<MCMessage> {
+public class MessageListAdapter extends ArrayAdapter<AccidentMessage> {
 
     /// the Android Activity owning the ListView
     private final Activity activity;
 
     /// a list of gasoline records for display
-    private final List<MCMessage> records;
+    private final List<AccidentMessage> records;
 
-    public MessageListAdapter(Activity activity, List<MCMessage> records) {
+    public MessageListAdapter(Activity activity, List<AccidentMessage> records) {
         super(activity, R.layout.row_message_list, records);
         this.activity = activity;
         this.records = records;
@@ -41,7 +37,7 @@ public class MessageListAdapter extends ArrayAdapter<MCMessage> {
         }
 
         // populate row widgets from record data
-        MCMessage record = records.get(position);
+        AccidentMessage record = records.get(position);
 
         // get widgets from the view
         //TextView columnDate = (TextView) view.findViewById(R.id.columnDate);

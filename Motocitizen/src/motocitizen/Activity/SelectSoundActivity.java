@@ -22,7 +22,7 @@ import java.util.Map;
 
 import motocitizen.MyApp;
 import motocitizen.main.R;
-import motocitizen.startup.MCPreferences;
+import motocitizen.startup.MyPreferences;
 import motocitizen.utils.Const;
 import motocitizen.utils.NewID;
 
@@ -33,7 +33,7 @@ public class SelectSoundActivity extends ActionBarActivity {
     private static Uri currentUri;
     private static String currentTitle;
     private static RingtoneManager rm;
-    private MCPreferences prefs;
+    private MyPreferences prefs;
     private Context context;
 
     private final Button.OnClickListener play = new Button.OnClickListener() {

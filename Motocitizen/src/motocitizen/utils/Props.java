@@ -1,6 +1,5 @@
 package motocitizen.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
 
@@ -12,8 +11,6 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
-
-import motocitizen.startup.Startup;
 
 public class Props {
     private final String GLOBAL = "global.properties";

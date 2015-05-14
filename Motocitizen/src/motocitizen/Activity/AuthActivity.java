@@ -16,9 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import motocitizen.MyApp;
-import motocitizen.app.mc.MCAccidents;
+import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.main.R;
-import motocitizen.startup.MCPreferences;
+import motocitizen.startup.MyPreferences;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Text;
 
@@ -33,7 +33,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
     private EditText login;
     private EditText password;
     private CheckBox anonim;
-    private MCPreferences prefs;
+    private MyPreferences prefs;
 
     private static Context context;
 
@@ -106,7 +106,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
                 //TODO Добавить запрос подтверждения на выход.
                 prefs.resetAuth();
                 prefs.setAnonim(true);
-                MCAccidents.auth.logoff();
+                AccidentsGeneral.auth.logoff();
                 fillCtrls();
             }
         });
@@ -122,7 +122,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
                     finish();
                 } else { // Авторизация
                     if (Startup.isOnline()) {
-                        if (MCAccidents.auth.auth(Startup.context, login.getText().toString(), password.getText().toString())) {
+                        if (AccidentsGeneral.auth.auth(Startup.context, login.getText().toString(), password.getText().toString())) {
                             prefs.setAnonim(false);
                             finish();
                         } else {
@@ -151,7 +151,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
         View accListYesterdayLine = findViewById(R.id.accListYesterdayLine);
 
         //Авторизованы?
-        if (MCAccidents.auth.isAuthorized()) {
+        if (AccidentsGeneral.auth.isAuthorized()) {
             loginBtn.setEnabled(false);
             logoutBtn.setEnabled(true);
             anonim.setEnabled(false);

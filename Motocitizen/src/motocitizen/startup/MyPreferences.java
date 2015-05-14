@@ -14,7 +14,7 @@ import java.util.Arrays;
 import motocitizen.main.R;
 import motocitizen.utils.Const;
 @SuppressLint("CommitPrefEdits")
-public class MCPreferences {
+public class MyPreferences {
     public final String showAcc = "mc.show.acc";
     public final String showBreak = "mc.show.break";
     public final String showSteal = "mc.show.steal";
@@ -23,7 +23,7 @@ public class MCPreferences {
     public final String distanceAlarm = "mc.distance.alarm";
     public final String mapProvider = "mc.map.provider";
     public final String currentVersion = "version";
-    public final String doNotDistrub = "do.not.distrub";
+    public final String doNotDisturb = "do.not.disturb";
 
     private final static String onWay = "mc.onway";
     private final static String soundTitle = "mc.notification.sound.title";
@@ -41,9 +41,9 @@ public class MCPreferences {
     private static SharedPreferences preferences;
     private static Context context;
 
-    public MCPreferences(Context context) {
+    public MyPreferences(Context context) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        MCPreferences.context = context;
+        MyPreferences.context = context;
     }
 
     public void putBoolean(String name, boolean value){
@@ -65,11 +65,11 @@ public class MCPreferences {
     }
 
     public void setDoNotDisturb(boolean value){
-        preferences.edit().putBoolean(doNotDistrub, value).commit();
+        preferences.edit().putBoolean(doNotDisturb, value).commit();
     }
 
     public boolean getDoNotDisturb(){
-        return preferences.getBoolean(doNotDistrub, false);
+        return preferences.getBoolean(doNotDisturb, false);
     }
 
     public String getCurrentVersion(){

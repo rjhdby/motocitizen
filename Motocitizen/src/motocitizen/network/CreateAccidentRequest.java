@@ -5,9 +5,6 @@ import org.json.JSONObject;
 import motocitizen.Activity.CreateAccActivity;
 import motocitizen.main.R;
 
-/**
- * Created by elagin on 03.04.15.
- */
 public class CreateAccidentRequest extends HttpClient  {
 
     private final CreateAccActivity activity;

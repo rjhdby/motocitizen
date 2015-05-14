@@ -3,7 +3,7 @@ package motocitizen.maps.general;
 import android.content.Context;
 import android.location.Location;
 
-    public abstract class MCMap {
+    public abstract class MyMapManager {
 
         public static final String OSM = "osm";
         public static final String GOOGLE = "google";

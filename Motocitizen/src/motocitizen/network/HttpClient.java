@@ -21,7 +21,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
-import java.util.zip.GZIPInputStream;
 
 import motocitizen.MyApp;
 
@@ -203,8 +202,6 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
         try {
             if (dialog != null && dialog.isShowing())
                 dialog.dismiss();
-        } catch (final IllegalArgumentException e) {
-            // Handle or log or ignore
         } catch (final Exception e) {
             // Handle or log or ignore
         } finally {

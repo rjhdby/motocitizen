@@ -2,9 +2,6 @@ package motocitizen.network;
 
 import java.util.Map;
 
-/**
- * Created by elagin on 31.03.15.
- */
 public class JsonRequest {
     public final String app;
     public final String method;

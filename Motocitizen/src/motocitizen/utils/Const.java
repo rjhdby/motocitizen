@@ -14,8 +14,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import motocitizen.startup.Startup;
-
 public class Const {
     public static SimpleDateFormat timeFormat, fullTimeFormat, dateFormat;
     public static TableRow.LayoutParams trlp;

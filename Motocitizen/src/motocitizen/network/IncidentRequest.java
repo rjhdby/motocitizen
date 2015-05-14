@@ -1,10 +1,8 @@
 package motocitizen.network;
 
-import android.content.Context;
-
 import org.json.JSONObject;
 
-import motocitizen.app.mc.MCAccidents;
+import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.main.R;
 import motocitizen.startup.Startup;
 
@@ -22,6 +20,6 @@ public class IncidentRequest extends HttpClient {
         super.onPostExecute(result);
         super.dismiss();
         activity.resetUpdating();
-        MCAccidents.refreshPoints(Startup.context, result);
+        AccidentsGeneral.refreshPoints(Startup.context, result);
     }
 }

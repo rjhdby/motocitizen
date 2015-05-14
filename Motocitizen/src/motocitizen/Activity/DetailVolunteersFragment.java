@@ -10,21 +10,20 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import motocitizen.app.mc.MCAccidents;
-import motocitizen.app.mc.MCVolunteer;
+import motocitizen.app.general.AccidentVolunteer;
+import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.main.R;
 import motocitizen.network.JsonRequest;
 import motocitizen.network.OnwayRequest;
 import motocitizen.startup.Startup;
 
-import static motocitizen.app.mc.MCAccidents.getDelimiterRow;
+import static motocitizen.app.general.AccidentsGeneral.getDelimiterRow;
 
 public class DetailVolunteersFragment extends AccidentDetailsFragments {
 
@@ -78,7 +77,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
 
         onwayContent = viewMain.findViewById(R.id.acc_onway_table);
         inplaceContent = viewMain.findViewById(R.id.acc_inplace_table);
-        toMap = (Button) viewMain.findViewById(R.id.details_to_map_button);
+        toMap = viewMain.findViewById(R.id.details_to_map_button);
         toMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,7 +116,6 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
 
@@ -132,25 +130,29 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         vg_onway.removeAllViews();
         vg_inplace.removeAllViews();
         for (int i : currentPoint.getSortedVolunteersKeys()) {
-            MCVolunteer current = currentPoint.volunteers.get(i);
-            if (current.status.equals("onway")) {
-                if (vg_onway.getVisibility() == View.INVISIBLE) {
-                    vg_onway.setVisibility(View.VISIBLE);
-                    vg_onway.addView(getDelimiterRow(getActivity(), "В пути"));
-                }
-                vg_onway.addView(current.createRow(getActivity()));
-            } else if (current.status.equals("inplace")) {
-                if (vg_onway.getVisibility() == View.INVISIBLE) {
-                    vg_onway.setVisibility(View.VISIBLE);
-                    vg_onway.addView(getDelimiterRow(getActivity(), "На месте"));
-                }
-                vg_onway.addView(current.createRow(getActivity()));
-            } else if (current.status.equals("leave")) {
-                if (vg_onway.getVisibility() == View.INVISIBLE) {
-                    vg_onway.setVisibility(View.VISIBLE);
-                    vg_onway.addView(getDelimiterRow(getActivity(), "Были"));
-                }
-                vg_onway.addView(current.createRow(getActivity()));
+            AccidentVolunteer current = currentPoint.volunteers.get(i);
+            switch (current.status) {
+                case "onway":
+                    if (vg_onway.getVisibility() == View.INVISIBLE) {
+                        vg_onway.setVisibility(View.VISIBLE);
+                        vg_onway.addView(getDelimiterRow(getActivity(), "В пути"));
+                    }
+                    vg_onway.addView(current.createRow(getActivity()));
+                    break;
+                case "inplace":
+                    if (vg_onway.getVisibility() == View.INVISIBLE) {
+                        vg_onway.setVisibility(View.VISIBLE);
+                        vg_onway.addView(getDelimiterRow(getActivity(), "На месте"));
+                    }
+                    vg_onway.addView(current.createRow(getActivity()));
+                    break;
+                case "leave":
+                    if (vg_onway.getVisibility() == View.INVISIBLE) {
+                        vg_onway.setVisibility(View.VISIBLE);
+                        vg_onway.addView(getDelimiterRow(getActivity(), "Были"));
+                    }
+                    vg_onway.addView(current.createRow(getActivity()));
+                    break;
             }
         }
     }
@@ -171,7 +173,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         if (currentPoint == null)
             throw new NullPointerException("currentPoint == null");
 
-        if (currentPoint.getId() == prefs.getOnWay() || currentPoint.getId() == MCAccidents.getInplaceID() || !MCAccidents.auth.isAuthorized() || !currentPoint.isActive()) {
+        if (currentPoint.getId() == prefs.getOnWay() || currentPoint.getId() == AccidentsGeneral.getInplaceID() || !AccidentsGeneral.auth.isAuthorized() || !currentPoint.isActive()) {
             onwayButton.setVisibility(View.INVISIBLE);
         } else {
             onwayButton.setVisibility(View.VISIBLE);
@@ -192,7 +194,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
             ft.remove(prev);
         }
         ft.addToBackStack(null);
-
+        ft.commit();
         switch (type) {
             case DIALOG_ONWAY_CONFIRM:
                 DialogFragment dialogFrag = ConfirmDialog.newInstance(getActivity().getString(R.string.onway_title_confirm));
@@ -217,11 +219,11 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
 
     private void sendOnway() {
         if (Startup.isOnline()) {
-            int currentId = MCAccidents.getCurrentPointID();
-            MCAccidents.setOnWay(currentId);
+            int currentId = AccidentsGeneral.getCurrentPointID();
+            AccidentsGeneral.setOnWay(currentId);
             Map<String, String> post = new HashMap<>();
-            post.put("login", MCAccidents.auth.getLogin());
-            post.put("passhash", MCAccidents.auth.makePassHash());
+            post.put("login", AccidentsGeneral.auth.getLogin());
+            post.put("passhash", AccidentsGeneral.auth.makePassHash());
             post.put("id", String.valueOf(currentId));
             JsonRequest request = new JsonRequest("mcaccidents", "onway", post, "", true);
             if (request != null) {
