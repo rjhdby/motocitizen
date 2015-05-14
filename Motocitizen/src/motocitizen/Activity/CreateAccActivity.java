@@ -5,7 +5,6 @@ import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,19 +28,20 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import motocitizen.app.mc.MCAccTypes;
-import motocitizen.app.mc.MCAccidents;
-import motocitizen.app.mc.MCLocation;
-import motocitizen.app.mc.user.MCRole;
+import motocitizen.MyApp;
+import motocitizen.app.general.AccidentsGeneral;
+import motocitizen.app.general.AccidentTypes;
+import motocitizen.app.general.MyLocationManager;
+import motocitizen.app.general.user.Role;
 import motocitizen.main.R;
 import motocitizen.network.CreateAccidentRequest;
 import motocitizen.network.GeoCodeNewRequest;
 import motocitizen.network.JsonRequest;
-import motocitizen.startup.MCPreferences;
+import motocitizen.startup.MyPreferences;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 import motocitizen.utils.Keyboard;
-import motocitizen.utils.MCUtils;
+import motocitizen.utils.MyUtils;
 import motocitizen.utils.Text;
 
 @SuppressWarnings("FieldCanBeLocal")
@@ -87,12 +87,14 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     private GoogleMap map;
     private Circle circle;
     private int radius;
+    private MyPreferences prefs;
+
     private final GoogleMap.OnCameraChangeListener cameraListener = new GoogleMap.OnCameraChangeListener() {
         @Override
         public void onCameraChange(CameraPosition camera) {
             Button mcCreateFineAddressConfirm = (Button) ((Activity) context).findViewById(R.id.mc_create_fine_address_confirm);
             if (initialLocation != null) {
-                double distance = MCUtils.LatLngToLocation(camera.target).distanceTo(initialLocation);
+                double distance = MyUtils.LatLngToLocation(camera.target).distanceTo(initialLocation);
                 if (distance > radius) {
                     mcCreateFineAddressConfirm.setEnabled(false);
                 } else {
@@ -103,7 +105,6 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             }
         }
     };
-    private MCPreferences prefs;
 
     public static void updateAddress(String address) {
         addressText = address;
@@ -147,7 +148,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
-        prefs = new MCPreferences(this);
+        prefs = ((MyApp) context.getApplicationContext()).getPreferences();
         setContentView(R.layout.mc_app_create_point);
 
         back = (Button) findViewById(R.id.mc_create_back);
@@ -204,9 +205,9 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         date = new Date();
         medText = "mc_m_na";
         ownerText = prefs.getLogin();
-        addressText = MCLocation.address;
+        addressText = MyLocationManager.address;
         timeText = Const.timeFormat.format((date).getTime());
-        location = MCLocation.getLocation(context);
+        location = MyLocationManager.getLocation(context);
         initialLocation = location;
         CURRENT = TYPE;
         isAcc = false;
@@ -221,15 +222,15 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         final SupportMapFragment mapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.mc_create_map_container);
         map = mapFragment.getMap();
 
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(MCUtils.LocationToLatLng(location), 16));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(location), 16));
         // map.setMyLocationEnabled(true);
         map.getUiSettings().setMyLocationButtonEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
-        if (MCRole.isModerator()) {
+        if (Role.isModerator()) {
             radius = 30000000;
         } else {
             radius = 1000;
-            CircleOptions circleOptions = new CircleOptions().center(MCUtils.LocationToLatLng(initialLocation)).radius(radius).fillColor(0x20FF0000);
+            CircleOptions circleOptions = new CircleOptions().center(MyUtils.LocationToLatLng(initialLocation)).radius(radius).fillColor(0x20FF0000);
             if (circle != null) {
                 circle.remove();
             }
@@ -266,9 +267,8 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
 
     public void parseResponse(JSONObject json) {
         if (json.has("result")) {
-            String result = "error";
             try {
-                result = json.getString("result");
+                String result = json.getString("result");
                 if (result.contains("ID")) {
                     Toast.makeText(this, this.getString(R.string.send_success), Toast.LENGTH_LONG).show();
                     finish();
@@ -281,7 +281,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                Toast.makeText(this, this.getString(R.string.parce_error), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, this.getString(R.string.parse_error), Toast.LENGTH_LONG).show();
             }
         } else {
             Toast.makeText(this, this.getString(R.string.send_error), Toast.LENGTH_LONG).show();
@@ -308,7 +308,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
 
     private Map<String, String> createPOST() {
         Map<String, String> POST = new HashMap<>();
-        POST.put("owner_id", String.valueOf(MCAccidents.auth.getID()));
+        POST.put("owner_id", String.valueOf(AccidentsGeneral.auth.getID()));
         POST.put("type", type);
         POST.put("med", med);
         POST.put("status", "acc_status_act");
@@ -317,8 +317,8 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         POST.put("created", Const.dateFormat.format(date));
         POST.put("address", addressText);
         POST.put("descr", details.getText().toString());
-        POST.put("login", MCAccidents.auth.getLogin());
-        POST.put("passhash", MCAccidents.auth.makePassHash());
+        POST.put("login", AccidentsGeneral.auth.getLogin());
+        POST.put("passhash", AccidentsGeneral.auth.makePassHash());
         POST.put("calledMethod", "createAcc");
         return POST;
     }
@@ -398,18 +398,18 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             show(FINAL);
         } else if (id == R.id.mc_create_fine_address_button) {
             if (location != null) {
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(MCUtils.LocationToLatLng(location), 16));
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(location), 16));
             }
             ImageView mapPointer = (ImageView) this.findViewById(R.id.mc_create_map_pointer);
-            mapPointer.setImageDrawable(MCAccTypes.getDrawable(this, type));
+            mapPointer.setImageDrawable(AccidentTypes.getDrawable(this, type));
             Keyboard.hide(details);
             show(FINEADDRESS);
         } else if (id == R.id.mc_create_fine_address_confirm) {
             //TODO Если вдруг initialLocation == null, но не получается взять координаты после тыка юзера, т.к. map.getCameraPosition() падает.
-            double distance = MCUtils.LatLngToLocation(map.getCameraPosition().target).distanceTo(initialLocation);
+            double distance = MyUtils.LatLngToLocation(map.getCameraPosition().target).distanceTo(initialLocation);
             if (distance > radius)
                 return;
-            location = MCUtils.LatLngToLocation(map.getCameraPosition().target);
+            location = MyUtils.LatLngToLocation(map.getCameraPosition().target);
             getAddress(location);
         } else if (id == R.id.mc_create_back) {
             backButton();

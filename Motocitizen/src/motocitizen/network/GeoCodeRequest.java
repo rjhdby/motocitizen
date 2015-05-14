@@ -5,8 +5,7 @@ import android.content.Context;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import motocitizen.app.mc.MCLocation;
-import motocitizen.main.R;
+import motocitizen.app.general.MyLocationManager;
 import motocitizen.startup.Startup;
 
 public class GeoCodeRequest extends HttpClient {
@@ -22,11 +21,11 @@ public class GeoCodeRequest extends HttpClient {
         super.dismiss();
 
         try {
-            MCLocation.address = result.getString("address");
-            Startup.updateStatusBar(MCLocation.address);
+            MyLocationManager.address = result.getString("address");
+            Startup.updateStatusBar(MyLocationManager.address);
         } catch (JSONException e) {
-            MCLocation.address = "Ошибка геокодирования";
-            Startup.updateStatusBar(MCLocation.address);
+            MyLocationManager.address = "Ошибка геокодирования";
+            Startup.updateStatusBar(MyLocationManager.address);
             e.printStackTrace();
         }
     }

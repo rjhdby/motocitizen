@@ -7,9 +7,6 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
-/**
- * Created by elagin on 12.05.15.
- */
 public class ConfirmDialog extends DialogFragment {
 
     public static ConfirmDialog newInstance(String title) {

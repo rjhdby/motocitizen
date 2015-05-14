@@ -22,7 +22,6 @@ import motocitizen.main.R;
 public class ChangeLog {
 
     private static final String EOCL = "END_OF_CHANGE_LOG";
-    private static String lastVersion;
     private static StringBuffer sb = null;
     private static Listmode currentListMode = Listmode.NONE;
 
@@ -44,16 +43,14 @@ public class ChangeLog {
         return builder.create();
     }
 
-    ;
-
     public static String getLog(Context context, boolean full) {
-        lastVersion = (new MCPreferences(context).getCurrentVersion());
+        String lastVersion = (new MyPreferences(context).getCurrentVersion());
         sb = new StringBuffer();
         try {
             InputStream ins = context.getResources().openRawResource(R.raw.changelog);
             BufferedReader br = new BufferedReader(new InputStreamReader(ins));
 
-            String line = null;
+            String line;
             boolean advanceToEOVS = false;
             while ((line = br.readLine()) != null) {
                 line = line.trim();
@@ -74,35 +71,32 @@ public class ChangeLog {
                         case '%':
                             // line contains version title
                             closeList();
-                            sb.append("<div class='title'>"
-                                    + line.substring(1).trim() + "</div>\n");
+                            sb.append("<div class='title'>").append(line.substring(1).trim()).append("</div>\n");
                             break;
                         case '_':
                             // line contains version title
                             closeList();
-                            sb.append("<div class='subtitle'>"
-                                    + line.substring(1).trim() + "</div>\n");
+                            sb.append("<div class='subtitle'>").append(line.substring(1).trim()).append("</div>\n");
                             break;
                         case '!':
                             // line contains free text
                             closeList();
-                            sb.append("<div class='freetext'>"
-                                    + line.substring(1).trim() + "</div>\n");
+                            sb.append("<div class='freetext'>").append(line.substring(1).trim()).append("</div>\n");
                             break;
                         case '#':
                             // line contains numbered list item
                             openList(Listmode.ORDERED);
-                            sb.append("<li>" + line.substring(1).trim() + "</li>\n");
+                            sb.append("<li>").append(line.substring(1).trim()).append("</li>\n");
                             break;
                         case '*':
                             // line contains bullet list item
                             openList(Listmode.UNORDERED);
-                            sb.append("<li>" + line.substring(1).trim() + "</li>\n");
+                            sb.append("<li>").append(line.substring(1).trim()).append("</li>\n");
                             break;
                         default:
                             // no special character: just use line as is
                             closeList();
-                            sb.append(line + "\n");
+                            sb.append(line).append("\n");
                     }
                 }
             }

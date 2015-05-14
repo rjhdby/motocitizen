@@ -6,7 +6,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import motocitizen.Activity.CreateAccActivity;
-import motocitizen.main.R;
 
 public class GeoCodeNewRequest extends HttpClient {
 

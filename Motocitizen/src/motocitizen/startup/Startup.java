@@ -28,32 +28,32 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import motocitizen.Activity.AboutActivity;
-import motocitizen.Activity.AuthActivity;
 import motocitizen.Activity.CreateAccActivity;
 import motocitizen.Activity.SettingsActivity;
-import motocitizen.app.mc.MCAccidents;
-import motocitizen.app.mc.MCLocation;
-import motocitizen.app.mc.gcm.GcmBroadcastReceiver;
-import motocitizen.app.mc.user.MCRole;
+import motocitizen.MyApp;
+import motocitizen.app.general.AccidentsGeneral;
+import motocitizen.app.general.MyLocationManager;
+import motocitizen.app.general.gcm.GCMBroadcastReceiver;
+import motocitizen.app.general.user.Role;
 import motocitizen.main.R;
-import motocitizen.maps.general.MCMap;
-import motocitizen.maps.google.MCGoogleMap;
-import motocitizen.maps.osm.MCOSMMap;
+import motocitizen.maps.general.MyMapManager;
+import motocitizen.maps.google.MyGoogleMapManager;
+import motocitizen.maps.osm.MyOSMMapManager;
 import motocitizen.network.IncidentRequest;
 import motocitizen.network.JsonRequest;
 import motocitizen.utils.Const;
 import motocitizen.utils.Keyboard;
-import motocitizen.utils.MCUtils;
-import motocitizen.utils.Props;
+import motocitizen.utils.MyUtils;
 import motocitizen.utils.Show;
 
 import java.lang.*;
 
 public class Startup extends ActionBarActivity implements View.OnClickListener {
-    public static Props props;
+
+    private MyApp myApp = null;
     public static Context context;
-    public static MCPreferences prefs;
-    public static MCMap map;
+    public static MyPreferences prefs;
+    public static MyMapManager map;
     public static boolean fromDetails;
 
     private ImageButton dialButton;
@@ -72,17 +72,16 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        myApp = (MyApp) getApplicationContext();
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         //requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.main);
         context = this;
-
         actionBar = getSupportActionBar();
 
-        //prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        prefs = new MCPreferences(this);
-        prefs.setDoNotDistrub(false);
+        prefs = myApp.getPreferences();
+        prefs.setDoNotDisturb(false);
         new Const();
 
         checkUpdate();
@@ -102,15 +101,14 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
 
         //prefs = getSharedPreferences("motocitizen.startup", MODE_PRIVATE);
         //prefs.edit().clear().commit();
-        props = new Props();
 
-        new MCAccidents(this);
+        new AccidentsGeneral(this);
 
         //createMap(prefs.getMapProvider());
-        createMap(MCMap.GOOGLE);
+        createMap(MyMapManager.GOOGLE);
         // zz
         // new SettingsMenu();
-        new GcmBroadcastReceiver();
+        new GCMBroadcastReceiver();
     }
 
     private void checkUpdate(){
@@ -132,7 +130,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     @Override
     protected void onPause() {
         super.onPause();
-        MCLocation.sleep();
+        MyLocationManager.sleep();
     }
 
     @Override
@@ -140,14 +138,14 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         super.onResume();
 
 //        Show.show(R.id.main_frame, R.id.main_screen_fragment);
-        MCLocation.wakeup(this);
+        MyLocationManager.wakeup();
         Intent intent = getIntent();
         Integer toMap = intent.getIntExtra("toMap", 0);
         Integer toDetails = intent.getIntExtra("toDetails", 0);
         context = this;
-        //MCAccidents.refresh(this);
+        //AccidentsGeneral.refresh(this);
 
-        if (MCRole.isStandart()) {
+        if (Role.isStandart()) {
             createAccButton.setVisibility(View.VISIBLE);
         } else {
             createAccButton.setVisibility(View.INVISIBLE);
@@ -155,7 +153,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
 
         getAccidents();
 //        if (isOnline()) {
-//            JsonRequest request = MCAccidents.getLoadPointsRequest();
+//            JsonRequest request = AccidentsGeneral.getLoadPointsRequest();
 //            if (request != null) {
 //                (new IncidentRequest(this, !isChangeLogDlgShowing())).execute(request);
 //            }
@@ -169,8 +167,8 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
             fromDetails = intent.getBooleanExtra("fromDetails", false);
         } else if(toDetails != 0){
             intent.removeExtra("toDetails");
-            MCAccidents.refresh(this);
-            MCAccidents.toDetails(this, toDetails);
+            AccidentsGeneral.refresh(this);
+            AccidentsGeneral.toDetails(this, toDetails);
         }
     }
 
@@ -184,14 +182,14 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         switch (keycode) {
             case KeyEvent.KEYCODE_BACK:
                 if(fromDetails){
-                    MCAccidents.toDetails(this);
+                    AccidentsGeneral.toDetails(this);
                 }
 //                FragmentManager fm = getFragmentManager();
 //                Fragment pf = fm.findFragmentByTag("settings");
 //                if(pf != null && pf.isVisible()){
 //                    Fragment mf = fm.findFragmentByTag("main_screen");
 //                    fm.beginTransaction().show(mf).hide(pf).commit();
-                    MCAccidents.redraw(this);
+                    AccidentsGeneral.redraw(this);
 //                }
                 Keyboard.hide();
                 return true;
@@ -206,12 +204,12 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         }
         String type = extras.getString("type");
         String idString = extras.getString("id");
-        if (type == null || idString == null || !MCUtils.isInteger(idString)) {
+        if (type == null || idString == null || !MyUtils.isInteger(idString)) {
             return;
         }
         int id = Integer.parseInt(idString);
         if (type.equals("acc") && id != 0) {
-            MCAccidents.points.setSelected(this, id);
+            AccidentsGeneral.points.setSelected(this, id);
         }
     }
 
@@ -225,13 +223,13 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         if (map != null && !map.getName().equals(name))
             map = null;
 
-        if (name.equals(MCMap.OSM)) {
-            map = new MCOSMMap(context);
-        } else if (name.equals(MCMap.GOOGLE)) {
-            map = new MCGoogleMap(context);
+        if (name.equals(MyMapManager.OSM)) {
+            map = new MyOSMMapManager(context);
+        } else if (name.equals(MyMapManager.GOOGLE)) {
+            map = new MyGoogleMapManager(context);
         }
 
-        Location location = MCLocation.getLocation(context);
+        Location location = MyLocationManager.getLocation(context);
         //if(location != null)
             map.jumpToPoint(location);
     }
@@ -301,12 +299,12 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         getMenuInflater().inflate(R.menu.small_settings_menu, menu);
         mMenu = menu;
 
-        MenuItem itemMenuNotDistrub = mMenu.findItem(R.id.do_not_distrub);
+        MenuItem itemMenuNotDisturb = mMenu.findItem(R.id.do_not_disturb);
 
-        if(prefs.getDoNotDistrub())
-            itemMenuNotDistrub.setIcon(R.drawable.ic_lock_ringer_off_alpha);
+        if(prefs.getDoNotDisturb())
+            itemMenuNotDisturb.setIcon(R.drawable.ic_lock_ringer_off_alpha);
         else
-            itemMenuNotDistrub.setIcon(R.drawable.ic_lock_ringer_on_alpha);
+            itemMenuNotDisturb.setIcon(R.drawable.ic_lock_ringer_on_alpha);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -333,15 +331,15 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
                 int pid = android.os.Process.myPid();
                 android.os.Process.killProcess(pid);
                 return true;
-            case R.id.do_not_distrub:
-                MCPreferences prefs = new MCPreferences(Startup.context);
-                MenuItem menuItemActionDistrub = mMenu.findItem(R.id.do_not_distrub);
-                if(prefs.getDoNotDistrub()){
+            case R.id.do_not_disturb:
+                MyPreferences prefs = myApp.getPreferences();
+                //MenuItem menuItemActionDisturb = mMenu.findItem(R.id.do_not_disturb);
+                if(prefs.getDoNotDisturb()){
                     item.setIcon(R.drawable.ic_lock_ringer_on_alpha);
-                    prefs.setDoNotDistrub(false);
+                    prefs.setDoNotDisturb(false);
                 } else {
                     item.setIcon(R.drawable.ic_lock_ringer_off_alpha);
-                    prefs.setDoNotDistrub(true);
+                    prefs.setDoNotDisturb(true);
                 }
                 return true;
         }
@@ -381,7 +379,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
                 actionRefresh.setVisible(true);
             }
 
-            JsonRequest request = MCAccidents.getLoadPointsRequest();
+            JsonRequest request = AccidentsGeneral.getLoadPointsRequest();
             if (request != null) {
                 (new IncidentRequest(this, false)).execute(request);
             }

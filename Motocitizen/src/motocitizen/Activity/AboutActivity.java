@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import motocitizen.main.R;
 import motocitizen.startup.ChangeLog;
-import motocitizen.startup.MCPreferences;
+import motocitizen.startup.MyPreferences;
 
 public class AboutActivity extends ActionBarActivity {
 
@@ -22,7 +22,7 @@ public class AboutActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
-        ((TextView) this.findViewById(R.id.about_code_version)).setText(getString(R.string.code_version_prefix) + ": " + (new MCPreferences(this)).getCurrentVersion());
+        ((TextView) this.findViewById(R.id.about_code_version)).setText(getString(R.string.code_version_prefix) + ": " + (new MyPreferences(this)).getCurrentVersion());
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);

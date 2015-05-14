@@ -9,7 +9,7 @@ import org.osmdroid.views.overlay.OverlayItem;
 
 import java.util.ArrayList;
 
-import motocitizen.app.mc.MCLocation;
+import motocitizen.app.general.MyLocationManager;
 import motocitizen.main.R;
 
 class OSMUserOverlay {
@@ -17,7 +17,7 @@ class OSMUserOverlay {
         ArrayList<OverlayItem> items;
         OverlayItem user;
 
-        Location location = MCLocation.getLocation(context);
+        Location location = MyLocationManager.getLocation(context);
         //if( location != null) {
             user = new OverlayItem("Ваша позиция", "Ваша позиция", new GeoPoint(location));
             user.setMarker(context.getResources().getDrawable(R.drawable.osm_moto_icon));

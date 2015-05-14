@@ -1,5 +1,6 @@
 package motocitizen.network;
 
+import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -18,28 +19,30 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
-import java.util.zip.GZIPInputStream;
 
+import motocitizen.MyApp;
 import motocitizen.main.R;
 import motocitizen.startup.Startup;
 
 //TODO Уйти от использования Startup.props
 public class JSONCall {
-    private final static String APP = Startup.props.get("default.app");
+    //private final static String APP = Startup.props.get("default.app");
     private final static String CHARSET = "UTF-8";
     private final static String USERAGENT = "Mozilla/5.0 (Linux; Android 4.4; Nexus 5 Build/_BuildID_) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/30.0.0.0 Mobile Safari/537.36";
     private URL url;
     private final String method;
+    private MyApp myApp = null;
 
-    public JSONCall(String method) {
-        this(APP, method);
+//    public JSONCall(String method) {
+//        this(APP, method);
+//    }
+
+    public JSONCall(Context context, String app, String method) {
+        this(context, app, method, true);
     }
 
-    public JSONCall(String app, String method) {
-        this(app, method, true);
-    }
-
-    public JSONCall(String app, String method, Boolean https) {
+    public JSONCall(Context context, String app, String method, Boolean https) {
+        myApp = (MyApp) context.getApplicationContext();
         String protocol;
         if (https) {
             //protocol = "https";
@@ -49,10 +52,10 @@ public class JSONCall {
         }
         this.method = method;
         String script;
-        String defaultMethod = Startup.props.get("app." + app + ".json.method.default");
-        String server = Startup.props.get("app." + app + ".json.server");
-        if (Startup.props.containsKey("app." + app + ".json.method." + method)) {
-            script = Startup.props.get("app." + app + ".json.method." + method);
+        String defaultMethod = myApp.getProps().get("app." + app + ".json.method.default");
+        String server = myApp.getProps().get("app." + app + ".json.server");
+        if (myApp.getProps().containsKey("app." + app + ".json.method." + method)) {
+            script = myApp.getProps().get("app." + app + ".json.method." + method);
         } else {
             script = defaultMethod;
         }

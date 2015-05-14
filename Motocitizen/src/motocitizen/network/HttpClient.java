@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,9 +21,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
-import java.util.zip.GZIPInputStream;
 
-import motocitizen.startup.Startup;
+import motocitizen.MyApp;
 
 public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
 
@@ -32,17 +30,20 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
     private final String info;
     private final Context context;
     private final boolean isCreateDialog;
+    private MyApp myApp = null;
 
     public HttpClient(Context context, String info) {
         this.info = info;
         this.context = context;
         this.isCreateDialog = true;
+        myApp = (MyApp) context.getApplicationContext();
     }
 
     public HttpClient(Context context, String info, boolean isCreateDialog) {
         this.info = info;
         this.context = context;
         this.isCreateDialog = isCreateDialog;
+        myApp = (MyApp) context.getApplicationContext();
     }
 
     private final static String CHARSET = "UTF-8";
@@ -87,10 +88,10 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
         }
         this.method = method;
         String script;
-        String defaultMethod = Startup.props.get("app." + app + ".json.method.default");
-        String server = Startup.props.get("app." + app + ".json.server");
-        if (Startup.props.containsKey("app." + app + ".json.method." + method)) {
-            script = Startup.props.get("app." + app + ".json.method." + method);
+        String defaultMethod = myApp.getProps().get("app." + app + ".json.method.default");
+        String server = myApp.getProps().get("app." + app + ".json.server");
+        if (myApp.getProps().containsKey("app." + app + ".json.method." + method)) {
+            script = myApp.getProps().get("app." + app + ".json.method." + method);
         } else {
             script = defaultMethod;
         }
@@ -201,8 +202,6 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
         try {
             if (dialog != null && dialog.isShowing())
                 dialog.dismiss();
-        } catch (final IllegalArgumentException e) {
-            // Handle or log or ignore
         } catch (final Exception e) {
             // Handle or log or ignore
         } finally {

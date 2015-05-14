@@ -7,12 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import motocitizen.app.mc.MCAccidents;
-import motocitizen.app.mc.MCPointHistory;
+import motocitizen.MyApp;
+import motocitizen.app.general.AccidentHistory;
 import motocitizen.main.R;
 
 public class DetailHistoryFragment extends AccidentDetailsFragments {
 
+    private MyApp myApp = null;
     private OnFragmentInteractionListener mListener;
 
     private View mcDetLogContent;
@@ -35,6 +36,7 @@ public class DetailHistoryFragment extends AccidentDetailsFragments {
         if (getArguments() != null) {
             accidentID = getArguments().getInt(ACCIDENT_ID);
         }
+        myApp = (MyApp) getActivity().getApplicationContext();
     }
 
     @Override
@@ -74,7 +76,6 @@ public class DetailHistoryFragment extends AccidentDetailsFragments {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
 
@@ -82,9 +83,9 @@ public class DetailHistoryFragment extends AccidentDetailsFragments {
         super.update();
         ViewGroup logView = (ViewGroup) mcDetLogContent;
         logView.removeAllViews();
-        logView.addView(MCPointHistory.createHeader(getActivity()));
+        logView.addView(AccidentHistory.createHeader(getActivity()));
         for (int i : currentPoint.getSortedHistoryKeys()) {
-            logView.addView(currentPoint.history.get(i).createRow(getActivity()));
+            logView.addView(currentPoint.history.get(i).createRow(getActivity(), myApp.getPreferences().getLogin()));
         }
     }
 

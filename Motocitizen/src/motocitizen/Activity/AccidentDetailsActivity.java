@@ -22,18 +22,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import motocitizen.app.mc.MCAccidents;
-import motocitizen.app.mc.MCPoint;
-import motocitizen.app.mc.popups.MCAccListPopup;
-import motocitizen.app.mc.user.MCRole;
+import motocitizen.app.general.Accident;
+import motocitizen.app.general.AccidentsGeneral;
+import motocitizen.app.general.popups.AccidentListPopup;
+import motocitizen.app.general.user.Role;
 import motocitizen.main.R;
 import motocitizen.network.AccidentFinishRequest;
 import motocitizen.network.AccidentHideRequest;
 import motocitizen.network.JsonRequest;
-import motocitizen.startup.MCPreferences;
+import motocitizen.startup.MyPreferences;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
-import motocitizen.utils.MCUtils;
+import motocitizen.utils.MyUtils;
 
 public class AccidentDetailsActivity
         extends ActionBarActivity
@@ -66,7 +66,7 @@ public class AccidentDetailsActivity
 
     private Menu mMenu;
 
-    MCPreferences prefs;
+    MyPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,9 +79,9 @@ public class AccidentDetailsActivity
         Bundle b = getIntent().getExtras();
         accidentID = b.getInt("accidentID");
 
-        detailVolunteersFragment = detailVolunteersFragment.newInstance(accidentID);
-        detailMessagesFragment = detailMessagesFragment.newInstance(accidentID);
-        detailHistoryFragment = detailHistoryFragment.newInstance(accidentID);
+        detailVolunteersFragment = DetailVolunteersFragment.newInstance(accidentID);
+        detailMessagesFragment = DetailMessagesFragment.newInstance(accidentID);
+        detailHistoryFragment = DetailHistoryFragment.newInstance(accidentID);
 
         /*
         * Описание группы закладок внутри деталей происшествия
@@ -94,7 +94,7 @@ public class AccidentDetailsActivity
             @Override
             public boolean onLongClick(View v) {
                 PopupWindow pw;
-                pw = MCAccListPopup.getPopupWindow(MCAccidents.getCurrentPointID(), true);
+                pw = AccidentListPopup.getPopupWindow(AccidentsGeneral.getCurrentPointID(), true);
                 pw.showAsDropDown(v, 20, -20);
                 return true;
             }
@@ -116,12 +116,12 @@ public class AccidentDetailsActivity
         super.onResume();
         //TODO Вероятно теперь ни когда null не будет.
         if (prefs == null)
-            prefs = new MCPreferences(this);
+            prefs = new MyPreferences(this);
         update();
     }
 
     private void update() {
-        MCPoint currentPoint = MCAccidents.points.getPoint(accidentID);
+        Accident currentPoint = AccidentsGeneral.points.getPoint(accidentID);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(currentPoint.getTypeText() + ". " + currentPoint.getDistanceText());
@@ -133,7 +133,7 @@ public class AccidentDetailsActivity
         generalAddress.setText("(" + currentPoint.getDistanceText() + ") " + currentPoint.getAddress());
         generalDescription.setText(currentPoint.getDescription());
 
-        menuReconstriction();
+        menuReconstruction();
 
         Startup.map.zoom(16);
         Startup.map.jumpToPoint(currentPoint.getLocation());
@@ -144,10 +144,10 @@ public class AccidentDetailsActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_accident_details, menu);
         mMenu = menu;
-        menuReconstriction();
+        menuReconstruction();
 
-        MCPoint currentPoint = MCAccidents.points.getPoint(accidentID);
-        List<String> contactNumbers = MCUtils.getPhonesFromText(currentPoint.getDescription());
+        Accident currentPoint = AccidentsGeneral.points.getPoint(accidentID);
+        List<String> contactNumbers = MyUtils.getPhonesFromText(currentPoint.getDescription());
         if (!contactNumbers.isEmpty()) {
             if (contactNumbers.size() == 1) {
                 mMenu.add(0, SMS_MENU_MIN_ID, 0, getString(R.string.send_sms) + contactNumbers.get(0));
@@ -164,12 +164,12 @@ public class AccidentDetailsActivity
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void menuReconstriction() {
+    private void menuReconstruction() {
         if (mMenu != null) {
-            MCPoint currentPoint = MCAccidents.points.getPoint(accidentID);
+            Accident currentPoint = AccidentsGeneral.points.getPoint(accidentID);
             MenuItem finish = mMenu.findItem(R.id.menu_acc_finish);
             MenuItem hide = mMenu.findItem(R.id.menu_acc_hide);
-            if (MCRole.isModerator()) {
+            if (Role.isModerator()) {
                 finish.setVisible(true);
                 if (currentPoint.isEnded()) {
                     finish.setTitle(R.string.unfinish);
@@ -214,7 +214,7 @@ public class AccidentDetailsActivity
             case R.id.action_share:
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, MCAccidents.points.getTextToCopy(accidentID));
+                sendIntent.putExtra(Intent.EXTRA_TEXT, AccidentsGeneral.points.getTextToCopy(accidentID));
                 sendIntent.setType("text/plain");
                 this.startActivity(sendIntent);
                 return true;
@@ -236,7 +236,8 @@ public class AccidentDetailsActivity
             Intent intent = new Intent(Intent.ACTION_VIEW);
             String smsPrefix = getString(R.string.send_sms);
             String number = (String) item.getTitle();
-            if (number.indexOf(smsPrefix) != -1)
+            //if (number.indexOf(smsPrefix) != -1)
+            if (number.contains(smsPrefix))
                 number = number.substring(smsPrefix.length(), number.length());
             intent.setData(Uri.parse("sms:" + number));
             Startup.context.startActivity(intent);
@@ -244,7 +245,8 @@ public class AccidentDetailsActivity
             Intent intent = new Intent(Intent.ACTION_DIAL);
             String callPrefix = getString(R.string.make_call);
             String number = (String) item.getTitle();
-            if (number.indexOf(callPrefix) != -1)
+            //if (number.indexOf(callPrefix) != -1)
+            if (number.contains(callPrefix))
                 number = number.substring(callPrefix.length(), number.length());
             intent.setData(Uri.parse("tel:" + number));
             Startup.context.startActivity(intent);
@@ -255,9 +257,9 @@ public class AccidentDetailsActivity
     private void sendFinishRequest() {
         if (Startup.isOnline()) {
             Map<String, String> params = new HashMap<>();
-            params.put("login", MCAccidents.auth.getLogin());
-            params.put("passhash", MCAccidents.auth.makePassHash());
-            MCPoint point = MCAccidents.points.getPoint(accidentID);
+            params.put("login", AccidentsGeneral.auth.getLogin());
+            params.put("passhash", AccidentsGeneral.auth.makePassHash());
+            Accident point = AccidentsGeneral.points.getPoint(accidentID);
             if (point.isEnded()) {
                 params.put("state", "acc_status_act");
             } else {
@@ -275,10 +277,10 @@ public class AccidentDetailsActivity
 
     private void sendHideRequest() {
         if (Startup.isOnline()) {
-            MCPoint point = MCAccidents.points.getPoint(accidentID);
+            Accident point = AccidentsGeneral.points.getPoint(accidentID);
             Map<String, String> params = new HashMap<>();
-            params.put("login", MCAccidents.auth.getLogin());
-            params.put("passhash", MCAccidents.auth.makePassHash());
+            params.put("login", AccidentsGeneral.auth.getLogin());
+            params.put("passhash", AccidentsGeneral.auth.makePassHash());
             if (point.isHidden()) {
                 params.put("state", "acc_status_act");
             } else {
@@ -312,21 +314,25 @@ public class AccidentDetailsActivity
         if (json.has("result")) {
             try {
                 String result = json.getString("result");
-                if (result.equals("OK")) {
-                    Toast.makeText(this, Startup.context.getString(R.string.send_success), Toast.LENGTH_LONG).show();
-                    MCAccidents.refresh(Startup.context);
-                    update();
-                    if (detailHistoryFragment.isResumed())
-                        detailHistoryFragment.notifyDataSetChanged();
-                    return;
-                } else if (result.equals("READONLY") || result.equals("NO RIGHTS")) {
-                    Toast.makeText(this, this.getString(R.string.not_have_rights_error), Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+                switch (result) {
+                    case "OK":
+                        Toast.makeText(this, Startup.context.getString(R.string.send_success), Toast.LENGTH_LONG).show();
+                        AccidentsGeneral.refresh(Startup.context);
+                        update();
+                        if (detailHistoryFragment.isResumed())
+                            detailHistoryFragment.notifyDataSetChanged();
+                        return;
+                    case "READONLY":
+                    case "NO RIGHTS":
+                        Toast.makeText(this, this.getString(R.string.not_have_rights_error), Toast.LENGTH_LONG).show();
+                        break;
+                    default:
+                        Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+                        break;
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                Toast.makeText(this, this.getString(R.string.parce_error), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, this.getString(R.string.parse_error), Toast.LENGTH_LONG).show();
             }
             Log.e("Send message failed", json.toString());
         } else {
@@ -338,23 +344,26 @@ public class AccidentDetailsActivity
         if (json.has("result")) {
             try {
                 String result = json.getString("result");
-                if (result.equals("OK")) {
-                    Toast.makeText(this, Startup.context.getString(R.string.send_success), Toast.LENGTH_LONG).show();
-                    MCAccidents.refresh(Startup.context);
-                    update();
-                    if (detailMessagesFragment.isResumed())
-                        detailMessagesFragment.notifyDataSetChanged();
-                    //mcNewMessageText.setText("");
-                    //Keyboard.hide(findViewById(R.id.mc_new_message_text));
-                    return;
-                } else if (result.equals("READONLY")) {
-                    Toast.makeText(this, this.getString(R.string.not_have_rights_error), Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+                switch (result) {
+                    case "OK":
+                        Toast.makeText(this, Startup.context.getString(R.string.send_success), Toast.LENGTH_LONG).show();
+                        AccidentsGeneral.refresh(Startup.context);
+                        update();
+                        if (detailMessagesFragment.isResumed())
+                            detailMessagesFragment.notifyDataSetChanged();
+                        //mcNewMessageText.setText("");
+                        //Keyboard.hide(findViewById(R.id.mc_new_message_text));
+                        return;
+                    case "READONLY":
+                        Toast.makeText(this, this.getString(R.string.not_have_rights_error), Toast.LENGTH_LONG).show();
+                        break;
+                    default:
+                        Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+                        break;
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                Toast.makeText(this, this.getString(R.string.parce_error), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, this.getString(R.string.parse_error), Toast.LENGTH_LONG).show();
             }
             Log.e("Send message failed", json.toString());
         } else {
@@ -369,7 +378,7 @@ public class AccidentDetailsActivity
                 if (result.equals("OK")) {
                     Toast.makeText(this, Startup.context.getString(R.string.send_success), Toast.LENGTH_LONG).show();
                     prefs.setOnWay(currentId);
-                    MCAccidents.refresh(Startup.context);
+                    AccidentsGeneral.refresh(Startup.context);
                     update();
                     if (detailVolunteersFragment.isResumed())
                         detailVolunteersFragment.notifyDataSetChanged();
@@ -386,7 +395,7 @@ public class AccidentDetailsActivity
 
     void jumpToMap() {
         Intent intent = new Intent(this, Startup.class);
-        intent.putExtra("toMap", MCAccidents.getCurrentPointID());
+        intent.putExtra("toMap", AccidentsGeneral.getCurrentPointID());
         intent.putExtra("fromDetails", true);
         this.startActivity(intent);
         finish();
@@ -397,9 +406,9 @@ public class AccidentDetailsActivity
 
     }
 
-    MCPreferences getPref() {
+    MyPreferences getPref() {
         if (prefs == null)
-            prefs = new MCPreferences(this);
+            prefs = new MyPreferences(this);
         return prefs;
     }
 }

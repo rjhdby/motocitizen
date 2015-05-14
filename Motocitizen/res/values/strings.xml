@@ -103,17 +103,18 @@
     <string name="share">Поделиться</string>
     <string name="unknown_code_version">Не определено</string>
     <string name="code_version_prefix">Текущая версия</string>
-    <string name="do_not_distrub">Не беспокоить</string>
+    <string name="do_not_disturb">Не беспокоить</string>
     <string name="no_one_accident_visible">Никакие события показаны не будут</string>
     <string name="cant_open_incident">Не могу открыть инцидент.</string>
     <string name="position_not_available">Местоположение определить не удалось.</string>
     <string name="hide_info_details">Скрыть подробности</string>
     <string name="show_info_details">Показать подробности</string>
-    <string name="parce_error">Ошибка разбора ответа сервера.</string>
+    <string name="parse_error">Ошибка разбора ответа сервера.</string>
     <string name="not_have_rights_error">Нет прав на эту операцию.</string>
     <string name="too_often_acts">Это действите нельзя выполнять так часто.</string>
     <string name="send_sms">Отправить СМС: </string>
     <string name="make_call">Позвонить: </string>
     <string name="about_url_support"><a href="http://forum.moto.msk.ru/forum/38-%D0%BC%D0%BE%D0%B1%D0%B8%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5-%D0%BF%D1%80%D0%B8%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5/">Поддержка</a>.</string>
 	<string name="onway_title_confirm">Вы готовы выехать?</string>
+    <string name="current_version_text">Текущая версия:</string>
 </resources>

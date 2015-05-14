@@ -14,8 +14,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import motocitizen.startup.Startup;
-
 public class Const {
     public static SimpleDateFormat timeFormat, fullTimeFormat, dateFormat;
     public static TableRow.LayoutParams trlp;
@@ -40,7 +38,7 @@ public class Const {
         med_text.put("mc_m_na", "");
 
         status_text.put("acc_status_act", "Активно");
-        status_text.put("acc_status_end", "Завершено");
+        status_text.put("acc_status_end", "Отбой");
         status_text.put("acc_status_hide", "Скрыто");
         status_text.put("acc_status_war", "Конфликт");
 

@@ -1,67 +1,61 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:orientation="vertical"
-             android:weightSum="1"
-             tools:context="motocitizen.Activity.DetailMessagesFragment">
-    <LinearLayout
-            android:id="@+id/det_messages"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/det_messages"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:tag="mc_det_messages_content"
+    android:weightSum="1"
+    tools:context="motocitizen.Activity.DetailMessagesFragment">
+
+    <ScrollView
+        android:id="@+id/mc_det_messages_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:tag="mc_det_messages_content">
+
+        <TableLayout
+            android:id="@+id/mc_det_messages_table"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:tag="mc_det_messages_content"
-            android:weightSum="1" >
+            android:shrinkColumns="2"
+            android:stretchColumns="2" />
 
-        <ScrollView
-                android:id="@+id/mc_det_messages_scroll"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:tag="mc_det_messages_content" >
+    </ScrollView>
 
-            <TableLayout
-                    android:id="@+id/mc_det_messages_table"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:shrinkColumns="2"
-                    android:stretchColumns="2">
+    <LinearLayout
+        android:id="@+id/mc_new_message_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal">
 
-            </TableLayout>
-        </ScrollView>
+        <EditText
+            android:id="@+id/mc_new_message_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="text"
+            android:lines="1">
 
-        <LinearLayout
-                android:id="@+id/mc_new_message_area"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="bottom" >
+            <requestFocus />
+        </EditText>
 
-            <EditText
-                    android:id="@+id/mc_new_message_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:ems="10"
-                    android:inputType="text"
-                    android:layout_weight="1"
-                    android:lines="1" >
-                <requestFocus />
-            </EditText>
-
-            <ImageButton
-                    android:id="@+id/mc_new_message_send"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:enabled="false"
-                    android:visibility="visible"
-                    android:src="@android:drawable/ic_menu_send"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="false"
-                    android:layout_alignWithParentIfMissing="false"
-                    android:layout_alignParentTop="true"
-                    android:nestedScrollingEnabled="false"
-                    android:minWidth="90dp"/>
-        </LinearLayout>
+        <ImageButton
+            android:id="@+id/mc_new_message_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="false"
+            android:layout_alignParentTop="true"
+            android:layout_alignWithParentIfMissing="false"
+            android:enabled="false"
+            android:minWidth="90dp"
+            android:nestedScrollingEnabled="false"
+            android:src="@android:drawable/ic_menu_send"
+            android:visibility="visible" />
     </LinearLayout>
-</FrameLayout>
+</LinearLayout>

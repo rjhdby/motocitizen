@@ -9,7 +9,7 @@ import android.preference.PreferenceFragment;
 import android.widget.Toast;
 
 import motocitizen.main.R;
-import motocitizen.startup.MCPreferences;
+import motocitizen.startup.MyPreferences;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 
@@ -19,14 +19,14 @@ public class SettingsFragment extends PreferenceFragment {
     private Preference nottifDistPreference, nottifAlarmPreference;
     private Preference authPreference, nottifSoundPreference;
     private Preference showAcc, showBreak, showSteal, showOther;
-    private MCPreferences prefs;
+    private MyPreferences prefs;
     private static Activity act;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         act = getActivity();
-        prefs = new MCPreferences(act);
+        prefs = new MyPreferences(act);
         update();
     }
 
@@ -98,7 +98,6 @@ public class SettingsFragment extends PreferenceFragment {
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             String valueText = (String) newValue;
             int value;
-            String key = preference.getKey();
             if (valueText.length() > 6) {
                 valueText = valueText.substring(0, 6);
             }

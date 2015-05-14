@@ -8,19 +8,19 @@ import org.osmdroid.views.overlay.OverlayItem;
 
 import java.util.ArrayList;
 
-import motocitizen.app.mc.MCAccTypes;
-import motocitizen.app.mc.MCAccidents;
-import motocitizen.app.mc.MCPoint;
+import motocitizen.app.general.AccidentTypes;
+import motocitizen.app.general.AccidentsGeneral;
+import motocitizen.app.general.Accident;
 
 class OSMAccOverlay {
     public static ItemizedIconOverlay<OverlayItem> getOverlay(Context context) {
         ArrayList<OverlayItem> items = new ArrayList<>();
         OverlayItem acc;
-        for (int id : MCAccidents.points.keySet()) {
-            MCPoint p = MCAccidents.points.getPoint(id);
+        for (int id : AccidentsGeneral.points.keySet()) {
+            Accident p = AccidentsGeneral.points.getPoint(id);
             if (p.getLocation() != null) {
                 acc = new OverlayItem(p.getTypeText(), p.getAddress(), new GeoPoint(p.getLocation()));
-                acc.setMarker(MCAccTypes.getDrawable(context, p.getType()));
+                acc.setMarker(AccidentTypes.getDrawable(context, p.getType()));
                 items.add(acc);
             }
         }
