@@ -125,7 +125,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         messageView.removeAllViews();
 
         for (int i : currentPoint.getSortedMessagesKeys()) {
-            messageView.addView(currentPoint.messages.get(i).createRow(getActivity(), myApp.getMCAuth().getLogin()));
+            messageView.addView(currentPoint.messages.get(i).createRow(getActivity(), myApp.getPreferences().getLogin()));
         }
         setupAccess();
     }
