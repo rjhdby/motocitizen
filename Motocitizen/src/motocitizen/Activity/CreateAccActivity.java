@@ -295,7 +295,8 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 Map<String, String> post = createPOST();
                 JsonRequest request = new JsonRequest("mcaccidents", "createAcc", post, "", true);
                 if (request != null) {
-                    (new CreateAccidentRequest(this)).execute(request);
+                    // zz
+                    // (new CreateAccidentRequest(this)).execute(request);
                 }
             } else {
                 confirm.setEnabled(true);
