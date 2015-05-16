@@ -131,22 +131,22 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         vg_inplace.removeAllViews();
         for (int i : currentPoint.getSortedVolunteersKeys()) {
             AccidentVolunteer current = currentPoint.volunteers.get(i);
-            switch (current.status) {
-                case "onway":
+            switch (current.getStatus()) {
+                case ONWAY:
                     if (vg_onway.getVisibility() == View.INVISIBLE) {
                         vg_onway.setVisibility(View.VISIBLE);
                         vg_onway.addView(getDelimiterRow(getActivity(), "В пути"));
                     }
                     vg_onway.addView(current.createRow(getActivity()));
                     break;
-                case "inplace":
+                case INPLACE:
                     if (vg_onway.getVisibility() == View.INVISIBLE) {
                         vg_onway.setVisibility(View.VISIBLE);
                         vg_onway.addView(getDelimiterRow(getActivity(), "На месте"));
                     }
                     vg_onway.addView(current.createRow(getActivity()));
                     break;
-                case "leave":
+                case LEAVE:
                     if (vg_onway.getVisibility() == View.INVISIBLE) {
                         vg_onway.setVisibility(View.VISIBLE);
                         vg_onway.addView(getDelimiterRow(getActivity(), "Были"));

@@ -15,28 +15,57 @@ import motocitizen.utils.Const;
 public class AccidentVolunteer {
     public int id;
     public String name;
-    public String status;
+    private Status status;
     public Date time;
+
+    public enum Status {
+        INPLACE, LEAVE, ONWAY
+    }
+
+    public void setStatus(Status newStatus) {
+        status = newStatus;
+    }
+
+    public void setStatus(String newStatus) {
+        if(newStatus.equals("inplace"))
+            status = Status.INPLACE;
+        else if(newStatus.equals("leave"))
+            status = Status.LEAVE;
+        else if(newStatus.equals("onway"))
+            status = Status.ONWAY;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public boolean isInplace() {
+        return status == Status.INPLACE;
+    }
+
+    public boolean isLeave() {
+        return status == Status.LEAVE;
+    }
 
     public AccidentVolunteer(JSONObject json) throws JSONException {
         id = json.getInt("id");
         name = json.getString("name");
-        status = json.getString("status");
+        setStatus(json.getString("status"));
         time = new Date(Long.parseLong(json.getString("uxtime"), 10) * 1000);
     }
 
     public AccidentVolunteer(int id, String name, String status){
         this.id = id;
         this.name = name;
-        this.status = status;
+        setStatus(status);
         this.time = new Date();
     }
 
     public TableRow createRow(Context context) {
         String type = ", выехал в ";
-        if(status.equals("inplace")){
+        if(isInplace()) {
             type = ", приехал в ";
-        } else if(status.equals("leave")){
+        } else if(isLeave()){
             type = ", уехал в ";
         }
         Log.d("TYPE", type);
