@@ -1,5 +1,6 @@
 package motocitizen.Activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 
@@ -46,6 +48,8 @@ import motocitizen.utils.Text;
 public class CreateAccActivityNewFragment extends Fragment implements View.OnClickListener {
 
     private View viewMain;
+    private FragmentActivity myContext;
+
     private static View globalView;
     private static String addressText;
     private static Context context;
@@ -92,6 +96,23 @@ public class CreateAccActivityNewFragment extends Fragment implements View.OnCli
     public CreateAccActivityNewFragment() {
     }
 
+    private final GoogleMap.OnCameraChangeListener cameraListener = new GoogleMap.OnCameraChangeListener() {
+        @Override
+        public void onCameraChange(CameraPosition camera) {
+            Button mcCreateFineAddressConfirm = (Button) ((Activity) context).findViewById(R.id.mc_create_fine_address_confirm);
+            if (initialLocation != null) {
+                double distance = MyUtils.LatLngToLocation(camera.target).distanceTo(initialLocation);
+                if (distance > radius) {
+                    mcCreateFineAddressConfirm.setEnabled(false);
+                } else {
+                    mcCreateFineAddressConfirm.setEnabled(true);
+                }
+            } else {
+                mcCreateFineAddressConfirm.setEnabled(false);
+            }
+        }
+    };
+
     private void backButton() {
         confirm.setEnabled(false);
         if (CURRENT == TYPE) {
@@ -123,6 +144,12 @@ public class CreateAccActivityNewFragment extends Fragment implements View.OnCli
             back.setEnabled(false);
         }
         writeGlobal();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        myContext=(FragmentActivity) activity;
+        super.onAttach(activity);
     }
 
     @Override
@@ -202,9 +229,10 @@ public class CreateAccActivityNewFragment extends Fragment implements View.OnCli
         //map = ((MapFragment) this.getFragmentManager().findFragmentById(R.id.mc_create_map_container)).getMap();
 
         // zz
-        /*
-        android.support.v4.app.FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+        // android.support.v4.app.FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+        android.support.v4.app.FragmentManager fragmentManager = ((FragmentActivity) myContext).getSupportFragmentManager();
         final SupportMapFragment mapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.mc_create_map_container);
+        //final SupportMapFragment mapFragment = (SupportMapFragment) fragmentManager.findFragmentByTag("tag_fragment_map");
         map = mapFragment.getMap();
 
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(location), 16));
@@ -221,9 +249,7 @@ public class CreateAccActivityNewFragment extends Fragment implements View.OnCli
             }
             circle = map.addCircle(circleOptions);
         }
-*/
-        // zz
-        //map.setOnCameraChangeListener(cameraListener);
+        map.setOnCameraChangeListener(cameraListener);
 
         return viewMain;
     }

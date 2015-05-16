@@ -1,5 +1,6 @@
 package motocitizen.Activity;
 
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,6 +18,9 @@ public class CreateAccActivityNew extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_acc_activity_new);
+
+        FragmentManager fm = getSupportFragmentManager();
+        //fm.beginTransaction().add(R.id.mc_create_map_container, fragment,"TagName").commit();
     }
 
 
