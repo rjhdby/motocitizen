@@ -137,7 +137,7 @@ public class Accident {
         createPoint(data);
         makeHistory(null);
         makeMessages(null);
-        makeVolunteers(null);
+        makeVolunteers(null, 0);
     }
 
     public Accident(JSONObject json, Context context) throws MCPointException {
@@ -148,7 +148,7 @@ public class Accident {
         try {
             makeHistory(json.getJSONArray("history"));
             makeMessages(json.getJSONArray("messages"));
-            makeVolunteers(json.getJSONArray("onway"));
+            makeVolunteers(json.getJSONArray("onway"), id);
         } catch (JSONException e) {
             e.printStackTrace();
             throw new MCPointException();
@@ -311,7 +311,7 @@ public class Accident {
         }
     }
 
-    private void makeVolunteers(JSONArray json) {
+    private void makeVolunteers(JSONArray json, int accID) {
         if (volunteers == null)
             volunteers = new HashMap<>();
         if (json == null) {
@@ -328,11 +328,11 @@ public class Accident {
                         case ONWAY:
                             //TODO Зачем храним эту информацию в двух местах? Думаю, что надо убрать AccidentsGeneral.onway и т.д. заменив на getOnWay и т.д.
                             setOnWay(volunteer.id);
-                            AccidentsGeneral.setOnWay(volunteer.id);
+                            AccidentsGeneral.setOnWay(accID);
                             break;
                         case INPLACE:
                             setInPlace(volunteer.id);
-                            AccidentsGeneral.setInPlace(volunteer.id);
+                            AccidentsGeneral.setInPlace(accID);
                             break;
                         case LEAVE:
                             setLeave(volunteer.id);
