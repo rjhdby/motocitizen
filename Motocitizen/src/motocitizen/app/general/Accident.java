@@ -137,7 +137,7 @@ public class Accident {
         createPoint(data);
         makeHistory(null);
         makeMessages(null);
-        makeVolunteers(null);
+        makeVolunteers(null, 0);
     }
 
     public Accident(JSONObject json, Context context) throws MCPointException {
@@ -148,7 +148,7 @@ public class Accident {
         try {
             makeHistory(json.getJSONArray("history"));
             makeMessages(json.getJSONArray("messages"));
-            makeVolunteers(json.getJSONArray("onway"));
+            makeVolunteers(json.getJSONArray("onway"), id);
         } catch (JSONException e) {
             e.printStackTrace();
             throw new MCPointException();
@@ -311,7 +311,7 @@ public class Accident {
         }
     }
 
-    private void makeVolunteers(JSONArray json) {
+    private void makeVolunteers(JSONArray json, int accID) {
         if (volunteers == null)
             volunteers = new HashMap<>();
         if (json == null) {
@@ -320,22 +320,22 @@ public class Accident {
 //        Map<Integer, AccidentVolunteer> newVolunteers = new HashMap<>();
         for (int i = 0; i < json.length(); i++) {
             try {
-                AccidentVolunteer current = new AccidentVolunteer(json.getJSONObject(i));
-                volunteers.put(current.id, current);
+                AccidentVolunteer volunteer = new AccidentVolunteer(json.getJSONObject(i));
+                volunteers.put(volunteer.id, volunteer);
                 //newVolunteers.put(current.id, current);
-                if (current.id == myApp.getMCAuth().getID()) {
-                    switch (current.status) {
-                        case "onway":
+                if (volunteer.id == myApp.getMCAuth().getID()) {
+                    switch (volunteer.getStatus()) {
+                        case ONWAY:
                             //TODO Зачем храним эту информацию в двух местах? Думаю, что надо убрать AccidentsGeneral.onway и т.д. заменив на getOnWay и т.д.
-                            setOnWay(current.id);
-                            AccidentsGeneral.onway = current.id;
+                            setOnWay(volunteer.id);
+                            AccidentsGeneral.setOnWay(accID);
                             break;
-                        case "inplace":
-                            setInPlace(current.id);
-                            AccidentsGeneral.inplace = current.id;
+                        case INPLACE:
+                            setInPlace(volunteer.id);
+                            AccidentsGeneral.setInPlace(accID);
                             break;
-                        case "leave":
-                            setLeave(current.id);
+                        case LEAVE:
+                            setLeave(volunteer.id);
                             break;
                     }
                 }
@@ -480,7 +480,7 @@ public class Accident {
         if (user == null) {
             volunteers.put(userId, new AccidentVolunteer(userId, prefs.getLogin(), "onway"));
         } else {
-            volunteers.get(userId).status = "onway";
+            volunteers.get(userId).setStatus(AccidentVolunteer.Status.ONWAY);
         }
         onway = true;
         inplace = false;
@@ -493,7 +493,7 @@ public class Accident {
         if (user == null) {
             volunteers.put(userId, new AccidentVolunteer(userId, prefs.getLogin(), "inplace"));
         } else {
-            volunteers.get(userId).status = "inplace";
+            volunteers.get(userId).setStatus(AccidentVolunteer.Status.INPLACE);
         }
         onway = false;
         inplace = true;
@@ -507,7 +507,7 @@ public class Accident {
         if (user == null) {
             volunteers.put(userId, new AccidentVolunteer(userId, prefs.getLogin(), "leave"));
         } else {
-            volunteers.get(userId).status = "leave";
+            volunteers.get(userId).setStatus(AccidentVolunteer.Status.LEAVE);
         }
         onway = false;
         inplace = false;

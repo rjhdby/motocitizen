@@ -39,8 +39,8 @@ import motocitizen.utils.Const;
 
 public class AccidentsGeneral {
     private MyApp myApp = null;
-    public static int onway;
-    public static int inplace;
+    public static int onwayAcc;
+    private static int inplaceAcc;
     private static Accident currentPoint;
     public static Accidents points;
     public static Auth auth;
@@ -48,11 +48,11 @@ public class AccidentsGeneral {
     private static MyPreferences prefs;
 
     public static int getInplaceID() {
-        return inplace;
+        return inplaceAcc;
     }
 
     public static void setInPlace(int id){
-        inplace = id;
+        inplaceAcc = id;
         for(int key:points.keySet()){
             if(points.getPoint(key).isInPlace()){
                 points.getPoint(key).setLeave(auth.getID());
@@ -62,7 +62,7 @@ public class AccidentsGeneral {
     }
 
     public static int getOnway(){
-        return onway;
+        return onwayAcc;
     }
 
     public static void setLeave(int id){
@@ -77,7 +77,7 @@ public class AccidentsGeneral {
                 points.getPoint(key).resetStatus();
             }
         }
-        onway = id;
+        onwayAcc = id;
         points.getPoint(id).setOnWay(auth.getID());
     }
 
@@ -102,8 +102,8 @@ public class AccidentsGeneral {
     public AccidentsGeneral(Context context) {
         myApp = (MyApp) context.getApplicationContext();
         prefs = myApp.getPreferences();
-        onway = 0;
-        inplace = 0;
+        onwayAcc = 0;
+        inplaceAcc = 0;
         auth = myApp.getMCAuth();
         new MyLocationManager(context);
         points = new Accidents(context);
