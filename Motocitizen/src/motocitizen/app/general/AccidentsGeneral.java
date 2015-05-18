@@ -39,7 +39,7 @@ import motocitizen.utils.Const;
 
 public class AccidentsGeneral {
     private MyApp myApp = null;
-    public static int onwayAcc;
+    private static int onwayAcc;
     private static int inplaceAcc;
     private static Accident currentPoint;
     public static Accidents points;
@@ -51,29 +51,29 @@ public class AccidentsGeneral {
         return inplaceAcc;
     }
 
-    public static void setInPlace(int id){
+    public static void setInPlace(int id) {
         inplaceAcc = id;
-        for(int key:points.keySet()){
-            if(points.getPoint(key).isInPlace()){
+        for (int key : points.keySet()) {
+            if (points.getPoint(key).isInPlace()) {
                 points.getPoint(key).setLeave(auth.getID());
             }
         }
         points.getPoint(id).setInPlace(auth.getID());
     }
 
-    public static int getOnway(){
+    public static int getOnway() {
         return onwayAcc;
     }
 
-    public static void setLeave(int id){
-        if(points.getPoint(id).isInPlace()){
+    public static void setLeave(int id) {
+        if (points.getPoint(id).isInPlace()) {
             points.getPoint(id).setLeave(auth.getID());
         }
     }
 
     public static void setOnWay(int id) {
-        for(int key:points.keySet()){
-            if(points.getPoint(key).isOnWay()){
+        for (int key : points.keySet()) {
+            if (points.getPoint(key).isOnWay()) {
                 points.getPoint(key).resetStatus();
             }
         }

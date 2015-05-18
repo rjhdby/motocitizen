@@ -478,7 +478,7 @@ public class Accident {
         if (userId == 0) return;
         AccidentVolunteer user = volunteers.get(userId);
         if (user == null) {
-            volunteers.put(userId, new AccidentVolunteer(userId, prefs.getLogin(), "onway"));
+            volunteers.put(userId, new AccidentVolunteer(userId, prefs.getLogin(), AccidentVolunteer.Status.ONWAY));
         } else {
             volunteers.get(userId).setStatus(AccidentVolunteer.Status.ONWAY);
         }
@@ -491,7 +491,7 @@ public class Accident {
         if (userId == 0) return;
         AccidentVolunteer user = volunteers.get(userId);
         if (user == null) {
-            volunteers.put(userId, new AccidentVolunteer(userId, prefs.getLogin(), "inplace"));
+            volunteers.put(userId, new AccidentVolunteer(userId, prefs.getLogin(), AccidentVolunteer.Status.INPLACE));
         } else {
             volunteers.get(userId).setStatus(AccidentVolunteer.Status.INPLACE);
         }
@@ -505,7 +505,7 @@ public class Accident {
         if (userId == 0) return;
         AccidentVolunteer user = volunteers.get(userId);
         if (user == null) {
-            volunteers.put(userId, new AccidentVolunteer(userId, prefs.getLogin(), "leave"));
+            volunteers.put(userId, new AccidentVolunteer(userId, prefs.getLogin(), AccidentVolunteer.Status.LEAVE));
         } else {
             volunteers.get(userId).setStatus(AccidentVolunteer.Status.LEAVE);
         }

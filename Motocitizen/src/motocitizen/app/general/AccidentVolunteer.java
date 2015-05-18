@@ -54,10 +54,10 @@ public class AccidentVolunteer {
         time = new Date(Long.parseLong(json.getString("uxtime"), 10) * 1000);
     }
 
-    public AccidentVolunteer(int id, String name, String status){
+    public AccidentVolunteer(int id, String name, Status status){
         this.id = id;
         this.name = name;
-        setStatus(status);
+        this.status = status;
         this.time = new Date();
     }
 
