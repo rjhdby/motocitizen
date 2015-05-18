@@ -9,13 +9,13 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="0"
         android:tag="mc_det_people_content">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TableLayout
@@ -49,6 +49,7 @@
             android:layout_weight="0.5"
             android:src="@drawable/onway"
             android:text="@string/onway_button"
+            android:contentDescription = "onway"
             android:adjustViewBounds="false" />
 
         <Button
