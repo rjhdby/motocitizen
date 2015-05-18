@@ -39,7 +39,7 @@ public class Auth {
         }
     }
 
-    void reset() {
+    private void reset() {
         name = "";
         role = "";
         id = 0;
@@ -61,7 +61,7 @@ public class Auth {
         return prefs.getLogin();
     }
 
-    String makePassHash(String pass) {
+    private String makePassHash(String pass) {
         String hash = "";
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");

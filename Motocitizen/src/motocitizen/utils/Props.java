@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Properties;
 
 public class Props {
-    private final String GLOBAL = "global.properties";
     private AssetManager as = null;
     private final Properties summary = new Properties();
     private Properties global = new Properties();
@@ -45,6 +44,7 @@ public class Props {
     private void makeGlobal() {
         InputStream is;
         try {
+            String GLOBAL = "global.properties";
             is = as.open(GLOBAL);
             global = read(is);
         } catch (IOException e) {
