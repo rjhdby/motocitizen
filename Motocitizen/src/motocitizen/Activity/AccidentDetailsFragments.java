@@ -15,6 +15,5 @@ public class AccidentDetailsFragments extends Fragment {
 
     protected void update() {
         currentPoint = AccidentsGeneral.points.getPoint(accidentID);
-        prefs = ((AccidentDetailsActivity)getActivity()).getPref();
     }
 }

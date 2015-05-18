@@ -16,6 +16,7 @@ import android.widget.Toast;
 import java.util.HashMap;
 import java.util.Map;
 
+import motocitizen.MyApp;
 import motocitizen.app.general.AccidentVolunteer;
 import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.main.R;
@@ -57,6 +58,9 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         if (savedInstanceState != null) {
             mStackLevel = savedInstanceState.getInt("level");
         }
+
+        MyApp myApp = (MyApp) getActivity().getApplicationContext();
+        prefs = myApp.getPreferences();
 
         if (getArguments() != null) {
             accidentID = getArguments().getInt(ACCIDENT_ID);
@@ -164,12 +168,6 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     }
 
     private void setupAccess() {
-        if (prefs == null) {
-            prefs = ((AccidentDetailsActivity) getActivity()).getPref();
-        }
-
-        if (prefs == null)
-            throw new NullPointerException("prefs == null");
         if (currentPoint == null)
             throw new NullPointerException("currentPoint == null");
 
