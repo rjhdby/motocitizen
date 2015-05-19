@@ -196,6 +196,20 @@ public class MyLocationManager {
     }
 
     private static boolean isInPlace(Location location, int accId) {
+        Accident acc = AccidentsGeneral.points.getPoint(accId);
+        if(acc == null) {
+            Toast.makeText(context, "Invalid accident", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if(location == null ) {
+            Toast.makeText(context, "Invalid location", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if(acc.getLocation() == null ) {
+            Toast.makeText(context, "Invalid accident location", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
         double meters = AccidentsGeneral.points.getPoint(accId).getLocation().distanceTo(location);
         double limit = location.getAccuracy() * 2 + 1000;
         return meters < limit;
