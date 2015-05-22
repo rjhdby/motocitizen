@@ -66,7 +66,9 @@ public class AccidentsGeneral {
     }
 
     public static void setLeave(int id) {
-        if (points.getPoint(id).isInPlace()) {
+        Accident acc = points.getPoint(id);
+        // Вероятно попадается инцидент которого уже нет в списке.
+        if(acc != null && acc.isInPlace()) {
             points.getPoint(id).setLeave(auth.getID());
         }
     }
