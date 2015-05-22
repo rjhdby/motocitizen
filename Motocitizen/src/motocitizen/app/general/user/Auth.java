@@ -31,12 +31,18 @@ public class Auth {
 
         if (!prefs.isAnonim() ) {
           if(!prefs.getLogin().isEmpty()) {
-              auth(context, prefs.getLogin(), prefs.getPassword());
+              if(!auth(context, prefs.getLogin(), prefs.getPassword())) {
+                  showlogin();
+              }
           } else {
-              Intent i = new Intent(Startup.context, AuthActivity.class);
-              Startup.context.startActivity(i);
+              showlogin();
           }
         }
+    }
+
+    private void showlogin() {
+        Intent i = new Intent(Startup.context, AuthActivity.class);
+        Startup.context.startActivity(i);
     }
 
     private void reset() {
