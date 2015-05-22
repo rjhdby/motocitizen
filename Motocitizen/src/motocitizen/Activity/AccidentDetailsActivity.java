@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import motocitizen.MyApp;
 import motocitizen.app.general.Accident;
 import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.app.general.popups.AccidentListPopup;
@@ -37,9 +38,7 @@ import motocitizen.utils.MyUtils;
 
 public class AccidentDetailsActivity
         extends ActionBarActivity
-        implements DetailMessagesFragment.OnFragmentInteractionListener,
-        DetailHistoryFragment.OnFragmentInteractionListener,
-        DetailVolunteersFragment.OnFragmentInteractionListener {
+        implements AccidentDetailsFragments.OnFragmentInteractionListener {
 
     static final int SMS_MENU_MIN_ID = 100;
     static final int SMS_MENU_MAX_ID = 200;
@@ -68,6 +67,8 @@ public class AccidentDetailsActivity
 
     MyPreferences prefs;
 
+    private String userName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,10 +79,11 @@ public class AccidentDetailsActivity
 
         Bundle b = getIntent().getExtras();
         accidentID = b.getInt("accidentID");
+        userName = ((MyApp) getApplicationContext()).getPreferences().getLogin();
 
-        detailVolunteersFragment = DetailVolunteersFragment.newInstance(accidentID);
-        detailMessagesFragment = DetailMessagesFragment.newInstance(accidentID);
-        detailHistoryFragment = DetailHistoryFragment.newInstance(accidentID);
+        detailVolunteersFragment = DetailVolunteersFragment.newInstance(accidentID, userName);
+        detailMessagesFragment = DetailMessagesFragment.newInstance(accidentID, userName);
+        detailHistoryFragment = DetailHistoryFragment.newInstance(accidentID, userName);
 
         /*
         * Описание группы закладок внутри деталей происшествия

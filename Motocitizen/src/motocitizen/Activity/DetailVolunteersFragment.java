@@ -5,7 +5,6 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,6 @@ import android.widget.Toast;
 import java.util.HashMap;
 import java.util.Map;
 
-import motocitizen.MyApp;
 import motocitizen.app.general.AccidentVolunteer;
 import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.main.R;
@@ -28,10 +26,7 @@ import static motocitizen.app.general.AccidentsGeneral.getDelimiterRow;
 
 public class DetailVolunteersFragment extends AccidentDetailsFragments {
 
-    int mStackLevel = 0;
     public static final int DIALOG_ONWAY_CONFIRM = 1;
-
-    private OnFragmentInteractionListener mListener;
 
     private ImageButton onwayButton;
     private View toMap;
@@ -39,10 +34,11 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     private View inplaceContent;
 
     // TODO: Rename and change types and number of parameters
-    public static DetailVolunteersFragment newInstance(int param1) {
+    public static DetailVolunteersFragment newInstance(int accID, String userName) {
         DetailVolunteersFragment fragment = new DetailVolunteersFragment();
         Bundle args = new Bundle();
-        args.putInt(ACCIDENT_ID, param1);
+        args.putInt(ACCIDENT_ID, accID);
+        args.putString(USER_NAME, userName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,24 +48,9 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        if (savedInstanceState != null) {
-            mStackLevel = savedInstanceState.getInt("level");
-        }
-
-        MyApp myApp = (MyApp) getActivity().getApplicationContext();
-        prefs = myApp.getPreferences();
-
-        if (getArguments() != null) {
-            accidentID = getArguments().getInt(ACCIDENT_ID);
-        }
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View viewMain = inflater.inflate(R.layout.fragment_detail_volunteers, container, false);
+        currentPoint = AccidentsGeneral.points.getPoint(accidentID);
 
         onwayButton = (ImageButton) viewMain.findViewById(R.id.onway_button);
         onwayButton.setOnClickListener(new View.OnClickListener() {
@@ -92,39 +73,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         return viewMain;
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        public void onFragmentInteraction(Uri uri);
-    }
-
     protected void update() {
-        super.update();
         setupAccess();
 
         ViewGroup vg_onway = (ViewGroup) onwayContent;
@@ -178,12 +127,6 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         }
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt("level", mStackLevel);
-    }
-
     void showDialog(int type) {
         mStackLevel++;
         FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
@@ -204,11 +147,11 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch(requestCode) {
+        switch (requestCode) {
             case DIALOG_ONWAY_CONFIRM:
                 if (resultCode == Activity.RESULT_OK) {
                     sendOnway();
-                } else if (resultCode == Activity.RESULT_CANCELED){
+                } else if (resultCode == Activity.RESULT_CANCELED) {
                     // After Cancel code.
                 }
                 break;
