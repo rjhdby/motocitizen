@@ -33,8 +33,8 @@ import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.app.general.MyLocationManager;
 import motocitizen.app.general.user.Role;
 import motocitizen.main.R;
-import motocitizen.network.GeoCodeNewRequest;
 import motocitizen.network.JsonRequest;
+import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.startup.MyPreferences;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
@@ -44,7 +44,25 @@ import motocitizen.utils.Text;
 public class CreateAccActivity extends FragmentActivity implements View.OnClickListener {
     static Context context;
     static MyPreferences prefs;
+    static NewAccident accident;
+    static View listView;
     final int RADIUS = 1000;
+    private final TextWatcher DetailsTextListener = new TextWatcher() {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            accident.setDescription(s.toString());
+            setConfirm();
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    };
     int TYPE;
     int DESCR;
     int ACC;
@@ -52,11 +70,25 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     int MAP;
     int currentScreen;
     GoogleMap map;
-    static NewAccident accident;
     Button confirmButton, backButton;
     View typeFrame, accFrame, mapFrame, medFrame, descrFrame;
-    static View listView;
     EditText descrView;
+
+    private static void refreshDescription() {
+        if (accident.med.equals("mc_m_na")) {
+            Text.set(context, listView, R.id.mc_create_what, prefs.getAccidentTypeName(accident.type));
+        } else {
+            Text.set(context, listView, R.id.mc_create_what, prefs.getAccidentTypeName(accident.type) + ". " + prefs.getMedTypeName(accident.med));
+        }
+        Text.set(context, listView, R.id.mc_create_who, AccidentsGeneral.auth.getLogin());
+        Text.set(context, listView, R.id.mc_create_where, accident.address);
+        Text.set(context, listView, R.id.mc_create_when, Const.dateFormat.format(accident.created));
+    }
+
+    public static void updateAddress(String address) {
+        accident.address = address;
+        refreshDescription();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,17 +222,6 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         refreshDescription();
     }
 
-    private static void refreshDescription() {
-        if (accident.med.equals("mc_m_na")) {
-            Text.set(context, listView, R.id.mc_create_what, prefs.getAccidentTypeName(accident.type));
-        } else {
-            Text.set(context, listView, R.id.mc_create_what, prefs.getAccidentTypeName(accident.type) + ". " + prefs.getMedTypeName(accident.med));
-        }
-        Text.set(context, listView, R.id.mc_create_who, AccidentsGeneral.auth.getLogin());
-        Text.set(context, listView, R.id.mc_create_where, accident.address);
-        Text.set(context, listView, R.id.mc_create_when, Const.dateFormat.format(accident.created));
-    }
-
     private void backButton() {
         switch (currentScreen) {
             case R.id.mc_create_map: //MAP
@@ -244,10 +265,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         if (accident.location != null) {
             if (Startup.isOnline()) {
                 setConfirm(false);
-                JsonRequest request = new JsonRequest("mcaccidents", "createAcc", accident.createPOST(), "", true);
-                if (request != null) {
-                    //(new CreateAccidentRequest(this)).execute(request);
-                }
+                new JsonRequest("mcaccidents", "createAcc", accident.createPOST(), "", true);
             } else {
                 setConfirm(true);
                 Toast.makeText(this, this.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
@@ -329,23 +347,6 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         return map;
     }
 
-    private final TextWatcher DetailsTextListener = new TextWatcher() {
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            accident.setDescription(s.toString());
-            setConfirm();
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-        }
-    };
-
     private void setConfirm(Boolean status) {
         confirmButton.setEnabled(status);
     }
@@ -375,11 +376,6 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         } else {
             Toast.makeText(this, this.getString(R.string.send_error), Toast.LENGTH_LONG).show();
         }
-    }
-
-    public static void updateAddress(String address) {
-        accident.address = address;
-        refreshDescription();
     }
 
     private class NewAccident {
@@ -447,20 +443,21 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
 
         public void updateLocation(Location location) {
             this.location = location;
-            getAddress(location);
+            //getAddress(location);
         }
 
-        private void getAddress(Location location) {
-            if (Startup.isOnline()) {
-                JsonRequest request = getAddressRequest(location);
-                if (request != null) {
-                    (new GeoCodeNewRequest(context)).execute(request);
+        /*
+                private void getAddress(Location location) {
+                    if (Startup.isOnline()) {
+                        JsonRequest request = getAddressRequest(location);
+                        if (request != null) {
+                            (new GeoCodeNewRequest(context)).execute(request);
+                        }
+                    } else {
+                        Toast.makeText(context, context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
+                    }
                 }
-            } else {
-                Toast.makeText(context, context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
-            }
-        }
-
+        */
         private JsonRequest getAddressRequest(Location location) {
             Map<String, String> post = new HashMap<>();
             post.put("lat", String.valueOf(location.getLatitude()));
@@ -503,6 +500,18 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
 
         public boolean isAccident() {
             return (type + "      ").substring(0, 5).equals("acc_m");
+        }
+    }
+
+    public class Callback implements AsyncTaskCompleteListener {
+
+        @Override
+        public void onTaskComplete(JSONObject result) {
+            try {
+                updateAddress(result.getString("address"));
+            } catch (JSONException e) {
+                updateAddress("Ошибка геокодирования");
+            }
         }
     }
 }

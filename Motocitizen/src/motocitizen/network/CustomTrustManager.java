@@ -13,7 +13,7 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 
-class CustomTrustManager {
+public class CustomTrustManager {
     private static TrustManager[] trustManagers;
 
     @SuppressLint("TrulyRandom")
