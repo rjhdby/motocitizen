@@ -251,12 +251,6 @@
 
                 <requestFocus />
             </EditText>
-
-            <Button
-                android:id="@+id/mc_create_fine_address_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/fine_address" />
         </LinearLayout>
 
         <LinearLayout
@@ -296,6 +290,7 @@
     </FrameLayout>
 
     <LinearLayout
+        android:id="@+id/mc_create_bottom_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="bottom"

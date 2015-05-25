@@ -257,5 +257,42 @@ public class MyPreferences {
     public void setMaxNotifications(int code) {
         preferences.edit().putInt(maxNotifications, code).commit();
     }
+
+    public String getAccidentTypeName(String type) {
+        switch (type) {
+            case "acc_s":
+                return "Угон";
+            case "acc_b":
+                return "Поломка";
+            case "acc_m":
+                return "ДТП, один участник";
+            case "acc_m_m":
+                return "ДТП, мот/мот";
+            case "acc_m_a":
+                return "ДТП, мот/авто";
+            case "acc_m_p":
+                return "Наезд на пешехода";
+            case "acc_o":
+                return "Прочее";
+            default:
+                return "";
+        }
+    }
+    public String getMedTypeName(String type) {
+        switch (type) {
+            case "mc_m_na":
+                return "";
+            case "mc_m_wo":
+                return "Без повреждений";
+            case "mc_m_l":
+                return "Ушибы";
+            case "mc_m_h":
+                return "Тяжелые травмы";
+            case "mc_m_d":
+                return "Минус";
+            default:
+                return "";
+        }
+    }
 }
 

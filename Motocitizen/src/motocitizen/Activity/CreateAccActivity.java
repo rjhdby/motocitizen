@@ -4,23 +4,21 @@ import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 
 import org.json.JSONException;
@@ -31,82 +29,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 import motocitizen.MyApp;
-import motocitizen.app.general.AccidentTypes;
 import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.app.general.MyLocationManager;
 import motocitizen.app.general.user.Role;
 import motocitizen.main.R;
-import motocitizen.network.CreateAccidentRequest;
-import motocitizen.network.GeoCodeNewRequest;
 import motocitizen.network.JsonRequest;
+import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.startup.MyPreferences;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
-import motocitizen.utils.Keyboard;
 import motocitizen.utils.MyUtils;
 import motocitizen.utils.Text;
 
-@SuppressWarnings("FieldCanBeLocal")
 public class CreateAccActivity extends FragmentActivity implements View.OnClickListener {
-    private static View globalView;
-    private static String addressText;
-    private static Context context;
-    private Button back;
-    private Button confirm;
-    private Button cancel;
-    private Button typeOtherButton;
-    private Button typeStealButton;
-    private Button typeBreakButton;
-    private Button typeAccButton;
-    private Button accMmButton;
-    private Button accMpButton;
-    private Button accSoloButton;
-    private Button accMaButton;
-    private Button peopleDeathButton;
-    private Button peopleHardButton;
-    private Button peopleLightButton;
-    private Button peopleNaButton;
-    private Button peopleOkButton;
-    private Button fineAddressButton;
-    private Button fineAddressConfirm;
-    private EditText details;
-    private int TYPE;
-    private int FINAL;
-    private int ACC;
-    private int PEOPLE;
-    private int FINEADDRESS;
-    private Date date;
-    private String globalText;
-    private String medText;
-    private String ownerText;
-    private String timeText;
-    private String type;
-    private String med = "mc_m_na";
-    private Location location;
-    private Location initialLocation;
-    private int CURRENT;
-    private boolean isAcc;
-    private GoogleMap map;
-    private Circle circle;
-    private int radius;
-    private MyPreferences prefs;
-
-    private final GoogleMap.OnCameraChangeListener cameraListener = new GoogleMap.OnCameraChangeListener() {
-        @Override
-        public void onCameraChange(CameraPosition camera) {
-            Button mcCreateFineAddressConfirm = (Button) ((Activity) context).findViewById(R.id.mc_create_fine_address_confirm);
-            if (initialLocation != null) {
-                double distance = MyUtils.LatLngToLocation(camera.target).distanceTo(initialLocation);
-                if (distance > radius) {
-                    mcCreateFineAddressConfirm.setEnabled(false);
-                } else {
-                    mcCreateFineAddressConfirm.setEnabled(true);
-                }
-            } else {
-                mcCreateFineAddressConfirm.setEnabled(false);
-            }
-        }
-    };
+    static Context context;
+    static MyPreferences prefs;
+    static NewAccident accident;
+    static View listView;
+    final int RADIUS = 1000;
     private final TextWatcher DetailsTextListener = new TextWatcher() {
 
         @Override
@@ -115,172 +55,304 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            enableConfirm(s.toString());
+            accident.setDescription(s.toString());
+            setConfirm();
         }
 
         @Override
         public void afterTextChanged(Editable s) {
         }
     };
+    int TYPE;
+    int DESCR;
+    int ACC;
+    int MED;
+    int MAP;
+    int currentScreen;
+    GoogleMap map;
+    Button confirmButton, backButton;
+    View typeFrame, accFrame, mapFrame, medFrame, descrFrame;
+    EditText descrView;
 
-    public static void updateAddress(String address) {
-        addressText = address;
-        Text.set(context, globalView, R.id.mc_create_where, addressText);
+    private static void refreshDescription() {
+        if (accident.med.equals("mc_m_na")) {
+            Text.set(context, listView, R.id.mc_create_what, prefs.getAccidentTypeName(accident.type));
+        } else {
+            Text.set(context, listView, R.id.mc_create_what, prefs.getAccidentTypeName(accident.type) + ". " + prefs.getMedTypeName(accident.med));
+        }
+        Text.set(context, listView, R.id.mc_create_who, AccidentsGeneral.auth.getLogin());
+        Text.set(context, listView, R.id.mc_create_where, accident.address);
+        Text.set(context, listView, R.id.mc_create_when, Const.dateFormat.format(accident.created));
     }
 
-    private void backButton() {
-        if (CURRENT == TYPE) {
-            finish();
-        } else if (CURRENT == FINAL) {
-            if (isAcc) {
-                med = "mc_m_na";
-                medText = "";
-                show(PEOPLE);
-            } else {
-                show(TYPE);
-                globalText = "";
-                type = "";
-            }
-        } else if (CURRENT == ACC) {
-            show(TYPE);
-            isAcc = false;
-            globalText = "";
-            type = "";
-        } else if (CURRENT == PEOPLE) {
-            show(ACC);
-            medText = "";
-            globalText = "ДТП";
-            med = "mc_m_na";
-            type = "";
-        } else if (CURRENT == FINEADDRESS) {
-            show(FINAL);
-        }
-        if (CURRENT == TYPE) {
-            back.setEnabled(false);
-        }
-        writeGlobal();
-        enableConfirm();
+    public static void updateAddress(String address) {
+        accident.address = address;
+        refreshDescription();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.mc_app_create_point);
         context = this;
         prefs = ((MyApp) context.getApplicationContext()).getPreferences();
-        setContentView(R.layout.mc_app_create_point);
-
-        back = (Button) findViewById(R.id.mc_create_back);
-        back.setOnClickListener(this);
-        confirm = (Button) findViewById(R.id.mc_create_create);
-        confirm.setOnClickListener(this);
-        cancel = (Button) findViewById(R.id.mc_create_cancel);
-        cancel.setOnClickListener(this);
-
-        fineAddressButton = (Button) findViewById(R.id.mc_create_fine_address_button);
-        fineAddressButton.setOnClickListener(this);
-        fineAddressConfirm = (Button) findViewById(R.id.mc_create_fine_address_confirm);
-        fineAddressConfirm.setOnClickListener(this);
-
-        typeOtherButton = (Button) findViewById(R.id.mc_create_type_other_button);
-        typeOtherButton.setOnClickListener(this);
-        typeStealButton = (Button) findViewById(R.id.mc_create_type_steal_button);
-        typeStealButton.setOnClickListener(this);
-        typeBreakButton = (Button) findViewById(R.id.mc_create_type_break_button);
-        typeBreakButton.setOnClickListener(this);
-        typeAccButton = (Button) findViewById(R.id.mc_create_type_acc_button);
-        typeAccButton.setOnClickListener(this);
-
-        accMmButton = (Button) findViewById(R.id.mc_create_acc_mm_button);
-        accMmButton.setOnClickListener(this);
-
-        accMpButton = (Button) findViewById(R.id.mc_create_acc_mp_button);
-        accMpButton.setOnClickListener(this);
-        accSoloButton = (Button) findViewById(R.id.mc_create_acc_solo_button);
-        accSoloButton.setOnClickListener(this);
-        accMaButton = (Button) findViewById(R.id.mc_create_acc_ma_button);
-        accMaButton.setOnClickListener(this);
-
-        peopleDeathButton = (Button) findViewById(R.id.mc_create_people_death_button);
-        peopleDeathButton.setOnClickListener(this);
-        peopleHardButton = (Button) findViewById(R.id.mc_create_people_hard_button);
-        peopleHardButton.setOnClickListener(this);
-        peopleLightButton = (Button) findViewById(R.id.mc_create_people_light_button);
-        peopleLightButton.setOnClickListener(this);
-        peopleNaButton = (Button) findViewById(R.id.mc_create_people_na_button);
-        peopleNaButton.setOnClickListener(this);
-        peopleOkButton = (Button) findViewById(R.id.mc_create_people_ok_button);
-        peopleOkButton.setOnClickListener(this);
-
-        globalView = findViewById(R.id.mc_create_main);
-        details = (EditText) findViewById(R.id.mc_create_final_text);
-        details.addTextChangedListener(DetailsTextListener);
+        accident = new NewAccident();
+        map = makeMap();
         TYPE = R.id.mc_create_type_frame;
-        FINAL = R.id.mc_create_final_frame;
+        DESCR = R.id.mc_create_final_frame;
         ACC = R.id.mc_create_acc_frame;
-        PEOPLE = R.id.mc_create_people_frame;
-        FINEADDRESS = R.id.mc_create_map;
+        MED = R.id.mc_create_people_frame;
+        MAP = R.id.mc_create_map;
+        currentScreen = MAP;
 
-        date = new Date();
-        medText = "mc_m_na";
-        ownerText = prefs.getLogin();
-        addressText = MyLocationManager.address;
-        timeText = Const.timeFormat.format((date).getTime());
-        location = MyLocationManager.getLocation(context);
-        initialLocation = location;
-        CURRENT = TYPE;
-        isAcc = false;
-        writeGlobal();
-        //show(CURRENT);
+        confirmButton = (Button) findViewById(R.id.mc_create_create);
+        backButton = (Button) findViewById(R.id.mc_create_back);
 
-        //TODO Зачем это вообще все нужно, если юзер не будет корректировать адрес?
-        //if (location != null) {
-        //map = ((MapFragment) this.getFragmentManager().findFragmentById(R.id.mc_create_map_container)).getMap();
+        typeFrame = findViewById(TYPE);
+        mapFrame = findViewById(MAP);
+        accFrame = findViewById(ACC);
+        descrFrame = findViewById(DESCR);
+        medFrame = findViewById(MED);
 
-        android.support.v4.app.FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
-        final SupportMapFragment mapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.mc_create_map_container);
+        descrView = (EditText) findViewById(R.id.mc_create_final_text);
+        descrView.addTextChangedListener(DetailsTextListener);
+
+        listView = findViewById(R.id.mc_create_main);
+
+        goToMap();
+        refreshDescription();
+        setupListener();
+    }
+
+    public void setupListener() {
+        findViewById(R.id.mc_create_type_break_button).setOnClickListener(this);
+        findViewById(R.id.mc_create_type_steal_button).setOnClickListener(this);
+        findViewById(R.id.mc_create_type_other_button).setOnClickListener(this);
+        findViewById(R.id.mc_create_type_acc_button).setOnClickListener(this);
+        findViewById(R.id.mc_create_acc_ma_button).setOnClickListener(this);
+        findViewById(R.id.mc_create_acc_solo_button).setOnClickListener(this);
+        findViewById(R.id.mc_create_acc_mm_button).setOnClickListener(this);
+        findViewById(R.id.mc_create_acc_mp_button).setOnClickListener(this);
+        findViewById(R.id.mc_create_people_ok_button).setOnClickListener(this);
+        findViewById(R.id.mc_create_people_light_button).setOnClickListener(this);
+        findViewById(R.id.mc_create_people_hard_button).setOnClickListener(this);
+        findViewById(R.id.mc_create_people_death_button).setOnClickListener(this);
+        findViewById(R.id.mc_create_people_na_button).setOnClickListener(this);
+        findViewById(R.id.mc_create_fine_address_confirm).setOnClickListener(this);
+        findViewById(R.id.mc_create_create).setOnClickListener(this);
+        findViewById(R.id.mc_create_cancel).setOnClickListener(this);
+        findViewById(R.id.mc_create_back).setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id) {
+            case R.id.mc_create_type_break_button:
+                accident.makeBreak();
+                goToDescription();
+                break;
+            case R.id.mc_create_type_steal_button:
+                accident.makeSteal();
+                goToDescription();
+                break;
+            case R.id.mc_create_type_other_button:
+                accident.makeOther();
+                goToDescription();
+                break;
+            // Кнопки ДТП
+            case R.id.mc_create_type_acc_button:
+                goToAccidentSubType();
+                break;
+            case R.id.mc_create_acc_ma_button:
+                accident.makeAccident("acc_m_a");
+                goToMed();
+                break;
+            case R.id.mc_create_acc_solo_button:
+                accident.makeAccident("acc_m");
+                goToMed();
+                break;
+            case R.id.mc_create_acc_mm_button:
+                accident.makeAccident("acc_m_m");
+                goToMed();
+                break;
+            case R.id.mc_create_acc_mp_button:
+                accident.makeAccident("acc_m_p");
+                goToMed();
+                break;
+            // Кнопки медицины
+            case R.id.mc_create_people_ok_button:
+                accident.setMed("mc_m_wo");
+                goToDescription();
+                break;
+            case R.id.mc_create_people_light_button:
+                accident.setMed("mc_m_l");
+                goToDescription();
+                break;
+            case R.id.mc_create_people_hard_button:
+                accident.setMed("mc_m_h");
+                goToDescription();
+                break;
+            case R.id.mc_create_people_death_button:
+                accident.setMed("mc_m_d");
+                goToDescription();
+                break;
+            case R.id.mc_create_people_na_button:
+                accident.setMed("mc_m_na");
+                goToDescription();
+                break;
+            // Работа с картой
+            case R.id.mc_create_fine_address_confirm:
+                accident.updateLocation(MyUtils.LatLngToLocation(map.getCameraPosition().target));
+                goToType();
+                break;
+            // Кнопки действий
+            case R.id.mc_create_create:
+                confirm();
+                break;
+            case R.id.mc_create_cancel:
+                //TODO Добавить подтверждение
+                finish();
+                break;
+            case R.id.mc_create_back:
+                backButton();
+                break;
+        }
+        setConfirm();
+        refreshDescription();
+    }
+
+    private void backButton() {
+        switch (currentScreen) {
+            case R.id.mc_create_map: //MAP
+                finish();
+                break;
+            case R.id.mc_create_people_frame: //MED
+                goToAccidentSubType();
+                accident.resetType();
+                break;
+            case R.id.mc_create_acc_frame: //ACC
+                goToType();
+                break;
+            case R.id.mc_create_type_frame: //TYPE
+                goToMap();
+                break;
+            case R.id.mc_create_final_frame: //DESCR
+                if (accident.isAccident()) {
+                    goToMed();
+                    accident.resetMed();
+                } else {
+                    goToType();
+                    accident.resetType();
+                }
+                break;
+        }
+        setConfirm();
+        refreshDescription();
+    }
+
+    @Override
+    public boolean onKeyUp(int keycode, @NonNull KeyEvent e) {
+        switch (keycode) {
+            case KeyEvent.KEYCODE_BACK:
+                backButton();
+                return true;
+        }
+        return super.onKeyUp(keycode, e);
+    }
+
+    private void confirm() {
+        if (accident.location != null) {
+            if (Startup.isOnline()) {
+                setConfirm(false);
+                new JsonRequest("mcaccidents", "createAcc", accident.createPOST(), "", true);
+            } else {
+                setConfirm(true);
+                Toast.makeText(this, this.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(this, this.getString(R.string.position_not_available), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void goToAccidentSubType() {
+        hideAll();
+        accFrame.setVisibility(View.VISIBLE);
+        currentScreen = ACC;
+    }
+
+    private void goToMed() {
+        hideAll();
+        medFrame.setVisibility(View.VISIBLE);
+        currentScreen = MED;
+    }
+
+    private void goToDescription() {
+        hideAll();
+        descrFrame.setVisibility(View.VISIBLE);
+        currentScreen = DESCR;
+    }
+
+    private void goToMap() {
+        hideAll();
+        mapFrame.setVisibility(View.VISIBLE);
+        currentScreen = MAP;
+        backButton.setEnabled(false);
+    }
+
+    private void goToType() {
+        hideAll();
+        typeFrame.setVisibility(View.VISIBLE);
+        currentScreen = TYPE;
+        backButton.setEnabled(true);
+    }
+
+    private void hideAll() {
+        typeFrame.setVisibility(View.INVISIBLE);
+        mapFrame.setVisibility(View.INVISIBLE);
+        medFrame.setVisibility(View.INVISIBLE);
+        descrFrame.setVisibility(View.INVISIBLE);
+        accFrame.setVisibility(View.INVISIBLE);
+    }
+
+    private GoogleMap makeMap() {
+        GoogleMap map;
+        FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+        SupportMapFragment mapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.mc_create_map_container);
         map = mapFragment.getMap();
 
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(location), 16));
-        // map.setMyLocationEnabled(true);
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(accident.location), 16));
         map.getUiSettings().setMyLocationButtonEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
-        if (Role.isModerator()) {
-            radius = 30000000;
-        } else {
-            radius = 1000;
-            CircleOptions circleOptions = new CircleOptions().center(MyUtils.LocationToLatLng(initialLocation)).radius(radius).fillColor(0x20FF0000);
-            if (circle != null) {
-                circle.remove();
-            }
-            circle = map.addCircle(circleOptions);
+        if (!Role.isModerator()) {
+            CircleOptions circleOptions = new CircleOptions().center(MyUtils.LocationToLatLng(accident.initialLocation)).radius(RADIUS).fillColor(0x20FF0000);
+            map.addCircle(circleOptions);
+            map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+                @Override
+                public void onCameraChange(CameraPosition camera) {
+                    Button mcCreateFineAddressConfirm = (Button) ((Activity) context).findViewById(R.id.mc_create_fine_address_confirm);
+                    if (accident.initialLocation != null) {
+                        double distance = MyUtils.LatLngToLocation(camera.target).distanceTo(accident.initialLocation);
+                        if (distance > RADIUS) {
+                            mcCreateFineAddressConfirm.setEnabled(false);
+                        } else {
+                            mcCreateFineAddressConfirm.setEnabled(true);
+                        }
+                    } else {
+                        mcCreateFineAddressConfirm.setEnabled(false);
+                    }
+                }
+            });
         }
-        map.setOnCameraChangeListener(cameraListener);
+        return map;
     }
 
-    private void writeGlobal() {
-        if (!medText.equals("mc_m_na")) {
-            Text.set(this, globalView, R.id.mc_create_what, globalText + ". " + medText);
-        } else {
-            Text.set(this, globalView, R.id.mc_create_what, globalText);
-        }
-        Text.set(this, globalView, R.id.mc_create_who, ownerText);
-        Text.set(this, globalView, R.id.mc_create_where, addressText);
-        Text.set(this, globalView, R.id.mc_create_when, timeText);
+    private void setConfirm(Boolean status) {
+        confirmButton.setEnabled(status);
     }
 
-    private void show(int page) {
-        //TODO Правильное решение http://android-er.blogspot.ru/2012/05/add-and-remove-view-dynamically.html
-        CURRENT = page;
-        FrameLayout frame = (FrameLayout) findViewById(R.id.mc_create_main_frame);
-
-        for (int i = 0; i < frame.getChildCount(); i++) {
-            View tmp = frame.getChildAt(i);
-            if (tmp.getId() == page) {
-                tmp.setVisibility(View.VISIBLE);
-            } else {
-                tmp.setVisibility(View.INVISIBLE);
-            }
-        }
+    private void setConfirm() {
+        confirmButton.setEnabled(accident.isComplete());
     }
 
     public void parseResponse(JSONObject json) {
@@ -306,192 +378,141 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         }
     }
 
-    private void onConfirm() {
-        if (location != null) {
-            if (Startup.isOnline()) {
-                confirm.setEnabled(false);
-                Map<String, String> post = createPOST();
-                JsonRequest request = new JsonRequest("mcaccidents", "createAcc", post, "", true);
-                if (request != null) {
-                    (new CreateAccidentRequest(this)).execute(request);
+    private class NewAccident {
+        int owner_id;
+        String type;
+        String med;
+        String status;
+        Location location, initialLocation;
+        Date created;
+        String address;
+        String description;
+
+        public NewAccident() {
+            owner_id = AccidentsGeneral.auth.getID();
+            type = "";
+            med = "mc_m_na";
+            status = "acc_status_act";
+            initialLocation = location = MyLocationManager.getLocation(context);
+            created = new Date();
+            address = MyLocationManager.address;
+            description = "";
+        }
+
+        public void makeBreak() {
+            type = "acc_b";
+        }
+
+        public void makeSteal() {
+            type = "acc_s";
+        }
+
+        public void makeOther() {
+            type = "acc_o";
+        }
+
+        public void makeAccident(String type) {
+            this.type = type;
+        }
+
+        public void setMed(String med) {
+            this.med = med;
+        }
+
+        public void setDescription(String description) {
+            this.description = description.replaceAll("\\s", "");
+        }
+
+        public void resetType() {
+            type = "";
+            med = "mc_m_na";
+        }
+
+        public void resetMed() {
+            med = "mc_m_na";
+        }
+
+        public boolean isComplete() {
+            if (isAccident()) {
+                return true;
+            } else if ((isSteal() || isBreak() || isOther()) && description.length() > 3) {
+                return true;
+            }
+            return false;
+        }
+
+        public void updateLocation(Location location) {
+            this.location = location;
+            //getAddress(location);
+        }
+
+        /*
+                private void getAddress(Location location) {
+                    if (Startup.isOnline()) {
+                        JsonRequest request = getAddressRequest(location);
+                        if (request != null) {
+                            (new GeoCodeNewRequest(context)).execute(request);
+                        }
+                    } else {
+                        Toast.makeText(context, context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
+                    }
                 }
-            } else {
-                confirm.setEnabled(true);
-                Toast.makeText(this, this.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
-            }
-        } else {
-            Toast.makeText(this, this.getString(R.string.position_not_available), Toast.LENGTH_LONG).show();
+        */
+        private JsonRequest getAddressRequest(Location location) {
+            Map<String, String> post = new HashMap<>();
+            post.put("lat", String.valueOf(location.getLatitude()));
+            post.put("lon", String.valueOf(location.getLongitude()));
+            return new JsonRequest("mcaccidents", "geocode", post, "", true);
+        }
+
+        public Map<String, String> createPOST() {
+            Map<String, String> POST = new HashMap<>();
+            POST.put("owner_id", String.valueOf(owner_id));
+            POST.put("type", type);
+            POST.put("med", med);
+            POST.put("status", status);
+            POST.put("lat", String.valueOf(location.getLatitude()));
+            POST.put("lon", String.valueOf(location.getLongitude()));
+            POST.put("created", Const.dateFormat.format(created));
+            POST.put("address", address);
+            POST.put("descr", description);
+            POST.put("login", AccidentsGeneral.auth.getLogin());
+            POST.put("passhash", AccidentsGeneral.auth.makePassHash());
+            POST.put("calledMethod", "createAcc");
+            return POST;
+        }
+
+        public boolean isSteal() {
+            return type.equals("acc_s");
+        }
+
+        public boolean isBreak() {
+            return type.equals("acc_b");
+        }
+
+        public boolean isOther() {
+            return type.equals("acc_o");
+        }
+
+        public boolean isNotSet() {
+            return type.equals("");
+        }
+
+        public boolean isAccident() {
+            return (type + "      ").substring(0, 5).equals("acc_m");
         }
     }
 
-    private Map<String, String> createPOST() {
-        Map<String, String> POST = new HashMap<>();
-        POST.put("owner_id", String.valueOf(AccidentsGeneral.auth.getID()));
-        POST.put("type", type);
-        POST.put("med", med);
-        POST.put("status", "acc_status_act");
-        POST.put("lat", String.valueOf(location.getLatitude()));
-        POST.put("lon", String.valueOf(location.getLongitude()));
-        POST.put("created", Const.dateFormat.format(date));
-        POST.put("address", addressText);
-        POST.put("descr", details.getText().toString());
-        POST.put("login", AccidentsGeneral.auth.getLogin());
-        POST.put("passhash", AccidentsGeneral.auth.makePassHash());
-        POST.put("calledMethod", "createAcc");
-        return POST;
-    }
+    public class Callback implements AsyncTaskCompleteListener {
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_create_acc, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onClick(View v) {
-        back.setEnabled(true);
-        int id = v.getId();
-        Button btn = (Button) findViewById(id);
-
-        //TODO switch case
-        switch (id) {
-            case R.id.mc_create_type_acc_button:
-                show(ACC);
-                isAcc = true;
-                globalText = "ДТП";
-                break;
-            case R.id.mc_create_type_break_button:
-                globalText = btn.getText().toString();
-                type = "acc_b";
-                show(FINAL);
-                break;
-            case R.id.mc_create_type_steal_button:
-                globalText = btn.getText().toString();
-                type = "acc_s";
-                show(FINAL);
-                break;
-            case R.id.mc_create_type_other_button:
-                globalText = btn.getText().toString();
-                type = "acc_o";
-                show(FINAL);
-                break;
-            case R.id.mc_create_acc_ma_button:
-                globalText = "ДТП " + btn.getText().toString();
-                type = "acc_m_a";
-                show(PEOPLE);
-                break;
-            case R.id.mc_create_acc_solo_button:
-                globalText = "ДТП " + btn.getText().toString();
-                type = "acc_m";
-                show(PEOPLE);
-                break;
-            case R.id.mc_create_acc_mm_button:
-                globalText = "ДТП " + btn.getText().toString();
-                type = "acc_m_m";
-                show(PEOPLE);
-                break;
-            case R.id.mc_create_acc_mp_button:
-                globalText = "ДТП " + btn.getText().toString();
-                type = "acc_m_p";
-                show(PEOPLE);
-                break;
-            case R.id.mc_create_people_ok_button:
-                medText = btn.getText().toString();
-                med = "mc_m_wo";
-                show(FINAL);
-                break;
-            case R.id.mc_create_people_light_button:
-                medText = btn.getText().toString();
-                med = "mc_m_l";
-                show(FINAL);
-                break;
-            case R.id.mc_create_people_hard_button:
-                medText = btn.getText().toString();
-                med = "mc_m_h";
-                show(FINAL);
-                break;
-            case R.id.mc_create_people_death_button:
-                globalText = btn.getText().toString();
-                med = "mc_m_d";
-                show(FINAL);
-                break;
-            case R.id.mc_create_people_na_button:
-                medText = "";
-                med = "mc_m_na";
-                show(FINAL);
-                break;
-            case R.id.mc_create_fine_address_button:
-                if (location != null) {
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(location), 16));
-                }
-                ImageView mapPointer = (ImageView) this.findViewById(R.id.mc_create_map_pointer);
-                mapPointer.setImageDrawable(AccidentTypes.getDrawable(this, type));
-                Keyboard.hide(details);
-                show(FINEADDRESS);
-                break;
-            case R.id.mc_create_fine_address_confirm:
-                //TODO Если вдруг initialLocation == null, но не получается взять координаты после тыка юзера, т.к. map.getCameraPosition() падает.
-                double distance = MyUtils.LatLngToLocation(map.getCameraPosition().target).distanceTo(initialLocation);
-                if (distance > radius)
-                    return;
-                location = MyUtils.LatLngToLocation(map.getCameraPosition().target);
-                getAddress(location);
-                break;
-            case R.id.mc_create_back:
-                backButton();
-                break;
-            case R.id.mc_create_cancel:
-                //TODO Добавить подтверждение
-                finish();
-                break;
-            case R.id.mc_create_create:
-                onConfirm();
-                break;
-        }
-        writeGlobal();
-        enableConfirm(details.getText().toString());
-    }
-
-    private void getAddress(Location location) {
-        if (Startup.isOnline()) {
-            JsonRequest request = getAddressRequest(location);
-            if (request != null) {
-                (new GeoCodeNewRequest(this)).execute(request);
-            }
-        } else {
-            Toast.makeText(this, this.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private void enableConfirm() {
-        enableConfirm("");
-    }
-
-    private void enableConfirm(String s) {
-        if (type == "") {
-            confirm.setEnabled(false);
-        } else if (type == "acc_m_a" || type == "acc_m" || type == "acc_m_m" || type == "acc_m_p") {
-            confirm.setEnabled(true);
-        } else {
-            String temp = s.toString().replaceAll("\\s", "");
-            if (temp.length() == 0) {
-                confirm.setEnabled(false);
-            } else {
-                confirm.setEnabled(true);
+        @Override
+        public void onTaskComplete(JSONObject result) {
+            try {
+                updateAddress(result.getString("address"));
+            } catch (JSONException e) {
+                updateAddress("Ошибка геокодирования");
             }
         }
-    }
-
-    private JsonRequest getAddressRequest(Location location) {
-        Map<String, String> post = new HashMap<>();
-        post.put("lat", String.valueOf(location.getLatitude()));
-        post.put("lon", String.valueOf(location.getLongitude()));
-        return new JsonRequest("mcaccidents", "geocode", post, "", true);
     }
 }
+

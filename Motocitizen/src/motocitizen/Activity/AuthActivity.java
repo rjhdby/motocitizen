@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import motocitizen.MyApp;
 import motocitizen.app.general.AccidentsGeneral;
+import motocitizen.app.general.user.Role;
 import motocitizen.main.R;
 import motocitizen.startup.MyPreferences;
 import motocitizen.startup.Startup;
@@ -149,13 +150,17 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
         password.setText(prefs.getPassword());
         anonim.setChecked(prefs.isAnonim());
         View accListYesterdayLine = findViewById(R.id.accListYesterdayLine);
+        TextView roleView = (TextView)findViewById(R.id.role);
 
         //Авторизованы?
         if (AccidentsGeneral.auth.isAuthorized()) {
             loginBtn.setEnabled(false);
             logoutBtn.setEnabled(true);
             anonim.setEnabled(false);
-            accListYesterdayLine.setEnabled(false);
+            accListYesterdayLine.setVisibility(View.GONE);
+            String format = getString(R.string.mc_auth_role);
+            roleView.setText(String.format(format, Role.getName(this)));
+            roleView.setVisibility(View.VISIBLE);
             login.setEnabled(false);
             password.setEnabled(false);
         } else {
@@ -165,7 +170,8 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
             anonim.setEnabled(true);
             login.setEnabled(!anonim.isChecked());
             password.setEnabled(!anonim.isChecked());
-            accListYesterdayLine.setEnabled(true);
+            accListYesterdayLine.setVisibility(View.VISIBLE);
+            roleView.setVisibility(View.GONE);
             enableLoginBtn();
         }
     }
