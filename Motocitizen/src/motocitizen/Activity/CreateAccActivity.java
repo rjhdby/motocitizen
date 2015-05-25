@@ -31,8 +31,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import motocitizen.MyApp;
-import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.app.general.AccidentTypes;
+import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.app.general.MyLocationManager;
 import motocitizen.app.general.user.Role;
 import motocitizen.main.R;
@@ -129,37 +129,37 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     }
 
     private void backButton() {
-        confirm.setEnabled(false);
         if (CURRENT == TYPE) {
             finish();
         } else if (CURRENT == FINAL) {
             if (isAcc) {
                 med = "mc_m_na";
                 medText = "";
-                confirm.setEnabled(true);
                 show(PEOPLE);
             } else {
                 show(TYPE);
                 globalText = "";
+                type = "";
             }
         } else if (CURRENT == ACC) {
             show(TYPE);
             isAcc = false;
             globalText = "";
+            type = "";
         } else if (CURRENT == PEOPLE) {
             show(ACC);
             medText = "";
             globalText = "ДТП";
             med = "mc_m_na";
+            type = "";
         } else if (CURRENT == FINEADDRESS) {
             show(FINAL);
-            //confirm.setEnabled(true);
-            enableConfirm();
         }
         if (CURRENT == TYPE) {
             back.setEnabled(false);
         }
         writeGlobal();
+        enableConfirm();
     }
 
     @Override
@@ -455,7 +455,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 break;
         }
         writeGlobal();
-        enableConfirm();
+        enableConfirm(details.getText().toString());
     }
 
     private void getAddress(Location location) {
@@ -469,20 +469,22 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         }
     }
 
-    private void enableConfirm(){
+    private void enableConfirm() {
         enableConfirm("");
     }
 
-    private void enableConfirm(String s){
-        if(type == "acc_b" || type == "acc_s" || type == "acc_o" || type == null) {
+    private void enableConfirm(String s) {
+        if (type == "") {
+            confirm.setEnabled(false);
+        } else if (type == "acc_m_a" || type == "acc_m" || type == "acc_m_m" || type == "acc_m_p") {
+            confirm.setEnabled(true);
+        } else {
             String temp = s.toString().replaceAll("\\s", "");
             if (temp.length() == 0) {
                 confirm.setEnabled(false);
             } else {
                 confirm.setEnabled(true);
             }
-        } else {
-            confirm.setEnabled(true);
         }
     }
 

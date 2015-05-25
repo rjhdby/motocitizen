@@ -131,7 +131,6 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
             InputStream is;
             try {
                 is = connection.getInputStream();
-                is = connection.getInputStream();
                 if(connection.getContentEncoding() != null){
                     is = new GZIPInputStream(is);
                 }
