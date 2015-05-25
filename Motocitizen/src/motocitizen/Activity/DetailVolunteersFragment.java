@@ -15,6 +15,7 @@ import android.widget.Toast;
 import java.util.HashMap;
 import java.util.Map;
 
+import motocitizen.app.general.Accident;
 import motocitizen.app.general.AccidentVolunteer;
 import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.main.R;
@@ -27,6 +28,7 @@ import static motocitizen.app.general.AccidentsGeneral.getDelimiterRow;
 public class DetailVolunteersFragment extends AccidentDetailsFragments {
 
     public static final int DIALOG_ONWAY_CONFIRM = 1;
+    public static final int DIALOG_ACC_NOT_ACTUAL = 2;
 
     private ImageButton onwayButton;
     private View toMap;
@@ -50,7 +52,6 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View viewMain = inflater.inflate(R.layout.fragment_detail_volunteers, container, false);
-        currentPoint = AccidentsGeneral.points.getPoint(accidentID);
 
         onwayButton = (ImageButton) viewMain.findViewById(R.id.onway_button);
         onwayButton.setOnClickListener(new View.OnClickListener() {
@@ -74,39 +75,45 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     }
 
     protected void update() {
-        setupAccess();
+        Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
 
-        ViewGroup vg_onway = (ViewGroup) onwayContent;
-        ViewGroup vg_inplace = (ViewGroup) inplaceContent;
-        vg_onway.setVisibility(View.INVISIBLE);
-        vg_inplace.setVisibility(View.INVISIBLE);
-        vg_onway.removeAllViews();
-        vg_inplace.removeAllViews();
-        for (int i : currentPoint.getSortedVolunteersKeys()) {
-            AccidentVolunteer current = currentPoint.volunteers.get(i);
-            switch (current.getStatus()) {
-                case ONWAY:
-                    if (vg_onway.getVisibility() == View.INVISIBLE) {
-                        vg_onway.setVisibility(View.VISIBLE);
-                        vg_onway.addView(getDelimiterRow(getActivity(), "В пути"));
-                    }
-                    vg_onway.addView(current.createRow(getActivity()));
-                    break;
-                case INPLACE:
-                    if (vg_onway.getVisibility() == View.INVISIBLE) {
-                        vg_onway.setVisibility(View.VISIBLE);
-                        vg_onway.addView(getDelimiterRow(getActivity(), "На месте"));
-                    }
-                    vg_onway.addView(current.createRow(getActivity()));
-                    break;
-                case LEAVE:
-                    if (vg_onway.getVisibility() == View.INVISIBLE) {
-                        vg_onway.setVisibility(View.VISIBLE);
-                        vg_onway.addView(getDelimiterRow(getActivity(), "Были"));
-                    }
-                    vg_onway.addView(current.createRow(getActivity()));
-                    break;
+        if (accident != null) {
+            setupAccess();
+
+            ViewGroup vg_onway = (ViewGroup) onwayContent;
+            ViewGroup vg_inplace = (ViewGroup) inplaceContent;
+            vg_onway.setVisibility(View.INVISIBLE);
+            vg_inplace.setVisibility(View.INVISIBLE);
+            vg_onway.removeAllViews();
+            vg_inplace.removeAllViews();
+            for (int i : accident.getSortedVolunteersKeys()) {
+                AccidentVolunteer current = accident.volunteers.get(i);
+                switch (current.getStatus()) {
+                    case ONWAY:
+                        if (vg_onway.getVisibility() == View.INVISIBLE) {
+                            vg_onway.setVisibility(View.VISIBLE);
+                            vg_onway.addView(getDelimiterRow(getActivity(), "В пути"));
+                        }
+                        vg_onway.addView(current.createRow(getActivity()));
+                        break;
+                    case INPLACE:
+                        if (vg_onway.getVisibility() == View.INVISIBLE) {
+                            vg_onway.setVisibility(View.VISIBLE);
+                            vg_onway.addView(getDelimiterRow(getActivity(), "На месте"));
+                        }
+                        vg_onway.addView(current.createRow(getActivity()));
+                        break;
+                    case LEAVE:
+                        if (vg_onway.getVisibility() == View.INVISIBLE) {
+                            vg_onway.setVisibility(View.VISIBLE);
+                            vg_onway.addView(getDelimiterRow(getActivity(), "Были"));
+                        }
+                        vg_onway.addView(current.createRow(getActivity()));
+                        break;
+                }
             }
+        } else {
+            showDialog(DIALOG_ACC_NOT_ACTUAL);
         }
     }
 
@@ -117,10 +124,8 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     }
 
     private void setupAccess() {
-        if (currentPoint == null)
-            throw new NullPointerException("currentPoint == null");
-
-        if (currentPoint.getId() == prefs.getOnWay() || currentPoint.getId() == AccidentsGeneral.getInplaceID() || !AccidentsGeneral.auth.isAuthorized() || !currentPoint.isActive()) {
+        Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
+        if (accident.getId() == prefs.getOnWay() || accident.getId() == AccidentsGeneral.getInplaceID() || !AccidentsGeneral.auth.isAuthorized() || !accident.isActive()) {
             onwayButton.setVisibility(View.INVISIBLE);
         } else {
             onwayButton.setVisibility(View.VISIBLE);
@@ -136,10 +141,23 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         }
         ft.addToBackStack(null);
         ft.commit();
+        Activity act = getActivity();
+
         switch (type) {
             case DIALOG_ONWAY_CONFIRM:
-                DialogFragment dialogFrag = ConfirmDialog.newInstance(getActivity().getString(R.string.onway_title_confirm));
-                dialogFrag.setTargetFragment(this, DIALOG_ONWAY_CONFIRM);
+                DialogFragment onwayConfirm = ConfirmDialog.newInstance(
+                        act.getString(R.string.title_dialog_onway_confirm),
+                        act.getString(android.R.string.yes),
+                        act.getString(android.R.string.no));
+                onwayConfirm.setTargetFragment(this, DIALOG_ONWAY_CONFIRM);
+                onwayConfirm.show(getFragmentManager().beginTransaction(), "dialog");
+                break;
+            case DIALOG_ACC_NOT_ACTUAL:
+                DialogFragment dialogFrag = ConfirmDialog.newInstance(
+                        act.getString(R.string.title_dialod_acc_not_actual),
+                        act.getString(android.R.string.ok),
+                        "");
+                dialogFrag.setTargetFragment(this, DIALOG_ACC_NOT_ACTUAL);
                 dialogFrag.show(getFragmentManager().beginTransaction(), "dialog");
                 break;
         }
@@ -154,6 +172,9 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
                 } else if (resultCode == Activity.RESULT_CANCELED) {
                     // After Cancel code.
                 }
+                break;
+            case DIALOG_ACC_NOT_ACTUAL:
+                getActivity().finish();
                 break;
         }
     }

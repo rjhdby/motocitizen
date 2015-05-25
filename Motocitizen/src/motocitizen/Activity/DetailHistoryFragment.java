@@ -5,8 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import motocitizen.app.general.Accident;
 import motocitizen.app.general.AccidentHistory;
-import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.main.R;
 
 public class DetailHistoryFragment extends AccidentDetailsFragments {
@@ -31,7 +31,6 @@ public class DetailHistoryFragment extends AccidentDetailsFragments {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View viewMain = inflater.inflate(R.layout.fragment_detail_history, container, false);
-        currentPoint = AccidentsGeneral.points.getPoint(accidentID);
         mcDetLogContent = viewMain.findViewById(R.id.mc_det_log_content);
 
         update();
@@ -39,11 +38,13 @@ public class DetailHistoryFragment extends AccidentDetailsFragments {
     }
 
     protected void update() {
+        Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
+
         ViewGroup logView = (ViewGroup) mcDetLogContent;
         logView.removeAllViews();
         logView.addView(AccidentHistory.createHeader(getActivity()));
-        for (int i : currentPoint.getSortedHistoryKeys()) {
-            logView.addView(currentPoint.history.get(i).createRow(getActivity(), userName));
+        for (int i : accident.getSortedHistoryKeys()) {
+            logView.addView(accident.history.get(i).createRow(getActivity(), userName));
         }
     }
 

@@ -51,6 +51,7 @@ public class AccidentDetailsActivity
     Инцидент с которым работаем
      */
     private int accidentID;
+    private Accident currentPoint;
 
     DetailVolunteersFragment detailVolunteersFragment;
     DetailMessagesFragment detailMessagesFragment;
@@ -80,7 +81,10 @@ public class AccidentDetailsActivity
 
         Bundle b = getIntent().getExtras();
         accidentID = b.getInt("accidentID");
+        currentPoint = AccidentsGeneral.points.getPoint(accidentID);
+
         NewAccidentReceived.removeNotification(accidentID);
+
         userName = ((MyApp) getApplicationContext()).getPreferences().getLogin();
 
         detailVolunteersFragment = DetailVolunteersFragment.newInstance(accidentID, userName);
@@ -125,7 +129,7 @@ public class AccidentDetailsActivity
     }
 
     private void update() {
-        Accident currentPoint = AccidentsGeneral.points.getPoint(accidentID);
+        currentPoint = AccidentsGeneral.points.getPoint(accidentID);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(currentPoint.getTypeText() + ". " + currentPoint.getDistanceText());
@@ -150,7 +154,6 @@ public class AccidentDetailsActivity
         mMenu = menu;
         menuReconstruction();
 
-        Accident currentPoint = AccidentsGeneral.points.getPoint(accidentID);
         List<String> contactNumbers = MyUtils.getPhonesFromText(currentPoint.getDescription());
         if (!contactNumbers.isEmpty()) {
             if (contactNumbers.size() == 1) {
@@ -414,5 +417,9 @@ public class AccidentDetailsActivity
         if (prefs == null)
             prefs = new MyPreferences(this);
         return prefs;
+    }
+
+    public Accident getCurrentPoint() {
+        return currentPoint;
     }
 }

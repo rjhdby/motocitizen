@@ -14,6 +14,7 @@ import android.widget.Toast;
 import java.util.HashMap;
 import java.util.Map;
 
+import motocitizen.app.general.Accident;
 import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.app.general.user.Role;
 import motocitizen.main.R;
@@ -55,7 +56,6 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View viewMain = inflater.inflate(R.layout.fragment_detail_messages, container, false);
-        currentPoint = AccidentsGeneral.points.getPoint(accidentID);
 
         newMessageButton = (ImageButton) viewMain.findViewById(R.id.mc_new_message_send);
         newMessageButton.setOnClickListener(new View.OnClickListener() {
@@ -113,9 +113,10 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
 */
         ViewGroup messageView = (ViewGroup) mcDetMessagesTable;
         messageView.removeAllViews();
+        Accident accident = ((AccidentDetailsActivity)getActivity()).getCurrentPoint();
 
-        for (int i : currentPoint.getSortedMessagesKeys()) {
-            messageView.addView(currentPoint.messages.get(i).createRow(getActivity(), userName));
+        for (int i : accident.getSortedMessagesKeys()) {
+            messageView.addView(accident.messages.get(i).createRow(getActivity(), userName));
         }
         setupAccess();
     }
