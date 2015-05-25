@@ -14,6 +14,10 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
+import motocitizen.MyApp;
 import motocitizen.app.general.Accident;
 import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.app.general.MyLocationManager;
@@ -24,6 +28,8 @@ import motocitizen.utils.MyUtils;
 
 
 public class NewAccidentReceived extends IntentService {
+    private static Queue<Integer> queue;
+    private static NotificationManager notificationManager;
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      */
@@ -37,6 +43,9 @@ public class NewAccidentReceived extends IntentService {
     }
     public NewAccidentReceived(Context context, Intent intent) {
     */
+        if(queue == null){
+            queue = new LinkedList<Integer>();
+        }
         MyPreferences prefs = new MyPreferences(this);
         if(prefs.getDoNotDisturb()){
             GCMBroadcastReceiver.completeWakefulIntent(intent);
@@ -93,8 +102,19 @@ public class NewAccidentReceived extends IntentService {
             builder.setVibrate(new long[]{1000, 1000, 1000});
         }
         Notification notification = builder.getNotification();
-        NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(id, notification);
         GCMBroadcastReceiver.completeWakefulIntent(intent);
+        queue.add(id);
+        if(queue.size() > prefs.getMaxNotifications()){
+            removeNotification(queue.poll());
+        }
+    }
+    public static void removeNotification(int id){
+        try {
+            notificationManager.cancel(id);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
