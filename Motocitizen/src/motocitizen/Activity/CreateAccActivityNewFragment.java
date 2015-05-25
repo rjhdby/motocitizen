@@ -3,11 +3,12 @@ package motocitizen.Activity;
 import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -21,16 +22,13 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import motocitizen.MyApp;
-import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.app.general.AccidentTypes;
+import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.app.general.MyLocationManager;
 import motocitizen.app.general.user.Role;
 import motocitizen.main.R;
@@ -44,8 +42,14 @@ import motocitizen.utils.Keyboard;
 import motocitizen.utils.MyUtils;
 import motocitizen.utils.Text;
 
-@SuppressWarnings("FieldCanBeLocal")
-public class CreateAccActivity extends FragmentActivity implements View.OnClickListener {
+/**
+ * A placeholder fragment containing a simple view.
+ */
+public class CreateAccActivityNewFragment extends Fragment implements View.OnClickListener {
+
+    private View viewMain;
+    private FragmentActivity myContext;
+
     private static View globalView;
     private static String addressText;
     private static Context context;
@@ -89,6 +93,9 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     private int radius;
     private MyPreferences prefs;
 
+    public CreateAccActivityNewFragment() {
+    }
+
     private final GoogleMap.OnCameraChangeListener cameraListener = new GoogleMap.OnCameraChangeListener() {
         @Override
         public void onCameraChange(CameraPosition camera) {
@@ -105,11 +112,6 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             }
         }
     };
-
-    public static void updateAddress(String address) {
-        addressText = address;
-        Text.set(context, globalView, R.id.mc_create_where, addressText);
-    }
 
     private void backButton() {
         confirm.setEnabled(false);
@@ -145,56 +147,63 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        context = this;
-        prefs = ((MyApp) context.getApplicationContext()).getPreferences();
-        setContentView(R.layout.mc_app_create_point);
+    public void onAttach(Activity activity) {
+        myContext=(FragmentActivity) activity;
+        super.onAttach(activity);
+    }
 
-        back = (Button) findViewById(R.id.mc_create_back);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //View viewMain = inflater.inflate(R.layout.mc_app_create_point, container, false);
+        viewMain = inflater.inflate(R.layout.mc_app_create_point, container, false);
+
+        context = getActivity();
+        prefs = ((MyApp) context.getApplicationContext()).getPreferences();
+
+        back = (Button) viewMain.findViewById(R.id.mc_create_back);
         back.setOnClickListener(this);
-        confirm = (Button) findViewById(R.id.mc_create_create);
+        confirm = (Button) viewMain.findViewById(R.id.mc_create_create);
         confirm.setOnClickListener(this);
-        cancel = (Button) findViewById(R.id.mc_create_cancel);
+        cancel = (Button) viewMain.findViewById(R.id.mc_create_cancel);
         cancel.setOnClickListener(this);
 
-        fineAddressButton = (Button) findViewById(R.id.mc_create_fine_address_button);
+        fineAddressButton = (Button) viewMain.findViewById(R.id.mc_create_fine_address_button);
         fineAddressButton.setOnClickListener(this);
-        fineAddressConfirm = (Button) findViewById(R.id.mc_create_fine_address_confirm);
+        fineAddressConfirm = (Button) viewMain.findViewById(R.id.mc_create_fine_address_confirm);
         fineAddressConfirm.setOnClickListener(this);
 
-        typeOtherButton = (Button) findViewById(R.id.mc_create_type_other_button);
+        typeOtherButton = (Button) viewMain.findViewById(R.id.mc_create_type_other_button);
         typeOtherButton.setOnClickListener(this);
-        typeStealButton = (Button) findViewById(R.id.mc_create_type_steal_button);
+        typeStealButton = (Button) viewMain.findViewById(R.id.mc_create_type_steal_button);
         typeStealButton.setOnClickListener(this);
-        typeBreakButton = (Button) findViewById(R.id.mc_create_type_break_button);
+        typeBreakButton = (Button) viewMain.findViewById(R.id.mc_create_type_break_button);
         typeBreakButton.setOnClickListener(this);
-        typeAccButton = (Button) findViewById(R.id.mc_create_type_acc_button);
+        typeAccButton = (Button) viewMain.findViewById(R.id.mc_create_type_acc_button);
         typeAccButton.setOnClickListener(this);
 
-        accMmButton = (Button) findViewById(R.id.mc_create_acc_mm_button);
+        accMmButton = (Button) viewMain.findViewById(R.id.mc_create_acc_mm_button);
         accMmButton.setOnClickListener(this);
 
-        accMpButton = (Button) findViewById(R.id.mc_create_acc_mp_button);
+        accMpButton = (Button) viewMain.findViewById(R.id.mc_create_acc_mp_button);
         accMpButton.setOnClickListener(this);
-        accSoloButton = (Button) findViewById(R.id.mc_create_acc_solo_button);
+        accSoloButton = (Button) viewMain.findViewById(R.id.mc_create_acc_solo_button);
         accSoloButton.setOnClickListener(this);
-        accMaButton = (Button) findViewById(R.id.mc_create_acc_ma_button);
+        accMaButton = (Button) viewMain.findViewById(R.id.mc_create_acc_ma_button);
         accMaButton.setOnClickListener(this);
 
-        peopleDeathButton = (Button) findViewById(R.id.mc_create_people_death_button);
+        peopleDeathButton = (Button) viewMain.findViewById(R.id.mc_create_people_death_button);
         peopleDeathButton.setOnClickListener(this);
-        peopleHardButton = (Button) findViewById(R.id.mc_create_people_hard_button);
+        peopleHardButton = (Button) viewMain.findViewById(R.id.mc_create_people_hard_button);
         peopleHardButton.setOnClickListener(this);
-        peopleLightButton = (Button) findViewById(R.id.mc_create_people_light_button);
+        peopleLightButton = (Button) viewMain.findViewById(R.id.mc_create_people_light_button);
         peopleLightButton.setOnClickListener(this);
-        peopleNaButton = (Button) findViewById(R.id.mc_create_people_na_button);
+        peopleNaButton = (Button) viewMain.findViewById(R.id.mc_create_people_na_button);
         peopleNaButton.setOnClickListener(this);
-        peopleOkButton = (Button) findViewById(R.id.mc_create_people_ok_button);
+        peopleOkButton = (Button) viewMain.findViewById(R.id.mc_create_people_ok_button);
         peopleOkButton.setOnClickListener(this);
 
-        globalView = findViewById(R.id.mc_create_main);
-        details = (EditText) findViewById(R.id.mc_create_final_text);
+        globalView = viewMain.findViewById(R.id.mc_create_main);
+        details = (EditText) viewMain.findViewById(R.id.mc_create_final_text);
 
         TYPE = R.id.mc_create_type_frame;
         FINAL = R.id.mc_create_final_frame;
@@ -211,6 +220,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         initialLocation = location;
         CURRENT = TYPE;
         isAcc = false;
+
         writeGlobal();
         //show(CURRENT);
 
@@ -218,8 +228,11 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         //if (location != null) {
         //map = ((MapFragment) this.getFragmentManager().findFragmentById(R.id.mc_create_map_container)).getMap();
 
-        android.support.v4.app.FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+        // zz
+        // android.support.v4.app.FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+        android.support.v4.app.FragmentManager fragmentManager = ((FragmentActivity) myContext).getSupportFragmentManager();
         final SupportMapFragment mapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.mc_create_map_container);
+        //final SupportMapFragment mapFragment = (SupportMapFragment) fragmentManager.findFragmentByTag("tag_fragment_map");
         map = mapFragment.getMap();
 
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(location), 16));
@@ -237,23 +250,25 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             circle = map.addCircle(circleOptions);
         }
         map.setOnCameraChangeListener(cameraListener);
+
+        return viewMain;
     }
 
     private void writeGlobal() {
         if (!medText.equals("mc_m_na")) {
-            Text.set(this, globalView, R.id.mc_create_what, globalText + ". " + medText);
+            Text.set(getActivity(), globalView, R.id.mc_create_what, globalText + ". " + medText);
         } else {
-            Text.set(this, globalView, R.id.mc_create_what, globalText);
+            Text.set(getActivity(), globalView, R.id.mc_create_what, globalText);
         }
-        Text.set(this, globalView, R.id.mc_create_who, ownerText);
-        Text.set(this, globalView, R.id.mc_create_where, addressText);
-        Text.set(this, globalView, R.id.mc_create_when, timeText);
+        Text.set(getActivity(), globalView, R.id.mc_create_who, ownerText);
+        Text.set(getActivity(), globalView, R.id.mc_create_where, addressText);
+        Text.set(getActivity(), globalView, R.id.mc_create_when, timeText);
     }
 
     private void show(int page) {
         //TODO Правильное решение http://android-er.blogspot.ru/2012/05/add-and-remove-view-dynamically.html
         CURRENT = page;
-        FrameLayout frame = (FrameLayout) findViewById(R.id.mc_create_main_frame);
+        FrameLayout frame = (FrameLayout) viewMain.findViewById(R.id.mc_create_main_frame);
 
         for (int i = 0; i < frame.getChildCount(); i++) {
             View tmp = frame.getChildAt(i);
@@ -265,29 +280,6 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         }
     }
 
-    public void parseResponse(JSONObject json) {
-        if (json.has("result")) {
-            try {
-                String result = json.getString("result");
-                if (result.contains("ID")) {
-                    Toast.makeText(this, this.getString(R.string.send_success), Toast.LENGTH_LONG).show();
-                    finish();
-                } else if (result.equals("READONLY")) {
-                    Toast.makeText(this, this.getString(R.string.not_have_rights_error), Toast.LENGTH_LONG).show();
-                } else if (result.equals("PROBABLY SPAM")) {
-                    Toast.makeText(this, this.getString(R.string.too_often_acts), Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(this, result, Toast.LENGTH_LONG).show();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Toast.makeText(this, this.getString(R.string.parse_error), Toast.LENGTH_LONG).show();
-            }
-        } else {
-            Toast.makeText(this, this.getString(R.string.send_error), Toast.LENGTH_LONG).show();
-        }
-    }
-
     private void OnConfirm() {
         if (location != null) {
             if (Startup.isOnline()) {
@@ -295,15 +287,14 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 Map<String, String> post = createPOST();
                 JsonRequest request = new JsonRequest("mcaccidents", "createAcc", post, "", true);
                 if (request != null) {
-                    // zz
-                    // (new CreateAccidentRequest(this)).execute(request);
+                    (new CreateAccidentRequest((CreateAccActivityNew)getActivity())).execute(request);
                 }
             } else {
                 confirm.setEnabled(true);
-                Toast.makeText(this, this.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), getActivity().getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
             }
         } else {
-            Toast.makeText(this, this.getString(R.string.position_not_available), Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), getActivity().getString(R.string.position_not_available), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -325,23 +316,11 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_create_acc, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void onClick(View v) {
         back.setEnabled(true);
         confirm.setEnabled(true);
         int id = v.getId();
-        Button btn = (Button) findViewById(id);
+        Button btn = (Button) viewMain.findViewById(id);
 
         //TODO switch case
         if (id == R.id.mc_create_type_acc_button) {
@@ -401,8 +380,8 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             if (location != null) {
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(location), 16));
             }
-            ImageView mapPointer = (ImageView) this.findViewById(R.id.mc_create_map_pointer);
-            mapPointer.setImageDrawable(AccidentTypes.getDrawable(this, type));
+            ImageView mapPointer = (ImageView) viewMain.findViewById(R.id.mc_create_map_pointer);
+            mapPointer.setImageDrawable(AccidentTypes.getDrawable(context, type));
             Keyboard.hide(details);
             show(FINEADDRESS);
         } else if (id == R.id.mc_create_fine_address_confirm) {
@@ -427,10 +406,10 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         if (Startup.isOnline()) {
             JsonRequest request = getAddressRequest(location);
             if (request != null) {
-                (new GeoCodeNewRequest(this)).execute(request);
+                (new GeoCodeNewRequest(getActivity())).execute(request);
             }
         } else {
-            Toast.makeText(this, this.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), getActivity().getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -439,5 +418,9 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         post.put("lat", String.valueOf(location.getLatitude()));
         post.put("lon", String.valueOf(location.getLongitude()));
         return new JsonRequest("mcaccidents", "geocode", post, "", true);
+    }
+
+    private void finish() {
+
     }
 }

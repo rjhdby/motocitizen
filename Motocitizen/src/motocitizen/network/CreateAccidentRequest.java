@@ -3,13 +3,14 @@ package motocitizen.network;
 import org.json.JSONObject;
 
 import motocitizen.Activity.CreateAccActivity;
+import motocitizen.Activity.CreateAccActivityNew;
 import motocitizen.main.R;
 
 public class CreateAccidentRequest extends HttpClient  {
 
-    private final CreateAccActivity activity;
+    private final CreateAccActivityNew activity;
 
-    public CreateAccidentRequest(CreateAccActivity activity) {
+    public CreateAccidentRequest(CreateAccActivityNew activity) {
         super(activity, activity.getString(R.string.request_create_acc));
         this.activity = activity;
     }

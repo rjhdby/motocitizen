@@ -37,7 +37,8 @@
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="18" />
 
-    <application android:name="motocitizen.MyApp"
+    <application
+        android:name="motocitizen.MyApp"
         android:allowBackup="true"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
@@ -51,6 +52,7 @@
                 <category android:name="motocitizen.main" />
             </intent-filter>
         </receiver>
+
         <service android:name="motocitizen.app.general.gcm.NewAccidentReceived" />
 
         <meta-data
@@ -69,11 +71,14 @@
             android:windowSoftInputMode="adjustResize" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="text/*" />
             </intent-filter>
         </activity>
@@ -89,27 +94,27 @@
         </activity>
         <activity
             android:name="motocitizen.Activity.AuthActivity"
-            android:screenOrientation="portrait"
-            android:label="AuthActivity" >
+            android:label="AuthActivity"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="motocitizen.Activity.SelectSoundActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_select_sound" >
+            android:label="@string/title_activity_select_sound"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="motocitizen.Activity.CreateAccActivity"
             android:label="@string/title_activity_create_acc"
-            android:screenOrientation="portrait"
-            android:parentActivityName="motocitizen.startup.Startup" >
+            android:parentActivityName="motocitizen.startup.Startup"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="motocitizen.startup.Startup" />
         </activity>
         <activity
             android:name="motocitizen.Activity.AccidentDetailsActivity"
-            android:screenOrientation="portrait"
             android:parentActivityName="motocitizen.startup.Startup"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -117,8 +122,16 @@
         </activity>
         <activity
             android:name="motocitizen.Activity.SettingsActivity"
-            android:theme="@style/Theme.AppCompat"
+            android:parentActivityName="motocitizen.startup.Startup"
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="motocitizen.startup.Startup" />
+        </activity>
+        <activity
+            android:name="motocitizen.Activity.CreateAccActivityNew"
+            android:label="@string/title_activity_create_acc_activity_new"
             android:parentActivityName="motocitizen.startup.Startup" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

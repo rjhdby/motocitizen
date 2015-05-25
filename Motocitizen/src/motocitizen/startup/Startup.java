@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import motocitizen.Activity.AboutActivity;
 import motocitizen.Activity.CreateAccActivity;
+import motocitizen.Activity.CreateAccActivityNew;
 import motocitizen.Activity.SettingsActivity;
 import motocitizen.MyApp;
 import motocitizen.app.general.AccidentsGeneral;
@@ -245,7 +246,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
                 Startup.context.startActivity(intent);
                 break;
             case R.id.mc_add_point_button:
-                startActivity(new Intent(Startup.context, CreateAccActivity.class));
+                startActivity(new Intent(Startup.context, CreateAccActivityNew.class));
                 break;
             default:
                 Log.e("Startup", "Unknown button pressed");
