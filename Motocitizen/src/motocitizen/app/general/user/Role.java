@@ -33,4 +33,16 @@ public class Role {
     public static boolean isAdmin() {
         return Arrays.asList(Admin).contains(getRole());
     }
+
+    public static String getName() {
+        //Порядок важен.
+        if(isAdmin())
+            return "администратор";
+        else if(isModerator())
+            return "модератор";
+        else if(isStandart())
+            return "пользователь";
+        else
+            return "только чтение";
+    }
 }

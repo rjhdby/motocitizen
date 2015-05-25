@@ -12,6 +12,12 @@
         android:text="@string/mc_auth_header"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
+    <TextView
+            android:id="@+id/role"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mc_auth_role" />
+
     <TableLayout
         android:id="@+id/mc_auth_rows"
         android:layout_width="match_parent"
