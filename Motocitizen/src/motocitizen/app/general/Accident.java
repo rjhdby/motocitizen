@@ -132,7 +132,12 @@ public class Accident {
         prefs = myApp.getPreferences();
         Map<String, String> data = new HashMap<>();
         for (String key : extras.keySet()) {
-            data.put(key, extras.getString(key));
+            Object obj = extras.get(key);
+            if (obj instanceof Integer) {
+                data.put(key, String.valueOf(obj));
+            } else {
+                data.put(key, (String) obj);
+            }
         }
         createPoint(data);
         makeHistory(null);

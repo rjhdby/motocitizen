@@ -5,6 +5,8 @@ import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -105,6 +107,21 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             }
         }
     };
+    private final TextWatcher DetailsTextListener = new TextWatcher() {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            enableConfirm(s.toString());
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    };
 
     public static void updateAddress(String address) {
         addressText = address;
@@ -136,7 +153,8 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             med = "mc_m_na";
         } else if (CURRENT == FINEADDRESS) {
             show(FINAL);
-            confirm.setEnabled(true);
+            //confirm.setEnabled(true);
+            enableConfirm();
         }
         if (CURRENT == TYPE) {
             back.setEnabled(false);
@@ -195,7 +213,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
 
         globalView = findViewById(R.id.mc_create_main);
         details = (EditText) findViewById(R.id.mc_create_final_text);
-
+        details.addTextChangedListener(DetailsTextListener);
         TYPE = R.id.mc_create_type_frame;
         FINAL = R.id.mc_create_final_frame;
         ACC = R.id.mc_create_acc_frame;
@@ -288,7 +306,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         }
     }
 
-    private void OnConfirm() {
+    private void onConfirm() {
         if (location != null) {
             if (Startup.isOnline()) {
                 confirm.setEnabled(false);
@@ -338,88 +356,106 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         back.setEnabled(true);
-        confirm.setEnabled(true);
         int id = v.getId();
         Button btn = (Button) findViewById(id);
 
         //TODO switch case
-        if (id == R.id.mc_create_type_acc_button) {
-            show(ACC);
-            isAcc = true;
-            confirm.setEnabled(false);
-            globalText = "ДТП";
-        } else if (id == R.id.mc_create_type_break_button) {
-            globalText = btn.getText().toString();
-            type = "acc_b";
-            show(FINAL);
-        } else if (id == R.id.mc_create_type_steal_button) {
-            globalText = btn.getText().toString();
-            type = "acc_s";
-            show(FINAL);
-        } else if (id == R.id.mc_create_type_other_button) {
-            globalText = btn.getText().toString();
-            type = "acc_o";
-            show(FINAL);
-        } else if (id == R.id.mc_create_acc_ma_button) {
-            globalText = "ДТП " + btn.getText().toString();
-            type = "acc_m_a";
-            show(PEOPLE);
-        } else if (id == R.id.mc_create_acc_solo_button) {
-            globalText = "ДТП " + btn.getText().toString();
-            type = "acc_m";
-            show(PEOPLE);
-        } else if (id == R.id.mc_create_acc_mm_button) {
-            globalText = "ДТП " + btn.getText().toString();
-            type = "acc_m_m";
-            show(PEOPLE);
-        } else if (id == R.id.mc_create_acc_mp_button) {
-            globalText = "ДТП " + btn.getText().toString();
-            type = "acc_m_p";
-            show(PEOPLE);
-        } else if (id == R.id.mc_create_people_ok_button) {
-            medText = btn.getText().toString();
-            med = "mc_m_wo";
-            show(FINAL);
-        } else if (id == R.id.mc_create_people_light_button) {
-            medText = btn.getText().toString();
-            med = "mc_m_l";
-            show(FINAL);
-        } else if (id == R.id.mc_create_people_hard_button) {
-            medText = btn.getText().toString();
-            med = "mc_m_h";
-            show(FINAL);
-        } else if (id == R.id.mc_create_people_death_button) {
-            globalText = btn.getText().toString();
-            med = "mc_m_d";
-            show(FINAL);
-        } else if (id == R.id.mc_create_people_na_button) {
-            medText = "";
-            med = "mc_m_na";
-            show(FINAL);
-        } else if (id == R.id.mc_create_fine_address_button) {
-            if (location != null) {
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(location), 16));
-            }
-            ImageView mapPointer = (ImageView) this.findViewById(R.id.mc_create_map_pointer);
-            mapPointer.setImageDrawable(AccidentTypes.getDrawable(this, type));
-            Keyboard.hide(details);
-            show(FINEADDRESS);
-        } else if (id == R.id.mc_create_fine_address_confirm) {
-            //TODO Если вдруг initialLocation == null, но не получается взять координаты после тыка юзера, т.к. map.getCameraPosition() падает.
-            double distance = MyUtils.LatLngToLocation(map.getCameraPosition().target).distanceTo(initialLocation);
-            if (distance > radius)
-                return;
-            location = MyUtils.LatLngToLocation(map.getCameraPosition().target);
-            getAddress(location);
-        } else if (id == R.id.mc_create_back) {
-            backButton();
-        } else if (id == R.id.mc_create_cancel) {
-            //TODO Добавить подтверждение
-            finish();
-        } else if (id == R.id.mc_create_create) {
-            OnConfirm();
+        switch (id) {
+            case R.id.mc_create_type_acc_button:
+                show(ACC);
+                isAcc = true;
+                globalText = "ДТП";
+                break;
+            case R.id.mc_create_type_break_button:
+                globalText = btn.getText().toString();
+                type = "acc_b";
+                show(FINAL);
+                break;
+            case R.id.mc_create_type_steal_button:
+                globalText = btn.getText().toString();
+                type = "acc_s";
+                show(FINAL);
+                break;
+            case R.id.mc_create_type_other_button:
+                globalText = btn.getText().toString();
+                type = "acc_o";
+                show(FINAL);
+                break;
+            case R.id.mc_create_acc_ma_button:
+                globalText = "ДТП " + btn.getText().toString();
+                type = "acc_m_a";
+                show(PEOPLE);
+                break;
+            case R.id.mc_create_acc_solo_button:
+                globalText = "ДТП " + btn.getText().toString();
+                type = "acc_m";
+                show(PEOPLE);
+                break;
+            case R.id.mc_create_acc_mm_button:
+                globalText = "ДТП " + btn.getText().toString();
+                type = "acc_m_m";
+                show(PEOPLE);
+                break;
+            case R.id.mc_create_acc_mp_button:
+                globalText = "ДТП " + btn.getText().toString();
+                type = "acc_m_p";
+                show(PEOPLE);
+                break;
+            case R.id.mc_create_people_ok_button:
+                medText = btn.getText().toString();
+                med = "mc_m_wo";
+                show(FINAL);
+                break;
+            case R.id.mc_create_people_light_button:
+                medText = btn.getText().toString();
+                med = "mc_m_l";
+                show(FINAL);
+                break;
+            case R.id.mc_create_people_hard_button:
+                medText = btn.getText().toString();
+                med = "mc_m_h";
+                show(FINAL);
+                break;
+            case R.id.mc_create_people_death_button:
+                globalText = btn.getText().toString();
+                med = "mc_m_d";
+                show(FINAL);
+                break;
+            case R.id.mc_create_people_na_button:
+                medText = "";
+                med = "mc_m_na";
+                show(FINAL);
+                break;
+            case R.id.mc_create_fine_address_button:
+                if (location != null) {
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(location), 16));
+                }
+                ImageView mapPointer = (ImageView) this.findViewById(R.id.mc_create_map_pointer);
+                mapPointer.setImageDrawable(AccidentTypes.getDrawable(this, type));
+                Keyboard.hide(details);
+                show(FINEADDRESS);
+                break;
+            case R.id.mc_create_fine_address_confirm:
+                //TODO Если вдруг initialLocation == null, но не получается взять координаты после тыка юзера, т.к. map.getCameraPosition() падает.
+                double distance = MyUtils.LatLngToLocation(map.getCameraPosition().target).distanceTo(initialLocation);
+                if (distance > radius)
+                    return;
+                location = MyUtils.LatLngToLocation(map.getCameraPosition().target);
+                getAddress(location);
+                break;
+            case R.id.mc_create_back:
+                backButton();
+                break;
+            case R.id.mc_create_cancel:
+                //TODO Добавить подтверждение
+                finish();
+                break;
+            case R.id.mc_create_create:
+                onConfirm();
+                break;
         }
         writeGlobal();
+        enableConfirm();
     }
 
     private void getAddress(Location location) {
@@ -430,6 +466,23 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             }
         } else {
             Toast.makeText(this, this.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void enableConfirm(){
+        enableConfirm("");
+    }
+
+    private void enableConfirm(String s){
+        if(type == "acc_b" || type == "acc_s" || type == "acc_o" || type == null) {
+            String temp = s.toString().replaceAll("\\s", "");
+            if (temp.length() == 0) {
+                confirm.setEnabled(false);
+            } else {
+                confirm.setEnabled(true);
+            }
+        } else {
+            confirm.setEnabled(true);
         }
     }
 

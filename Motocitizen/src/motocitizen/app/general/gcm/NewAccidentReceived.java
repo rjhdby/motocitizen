@@ -29,7 +29,6 @@ public class NewAccidentReceived extends IntentService {
      */
     public NewAccidentReceived() {
         super("Intent");
-        Log.d("GCM RECEIVED", "2");
     }
 
     @Override
@@ -38,13 +37,11 @@ public class NewAccidentReceived extends IntentService {
     }
     public NewAccidentReceived(Context context, Intent intent) {
     */
-        Log.d("GCM RECEIVED", "3");
         MyPreferences prefs = new MyPreferences(this);
         if(prefs.getDoNotDisturb()){
             GCMBroadcastReceiver.completeWakefulIntent(intent);
             return;
         }
-        Log.d("GCM RECEIVED", "4");
         Bundle extras = intent.getExtras();
         try {
             AccidentsGeneral.points.addPoint(new Accident(extras, this));
