@@ -25,6 +25,7 @@ import java.util.Map;
 import motocitizen.MyApp;
 import motocitizen.app.general.Accident;
 import motocitizen.app.general.AccidentsGeneral;
+import motocitizen.app.general.gcm.NewAccidentReceived;
 import motocitizen.app.general.popups.AccidentListPopup;
 import motocitizen.app.general.user.Role;
 import motocitizen.main.R;
@@ -79,6 +80,7 @@ public class AccidentDetailsActivity
 
         Bundle b = getIntent().getExtras();
         accidentID = b.getInt("accidentID");
+        NewAccidentReceived.removeNotification(accidentID);
         userName = ((MyApp) getApplicationContext()).getPreferences().getLogin();
 
         detailVolunteersFragment = DetailVolunteersFragment.newInstance(accidentID, userName);
