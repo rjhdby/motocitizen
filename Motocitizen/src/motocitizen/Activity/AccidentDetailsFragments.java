@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import motocitizen.MyApp;
-import motocitizen.app.general.Accident;
 import motocitizen.startup.MyPreferences;
 
 public class AccidentDetailsFragments extends Fragment {
@@ -17,7 +16,6 @@ public class AccidentDetailsFragments extends Fragment {
     protected int accidentID;
     protected String userName;
 
-    protected Accident currentPoint;
     protected MyPreferences prefs;
 
     int mStackLevel = 0;

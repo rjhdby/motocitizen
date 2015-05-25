@@ -15,6 +15,7 @@ import android.widget.Toast;
 import java.util.HashMap;
 import java.util.Map;
 
+import motocitizen.app.general.Accident;
 import motocitizen.app.general.AccidentVolunteer;
 import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.main.R;
@@ -51,7 +52,6 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View viewMain = inflater.inflate(R.layout.fragment_detail_volunteers, container, false);
-        currentPoint = AccidentsGeneral.points.getPoint(accidentID);
 
         onwayButton = (ImageButton) viewMain.findViewById(R.id.onway_button);
         onwayButton.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +75,9 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     }
 
     protected void update() {
-        if (currentPoint != null) {
+        Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
+
+        if (accident != null) {
             setupAccess();
 
             ViewGroup vg_onway = (ViewGroup) onwayContent;
@@ -84,8 +86,8 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
             vg_inplace.setVisibility(View.INVISIBLE);
             vg_onway.removeAllViews();
             vg_inplace.removeAllViews();
-            for (int i : currentPoint.getSortedVolunteersKeys()) {
-                AccidentVolunteer current = currentPoint.volunteers.get(i);
+            for (int i : accident.getSortedVolunteersKeys()) {
+                AccidentVolunteer current = accident.volunteers.get(i);
                 switch (current.getStatus()) {
                     case ONWAY:
                         if (vg_onway.getVisibility() == View.INVISIBLE) {
@@ -122,7 +124,8 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     }
 
     private void setupAccess() {
-        if (currentPoint.getId() == prefs.getOnWay() || currentPoint.getId() == AccidentsGeneral.getInplaceID() || !AccidentsGeneral.auth.isAuthorized() || !currentPoint.isActive()) {
+        Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
+        if (accident.getId() == prefs.getOnWay() || accident.getId() == AccidentsGeneral.getInplaceID() || !AccidentsGeneral.auth.isAuthorized() || !accident.isActive()) {
             onwayButton.setVisibility(View.INVISIBLE);
         } else {
             onwayButton.setVisibility(View.VISIBLE);
