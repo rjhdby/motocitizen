@@ -1,8 +1,11 @@
 package motocitizen.app.general.user;
 
+import android.content.Context;
+
 import java.util.Arrays;
 
 import motocitizen.app.general.AccidentsGeneral;
+import motocitizen.main.R;
 
 public class Role {
     private static final String[] ReadOnly = new String[]{"readonly", "banned", "standart", "moderator", "admin"};
@@ -34,15 +37,15 @@ public class Role {
         return Arrays.asList(Admin).contains(getRole());
     }
 
-    public static String getName() {
+    public static String getName(Context context) {
         //Порядок важен.
         if(isAdmin())
-            return "администратор";
+            return context.getString(R.string.role_admin);
         else if(isModerator())
-            return "модератор";
+            return context.getString(R.string.role_moderator);
         else if(isStandart())
-            return "пользователь";
+            return context.getString(R.string.role_user);
         else
-            return "только чтение";
+            return context.getString(R.string.role_read_only);
     }
 }

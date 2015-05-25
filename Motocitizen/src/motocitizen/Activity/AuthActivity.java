@@ -159,7 +159,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
             anonim.setEnabled(false);
             accListYesterdayLine.setVisibility(View.GONE);
             String format = getString(R.string.mc_auth_role);
-            roleView.setText(String.format(format, Role.getName()));
+            roleView.setText(String.format(format, Role.getName(this)));
             roleView.setVisibility(View.VISIBLE);
             login.setEnabled(false);
             password.setEnabled(false);

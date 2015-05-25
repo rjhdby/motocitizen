@@ -65,9 +65,9 @@ public class SettingsFragment extends PreferenceFragment {
         nottifAlarmPreference.setOnPreferenceChangeListener(distanceListener);
         String login = prefs.getLogin();
         if( login.length() > 0 )
-            authPreference.setSummary(Role.getName()  + ": "  + login);
+            authPreference.setSummary(Role.getName(getActivity())  + ": "  + login);
         else
-            authPreference.setSummary(Role.getName());
+            authPreference.setSummary(Role.getName(getActivity()));
         nottifSoundPreference.setSummary(prefs.getAlarmSoundTitle());
         nottifDistPreference.setSummary(String.valueOf(prefs.getVisibleDistance()));
         nottifAlarmPreference.setSummary(String.valueOf(prefs.getAlarmDistance()));
