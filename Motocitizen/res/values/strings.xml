@@ -117,4 +117,9 @@
     <string name="about_url_support"><a href="http://forum.moto.msk.ru/forum/38-%D0%BC%D0%BE%D0%B1%D0%B8%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5-%D0%BF%D1%80%D0%B8%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5/">Поддержка</a>.</string>
 	<string name="onway_title_confirm">Вы готовы выехать?</string>
     <string name="current_version_text">Текущая версия:</string>
+	<string name="mc_auth_role">Вы: %1$s.</string>
+	<string name="role_admin">администратор</string>
+	<string name="role_moderator">модератор</string>
+	<string name="role_user">пользователь</string>
+	<string name="role_read_only">только чтение</string>
 </resources>
