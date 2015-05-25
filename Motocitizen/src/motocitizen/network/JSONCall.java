@@ -4,10 +4,12 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.DataOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -18,7 +20,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
 
 import motocitizen.MyApp;
 import motocitizen.main.R;
@@ -78,7 +82,7 @@ public class JSONCall {
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
                 connection.setRequestProperty("Accept-Charset", CHARSET);
-                //connection.setRequestProperty("Accept-Encoding", "gzip");
+                connection.setRequestProperty("Accept-Encoding", "gzip");
                 connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + CHARSET);
                 connection.setRequestProperty("Content-Language", "ru-RU");
                 connection.setRequestProperty("User-Agent", USERAGENT);
@@ -95,7 +99,9 @@ public class JSONCall {
                 InputStream is;
                 try {
                     is = connection.getInputStream();
-                    //is = new GZIPInputStream(is);
+                    if(connection.getContentEncoding() != null){
+                        is = new GZIPInputStream(is);
+                    }
                     int responseCode = connection.getResponseCode();
                     Log.d("JSON ERROR", String.valueOf(responseCode));
                     if (responseCode == 200) {
