@@ -13,6 +13,7 @@ import java.util.Arrays;
 
 import motocitizen.main.R;
 import motocitizen.utils.Const;
+
 @SuppressLint("CommitPrefEdits")
 public class MyPreferences {
     public final String showAcc = "mc.show.acc";
@@ -36,6 +37,8 @@ public class MyPreferences {
     private final static String savedlng = "savedlng";
     private final static String savedlat = "savedlat";
 
+    private final static String maxNotifications = "notifications.max";
+
     private final static String[] mapProviders = {"google", "osm", "yandex"};
 
     private static SharedPreferences preferences;
@@ -46,15 +49,15 @@ public class MyPreferences {
         MyPreferences.context = context;
     }
 
-    public void putBoolean(String name, boolean value){
+    public void putBoolean(String name, boolean value) {
         preferences.edit().putBoolean(name, value).commit();
     }
 
-    public void setOnWay(int id){
+    public void setOnWay(int id) {
         preferences.edit().putInt(onWay, id).commit();
     }
 
-    public int getOnWay(){
+    public int getOnWay() {
         return preferences.getInt(onWay, 0);
     }
 
@@ -64,19 +67,19 @@ public class MyPreferences {
         return new LatLng(lat, lng);
     }
 
-    public void setDoNotDisturb(boolean value){
+    public void setDoNotDisturb(boolean value) {
         preferences.edit().putBoolean(doNotDisturb, value).commit();
     }
 
-    public boolean getDoNotDisturb(){
+    public boolean getDoNotDisturb() {
         return preferences.getBoolean(doNotDisturb, false);
     }
 
-    public String getCurrentVersion(){
+    public String getCurrentVersion() {
         return preferences.getString(currentVersion, context.getString(R.string.unknown_code_version));
     }
 
-    public void setCurrentVersion(String version){
+    public void setCurrentVersion(String version) {
         preferences.edit().putString(currentVersion, version).commit();
     }
 
@@ -105,7 +108,7 @@ public class MyPreferences {
         int distance;
         try {
             distance = preferences.getInt(distanceShow, 200);
-        }catch (Exception e){
+        } catch (Exception e) {
             String distanceString = preferences.getString(distanceShow, "200");
             distance = Integer.parseInt(distanceString);
         }
@@ -116,7 +119,7 @@ public class MyPreferences {
         int distance;
         try {
             distance = preferences.getInt(distanceAlarm, 20);
-        }catch (Exception e){
+        } catch (Exception e) {
             String distanceString = preferences.getString(distanceAlarm, "20");
             distance = Integer.parseInt(distanceString);
         }
@@ -166,7 +169,7 @@ public class MyPreferences {
     }
 
     public void setAppVersion(int code) {
-        preferences.edit().putInt(appVersion, code);
+        preferences.edit().putInt(appVersion, code).commit();
     }
 
     public void setShowAcc(boolean show) {
@@ -243,7 +246,16 @@ public class MyPreferences {
         }
     }
 
-    public void resetPreferences(){
+    public void resetPreferences() {
         preferences.edit().clear();
     }
+
+    public int getMaxNotifications() {
+        return preferences.getInt(maxNotifications, 3);
+    }
+
+    public void setMaxNotifications(int code) {
+        preferences.edit().putInt(maxNotifications, code).commit();
+    }
 }
+
