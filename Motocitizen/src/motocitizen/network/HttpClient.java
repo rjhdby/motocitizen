@@ -21,6 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
 
 import motocitizen.MyApp;
 
@@ -130,7 +131,9 @@ public class HttpClient extends AsyncTask<JsonRequest, Void, JSONObject> {
             InputStream is;
             try {
                 is = connection.getInputStream();
-//                is = new GZIPInputStream(is);
+                if(connection.getContentEncoding() != null){
+                    is = new GZIPInputStream(is);
+                }
                 int responseCode = connection.getResponseCode();
                 Log.d("JSON ERROR", String.valueOf(responseCode));
                 if (responseCode == 200) {
