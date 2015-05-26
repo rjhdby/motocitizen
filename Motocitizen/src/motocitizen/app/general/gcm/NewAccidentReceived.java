@@ -114,7 +114,6 @@ public class NewAccidentReceived extends IntentService {
         try {
             notificationManager.cancel(id);
         }catch (Exception e){
-            e.printStackTrace();
         }
     }
 }

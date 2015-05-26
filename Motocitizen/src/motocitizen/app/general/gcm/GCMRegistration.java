@@ -8,7 +8,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -20,11 +19,8 @@ import java.util.Map;
 
 import motocitizen.MyApp;
 import motocitizen.app.general.AccidentsGeneral;
-import motocitizen.main.R;
-import motocitizen.network.JsonRequest;
-import motocitizen.network.registerGCMRequest;
+import motocitizen.network.requests.GCMRegistrationRequest;
 import motocitizen.startup.MyPreferences;
-import motocitizen.startup.Startup;
 
 public class GCMRegistration {
     private static final String TAG = "GCM";
@@ -129,17 +125,10 @@ public class GCMRegistration {
 
     @SuppressLint("CommitPrefEdits")
     private void storeRegistrationId(String regId) {
-        if (Startup.isOnline()) {
-            int appVersion = getAppVersion();
-            Log.i(TAG, "Saving regId on app version " + appVersion);
-            prefs.setAppVersion(appVersion);
-            prefs.setGCMRegistrationCode(regId);
-            JsonRequest request = new JsonRequest("mcaccidents", "registerGCM", createPOST(regId), "", true);
-            if (request != null) {
-                (new registerGCMRequest(context, !Startup.isChangeLogDlgShowing())).execute(request);
-            }
-        } else {
-            Toast.makeText(context, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
-        }
+        int appVersion = getAppVersion();
+        Log.i(TAG, "Saving regId on app version " + appVersion);
+        prefs.setAppVersion(appVersion);
+        prefs.setGCMRegistrationCode(regId);
+        new GCMRegistrationRequest(context, regId);
     }
 }

@@ -15,13 +15,9 @@ import android.widget.PopupWindow;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.app.general.Accident;
 import motocitizen.main.R;
-import motocitizen.network.JSONCall;
+import motocitizen.network.requests.AccidentChangeState;
 import motocitizen.startup.Startup;
 
 class PopupWindowGeneral {
@@ -68,33 +64,21 @@ class PopupWindowGeneral {
     private static final OnClickListener finishButtonListener = new OnClickListener() {
         public void onClick(View v) {
             pw.dismiss();
-            Map<String, String> params = new HashMap<>();
-            params.put("login", AccidentsGeneral.auth.getLogin());
-            params.put("passhash", AccidentsGeneral.auth.makePassHash());
             if (point.isEnded()) {
-                params.put("state", "acc_status_act");
+                new AccidentChangeState(context, point.getId(), AccidentChangeState.ACTIVE);
             } else {
-                params.put("state", "acc_status_end");
+                new AccidentChangeState(context, point.getId(), AccidentChangeState.ENDED);
             }
-            params.put("id", String.valueOf(point.getId()));
-            new JSONCall(context, "mcaccidents", "changeState").request(params);
-            AccidentsGeneral.refresh(v.getContext());
         }
     };
     private static final OnClickListener hideButtonListener = new OnClickListener() {
         public void onClick(View v) {
             pw.dismiss();
-            Map<String, String> params = new HashMap<>();
-            params.put("login", AccidentsGeneral.auth.getLogin());
-            params.put("passhash", AccidentsGeneral.auth.makePassHash());
             if (point.isHidden()) {
-                params.put("state", "acc_status_act");
+                new AccidentChangeState(context, point.getId(), AccidentChangeState.ACTIVE);
             } else {
-                params.put("state", "acc_status_hide");
+                new AccidentChangeState(context, point.getId(), AccidentChangeState.HIDE);
             }
-            params.put("id", String.valueOf(point.getId()));
-            new JSONCall(context, "mcaccidents", "changeState").request(params);
-            AccidentsGeneral.refresh(v.getContext());
         }
     };
 

@@ -2,7 +2,6 @@ package motocitizen.app.general.user;
 
 import android.content.Context;
 import android.content.Intent;
-import android.telephony.TelephonyManager;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -10,11 +9,10 @@ import org.json.JSONObject;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
 
 import motocitizen.Activity.AuthActivity;
-import motocitizen.network.JSONCall;
+import motocitizen.main.R;
+import motocitizen.network.requests.AuthRequest;
 import motocitizen.startup.MyPreferences;
 import motocitizen.startup.Startup;
 
@@ -24,19 +22,25 @@ public class Auth {
     private int id;
     private MyPreferences prefs;
     private boolean isAuthorized = false;
+    Context context;
+    String login, password;
 
     public Auth(Context context) {
+        this.context = context;
         prefs = new MyPreferences(context);
         reset();
 
-        if (!prefs.isAnonim() ) {
-          if(!prefs.getLogin().isEmpty()) {
-              if(!auth(context, prefs.getLogin(), prefs.getPassword())) {
-                  showlogin();
-              }
-          } else {
-              showlogin();
-          }
+
+        if (!prefs.isAnonim()) {
+            if (!prefs.getLogin().isEmpty()) {
+                login = prefs.getLogin();
+                password = prefs.getPassword();
+                if (!auth(context, login, password)) {
+                    showlogin();
+                }
+            } else {
+                showlogin();
+            }
         }
     }
 
@@ -67,7 +71,7 @@ public class Auth {
         return prefs.getLogin();
     }
 
-    private String makePassHash(String pass) {
+    public static String makePassHash(String pass) {
         String hash = "";
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
@@ -94,14 +98,16 @@ public class Auth {
     }
 
     public Boolean auth(Context context, String login, String password) {
-        if(Startup.isOnline()) {
-            String ident = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
-            Map<String, String> post = new HashMap<>();
-            post.put("ident", ident);
-            post.put("login", login);
-            post.put("passwordHash", makePassHash(password));
-            JSONObject json = new JSONCall(context, "mcaccidents", "auth").request(post);
-            parseJSON(json);
+        this.password = password;
+        this.login = login;
+        AuthRequest auth = new AuthRequest(context);
+        auth.setLogin(login);
+        auth.setPassword(password);
+        JSONObject result = auth.execute();
+        try {
+            name = result.getString("name");
+            role = result.getString("role");
+            id = Integer.parseInt(result.getString("id"));
             if (name.length() > 0) {
                 prefs.setLogin(login);
                 prefs.setPassword(password);
@@ -110,22 +116,11 @@ public class Auth {
             } else {
                 isAuthorized = false;
             }
-        } else {
-            //TODO Перенести в ресурсы
-            Toast.makeText(context, "Авторизация не возможна, пожалуйста, проверьте доступность Internet.", Toast.LENGTH_LONG).show();
+        } catch (JSONException e) {
+            Toast.makeText(context, context.getString(R.string.unknown_error), Toast.LENGTH_LONG).show();
             isAuthorized = false;
         }
         return isAuthorized;
-    }
-
-    private void parseJSON(JSONObject json) {
-        try {
-            name = json.getString("name");
-            role = json.getString("role");
-            id = json.getInt("id");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
     public boolean isAuthorized() {

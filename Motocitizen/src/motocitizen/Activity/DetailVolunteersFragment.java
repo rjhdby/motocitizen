@@ -10,18 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.Toast;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import motocitizen.app.general.Accident;
 import motocitizen.app.general.AccidentVolunteer;
 import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.main.R;
-import motocitizen.network.JsonRequest;
-import motocitizen.network.OnwayRequest;
-import motocitizen.startup.Startup;
+import motocitizen.network.requests.OnWayRequest;
 
 import static motocitizen.app.general.AccidentsGeneral.getDelimiterRow;
 
@@ -180,19 +174,8 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     }
 
     private void sendOnway() {
-        if (Startup.isOnline()) {
-            int currentId = AccidentsGeneral.getCurrentPointID();
-            AccidentsGeneral.setOnWay(currentId);
-            Map<String, String> post = new HashMap<>();
-            post.put("login", AccidentsGeneral.auth.getLogin());
-            post.put("passhash", AccidentsGeneral.auth.makePassHash());
-            post.put("id", String.valueOf(currentId));
-            JsonRequest request = new JsonRequest("mcaccidents", "onway", post, "", true);
-            if (request != null) {
-                (new OnwayRequest((AccidentDetailsActivity) getActivity(), currentId)).execute(request);
-            }
-        } else {
-            Toast.makeText(getActivity(), getActivity().getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
-        }
+        int currentId = AccidentsGeneral.getCurrentPointID();
+        AccidentsGeneral.setOnWay(currentId);
+        new OnWayRequest(this.getActivity(), currentId);
     }
 }

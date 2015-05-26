@@ -1,5 +1,6 @@
 package motocitizen.Activity;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,16 +12,17 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import motocitizen.app.general.Accident;
 import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.app.general.user.Role;
 import motocitizen.main.R;
-import motocitizen.network.JsonRequest;
-import motocitizen.network.SendMessageRequest;
-import motocitizen.startup.Startup;
+import motocitizen.network.requests.AccidentsRequest;
+import motocitizen.network.requests.AsyncTaskCompleteListener;
+import motocitizen.network.requests.SendMessageRequest;
 
 public class DetailMessagesFragment extends AccidentDetailsFragments {
 
@@ -28,6 +30,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
 
     private ImageButton newMessageButton;
     private EditText mcNewMessageText;
+    private String currentText;
 
     View newMessageArea;
 
@@ -54,28 +57,17 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View viewMain = inflater.inflate(R.layout.fragment_detail_messages, container, false);
 
         newMessageButton = (ImageButton) viewMain.findViewById(R.id.mc_new_message_send);
         newMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Startup.isOnline()) {
-                    String text = mcNewMessageText.getText().toString();
-                    int currentId = AccidentsGeneral.getCurrentPointID();
-                    Map<String, String> post = new HashMap<>();
-                    post.put("login", AccidentsGeneral.auth.getLogin());
-                    post.put("passhash", AccidentsGeneral.auth.makePassHash());
-                    post.put("id", String.valueOf(currentId));
-                    post.put("text", text);
-                    JsonRequest request = new JsonRequest("mcaccidents", "message", post, "", true);
-                    if (request != null) {
-                        (new SendMessageRequest((AccidentDetailsActivity) getActivity(), currentId)).execute(request);
-                    }
-                } else {
-                    Toast.makeText(getActivity(), getActivity().getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
-                }
+                String text = mcNewMessageText.getText().toString();
+                int currentId = AccidentsGeneral.getCurrentPointID();
+                new SendMessageRequest(new SendMessageCallback(), getActivity(), currentId, text);
+                newMessageButton.setEnabled(false);
             }
         });
 
@@ -113,7 +105,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
 */
         ViewGroup messageView = (ViewGroup) mcDetMessagesTable;
         messageView.removeAllViews();
-        Accident accident = ((AccidentDetailsActivity)getActivity()).getCurrentPoint();
+        Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
 
         for (int i : accident.getSortedMessagesKeys()) {
             messageView.addView(accident.messages.get(i).createRow(getActivity(), userName));
@@ -123,8 +115,6 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
 
     public void notifyDataSetChanged() {
         update();
-//  ListAdapter
-//        adapter.notifyDataSetChanged();
         mcNewMessageText.setText("");
     }
 
@@ -161,6 +151,37 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
             newMessageArea.setVisibility(View.VISIBLE);
         } else {
             newMessageArea.setVisibility(View.INVISIBLE);
+        }
+    }
+    private class SendMessageCallback implements AsyncTaskCompleteListener {
+        @Override
+        public void onTaskComplete(JSONObject result) {
+            Context context = getActivity();
+            try {
+                String response = result.getString("result");
+                if(response.equals("OK")){
+                    new AccidentsRequest(new UpdateAccidentsCallback(), context);
+                } else {
+                    Toast.makeText(context, context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
+                    newMessageButton.setEnabled(true);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Toast.makeText(context, context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
+                newMessageButton.setEnabled(true);
+            }
+
+        }
+    }
+    private class UpdateAccidentsCallback implements AsyncTaskCompleteListener {
+        @Override
+        public void onTaskComplete(JSONObject result) {
+            mcNewMessageText.setText("");
+            try {
+                AccidentsGeneral.points.update(result.getJSONArray("list"));
+                update();
+            } catch (JSONException e) {
+            }
         }
     }
 }

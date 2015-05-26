@@ -3,7 +3,6 @@ package motocitizen.app.general;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.location.Location;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -17,8 +16,8 @@ import java.util.Set;
 
 import motocitizen.MyApp;
 import motocitizen.main.R;
-import motocitizen.network.JSONCall;
-import motocitizen.network.JsonRequest;
+import motocitizen.network.requests.AccidentsRequest;
+import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.startup.MyPreferences;
 import motocitizen.utils.Const;
 
@@ -56,27 +55,9 @@ public class Accidents {
     }
 
     public void load() {
-        Map<String, String> selector = new HashMap<>();
-        Location userLocation = MyLocationManager.getLocation(context);
-        //if(userLocation != null ) {
-        selector.put("distance", String.valueOf(prefs.getVisibleDistance()));
-        selector.put("lon", String.valueOf(userLocation.getLongitude()));
-        selector.put("lat", String.valueOf(userLocation.getLatitude()));
-        //}
-        String user = prefs.getLogin();
-        if (!user.equals("")) {
-            selector.put("user", user);
-        }
-        if (!points.isEmpty()) {
-            selector.put("update", "1");
-        }
+        new AccidentsRequest(new AccidentsRequestCallback(), context);
+     }
 
-        try {
-            parseJSON(new JSONCall(context, "mcaccidents", "getlist", false).request(selector).getJSONArray("list"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void update(JSONArray data) {
         try {
@@ -84,26 +65,6 @@ public class Accidents {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    public JsonRequest getLoadRequest() {
-        Map<String, String> selector = new HashMap<>();
-        Location userLocation = MyLocationManager.getLocation(context);
-
-        //if(userLocation != null) {
-        selector.put("distance", String.valueOf(prefs.getVisibleDistance()));
-        selector.put("lon", String.valueOf(userLocation.getLongitude()));
-        selector.put("lat", String.valueOf(userLocation.getLatitude()));
-        //}
-        String user = prefs.getLogin();
-        if (!user.equals("")) {
-            selector.put("user", user);
-        }
-        if (!points.isEmpty()) {
-            selector.put("update", "1");
-        }
-
-        return new JsonRequest("mcaccidents", "getlist", selector, "list", false);
     }
 
     private void parseJSON(JSONArray json) throws JSONException {
@@ -183,5 +144,15 @@ public class Accidents {
 
     public String getTextToCopy(int id) {
         return points.get(id).getTextToCopy();
+    }
+    private class AccidentsRequestCallback implements AsyncTaskCompleteListener {
+        @Override
+        public void onTaskComplete(JSONObject result) {
+            try {
+                parseJSON(result.getJSONArray("list"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

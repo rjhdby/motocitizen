@@ -32,7 +32,6 @@ import motocitizen.app.general.gcm.GCMRegistration;
 import motocitizen.app.general.popups.AccidentListPopup;
 import motocitizen.app.general.user.Auth;
 import motocitizen.main.R;
-import motocitizen.network.JsonRequest;
 import motocitizen.startup.MyPreferences;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
@@ -241,13 +240,7 @@ public class AccidentsGeneral {
     public static void toDetails(Context context, int id) {
         currentPoint = points.getPoint(id);
         if (currentPoint != null) {
-/*
-        if (!points.containsKey(id)) {
-            return;
-        }
-*/
             points.setSelected(context, id);
-            //redraw(context);
             Intent intent = new Intent(context, AccidentDetailsActivity.class);
             Bundle bundle = new Bundle();
             bundle.putInt("accidentID", currentPoint.getId());
@@ -257,9 +250,5 @@ public class AccidentsGeneral {
         } else {
             Toast.makeText(context, Startup.context.getString(R.string.cant_open_incident), Toast.LENGTH_LONG).show();
         }
-    }
-
-    public static JsonRequest getLoadPointsRequest() {
-        return points.getLoadRequest();
     }
 }

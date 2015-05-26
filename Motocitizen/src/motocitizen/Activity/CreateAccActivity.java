@@ -25,18 +25,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import motocitizen.MyApp;
 import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.app.general.MyLocationManager;
 import motocitizen.app.general.user.Role;
 import motocitizen.main.R;
-import motocitizen.network.JsonRequest;
+import motocitizen.network.requests.GeocodeRequest;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
+import motocitizen.network.requests.CreateAccidentRequest;
 import motocitizen.startup.MyPreferences;
-import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
 import motocitizen.utils.Text;
@@ -46,6 +44,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     static MyPreferences prefs;
     static NewAccident accident;
     static View listView;
+    static Boolean confirmLock;
     final int RADIUS = 1000;
     private final TextWatcher DetailsTextListener = new TextWatcher() {
 
@@ -97,6 +96,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         context = this;
         prefs = ((MyApp) context.getApplicationContext()).getPreferences();
         accident = new NewAccident();
+        confirmLock = false;
         map = makeMap();
         TYPE = R.id.mc_create_type_frame;
         DESCR = R.id.mc_create_final_frame;
@@ -262,17 +262,15 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     }
 
     private void confirm() {
-        if (accident.location != null) {
-            if (Startup.isOnline()) {
-                setConfirm(false);
-                new JsonRequest("mcaccidents", "createAcc", accident.createPOST(), "", true);
-            } else {
-                setConfirm(true);
-                Toast.makeText(this, this.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
-            }
-        } else {
-            Toast.makeText(this, this.getString(R.string.position_not_available), Toast.LENGTH_LONG).show();
-        }
+        disableConfirm();
+        CreateAccidentRequest request = new CreateAccidentRequest(new CreateAccidentCallback(), context);
+        request.setType(accident.type);
+        request.setMed(accident.med);
+        request.setAddress(accident.address);
+        request.setLocation(accident.location);
+        request.setDescription(accident.description);
+        request.setCreated(accident.created);
+        request.execute();
     }
 
     private void goToAccidentSubType() {
@@ -347,14 +345,25 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         return map;
     }
 
+    private void disableConfirm() {
+        setConfirm(false);
+        confirmLock = true;
+    }
+
+    private void enableConfirm() {
+        confirmLock = false;
+        setConfirm(true);
+    }
+
     private void setConfirm(Boolean status) {
+        if (confirmLock) return;
         confirmButton.setEnabled(status);
     }
 
     private void setConfirm() {
-        confirmButton.setEnabled(accident.isComplete());
+        setConfirm(accident.isComplete());
     }
-
+/*
     public void parseResponse(JSONObject json) {
         if (json.has("result")) {
             try {
@@ -377,22 +386,18 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             Toast.makeText(this, this.getString(R.string.send_error), Toast.LENGTH_LONG).show();
         }
     }
-
+*/
     private class NewAccident {
-        int owner_id;
         String type;
         String med;
-        String status;
         Location location, initialLocation;
         Date created;
         String address;
         String description;
 
         public NewAccident() {
-            owner_id = AccidentsGeneral.auth.getID();
             type = "";
             med = "mc_m_na";
-            status = "acc_status_act";
             initialLocation = location = MyLocationManager.getLocation(context);
             created = new Date();
             address = MyLocationManager.address;
@@ -443,43 +448,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
 
         public void updateLocation(Location location) {
             this.location = location;
-            //getAddress(location);
-        }
-
-        /*
-                private void getAddress(Location location) {
-                    if (Startup.isOnline()) {
-                        JsonRequest request = getAddressRequest(location);
-                        if (request != null) {
-                            (new GeoCodeNewRequest(context)).execute(request);
-                        }
-                    } else {
-                        Toast.makeText(context, context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
-                    }
-                }
-        */
-        private JsonRequest getAddressRequest(Location location) {
-            Map<String, String> post = new HashMap<>();
-            post.put("lat", String.valueOf(location.getLatitude()));
-            post.put("lon", String.valueOf(location.getLongitude()));
-            return new JsonRequest("mcaccidents", "geocode", post, "", true);
-        }
-
-        public Map<String, String> createPOST() {
-            Map<String, String> POST = new HashMap<>();
-            POST.put("owner_id", String.valueOf(owner_id));
-            POST.put("type", type);
-            POST.put("med", med);
-            POST.put("status", status);
-            POST.put("lat", String.valueOf(location.getLatitude()));
-            POST.put("lon", String.valueOf(location.getLongitude()));
-            POST.put("created", Const.dateFormat.format(created));
-            POST.put("address", address);
-            POST.put("descr", description);
-            POST.put("login", AccidentsGeneral.auth.getLogin());
-            POST.put("passhash", AccidentsGeneral.auth.makePassHash());
-            POST.put("calledMethod", "createAcc");
-            return POST;
+            new GeocodeRequest(new GeocodeCallback(), accident.location, context);
         }
 
         public boolean isSteal() {
@@ -494,16 +463,12 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             return type.equals("acc_o");
         }
 
-        public boolean isNotSet() {
-            return type.equals("");
-        }
-
         public boolean isAccident() {
             return (type + "      ").substring(0, 5).equals("acc_m");
         }
     }
 
-    public class Callback implements AsyncTaskCompleteListener {
+    private class GeocodeCallback implements AsyncTaskCompleteListener {
 
         @Override
         public void onTaskComplete(JSONObject result) {
@@ -514,5 +479,38 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             }
         }
     }
-}
 
+    private class CreateAccidentCallback implements AsyncTaskCompleteListener {
+        @Override
+        public void onTaskComplete(JSONObject result) {
+            try {
+                JSONObject data = result.getJSONObject("result");
+                if (data.has("ID")) {
+                    finish();
+                }
+            } catch (JSONException e) {
+                try {
+                    String data = result.getString("result");
+                    switch (data) {
+                        case "OK":
+                            finish();
+                            break;
+                        case "READONLY":
+                        case "AUTH ERROR":
+                            Toast.makeText(context, context.getString(R.string.auth_error), Toast.LENGTH_LONG).show();
+                            break;
+                        case "PROBABLY SPAM":
+                            Toast.makeText(context, context.getString(R.string.too_often_acts), Toast.LENGTH_LONG).show();
+                            break;
+                        default:
+                            Toast.makeText(context, context.getString(R.string.parse_error), Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                    Toast.makeText(context, context.getString(R.string.parse_error), Toast.LENGTH_LONG).show();
+                }
+            }
+            enableConfirm();
+        }
+    }
+}

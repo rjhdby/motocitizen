@@ -29,9 +29,7 @@ import motocitizen.app.general.gcm.NewAccidentReceived;
 import motocitizen.app.general.popups.AccidentListPopup;
 import motocitizen.app.general.user.Role;
 import motocitizen.main.R;
-import motocitizen.network.AccidentFinishRequest;
-import motocitizen.network.AccidentHideRequest;
-import motocitizen.network.JsonRequest;
+import motocitizen.network.requests.AccidentChangeState;
 import motocitizen.startup.MyPreferences;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
@@ -262,44 +260,18 @@ public class AccidentDetailsActivity
     }
 
     private void sendFinishRequest() {
-        if (Startup.isOnline()) {
-            Map<String, String> params = new HashMap<>();
-            params.put("login", AccidentsGeneral.auth.getLogin());
-            params.put("passhash", AccidentsGeneral.auth.makePassHash());
-            Accident point = AccidentsGeneral.points.getPoint(accidentID);
-            if (point.isEnded()) {
-                params.put("state", "acc_status_act");
+            if (AccidentsGeneral.points.getPoint(accidentID).isEnded()) {
+                new AccidentChangeState(this, accidentID, AccidentChangeState.ACTIVE);
             } else {
-                params.put("state", "acc_status_end");
+                new AccidentChangeState(this, accidentID, AccidentChangeState.ENDED);
             }
-            params.put("id", String.valueOf(point.getId()));
-            JsonRequest request = new JsonRequest("mcaccidents", "changeState", params, "", true);
-            if (request != null) {
-                (new AccidentFinishRequest(this, accidentID)).execute(request);
-            }
-        } else {
-            Toast.makeText(this, getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
-        }
     }
 
     private void sendHideRequest() {
-        if (Startup.isOnline()) {
-            Accident point = AccidentsGeneral.points.getPoint(accidentID);
-            Map<String, String> params = new HashMap<>();
-            params.put("login", AccidentsGeneral.auth.getLogin());
-            params.put("passhash", AccidentsGeneral.auth.makePassHash());
-            if (point.isHidden()) {
-                params.put("state", "acc_status_act");
-            } else {
-                params.put("state", "acc_status_hide");
-            }
-            params.put("id", String.valueOf(point.getId()));
-            JsonRequest request = new JsonRequest("mcaccidents", "changeState", params, "", true);
-            if (request != null) {
-                (new AccidentHideRequest(this, accidentID)).execute(request);
-            }
+        if (AccidentsGeneral.points.getPoint(accidentID).isEnded()) {
+            new AccidentChangeState(this, accidentID, AccidentChangeState.ACTIVE);
         } else {
-            Toast.makeText(this, getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
+            new AccidentChangeState(this, accidentID, AccidentChangeState.HIDE);
         }
     }
 

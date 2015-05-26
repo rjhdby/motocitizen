@@ -204,7 +204,7 @@ public class Accident {
         }
     }
 
-    private void setStatus(String status) {
+    public void setStatus(String status) {
         switch (status) {
             case "acc_status_act":
                 this.status = PointStatus.ACTIVE;

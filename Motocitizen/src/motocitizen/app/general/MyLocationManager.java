@@ -11,14 +11,14 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import motocitizen.MyApp;
-import motocitizen.main.R;
-import motocitizen.network.GeoCodeRequest;
-import motocitizen.network.JSONCall;
-import motocitizen.network.JsonRequest;
+import motocitizen.network.requests.AsyncTaskCompleteListener;
+import motocitizen.network.requests.GeocodeRequest;
+import motocitizen.network.requests.InplaceRequest;
+import motocitizen.network.requests.LeaveRequest;
 import motocitizen.startup.MyPreferences;
 import motocitizen.startup.Startup;
 
@@ -139,26 +139,12 @@ public class MyLocationManager {
         runLocationService(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
-    private static JsonRequest getAddressRequest(Location location) {
-        Map<String, String> post = new HashMap<>();
-        post.put("lat", String.valueOf(location.getLatitude()));
-        post.put("lon", String.valueOf(location.getLongitude()));
-        return new JsonRequest("mcaccidents", "geocode", post, "", true);
-    }
-
     private static void requestAddress(Context context) {
-        if (Startup.isOnline()) {
             Location location = getBestFusionLocation(context);
             if (current == location) {
                 return;
             }
-            JsonRequest request = getAddressRequest(location);
-            if (request != null) {
-                (new GeoCodeRequest(context)).execute(request);
-            }
-        } else {
-            Toast.makeText(context, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
-        }
+            new GeocodeRequest(new GeocodeCallback(), location, context);
     }
 
     private static void checkInPlace(Context context, Location location) {
@@ -172,19 +158,13 @@ public class MyLocationManager {
                 return;
             } else {
                 AccidentsGeneral.setLeave(currentInplace);
-                Map<String, String> post = new HashMap<>();
-                post.put("login", login);
-                post.put("id", String.valueOf(currentInplace));
-                new JSONCall(context, "mcaccidents", "leave").request(post);
+                new LeaveRequest(context, currentInplace);
             }
         }
         for (int accId : AccidentsGeneral.points.keySet()) {
             if (isArrived(location, accId)) {
                 AccidentsGeneral.setInPlace(accId);
-                Map<String, String> post = new HashMap<>();
-                post.put("login", login);
-                post.put("id", String.valueOf(accId));
-                new JSONCall(context, "mcaccidents", "inplace").request(post);
+                new InplaceRequest(context, accId);
             }
         }
     }
@@ -217,5 +197,18 @@ public class MyLocationManager {
 
     public static Location getLocation(Context context) {
         return getBestFusionLocation(context);
+    }
+    private static class GeocodeCallback implements AsyncTaskCompleteListener {
+        @Override
+        public void onTaskComplete(JSONObject result) {
+            try {
+                address = result.getString("address");
+                Startup.updateStatusBar(MyLocationManager.address);
+            } catch (JSONException e) {
+                address = "Ошибка геокодирования";
+                Startup.updateStatusBar(MyLocationManager.address);
+                e.printStackTrace();
+            }
+        }
     }
 }

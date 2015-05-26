@@ -123,4 +123,6 @@
 	<string name="role_moderator">модератор</string>
 	<string name="role_user">пользователь</string>
 	<string name="role_read_only">только чтение</string>
+    <string name="unknown_error">Неизвестная ошибка</string>
+    <string name="auth_error">Ошибка авторизации</string>
 </resources>

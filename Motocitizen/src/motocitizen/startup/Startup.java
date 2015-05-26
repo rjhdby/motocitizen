@@ -25,7 +25,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
-import android.widget.Toast;
+
+import org.json.JSONObject;
 
 import motocitizen.Activity.AboutActivity;
 import motocitizen.Activity.CreateAccActivity;
@@ -39,14 +40,12 @@ import motocitizen.main.R;
 import motocitizen.maps.general.MyMapManager;
 import motocitizen.maps.google.MyGoogleMapManager;
 import motocitizen.maps.osm.MyOSMMapManager;
-import motocitizen.network.IncidentRequest;
-import motocitizen.network.JsonRequest;
+import motocitizen.network.requests.AccidentsRequest;
+import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.utils.Const;
 import motocitizen.utils.Keyboard;
 import motocitizen.utils.MyUtils;
 import motocitizen.utils.Show;
-
-import java.lang.*;
 
 public class Startup extends ActionBarActivity implements View.OnClickListener {
 
@@ -111,7 +110,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         new GCMBroadcastReceiver();
     }
 
-    private void checkUpdate(){
+    private void checkUpdate() {
         PackageManager manager = this.getPackageManager();
         String version;
         try {
@@ -120,7 +119,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         } catch (PackageManager.NameNotFoundException e) {
             version = getString(R.string.unknown_code_version);
         }
-        if(!prefs.getCurrentVersion().equals(version)){
+        if (!prefs.getCurrentVersion().equals(version)) {
             changeLogDlg = ChangeLog.getDialog(this, true);
             changeLogDlg.show();
         }
@@ -161,11 +160,11 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
 //        } else {
 //            Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
 //        }
-        if(toMap != 0){
+        if (toMap != 0) {
             intent.removeExtra("toMap");
             mainTabsGroup.check(R.id.tab_map_button);
             fromDetails = intent.getBooleanExtra("fromDetails", false);
-        } else if(toDetails != 0){
+        } else if (toDetails != 0) {
             intent.removeExtra("toDetails");
             AccidentsGeneral.refresh(this);
             AccidentsGeneral.toDetails(this, toDetails);
@@ -177,11 +176,12 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         super.onNewIntent(intent);
         setIntent(intent);
     }
+
     @Override
     public boolean onKeyUp(int keycode, @NonNull KeyEvent e) {
         switch (keycode) {
             case KeyEvent.KEYCODE_BACK:
-                if(fromDetails){
+                if (fromDetails) {
                     AccidentsGeneral.toDetails(this);
                 }
 //                FragmentManager fm = getFragmentManager();
@@ -189,7 +189,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
 //                if(pf != null && pf.isVisible()){
 //                    Fragment mf = fm.findFragmentByTag("main_screen");
 //                    fm.beginTransaction().show(mf).hide(pf).commit();
-                    AccidentsGeneral.redraw(this);
+                AccidentsGeneral.redraw(this);
 //                }
                 Keyboard.hide();
                 return true;
@@ -231,7 +231,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
 
         Location location = MyLocationManager.getLocation(context);
         //if(location != null)
-            map.jumpToPoint(location);
+        map.jumpToPoint(location);
     }
 
     @Override
@@ -282,13 +282,13 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         int commaPos = address.lastIndexOf(",", address.length() / 2);
         int spacePos = address.lastIndexOf(" ", address.length() / 2);
 
-        if(commaPos != -1 || spacePos != -1) {
+        if (commaPos != -1 || spacePos != -1) {
             subTitle = address.substring(Math.max(commaPos, spacePos) + 1);
-            address = address.substring(0,Math.max(commaPos, spacePos));
+            address = address.substring(0, Math.max(commaPos, spacePos));
         }
 
         actionBar.setTitle(address);
-        if(!subTitle.isEmpty())
+        if (!subTitle.isEmpty())
             actionBar.setSubtitle(subTitle);
 //        Text.set(context, R.id.statusBarText, name + address);
         map.placeUser(context);
@@ -301,7 +301,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
 
         MenuItem itemMenuNotDisturb = mMenu.findItem(R.id.do_not_disturb);
 
-        if(prefs.getDoNotDisturb())
+        if (prefs.getDoNotDisturb())
             itemMenuNotDisturb.setIcon(R.drawable.ic_lock_ringer_off_alpha);
         else
             itemMenuNotDisturb.setIcon(R.drawable.ic_lock_ringer_on_alpha);
@@ -334,7 +334,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
             case R.id.do_not_disturb:
                 MyPreferences prefs = myApp.getPreferences();
                 //MenuItem menuItemActionDisturb = mMenu.findItem(R.id.do_not_disturb);
-                if(prefs.getDoNotDisturb()){
+                if (prefs.getDoNotDisturb()) {
                     item.setIcon(R.drawable.ic_lock_ringer_on_alpha);
                     prefs.setDoNotDisturb(false);
                 } else {
@@ -350,10 +350,9 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         return (changeLogDlg != null && changeLogDlg.isShowing());
     }
 
-    public void resetUpdating()
-    {
+    public void resetUpdating() {
         // Get our refresh item from the menu
-        if(mMenu != null  ) {
+        if (mMenu != null) {
             MenuItem item = mMenu.findItem(R.id.action_refresh);
             if (item.getActionView() != null) {
                 // Remove the animation.
@@ -366,8 +365,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
 
     private void getAccidents() {
         if (Startup.isOnline()) {
-
-            if(mMenu != null ) {
+            if (mMenu != null) {
                 LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 ImageView iv = (ImageView) inflater.inflate(R.layout.iv_refresh, null);
                 Animation rotation = AnimationUtils.loadAnimation(this, R.anim.rotate_refresh);
@@ -378,13 +376,15 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
                 actionRefresh.setActionView(iv);
                 actionRefresh.setVisible(true);
             }
+            new AccidentsRequest(new AccidentsRequestCallback(), this);
+        }
 
-            JsonRequest request = AccidentsGeneral.getLoadPointsRequest();
-            if (request != null) {
-                (new IncidentRequest(this, false)).execute(request);
-            }
-        } else {
-            Toast.makeText(context, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
+    }
+    private class AccidentsRequestCallback implements AsyncTaskCompleteListener {
+        @Override
+        public void onTaskComplete(JSONObject result) {
+            resetUpdating();
+            AccidentsGeneral.refreshPoints(context, result);
         }
     }
 }
