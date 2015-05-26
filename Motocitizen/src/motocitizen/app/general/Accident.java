@@ -289,11 +289,12 @@ public class Accident {
         Map<Integer, AccidentMessage> newMessages = new HashMap<>();
         for (int i = 0; i < json.length(); i++) {
             try {
-                AccidentMessage current = new AccidentMessage(json.getJSONObject(i), id);
-                if (messages.containsKey(current.id)) {
-                    current.unread = messages.get(current.id).unread;
-                }
-                newMessages.put(current.id, current);
+                AccidentMessage currentMsg = new AccidentMessage(json.getJSONObject(i), id);
+                AccidentMessage oldMsg = messages.get(currentMsg.id);
+                if (oldMsg != null)
+                    // Если такое сообщение уже существует, извлекаем из него флаг прочтения
+                    currentMsg.unread = oldMsg.unread;
+                newMessages.put(currentMsg.id, currentMsg);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
