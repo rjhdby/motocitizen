@@ -348,27 +348,27 @@ public class AccidentDetailsActivity
         }
     }
 
-    public void parseOnwayResponse(JSONObject json, int currentId) {
-        if (json.has("result")) {
-            try {
-                String result = json.getString("result");
-                if (result.equals("OK")) {
-                    Toast.makeText(this, Startup.context.getString(R.string.send_success), Toast.LENGTH_LONG).show();
-                    prefs.setOnWay(currentId);
-                    AccidentsGeneral.refresh(Startup.context);
-                    update();
-                    if (detailVolunteersFragment.isResumed())
-                        detailVolunteersFragment.notifyDataSetChanged();
-                    return;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            Log.e("Set onway failed", json.toString());
-        } else {
-            Toast.makeText(this, Startup.context.getString(R.string.send_error), Toast.LENGTH_LONG).show();
-        }
-    }
+//    public void parseOnwayResponse(JSONObject json, int currentId) {
+//        if (json.has("result")) {
+//            try {
+//                String result = json.getString("result");
+//                if (result.equals("OK")) {
+//                    Toast.makeText(this, Startup.context.getString(R.string.send_success), Toast.LENGTH_LONG).show();
+//                    prefs.setOnWay(currentId);
+//                    AccidentsGeneral.refresh(Startup.context);
+//                    update();
+//                    if (detailVolunteersFragment.isResumed())
+//                        detailVolunteersFragment.notifyDataSetChanged();
+//                    return;
+//                }
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//            Log.e("Set onway failed", json.toString());
+//        } else {
+//            Toast.makeText(this, Startup.context.getString(R.string.send_error), Toast.LENGTH_LONG).show();
+//        }
+//    }
 
     void jumpToMap() {
         Intent intent = new Intent(this, Startup.class);
@@ -383,11 +383,11 @@ public class AccidentDetailsActivity
 
     }
 
-    MyPreferences getPref() {
-        if (prefs == null)
-            prefs = new MyPreferences(this);
-        return prefs;
-    }
+//    MyPreferences getPref() {
+//        if (prefs == null)
+//            prefs = new MyPreferences(this);
+//        return prefs;
+//    }
 
     public Accident getCurrentPoint() {
         return currentPoint;

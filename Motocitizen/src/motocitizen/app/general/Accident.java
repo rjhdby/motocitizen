@@ -482,8 +482,7 @@ public class Accident {
 
     public void setOnWay(int userId) {
         if (userId == 0) return;
-        AccidentVolunteer user = volunteers.get(userId);
-        if (user == null) {
+        if (volunteers.get(userId) == null) {
             volunteers.put(userId, new AccidentVolunteer(userId, prefs.getLogin(), AccidentVolunteer.Status.ONWAY));
         } else {
             volunteers.get(userId).setStatus(AccidentVolunteer.Status.ONWAY);

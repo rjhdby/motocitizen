@@ -53,13 +53,13 @@ public class MyPreferences {
         preferences.edit().putBoolean(name, value).commit();
     }
 
-    public void setOnWay(int id) {
-        preferences.edit().putInt(onWay, id).commit();
-    }
-
-    public int getOnWay() {
-        return preferences.getInt(onWay, 0);
-    }
+//    public void setOnWay(int id) {
+//        preferences.edit().putInt(onWay, id).commit();
+//    }
+//
+//    public int getOnWay() {
+//        return preferences.getInt(onWay, 0);
+//    }
 
     public LatLng getSavedLatLng() {
         double lat = (double) preferences.getFloat(savedlat, 55.752295f);
