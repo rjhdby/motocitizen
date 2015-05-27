@@ -18,9 +18,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import motocitizen.MyApp;
 import motocitizen.app.general.Accident;
@@ -126,7 +124,7 @@ public class AccidentDetailsActivity
         update();
     }
 
-    private void update() {
+    protected void update() {
         currentPoint = AccidentsGeneral.points.getPoint(accidentID);
 
         ActionBar actionBar = getSupportActionBar();
@@ -260,11 +258,11 @@ public class AccidentDetailsActivity
     }
 
     private void sendFinishRequest() {
-            if (AccidentsGeneral.points.getPoint(accidentID).isEnded()) {
-                new AccidentChangeState(this, accidentID, AccidentChangeState.ACTIVE);
-            } else {
-                new AccidentChangeState(this, accidentID, AccidentChangeState.ENDED);
-            }
+        if (AccidentsGeneral.points.getPoint(accidentID).isEnded()) {
+            new AccidentChangeState(this, accidentID, AccidentChangeState.ACTIVE);
+        } else {
+            new AccidentChangeState(this, accidentID, AccidentChangeState.ENDED);
+        }
     }
 
     private void sendHideRequest() {

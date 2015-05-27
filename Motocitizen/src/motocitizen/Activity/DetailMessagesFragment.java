@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -65,8 +64,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
             @Override
             public void onClick(View v) {
                 String text = mcNewMessageText.getText().toString();
-                int currentId = AccidentsGeneral.getCurrentPointID();
-                new SendMessageRequest(new SendMessageCallback(), getActivity(), currentId, text);
+                new SendMessageRequest(new SendMessageCallback(), getActivity(), accidentID, text);
                 newMessageButton.setEnabled(false);
             }
         });
@@ -153,34 +151,42 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
             newMessageArea.setVisibility(View.INVISIBLE);
         }
     }
+
     private class SendMessageCallback implements AsyncTaskCompleteListener {
         @Override
         public void onTaskComplete(JSONObject result) {
             Context context = getActivity();
             try {
                 String response = result.getString("result");
-                if(response.equals("OK")){
-                    new AccidentsRequest(new UpdateAccidentsCallback(), context);
-                } else {
-                    Toast.makeText(context, context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
-                    newMessageButton.setEnabled(true);
+                switch (response) {
+                    case "OK":
+                        new AccidentsRequest(new UpdateAccidentsCallback(), context);
+                        return;
+                    case "READONLY":
+                        Toast.makeText(context, context.getString(R.string.not_have_rights_error), Toast.LENGTH_LONG).show();
+                        break;
+                    default:
+                        Toast.makeText(context, response, Toast.LENGTH_LONG).show();
+                        break;
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                Toast.makeText(context, context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
-                newMessageButton.setEnabled(true);
+                Toast.makeText(context, context.getString(R.string.parse_error), Toast.LENGTH_LONG).show();
             }
-
+            newMessageButton.setEnabled(true);
         }
     }
+
     private class UpdateAccidentsCallback implements AsyncTaskCompleteListener {
         @Override
         public void onTaskComplete(JSONObject result) {
             mcNewMessageText.setText("");
             try {
                 AccidentsGeneral.points.update(result.getJSONArray("list"));
+                ((AccidentDetailsActivity) getActivity()).update();
                 update();
             } catch (JSONException e) {
+                //TODO Нельзя наглухо ловить исключения.
             }
         }
     }
