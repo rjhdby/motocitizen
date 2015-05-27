@@ -4,18 +4,26 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import motocitizen.app.general.Accident;
 import motocitizen.app.general.AccidentVolunteer;
 import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.main.R;
+import motocitizen.network.requests.AccidentsRequest;
+import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.network.requests.OnWayRequest;
+import motocitizen.startup.Startup;
 
 import static motocitizen.app.general.AccidentsGeneral.getDelimiterRow;
 
@@ -119,7 +127,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
 
     private void setupAccess() {
         Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
-        if (accident.getId() == prefs.getOnWay() || accident.getId() == AccidentsGeneral.getInplaceID() || !AccidentsGeneral.auth.isAuthorized() || !accident.isActive()) {
+        if (accident.getId() == AccidentsGeneral.getOnway() || accident.getId() == AccidentsGeneral.getInplaceID() || !AccidentsGeneral.auth.isAuthorized() || !accident.isActive()) {
             onwayButton.setVisibility(View.INVISIBLE);
         } else {
             onwayButton.setVisibility(View.VISIBLE);
@@ -174,8 +182,40 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     }
 
     private void sendOnway() {
-        int currentId = AccidentsGeneral.getCurrentPointID();
-        AccidentsGeneral.setOnWay(currentId);
-        new OnWayRequest(this.getActivity(), currentId);
+        AccidentsGeneral.setOnWay(accidentID);
+        new OnWayRequest(new OnWayCallback(), this.getActivity(), accidentID);
+    }
+
+    private class OnWayCallback implements AsyncTaskCompleteListener {
+        @Override
+        public void onTaskComplete(JSONObject result) {
+            Context context = getActivity();
+            try {
+                String response = result.getString("result");
+                switch (response) {
+                    case "OK":
+                        new AccidentsRequest(new UpdateAccidentsCallback(), context);
+                        return;
+                    default:
+                        Toast.makeText(context, response, Toast.LENGTH_LONG).show();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class UpdateAccidentsCallback implements AsyncTaskCompleteListener {
+        @Override
+        public void onTaskComplete(JSONObject result) {
+            try {
+                AccidentsGeneral.points.update(result.getJSONArray("list"));
+                ((AccidentDetailsActivity) getActivity()).update();
+                update();
+            } catch (JSONException e) {
+                //TODO Нельзя наглухо ловить исключения.
+            }
+        }
     }
 }

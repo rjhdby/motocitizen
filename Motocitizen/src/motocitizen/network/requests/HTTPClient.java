@@ -46,7 +46,6 @@ public class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONObje
 
     public JSONObject request(Map<String, String> post) {
         if (!Startup.isOnline()) {
-            Toast.makeText(context, context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
             return new JSONObject();
         }
         URL url;

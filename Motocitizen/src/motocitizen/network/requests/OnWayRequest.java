@@ -7,7 +7,8 @@ import java.util.HashMap;
 import motocitizen.app.general.AccidentsGeneral;
 
 public class OnWayRequest extends HTTPClient {
-    public OnWayRequest(Context context, int id) {
+    public OnWayRequest(AsyncTaskCompleteListener listener, Context context, int id) {
+        this.listener = listener;
         this.context = context;
         post = new HashMap<>();
         post.put("login", AccidentsGeneral.auth.getLogin());
