@@ -40,12 +40,12 @@ import motocitizen.utils.MyUtils;
 import motocitizen.utils.Text;
 
 public class CreateAccActivity extends FragmentActivity implements View.OnClickListener {
-    static Context context;
-    static MyPreferences prefs;
-    static NewAccident accident;
-    static View listView;
-    static Boolean confirmLock;
-    final int RADIUS = 1000;
+    private Context context;
+    private MyPreferences prefs;
+    private NewAccident accident;
+    private View listView;
+    private Boolean confirmLock;
+    private final int RADIUS = 1000;
     private final TextWatcher DetailsTextListener = new TextWatcher() {
 
         @Override
@@ -62,6 +62,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         public void afterTextChanged(Editable s) {
         }
     };
+
     int TYPE;
     int DESCR;
     int ACC;
@@ -73,7 +74,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     View typeFrame, accFrame, mapFrame, medFrame, descrFrame;
     EditText descrView;
 
-    private static void refreshDescription() {
+    private void refreshDescription() {
         if (accident.med.equals("mc_m_na")) {
             Text.set(context, listView, R.id.mc_create_what, prefs.getAccidentTypeName(accident.type));
         } else {
@@ -84,7 +85,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         Text.set(context, listView, R.id.mc_create_when, Const.dateFormat.format(accident.created));
     }
 
-    public static void updateAddress(String address) {
+    public void updateAddress(String address) {
         accident.address = address;
         refreshDescription();
     }
