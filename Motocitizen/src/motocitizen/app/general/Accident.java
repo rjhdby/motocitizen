@@ -45,7 +45,7 @@ public class Accident {
     public Map<Integer, AccidentVolunteer> volunteers;
     public Map<Integer, AccidentHistory> history;
     private Location location;
-    private boolean onway, inplace, leave, hasHere;
+    private boolean onway, inplace, leave, hasHere, onway_cancel;
 
     private String type, med, address, owner, descr;
 
@@ -180,6 +180,7 @@ public class Accident {
             owner_id = Integer.parseInt(data.get("owner_id"));
             descr = data.get("descr");
             onway = false;
+            onway_cancel = false;
             inplace = false;
             leave = false;
             hasHere = false;
@@ -482,6 +483,7 @@ public class Accident {
 
     public void setOnWay(int userId) {
         if (userId == 0) return;
+
         if (volunteers.get(userId) == null) {
             volunteers.put(userId, new AccidentVolunteer(userId, prefs.getLogin(), AccidentVolunteer.Status.ONWAY));
         } else {
@@ -490,6 +492,16 @@ public class Accident {
         onway = true;
         inplace = false;
         leave = false;
+    }
+
+    public void setCancelOnWay(int userId) {
+        if (userId == 0) return;
+
+        volunteers.get(userId).setStatus(AccidentVolunteer.Status.CANCEL);
+        onway = false;
+        inplace = false;
+        leave = false;
+        onway_cancel = true;
     }
 
     public void setInPlace(int userId) {
@@ -535,5 +547,11 @@ public class Accident {
         onway = false;
         inplace = false;
         leave = false;
+        onway_cancel = false;
     }
+
+    public boolean isOnwayCancel() {
+        return onway_cancel;
+    }
+
 }

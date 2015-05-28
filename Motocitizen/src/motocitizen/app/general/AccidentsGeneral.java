@@ -82,6 +82,11 @@ public class AccidentsGeneral {
         points.getPoint(id).setOnWay(auth.getID());
     }
 
+    public static void setCancelOnWay(int id) {
+        points.getPoint(id).setCancelOnWay(auth.getID());
+        onwayAcc = 0;
+    }
+
     private static final OnLongClickListener detLongClick = new OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {

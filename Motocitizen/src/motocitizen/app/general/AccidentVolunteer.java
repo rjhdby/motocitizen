@@ -19,7 +19,7 @@ public class AccidentVolunteer {
     public Date time;
 
     public enum Status {
-        INPLACE, LEAVE, ONWAY
+        INPLACE, LEAVE, ONWAY, CANCEL
     }
 
     public void setStatus(Status newStatus) {
@@ -33,6 +33,8 @@ public class AccidentVolunteer {
             status = Status.LEAVE;
         else if(newStatus.equals("onway"))
             status = Status.ONWAY;
+        else if(newStatus.equals("cancel"))
+            status = Status.CANCEL;
     }
 
     public Status getStatus() {
@@ -45,6 +47,10 @@ public class AccidentVolunteer {
 
     public boolean isLeave() {
         return status == Status.LEAVE;
+    }
+
+    public boolean isCancel() {
+        return status == Status.CANCEL;
     }
 
     public AccidentVolunteer(JSONObject json) throws JSONException {
@@ -67,6 +73,8 @@ public class AccidentVolunteer {
             type = ", приехал в ";
         } else if(isLeave()){
             type = ", уехал в ";
+        } else if(isCancel()) {
+            type = ", отменил выезд в ";
         }
         Log.d("TYPE", type);
         Log.d("NAME", name);
