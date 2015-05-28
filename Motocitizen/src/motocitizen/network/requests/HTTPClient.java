@@ -139,7 +139,19 @@ public class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONObje
             reader = new JSONObject(response.toString());
         } catch (JSONException e) {
             e.printStackTrace();
-            reader = new JSONObject();
+            try {
+                reader = new JSONObject(response.toString().replace("\\", "").replace("\"", ""));
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+                String fakeAnswer = "{ error : unknown }";
+                try {
+                    reader = new JSONObject(fakeAnswer);
+                } catch (JSONException e2) {
+                    //Абсолютно маловероятно
+                    e2.printStackTrace();
+                    reader = new JSONObject();
+                }
+            }
         }
         Log.d("JSON RESPONSE", reader.toString());
         return reader;

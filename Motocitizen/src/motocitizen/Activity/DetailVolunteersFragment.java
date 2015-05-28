@@ -202,6 +202,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+                Toast.makeText(context, result.toString(), Toast.LENGTH_LONG).show();
             }
         }
     }
