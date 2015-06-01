@@ -170,8 +170,16 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
                         break;
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
-                Toast.makeText(context, context.getString(R.string.parse_error), Toast.LENGTH_LONG).show();
+                try {
+                    String response = result.getString("error");
+                    if(response.equals("internet_not_avaible"))
+                        Toast.makeText(context, context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(context, context.getString(R.string.error) + response, Toast.LENGTH_LONG).show();
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                    Toast.makeText(context, context.getString(R.string.parse_error), Toast.LENGTH_LONG).show();
+                }
             }
             newMessageButton.setEnabled(true);
         }

@@ -46,7 +46,13 @@ public class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONObje
 
     public JSONObject request(Map<String, String> post) {
         if (!Startup.isOnline()) {
-            return new JSONObject();
+            String error = "{ error : internet_not_avaible }";
+            try {
+                return new JSONObject(error);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return new JSONObject();
+            }
         }
         URL url;
         String app, method;
