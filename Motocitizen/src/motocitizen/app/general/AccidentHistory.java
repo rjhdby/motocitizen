@@ -26,6 +26,7 @@ public class AccidentHistory {
         Map<String, String> m = new HashMap<>();
         m.put("create_mc_acc", "создал");
         m.put("onway", "выехал");
+        m.put("cancel", "не выехал");
         m.put("inplace", "приехал");
         m.put("leave", "уехал");
         m.put("finish_mc_acc", "отбой");
