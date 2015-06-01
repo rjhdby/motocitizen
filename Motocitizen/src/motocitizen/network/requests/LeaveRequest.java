@@ -12,7 +12,7 @@ public class LeaveRequest extends HTTPClient {
         post = new HashMap<>();
         post.put("login", AccidentsGeneral.auth.getLogin());
         post.put("id", String.valueOf(id));
-        post.put("callMethod", "leave");
+        post.put("calledMethod", "leave");
         execute(post);
     }
 }
