@@ -22,6 +22,7 @@ import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentsRequest;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
+import motocitizen.network.requests.CancelOnWayRequest;
 import motocitizen.network.requests.OnWayRequest;
 import motocitizen.startup.Startup;
 
@@ -251,7 +252,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
 
     private void sendCancelOnway() {
         AccidentsGeneral.setCancelOnWay(accidentID);
-        new OnWayRequest(new CancelOnWayCallback(), this.getActivity(), accidentID);
+        new CancelOnWayRequest(new CancelOnWayCallback(), this.getActivity(), accidentID);
     }
 
     private class CancelOnWayCallback implements AsyncTaskCompleteListener {
