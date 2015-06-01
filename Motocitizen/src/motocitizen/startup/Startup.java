@@ -1,6 +1,7 @@
 package motocitizen.startup;
 
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -35,6 +36,7 @@ import motocitizen.MyApp;
 import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.app.general.MyLocationManager;
 import motocitizen.app.general.gcm.GCMBroadcastReceiver;
+import motocitizen.app.general.gcm.NewAccidentReceived;
 import motocitizen.app.general.user.Role;
 import motocitizen.main.R;
 import motocitizen.maps.general.MyMapManager;
@@ -168,6 +170,9 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
             intent.removeExtra("toDetails");
             AccidentsGeneral.refresh(this);
             AccidentsGeneral.toDetails(this, toDetails);
+            NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancelAll();
+            NewAccidentReceived.queue.clear();
         }
     }
 

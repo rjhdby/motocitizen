@@ -28,7 +28,7 @@ import motocitizen.utils.MyUtils;
 
 
 public class NewAccidentReceived extends IntentService {
-    private static Queue<Integer> queue;
+    public static Queue<Integer> queue;
     private static NotificationManager notificationManager;
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
