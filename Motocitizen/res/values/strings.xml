@@ -84,6 +84,7 @@
     <string name="map_provider_category">Карта</string>
     <string name="config_map_title">Провайдер</string>
     <string name="inet_not_available">Не могу отправить запрос, пожалуйста, проверьте доступность Internet.</string>
+	<string name="auth_not_available">Авторизация не возможна, пожалуйста, проверьте доступность Internet.</string>
     <string name="title_activity_create_acc">CreateAccActivity</string>
     <string name="send_success">Сообщение было успешно отправлено.</string>
     <string name="send_error">Произошла ошибка при отправке сообщения.</string>
@@ -125,6 +126,7 @@
 	<string name="role_read_only">только чтение</string>
     <string name="unknown_error">Неизвестная ошибка</string>
     <string name="auth_error">Ошибка авторизации</string>
+	<string name="auth_password_error">Не удалось авторизоваться. Возможно неверно введен логин или пароль.</string>
 	<string name="title_dialog_cancel_onway_confirm">Вы хотите отменить выезд?</string>
 	<string name="onway_cancel_button">Отмена выезда</string>
 </resources>

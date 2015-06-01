@@ -26,6 +26,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import org.json.JSONObject;
 
@@ -382,7 +383,10 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
                 actionRefresh.setVisible(true);
             }
             new AccidentsRequest(new AccidentsRequestCallback(), this);
+        } else {
+            Toast.makeText(context, R.string.inet_not_available, Toast.LENGTH_LONG).show();
         }
+
 
     }
     private class AccidentsRequestCallback implements AsyncTaskCompleteListener {
