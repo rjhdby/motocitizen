@@ -128,11 +128,11 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
                             finish();
                         } else {
                             TextView authErrorHelper = (TextView) findViewById(R.id.auth_error_helper);
-                            authErrorHelper.setText("Не удалось авторизоваться. Возможно неверно введен логин или пароль.");
+                            authErrorHelper.setText(R.string.auth_password_error);
                         }
                     } else {
                         //TODO Перенести в ресурсы
-                        Toast.makeText(context, "Авторизация не возможна, пожалуйста, проверьте доступность Internet.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, R.string.auth_not_available, Toast.LENGTH_LONG).show();
                     }
                 }
             }
