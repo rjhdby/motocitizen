@@ -65,9 +65,9 @@ class PopupWindowGeneral {
         public void onClick(View v) {
             pw.dismiss();
             if (point.isEnded()) {
-                new AccidentChangeState(context, point.getId(), AccidentChangeState.ACTIVE);
+                new AccidentChangeState(null, context, point.getId(), AccidentChangeState.ACTIVE);
             } else {
-                new AccidentChangeState(context, point.getId(), AccidentChangeState.ENDED);
+                new AccidentChangeState(null, context, point.getId(), AccidentChangeState.ENDED);
             }
         }
     };
@@ -75,9 +75,9 @@ class PopupWindowGeneral {
         public void onClick(View v) {
             pw.dismiss();
             if (point.isHidden()) {
-                new AccidentChangeState(context, point.getId(), AccidentChangeState.ACTIVE);
+                new AccidentChangeState(null, context, point.getId(), AccidentChangeState.ACTIVE);
             } else {
-                new AccidentChangeState(context, point.getId(), AccidentChangeState.HIDE);
+                new AccidentChangeState(null, context, point.getId(), AccidentChangeState.HIDE);
             }
         }
     };

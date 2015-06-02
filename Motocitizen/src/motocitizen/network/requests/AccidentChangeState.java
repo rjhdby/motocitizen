@@ -14,7 +14,8 @@ public class AccidentChangeState extends HTTPClient {
     public static final String HIDE = "acc_status_hide";
     int id;
     String state;
-    public AccidentChangeState (Context context, int id, String state){
+    public AccidentChangeState (AsyncTaskCompleteListener listener, Context context, int id, String state){
+        this.listener = listener;
         this.context = context;
         this.id = id;
         this.state = state;
@@ -26,9 +27,9 @@ public class AccidentChangeState extends HTTPClient {
         post.put("calledMethod", "changeState");
         execute(post);
     }
-    @Override
-    public void onPostExecute(JSONObject result){
-        AccidentsGeneral.points.getPoint(id).setStatus(state);
-        AccidentsGeneral.redraw(context);
-    }
+//    @Override
+//    public void onPostExecute(JSONObject result){
+//        AccidentsGeneral.points.getPoint(id).setStatus(state);
+//        AccidentsGeneral.redraw(context);
+//    }
 }
