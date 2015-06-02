@@ -129,4 +129,5 @@
 	<string name="auth_password_error">Не удалось авторизоваться. Возможно неверно введен логин или пароль.</string>
 	<string name="title_dialog_cancel_onway_confirm">Вы хотите отменить выезд?</string>
 	<string name="onway_cancel_button">Отмена выезда</string>
+    <string name="role_developer">Разработчик</string>
 </resources>

@@ -8,10 +8,11 @@ import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.main.R;
 
 public class Role {
-    private static final String[] ReadOnly = new String[]{"readonly", "banned", "standart", "moderator", "admin"};
-    private static final String[] Standart = new String[]{"standart", "moderator", "admin"};
-    private static final String[] Moderator = new String[]{"moderator", "admin"};
-    private static final String[] Admin = new String[]{"admin"};
+    private static final String[] ReadOnly = new String[]{"readonly", "banned", "standart", "moderator", "admin", "developer"};
+    private static final String[] Standart = new String[]{"standart", "moderator", "admin", "developer"};
+    private static final String[] Moderator = new String[]{"moderator", "admin", "developer"};
+    private static final String[] Admin = new String[]{"admin", "developer"};
+    private static final String[] Developer = new String[]{"developer"};
 
     private static String getRole() {
         String role = AccidentsGeneral.auth.getRole();
@@ -37,6 +38,10 @@ public class Role {
         return Arrays.asList(Admin).contains(getRole());
     }
 
+    public static boolean isDeveloper() {
+        return Arrays.asList(Developer).contains(getRole());
+    }
+
     public static String getName(Context context) {
         //Порядок важен.
         if(isAdmin())
@@ -45,6 +50,8 @@ public class Role {
             return context.getString(R.string.role_moderator);
         else if(isStandart())
             return context.getString(R.string.role_user);
+        else if(isDeveloper())
+            return context.getString(R.string.role_developer);
         else
             return context.getString(R.string.role_read_only);
     }
