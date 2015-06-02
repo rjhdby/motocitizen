@@ -14,8 +14,8 @@ public class CreateAccidentRequest extends HTTPClient {
     public CreateAccidentRequest(AsyncTaskCompleteListener listener, Context context) {
         this.context = context;
         this.listener = listener;
-        post.put("status", "acc_status_act");
         post = new HashMap<>();
+        post.put("status", "acc_status_act");
         post.put("calledMethod", "createAcc");
         post.put("hint", context.getString(R.string.request_create_acc));
         post.put("owner_id", String.valueOf(AccidentsGeneral.auth.getID()));
