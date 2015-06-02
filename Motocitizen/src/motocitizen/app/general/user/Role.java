@@ -44,14 +44,14 @@ public class Role {
 
     public static String getName(Context context) {
         //Порядок важен.
-        if(isAdmin())
+        if(isDeveloper())
+            return context.getString(R.string.role_developer);
+        else if(isAdmin())
             return context.getString(R.string.role_admin);
         else if(isModerator())
             return context.getString(R.string.role_moderator);
         else if(isStandart())
             return context.getString(R.string.role_user);
-        else if(isDeveloper())
-            return context.getString(R.string.role_developer);
         else
             return context.getString(R.string.role_read_only);
     }
