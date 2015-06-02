@@ -1,5 +1,6 @@
 package motocitizen.Activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,6 +29,8 @@ import motocitizen.app.general.popups.AccidentListPopup;
 import motocitizen.app.general.user.Role;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentChangeState;
+import motocitizen.network.requests.AccidentsRequest;
+import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.startup.MyPreferences;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
@@ -36,6 +39,8 @@ import motocitizen.utils.MyUtils;
 public class AccidentDetailsActivity
         extends ActionBarActivity
         implements AccidentDetailsFragments.OnFragmentInteractionListener {
+
+    private Context context;
 
     static final int SMS_MENU_MIN_ID = 100;
     static final int SMS_MENU_MAX_ID = 200;
@@ -48,6 +53,8 @@ public class AccidentDetailsActivity
      */
     private int accidentID;
     private Accident currentPoint;
+
+    private String accNewState = "";
 
     DetailVolunteersFragment detailVolunteersFragment;
     DetailMessagesFragment detailMessagesFragment;
@@ -71,6 +78,7 @@ public class AccidentDetailsActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accident_details);
+        context = this;
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -259,17 +267,63 @@ public class AccidentDetailsActivity
 
     private void sendFinishRequest() {
         if (AccidentsGeneral.points.getPoint(accidentID).isEnded()) {
-            new AccidentChangeState(this, accidentID, AccidentChangeState.ACTIVE);
+            //TODO Суперкостыль
+            accNewState = AccidentChangeState.ACTIVE;
+            new AccidentChangeState(new AccidentChangeCallback(), this, accidentID, AccidentChangeState.ACTIVE);
         } else {
-            new AccidentChangeState(this, accidentID, AccidentChangeState.ENDED);
+            //TODO Суперкостыль
+            accNewState = AccidentChangeState.ENDED;
+            new AccidentChangeState(new AccidentChangeCallback(), this, accidentID, AccidentChangeState.ENDED);
         }
     }
 
     private void sendHideRequest() {
         if (AccidentsGeneral.points.getPoint(accidentID).isEnded()) {
-            new AccidentChangeState(this, accidentID, AccidentChangeState.ACTIVE);
+            //TODO Суперкостыль
+            accNewState = AccidentChangeState.ACTIVE;
+            new AccidentChangeState(new AccidentChangeCallback(), this, accidentID, AccidentChangeState.ACTIVE);
         } else {
-            new AccidentChangeState(this, accidentID, AccidentChangeState.HIDE);
+            //TODO Суперкостыль
+            accNewState = AccidentChangeState.HIDE;
+            new AccidentChangeState(new AccidentChangeCallback(), this, accidentID, AccidentChangeState.HIDE);
+        }
+    }
+
+    private class AccidentChangeCallback implements AsyncTaskCompleteListener {
+        @Override
+        public void onTaskComplete(JSONObject result) {
+           try {
+                String response = result.getString("result");
+                switch (response) {
+                    case "OK":
+                        //new AccidentsRequest(new UpdateAccidentsCallback(), context);
+                        //AccidentsGeneral.points.update(result.getJSONArray("list"));
+                        //TODO Суперкостыль
+                        currentPoint.setStatus(accNewState);
+                        accNewState = "";
+                        //AccidentsGeneral.points.getPoint(id).setStatus(state);
+                        update();
+                        //AccidentsGeneral.redraw(context);
+                        return;
+                    case "READONLY":
+                        Toast.makeText(context, context.getString(R.string.not_have_rights_error), Toast.LENGTH_LONG).show();
+                        break;
+                    default:
+                        Toast.makeText(context, response, Toast.LENGTH_LONG).show();
+                        break;
+                }
+            } catch (JSONException e) {
+                try {
+                    String response = result.getString("error");
+                    if(response.equals("internet_not_avaible"))
+                        Toast.makeText(context, context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(context, context.getString(R.string.error) + response, Toast.LENGTH_LONG).show();
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                    Toast.makeText(context, context.getString(R.string.parse_error), Toast.LENGTH_LONG).show();
+                }
+            }
         }
     }
 
