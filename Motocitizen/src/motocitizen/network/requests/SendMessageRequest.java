@@ -2,6 +2,9 @@ package motocitizen.network.requests;
 
 import android.content.Context;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 
 import motocitizen.app.general.AccidentsGeneral;
@@ -17,5 +20,35 @@ public class SendMessageRequest  extends HTTPClient {
         post.put("text", text);
         post.put("calledMethod", "message");
         execute(post);
+    }
+    @Override
+    public boolean error(JSONObject response) {
+        if (!response.has("result")) return true;
+        try {
+            String result = response.getString("result");
+            if (result.equals("OK")) return false;
+        } catch (JSONException e) {
+            return true;
+        }
+        return true;
+    }
+
+    @Override
+    public String getError(JSONObject response) {
+        if (!response.has("result")) return "Ошибка соединения с сервером"  + response.toString();
+        try {
+            String result = response.getString("result");
+            switch (result) {
+                case "OK":
+                    return "Сообщение отправлено";
+                case "ERROR":
+                    return "Вы не авторизированы";
+                case "READONLY":
+                    return "Недостаточно прав";
+            }
+        } catch (JSONException e) {
+
+        }
+        return "Неизвестная ошибка" + response.toString();
     }
 }

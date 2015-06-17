@@ -29,7 +29,6 @@ import motocitizen.app.general.popups.AccidentListPopup;
 import motocitizen.app.general.user.Role;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentChangeState;
-import motocitizen.network.requests.AccidentsRequest;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.startup.MyPreferences;
 import motocitizen.startup.Startup;
@@ -292,37 +291,21 @@ public class AccidentDetailsActivity
     private class AccidentChangeCallback implements AsyncTaskCompleteListener {
         @Override
         public void onTaskComplete(JSONObject result) {
-           try {
-                String response = result.getString("result");
-                switch (response) {
-                    case "OK":
-                        //new AccidentsRequest(new UpdateAccidentsCallback(), context);
-                        //AccidentsGeneral.points.update(result.getJSONArray("list"));
-                        //TODO Суперкостыль
-                        currentPoint.setStatus(accNewState);
-                        accNewState = "";
-                        //AccidentsGeneral.points.getPoint(id).setStatus(state);
-                        update();
-                        //AccidentsGeneral.redraw(context);
-                        return;
-                    case "READONLY":
-                        Toast.makeText(context, context.getString(R.string.not_have_rights_error), Toast.LENGTH_LONG).show();
-                        break;
-                    default:
-                        Toast.makeText(context, response, Toast.LENGTH_LONG).show();
-                        break;
-                }
-            } catch (JSONException e) {
+
+            if (result.has("error")) {
+                String error;
                 try {
-                    String response = result.getString("error");
-                    if(response.equals("internet_not_avaible"))
-                        Toast.makeText(context, context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
-                    else
-                        Toast.makeText(context, context.getString(R.string.error) + response, Toast.LENGTH_LONG).show();
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                    Toast.makeText(context, context.getString(R.string.parse_error), Toast.LENGTH_LONG).show();
+                    error = result.getString("error");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    error = "Неизвестная ошибка";
                 }
+                Toast.makeText(context, error, Toast.LENGTH_LONG).show();
+            } else {
+                //TODO Суперкостыль
+                currentPoint.setStatus(accNewState);
+                accNewState = "";
+                update();
             }
         }
     }
@@ -340,89 +323,6 @@ public class AccidentDetailsActivity
             }
         }
     };
-
-    public void parseFinishResponse(JSONObject json, int currentId) {
-        if (json.has("result")) {
-            try {
-                String result = json.getString("result");
-                switch (result) {
-                    case "OK":
-                        Toast.makeText(this, Startup.context.getString(R.string.send_success), Toast.LENGTH_LONG).show();
-                        AccidentsGeneral.refresh(Startup.context);
-                        update();
-                        if (detailHistoryFragment.isResumed())
-                            detailHistoryFragment.notifyDataSetChanged();
-                        return;
-                    case "READONLY":
-                    case "NO RIGHTS":
-                        Toast.makeText(this, this.getString(R.string.not_have_rights_error), Toast.LENGTH_LONG).show();
-                        break;
-                    default:
-                        Toast.makeText(this, result, Toast.LENGTH_LONG).show();
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Toast.makeText(this, this.getString(R.string.parse_error), Toast.LENGTH_LONG).show();
-            }
-            Log.e("Send message failed", json.toString());
-        } else {
-            Toast.makeText(this, Startup.context.getString(R.string.message_send_error), Toast.LENGTH_LONG).show();
-        }
-    }
-
-    public void parseSendMessageResponse(JSONObject json, int currentId) {
-        if (json.has("result")) {
-            try {
-                String result = json.getString("result");
-                switch (result) {
-                    case "OK":
-                        Toast.makeText(this, Startup.context.getString(R.string.send_success), Toast.LENGTH_LONG).show();
-                        AccidentsGeneral.refresh(Startup.context);
-                        update();
-                        if (detailMessagesFragment.isResumed())
-                            detailMessagesFragment.notifyDataSetChanged();
-                        //mcNewMessageText.setText("");
-                        //Keyboard.hide(findViewById(R.id.mc_new_message_text));
-                        return;
-                    case "READONLY":
-                        Toast.makeText(this, this.getString(R.string.not_have_rights_error), Toast.LENGTH_LONG).show();
-                        break;
-                    default:
-                        Toast.makeText(this, result, Toast.LENGTH_LONG).show();
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Toast.makeText(this, this.getString(R.string.parse_error), Toast.LENGTH_LONG).show();
-            }
-            Log.e("Send message failed", json.toString());
-        } else {
-            Toast.makeText(this, Startup.context.getString(R.string.message_send_error), Toast.LENGTH_LONG).show();
-        }
-    }
-
-//    public void parseOnwayResponse(JSONObject json, int currentId) {
-//        if (json.has("result")) {
-//            try {
-//                String result = json.getString("result");
-//                if (result.equals("OK")) {
-//                    Toast.makeText(this, Startup.context.getString(R.string.send_success), Toast.LENGTH_LONG).show();
-//                    prefs.setOnWay(currentId);
-//                    AccidentsGeneral.refresh(Startup.context);
-//                    update();
-//                    if (detailVolunteersFragment.isResumed())
-//                        detailVolunteersFragment.notifyDataSetChanged();
-//                    return;
-//                }
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//            Log.e("Set onway failed", json.toString());
-//        } else {
-//            Toast.makeText(this, Startup.context.getString(R.string.send_error), Toast.LENGTH_LONG).show();
-//        }
-//    }
 
     void jumpToMap() {
         Intent intent = new Intent(this, Startup.class);

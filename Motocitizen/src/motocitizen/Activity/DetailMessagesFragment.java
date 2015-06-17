@@ -1,6 +1,5 @@
 package motocitizen.Activity;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -155,31 +154,15 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
     private class SendMessageCallback implements AsyncTaskCompleteListener {
         @Override
         public void onTaskComplete(JSONObject result) {
-            Context context = getActivity();
-            try {
-                String response = result.getString("result");
-                switch (response) {
-                    case "OK":
-                        new AccidentsRequest(new UpdateAccidentsCallback(), context);
-                        return;
-                    case "READONLY":
-                        Toast.makeText(context, context.getString(R.string.not_have_rights_error), Toast.LENGTH_LONG).show();
-                        break;
-                    default:
-                        Toast.makeText(context, response, Toast.LENGTH_LONG).show();
-                        break;
-                }
-            } catch (JSONException e) {
+            if (result.has("error")) {
                 try {
-                    String response = result.getString("error");
-                    if(response.equals("internet_not_avaible"))
-                        Toast.makeText(context, context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
-                    else
-                        Toast.makeText(context, context.getString(R.string.error) + response, Toast.LENGTH_LONG).show();
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                    Toast.makeText(context, context.getString(R.string.parse_error), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), result.getString("error"), Toast.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    Toast.makeText(getActivity(), "Неизвестная ошибка" + result.toString(), Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
                 }
+            } else {
+                new AccidentsRequest(new UpdateAccidentsCallback(), getActivity());
             }
             newMessageButton.setEnabled(true);
         }
@@ -189,12 +172,23 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         @Override
         public void onTaskComplete(JSONObject result) {
             mcNewMessageText.setText("");
-            try {
-                AccidentsGeneral.points.update(result.getJSONArray("list"));
-                ((AccidentDetailsActivity) getActivity()).update();
-                update();
-            } catch (JSONException e) {
-                //TODO Нельзя наглухо ловить исключения.
+
+            if (result.has("error")) {
+                String error;
+                try {
+                    error = result.getString("error");
+                } catch (JSONException e) {
+                    error = "Неизвестная ошибка";
+                }
+                Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
+            } else {
+                try {
+                    AccidentsGeneral.points.update(result.getJSONArray("list"));
+                    ((AccidentDetailsActivity) getActivity()).update();
+                    update();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

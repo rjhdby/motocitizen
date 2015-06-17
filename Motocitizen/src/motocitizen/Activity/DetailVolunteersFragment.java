@@ -219,20 +219,14 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     private class OnWayCallback implements AsyncTaskCompleteListener {
         @Override
         public void onTaskComplete(JSONObject result) {
-            Context context = getActivity();
-            try {
-                String response = result.getString("result");
-                switch (response) {
-                    case "OK":
-                        new AccidentsRequest(new UpdateAccidentsCallback(), context);
-                        return;
-                    default:
-                        Toast.makeText(context, response, Toast.LENGTH_LONG).show();
-                        break;
+            if(result.has("error")){
+                try {
+                    Toast.makeText(getActivity(), result.getString("error"), Toast.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    Toast.makeText(getActivity(), "Неизвестная ошибка " + result.toString(), Toast.LENGTH_LONG).show();
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Toast.makeText(context, result.toString(), Toast.LENGTH_LONG).show();
+            } else {
+                new AccidentsRequest(new UpdateAccidentsCallback(), getActivity());
             }
         }
     }
@@ -245,33 +239,13 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
                 ((AccidentDetailsActivity) getActivity()).update();
                 update();
             } catch (JSONException e) {
-                //TODO Нельзя наглухо ловить исключения.
+                e.printStackTrace();
             }
         }
     }
 
     private void sendCancelOnway() {
         AccidentsGeneral.setCancelOnWay(accidentID);
-        new CancelOnWayRequest(new CancelOnWayCallback(), this.getActivity(), accidentID);
-    }
-
-    private class CancelOnWayCallback implements AsyncTaskCompleteListener {
-        @Override
-        public void onTaskComplete(JSONObject result) {
-            Context context = getActivity();
-            try {
-                String response = result.getString("result");
-                switch (response) {
-                    case "OK":
-                        new AccidentsRequest(new UpdateAccidentsCallback(), context);
-                        return;
-                    default:
-                        Toast.makeText(context, response, Toast.LENGTH_LONG).show();
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
+        new CancelOnWayRequest(new OnWayCallback(), this.getActivity(), accidentID);
     }
 }

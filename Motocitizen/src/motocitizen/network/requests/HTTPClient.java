@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,12 +24,11 @@ import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 import motocitizen.MyApp;
-import motocitizen.main.R;
 import motocitizen.network.CustomTrustManager;
 import motocitizen.startup.Startup;
 
 
-public class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONObject> {
+public abstract class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONObject> {
     final static String CHARSET = "UTF-8";
     final static String USERAGENT = "Mozilla/5.0 (Linux; Android 4.4; Nexus 5 Build/_BuildID_) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/30.0.0.0 Mobile Safari/537.36";
     ProgressDialog dialog;
@@ -46,9 +44,10 @@ public class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONObje
 
     public JSONObject request(Map<String, String> post) {
         if (!Startup.isOnline()) {
-            String error = "{ error : internet_not_avaible }";
             try {
-                return new JSONObject(error);
+                JSONObject result = new JSONObject();
+                result.put("error", "Интернет не доступен");
+                return result;
             } catch (JSONException e) {
                 e.printStackTrace();
                 return new JSONObject();
@@ -58,13 +57,13 @@ public class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONObje
         String app, method;
         myApp = (MyApp) context.getApplicationContext();
         try {
-            if(post.containsKey("app")) {
+            if (post.containsKey("app")) {
                 app = post.get("app");
                 post.remove("app");
-            } else{
+            } else {
                 app = myApp.getProps().get("default.app");
             }
-            if(post.containsKey("method")) {
+            if (post.containsKey("method")) {
                 method = post.get("method");
                 post.remove("method");
             } else {
@@ -185,6 +184,7 @@ public class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONObje
         // Log.d("JSON POST", result.toString());
         return result.toString();
     }
+
     public URL createUrl(String app, String method, Boolean https) {
         String protocol;
         if (https) {
@@ -207,6 +207,7 @@ public class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONObje
         }
         return null;
     }
+
     protected void dismiss() {
         try {
             if (dialog != null && dialog.isShowing())
@@ -217,11 +218,29 @@ public class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONObje
             dialog = null;
         }
     }
+
     @Override
     protected void onPostExecute(JSONObject result) {
-        if(listener != null) {
-            listener.onTaskComplete(result);
+        if (error(result) && !result.has("error")) {
+            String error = getError(result);
+            result = new JSONObject();
+            try {
+                result.put("error", error);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        if (listener != null) {
+            try {
+                listener.onTaskComplete(result);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
         dismiss();
     }
+
+    public abstract boolean error(JSONObject response);
+
+    public abstract String getError(JSONObject response);
 }

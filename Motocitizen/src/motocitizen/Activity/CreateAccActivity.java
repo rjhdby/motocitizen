@@ -31,9 +31,9 @@ import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.app.general.MyLocationManager;
 import motocitizen.app.general.user.Role;
 import motocitizen.main.R;
-import motocitizen.network.requests.GeocodeRequest;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.network.requests.CreateAccidentRequest;
+import motocitizen.network.requests.GeocodeRequest;
 import motocitizen.startup.MyPreferences;
 import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
@@ -364,30 +364,31 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     private void setConfirm() {
         setConfirm(accident.isComplete());
     }
-/*
-    public void parseResponse(JSONObject json) {
-        if (json.has("result")) {
-            try {
-                String result = json.getString("result");
-                if (result.contains("ID")) {
-                    Toast.makeText(this, this.getString(R.string.send_success), Toast.LENGTH_LONG).show();
-                    finish();
-                } else if (result.equals("READONLY")) {
-                    Toast.makeText(this, this.getString(R.string.not_have_rights_error), Toast.LENGTH_LONG).show();
-                } else if (result.equals("PROBABLY SPAM")) {
-                    Toast.makeText(this, this.getString(R.string.too_often_acts), Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+
+    /*
+        public void parseResponse(JSONObject json) {
+            if (json.has("result")) {
+                try {
+                    String result = json.getString("result");
+                    if (result.contains("ID")) {
+                        Toast.makeText(this, this.getString(R.string.send_success), Toast.LENGTH_LONG).show();
+                        finish();
+                    } else if (result.equals("READONLY")) {
+                        Toast.makeText(this, this.getString(R.string.not_have_rights_error), Toast.LENGTH_LONG).show();
+                    } else if (result.equals("PROBABLY SPAM")) {
+                        Toast.makeText(this, this.getString(R.string.too_often_acts), Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, this.getString(R.string.parse_error), Toast.LENGTH_LONG).show();
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Toast.makeText(this, this.getString(R.string.parse_error), Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, this.getString(R.string.send_error), Toast.LENGTH_LONG).show();
             }
-        } else {
-            Toast.makeText(this, this.getString(R.string.send_error), Toast.LENGTH_LONG).show();
         }
-    }
-*/
+    */
     private class NewAccident {
         String type;
         String med;
@@ -484,32 +485,15 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     private class CreateAccidentCallback implements AsyncTaskCompleteListener {
         @Override
         public void onTaskComplete(JSONObject result) {
-            try {
-                JSONObject data = result.getJSONObject("result");
-                if (data.has("ID")) {
-                    finish();
-                }
-            } catch (JSONException e) {
+            if (result.has("error")) {
                 try {
-                    String data = result.getString("result");
-                    switch (data) {
-                        case "OK":
-                            finish();
-                            break;
-                        case "READONLY":
-                        case "AUTH ERROR":
-                            Toast.makeText(context, context.getString(R.string.auth_error), Toast.LENGTH_LONG).show();
-                            break;
-                        case "PROBABLY SPAM":
-                            Toast.makeText(context, context.getString(R.string.too_often_acts), Toast.LENGTH_LONG).show();
-                            break;
-                        default:
-                            Toast.makeText(context, context.getString(R.string.parse_error), Toast.LENGTH_LONG).show();
-                    }
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                    Toast.makeText(context, context.getString(R.string.parse_error), Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, result.getString("error"), Toast.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    Toast.makeText(context, "Неизвестная ошибка" + result.toString(), Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
                 }
+            } else {
+                finish();
             }
             enableConfirm();
         }

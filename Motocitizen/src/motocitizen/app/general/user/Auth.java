@@ -104,21 +104,27 @@ public class Auth {
         auth.setLogin(login);
         auth.setPassword(password);
         JSONObject result = auth.execute();
-        try {
-            name = result.getString("name");
-            role = result.getString("role");
-            id = Integer.parseInt(result.getString("id"));
-            if (name.length() > 0) {
-                prefs.setLogin(login);
-                prefs.setPassword(password);
-                prefs.setAnonim(false);
-                isAuthorized = true;
-            } else {
+        if (auth.error(result)) {
+            String error = auth.getError(result);
+            Toast.makeText(context, error, Toast.LENGTH_LONG).show();
+            isAuthorized = false;
+        } else {
+            try {
+                name = result.getString("name");
+                role = result.getString("role");
+                id = Integer.parseInt(result.getString("id"));
+                if (name.length() > 0) {
+                    prefs.setLogin(login);
+                    prefs.setPassword(password);
+                    prefs.setAnonim(false);
+                    isAuthorized = true;
+                } else {
+                    isAuthorized = false;
+                }
+            } catch (JSONException e) {
+                Toast.makeText(context, context.getString(R.string.unknown_error), Toast.LENGTH_LONG).show();
                 isAuthorized = false;
             }
-        } catch (JSONException e) {
-            Toast.makeText(context, context.getString(R.string.unknown_error), Toast.LENGTH_LONG).show();
-            isAuthorized = false;
         }
         return isAuthorized;
     }

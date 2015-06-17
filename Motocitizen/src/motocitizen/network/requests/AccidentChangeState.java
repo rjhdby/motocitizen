@@ -2,6 +2,7 @@ package motocitizen.network.requests;
 
 import android.content.Context;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -14,7 +15,8 @@ public class AccidentChangeState extends HTTPClient {
     public static final String HIDE = "acc_status_hide";
     int id;
     String state;
-    public AccidentChangeState (AsyncTaskCompleteListener listener, Context context, int id, String state){
+
+    public AccidentChangeState(AsyncTaskCompleteListener listener, Context context, int id, String state) {
         this.listener = listener;
         this.context = context;
         this.id = id;
@@ -27,9 +29,36 @@ public class AccidentChangeState extends HTTPClient {
         post.put("calledMethod", "changeState");
         execute(post);
     }
-//    @Override
-//    public void onPostExecute(JSONObject result){
-//        AccidentsGeneral.points.getPoint(id).setStatus(state);
-//        AccidentsGeneral.redraw(context);
-//    }
+
+    @Override
+    public boolean error(JSONObject response) {
+        if (!response.has("result")) return true;
+        try {
+            String result = response.getString("result");
+            if (result.equals("OK")) return false;
+        } catch (JSONException e) {
+            return true;
+        }
+        return true;
+    }
+
+    @Override
+    public String getError(JSONObject response) {
+        if (!response.has("result")) return "Ошибка соединения с сервером"  + response.toString();
+        try {
+            String result = response.getString("result");
+            switch (result) {
+                case "OK":
+                    return "Статус изменен успешно";
+                case "ERROR":
+                    return "Вы не авторизированы";
+                case "NO RIGHTS":
+                case "READONLY":
+                    return "Недостаточно прав";
+            }
+        } catch (JSONException e) {
+
+        }
+        return "Неизвестная ошибка" + response.toString();
+    }
 }

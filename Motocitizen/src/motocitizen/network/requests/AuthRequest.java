@@ -3,6 +3,7 @@ package motocitizen.network.requests;
 import android.content.Context;
 import android.telephony.TelephonyManager;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -17,13 +18,38 @@ public class AuthRequest extends HTTPClient {
         post.put("ident", ident);
         post.put("calledMethod", "auth");
     }
-    public void setLogin(String login){
+
+    public void setLogin(String login) {
         post.put("login", login);
     }
-    public void setPassword(String password){
+
+    public void setPassword(String password) {
         post.put("passwordHash", Auth.makePassHash(password));
     }
-    public JSONObject execute(){
+
+    public JSONObject execute() {
         return super.request(post);
+    }
+
+    @Override
+    public boolean error(JSONObject response) {
+        if (response.has("id")) return false;
+        return true;
+    }
+
+    @Override
+    public String getError(JSONObject response) {
+        if (!response.has("id")) return "Неизвестная ошибка " + response.toString();
+        try {
+            String result = response.getString("id");
+            if (result.equals("0")) {
+                return "Ошибка авторизации";
+            } else {
+                return "Успешная авторизация";
+            }
+        } catch (JSONException e) {
+
+        }
+        return "Неизвестная ошибка " + response.toString();
     }
 }

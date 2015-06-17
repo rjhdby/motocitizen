@@ -3,6 +3,9 @@ package motocitizen.network.requests;
 import android.content.Context;
 import android.location.Location;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Date;
 import java.util.HashMap;
 
@@ -54,5 +57,39 @@ public class CreateAccidentRequest extends HTTPClient {
 
     public void setStatus(String status) {
         post.put("status", status);
+    }
+
+    @Override
+    public boolean error(JSONObject response) {
+        if (!response.has("result")) return true;
+        try {
+            String result = response.getString("result");
+            if (result.equals("ID")) return false;
+        } catch (JSONException e) {
+            return true;
+        }
+        return true;
+    }
+
+    @Override
+    public String getError(JSONObject response) {
+        if (!response.has("result")) return "Ошибка соединения с сервером"  + response.toString();
+        try {
+            String result = response.getString("result");
+            switch (result) {
+                case "ID":
+                    return "Событие успешно создано";
+                case "AUTH ERROR":
+                    return "Вы не авторизированы";
+                case "NO RIGHTS":
+                case "READONLY":
+                    return "Недостаточно прав";
+                case "PROBABLY SPAM":
+                    return "Вам запрещено так часто создавать события";
+            }
+        } catch (JSONException e) {
+
+        }
+        return "Неизвестная ошибка" + response.toString();
     }
 }
