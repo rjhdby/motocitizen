@@ -39,12 +39,9 @@ public class NewAccidentReceived extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-/*
-    }
-    public NewAccidentReceived(Context context, Intent intent) {
-    */
+
         if(queue == null){
-            queue = new LinkedList<Integer>();
+            queue = new LinkedList<>();
         }
         MyPreferences prefs = new MyPreferences(this);
         if(prefs.getDoNotDisturb()){
@@ -114,6 +111,11 @@ public class NewAccidentReceived extends IntentService {
         try {
             notificationManager.cancel(id);
         }catch (Exception e){
+        }
+    }
+    public static void clearQueue(){
+        if(queue != null){
+            queue.clear();
         }
     }
 }
