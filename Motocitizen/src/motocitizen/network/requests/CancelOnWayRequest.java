@@ -35,7 +35,7 @@ public class CancelOnWayRequest extends HTTPClient {
 
     @Override
     public String getError(JSONObject response) {
-        if (!response.has("result")) return "Неизвестная ошибка "  + response.toString();
+        if (!response.has("result")) return "Ошибка соединения "  + response.toString();
         try {
             String result = response.getString("result");
             switch (result) {

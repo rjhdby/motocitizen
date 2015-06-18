@@ -39,7 +39,7 @@ public class AuthRequest extends HTTPClient {
 
     @Override
     public String getError(JSONObject response) {
-        if (!response.has("id")) return "Неизвестная ошибка " + response.toString();
+        if (!response.has("id")) return "Ошибка соединения " + response.toString();
         try {
             String result = response.getString("id");
             if (result.equals("0")) {

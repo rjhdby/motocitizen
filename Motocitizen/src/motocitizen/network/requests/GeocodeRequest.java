@@ -33,6 +33,6 @@ public class GeocodeRequest extends HTTPClient {
 
     @Override
     public String getError(JSONObject response) {
-        return "Неизвестная ошибка" + response.toString();
+        return "Неизвестная ошибка " + response.toString();
     }
 }

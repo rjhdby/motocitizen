@@ -35,20 +35,20 @@ public class SendMessageRequest  extends HTTPClient {
 
     @Override
     public String getError(JSONObject response) {
-        if (!response.has("result")) return "Ошибка соединения с сервером"  + response.toString();
+        if (!response.has("result")) return "РћС€РёР±РєР° СЃРѕРµРґРёРЅРµРЅРёСЏ "  + response.toString();
         try {
             String result = response.getString("result");
             switch (result) {
                 case "OK":
-                    return "Сообщение отправлено";
+                    return "РЎРѕРѕР±С‰РµРЅРёРµ РѕС‚РїСЂР°РІР»РµРЅРѕ";
                 case "ERROR":
-                    return "Вы не авторизированы";
+                    return "Р’С‹ РЅРµ Р°РІС‚РѕСЂРёР·РѕРІР°РЅС‹";
                 case "READONLY":
-                    return "Недостаточно прав";
+                    return "РќРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ РїСЂР°РІ";
             }
         } catch (JSONException e) {
 
         }
-        return "Неизвестная ошибка" + response.toString();
+        return "РќРµРёР·РІРµСЃС‚РЅР°СЏ РѕС€РёР±РєР° " + response.toString();
     }
 }

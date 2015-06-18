@@ -32,18 +32,18 @@ public class InplaceRequest extends HTTPClient {
 
     @Override
     public String getError(JSONObject response) {
-        if (!response.has("result")) return "Ошибка соединения с сервером"  + response.toString();
+        if (!response.has("result")) return "РћС€РёР±РєР° СЃРѕРµРґРёРЅРµРЅРёСЏ "  + response.toString();
         try {
             String result = response.getString("result");
             switch (result) {
                 case "OK":
-                    return "Статус изменен успешно";
+                    return "РЎС‚Р°С‚СѓСЃ РёР·РјРµРЅРµРЅ";
                 case "ERROR PREREQUISITES":
-                    return "Неизвестная ошибка" + response.toString();
+                    return "РќРµРёР·РІРµСЃС‚РЅР°СЏ РѕС€РёР±РєР°" + response.toString();
             }
         } catch (JSONException e) {
 
         }
-        return "Неизвестная ошибка" + response.toString();
+        return "РќРµРёР·РІРµСЃС‚РЅР°СЏ РѕС€РёР±РєР° " + response.toString();
     }
 }

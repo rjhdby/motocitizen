@@ -44,21 +44,21 @@ public class AccidentChangeState extends HTTPClient {
 
     @Override
     public String getError(JSONObject response) {
-        if (!response.has("result")) return "Ошибка соединения с сервером"  + response.toString();
+        if (!response.has("result")) return "РћС€РёР±РєР° СЃРѕРµРґРёРЅРµРЅРёСЏ "  + response.toString();
         try {
             String result = response.getString("result");
             switch (result) {
                 case "OK":
-                    return "Статус изменен успешно";
+                    return "РЎС‚Р°С‚СѓСЃ РёР·РјРµРЅРµРЅ СѓСЃРїРµС€РЅРѕ";
                 case "ERROR":
-                    return "Вы не авторизированы";
+                    return "Р’С‹ РЅРµ Р°РІС‚РѕСЂРёР·РёСЂРѕРІР°РЅС‹";
                 case "NO RIGHTS":
                 case "READONLY":
-                    return "Недостаточно прав";
+                    return "РќРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ РїСЂР°РІ";
             }
         } catch (JSONException e) {
 
         }
-        return "Неизвестная ошибка" + response.toString();
+        return "РќРµРёР·РІРµСЃС‚РЅР°СЏ РѕС€РёР±РєР° " + response.toString();
     }
 }

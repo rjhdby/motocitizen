@@ -73,23 +73,23 @@ public class CreateAccidentRequest extends HTTPClient {
 
     @Override
     public String getError(JSONObject response) {
-        if (!response.has("result")) return "Ошибка соединения с сервером"  + response.toString();
+        if (!response.has("result")) return "РћС€РёР±РєР° СЃРѕРµРґРёРЅРµРЅРёСЏ "  + response.toString();
         try {
             String result = response.getString("result");
             switch (result) {
                 case "ID":
-                    return "Событие успешно создано";
+                    return "РЎРѕРѕР±С‰РµРЅРёРµ РѕС‚РїСЂР°РІР»РµРЅРѕ";
                 case "AUTH ERROR":
-                    return "Вы не авторизированы";
+                    return "Р’С‹ РЅРµ Р°РІС‚РѕСЂРёР·РѕРІР°РЅС‹";
                 case "NO RIGHTS":
                 case "READONLY":
-                    return "Недостаточно прав";
+                    return "РќРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ РїСЂР°РІ";
                 case "PROBABLY SPAM":
-                    return "Вам запрещено так часто создавать события";
+                    return "РќРµР»СЊР·СЏ СЃРѕР·РґР°РІР°С‚СЊ СЃРѕР±С‹С‚РёСЏ С‚Р°Рє С‡Р°СЃС‚Рѕ";
             }
         } catch (JSONException e) {
 
         }
-        return "Неизвестная ошибка" + response.toString();
+        return "РќРµРёР·РІРµСЃС‚РЅР°СЏ РѕС€РёР±РєР° " + response.toString();
     }
 }

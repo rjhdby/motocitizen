@@ -37,18 +37,18 @@ public class GCMRegistrationRequest extends HTTPClient {
 
     @Override
     public String getError(JSONObject response) {
-        if (!response.has("result")) return "Ошибка соединения с сервером"  + response.toString();
+        if (!response.has("result")) return "РћС€РёР±РєР° СЃРѕРµРґРёРЅРµРЅРёСЏ "  + response.toString();
         try {
             String result = response.getString("result");
             switch (result) {
                 case "OK":
-                    return "Регистрация в GCM успешна";
+                    return "Р РµРіРёСЃС‚СЂР°С†РёСЏ РІ GCM СѓСЃРїРµС€РЅР°";
                 case "ERROR PREREQUISITES":
-                    return "Не удалось зарегистрироваться в GCM " + response.toString();
+                    return "РћС€РёР±РєР° СЃРѕРµРґРёРЅРµРЅРёСЏ " + response.toString();
             }
         } catch (JSONException e) {
 
         }
-        return "Не удалось зарегистрироваться в GCM " + response.toString();
+        return "РќРµРёР·РІРµСЃС‚РЅР°СЏ РѕС€РёР±РєР° " + response.toString();
     }
 }

@@ -50,7 +50,7 @@ public class AccidentsRequest extends HTTPClient {
 
     @Override
     public String getError(JSONObject response) {
-        if (!response.has("list")) return "Неизвестная ошибка " + response.toString();
+        if (!response.has("list")) return "Ошибка соединения " + response.toString();
         try {
             JSONObject json = response.getJSONArray("list").getJSONObject(0);
             if (json.has("error")) {
