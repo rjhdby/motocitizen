@@ -243,7 +243,7 @@ public class AccidentsGeneral {
             context.startActivity(intent);
 
         } else {
-            Toast.makeText(context, Startup.context.getString(R.string.cant_open_incident), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, context.getString(R.string.cant_open_incident), Toast.LENGTH_LONG).show();
         }
     }
 }

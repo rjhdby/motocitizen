@@ -36,17 +36,17 @@ public class Auth {
                 login = prefs.getLogin();
                 password = prefs.getPassword();
                 if (!auth(context, login, password)) {
-                    showlogin();
+                    showLogin(context);
                 }
             } else {
-                showlogin();
+                showLogin(context);
             }
         }
     }
 
-    private void showlogin() {
-        Intent i = new Intent(Startup.context, AuthActivity.class);
-        Startup.context.startActivity(i);
+    private void showLogin(Context context) {
+        Intent i = new Intent(context, AuthActivity.class);
+        context.startActivity(i);
     }
 
     private void reset() {

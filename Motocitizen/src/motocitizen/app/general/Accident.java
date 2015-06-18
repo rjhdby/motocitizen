@@ -378,7 +378,7 @@ public class Accident {
             @Override
             public boolean onLongClick(View v) {
                 PopupWindow pw;
-                pw = AccidentListPopup.getPopupWindow(id, false);
+                pw = AccidentListPopup.getPopupWindow(context, id, false);
                 int viewLocation[] = new int[2];
                 v.getLocationOnScreen(viewLocation);
                 pw.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);

@@ -1,5 +1,6 @@
 package motocitizen.app.general.popups;
 
+import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
@@ -12,9 +13,9 @@ import motocitizen.startup.Startup;
 import motocitizen.utils.MyUtils;
 
 public class MessagesPopup extends PopupWindowGeneral {
-    public static PopupWindow getPopupWindow(int id, int acc_id) {
+    public static PopupWindow getPopupWindow(Context context,int id, int acc_id) {
         AccidentMessage m = AccidentsGeneral.points.getPoint(acc_id).messages.get(id);
-        content = new TableLayout(Startup.context);
+        content = new TableLayout(context);
         content.setOrientation(LinearLayout.HORIZONTAL);
         content.setBackgroundColor(0xFF202020);
         content.setLayoutParams(lp);

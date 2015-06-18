@@ -110,7 +110,7 @@ public class AccidentDetailsActivity
             @Override
             public boolean onLongClick(View v) {
                 PopupWindow pw;
-                pw = AccidentListPopup.getPopupWindow(AccidentsGeneral.getCurrentPointID(), true);
+                pw = AccidentListPopup.getPopupWindow(context, AccidentsGeneral.getCurrentPointID(), false);
                 int viewLocation[] = new int[2];
                 v.getLocationOnScreen(viewLocation);
                 pw.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
@@ -257,7 +257,7 @@ public class AccidentDetailsActivity
             if (number.contains(smsPrefix))
                 number = number.substring(smsPrefix.length(), number.length());
             intent.setData(Uri.parse("sms:" + number));
-            Startup.context.startActivity(intent);
+            context.startActivity(intent);
         } else if (item.getItemId() >= CALL_MENU_MIN_ID && item.getItemId() < CALL_MENU_MAX_ID) {
             Intent intent = new Intent(Intent.ACTION_DIAL);
             String callPrefix = getString(R.string.make_call);
@@ -266,7 +266,7 @@ public class AccidentDetailsActivity
             if (number.contains(callPrefix))
                 number = number.substring(callPrefix.length(), number.length());
             intent.setData(Uri.parse("tel:" + number));
-            Startup.context.startActivity(intent);
+            context.startActivity(intent);
         }
         return false;
     }

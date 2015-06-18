@@ -35,7 +35,7 @@ class PopupWindowGeneral {
         @Override
         public void onClick(View v) {
             ClipboardManager myClipboard;
-            myClipboard = (ClipboardManager) Startup.context.getSystemService(Context.CLIPBOARD_SERVICE);
+            myClipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData myClip;
             myClip = ClipData.newPlainText("text", textToCopy);
             myClipboard.setPrimaryClip(myClip);
@@ -49,7 +49,7 @@ class PopupWindowGeneral {
             Intent intent = new Intent(Intent.ACTION_DIAL);
             String number = (String) ((Button) v).getText();
             intent.setData(Uri.parse("tel:" + number.replace(CALL_PREFIX, "")));
-            Startup.context.startActivity(intent);
+            context.startActivity(intent);
         }
     };
     private static final OnClickListener smsButtonListener = new OnClickListener() {
@@ -58,7 +58,7 @@ class PopupWindowGeneral {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             String number = (String) ((Button) v).getText();
             intent.setData(Uri.parse("sms:" + number.replace(SMS_PREFIX, "")));
-            Startup.context.startActivity(intent);
+            context.startActivity(intent);
         }
     };
     private static final OnClickListener finishButtonListener = new OnClickListener() {

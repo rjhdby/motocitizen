@@ -123,7 +123,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
                     finish();
                 } else { // Авторизация
                     if (Startup.isOnline()) {
-                        if (AccidentsGeneral.auth.auth(Startup.context, login.getText().toString(), password.getText().toString())) {
+                        if (AccidentsGeneral.auth.auth(context, login.getText().toString(), password.getText().toString())) {
                             prefs.setAnonim(false);
                             finish();
                         } else {

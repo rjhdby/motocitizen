@@ -46,17 +46,15 @@ import motocitizen.maps.osm.MyOSMMapManager;
 import motocitizen.network.requests.AccidentsRequest;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.utils.Const;
-import motocitizen.utils.Keyboard;
 import motocitizen.utils.MyUtils;
-import motocitizen.utils.Show;
 
 public class Startup extends ActionBarActivity implements View.OnClickListener {
 
     private MyApp myApp = null;
-    public static Context context;
+    public static Context       context;
     public static MyPreferences prefs;
-    public static MyMapManager map;
-    public static boolean fromDetails;
+    public static MyMapManager  map;
+    public static boolean       fromDetails;
 
     private ImageButton dialButton;
     private ImageButton createAccButton;
@@ -70,6 +68,8 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
 
     private static ActionBar actionBar;
     private static AlertDialog changeLogDlg = null;
+
+    public static Integer currentGeneral;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +115,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
 
     private void checkUpdate() {
         PackageManager manager = this.getPackageManager();
-        String version;
+        String         version;
         try {
             PackageInfo info = manager.getPackageInfo(this.getPackageName(), 0);
             version = info.versionName;
@@ -141,8 +141,8 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
 
 //        Show.show(R.id.main_frame, R.id.main_screen_fragment);
         MyLocationManager.wakeup();
-        Intent intent = getIntent();
-        Integer toMap = intent.getIntExtra("toMap", 0);
+        Intent  intent    = getIntent();
+        Integer toMap     = intent.getIntExtra("toMap", 0);
         Integer toDetails = intent.getIntExtra("toDetails", 0);
         context = this;
         //AccidentsGeneral.refresh(this);
@@ -197,7 +197,6 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
 //                    fm.beginTransaction().show(mf).hide(pf).commit();
                 AccidentsGeneral.redraw(this);
 //                }
-                Keyboard.hide();
                 return true;
         }
         return super.onKeyUp(keycode, e);
@@ -208,7 +207,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         if (extras == null) {
             return;
         }
-        String type = extras.getString("type");
+        String type     = extras.getString("type");
         String idString = extras.getString("id");
         if (type == null || idString == null || !MyUtils.isInteger(idString)) {
             return;
@@ -220,8 +219,8 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     }
 
     public static boolean isOnline() {
-        ConnectivityManager cm = (ConnectivityManager) Startup.context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        ConnectivityManager cm      = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo         netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
@@ -248,10 +247,10 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
             case R.id.dial_button:
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:+78007751734"));
-                Startup.context.startActivity(intent);
+                this.startActivity(intent);
                 break;
             case R.id.mc_add_point_button:
-                startActivity(new Intent(Startup.context, CreateAccActivity.class));
+                startActivity(new Intent(this, CreateAccActivity.class));
                 break;
             default:
                 Log.e("Startup", "Unknown button pressed");
@@ -266,8 +265,8 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
             accListView.setVisibility(View.VISIBLE);
             mapContainer.setVisibility(View.VISIBLE);
 
-            if (Show.currentGeneral == null) {
-                Show.currentGeneral = R.id.tab_accidents_button;
+            if (currentGeneral == null) {
+                currentGeneral = R.id.tab_accidents_button;
             }
 
             if (id == R.id.tab_accidents_button) {
@@ -277,7 +276,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
                 accListView.animate().translationX(-Const.getWidth(context) * 2);
                 mapContainer.animate().translationX(0);
             }
-            Show.currentGeneral = id;
+            currentGeneral = id;
         }
     };
 
@@ -324,7 +323,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
                 return true;
             case R.id.small_menu_settings:
                 Intent intentSettings = new Intent(this, SettingsActivity.class);
-                Startup.context.startActivity(intentSettings);
+                this.startActivity(intentSettings);
                 return true;
             case R.id.small_menu_about:
                 Intent intentAbout = new Intent(this, AboutActivity.class);
@@ -389,6 +388,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
 
 
     }
+
     private class AccidentsRequestCallback implements AsyncTaskCompleteListener {
         @Override
         public void onTaskComplete(JSONObject result) {

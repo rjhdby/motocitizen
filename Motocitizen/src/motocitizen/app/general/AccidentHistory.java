@@ -19,6 +19,7 @@ import java.util.Map;
 
 import motocitizen.app.general.popups.AccidentListPopup;
 import motocitizen.app.general.popups.MessagesPopup;
+import motocitizen.startup.Startup;
 import motocitizen.utils.MyUtils;
 
 public class AccidentHistory {
@@ -42,18 +43,6 @@ public class AccidentHistory {
     public       int owner_id;
     public       int table_row;
     public final int acc_id;
-    private OnLongClickListener rowLongClick = new OnLongClickListener() {
-
-        @Override
-        public boolean onLongClick(View v) {
-            PopupWindow pw;
-            pw = MessagesPopup.getPopupWindow(id, acc_id);
-            int viewLocation[] = new int[2];
-            v.getLocationOnScreen(viewLocation);
-            pw.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
-            return true;
-        }
-    };
     public String owner, action;
     public Date time;
 

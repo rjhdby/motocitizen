@@ -24,6 +24,7 @@ public class AccidentMessage {
     public String owner, status, text;
     public Date time;
     public Boolean unread;
+    private static Context context;
 
     public AccidentMessage(JSONObject json, int acc_id) throws JSONException {
         this.acc_id = acc_id;
@@ -37,6 +38,7 @@ public class AccidentMessage {
     }
 
     public TableRow createRow(Context context, String login) {
+        this.context = context;
         TableRow tr = new TableRow(context);
         TableRow.LayoutParams lp = new TableRow.LayoutParams();
         TextView tvTime = new TextView(tr.getContext());
@@ -67,7 +69,7 @@ public class AccidentMessage {
         @Override
         public boolean onLongClick(View v) {
             PopupWindow pw;
-            pw = MessagesPopup.getPopupWindow(id, acc_id);
+            pw = MessagesPopup.getPopupWindow(context, id, acc_id);
             int viewLocation[] = new int[2];
             v.getLocationOnScreen(viewLocation);
             pw.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
