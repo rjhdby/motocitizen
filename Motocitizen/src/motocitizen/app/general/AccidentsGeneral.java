@@ -87,16 +87,6 @@ public class AccidentsGeneral {
         onwayAcc = 0;
     }
 
-    private static final OnLongClickListener detLongClick = new OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View v) {
-            PopupWindow pw;
-            pw = AccidentListPopup.getPopupWindow(currentPoint.getId(), false);
-            pw.showAsDropDown(v, 20, -20);
-            return true;
-        }
-    };
-
     public static int getCurrentPointID() {
         return currentPoint.getId();
     }

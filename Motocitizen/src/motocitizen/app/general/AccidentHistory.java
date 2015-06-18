@@ -2,6 +2,7 @@ package motocitizen.app.general;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.widget.PopupWindow;
@@ -16,6 +17,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import motocitizen.app.general.popups.AccidentListPopup;
 import motocitizen.app.general.popups.MessagesPopup;
 import motocitizen.utils.MyUtils;
 
@@ -36,9 +38,9 @@ public class AccidentHistory {
         actions = Collections.unmodifiableMap(m);
     }
 
-    public int id;
-    public int owner_id;
-    public int table_row;
+    public       int id;
+    public       int owner_id;
+    public       int table_row;
     public final int acc_id;
     private OnLongClickListener rowLongClick = new OnLongClickListener() {
 
@@ -46,7 +48,9 @@ public class AccidentHistory {
         public boolean onLongClick(View v) {
             PopupWindow pw;
             pw = MessagesPopup.getPopupWindow(id, acc_id);
-            pw.showAsDropDown(v, 20, -20);
+            int viewLocation[] = new int[2];
+            v.getLocationOnScreen(viewLocation);
+            pw.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
             return true;
         }
     };
@@ -63,11 +67,11 @@ public class AccidentHistory {
     }
 
     public static TableRow createHeader(Context context) {
-        TableRow tr = new TableRow(context);
-        TableRow.LayoutParams lp = new TableRow.LayoutParams();
-        TextView tvOwner = new TextView(tr.getContext());
-        TextView tvText = new TextView(tr.getContext());
-        TextView tvDate = new TextView(tr.getContext());
+        TableRow              tr      = new TableRow(context);
+        TableRow.LayoutParams lp      = new TableRow.LayoutParams();
+        TextView              tvOwner = new TextView(tr.getContext());
+        TextView              tvText  = new TextView(tr.getContext());
+        TextView              tvDate  = new TextView(tr.getContext());
         lp.setMargins(0, 0, 5, 0);
         tvOwner.setLayoutParams(lp);
         tvOwner.setText("Кто");

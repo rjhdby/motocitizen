@@ -2,6 +2,7 @@ package motocitizen.app.general;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.widget.PopupWindow;
@@ -67,7 +68,9 @@ public class AccidentMessage {
         public boolean onLongClick(View v) {
             PopupWindow pw;
             pw = MessagesPopup.getPopupWindow(id, acc_id);
-            pw.showAsDropDown(v, 20, -20);
+            int viewLocation[] = new int[2];
+            v.getLocationOnScreen(viewLocation);
+            pw.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
             return true;
         }
     };

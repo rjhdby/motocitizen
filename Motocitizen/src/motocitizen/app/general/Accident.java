@@ -3,14 +3,19 @@ package motocitizen.app.general;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -40,12 +45,12 @@ import motocitizen.utils.NewID;
 @SuppressLint({"UseSparseArrays", "RtlHardcoded"})
 public class Accident {
     private MyApp myApp = null;
-    public Map<String, String> attributes;
-    public Map<Integer, AccidentMessage> messages;
-    public Map<Integer, AccidentVolunteer> volunteers;
-    public Map<Integer, AccidentHistory> history;
-    private Location location;
-    private boolean onway, inplace, leave, hasHere, onway_cancel;
+    public  Map<String, String>             attributes;
+    public  Map<Integer, AccidentMessage>   messages;
+    public  Map<Integer, AccidentVolunteer> volunteers;
+    public  Map<Integer, AccidentHistory>   history;
+    private Location                        location;
+    private boolean                         onway, inplace, leave, hasHere, onway_cancel;
 
     private String type, med, address, owner, descr;
 
@@ -58,7 +63,7 @@ public class Accident {
     public Date created;
 
     private int id, owner_id;
-    public int row_id;
+    public  int     row_id;
     private Context context;
 
     public int getId() {
@@ -113,16 +118,6 @@ public class Accident {
     private final View.OnClickListener accRowClick = new View.OnClickListener() {
         public void onClick(View v) {
             AccidentsGeneral.toDetails(v.getContext(), id);
-        }
-    };
-
-    private final OnLongClickListener rowLongClick = new OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View v) {
-            PopupWindow pw;
-            pw = AccidentListPopup.getPopupWindow(id, false);
-            pw.showAsDropDown(v, 20, -20);
-            return true;
         }
     };
 
@@ -226,7 +221,7 @@ public class Accident {
 
     private Map<String, String> buildDataSet(JSONObject json) {
         Map<String, String> data = new HashMap<>();
-        Iterator<String> keys = json.keys();
+        Iterator<String>    keys = json.keys();
         while (keys.hasNext()) {
             String key = keys.next();
             if (key.equals("onway") || key.equals("messages")) {
@@ -370,16 +365,26 @@ public class Accident {
         }
     }
 
-    public FrameLayout createAccRow(Context context) {
-        ViewGroup vg = (ViewGroup) ((Activity) context).findViewById(R.id.accListContent);
-        FrameLayout fl = (FrameLayout) Const.getLayoutInflater(context).inflate(R.layout.accident_row, vg, false);
-        TextView general = (TextView) fl.findViewById(R.id.accident_row_content);
-        TextView time = (TextView) fl.findViewById(R.id.accident_row_time);
-        TextView unreadView = (TextView) fl.findViewById(R.id.accident_row_unread);
-        View iWasHere = fl.findViewById(R.id.i_was_here);
+    public FrameLayout createAccRow(final Context context) {
+        ViewGroup   vg         = (ViewGroup) ((Activity) context).findViewById(R.id.accListContent);
+        FrameLayout fl         = (FrameLayout) Const.getLayoutInflater(context).inflate(R.layout.accident_row, vg, false);
+        TextView    general    = (TextView) fl.findViewById(R.id.accident_row_content);
+        TextView    time       = (TextView) fl.findViewById(R.id.accident_row_time);
+        TextView    unreadView = (TextView) fl.findViewById(R.id.accident_row_unread);
+        View        iWasHere   = fl.findViewById(R.id.i_was_here);
         row_id = NewID.id();
         fl.setId(row_id);
-        fl.setOnLongClickListener(rowLongClick);
+        fl.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                PopupWindow pw;
+                pw = AccidentListPopup.getPopupWindow(id, false);
+                int viewLocation[] = new int[2];
+                v.getLocationOnScreen(viewLocation);
+                pw.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
+                return true;
+            }
+        });
         fl.setOnClickListener(accRowClick);
         if (hasInOwners()) {
             iWasHere.setBackgroundColor(0xFFC62828);
@@ -392,7 +397,7 @@ public class Accident {
         sb.append("(").append(getDistanceText()).append(")\n").append(address).append("\n").append(descr);
         general.setText(sb);
         time.setText(MyUtils.getIntervalFromNowInText(created));
-        int unread = countUnreadMessages();
+        int    unread  = countUnreadMessages();
         String msgText = "<b>" + String.valueOf(messages.size()) + "</b>";
         if (unread > 0) {
             msgText += "<font color=#C62828><b>(" + String.valueOf(countUnreadMessages()) + ")</b></font>";
@@ -403,7 +408,7 @@ public class Accident {
 
     private boolean checkPrerequisites(Map<String, String> data) {
         String[] prereq = {"lon", "lat", "status", "mc_accident_orig_type", "mc_accident_orig_med", "id", "address", "created", "owner_id", "owner",
-                "descr"};
+                           "descr"};
         for (String key : prereq) {
             if (!data.containsKey(key)) {
                 Log.d("PARSE ERROR", key);
@@ -447,7 +452,7 @@ public class Accident {
 
     public boolean isToday() {
         Calendar calendar = Calendar.getInstance();
-        int now = calendar.get(Calendar.DAY_OF_YEAR);
+        int      now      = calendar.get(Calendar.DAY_OF_YEAR);
         calendar.setTime(created);
         int current = calendar.get(Calendar.DAY_OF_YEAR);
         return current == now;

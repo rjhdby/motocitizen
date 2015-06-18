@@ -2,15 +2,20 @@ package motocitizen.Activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -50,14 +55,14 @@ public class AccidentDetailsActivity
     /*
     Инцидент с которым работаем
      */
-    private int accidentID;
+    private int      accidentID;
     private Accident currentPoint;
 
     private String accNewState = "";
 
     DetailVolunteersFragment detailVolunteersFragment;
-    DetailMessagesFragment detailMessagesFragment;
-    DetailHistoryFragment detailHistoryFragment;
+    DetailMessagesFragment   detailMessagesFragment;
+    DetailHistoryFragment    detailHistoryFragment;
 
     private TextView generalType;
     private TextView generalStatus;
@@ -65,7 +70,7 @@ public class AccidentDetailsActivity
     private TextView generalOwner;
     private TextView generalAddress;
     private TextView generalDescription;
-    private View generalLayout;
+    private View     generalLayout;
 
     private Menu mMenu;
 
@@ -106,7 +111,9 @@ public class AccidentDetailsActivity
             public boolean onLongClick(View v) {
                 PopupWindow pw;
                 pw = AccidentListPopup.getPopupWindow(AccidentsGeneral.getCurrentPointID(), true);
-                pw.showAsDropDown(v, 20, -20);
+                int viewLocation[] = new int[2];
+                v.getLocationOnScreen(viewLocation);
+                pw.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
                 return true;
             }
         });
@@ -202,7 +209,7 @@ public class AccidentDetailsActivity
 
     private void showGeneralLayout(int state) {
         MenuItem menuItemActionHideInfo = mMenu.findItem(R.id.action_hide_info);
-        MenuItem menuItemMenuHideInfo = mMenu.findItem(R.id.menu_hide_info);
+        MenuItem menuItemMenuHideInfo   = mMenu.findItem(R.id.menu_hide_info);
         if (state == View.INVISIBLE) {
             generalLayout.setVisibility(View.GONE);
             menuItemActionHideInfo.setIcon(R.drawable.ic_panel_down);
