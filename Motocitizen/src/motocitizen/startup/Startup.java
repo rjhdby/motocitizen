@@ -16,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,6 +27,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -61,10 +63,11 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
 
     private RadioGroup mainTabsGroup;
 
-    private View accListView;
-    private View mapContainer;
+    private View       accListView;
+    private View       mapContainer;
+    private ScrollView accListRefresh;
 
-    private Menu mMenu;
+    public static Menu mMenu;
 
     private static ActionBar actionBar;
     private static AlertDialog changeLogDlg = null;
@@ -101,6 +104,14 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         mapContainer = findViewById(R.id.map_container);
         mapContainer.setTranslationX(Const.getWidth(context));
 
+        accListRefresh = (ScrollView) this.findViewById(R.id.accListRefresh);
+        accListView.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+
+                return true;
+            }
+        });
         //prefs = getSharedPreferences("motocitizen.startup", MODE_PRIVATE);
         //prefs.edit().clear().commit();
 
@@ -385,8 +396,6 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         } else {
             Toast.makeText(context, R.string.inet_not_available, Toast.LENGTH_LONG).show();
         }
-
-
     }
 
     private class AccidentsRequestCallback implements AsyncTaskCompleteListener {
