@@ -163,7 +163,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
             createAccButton.setVisibility(View.INVISIBLE);
         }
 
-        getAccidents();
+        getAccidents(true);
 //        if (isOnline()) {
 //            JsonRequest request = AccidentsGeneral.getLoadPointsRequest();
 //            if (request != null) {
@@ -376,11 +376,15 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     }
 
     private void getAccidents() {
+        getAccidents(false);
+    }
+
+    private void getAccidents(boolean silent) {
         if (Startup.isOnline()) {
             if (mMenu != null) {
                 refreshAnimation.onRefreshBeginning();
             }
-            new AccidentsRequest(new AccidentsRequestCallback(), this);
+            new AccidentsRequest(this, new AccidentsRequestCallback(), silent);
         } else {
             Toast.makeText(context, R.string.inet_not_available, Toast.LENGTH_LONG).show();
         }

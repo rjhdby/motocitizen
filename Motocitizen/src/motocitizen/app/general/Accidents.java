@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,19 +18,18 @@ import motocitizen.main.R;
 import motocitizen.network.requests.AccidentsRequest;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.startup.MyPreferences;
-import motocitizen.utils.Const;
 
 //import motocitizen.startup.Startup;
 
 @SuppressLint("UseSparseArrays")
 public class Accidents {
     private static final int NORMAL = R.drawable.accident_row_gradient;
-    private static final int HIDE = R.drawable.accident_row_gradient_hide;
-    private static final int ENDED = R.drawable.accident_row_gradient_ended;
-    public final String error;
-    private Map<Integer, Accident> points;
-    private MyPreferences prefs;
-    private Context context;
+    private static final int HIDE   = R.drawable.accident_row_gradient_hide;
+    private static final int ENDED  = R.drawable.accident_row_gradient_ended;
+    public final String                 error;
+    private      Map<Integer, Accident> points;
+    private      MyPreferences          prefs;
+    private      Context                context;
 
     public Accidents(Context context) {
         error = "ok";
@@ -55,8 +53,8 @@ public class Accidents {
     }
 
     public void load() {
-        new AccidentsRequest(new AccidentsRequestCallback(), context);
-     }
+        new AccidentsRequest(context, new AccidentsRequestCallback());
+    }
 
 
     public void update(JSONArray data) {
@@ -120,6 +118,7 @@ public class Accidents {
                 AccidentsGeneral.redraw(context);
             }
         } else {
+            /*
             View row = ((Activity) context).findViewById(selected.row_id);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -127,7 +126,7 @@ public class Accidents {
             lp.setMargins(margin, 0, margin, 0);
             row.setLayoutParams(lp);
             row.setPadding(0, margin, 0, margin);
-
+*/
             selected.resetMessagesUnreadFlag();
         }
     }
@@ -145,6 +144,7 @@ public class Accidents {
     public String getTextToCopy(int id) {
         return points.get(id).getTextToCopy();
     }
+
     private class AccidentsRequestCallback implements AsyncTaskCompleteListener {
         @Override
         public void onTaskComplete(JSONObject result) {

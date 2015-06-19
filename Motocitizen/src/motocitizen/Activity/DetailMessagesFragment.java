@@ -162,7 +162,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
                     e.printStackTrace();
                 }
             } else {
-                new AccidentsRequest(new UpdateAccidentsCallback(), getActivity());
+                new AccidentsRequest(getActivity(), new UpdateAccidentsCallback());
             }
             newMessageButton.setEnabled(true);
         }

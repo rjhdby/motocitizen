@@ -65,7 +65,7 @@ public class BounceScrollView extends ScrollView {
                     refreshAnimation = new RefreshAnimation(refreshItem);
                     refreshAnimation.onRefreshBeginning();
                 }
-                new AccidentsRequest(new AccidentsRequestCallback(), context);
+                new AccidentsRequest(context, new AccidentsRequestCallback());
             } else {
                 Toast.makeText(context, R.string.inet_not_available, Toast.LENGTH_LONG).show();
             }

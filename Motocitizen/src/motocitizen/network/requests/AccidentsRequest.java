@@ -14,7 +14,9 @@ import motocitizen.app.general.MyLocationManager;
 import motocitizen.startup.MyPreferences;
 
 public class AccidentsRequest extends HTTPClient {
-    public AccidentsRequest(AsyncTaskCompleteListener listener, Context context) {
+    private boolean silent;
+    public AccidentsRequest(Context context, AsyncTaskCompleteListener listener, boolean silent) {
+        this.silent = silent;
         this.context = context;
         this.listener = listener;
         post = new HashMap<>();
@@ -35,9 +37,13 @@ public class AccidentsRequest extends HTTPClient {
         post.put("calledMethod", "getlist");
         this.execute(post);
     }
+    public AccidentsRequest(Context context, AsyncTaskCompleteListener listener){
+        new AccidentsRequest(context, listener, false);
+    }
 
     @Override
     public boolean error(JSONObject response) {
+        if(silent) return false;
         if (!response.has("list")) return true;
         try {
             JSONObject error = response.getJSONArray("list").getJSONObject(0);

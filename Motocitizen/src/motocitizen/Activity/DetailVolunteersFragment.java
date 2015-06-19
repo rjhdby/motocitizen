@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,7 +23,6 @@ import motocitizen.network.requests.AccidentsRequest;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.network.requests.CancelOnWayRequest;
 import motocitizen.network.requests.OnWayRequest;
-import motocitizen.startup.Startup;
 
 import static motocitizen.app.general.AccidentsGeneral.getDelimiterRow;
 
@@ -226,7 +224,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
                     Toast.makeText(getActivity(), "Неизвестная ошибка " + result.toString(), Toast.LENGTH_LONG).show();
                 }
             } else {
-                new AccidentsRequest(new UpdateAccidentsCallback(), getActivity());
+                new AccidentsRequest(getActivity(), new UpdateAccidentsCallback());
             }
         }
     }
