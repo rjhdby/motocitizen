@@ -10,8 +10,10 @@ import android.view.MenuItem;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentsRequest;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
@@ -74,6 +76,16 @@ public class BounceScrollView extends ScrollView {
     private class AccidentsRequestCallback implements AsyncTaskCompleteListener {
         @Override
         public void onTaskComplete(JSONObject result) {
+            if(result.has("error")){
+                try {
+                    Toast.makeText(context, result.getString("error"), Toast.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    Toast.makeText(context, "Неизвестная ошибка", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
+            }else {
+                AccidentsGeneral.refreshPoints(context, result);
+            }
             if (Startup.mMenu != null) {
                 MenuItem item = Startup.mMenu.findItem(R.id.action_refresh);
                 if (item.getActionView() != null) {

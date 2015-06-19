@@ -26,6 +26,7 @@ import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import motocitizen.Activity.AboutActivity;
@@ -388,8 +389,17 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     private class AccidentsRequestCallback implements AsyncTaskCompleteListener {
         @Override
         public void onTaskComplete(JSONObject result) {
+            if(result.has("error")){
+                try {
+                    Toast.makeText(context, result.getString("error"), Toast.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    Toast.makeText(context, "Неизвестная ошибка", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
+            }else {
+                AccidentsGeneral.refreshPoints(context, result);
+            }
             resetUpdating();
-            AccidentsGeneral.refreshPoints(context, result);
         }
     }
 }
