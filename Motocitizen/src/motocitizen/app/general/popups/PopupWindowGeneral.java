@@ -18,9 +18,14 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import motocitizen.app.general.Accident;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentChangeState;
+import motocitizen.network.requests.AsyncTaskCompleteListener;
+import motocitizen.network.requests.BanRequest;
 import motocitizen.utils.MyUtils;
 
 class PopupWindowGeneral {
@@ -183,6 +188,35 @@ class PopupWindowGeneral {
         });
         TableRow tr = new TableRow(content.getContext());
         tr.addView(coordinates, lp);
+        return tr;
+    }
+
+    static TableRow banButtonRow(final int id) {
+        Button ban = new Button(content.getContext());
+        ban.setText("Забанить");
+        ban.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new BanRequest(context, new AsyncTaskCompleteListener() {
+                    @Override
+                    public void onTaskComplete(JSONObject result) throws JSONException {
+                        if (result.has("error")) {
+                            try {
+                                Toast.makeText(context, result.getString("error"), Toast.LENGTH_LONG).show();
+                            } catch (JSONException e) {
+                                Toast.makeText(context, "Неизвестная ошибка", Toast.LENGTH_LONG).show();
+                                e.printStackTrace();
+                            }
+                        } else {
+                            Toast.makeText(context, "Пользователь забанен", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }, id);
+                pw.dismiss();
+            }
+        });
+        TableRow tr = new TableRow(content.getContext());
+        tr.addView(ban, lp);
         return tr;
     }
 }

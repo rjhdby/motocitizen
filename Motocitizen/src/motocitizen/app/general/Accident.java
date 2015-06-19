@@ -89,6 +89,9 @@ public class Accident {
     public String getOwner() {
         return owner;
     }
+    public int getOwnerId(){
+        return owner_id;
+    }
 
     public String getStatusString() {
         if (status == PointStatus.ACTIVE)

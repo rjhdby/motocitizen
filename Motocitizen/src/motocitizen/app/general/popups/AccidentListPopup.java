@@ -7,14 +7,13 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TableLayout;
 
-import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.app.general.Accident;
+import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.app.general.user.Role;
-import motocitizen.startup.Startup;
 import motocitizen.utils.MyUtils;
 
 public class AccidentListPopup extends PopupWindowGeneral {
-    public static PopupWindow getPopupWindow(Context context,int id, boolean disableOldItems) {
+    public static PopupWindow getPopupWindow(Context context, int id, boolean disableOldItems) {
         Accident point = AccidentsGeneral.points.getPoint(id);
         content = new TableLayout(context);
         content.setOrientation(LinearLayout.HORIZONTAL);
@@ -22,8 +21,6 @@ public class AccidentListPopup extends PopupWindowGeneral {
         content.setLayoutParams(lp);
         textToCopy = AccidentsGeneral.points.getTextToCopy(id);
         content.addView(copyButtonRow(), lp);
-        content.addView(coordinatesButtonRow(point), lp);
-
         if (!disableOldItems) {
             for (String phone : MyUtils.getPhonesFromText(point.getDescription())) {
                 content.addView(phoneButtonRow(phone), lp);
@@ -37,6 +34,8 @@ public class AccidentListPopup extends PopupWindowGeneral {
             }
         }
         content.addView(shareMessage(context));
+        content.addView(coordinatesButtonRow(point), lp);
+        content.addView(banButtonRow(point.getId()), lp);
         pw = new PopupWindow(content, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         pw.setBackgroundDrawable(new ColorDrawable(android.R.color.transparent));
         pw.setOutsideTouchable(true);
