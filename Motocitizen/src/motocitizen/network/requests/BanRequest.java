@@ -27,7 +27,7 @@ public class BanRequest extends HTTPClient {
     public boolean error(JSONObject response) {
         if (!response.has("result")) return true;
         try {
-            String result = response.getString("result");
+            String result = response.getString("ban");
             if (result.equals("OK")) return false;
         } catch (JSONException e) {
             return true;
