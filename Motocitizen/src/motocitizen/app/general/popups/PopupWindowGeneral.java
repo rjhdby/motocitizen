@@ -123,7 +123,7 @@ class PopupWindowGeneral {
     }
 
     static TableRow smsButtonRow(String raw) {
-        String phone = "+7" + raw.substring(1);
+        String phone = raw.substring(1);
         Button dial = new Button(content.getContext());
         dial.setText(SMS_PREFIX + phone);
         dial.setOnClickListener(smsButtonListener);
