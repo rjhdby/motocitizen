@@ -15,24 +15,25 @@ import motocitizen.utils.MyUtils;
 
 public class AccidentListPopup extends PopupWindowGeneral {
     public static PopupWindow getPopupWindow(Context context,int id, boolean disableOldItems) {
-        Accident p = AccidentsGeneral.points.getPoint(id);
+        Accident point = AccidentsGeneral.points.getPoint(id);
         content = new TableLayout(context);
         content.setOrientation(LinearLayout.HORIZONTAL);
         content.setBackgroundColor(0xFF202020);
         content.setLayoutParams(lp);
         textToCopy = AccidentsGeneral.points.getTextToCopy(id);
         content.addView(copyButtonRow(), lp);
+        content.addView(coordinatesButtonRow(point), lp);
 
         if (!disableOldItems) {
-            for (String phone : MyUtils.getPhonesFromText(p.getDescription())) {
+            for (String phone : MyUtils.getPhonesFromText(point.getDescription())) {
                 content.addView(phoneButtonRow(phone), lp);
                 content.addView(smsButtonRow(phone), lp);
             }
         }
         if (Role.isModerator()) {
             if (!disableOldItems) {
-                content.addView(finishButtonRow(p));
-                content.addView(hideButtonRow(p));
+                content.addView(finishButtonRow(point));
+                content.addView(hideButtonRow(point));
             }
         }
         content.addView(shareMessage(context));

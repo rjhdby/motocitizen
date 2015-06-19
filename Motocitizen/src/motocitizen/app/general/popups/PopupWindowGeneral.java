@@ -14,22 +14,25 @@ import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.Toast;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import motocitizen.app.general.Accident;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentChangeState;
-import motocitizen.startup.Startup;
+import motocitizen.utils.MyUtils;
 
 class PopupWindowGeneral {
 
     static final String CALL_PREFIX = "Вызов: ";
-    static final String SMS_PREFIX = "СМС: ";
+    static final String SMS_PREFIX  = "СМС: ";
 
     static final TableRow.LayoutParams lp = new TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-    static TableLayout content;
-    static PopupWindow pw;
-    static String textToCopy;
-    private static Context context;
+    static         TableLayout content;
+    static         PopupWindow pw;
+    static         String      textToCopy;
+    private static Context     context;
     private static final OnClickListener copyButtonListener = new OnClickListener() {
         @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         @Override
@@ -43,7 +46,7 @@ class PopupWindowGeneral {
         }
     };
     private static Accident point;
-    private static final OnClickListener dialButtonListener = new OnClickListener() {
+    private static final OnClickListener dialButtonListener   = new OnClickListener() {
         public void onClick(View v) {
             pw.dismiss();
             Intent intent = new Intent(Intent.ACTION_DIAL);
@@ -52,7 +55,7 @@ class PopupWindowGeneral {
             context.startActivity(intent);
         }
     };
-    private static final OnClickListener smsButtonListener = new OnClickListener() {
+    private static final OnClickListener smsButtonListener    = new OnClickListener() {
         public void onClick(View v) {
             pw.dismiss();
             Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -71,7 +74,7 @@ class PopupWindowGeneral {
             }
         }
     };
-    private static final OnClickListener hideButtonListener = new OnClickListener() {
+    private static final OnClickListener hideButtonListener   = new OnClickListener() {
         public void onClick(View v) {
             pw.dismiss();
             if (point.isHidden()) {
@@ -94,10 +97,10 @@ class PopupWindowGeneral {
         }
     };
 
-    static TableRow shareMessage(Context outerContext){
+    static TableRow shareMessage(Context outerContext) {
         context = outerContext;
         TableRow tr = new TableRow(content.getContext());
-        Button b = new Button(content.getContext());
+        Button   b  = new Button(content.getContext());
         b.setText(R.string.share);
         b.setOnClickListener(shareButtonListener);
         tr.addView(b, lp);
@@ -106,7 +109,7 @@ class PopupWindowGeneral {
 
     static TableRow copyButtonRow() {
         TableRow tr = new TableRow(content.getContext());
-        Button b = new Button(content.getContext());
+        Button   b  = new Button(content.getContext());
         b.setText(R.string.copy);
         b.setOnClickListener(copyButtonListener);
         tr.addView(b, lp);
@@ -124,7 +127,7 @@ class PopupWindowGeneral {
 
     static TableRow smsButtonRow(String raw) {
         String phone = raw.substring(1);
-        Button dial = new Button(content.getContext());
+        Button dial  = new Button(content.getContext());
         dial.setText(SMS_PREFIX + phone);
         dial.setOnClickListener(smsButtonListener);
         TableRow tr = new TableRow(content.getContext());
@@ -147,8 +150,7 @@ class PopupWindowGeneral {
         return tr;
     }
 
-    static TableRow hideButtonRow(Accident p) {
-        point = p;
+    static TableRow hideButtonRow(Accident point) {
         Button finish = new Button(content.getContext());
         if (point.isHidden()) {
             finish.setText(R.string.show);
@@ -159,6 +161,28 @@ class PopupWindowGeneral {
         finish.setOnClickListener(hideButtonListener);
         TableRow tr = new TableRow(content.getContext());
         tr.addView(finish, lp);
+        return tr;
+    }
+
+    static TableRow coordinatesButtonRow(final Accident point) {
+        Button coordinates = new Button(content.getContext());
+        coordinates.setText("Скопировать координаты");
+        coordinates.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LatLng           latlng = MyUtils.LocationToLatLng(point.getLocation());
+                String           text   = String.valueOf(latlng.latitude) + "," + String.valueOf(latlng.longitude);
+                ClipboardManager myClipboard;
+                myClipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData myClip;
+                myClip = ClipData.newPlainText("text", text);
+                myClipboard.setPrimaryClip(myClip);
+                pw.dismiss();
+                Toast.makeText(context, "координаты скопированы в буфер обмена", Toast.LENGTH_LONG).show();
+            }
+        });
+        TableRow tr = new TableRow(content.getContext());
+        tr.addView(coordinates, lp);
         return tr;
     }
 }
