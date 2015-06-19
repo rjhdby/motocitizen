@@ -18,14 +18,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.Toast;
@@ -49,6 +45,7 @@ import motocitizen.network.requests.AccidentsRequest;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
+import motocitizen.utils.RefreshAnimation;
 
 public class Startup extends ActionBarActivity implements View.OnClickListener {
 
@@ -72,7 +69,8 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     private static ActionBar actionBar;
     private static AlertDialog changeLogDlg = null;
 
-    public static Integer currentGeneral;
+    public static Integer          currentGeneral;
+    public static RefreshAnimation refreshAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -314,9 +312,10 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.small_settings_menu, menu);
         mMenu = menu;
-
         MenuItem itemMenuNotDisturb = mMenu.findItem(R.id.do_not_disturb);
-
+        MenuItem refreshItem        = mMenu.findItem(R.id.action_refresh);
+        refreshAnimation = new RefreshAnimation(refreshItem);
+        refreshAnimation.onRefreshBeginning();
         if (prefs.getDoNotDisturb())
             itemMenuNotDisturb.setIcon(R.drawable.ic_lock_ringer_off_alpha);
         else
@@ -347,6 +346,9 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
                 int pid = android.os.Process.myPid();
                 android.os.Process.killProcess(pid);
                 return true;
+            case R.id.action_refresh:
+                getAccidents();
+                return true;
             case R.id.do_not_disturb:
                 MyPreferences prefs = myApp.getPreferences();
                 //MenuItem menuItemActionDisturb = mMenu.findItem(R.id.do_not_disturb);
@@ -367,30 +369,15 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     }
 
     public void resetUpdating() {
-        // Get our refresh item from the menu
         if (mMenu != null) {
-            MenuItem item = mMenu.findItem(R.id.action_refresh);
-            if (item.getActionView() != null) {
-                // Remove the animation.
-                item.getActionView().clearAnimation();
-                item.setActionView(null);
-            }
-            item.setVisible(false);
+            refreshAnimation.onRefreshComplete();
         }
     }
 
     private void getAccidents() {
         if (Startup.isOnline()) {
             if (mMenu != null) {
-                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                ImageView iv = (ImageView) inflater.inflate(R.layout.iv_refresh, null);
-                Animation rotation = AnimationUtils.loadAnimation(this, R.anim.rotate_refresh);
-                rotation.setRepeatCount(Animation.INFINITE);
-                iv.startAnimation(rotation);
-
-                MenuItem actionRefresh = mMenu.findItem(R.id.action_refresh);
-                actionRefresh.setActionView(iv);
-                actionRefresh.setVisible(true);
+                refreshAnimation.onRefreshBeginning();
             }
             new AccidentsRequest(new AccidentsRequestCallback(), this);
         } else {

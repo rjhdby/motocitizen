@@ -6,12 +6,7 @@ package motocitizen.utils;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -25,33 +20,31 @@ import motocitizen.startup.Startup;
 public class BounceScrollView extends ScrollView {
     private static final int MAX_Y_OVERSCROLL_DISTANCE = 40;
 
-    private Context mContext;
+    private Context context;
     private int     mMaxYOverscrollDistance;
     private boolean isRequestedUpdate = false;
+    RefreshAnimation refreshAnimation;
 
     public BounceScrollView(Context context) {
         super(context);
-        mContext = context;
+        this.context = context;
         initBounceScrollView();
     }
 
     public BounceScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mContext = context;
+        this.context = context;
         initBounceScrollView();
     }
 
     public BounceScrollView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        mContext = context;
+        this.context = context;
         initBounceScrollView();
     }
 
     private void initBounceScrollView() {
-        //get the density of the screen and do some maths with it on the max overscroll distance
-        //variable so that you get similar behaviors no matter what the screen size
-
-        final DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+        final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         final float          density = metrics.density;
 
         mMaxYOverscrollDistance = (int) (density * MAX_Y_OVERSCROLL_DISTANCE);
@@ -59,8 +52,6 @@ public class BounceScrollView extends ScrollView {
 
     @Override
     protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX, int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
-        //This is where the magic happens, we have replaced the incoming maxOverScrollY with our own custom variable mMaxYOverscrollDistance;
-        //Log.d("OVERSCROLL", String.valueOf(scrollY));
         if (scrollY < -mMaxYOverscrollDistance * 0.9 && !isRequestedUpdate) {
             isRequestedUpdate = true;
         }
@@ -68,19 +59,13 @@ public class BounceScrollView extends ScrollView {
             if (Startup.isOnline()) {
                 isRequestedUpdate = false;
                 if (Startup.mMenu != null) {
-                    LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    ImageView iv = (ImageView) inflater.inflate(R.layout.iv_refresh, null);
-                    Animation rotation = AnimationUtils.loadAnimation(mContext, R.anim.rotate_refresh);
-                    rotation.setRepeatCount(Animation.INFINITE);
-                    iv.startAnimation(rotation);
-
-                    MenuItem actionRefresh = Startup.mMenu.findItem(R.id.action_refresh);
-                    actionRefresh.setActionView(iv);
-                    actionRefresh.setVisible(true);
+                    MenuItem refreshItem = Startup.mMenu.findItem(R.id.action_refresh);
+                    refreshAnimation = new RefreshAnimation(refreshItem);
+                    refreshAnimation.onRefreshBeginning();
                 }
-                new AccidentsRequest(new AccidentsRequestCallback(), mContext);
+                new AccidentsRequest(new AccidentsRequestCallback(), context);
             } else {
-                Toast.makeText(mContext, R.string.inet_not_available, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, R.string.inet_not_available, Toast.LENGTH_LONG).show();
             }
         }
         return super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX, mMaxYOverscrollDistance, isTouchEvent);
@@ -92,10 +77,8 @@ public class BounceScrollView extends ScrollView {
             if (Startup.mMenu != null) {
                 MenuItem item = Startup.mMenu.findItem(R.id.action_refresh);
                 if (item.getActionView() != null) {
-                    item.getActionView().clearAnimation();
-                    item.setActionView(null);
+                    refreshAnimation.onRefreshComplete();
                 }
-                item.setVisible(false);
             }
         }
     }
