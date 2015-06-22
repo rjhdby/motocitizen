@@ -32,10 +32,11 @@ public class AccidentListPopup extends PopupWindowGeneral {
                 content.addView(finishButtonRow(point));
                 content.addView(hideButtonRow(point));
             }
+            content.addView(banButtonRow(point.getId()), lp);
         }
         content.addView(shareMessage(context));
         content.addView(coordinatesButtonRow(point), lp);
-        content.addView(banButtonRow(point.getId()), lp);
+
         pw = new PopupWindow(content, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         pw.setBackgroundDrawable(new ColorDrawable(android.R.color.transparent));
         pw.setOutsideTouchable(true);
