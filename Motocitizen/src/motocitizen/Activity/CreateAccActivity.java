@@ -427,7 +427,8 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         }
 
         public void setDescription(String description) {
-            this.description = description.replaceAll("\\s", "");
+            this.description = description.replace("^\\s+", "");
+            this.description = description.replace("\\s+$", "");
         }
 
         public void resetType() {
