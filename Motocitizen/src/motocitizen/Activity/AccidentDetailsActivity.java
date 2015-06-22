@@ -91,7 +91,7 @@ public class AccidentDetailsActivity
         accidentID = b.getInt("accidentID");
         currentPoint = AccidentsGeneral.points.getPoint(accidentID);
 
-        NewAccidentReceived.removeNotification(accidentID);
+        //NewAccidentReceived.removeNotification(accidentID);
 
         userName = ((MyApp) getApplicationContext()).getPreferences().getLogin();
 

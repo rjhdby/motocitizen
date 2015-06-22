@@ -9,6 +9,9 @@ import android.preference.PreferenceManager;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.Arrays;
 
 import motocitizen.main.R;
@@ -16,33 +19,34 @@ import motocitizen.utils.Const;
 
 @SuppressLint("CommitPrefEdits")
 public class MyPreferences {
-    public final String showAcc = "mc.show.acc";
-    public final String showBreak = "mc.show.break";
-    public final String showSteal = "mc.show.steal";
-    public final String showOther = "mc.show.other";
-    public final String distanceShow = "mc.distance.show";
-    public final String distanceAlarm = "mc.distance.alarm";
-    public final String mapProvider = "mc.map.provider";
+    public final String showAcc        = "mc.show.acc";
+    public final String showBreak      = "mc.show.break";
+    public final String showSteal      = "mc.show.steal";
+    public final String showOther      = "mc.show.other";
+    public final String distanceShow   = "mc.distance.show";
+    public final String distanceAlarm  = "mc.distance.alarm";
+    public final String mapProvider    = "mc.map.provider";
     public final String currentVersion = "version";
-    public final String doNotDisturb = "do.not.disturb";
+    public final String doNotDisturb   = "do.not.disturb";
 
-    private final static String onWay = "mc.onway";
-    private final static String soundTitle = "mc.notification.sound.title";
-    private final static String soundURI = "mc.notification.sound";
-    private final static String login = "mc.login";
-    private final static String password = "mc.password";
-    private final static String anonim = "mc.anonim";
+    private final static String onWay               = "mc.onway";
+    private final static String soundTitle          = "mc.notification.sound.title";
+    private final static String soundURI            = "mc.notification.sound";
+    private final static String login               = "mc.login";
+    private final static String password            = "mc.password";
+    private final static String anonim              = "mc.anonim";
     private final static String GCMRegistrationCode = "mc.gcm.id";
-    private final static String appVersion = "mc.app.version";
-    private final static String savedlng = "savedlng";
-    private final static String savedlat = "savedlat";
+    private final static String appVersion          = "mc.app.version";
+    private final static String savedlng            = "savedlng";
+    private final static String savedlat            = "savedlat";
 
+    private final static String notificationList = "notificationList";
     private final static String maxNotifications = "notifications.max";
 
     private final static String[] mapProviders = {"google", "osm", "yandex"};
 
     private static SharedPreferences preferences;
-    private static Context context;
+    private static Context           context;
 
     public MyPreferences(Context context) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -53,13 +57,13 @@ public class MyPreferences {
         preferences.edit().putBoolean(name, value).commit();
     }
 
-//    public void setOnWay(int id) {
-//        preferences.edit().putInt(onWay, id).commit();
-//    }
-//
-//    public int getOnWay() {
-//        return preferences.getInt(onWay, 0);
-//    }
+    public static void setOnWay(int id) {
+        preferences.edit().putInt(onWay, id).commit();
+    }
+
+    public static int getOnWay() {
+        return preferences.getInt(onWay, 0);
+    }
 
     public LatLng getSavedLatLng() {
         double lat = (double) preferences.getFloat(savedlat, 55.752295f);
@@ -85,7 +89,7 @@ public class MyPreferences {
 
     public void saveLatLng(LatLng latlng) {
         preferences.edit().putFloat(savedlat, (float) latlng.latitude)
-                .putFloat(savedlng, (float) latlng.longitude).commit();
+                   .putFloat(savedlng, (float) latlng.longitude).commit();
     }
 
     public boolean toShowAcc() {
@@ -131,7 +135,7 @@ public class MyPreferences {
     }
 
     public Uri getAlarmSoundUri() {
-        Uri uri;
+        Uri    uri;
         String uriString = preferences.getString(soundURI, "default");
         if (uriString.equals("default")) {
             uri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION);
@@ -278,6 +282,7 @@ public class MyPreferences {
                 return "";
         }
     }
+
     public String getMedTypeName(String type) {
         switch (type) {
             case "mc_m_na":
@@ -293,6 +298,21 @@ public class MyPreferences {
             default:
                 return "";
         }
+    }
+
+    public static void setNotificationList(JSONArray json) {
+        preferences.edit().putString(notificationList, json.toString());
+    }
+
+    public static JSONArray getNotificationList() {
+        JSONArray json;
+        try {
+            json = new JSONArray(preferences.getString(notificationList, "{}"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            json = new JSONArray();
+        }
+        return json;
     }
 }
 

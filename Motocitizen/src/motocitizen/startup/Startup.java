@@ -182,8 +182,9 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
             AccidentsGeneral.refresh(this);
             AccidentsGeneral.toDetails(this, toDetails);
             NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.cancelAll();
-            NewAccidentReceived.clearQueue();
+            //notificationManager.cancelAll();
+            //NewAccidentReceived.clearQueue();
+            NewAccidentReceived.clearAll();
         }
     }
 

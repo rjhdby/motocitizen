@@ -10,14 +10,12 @@ import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import org.json.JSONArray;
+import org.json.JSONException;
 
-import motocitizen.MyApp;
 import motocitizen.app.general.Accident;
 import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.app.general.MyLocationManager;
@@ -28,8 +26,9 @@ import motocitizen.utils.MyUtils;
 
 
 public class NewAccidentReceived extends IntentService {
-    public static Queue<Integer> queue;
+    //public static Queue<Integer> queue;
     private static NotificationManager notificationManager;
+
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      */
@@ -37,14 +36,17 @@ public class NewAccidentReceived extends IntentService {
         super("Intent");
     }
 
+    private MyPreferences prefs;
+
     @Override
     protected void onHandleIntent(Intent intent) {
-
+/*
         if(queue == null){
             queue = new LinkedList<>();
         }
-        MyPreferences prefs = new MyPreferences(this);
-        if(prefs.getDoNotDisturb()){
+        */
+        prefs = new MyPreferences(this);
+        if (prefs.getDoNotDisturb()) {
             GCMBroadcastReceiver.completeWakefulIntent(intent);
             return;
         }
@@ -54,15 +56,15 @@ public class NewAccidentReceived extends IntentService {
         } catch (Accident.MCPointException e) {
             e.printStackTrace();
         }
-        String type = extras.getString("type");
-        String message = extras.getString("message");
-        String title = extras.getString("title");
-        String idString = extras.getString("id");
+        String type      = extras.getString("type");
+        String message   = extras.getString("message");
+        String title     = extras.getString("title");
+        String idString  = extras.getString("id");
         String latString = extras.getString("lat");
         String lngString = extras.getString("lon");
-        if(idString.equals(null)) return;
+        if (idString.equals(null)) return;
         extras.putInt("toDetails", Integer.parseInt(idString));
-        int id;
+        int    id;
         double lat, lng;
         if (MyUtils.isInteger(idString)) {
             id = Integer.valueOf(idString);
@@ -88,10 +90,10 @@ public class NewAccidentReceived extends IntentService {
         notificationIntent.putExtras(extras);
         PendingIntent contentIntent = PendingIntent.getActivity(this, id, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
 
-        Resources res = this.getResources();
+        Resources            res     = this.getResources();
         Notification.Builder builder = new Notification.Builder(this);
         builder.setContentIntent(contentIntent).setSmallIcon(R.drawable.logo).setLargeIcon(BitmapFactory.decodeResource(res, R.drawable.logo))
-                .setTicker(title).setWhen(System.currentTimeMillis()).setAutoCancel(true).setContentTitle(title).setContentText(message);
+               .setTicker(title).setWhen(System.currentTimeMillis()).setAutoCancel(true).setContentTitle(title).setContentText(message);
 
         if (prefs.getAlarmSoundTitle().equals("default system")) {
             builder.setDefaults(Notification.DEFAULT_ALL);
@@ -102,21 +104,58 @@ public class NewAccidentReceived extends IntentService {
         Notification notification = builder.getNotification();
         notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(id, notification);
+        manageTray(id);
         GCMBroadcastReceiver.completeWakefulIntent(intent);
+        /*
         queue.add(id);
         if(queue.size() > prefs.getMaxNotifications()){
             removeNotification(queue.poll());
         }
+        */
     }
+
+    private void manageTray(int id) {
+        JSONArray tray = prefs.getNotificationList();
+        tray.put(String.valueOf(id));
+        int max = prefs.getMaxNotifications();
+        if (max < tray.length()) {
+            JSONArray out = new JSONArray();
+            for (int i = 0; i < tray.length() - max; i++) {
+                try {
+                    int idToCancel = Integer.parseInt(tray.getString(i));
+                    notificationManager.cancel(idToCancel);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            for (int i = tray.length() - max; i < tray.length(); i++) {
+                try {
+                    out.put(tray.getString(i));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            tray = out;
+        }
+        prefs.setNotificationList(tray);
+    }
+    public static void clearAll(){
+        MyPreferences.setNotificationList(new JSONArray());
+        notificationManager.cancelAll();
+    }
+    /*
     public static void removeNotification(int id){
         try {
             notificationManager.cancel(id);
         }catch (Exception e){
         }
     }
+    */
+    /*
     public static void clearQueue(){
         if(queue != null){
             queue.clear();
         }
     }
+    */
 }
