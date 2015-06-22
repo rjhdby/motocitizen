@@ -503,9 +503,9 @@ public class Accident {
     }
 
     public void setCancelOnWay(int userId) {
-        if (userId == 0) return;
-
-        volunteers.get(userId).setStatus(AccidentVolunteer.Status.CANCEL);
+        AccidentVolunteer volunteer = volunteers.get(userId);
+        if (volunteer == null) return;
+        volunteer.setStatus(AccidentVolunteer.Status.CANCEL);
         onway = false;
         inplace = false;
         leave = false;
