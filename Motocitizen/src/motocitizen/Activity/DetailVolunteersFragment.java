@@ -24,8 +24,6 @@ import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.network.requests.CancelOnWayRequest;
 import motocitizen.network.requests.OnWayRequest;
 
-import static motocitizen.app.general.AccidentsGeneral.getDelimiterRow;
-
 public class DetailVolunteersFragment extends AccidentDetailsFragments {
 
     public static final int DIALOG_ONWAY_CONFIRM        = 1;
@@ -37,7 +35,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     private ImageButton onwayDisabledButton;
     private View        toMap;
     private View        onwayContent;
-    private View        inplaceContent;
+    //private View        inplaceContent;
 
     // TODO: Rename and change types and number of parameters
     public static DetailVolunteersFragment newInstance(int accID, String userName) {
@@ -76,7 +74,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         onwayDisabledButton = (ImageButton) viewMain.findViewById(R.id.onway_disabled_button);
         onwayDisabledButton.setEnabled(false);
         onwayContent = viewMain.findViewById(R.id.acc_onway_table);
-        inplaceContent = viewMain.findViewById(R.id.acc_inplace_table);
+        //inplaceContent = viewMain.findViewById(R.id.acc_inplace_table);
         toMap = viewMain.findViewById(R.id.details_to_map_button);
         toMap.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,36 +93,23 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
             setupAccess();
 
             ViewGroup vg_onway = (ViewGroup) onwayContent;
-            ViewGroup vg_inplace = (ViewGroup) inplaceContent;
-            vg_onway.setVisibility(View.INVISIBLE);
-            vg_inplace.setVisibility(View.INVISIBLE);
             vg_onway.removeAllViews();
-            vg_inplace.removeAllViews();
             for (int i : accident.getSortedVolunteersKeys()) {
                 AccidentVolunteer current = accident.volunteers.get(i);
+                /*
                 switch (current.getStatus()) {
                     case ONWAY:
-                        if (vg_onway.getVisibility() == View.INVISIBLE) {
-                            vg_onway.setVisibility(View.VISIBLE);
-                            vg_onway.addView(getDelimiterRow(getActivity(), "В пути"));
-                        }
-                        vg_onway.addView(current.createRow(getActivity()));
+                        vg_onway.addView(getDelimiterRow(getActivity(), "В пути"));
                         break;
                     case INPLACE:
-                        if (vg_onway.getVisibility() == View.INVISIBLE) {
-                            vg_onway.setVisibility(View.VISIBLE);
-                            vg_onway.addView(getDelimiterRow(getActivity(), "На месте"));
-                        }
-                        vg_onway.addView(current.createRow(getActivity()));
+                        vg_onway.addView(getDelimiterRow(getActivity(), "На месте"));
                         break;
                     case LEAVE:
-                        if (vg_onway.getVisibility() == View.INVISIBLE) {
-                            vg_onway.setVisibility(View.VISIBLE);
-                            vg_onway.addView(getDelimiterRow(getActivity(), "Были"));
-                        }
-                        vg_onway.addView(current.createRow(getActivity()));
+                        vg_onway.addView(getDelimiterRow(getActivity(), "Были"));
                         break;
                 }
+                */
+                vg_onway.addView(current.createRow(getActivity()));
             }
         } else {
             showDialog(DIALOG_ACC_NOT_ACTUAL);

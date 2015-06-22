@@ -1,6 +1,7 @@
 package motocitizen.app.general;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -11,6 +12,7 @@ import org.json.JSONObject;
 import java.util.Date;
 
 import motocitizen.utils.Const;
+import motocitizen.utils.MyUtils;
 
 public class AccidentVolunteer {
     public int id;
@@ -79,9 +81,32 @@ public class AccidentVolunteer {
         Log.d("TYPE", type);
         Log.d("NAME", name);
         TableRow tr = new TableRow(context);
+        TableRow.LayoutParams lp = new TableRow.LayoutParams();
         TextView nameView = new TextView(tr.getContext());
         nameView.setText(name + type + Const.timeFormat.format(time.getTime()));
+        nameView.setLayoutParams(lp);
         tr.addView(nameView);
         return tr;
     }
+  /*
+public TableRow createRow(Context context) {
+    TableRow tr = new TableRow(context);
+    TableRow.LayoutParams lp = new TableRow.LayoutParams();
+    TextView tvOwner = new TextView(tr.getContext());
+    TextView tvText = new TextView(tr.getContext());
+    TextView tvDate = new TextView(tr.getContext());
+    lp.setMargins(0, 0, 5, 0);
+    tvOwner.setLayoutParams(lp);
+    tvOwner.setText(name);
+
+    tvText.setText("");
+    tvDate.setText(MyUtils.getStringTime(time, true));
+    tr.setTag(String.valueOf(id));
+    tr.addView(tvOwner);
+    tr.addView(tvText);
+    tr.addView(tvDate);
+    // tr.setOnLongClickListener(rowLongClick);
+    return tr;
+}
+*/
 }
