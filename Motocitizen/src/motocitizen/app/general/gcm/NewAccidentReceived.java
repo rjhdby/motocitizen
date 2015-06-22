@@ -60,6 +60,7 @@ public class NewAccidentReceived extends IntentService {
         String idString = extras.getString("id");
         String latString = extras.getString("lat");
         String lngString = extras.getString("lon");
+        if(idString.equals(null)) return;
         extras.putInt("toDetails", Integer.parseInt(idString));
         int id;
         double lat, lng;

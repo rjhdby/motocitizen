@@ -46,6 +46,7 @@ public class Auth {
 
     private void showLogin(Context context) {
         Intent i = new Intent(context, AuthActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);
     }
 
