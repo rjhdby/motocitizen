@@ -3,19 +3,15 @@ package motocitizen.app.general;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -140,7 +136,7 @@ public class Accident {
         createPoint(data);
         makeHistory(null);
         makeMessages(null);
-        makeVolunteers(null, 0);
+        makeVolunteers(null);
     }
 
     public Accident(JSONObject json, Context context) throws MCPointException {
@@ -151,7 +147,7 @@ public class Accident {
         try {
             makeHistory(json.getJSONArray("history"));
             makeMessages(json.getJSONArray("messages"));
-            makeVolunteers(json.getJSONArray("onway"), id);
+            makeVolunteers(json.getJSONArray("onway"));
         } catch (JSONException e) {
             e.printStackTrace();
             throw new MCPointException();
@@ -316,7 +312,7 @@ public class Accident {
         }
     }
 
-    private void makeVolunteers(JSONArray json, int accID) {
+    private void makeVolunteers(JSONArray json) {
         if (volunteers == null)
             volunteers = new HashMap<>();
         if (json == null) {
@@ -328,6 +324,7 @@ public class Accident {
                 AccidentVolunteer volunteer = new AccidentVolunteer(json.getJSONObject(i));
                 volunteers.put(volunteer.id, volunteer);
                 //newVolunteers.put(current.id, current);
+                /*
                 if (volunteer.id == myApp.getMCAuth().getID()) {
                     switch (volunteer.getStatus()) {
                         case ONWAY:
@@ -343,7 +340,9 @@ public class Accident {
                             setLeave(volunteer.id);
                             break;
                     }
+
                 }
+                */
             } catch (JSONException e) {
                 e.printStackTrace();
             }

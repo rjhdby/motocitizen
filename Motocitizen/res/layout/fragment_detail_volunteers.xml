@@ -1,11 +1,11 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/det_volunteers"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:visibility="visible"
-    tools:context="motocitizen.Activity.DetailVolunteersFragment">
+<LinearLayout android:id="@+id/det_volunteers"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:visibility="visible"
+              tools:context="motocitizen.Activity.DetailVolunteersFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -23,14 +23,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:stretchColumns="*"
-                android:visibility="invisible" />
+                android:visibility="invisible"/>
 
             <TableLayout
                 android:id="@+id/acc_onway_table"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:stretchColumns="*"
-                android:visibility="invisible" />
+                android:visibility="invisible"/>
         </LinearLayout>
     </ScrollView>
 
@@ -47,22 +47,34 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_weight="0.5"
+            android:adjustViewBounds="false"
+            android:contentDescription="onway"
             android:src="@drawable/onway"
-            android:text="@string/onway_button"
-            android:contentDescription = "onway"
-            android:adjustViewBounds="false" />
+            android:text="@string/onway_button"/>
 
         <ImageButton
-                android:id="@+id/onway_cancel_button"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_weight="0.5"
-                android:src="@drawable/onway_cancel"
-                android:text="@string/onway_cancel_button"
-                android:contentDescription = "onway"
-                android:adjustViewBounds="false" />
+            android:id="@+id/onway_cancel_button"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="0.5"
+            android:adjustViewBounds="false"
+            android:contentDescription="onway"
+            android:src="@drawable/onway_cancel"
+            android:text="@string/onway_cancel_button"/>
+
+        <ImageButton
+            android:id="@+id/onway_disabled_button"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="0.5"
+            android:adjustViewBounds="false"
+            android:contentDescription="onway"
+            android:src="@drawable/onway_disabled"
+            android:text="@string/onway_cancel_button"/>
 
         <Button
             android:id="@+id/details_to_map_button"
@@ -70,6 +82,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:text="@string/to_map" />
+            android:text="@string/to_map"/>
     </LinearLayout>
 </LinearLayout>

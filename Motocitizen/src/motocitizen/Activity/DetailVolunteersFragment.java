@@ -28,20 +28,21 @@ import static motocitizen.app.general.AccidentsGeneral.getDelimiterRow;
 
 public class DetailVolunteersFragment extends AccidentDetailsFragments {
 
-    public static final int DIALOG_ONWAY_CONFIRM = 1;
-    public static final int DIALOG_ACC_NOT_ACTUAL = 2;
+    public static final int DIALOG_ONWAY_CONFIRM        = 1;
+    public static final int DIALOG_ACC_NOT_ACTUAL       = 2;
     public static final int DIALOG_CANCEL_ONWAY_CONFIRM = 3;
 
     private ImageButton onwayButton;
     private ImageButton onwayCancelButton;
-    private View toMap;
-    private View onwayContent;
-    private View inplaceContent;
+    private ImageButton onwayDisabledButton;
+    private View        toMap;
+    private View        onwayContent;
+    private View        inplaceContent;
 
     // TODO: Rename and change types and number of parameters
     public static DetailVolunteersFragment newInstance(int accID, String userName) {
         DetailVolunteersFragment fragment = new DetailVolunteersFragment();
-        Bundle args = new Bundle();
+        Bundle                   args     = new Bundle();
         args.putInt(ACCIDENT_ID, accID);
         args.putString(USER_NAME, userName);
         fragment.setArguments(args);
@@ -72,6 +73,8 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
             }
         });
 
+        onwayDisabledButton = (ImageButton) viewMain.findViewById(R.id.onway_disabled_button);
+        onwayDisabledButton.setEnabled(false);
         onwayContent = viewMain.findViewById(R.id.acc_onway_table);
         inplaceContent = viewMain.findViewById(R.id.acc_inplace_table);
         toMap = viewMain.findViewById(R.id.details_to_map_button);
@@ -136,19 +139,27 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
 
     private void setupAccess() {
         Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
-        if (accident.getId() == AccidentsGeneral.getOnway() || accident.getId() == AccidentsGeneral.getInplaceID() || !AccidentsGeneral.auth.isAuthorized() || !accident.isActive()) {
+        if (accident.getId() == prefs.getOnWay()) {
             onwayButton.setVisibility(View.GONE);
             onwayCancelButton.setVisibility(View.VISIBLE);
+            onwayDisabledButton.setVisibility(View.GONE);
+
+        } else if (accident.getId() == AccidentsGeneral.getInplaceID() || !AccidentsGeneral.auth.isAuthorized() || !accident.isActive()) {
+            onwayButton.setVisibility(View.GONE);
+            onwayCancelButton.setVisibility(View.GONE);
+            onwayDisabledButton.setVisibility(View.VISIBLE);
+
         } else {
             onwayButton.setVisibility(View.VISIBLE);
-            onwayCancelButton.setVisibility(View.INVISIBLE);
+            onwayCancelButton.setVisibility(View.GONE);
+            onwayDisabledButton.setVisibility(View.GONE);
         }
     }
 
     void showDialog(int type) {
         mStackLevel++;
-        FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
-        Fragment prev = getActivity().getFragmentManager().findFragmentByTag("dialog");
+        FragmentTransaction ft   = getActivity().getFragmentManager().beginTransaction();
+        Fragment            prev = getActivity().getFragmentManager().findFragmentByTag("dialog");
         if (prev != null) {
             ft.remove(prev);
         }
@@ -210,14 +221,15 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     }
 
     private void sendOnway() {
-        AccidentsGeneral.setOnWay(accidentID);
+        //AccidentsGeneral.setOnWay(accidentID);
+        prefs.setOnWay(accidentID);
         new OnWayRequest(new OnWayCallback(), this.getActivity(), accidentID);
     }
 
     private class OnWayCallback implements AsyncTaskCompleteListener {
         @Override
         public void onTaskComplete(JSONObject result) {
-            if(result.has("error")){
+            if (result.has("error")) {
                 try {
                     Toast.makeText(getActivity(), result.getString("error"), Toast.LENGTH_LONG).show();
                 } catch (JSONException e) {
@@ -243,7 +255,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     }
 
     private void sendCancelOnway() {
-        AccidentsGeneral.setCancelOnWay(accidentID);
+        prefs.setOnWay(0);
         new CancelOnWayRequest(new OnWayCallback(), this.getActivity(), accidentID);
     }
 }
