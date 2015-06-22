@@ -130,8 +130,7 @@ class PopupWindowGeneral {
         return tr;
     }
 
-    static TableRow smsButtonRow(String raw) {
-        String phone = raw.substring(1);
+    static TableRow smsButtonRow(String phone) {
         Button dial  = new Button(content.getContext());
         dial.setText(SMS_PREFIX + phone);
         dial.setOnClickListener(smsButtonListener);
