@@ -102,7 +102,9 @@ public class NewAccidentReceived extends IntentService {
             builder.setVibrate(new long[]{1000, 1000, 1000});
         }
         Notification notification = builder.getNotification();
-        notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        if(notificationManager == null) {
+            notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        }
         notificationManager.notify(id, notification);
         manageTray(id);
         GCMBroadcastReceiver.completeWakefulIntent(intent);
@@ -139,7 +141,10 @@ public class NewAccidentReceived extends IntentService {
         }
         prefs.setNotificationList(tray);
     }
-    public static void clearAll(){
+    public static void clearAll(Context context){
+        if(notificationManager == null) {
+            notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        }
         MyPreferences.setNotificationList(new JSONArray());
         notificationManager.cancelAll();
     }
