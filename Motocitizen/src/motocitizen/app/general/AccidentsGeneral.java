@@ -4,15 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.View;
-import android.view.View.OnLongClickListener;
+import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,22 +25,18 @@ import java.util.List;
 import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.MyApp;
 import motocitizen.app.general.gcm.GCMRegistration;
-import motocitizen.app.general.popups.AccidentListPopup;
 import motocitizen.app.general.user.Auth;
 import motocitizen.main.R;
-import motocitizen.startup.MyPreferences;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 
 public class AccidentsGeneral {
     private MyApp myApp = null;
-    //private static int onwayAcc;
-    private static int inplaceAcc;
-    private static Accident currentPoint;
-    public static Accidents points;
-    public static Auth auth;
+    private static int       inplaceAcc;
+    private static Accident  currentPoint;
+    public static  Accidents points;
+    public static  Auth      auth;
     private static Integer[] sorted;
-    private static MyPreferences prefs;
 
     public static int getInplaceID() {
         return inplaceAcc;
@@ -63,7 +55,7 @@ public class AccidentsGeneral {
     public static void setLeave(int id) {
         Accident acc = points.getPoint(id);
         // Вероятно попадается инцидент которого уже нет в списке.
-        if(acc != null && acc.isInPlace()) {
+        if (acc != null && acc.isInPlace()) {
             points.getPoint(id).setLeave(auth.getID());
         }
     }
@@ -78,8 +70,6 @@ public class AccidentsGeneral {
 
     public AccidentsGeneral(Context context) {
         myApp = (MyApp) context.getApplicationContext();
-        prefs = myApp.getPreferences();
-        //onwayAcc = 0;
         inplaceAcc = 0;
         auth = myApp.getMCAuth();
         new MyLocationManager(context);
@@ -106,23 +96,14 @@ public class AccidentsGeneral {
         Arrays.sort(sorted, Collections.reverseOrder());
     }
 
-    private static TextView yesterdayRow(Context context) {
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        int margin = (int) (8 * Const.getDP(context));
-        lp.setMargins(margin, 0, margin, 0);
-        TextView tv = new TextView(context);
-        tv.setText("Вчера");
-        tv.setTextColor(Color.WHITE);
-        tv.setTypeface(null, Typeface.BOLD);
-        tv.setGravity(Gravity.CENTER);
-        tv.setBackgroundColor(0xFFC62828);
-        tv.setLayoutParams(lp);
-        return tv;
+    private static void inflateYesterdayRow(Context context, ViewGroup view) {
+        LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        view.addView(li.inflate(R.layout.yesterday_row, view, false));
     }
 
     private static FrameLayout noAccidentsNotification(Context context) {
         FrameLayout fl = new FrameLayout(context);
-        TextView tv = new TextView(context);
+        TextView    tv = new TextView(context);
         tv.setText("Нет событий");
         tv.setTextColor(Color.RED);
         tv.setGravity(Gravity.CENTER);
@@ -143,7 +124,7 @@ public class AccidentsGeneral {
                 Accident acc = points.getPoint(aSorted);
                 if (acc.isVisible()) {
                     if (!acc.isToday() && noYesterday) {
-                        view.addView(yesterdayRow(context));
+                        inflateYesterdayRow(context, view);
                         noYesterday = false;
                     }
                     FrameLayout tr = acc.createAccRow(context);
