@@ -105,7 +105,6 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
 
         for (int i : accident.getSortedMessagesKeys()) {
-            //messageView.addView(accident.messages.get(i).createRow(getActivity(), userName));
             accident.messages.get(i).inflateRow(getActivity(), messageView);
         }
         setupAccess();

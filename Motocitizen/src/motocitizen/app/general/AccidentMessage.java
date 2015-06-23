@@ -40,34 +40,6 @@ public class AccidentMessage {
         text = json.getString("text");
         time = new Date(Long.parseLong(json.getString("uxtime"), 10) * 1000);
     }
-/*
-    public TableRow createRow(Context context, String login) {
-        this.context = context;
-        TableRow              tr      = new TableRow(context);
-        TableRow.LayoutParams lp      = new TableRow.LayoutParams();
-        TextView              tvTime  = new TextView(tr.getContext());
-        TextView              tvOwner = new TextView(tr.getContext());
-        TextView              tvText  = new TextView(tr.getContext());
-        lp.setMargins(0, 0, 5, 0);
-        tvTime.setText(Const.timeFormat.format(time.getTime()));
-        tvOwner.setLayoutParams(lp);
-        tvOwner.setText(owner);
-        if (owner.equals(login)) {
-            tvOwner.setBackgroundColor(Color.DKGRAY);
-        } else {
-            tvOwner.setBackgroundColor(Color.GRAY);
-        }
-        tvText.setMaxLines(10);
-        tvText.setSingleLine(false);
-        tvText.setText(text);
-        tr.setTag(String.valueOf(id));
-        tr.addView(tvTime);
-        tr.addView(tvOwner);
-        tr.addView(tvText);
-        tr.setOnLongClickListener(rowLongClick);
-        return tr;
-    }
-    */
     public void inflateRow(Context context, ViewGroup tableLayout) {
         LayoutInflater li        = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         TableRow       tr        = (TableRow) li.inflate(R.layout.message_row, tableLayout, false);

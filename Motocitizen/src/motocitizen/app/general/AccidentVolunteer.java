@@ -68,28 +68,6 @@ public class AccidentVolunteer {
         this.status = status;
         this.time = new Date();
     }
-
-    /*
-        public TableRow createRow(Context context) {
-            String type = ", выехал в ";
-            if(isInplace()) {
-                type = ", приехал в ";
-            } else if(isLeave()){
-                type = ", уехал в ";
-            } else if(isCancel()) {
-                type = ", отменил выезд в ";
-            }
-            Log.d("TYPE", type);
-            Log.d("NAME", name);
-            TableRow tr = new TableRow(context);
-            TableRow.LayoutParams lp = new TableRow.LayoutParams();
-            TextView nameView = new TextView(tr.getContext());
-            nameView.setText(name + type + Const.timeFormat.format(time.getTime()));
-            nameView.setLayoutParams(lp);
-            tr.addView(nameView);
-            return tr;
-        }
-        */
     private void inflateHeader(Context context, ViewGroup tableLayout) {
         LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         TableRow       tr = (TableRow) li.inflate(R.layout.volunteer_row, tableLayout, false);
