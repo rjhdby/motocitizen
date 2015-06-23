@@ -59,11 +59,7 @@ public class AccidentsGeneral {
         }
         points.getPoint(id).setInPlace(auth.getID());
     }
-/*
-    public static int getOnway() {
-        return onwayAcc;
-    }
-*/
+
     public static void setLeave(int id) {
         Accident acc = points.getPoint(id);
         // Вероятно попадается инцидент которого уже нет в списке.
@@ -71,28 +67,6 @@ public class AccidentsGeneral {
             points.getPoint(id).setLeave(auth.getID());
         }
     }
-
-    /*
-    public static void setOnWay(int id) {
-
-        for (int key : points.keySet()) {
-            if (points.getPoint(key).isOnWay()) {
-                points.getPoint(key).resetStatus();
-            }
-        }
-        onwayAcc = id;
-        points.getPoint(id).setOnWay(auth.getID());
-    }
-*/
-    /*
-    public static void setCancelOnWay(int id) {
-
-        points.getPoint(id).setCancelOnWay(auth.getID());
-        onwayAcc = 0;
-
-        prefs.setOnWay(0);
-    }
-    */
 
     public static int getCurrentPointID() {
         return currentPoint.getId();

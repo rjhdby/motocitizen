@@ -20,8 +20,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import motocitizen.app.general.AccidentTypes;
 import motocitizen.app.general.Accident;
+import motocitizen.app.general.AccidentTypes;
 import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.app.general.MyLocationManager;
 import motocitizen.main.R;
@@ -31,10 +31,10 @@ import motocitizen.utils.MyUtils;
 
 @SuppressLint("UseSparseArrays")
 public class MyGoogleMapManager extends MyMapManager {
-    private static GoogleMap map;
-    private static Marker user;
+    private static GoogleMap            map;
+    private static Marker               user;
     private static Map<String, Integer> accidents;
-    private static String selected;
+    private static String               selected;
 
     public MyGoogleMapManager(final Context context) {
         setName(MyMapManager.GOOGLE);
@@ -43,10 +43,10 @@ public class MyGoogleMapManager extends MyMapManager {
         Inflate.set(context, R.id.map_container, R.layout.google_maps_view);
 
         android.support.v4.app.FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
-        final SupportMapFragment mapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.google_map);
+        final SupportMapFragment               mapFragment     = (SupportMapFragment) fragmentManager.findFragmentById(R.id.google_map);
         map = mapFragment.getMap();
 /* Возможно поможет, хотя и костыль */
-        if(map == null){
+        if (map == null) {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
@@ -72,7 +72,7 @@ public class MyGoogleMapManager extends MyMapManager {
         map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
-                String uri = String.format(Locale.ENGLISH, "geo:" + latLng.latitude + "," + latLng.longitude);
+                String uri    = String.format(Locale.ENGLISH, "geo:" + latLng.latitude + "," + latLng.longitude);
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                 context.startActivity(intent);
             }
@@ -88,7 +88,7 @@ public class MyGoogleMapManager extends MyMapManager {
         Location location = MyLocationManager.getLocation(context);
         //if(location != null) {
         user = map.addMarker(new MarkerOptions().position(MyUtils.LocationToLatLng(location)).title("Вы")
-                .icon(AccidentTypes.getBitmapDescriptor("user")));
+                                                .icon(AccidentTypes.getBitmapDescriptor("user")));
         //} else {
         //TODO Отобразить сообщение?
         //Toast.makeText(this, Startup.context.getString(R.string.position_not_available), Toast.LENGTH_LONG).show();
@@ -107,15 +107,16 @@ public class MyGoogleMapManager extends MyMapManager {
         init();
         accidents.clear();
         for (int id : AccidentsGeneral.points.keySet()) {
-            Accident p = AccidentsGeneral.points.getPoint(id);
-            String title = p.getTypeText();
-            if (!p.getMedText().equals("")) {
-                title += ", " + p.getMedText();
+            Accident point = AccidentsGeneral.points.getPoint(id);
+            if (!point.isVisible()) continue;
+            String title = point.getTypeText();
+            if (!point.getMedText().equals("")) {
+                title += ", " + point.getMedText();
             }
-            title += ", " + MyUtils.getIntervalFromNowInText(p.created) + " назад";
+            title += ", " + MyUtils.getIntervalFromNowInText(point.created) + " назад";
 
             float alpha;
-            int age = (int) (((new Date()).getTime() - p.created.getTime()) / 3600000);
+            int age = (int) (((new Date()).getTime() - point.created.getTime()) / 3600000);
             if (age < 2) {
                 alpha = 1.0f;
             } else if (age < 6) {
@@ -123,8 +124,8 @@ public class MyGoogleMapManager extends MyMapManager {
             } else {
                 alpha = 0.2f;
             }
-            Marker marker = map.addMarker(new MarkerOptions().position(MyUtils.LocationToLatLng(p.getLocation())).title(title)
-                    .icon(AccidentTypes.getBitmapDescriptor(p.getType())).alpha(alpha));
+            Marker marker = map.addMarker(new MarkerOptions().position(MyUtils.LocationToLatLng(point.getLocation())).title(title)
+                                                             .icon(AccidentTypes.getBitmapDescriptor(point.getType())).alpha(alpha));
             accidents.put(marker.getId(), id);
         }
     }
