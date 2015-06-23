@@ -3,8 +3,10 @@ package motocitizen.app.general;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnLongClickListener;
+import android.view.ViewGroup;
 import android.widget.PopupWindow;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -15,7 +17,9 @@ import org.json.JSONObject;
 import java.util.Date;
 
 import motocitizen.app.general.popups.MessagesPopup;
+import motocitizen.main.R;
 import motocitizen.utils.Const;
+import motocitizen.utils.MyUtils;
 
 public class AccidentMessage {
     public       int    id;
@@ -36,7 +40,7 @@ public class AccidentMessage {
         text = json.getString("text");
         time = new Date(Long.parseLong(json.getString("uxtime"), 10) * 1000);
     }
-
+/*
     public TableRow createRow(Context context, String login) {
         this.context = context;
         TableRow              tr      = new TableRow(context);
@@ -62,6 +66,20 @@ public class AccidentMessage {
         tr.addView(tvText);
         tr.setOnLongClickListener(rowLongClick);
         return tr;
+    }
+    */
+    public void inflateRow(Context context, ViewGroup tableLayout) {
+        LayoutInflater li        = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        TableRow       tr        = (TableRow) li.inflate(R.layout.message_row, tableLayout, false);
+        TextView       ownerView = (TextView) tr.findViewById(R.id.owner);
+        if (owner.equals(AccidentsGeneral.auth.getLogin())) {
+            ownerView.setBackgroundColor(Color.DKGRAY);
+        }
+        ownerView.setText(owner);
+        ((TextView) tr.findViewById(R.id.text)).setText(text);
+        ((TextView) tr.findViewById(R.id.time)).setText(Const.timeFormat.format(time.getTime()));
+        tr.setOnLongClickListener(rowLongClick);
+        tableLayout.addView(tr);
     }
 
     private final OnLongClickListener rowLongClick = new OnLongClickListener() {

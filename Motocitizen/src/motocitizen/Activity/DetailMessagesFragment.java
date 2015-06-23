@@ -27,8 +27,8 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
     private OnFragmentInteractionListener mListener;
 
     private ImageButton newMessageButton;
-    private EditText mcNewMessageText;
-    private String currentText;
+    private EditText    mcNewMessageText;
+    private String      currentText;
 
     View newMessageArea;
 
@@ -43,7 +43,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
 
     public static DetailMessagesFragment newInstance(int accID, String userName) {
         DetailMessagesFragment fragment = new DetailMessagesFragment();
-        Bundle args = new Bundle();
+        Bundle                 args     = new Bundle();
         args.putInt(ACCIDENT_ID, accID);
         args.putString(USER_NAME, userName);
         fragment.setArguments(args);
@@ -105,7 +105,8 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
 
         for (int i : accident.getSortedMessagesKeys()) {
-            messageView.addView(accident.messages.get(i).createRow(getActivity(), userName));
+            //messageView.addView(accident.messages.get(i).createRow(getActivity(), userName));
+            accident.messages.get(i).inflateRow(getActivity(), messageView);
         }
         setupAccess();
     }
