@@ -23,7 +23,7 @@ android {
       resources.srcDirs = ['src','assets']
       aidl.srcDirs = ['src','assets']
       renderscript.srcDirs = ['src','assets']
-      res.srcDirs = ['res']
+      res.srcDirs = ['res','res/tablerows']
       assets.srcDirs = ['assets']
     }
     instrumentTest.setRoot('tests')

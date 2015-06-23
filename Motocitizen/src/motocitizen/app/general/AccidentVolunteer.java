@@ -1,8 +1,8 @@
 package motocitizen.app.general;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -11,14 +11,14 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
+import motocitizen.main.R;
 import motocitizen.utils.Const;
-import motocitizen.utils.MyUtils;
 
 public class AccidentVolunteer {
-    public int id;
-    public String name;
+    public  int    id;
+    public  String name;
     private Status status;
-    public Date time;
+    public  Date   time;
 
     public enum Status {
         INPLACE, LEAVE, ONWAY, CANCEL
@@ -29,13 +29,13 @@ public class AccidentVolunteer {
     }
 
     public void setStatus(String newStatus) {
-        if(newStatus.equals("inplace"))
+        if (newStatus.equals("inplace"))
             status = Status.INPLACE;
-        else if(newStatus.equals("leave"))
+        else if (newStatus.equals("leave"))
             status = Status.LEAVE;
-        else if(newStatus.equals("onway"))
+        else if (newStatus.equals("onway"))
             status = Status.ONWAY;
-        else if(newStatus.equals("cancel"))
+        else if (newStatus.equals("cancel"))
             status = Status.CANCEL;
     }
 
@@ -62,51 +62,59 @@ public class AccidentVolunteer {
         time = new Date(Long.parseLong(json.getString("uxtime"), 10) * 1000);
     }
 
-    public AccidentVolunteer(int id, String name, Status status){
+    public AccidentVolunteer(int id, String name, Status status) {
         this.id = id;
         this.name = name;
         this.status = status;
         this.time = new Date();
     }
 
-    public TableRow createRow(Context context) {
-        String type = ", выехал в ";
-        if(isInplace()) {
-            type = ", приехал в ";
-        } else if(isLeave()){
-            type = ", уехал в ";
-        } else if(isCancel()) {
-            type = ", отменил выезд в ";
+    /*
+        public TableRow createRow(Context context) {
+            String type = ", выехал в ";
+            if(isInplace()) {
+                type = ", приехал в ";
+            } else if(isLeave()){
+                type = ", уехал в ";
+            } else if(isCancel()) {
+                type = ", отменил выезд в ";
+            }
+            Log.d("TYPE", type);
+            Log.d("NAME", name);
+            TableRow tr = new TableRow(context);
+            TableRow.LayoutParams lp = new TableRow.LayoutParams();
+            TextView nameView = new TextView(tr.getContext());
+            nameView.setText(name + type + Const.timeFormat.format(time.getTime()));
+            nameView.setLayoutParams(lp);
+            tr.addView(nameView);
+            return tr;
         }
-        Log.d("TYPE", type);
-        Log.d("NAME", name);
-        TableRow tr = new TableRow(context);
-        TableRow.LayoutParams lp = new TableRow.LayoutParams();
-        TextView nameView = new TextView(tr.getContext());
-        nameView.setText(name + type + Const.timeFormat.format(time.getTime()));
-        nameView.setLayoutParams(lp);
-        tr.addView(nameView);
-        return tr;
+        */
+    private void inflateHeader(Context context, ViewGroup tableLayout) {
+        LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        TableRow       tr = (TableRow) li.inflate(R.layout.volunteer_row, tableLayout, false);
+        ((TextView) tr.findViewById(R.id.volunteer)).setText("Кто");
+        ((TextView) tr.findViewById(R.id.action)).setText("Что");
+        ((TextView) tr.findViewById(R.id.time)).setText("Когда");
+        tableLayout.addView(tr);
     }
-  /*
-public TableRow createRow(Context context) {
-    TableRow tr = new TableRow(context);
-    TableRow.LayoutParams lp = new TableRow.LayoutParams();
-    TextView tvOwner = new TextView(tr.getContext());
-    TextView tvText = new TextView(tr.getContext());
-    TextView tvDate = new TextView(tr.getContext());
-    lp.setMargins(0, 0, 5, 0);
-    tvOwner.setLayoutParams(lp);
-    tvOwner.setText(name);
 
-    tvText.setText("");
-    tvDate.setText(MyUtils.getStringTime(time, true));
-    tr.setTag(String.valueOf(id));
-    tr.addView(tvOwner);
-    tr.addView(tvText);
-    tr.addView(tvDate);
-    // tr.setOnLongClickListener(rowLongClick);
-    return tr;
-}
-*/
+    public void inflateRow(Context context, ViewGroup tableLayout) {
+        if (isCancel() || isLeave()) return;
+        if (tableLayout.getChildCount() == 0) {
+            inflateHeader(context, tableLayout);
+        }
+        String type;
+        if (isInplace()) {
+            type = "приехал";
+        } else {
+            type = "выехал";
+        }
+        LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        TableRow       tr = (TableRow) li.inflate(R.layout.volunteer_row, tableLayout, false);
+        ((TextView) tr.findViewById(R.id.volunteer)).setText(name);
+        ((TextView) tr.findViewById(R.id.action)).setText(type);
+        ((TextView) tr.findViewById(R.id.time)).setText(Const.timeFormat.format(time.getTime()));
+        tableLayout.addView(tr);
+    }
 }

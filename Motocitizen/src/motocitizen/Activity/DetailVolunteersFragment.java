@@ -109,7 +109,8 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
                         break;
                 }
                 */
-                vg_onway.addView(current.createRow(getActivity()));
+                //vg_onway.addView(current.createRow(getActivity()));
+                current.inflateRow(getActivity(), vg_onway);
             }
         } else {
             showDialog(DIALOG_ACC_NOT_ACTUAL);

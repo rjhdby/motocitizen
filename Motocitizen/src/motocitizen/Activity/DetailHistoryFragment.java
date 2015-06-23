@@ -17,7 +17,7 @@ public class DetailHistoryFragment extends AccidentDetailsFragments {
 
     public static DetailHistoryFragment newInstance(int accID, String userName) {
         DetailHistoryFragment fragment = new DetailHistoryFragment();
-        Bundle args = new Bundle();
+        Bundle                args     = new Bundle();
         args.putInt(ACCIDENT_ID, accID);
         args.putString(USER_NAME, userName);
         fragment.setArguments(args);
@@ -42,9 +42,8 @@ public class DetailHistoryFragment extends AccidentDetailsFragments {
 
         ViewGroup logView = (ViewGroup) mcDetLogContent;
         logView.removeAllViews();
-        logView.addView(AccidentHistory.createHeader(getActivity()));
         for (int i : accident.getSortedHistoryKeys()) {
-            logView.addView(accident.history.get(i).createRow(getActivity(), userName));
+            accident.history.get(i).inflateRow(getActivity(), logView);
         }
     }
 

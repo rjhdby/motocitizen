@@ -2,10 +2,8 @@ package motocitizen.app.general;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.view.Gravity;
-import android.view.View;
-import android.view.View.OnLongClickListener;
-import android.widget.PopupWindow;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -17,9 +15,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import motocitizen.app.general.popups.AccidentListPopup;
-import motocitizen.app.general.popups.MessagesPopup;
-import motocitizen.startup.Startup;
+import motocitizen.main.R;
 import motocitizen.utils.MyUtils;
 
 public class AccidentHistory {
@@ -39,11 +35,11 @@ public class AccidentHistory {
         actions = Collections.unmodifiableMap(m);
     }
 
-    public       int id;
-    public       int owner_id;
-    public       int table_row;
-    public final int acc_id;
-    public String owner, action;
+    public       int    id;
+    public       int    owner_id;
+    public       int    table_row;
+    public final int    acc_id;
+    public       String owner, action;
     public Date time;
 
     public AccidentHistory(JSONObject json, int acc_id) throws JSONException {
@@ -55,23 +51,6 @@ public class AccidentHistory {
         time = new Date(Long.parseLong(json.getString("uxtime"), 10) * 1000);
     }
 
-    public static TableRow createHeader(Context context) {
-        TableRow              tr      = new TableRow(context);
-        TableRow.LayoutParams lp      = new TableRow.LayoutParams();
-        TextView              tvOwner = new TextView(tr.getContext());
-        TextView              tvText  = new TextView(tr.getContext());
-        TextView              tvDate  = new TextView(tr.getContext());
-        lp.setMargins(0, 0, 5, 0);
-        tvOwner.setLayoutParams(lp);
-        tvOwner.setText("Кто");
-        tvText.setText("Что");
-        tvDate.setText("Когда");
-        tr.addView(tvOwner);
-        tr.addView(tvText);
-        tr.addView(tvDate);
-        return tr;
-    }
-
     String getAction() {
         if (actions.containsKey(action)) {
             return actions.get(action);
@@ -80,27 +59,28 @@ public class AccidentHistory {
         }
     }
 
-    public TableRow createRow(Context context, String login) {
-        TableRow tr = new TableRow(context);
-        TableRow.LayoutParams lp = new TableRow.LayoutParams();
-        TextView tvOwner = new TextView(tr.getContext());
-        TextView tvText = new TextView(tr.getContext());
-        TextView tvDate = new TextView(tr.getContext());
-        lp.setMargins(0, 0, 5, 0);
-        tvOwner.setLayoutParams(lp);
-        tvOwner.setText(owner);
-        if (owner.equals(login)) {
-            tvOwner.setBackgroundColor(Color.DKGRAY);
-        } else {
-            tvOwner.setBackgroundColor(Color.GRAY);
+    private void inflateHeader(Context context, ViewGroup tableLayout) {
+        LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        TableRow       tr = (TableRow) li.inflate(R.layout.history_row, tableLayout, false);
+        ((TextView) tr.findViewById(R.id.owner)).setText("Кто");
+        ((TextView) tr.findViewById(R.id.text)).setText("Что");
+        ((TextView) tr.findViewById(R.id.date)).setText("Когда");
+        tableLayout.addView(tr);
+    }
+
+    public void inflateRow(Context context, ViewGroup tableLayout) {
+        if (tableLayout.getChildCount() == 0) {
+            inflateHeader(context, tableLayout);
         }
-        tvText.setText(getAction());
-        tvDate.setText(MyUtils.getStringTime(time, true));
-        tr.setTag(String.valueOf(id));
-        tr.addView(tvOwner);
-        tr.addView(tvText);
-        tr.addView(tvDate);
-        // tr.setOnLongClickListener(rowLongClick);
-        return tr;
+        LayoutInflater li        = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        TableRow       tr        = (TableRow) li.inflate(R.layout.history_row, tableLayout, false);
+        TextView       ownerView = (TextView) tr.findViewById(R.id.owner);
+        if (owner.equals(AccidentsGeneral.auth.getLogin())) {
+            ownerView.setBackgroundColor(Color.DKGRAY);
+        }
+        ownerView.setText(owner);
+        ((TextView) tr.findViewById(R.id.text)).setText(getAction());
+        ((TextView) tr.findViewById(R.id.date)).setText(MyUtils.getStringTime(time, true));
+        tableLayout.addView(tr);
     }
 }
