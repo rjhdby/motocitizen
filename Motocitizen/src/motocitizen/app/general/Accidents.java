@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -110,7 +111,6 @@ public class Accidents {
         if (selected.row_id == 0) {
             int nnid = getFirstNonNull();
             if (nnid == 0) {
-                //noinspection UnnecessaryReturnStatement
                 return;
             } else {
                 setSelected(context, nnid);
@@ -118,15 +118,6 @@ public class Accidents {
                 AccidentsGeneral.redraw(context);
             }
         } else {
-            /*
-            View row = ((Activity) context).findViewById(selected.row_id);
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-            int margin = (int) (4 * Const.getDP(context));
-            lp.setMargins(margin, 0, margin, 0);
-            row.setLayoutParams(lp);
-            row.setPadding(0, margin, 0, margin);
-*/
             selected.resetMessagesUnreadFlag();
         }
     }
@@ -141,18 +132,29 @@ public class Accidents {
         return NORMAL;
     }
 
-    public String getTextToCopy(int id) {
+    public String toString(int id) {
         return points.get(id).getTextToCopy();
     }
 
     private class AccidentsRequestCallback implements AsyncTaskCompleteListener {
         @Override
         public void onTaskComplete(JSONObject result) {
-            try {
-                parseJSON(result.getJSONArray("list"));
-            } catch (JSONException e) {
-                e.printStackTrace();
+
+            if (result.has("error")) {
+                try {
+                    Toast.makeText(context, result.getString("error"), Toast.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    Toast.makeText(context, "Неизвестная ошибка" + result.toString(), Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
+            } else {
+                try {
+                    parseJSON(result.getJSONArray("list"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
+
         }
     }
 }
