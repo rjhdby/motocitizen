@@ -379,11 +379,11 @@ public class Accident {
         fl.setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                PopupWindow pw;
-                pw = AccidentListPopup.getPopupWindow(context, id, false);
+                PopupWindow popupWindow;
+                popupWindow = (new AccidentListPopup(context, AccidentsGeneral.getCurrentPointID(), false)).getPopupWindow();
                 int viewLocation[] = new int[2];
                 v.getLocationOnScreen(viewLocation);
-                pw.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
+                popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
                 return true;
             }
         });

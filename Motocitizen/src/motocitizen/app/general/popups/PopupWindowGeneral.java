@@ -4,11 +4,13 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -26,21 +28,29 @@ import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.network.requests.BanRequest;
 import motocitizen.utils.MyUtils;
 
-class PopupWindowGeneral {
+abstract class PopupWindowGeneral {
 
     static final String CALL_PREFIX = "Вызов: ";
     static final String SMS_PREFIX  = "СМС: ";
 
-    static final TableRow.LayoutParams lp = new TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-    static         TableLayout content;
-    static         PopupWindow pw;
-    static         String      textToCopy;
-    private static Context     context;
+    final TableRow.LayoutParams layoutParams;
+    TableLayout content;
+    PopupWindow popupWindow;
+    Context context;
 
-    private static Accident point;
+    PopupWindowGeneral(Context context) {
+        this.context = context;
+        layoutParams = new TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        content = new TableLayout(context);
+        content.setOrientation(LinearLayout.HORIZONTAL);
+        content.setBackgroundColor(0xFF202020);
+        content.setLayoutParams(layoutParams);
+        popupWindow = new PopupWindow(content, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(android.R.color.transparent));
+        popupWindow.setOutsideTouchable(true);
+    }
 
-    static TableRow shareMessage(Context outerContext) {
-        context = outerContext;
+    TableRow shareMessage(final Context context, final String textToShare) {
         TableRow tr = new TableRow(content.getContext());
         Button   b  = new Button(content.getContext());
         b.setText(R.string.share);
@@ -49,17 +59,17 @@ class PopupWindowGeneral {
             public void onClick(View v) {
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, textToCopy);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, textToShare);
                 sendIntent.setType("text/plain");
                 context.startActivity(sendIntent);
-                pw.dismiss();
+                popupWindow.dismiss();
             }
         });
-        tr.addView(b, lp);
+        tr.addView(b, layoutParams);
         return tr;
     }
 
-    static TableRow copyButtonRow() {
+    TableRow copyButtonRow(final Context context, final String textToCopy) {
         TableRow tr = new TableRow(content.getContext());
         Button   b  = new Button(content.getContext());
         b.setText(R.string.copy);
@@ -71,19 +81,19 @@ class PopupWindowGeneral {
                 ClipData myClip;
                 myClip = ClipData.newPlainText("text", textToCopy);
                 myClipboard.setPrimaryClip(myClip);
-                pw.dismiss();
+                popupWindow.dismiss();
             }
         });
-        tr.addView(b, lp);
+        tr.addView(b, layoutParams);
         return tr;
     }
 
-    static TableRow phoneButtonRow(String phone) {
+    TableRow phoneButtonRow(final Context context, String phone) {
         Button dial = new Button(content.getContext());
         dial.setText(CALL_PREFIX + phone);
         dial.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                pw.dismiss();
+                popupWindow.dismiss();
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 String number = (String) ((Button) v).getText();
                 intent.setData(Uri.parse("tel:" + number.replace(CALL_PREFIX, "")));
@@ -91,16 +101,16 @@ class PopupWindowGeneral {
             }
         });
         TableRow tr = new TableRow(content.getContext());
-        tr.addView(dial, lp);
+        tr.addView(dial, layoutParams);
         return tr;
     }
 
-    static TableRow smsButtonRow(String phone) {
+    TableRow smsButtonRow(final Context context, String phone) {
         Button dial = new Button(content.getContext());
         dial.setText(SMS_PREFIX + phone);
         dial.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                pw.dismiss();
+                popupWindow.dismiss();
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 String number = (String) ((Button) v).getText();
                 intent.setData(Uri.parse("sms:" + number.replace(SMS_PREFIX, "")));
@@ -108,12 +118,11 @@ class PopupWindowGeneral {
             }
         });
         TableRow tr = new TableRow(content.getContext());
-        tr.addView(dial, lp);
+        tr.addView(dial, layoutParams);
         return tr;
     }
 
-    static TableRow finishButtonRow(Accident p) {
-        point = p;
+    TableRow finishButtonRow(final Context context, final Accident point) {
         Button finish = new Button(content.getContext());
         if (point.isEnded()) {
             finish.setText(R.string.unfinish);
@@ -123,7 +132,7 @@ class PopupWindowGeneral {
 
         finish.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                pw.dismiss();
+                popupWindow.dismiss();
                 if (point.isEnded()) {
                     new AccidentChangeState(null, context, point.getId(), AccidentChangeState.ACTIVE);
                 } else {
@@ -132,11 +141,11 @@ class PopupWindowGeneral {
             }
         });
         TableRow tr = new TableRow(content.getContext());
-        tr.addView(finish, lp);
+        tr.addView(finish, layoutParams);
         return tr;
     }
 
-    static TableRow hideButtonRow(final Accident point) {
+    TableRow hideButtonRow(final Context context, final Accident point) {
         Button finish = new Button(content.getContext());
         if (point.isHidden()) {
             finish.setText(R.string.show);
@@ -146,7 +155,7 @@ class PopupWindowGeneral {
 
         finish.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                pw.dismiss();
+                popupWindow.dismiss();
                 if (point.isHidden()) {
                     new AccidentChangeState(null, context, point.getId(), AccidentChangeState.ACTIVE);
                 } else {
@@ -155,11 +164,11 @@ class PopupWindowGeneral {
             }
         });
         TableRow tr = new TableRow(content.getContext());
-        tr.addView(finish, lp);
+        tr.addView(finish, layoutParams);
         return tr;
     }
 
-    static TableRow coordinatesButtonRow(final Accident point) {
+    TableRow coordinatesButtonRow(final Context context, final Accident point) {
         Button coordinates = new Button(content.getContext());
         coordinates.setText("Скопировать координаты");
         coordinates.setOnClickListener(new OnClickListener() {
@@ -172,16 +181,16 @@ class PopupWindowGeneral {
                 ClipData myClip;
                 myClip = ClipData.newPlainText("text", text);
                 myClipboard.setPrimaryClip(myClip);
-                pw.dismiss();
+                popupWindow.dismiss();
                 Toast.makeText(context, "координаты скопированы в буфер обмена", Toast.LENGTH_LONG).show();
             }
         });
         TableRow tr = new TableRow(content.getContext());
-        tr.addView(coordinates, lp);
+        tr.addView(coordinates, layoutParams);
         return tr;
     }
 
-    static TableRow banButtonRow(final int id) {
+    TableRow banButtonRow(final Context context, final int id) {
         Button ban = new Button(content.getContext());
         ban.setText("Забанить");
         ban.setOnClickListener(new OnClickListener() {
@@ -202,11 +211,11 @@ class PopupWindowGeneral {
                         }
                     }
                 }, id);
-                pw.dismiss();
+                popupWindow.dismiss();
             }
         });
         TableRow tr = new TableRow(content.getContext());
-        tr.addView(ban, lp);
+        tr.addView(ban, layoutParams);
         return tr;
     }
 }

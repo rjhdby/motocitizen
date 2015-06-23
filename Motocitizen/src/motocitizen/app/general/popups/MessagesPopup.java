@@ -1,34 +1,26 @@
 package motocitizen.app.general.popups;
 
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.TableLayout;
 
-import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.app.general.AccidentMessage;
-import motocitizen.startup.Startup;
+import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.utils.MyUtils;
 
 public class MessagesPopup extends PopupWindowGeneral {
-    public static PopupWindow getPopupWindow(Context context,int id, int acc_id) {
-        AccidentMessage m = AccidentsGeneral.points.getPoint(acc_id).messages.get(id);
-        content = new TableLayout(context);
-        content.setOrientation(LinearLayout.HORIZONTAL);
-        content.setBackgroundColor(0xFF202020);
-        content.setLayoutParams(lp);
-        textToCopy = m.owner + ": " + m.text;
-        content.addView(copyButtonRow(), lp);
-        for (String phone : MyUtils.getPhonesFromText(m.text)) {
-            content.addView(phoneButtonRow(phone), lp);
-        }
+    AccidentMessage message;
 
-        pw = new PopupWindow(content, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        pw.setBackgroundDrawable(new ColorDrawable(android.R.color.transparent));
-        pw.setOutsideTouchable(true);
-        pw.setContentView(content);
-        return pw;
+    public MessagesPopup(Context context, int id, int acc_id) {
+        super(context);
+        message = AccidentsGeneral.points.getPoint(acc_id).messages.get(id);
+    }
+
+    public PopupWindow getPopupWindow() {
+        content.addView(copyButtonRow(context, message.owner + ": " + message.text), layoutParams);
+        for (String phone : MyUtils.getPhonesFromText(message.text)) {
+            content.addView(phoneButtonRow(context, phone), layoutParams);
+        }
+        popupWindow.setContentView(content);
+        return popupWindow;
     }
 }

@@ -18,12 +18,12 @@ import motocitizen.app.general.popups.MessagesPopup;
 import motocitizen.utils.Const;
 
 public class AccidentMessage {
-    public int id;
-    public int owner_id;
-    public final int acc_id;
-    public String owner, status, text;
-    public Date time;
-    public Boolean unread;
+    public       int    id;
+    public       int    owner_id;
+    public final int    acc_id;
+    public       String owner, status, text;
+    public         Date    time;
+    public         Boolean unread;
     private static Context context;
 
     public AccidentMessage(JSONObject json, int acc_id) throws JSONException {
@@ -39,11 +39,11 @@ public class AccidentMessage {
 
     public TableRow createRow(Context context, String login) {
         this.context = context;
-        TableRow tr = new TableRow(context);
-        TableRow.LayoutParams lp = new TableRow.LayoutParams();
-        TextView tvTime = new TextView(tr.getContext());
-        TextView tvOwner = new TextView(tr.getContext());
-        TextView tvText = new TextView(tr.getContext());
+        TableRow              tr      = new TableRow(context);
+        TableRow.LayoutParams lp      = new TableRow.LayoutParams();
+        TextView              tvTime  = new TextView(tr.getContext());
+        TextView              tvOwner = new TextView(tr.getContext());
+        TextView              tvText  = new TextView(tr.getContext());
         lp.setMargins(0, 0, 5, 0);
         tvTime.setText(Const.timeFormat.format(time.getTime()));
         tvOwner.setLayoutParams(lp);
@@ -68,11 +68,11 @@ public class AccidentMessage {
 
         @Override
         public boolean onLongClick(View v) {
-            PopupWindow pw;
-            pw = MessagesPopup.getPopupWindow(context, id, acc_id);
+            PopupWindow popupWindow;
+            popupWindow = (new MessagesPopup(context, id, acc_id)).getPopupWindow();
             int viewLocation[] = new int[2];
             v.getLocationOnScreen(viewLocation);
-            pw.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
+            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
             return true;
         }
     };
