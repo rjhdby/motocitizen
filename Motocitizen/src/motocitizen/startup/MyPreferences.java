@@ -307,7 +307,7 @@ public class MyPreferences {
     public static JSONArray getNotificationList() {
         JSONArray json;
         try {
-            json = new JSONArray(preferences.getString(notificationList, "{}"));
+            json = new JSONArray(preferences.getString(notificationList, "[]"));
         } catch (JSONException e) {
             e.printStackTrace();
             json = new JSONArray();
