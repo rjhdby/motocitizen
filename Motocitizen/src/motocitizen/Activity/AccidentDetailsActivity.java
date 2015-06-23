@@ -2,20 +2,15 @@ package motocitizen.Activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -29,7 +24,6 @@ import java.util.List;
 import motocitizen.MyApp;
 import motocitizen.app.general.Accident;
 import motocitizen.app.general.AccidentsGeneral;
-import motocitizen.app.general.gcm.NewAccidentReceived;
 import motocitizen.app.general.popups.AccidentListPopup;
 import motocitizen.app.general.user.Role;
 import motocitizen.main.R;
@@ -231,7 +225,7 @@ public class AccidentDetailsActivity
             case R.id.action_share:
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, AccidentsGeneral.points.getTextToCopy(accidentID));
+                sendIntent.putExtra(Intent.EXTRA_TEXT, AccidentsGeneral.points.toString(accidentID));
                 sendIntent.setType("text/plain");
                 this.startActivity(sendIntent);
                 return true;

@@ -17,7 +17,7 @@ public class AccidentListPopup extends PopupWindowGeneral {
         super(context);
         point = AccidentsGeneral.points.getPoint(id);
         this.disableOldItems = disableOldItems;
-        accText = AccidentsGeneral.points.getTextToCopy(id);
+        accText = AccidentsGeneral.points.toString(id);
     }
 
     public PopupWindow getPopupWindow() {
