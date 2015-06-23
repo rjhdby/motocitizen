@@ -28,7 +28,6 @@ public class AccidentMessage {
     public       String owner, status, text;
     public         Date    time;
     public         Boolean unread;
-    private static Context context;
 
     public AccidentMessage(JSONObject json, int acc_id) throws JSONException {
         this.acc_id = acc_id;
@@ -40,7 +39,7 @@ public class AccidentMessage {
         text = json.getString("text");
         time = new Date(Long.parseLong(json.getString("uxtime"), 10) * 1000);
     }
-    public void inflateRow(Context context, ViewGroup tableLayout) {
+    public void inflateRow(final Context context, ViewGroup tableLayout) {
         LayoutInflater li        = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         TableRow       tr        = (TableRow) li.inflate(R.layout.message_row, tableLayout, false);
         TextView       ownerView = (TextView) tr.findViewById(R.id.owner);
@@ -50,20 +49,18 @@ public class AccidentMessage {
         ownerView.setText(owner);
         ((TextView) tr.findViewById(R.id.text)).setText(text);
         ((TextView) tr.findViewById(R.id.time)).setText(Const.timeFormat.format(time.getTime()));
-        tr.setOnLongClickListener(rowLongClick);
+        tr.setOnLongClickListener(new OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View v) {
+                PopupWindow popupWindow;
+                popupWindow = (new MessagesPopup(context, id, acc_id)).getPopupWindow();
+                int viewLocation[] = new int[2];
+                v.getLocationOnScreen(viewLocation);
+                popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
+                return true;
+            }
+        });
         tableLayout.addView(tr);
     }
-
-    private final OnLongClickListener rowLongClick = new OnLongClickListener() {
-
-        @Override
-        public boolean onLongClick(View v) {
-            PopupWindow popupWindow;
-            popupWindow = (new MessagesPopup(context, id, acc_id)).getPopupWindow();
-            int viewLocation[] = new int[2];
-            v.getLocationOnScreen(viewLocation);
-            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
-            return true;
-        }
-    };
 }
