@@ -15,19 +15,16 @@ import java.util.Locale;
 import java.util.Map;
 
 public class Const {
-    public static SimpleDateFormat timeFormat, fullTimeFormat, dateFormat;
-    public static TableRow.LayoutParams trlp;
-    public static LayoutParams lp;
+    public static final SimpleDateFormat fullTimeFormat = new SimpleDateFormat("dd.MM.yy HH:mm", Locale.getDefault());
+    public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+    public static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+    public static final TableRow.LayoutParams trlp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+    public static final LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);;
     public static Map<String, String> med_text, status_text, type_text;
     public final static int EQUATOR = 20038;
 
     @SuppressWarnings("deprecation")
     public Const() {
-        timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        fullTimeFormat = new SimpleDateFormat("dd.MM.yy HH:mm", Locale.getDefault());
-        dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-        lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        trlp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
         med_text = new HashMap<>();
         status_text = new HashMap<>();
         type_text = new HashMap<>();
