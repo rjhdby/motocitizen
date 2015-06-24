@@ -301,7 +301,7 @@ public class MyPreferences {
     }
 
     public static void setNotificationList(JSONArray json) {
-        preferences.edit().putString(notificationList, json.toString());
+        preferences.edit().putString(notificationList, json.toString()).commit();
     }
 
     public static JSONArray getNotificationList() {
