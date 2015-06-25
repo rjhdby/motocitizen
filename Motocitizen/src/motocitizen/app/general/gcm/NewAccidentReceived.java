@@ -55,7 +55,10 @@ public class NewAccidentReceived extends IntentService {
             AccidentsGeneral.points.addPoint(new Accident(extras, this));
         } catch (Accident.MCPointException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         String type      = extras.getString("type");
         String message   = extras.getString("message");
         String title     = extras.getString("title");
@@ -102,7 +105,7 @@ public class NewAccidentReceived extends IntentService {
             builder.setVibrate(new long[]{1000, 1000, 1000});
         }
         Notification notification = builder.getNotification();
-        if(notificationManager == null) {
+        if (notificationManager == null) {
             notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         }
         notificationManager.notify(id, notification);
@@ -141,11 +144,12 @@ public class NewAccidentReceived extends IntentService {
         }
         prefs.setNotificationList(tray);
     }
-    public static void clearAll(Context context){
-        if(notificationManager == null) {
+
+    public static void clearAll(Context context) {
+        if (notificationManager == null) {
             notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         }
-        MyPreferences.setNotificationList(new JSONArray());
+        (new MyPreferences(context)).setNotificationList(new JSONArray());
         notificationManager.cancelAll();
     }
     /*
