@@ -9,18 +9,12 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.MyApp;
@@ -85,6 +79,7 @@ public class AccidentsGeneral {
             return null;
         }
     }
+
     private static void inflateYesterdayRow(Context context, ViewGroup view) {
         LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view.addView(li.inflate(R.layout.yesterday_row, view, false));
@@ -108,22 +103,16 @@ public class AccidentsGeneral {
         boolean   noYesterday = true;
         Integer[] visible     = points.sort(points.getVisibleAccidents(), Accidents.Sort.BACKWARD);
         if (points.error.equals("ok") || points.error.equals("no_new")) {
-            for (Integer aSorted : visible) {
-                Accident acc = points.getPoint(aSorted);
+            for (int i : visible) {
+                Accident acc = points.getPoint(i);
                 if (!acc.isToday() && noYesterday) {
                     inflateYesterdayRow(context, view);
                     noYesterday = false;
                 }
-                FrameLayout tr = acc.createAccRow(context);
-                tr.setBackgroundResource(points.getBackground(acc.getStatusString()));
-                view.addView(tr);
+                acc.inflateRow(context, view);
             }
             if (visible.length == 0) {
                 view.addView(noAccidentsNotification(context));
-            } else if (currentPoint.getId() == 0) {
-                //points.setSelected(context, currentPoint.getId());
-            } else {
-                //points.setSelected(context, currentPoint.getId());
             }
         } else {
             // TODO Сюда вкрячить сообщение об ошибке

@@ -1,7 +1,6 @@
 package motocitizen.app.general;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
@@ -9,6 +8,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
@@ -85,7 +85,8 @@ public class Accident {
     public String getOwner() {
         return owner;
     }
-    public int getOwnerId(){
+
+    public int getOwnerId() {
         return owner_id;
     }
 
@@ -345,15 +346,32 @@ public class Accident {
         }
     }
 
-    public FrameLayout createAccRow(final Context context) {
-        ViewGroup   vg         = (ViewGroup) ((Activity) context).findViewById(R.id.accListContent);
-        FrameLayout fl         = (FrameLayout) Const.getLayoutInflater(context).inflate(R.layout.accident_row, vg, false);
-        TextView    general    = (TextView) fl.findViewById(R.id.accident_row_content);
-        TextView    time       = (TextView) fl.findViewById(R.id.accident_row_time);
-        TextView    unreadView = (TextView) fl.findViewById(R.id.accident_row_unread);
-        View        iWasHere   = fl.findViewById(R.id.i_was_here);
-        row_id = NewID.id();
-        fl.setId(row_id);
+    public void inflateRow(final Context context, ViewGroup viewGroup) {
+        LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        FrameLayout    fl = (FrameLayout) li.inflate(R.layout.accident_row, viewGroup, false);
+
+        StringBuilder generalText = new StringBuilder();
+        generalText.append(getTypeText());
+        if (!med.equals("mc_m_na")) {
+            generalText.append(", ").append(getMedText());
+        }
+        generalText.append("(").append(getDistanceText()).append(")\n").append(address).append("\n").append(descr);
+        String msgText = "<b>" + String.valueOf(messages.size()) + "</b>";
+        if (countUnreadMessages() > 0)
+            msgText += "<font color=#C62828><b>(" + String.valueOf(countUnreadMessages()) + ")</b></font>";
+
+        ((TextView) fl.findViewById(R.id.accident_row_content)).setText(generalText);
+        ((TextView) fl.findViewById(R.id.accident_row_time)).setText(MyUtils.getIntervalFromNowInText(created));
+        ((TextView) fl.findViewById(R.id.accident_row_unread)).setText(Html.fromHtml(msgText));
+        if (hasInOwners()) (fl.findViewById(R.id.i_was_here)).setBackgroundColor(0xFFC62828);
+
+        fl.setId(NewID.id());
+        fl.setBackgroundResource(Accidents.getBackground(getStatusString()));
+        fl.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                AccidentsGeneral.toDetails(v.getContext(), id);
+            }
+        });
         fl.setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -365,25 +383,7 @@ public class Accident {
                 return true;
             }
         });
-        fl.setOnClickListener(accRowClick);
-        if (hasInOwners()) {
-            iWasHere.setBackgroundColor(0xFFC62828);
-        }
-        StringBuilder sb = new StringBuilder();
-        sb.append(getTypeText());
-        if (!med.equals("mc_m_na")) {
-            sb.append(", ").append(getMedText());
-        }
-        sb.append("(").append(getDistanceText()).append(")\n").append(address).append("\n").append(descr);
-        general.setText(sb);
-        time.setText(MyUtils.getIntervalFromNowInText(created));
-        int    unread  = countUnreadMessages();
-        String msgText = "<b>" + String.valueOf(messages.size()) + "</b>";
-        if (unread > 0) {
-            msgText += "<font color=#C62828><b>(" + String.valueOf(countUnreadMessages()) + ")</b></font>";
-        }
-        unreadView.setText(Html.fromHtml(msgText));
-        return fl;
+        viewGroup.addView(fl);
     }
 
     private boolean checkPrerequisites(Map<String, String> data) {
@@ -539,7 +539,7 @@ public class Accident {
         return onway_cancel;
     }
 
-    public int getHoursAgo(){
-        return (int) ((new Date()).getTime() - created.getTime())/3600000;
+    public int getHoursAgo() {
+        return (int) ((new Date()).getTime() - created.getTime()) / 3600000;
     }
 }

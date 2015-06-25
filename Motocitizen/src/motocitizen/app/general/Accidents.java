@@ -94,7 +94,7 @@ public class Accidents {
         points.put(point.getId(), point);
     }
 
-    int getBackground(String status) {
+    static int getBackground(String status) {
         if (status.equals("acc_status_end")) {
             return ENDED;
         }
