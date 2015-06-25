@@ -18,9 +18,9 @@ public class SettingsFragment extends PreferenceFragment {
 
     private ListPreference mapProviderPreference;
     private Preference     nottifDistPreference, nottifAlarmPreference;
-    private Preference authPreference, nottifSoundPreference;
-    private Preference showAcc, showBreak, showSteal, showOther;
-    private        Preference    hoursAgo;
+    Preference authPreference, nottifSoundPreference;
+    Preference showAcc, showBreak, showSteal, showOther;
+    Preference hoursAgo, maxNotifications;
     private        MyPreferences prefs;
     private static Activity      act;
 
@@ -96,6 +96,23 @@ public class SettingsFragment extends PreferenceFragment {
                 }
                 if (value > 24) newValue = "24";
                 if (value < 1) newValue = "1";
+                preference.setSummary(newValue.toString());
+                return true;
+            }
+        });
+        maxNotifications = findPreference(prefs.maxNotifications);
+        maxNotifications.setSummary(String.valueOf(prefs.getMaxNotifications()));
+        maxNotifications.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                Integer value;
+                try {
+                    value = Integer.parseInt((String) newValue);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+                if (value < 0) newValue = "0";
                 preference.setSummary(newValue.toString());
                 return true;
             }

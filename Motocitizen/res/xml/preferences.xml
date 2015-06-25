@@ -68,6 +68,14 @@
             android:title="@string/mc_settings_hours_ago"
             android:numeric="integer"
             android:tag="hours.ago" />
+        <EditTextPreference
+            android:defaultValue="3"
+            android:dialogTitle="@string/mc_settings_max_notifications"
+            android:key="notifications.max"
+            android:summary=""
+            android:title="@string/mc_settings_max_notifications"
+            android:numeric="integer"
+            android:tag="notifications.max" />
     </PreferenceCategory>
     <PreferenceCategory
         android:key="@string/map_provider_category"

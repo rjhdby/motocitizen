@@ -131,4 +131,5 @@
 	<string name="onway_cancel_button">Отмена выезда</string>
     <string name="role_developer">Разработчик</string>
 	<string name="mc_settings_hours_ago">Показывать не старше (ч)</string>
+	<string name="mc_settings_max_notifications">Сообщений в области уведомлений</string>
 </resources>
