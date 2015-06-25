@@ -72,7 +72,7 @@
 	<string name="fine_address">Уточнить адрес</string>
     <string name="small_menu_settings2">Настройки2</string>
     <string name="title_activity_about">О приложении</string>
-    <string name="config_title_notify_category">настройки событий</string>
+    <string name="config_title_notify_category">Настройки событий</string>
     <string name="config_acc_type_category">Типы инцидентов</string>
     <string name="small_menu_about">О приложении</string>
     <string name="about_info">Мото ДТП инфо - программа взаимопомощи на дорогах</string>
@@ -132,4 +132,6 @@
     <string name="role_developer">Разработчик</string>
 	<string name="mc_settings_hours_ago">Показывать не старше (ч)</string>
 	<string name="mc_settings_max_notifications">Сообщений в области уведомлений</string>
+	<string name="mc_settings_use_vibration">Использовать вибрацию</string>
+	<string name="mc_settings_no_use_vibration">Не использовать вибрацию</string>
 </resources>

@@ -31,6 +31,7 @@ public class MyPreferences {
     public final String doNotDisturb     = "do.not.disturb";
     public final String hoursAgo         = "hours.ago";
     public final String maxNotifications = "notifications.max";
+    public final String useVibration     = "use.vibration";
 
     private final static String onWay               = "mc.onway";
     private final static String soundTitle          = "mc.notification.sound.title";
@@ -322,5 +323,13 @@ public class MyPreferences {
 
     public void setHoursAgo(int hours) {
         preferences.edit().putString(hoursAgo, String.valueOf(hours)).commit();
+    }
+
+    public void setVibration(boolean vibration) {
+        preferences.edit().putString(useVibration, String.valueOf(vibration)).commit();
+    }
+
+    public boolean getVibration() {
+        return preferences.getBoolean(useVibration, true);
     }
 }

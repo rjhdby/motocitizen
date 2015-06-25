@@ -17,10 +17,18 @@ import motocitizen.utils.Const;
 public class SettingsFragment extends PreferenceFragment {
 
     private ListPreference mapProviderPreference;
-    private Preference     nottifDistPreference, nottifAlarmPreference;
-    Preference authPreference, nottifSoundPreference;
-    Preference showAcc, showBreak, showSteal, showOther;
-    Preference hoursAgo, maxNotifications;
+    Preference
+            nottifDistPreference,
+            nottifAlarmPreference,
+            authPreference,
+            nottifSoundPreference,
+            showAcc,
+            showBreak,
+            showSteal,
+            showOther,
+            hoursAgo,
+            maxNotifications,
+            useVibration;
     private        MyPreferences prefs;
     private static Activity      act;
 
@@ -114,6 +122,14 @@ public class SettingsFragment extends PreferenceFragment {
                 }
                 if (value < 0) newValue = "0";
                 preference.setSummary(newValue.toString());
+                return true;
+            }
+        });
+        useVibration = findPreference(prefs.useVibration);
+        useVibration.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                prefs.putBoolean(preference.getKey(), (boolean) newValue);
                 return true;
             }
         });

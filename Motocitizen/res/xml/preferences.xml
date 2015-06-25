@@ -5,41 +5,41 @@
         android:key="@string/config_acc_type_category"
         android:title="@string/config_acc_type_category">
         <CheckBoxPreference
+            android:id="@+id/value_app_mcaccidents_accidents"
             android:defaultValue="true"
             android:dialogTitle="@string/mc_settings_accidents"
             android:key="mc.show.acc"
             android:summaryOff="@string/settings_summary_off"
             android:summaryOn="@string/settings_summary_on"
-            android:title="@string/mc_settings_accidents"
-            android:id="@+id/value_app_mcaccidents_accidents"
-            android:tag="mc.show.acc" />
+            android:tag="mc.show.acc"
+            android:title="@string/mc_settings_accidents"/>
         <CheckBoxPreference
+            android:id="@+id/value_app_mcaccidents_breaks"
             android:defaultValue="true"
             android:dialogTitle="@string/mc_settings_breaks"
             android:key="mc.show.break"
             android:summaryOff="@string/settings_summary_off"
             android:summaryOn="@string/settings_summary_on"
-            android:title="@string/mc_settings_breaks"
-            android:id="@+id/value_app_mcaccidents_breaks"
-            android:tag="mc.show.break" />
+            android:tag="mc.show.break"
+            android:title="@string/mc_settings_breaks"/>
         <CheckBoxPreference
+            android:id="@+id/value_app_mcaccidents_steal"
             android:defaultValue="true"
             android:dialogTitle="@string/mc_settings_steal"
             android:key="mc.show.steal"
             android:summaryOff="@string/settings_summary_off"
             android:summaryOn="@string/settings_summary_on"
-            android:title="@string/mc_settings_steal"
-            android:id="@+id/value_app_mcaccidents_steal"
-            android:tag="mc.show.steal" />
+            android:tag="mc.show.steal"
+            android:title="@string/mc_settings_steal"/>
         <CheckBoxPreference
+            android:id="@+id/value_app_mcaccidents_other"
             android:defaultValue="true"
             android:dialogTitle="@string/mc_settings_other"
             android:key="mc.show.other"
             android:summaryOff="@string/settings_summary_off"
             android:summaryOn="@string/settings_summary_on"
-            android:title="@string/mc_settings_other"
-            android:id="@+id/value_app_mcaccidents_other"
-            android:tag="mc.show.other" />
+            android:tag="mc.show.other"
+            android:title="@string/mc_settings_other"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:key="@string/config_title_notify_category"
@@ -48,61 +48,70 @@
             android:defaultValue="200"
             android:dialogTitle="@string/mc_settings_distance"
             android:key="mc.distance.show"
-            android:summary="@string/mc_settings_distance"
-            android:title="@string/mc_settings_distance"
             android:numeric="integer"
-            android:tag="mc.distance.show" />
+            android:summary="@string/mc_settings_distance"
+            android:tag="mc.distance.show"
+            android:title="@string/mc_settings_distance"/>
         <EditTextPreference
             android:defaultValue="20"
             android:dialogTitle="@string/mc_settings_distance_alarm"
             android:key="mc.distance.alarm"
-            android:summary="@string/mc_settings_distance_alarm"
-            android:title="@string/mc_settings_distance_alarm"
             android:numeric="integer"
-            android:tag="mc.distance.alarm" />
+            android:summary="@string/mc_settings_distance_alarm"
+            android:tag="mc.distance.alarm"
+            android:title="@string/mc_settings_distance_alarm"/>
         <EditTextPreference
             android:defaultValue="24"
             android:dialogTitle="@string/mc_settings_hours_ago"
             android:key="hours.ago"
-            android:summary=""
-            android:title="@string/mc_settings_hours_ago"
             android:numeric="integer"
-            android:tag="hours.ago" />
+            android:summary=""
+            android:tag="hours.ago"
+            android:title="@string/mc_settings_hours_ago"/>
         <EditTextPreference
             android:defaultValue="3"
             android:dialogTitle="@string/mc_settings_max_notifications"
             android:key="notifications.max"
-            android:summary=""
-            android:title="@string/mc_settings_max_notifications"
             android:numeric="integer"
-            android:tag="notifications.max" />
+            android:summary=""
+            android:tag="notifications.max"
+            android:title="@string/mc_settings_max_notifications"/>
+        <Preference
+            android:id="@+id/mc_notif_sound_button"
+            android:key="@string/mc_notif_sound"
+            android:summary="@string/mc_notif_system"
+            android:tag="mc.notification.sound.title"
+            android:title="@string/mc_notif_sound"/>
+        <CheckBoxPreference
+            android:id="@+id/mc_settings_use_vibration"
+            android:defaultValue="true"
+            android:dialogTitle="@string/mc_settings_use_vibration"
+            android:key="use.vibration"
+            android:summaryOff="@string/mc_settings_use_vibration"
+            android:summaryOn="@string/mc_settings_no_use_vibration"
+            android:tag="use.vibration"
+            android:title="@string/mc_settings_use_vibration"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:key="@string/map_provider_category"
         android:title="@string/map_provider_category">
         <ListPreference
-            android:title="@string/config_map_title"
-            android:key="mc.map.provider"
             android:defaultValue="google"
-            android:summary="%s"
-            android:entries="@array/mapProvider"
             android:enabled="false"
-            android:entryValues="@array/mapProviderValues" />
+            android:entries="@array/mapProvider"
+            android:entryValues="@array/mapProviderValues"
+            android:key="mc.map.provider"
+            android:summary="%s"
+            android:title="@string/config_map_title"/>
     </PreferenceCategory>
-  <PreferenceCategory
-      android:key="@string/config_other_category"
-      android:title="@string/config_other_category">
+    <PreferenceCategory
+        android:key="@string/config_other_category"
+        android:title="@string/config_other_category">
         <Preference
-            android:title="@string/mc_notif_sound"
-            android:id="@+id/mc_notif_sound_button"
-            android:tag="mc.notification.sound.title"
-            android:key="@string/mc_notif_sound"
-            android:summary="@string/mc_notif_system"/>
-        <Preference
-            android:title="@string/mc_settings_auth_button"
             android:id="@+id/app_mcaccidents_register_button"
-            android:tag="mc.notification.sound.title"
             android:key="@string/mc_settings_auth_button"
-            android:summary="@string/mc_notif_system"/>
-  </PreferenceCategory>
+            android:summary="@string/mc_notif_system"
+            android:tag="mc.notification.sound.title"
+            android:title="@string/mc_settings_auth_button"/>
+    </PreferenceCategory>
 </PreferenceScreen>
