@@ -8,7 +8,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,33 +28,16 @@ import motocitizen.utils.NewID;
 
 public class SelectSoundActivity extends ActionBarActivity {
     private static Map<Integer, Uri> notifications;
-    private static int currentId;
-    private static ViewGroup vg;
-    private static Uri currentUri;
-    private static String currentTitle;
-    private static RingtoneManager rm;
-    private MyPreferences prefs;
-    private Context context;
-
-    private final Button.OnClickListener play = new Button.OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-            if (currentId != 0) {
-                vg.findViewById(currentId).setBackgroundColor(Const.getDefaultBGColor(context));
-            }
-            currentId = v.getId();
-            vg.findViewById(currentId).setBackgroundColor(Color.GRAY);
-            Ringtone current = RingtoneManager.getRingtone(v.getContext(), notifications.get(v.getId()));
-            current.play();
-            currentUri = notifications.get(v.getId());
-            currentTitle = current.getTitle(v.getContext());
-        }
-    };
+    private static int               currentId;
+    private static ViewGroup         vg;
+    private static Uri               currentUri;
+    private static String            currentTitle;
+    private static RingtoneManager   rm;
+    private        MyPreferences     prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        context = this;
+        Context context = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mc_select_sound);
         prefs = ((MyApp) context.getApplicationContext()).getPreferences();
@@ -99,38 +82,32 @@ public class SelectSoundActivity extends ActionBarActivity {
         }
         while (!cursor.isAfterLast() && cursor.moveToNext()) {
             int currentPosition = cursor.getPosition();
-
-            TableRow tr = createRow(context, rm.getRingtone(currentPosition).getTitle(context));
-            int id = tr.getId();
-            notifications.put(id, rm.getRingtoneUri(currentPosition));
-            vg.addView(tr);
-            vg.addView(createDelimiter(context));
+            inflateRow(context, vg, currentPosition);
         }
     }
 
-    private TableRow createRow(Context context, String title) {
-        TableRow tr = new TableRow(context);
-        TextView tv = new TextView(tr.getContext());
+    private void inflateRow(final Context context, ViewGroup viewGroup, int currentPosition) {
+        LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        TableRow       tr = (TableRow) li.inflate(R.layout.sound_row, viewGroup, false);
         tr.setId(NewID.id());
-        tr.setLayoutParams(Const.trlp);
-        tv.setLayoutParams(Const.trlp);
-        tv.setLines(2);
-        tv.setText(title);
-        tv.setGravity(Gravity.CENTER_VERTICAL);
-        tr.addView(tv);
-        tr.setOnClickListener(play);
-        return tr;
-    }
+        ((TextView) tr.findViewById(R.id.sound)).setText(rm.getRingtone(currentPosition).getTitle(context));
+        notifications.put(tr.getId(), rm.getRingtoneUri(currentPosition));
+        tr.setOnClickListener(new Button.OnClickListener() {
 
-    private TableRow createDelimiter(Context context) {
-        TableRow tr = new TableRow(context);
-        TextView tv = new TextView(tr.getContext());
-        tr.setLayoutParams(Const.trlp);
-        tv.setLayoutParams(Const.trlp);
-        tv.setHeight(2);
-        tv.setBackgroundColor(Color.GRAY);
-        tr.addView(tv);
-        return tr;
+            @Override
+            public void onClick(View v) {
+                if (currentId != 0) {
+                    vg.findViewById(currentId).setBackgroundColor(Const.getDefaultBGColor(context));
+                }
+                currentId = v.getId();
+                vg.findViewById(currentId).setBackgroundColor(Color.GRAY);
+                Ringtone current = RingtoneManager.getRingtone(v.getContext(), notifications.get(v.getId()));
+                current.play();
+                currentUri = notifications.get(v.getId());
+                currentTitle = current.getTitle(v.getContext());
+            }
+        });
+        viewGroup.addView(tr);
     }
 
     @Override
