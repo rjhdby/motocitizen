@@ -8,7 +8,6 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.widget.Toast;
 
-import motocitizen.app.general.user.Auth;
 import motocitizen.app.general.user.Role;
 import motocitizen.main.R;
 import motocitizen.startup.MyPreferences;
@@ -18,11 +17,12 @@ import motocitizen.utils.Const;
 public class SettingsFragment extends PreferenceFragment {
 
     private ListPreference mapProviderPreference;
-    private Preference nottifDistPreference, nottifAlarmPreference;
+    private Preference     nottifDistPreference, nottifAlarmPreference;
     private Preference authPreference, nottifSoundPreference;
     private Preference showAcc, showBreak, showSteal, showOther;
-    private MyPreferences prefs;
-    private static Activity act;
+    private        Preference    hoursAgo;
+    private        MyPreferences prefs;
+    private static Activity      act;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,8 +64,8 @@ public class SettingsFragment extends PreferenceFragment {
         nottifDistPreference.setOnPreferenceChangeListener(distanceListener);
         nottifAlarmPreference.setOnPreferenceChangeListener(distanceListener);
         String login = prefs.getLogin();
-        if( login.length() > 0 )
-            authPreference.setSummary(Role.getName(getActivity())  + ": "  + login);
+        if (login.length() > 0)
+            authPreference.setSummary(Role.getName(getActivity()) + ": " + login);
         else
             authPreference.setSummary(Role.getName(getActivity()));
         nottifSoundPreference.setSummary(prefs.getAlarmSoundTitle());
@@ -81,6 +81,25 @@ public class SettingsFragment extends PreferenceFragment {
         showBreak.setOnPreferenceChangeListener(visibleListener);
         showSteal.setOnPreferenceChangeListener(visibleListener);
         showOther.setOnPreferenceChangeListener(visibleListener);
+
+        hoursAgo = findPreference(prefs.hoursAgo);
+        hoursAgo.setSummary(String.valueOf(prefs.getHoursAgo()));
+        hoursAgo.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                Integer value;
+                try {
+                    value = Integer.parseInt((String) newValue);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+                if (value > 24) newValue = "24";
+                if (value < 1) newValue = "1";
+                preference.setSummary(newValue.toString());
+                return true;
+            }
+        });
     }
 
     @Override
@@ -103,7 +122,7 @@ public class SettingsFragment extends PreferenceFragment {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             String valueText = (String) newValue;
-            int value;
+            int    value;
             if (valueText.length() > 6) {
                 valueText = valueText.substring(0, 6);
             }

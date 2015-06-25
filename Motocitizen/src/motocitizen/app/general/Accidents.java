@@ -10,7 +10,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,6 +35,10 @@ public class Accidents {
     private      Map<Integer, Accident> points;
     private      MyPreferences          prefs;
     private      Context                context;
+
+    public enum Sort {
+        FORWARD, BACKWARD
+    }
 
     public Accidents(Context context) {
         error = "ok";
@@ -86,42 +94,6 @@ public class Accidents {
         points.put(point.getId(), point);
     }
 
-    int getFirstNonNull() {
-        for (int i : points.keySet()) {
-            if (points.get(i).row_id != 0) {
-                return i;
-            }
-        }
-        return 0;
-    }
-
-    public void setSelected(Context context, int id) {
-        for (int i : points.keySet()) {
-            Accident p = points.get(i);
-            if (p.row_id == 0) {
-                continue;
-            }
-            View row = ((Activity) context).findViewById(p.row_id);
-            row.setBackgroundResource(getBackground(p.getStatusString()));
-        }
-        Accident selected = points.get(id);
-        if (selected == null) {
-            return;
-        }
-        if (selected.row_id == 0) {
-            int nnid = getFirstNonNull();
-            if (nnid == 0) {
-                return;
-            } else {
-                setSelected(context, nnid);
-                AccidentsGeneral.setCurrentPoint(points.get(nnid));
-                AccidentsGeneral.redraw(context);
-            }
-        } else {
-            selected.resetMessagesUnreadFlag();
-        }
-    }
-
     int getBackground(String status) {
         if (status.equals("acc_status_end")) {
             return ENDED;
@@ -156,5 +128,35 @@ public class Accidents {
             }
 
         }
+    }
+
+    public Map<Integer, Accident> getVisibleAccidents() {
+        Map<Integer, Accident> out = new HashMap<>();
+        for (int i : points.keySet()) {
+            Accident point = points.get(i);
+            if (!point.isVisible()) continue;
+            if (point.getHoursAgo() >= prefs.getHoursAgo()) continue;
+            out.put(i, point);
+        }
+        return out;
+    }
+
+    public Integer[] sort(Map<Integer, Accident> in, Sort FLAG) {
+        List<Integer> list = new ArrayList<>();
+        list.addAll(in.keySet());
+        Integer[] out = new Integer[list.size()];
+        switch (FLAG) {
+            case FORWARD:
+                list.toArray(out);
+                Arrays.sort(out);
+                break;
+            case BACKWARD:
+                list.toArray(out);
+                Arrays.sort(out, Collections.reverseOrder());
+                break;
+            default:
+                list.toArray(out);
+        }
+        return out;
     }
 }

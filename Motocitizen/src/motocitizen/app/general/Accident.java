@@ -318,36 +318,14 @@ public class Accident {
         if (json == null) {
             return;
         }
-//        Map<Integer, AccidentVolunteer> newVolunteers = new HashMap<>();
         for (int i = 0; i < json.length(); i++) {
             try {
                 AccidentVolunteer volunteer = new AccidentVolunteer(json.getJSONObject(i));
                 volunteers.put(volunteer.id, volunteer);
-                //newVolunteers.put(current.id, current);
-                /*
-                if (volunteer.id == myApp.getMCAuth().getID()) {
-                    switch (volunteer.getStatus()) {
-                        case ONWAY:
-                            //TODO Зачем храним эту информацию в двух местах? Думаю, что надо убрать AccidentsGeneral.onway и т.д. заменив на getOnWay и т.д.
-                            setOnWay(volunteer.id);
-                            AccidentsGeneral.setOnWay(accID);
-                            break;
-                        case INPLACE:
-                            setInPlace(volunteer.id);
-                            AccidentsGeneral.setInPlace(accID);
-                            break;
-                        case LEAVE:
-                            setLeave(volunteer.id);
-                            break;
-                    }
-
-                }
-                */
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-//        volunteers.putAll(newVolunteers);
     }
 
     private void makeHistory(JSONArray json) {
@@ -561,4 +539,7 @@ public class Accident {
         return onway_cancel;
     }
 
+    public int getHoursAgo(){
+        return (int) ((new Date()).getTime() - created.getTime())/3600000;
+    }
 }

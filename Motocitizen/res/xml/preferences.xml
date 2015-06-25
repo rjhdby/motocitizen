@@ -60,6 +60,14 @@
             android:title="@string/mc_settings_distance_alarm"
             android:numeric="integer"
             android:tag="mc.distance.alarm" />
+        <EditTextPreference
+            android:defaultValue="24"
+            android:dialogTitle="@string/mc_settings_hours_ago"
+            android:key="hours.ago"
+            android:summary=""
+            android:title="@string/mc_settings_hours_ago"
+            android:numeric="integer"
+            android:tag="hours.ago" />
     </PreferenceCategory>
     <PreferenceCategory
         android:key="@string/map_provider_category"

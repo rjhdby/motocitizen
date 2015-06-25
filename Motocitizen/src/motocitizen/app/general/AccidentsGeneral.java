@@ -36,7 +36,6 @@ public class AccidentsGeneral {
     private static Accident  currentPoint;
     public static  Accidents points;
     public static  Auth      auth;
-    private static Integer[] sorted;
 
     public static int getInplaceID() {
         return inplaceAcc;
@@ -78,24 +77,14 @@ public class AccidentsGeneral {
     }
 
     private static Accident getCurrent() {
-        makeSortedList();
         if (currentPoint != null) {
             return currentPoint;
         } else if (points.keySet().size() != 0) {
-            return points.getPoint(sorted[0]);
+            return points.getPoint((Integer) points.keySet().toArray()[0]);
         } else {
             return null;
         }
     }
-
-    private static void makeSortedList() {
-        List<Integer> list = new ArrayList<>();
-        list.addAll(points.keySet());
-        sorted = new Integer[list.size()];
-        list.toArray(sorted);
-        Arrays.sort(sorted, Collections.reverseOrder());
-    }
-
     private static void inflateYesterdayRow(Context context, ViewGroup view) {
         LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view.addView(li.inflate(R.layout.yesterday_row, view, false));
@@ -116,47 +105,29 @@ public class AccidentsGeneral {
     private static void drawList(Context context) {
         ViewGroup view = (ViewGroup) ((Activity) context).findViewById(R.id.accListContent);
         view.removeAllViews();
-        //AccidentTypes.refresh();
-        boolean noYesterday = true;
+        boolean   noYesterday = true;
+        Integer[] visible     = points.sort(points.getVisibleAccidents(), Accidents.Sort.BACKWARD);
         if (points.error.equals("ok") || points.error.equals("no_new")) {
-            makeSortedList();
-            for (Integer aSorted : sorted) {
+            for (Integer aSorted : visible) {
                 Accident acc = points.getPoint(aSorted);
-                if (acc.isVisible()) {
-                    if (!acc.isToday() && noYesterday) {
-                        inflateYesterdayRow(context, view);
-                        noYesterday = false;
-                    }
-                    FrameLayout tr = acc.createAccRow(context);
-                    view.addView(tr);
-                } else {
-                    acc.row_id = 0;
+                if (!acc.isToday() && noYesterday) {
+                    inflateYesterdayRow(context, view);
+                    noYesterday = false;
                 }
+                FrameLayout tr = acc.createAccRow(context);
+                tr.setBackgroundResource(points.getBackground(acc.getStatusString()));
+                view.addView(tr);
             }
-            if (sorted.length == 0) {
+            if (visible.length == 0) {
                 view.addView(noAccidentsNotification(context));
             } else if (currentPoint.getId() == 0) {
-                points.setSelected(context, currentPoint.getId());
+                //points.setSelected(context, currentPoint.getId());
             } else {
-                points.setSelected(context, currentPoint.getId());
+                //points.setSelected(context, currentPoint.getId());
             }
         } else {
             // TODO Сюда вкрячить сообщение об ошибке
         }
-    }
-
-    @SuppressWarnings("SameParameterValue")
-    public static TableRow getDelimiterRow(Context context, String text) {
-        TableRow tr = new TableRow(context);
-        TextView tw = new TextView(tr.getContext());
-        tr.setLayoutParams(Const.trlp);
-        tw.setTextColor(Color.BLACK);
-        tw.setBackgroundColor(Color.LTGRAY);
-        tw.setGravity(Gravity.CENTER);
-        tw.setText(text);
-        tw.setLayoutParams(Const.trlp);
-        tr.addView(tw);
-        return tr;
     }
 
     public static void refresh(Context context) {
@@ -197,7 +168,7 @@ public class AccidentsGeneral {
     public static void toDetails(Context context, int id) {
         currentPoint = points.getPoint(id);
         if (currentPoint != null) {
-            points.setSelected(context, id);
+            //points.setSelected(context, id);
             Intent intent = new Intent(context, AccidentDetailsActivity.class);
             Bundle bundle = new Bundle();
             bundle.putInt("accidentID", currentPoint.getId());

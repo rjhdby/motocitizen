@@ -19,6 +19,7 @@ import motocitizen.utils.Const;
 
 @SuppressLint("CommitPrefEdits")
 public class MyPreferences {
+
     public final String showAcc        = "mc.show.acc";
     public final String showBreak      = "mc.show.break";
     public final String showSteal      = "mc.show.steal";
@@ -28,22 +29,21 @@ public class MyPreferences {
     public final String mapProvider    = "mc.map.provider";
     public final String currentVersion = "version";
     public final String doNotDisturb   = "do.not.disturb";
+    public final String hoursAgo       = "hours.ago";
 
-    private final static String onWay               = "mc.onway";
-    private final static String soundTitle          = "mc.notification.sound.title";
-    private final static String soundURI            = "mc.notification.sound";
-    private final static String login               = "mc.login";
-    private final static String password            = "mc.password";
-    private final static String anonim              = "mc.anonim";
-    private final static String GCMRegistrationCode = "mc.gcm.id";
-    private final static String appVersion          = "mc.app.version";
-    private final static String savedlng            = "savedlng";
-    private final static String savedlat            = "savedlat";
-
-    private final static String notificationList = "notificationList";
-    private final static String maxNotifications = "notifications.max";
-
-    private final static String[] mapProviders = {"google", "osm", "yandex"};
+    private final static String   onWay               = "mc.onway";
+    private final static String   soundTitle          = "mc.notification.sound.title";
+    private final static String   soundURI            = "mc.notification.sound";
+    private final static String   login               = "mc.login";
+    private final static String   password            = "mc.password";
+    private final static String   anonim              = "mc.anonim";
+    private final static String   GCMRegistrationCode = "mc.gcm.id";
+    private final static String   appVersion          = "mc.app.version";
+    private final static String   savedlng            = "savedlng";
+    private final static String   savedlat            = "savedlat";
+    private final static String   notificationList    = "notificationList";
+    private final static String   maxNotifications    = "notifications.max";
+    private final static String[] mapProviders        = {"google", "osm", "yandex"};
 
     private static SharedPreferences preferences;
     private static Context           context;
@@ -300,11 +300,11 @@ public class MyPreferences {
         }
     }
 
-    public static void setNotificationList(JSONArray json) {
+    public void setNotificationList(JSONArray json) {
         preferences.edit().putString(notificationList, json.toString()).commit();
     }
 
-    public static JSONArray getNotificationList() {
+    public JSONArray getNotificationList() {
         JSONArray json;
         try {
             json = new JSONArray(preferences.getString(notificationList, "[]"));
@@ -314,5 +314,12 @@ public class MyPreferences {
         }
         return json;
     }
-}
 
+    public int getHoursAgo() {
+        return Integer.parseInt(preferences.getString(hoursAgo, "24"));
+    }
+
+    public void setHoursAgo(int hours) {
+        preferences.edit().putString(hoursAgo, String.valueOf(hours)).commit();
+    }
+}

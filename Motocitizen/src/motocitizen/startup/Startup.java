@@ -79,7 +79,6 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         myApp = (MyApp) getApplicationContext();
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-        //requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.main);
         context = this;
         actionBar = getSupportActionBar();
@@ -111,15 +110,10 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
                 return true;
             }
         });
-        //prefs = getSharedPreferences("motocitizen.startup", MODE_PRIVATE);
-        //prefs.edit().clear().commit();
 
         new AccidentsGeneral(this);
 
-        //createMap(prefs.getMapProvider());
         createMap(MyMapManager.GOOGLE);
-        // zz
-        // new SettingsMenu();
         new GCMBroadcastReceiver();
     }
 
@@ -148,14 +142,11 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
-
-//        Show.show(R.id.main_frame, R.id.main_screen_fragment);
         MyLocationManager.wakeup();
         Intent  intent    = getIntent();
         Integer toMap     = intent.getIntExtra("toMap", 0);
         Integer toDetails = intent.getIntExtra("toDetails", 0);
         context = this;
-        //AccidentsGeneral.refresh(this);
 
         if (Role.isStandart()) {
             createAccButton.setVisibility(View.VISIBLE);
@@ -164,15 +155,6 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         }
 
         getAccidents(true);
-//        if (isOnline()) {
-//            JsonRequest request = AccidentsGeneral.getLoadPointsRequest();
-//            if (request != null) {
-//                (new IncidentRequest(this, !isChangeLogDlgShowing())).execute(request);
-//            }
-//            catchIntent(intent);
-//        } else {
-//            Toast.makeText(Startup.context, Startup.context.getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
-//        }
         if (toMap != 0) {
             intent.removeExtra("toMap");
             mainTabsGroup.check(R.id.tab_map_button);
@@ -181,9 +163,6 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
             intent.removeExtra("toDetails");
             AccidentsGeneral.refresh(this);
             AccidentsGeneral.toDetails(this, toDetails);
-            NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-            //notificationManager.cancelAll();
-            //NewAccidentReceived.clearQueue();
             NewAccidentReceived.clearAll(this);
         }
     }
@@ -201,34 +180,11 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
                 if (fromDetails) {
                     AccidentsGeneral.toDetails(this);
                 }
-//                FragmentManager fm = getFragmentManager();
-//                Fragment pf = fm.findFragmentByTag("settings");
-//                if(pf != null && pf.isVisible()){
-//                    Fragment mf = fm.findFragmentByTag("main_screen");
-//                    fm.beginTransaction().show(mf).hide(pf).commit();
                 AccidentsGeneral.redraw(this);
-//                }
                 return true;
         }
         return super.onKeyUp(keycode, e);
     }
-
-    private void catchIntent(Intent intent) {
-        Bundle extras = intent.getExtras();
-        if (extras == null) {
-            return;
-        }
-        String type     = extras.getString("type");
-        String idString = extras.getString("id");
-        if (type == null || idString == null || !MyUtils.isInteger(idString)) {
-            return;
-        }
-        int id = Integer.parseInt(idString);
-        if (type.equals("acc") && id != 0) {
-            AccidentsGeneral.points.setSelected(this, id);
-        }
-    }
-
     public static boolean isOnline() {
         ConnectivityManager cm      = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo         netInfo = cm.getActiveNetworkInfo();
@@ -246,7 +202,6 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         }
 
         Location location = MyLocationManager.getLocation(context);
-        //if(location != null)
         map.jumpToPoint(location);
     }
 
@@ -306,7 +261,6 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         actionBar.setTitle(address);
         if (!subTitle.isEmpty())
             actionBar.setSubtitle(subTitle);
-//        Text.set(context, R.id.statusBarText, name + address);
         map.placeUser(context);
     }
 

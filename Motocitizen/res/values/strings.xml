@@ -8,8 +8,8 @@
 	<string name="mc_accidents_details_owner">Сообщил</string>
 	<string name="mc_accidents_details_status">Статус</string>
 	<string name="mc_accidents_details_begin">Начало</string>
-	<string name="mc_settings_distance">Текстом (км)</string>
-	<string name="mc_settings_distance_alarm">Звуком (км)</string>
+	<string name="mc_settings_distance">Показывать не далее (км)</string>
+	<string name="mc_settings_distance_alarm">Оповещать звуком не далее (км)</string>
 	<string name="mc_settings_accidents">ДТП</string>
 	<string name="settings_confirm_button">Сохранить</string>
 	<string name="settings_cancel_button">Отменить</string>
@@ -72,7 +72,7 @@
 	<string name="fine_address">Уточнить адрес</string>
     <string name="small_menu_settings2">Настройки2</string>
     <string name="title_activity_about">О приложении</string>
-    <string name="config_title_notify_category">Дистанции оповещений</string>
+    <string name="config_title_notify_category">настройки событий</string>
     <string name="config_acc_type_category">Типы инцидентов</string>
     <string name="small_menu_about">О приложении</string>
     <string name="about_info">Мото ДТП инфо - программа взаимопомощи на дорогах</string>
@@ -130,4 +130,5 @@
 	<string name="title_dialog_cancel_onway_confirm">Вы хотите отменить выезд?</string>
 	<string name="onway_cancel_button">Отмена выезда</string>
     <string name="role_developer">Разработчик</string>
+	<string name="mc_settings_hours_ago">Показывать не старше (ч)</string>
 </resources>
