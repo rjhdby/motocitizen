@@ -93,7 +93,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mc_app_create_point);
+        setContentView(R.layout.create_point);
         context = this;
         prefs = ((MyApp) context.getApplicationContext()).getPreferences();
         accident = new NewAccident();

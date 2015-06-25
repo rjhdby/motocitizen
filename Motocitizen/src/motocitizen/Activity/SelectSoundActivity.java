@@ -39,7 +39,7 @@ public class SelectSoundActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Context context = this;
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mc_select_sound);
+        setContentView(R.layout.select_sound);
         prefs = ((MyApp) context.getApplicationContext()).getPreferences();
         vg = (ViewGroup) findViewById(R.id.sound_select_table);
         rm = new RingtoneManager(this);

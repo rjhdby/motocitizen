@@ -46,7 +46,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mc_auth);
+        setContentView(R.layout.auth);
 
         myApp = (MyApp) getApplicationContext();
 

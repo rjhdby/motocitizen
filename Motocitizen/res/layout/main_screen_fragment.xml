@@ -51,7 +51,7 @@
         android:layout_weight="2" >
 
         <include
-            layout="@layout/mc_acc_list"/>
+            layout="@layout/acc_list"/>
 
         <LinearLayout
             android:id="@+id/map_container"
