@@ -63,8 +63,8 @@ public class CreateAccidentRequest extends HTTPClient {
     public boolean error(JSONObject response) {
         if (!response.has("result")) return true;
         try {
-            String result = response.getString("result");
-            if (result.equals("ID")) return false;
+            JSONObject result = response.getJSONObject("result");
+            if (result.has("ID")) return false;
         } catch (JSONException e) {
             return true;
         }
@@ -73,12 +73,11 @@ public class CreateAccidentRequest extends HTTPClient {
 
     @Override
     public String getError(JSONObject response) {
-        if (!response.has("result")) return "Ошибка соединения "  + response.toString();
+        if (!response.has("result")) return "Ошибка соединения " + response.toString();
         try {
+            if (response.getJSONObject("result").has("ID")) return "Сообщение отправлено";
             String result = response.getString("result");
             switch (result) {
-                case "ID":
-                    return "Сообщение отправлено";
                 case "AUTH ERROR":
                     return "Вы не авторизованы";
                 case "NO RIGHTS":
