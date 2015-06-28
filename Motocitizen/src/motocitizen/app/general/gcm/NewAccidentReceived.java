@@ -45,6 +45,9 @@ public class NewAccidentReceived extends IntentService {
         }
         Bundle extras = intent.getExtras();
         try {
+            if(AccidentsGeneral.points == null){
+                new AccidentsGeneral(this);
+            }
             AccidentsGeneral.points.addPoint(new Accident(extras, this));
         } catch (Exception e) {
             e.printStackTrace();
