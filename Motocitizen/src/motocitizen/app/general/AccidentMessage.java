@@ -19,15 +19,16 @@ import java.util.Date;
 import motocitizen.app.general.popups.MessagesPopup;
 import motocitizen.main.R;
 import motocitizen.utils.Const;
-import motocitizen.utils.MyUtils;
 
 public class AccidentMessage {
-    public       int    id;
-    public       int    owner_id;
-    public final int    acc_id;
-    public       String owner, status, text;
-    public         Date    time;
-    public         Boolean unread;
+    public        int    id;
+    public        int    owner_id;
+    private final int    acc_id;
+    public        String owner;
+    private String status;
+    public  String text;
+    public Date    time;
+    public Boolean unread;
 
     public AccidentMessage(JSONObject json, int acc_id) throws JSONException {
         this.acc_id = acc_id;
@@ -39,8 +40,9 @@ public class AccidentMessage {
         text = json.getString("text");
         time = new Date(Long.parseLong(json.getString("uxtime"), 10) * 1000);
     }
+
     public void inflateRow(final Context context, ViewGroup tableLayout) {
-        LayoutInflater li        = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         TableRow       tr        = (TableRow) li.inflate(R.layout.message_row, tableLayout, false);
         TextView       ownerView = (TextView) tr.findViewById(R.id.owner);
         if (owner.equals(AccidentsGeneral.auth.getLogin())) {

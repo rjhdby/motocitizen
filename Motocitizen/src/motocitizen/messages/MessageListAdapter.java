@@ -51,11 +51,4 @@ public class MessageListAdapter extends ArrayAdapter<AccidentMessage> {
         return view;
     }
 
-    @Override
-    public void notifyDataSetChanged() {
-
-        // configuration may have changed - get current settings
-        //getSettings();
-        super.notifyDataSetChanged();
-    }
 }

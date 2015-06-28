@@ -8,17 +8,17 @@ import motocitizen.utils.Props;
 
 public class MyApp extends Application {
 
-    private MyApp instance;
-    public MyPreferences prefs = null;
-    private Props props = null;
-    private Auth auth = null;
+    private final MyApp instance;
+    public  MyPreferences prefs = null;
+    private Props         props = null;
+    private Auth          auth  = null;
 
     public MyApp() {
         instance = this;
     }
 
     public MyPreferences getPreferences() {
-        if(prefs == null)
+        if (prefs == null)
             prefs = new MyPreferences(getApplicationContext());
         return prefs;
     }

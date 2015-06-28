@@ -30,7 +30,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
     private EditText    mcNewMessageText;
     private String      currentText;
 
-    View newMessageArea;
+    private View newMessageArea;
 
     /// Сообщения
     //private List<AccidentMessage> records = new ArrayList();
@@ -89,7 +89,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         return viewMain;
     }
 
-    protected void update() {
+    private void update() {
 //  ListAdapter
 /*
         if(records.size() > 0) {
@@ -143,7 +143,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         }
     }
 
-    public void setupAccess() {
+    private void setupAccess() {
         if (Role.isStandart()) {
             newMessageArea.setVisibility(View.VISIBLE);
         } else {

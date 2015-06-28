@@ -14,16 +14,16 @@ import motocitizen.Activity.AuthActivity;
 import motocitizen.main.R;
 import motocitizen.network.requests.AuthRequest;
 import motocitizen.startup.MyPreferences;
-import motocitizen.startup.Startup;
 
 public class Auth {
-    private String role;
-    private String name;
-    private int id;
-    private MyPreferences prefs;
+    private       String        role;
+    private       String        name;
+    private       int           id;
+    private final MyPreferences prefs;
     private boolean isAuthorized = false;
-    Context context;
-    String login, password;
+    private final Context context;
+    private       String  login;
+    private       String  password;
 
     public Auth(Context context) {
         this.context = context;

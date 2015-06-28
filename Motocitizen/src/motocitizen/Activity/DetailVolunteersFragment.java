@@ -26,14 +26,13 @@ import motocitizen.network.requests.OnWayRequest;
 
 public class DetailVolunteersFragment extends AccidentDetailsFragments {
 
-    public static final int DIALOG_ONWAY_CONFIRM        = 1;
-    public static final int DIALOG_ACC_NOT_ACTUAL       = 2;
-    public static final int DIALOG_CANCEL_ONWAY_CONFIRM = 3;
+    private static final int DIALOG_ONWAY_CONFIRM        = 1;
+    private static final int DIALOG_ACC_NOT_ACTUAL       = 2;
+    private static final int DIALOG_CANCEL_ONWAY_CONFIRM = 3;
 
     private ImageButton onwayButton;
     private ImageButton onwayCancelButton;
     private ImageButton onwayDisabledButton;
-    private View        toMap;
     private View        onwayContent;
     //private View        inplaceContent;
 
@@ -75,7 +74,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         onwayDisabledButton.setEnabled(false);
         onwayContent = viewMain.findViewById(R.id.acc_onway_table);
         //inplaceContent = viewMain.findViewById(R.id.acc_inplace_table);
-        toMap = viewMain.findViewById(R.id.details_to_map_button);
+        View toMap = viewMain.findViewById(R.id.details_to_map_button);
         toMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,7 +85,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         return viewMain;
     }
 
-    protected void update() {
+    private void update() {
         Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
 
         if (accident != null) {
@@ -142,7 +141,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         }
     }
 
-    void showDialog(int type) {
+    private void showDialog(int type) {
         mStackLevel++;
         FragmentTransaction ft   = getActivity().getFragmentManager().beginTransaction();
         Fragment            prev = getActivity().getFragmentManager().findFragmentByTag("dialog");

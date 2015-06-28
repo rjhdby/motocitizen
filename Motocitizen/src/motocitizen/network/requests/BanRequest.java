@@ -51,7 +51,7 @@ public class BanRequest extends HTTPClient {
                 case "NO RIGHTS":
                     return "Недостаточно прав";
             }
-        } catch (JSONException e) {
+        } catch (JSONException ignored) {
 
         }
         return "Неизвестная ошибка " + response.toString();

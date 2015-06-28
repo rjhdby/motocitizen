@@ -10,13 +10,14 @@ import motocitizen.startup.MyPreferences;
 
 public class AccidentDetailsFragments extends Fragment {
 
-    protected static final String ACCIDENT_ID = "accidentID";
-    protected static final String USER_NAME = "userName";
+    static final String ACCIDENT_ID = "accidentID";
+    static final String USER_NAME   = "userName";
 
-    protected int accidentID;
-    protected String userName;
+    int accidentID;
+    private String userName;
 
-    protected MyPreferences prefs;
+    MyPreferences
+            prefs;
 
     int mStackLevel = 0;
     private OnFragmentInteractionListener mListener;
@@ -53,7 +54,7 @@ public class AccidentDetailsFragments extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        public void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(Uri uri);
     }
 
     @Override

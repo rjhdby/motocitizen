@@ -28,21 +28,22 @@ import motocitizen.network.CustomTrustManager;
 import motocitizen.startup.Startup;
 
 
-public abstract class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONObject> {
-    final static String CHARSET = "UTF-8";
-    final static String USERAGENT = "Mozilla/5.0 (Linux; Android 4.4; Nexus 5 Build/_BuildID_) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/30.0.0.0 Mobile Safari/537.36";
-    ProgressDialog dialog;
-    Context context;
-    MyApp myApp;
+abstract class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONObject> {
+    private final static String CHARSET   = "UTF-8";
+    private final static String USERAGENT = "Mozilla/5.0 (Linux; Android 4.4; Nexus 5 Build/_BuildID_) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/30.0.0.0 Mobile Safari/537.36";
+    private ProgressDialog dialog;
+    Context                   context;
+    MyApp                     myApp;
     AsyncTaskCompleteListener listener;
-    Map<String, String> post;
+    Map<String, String>       post;
 
+    @SafeVarargs
     @Override
-    protected JSONObject doInBackground(Map<String, String>... params) {
+    protected final JSONObject doInBackground(Map<String, String>... params) {
         return request(params[0]);
     }
 
-    public JSONObject request(Map<String, String> post) {
+    JSONObject request(Map<String, String> post) {
         if (!Startup.isOnline()) {
             try {
                 JSONObject result = new JSONObject();
@@ -53,7 +54,7 @@ public abstract class HTTPClient extends AsyncTask<Map<String, String>, Integer,
                 return new JSONObject();
             }
         }
-        URL url;
+        URL    url;
         String app, method;
         myApp = (MyApp) context.getApplicationContext();
         try {
@@ -185,7 +186,7 @@ public abstract class HTTPClient extends AsyncTask<Map<String, String>, Integer,
         return result.toString();
     }
 
-    public URL createUrl(String app, String method, Boolean https) {
+    private URL createUrl(String app, String method, Boolean https) {
         String protocol;
         if (https) {
             protocol = "https";
@@ -208,7 +209,7 @@ public abstract class HTTPClient extends AsyncTask<Map<String, String>, Integer,
         return null;
     }
 
-    protected void dismiss() {
+    private void dismiss() {
         try {
             if (dialog != null && dialog.isShowing())
                 dialog.dismiss();
@@ -240,7 +241,7 @@ public abstract class HTTPClient extends AsyncTask<Map<String, String>, Integer,
         dismiss();
     }
 
-    public abstract boolean error(JSONObject response);
+    protected abstract boolean error(JSONObject response);
 
-    public abstract String getError(JSONObject response);
+    protected abstract String getError(JSONObject response);
 }

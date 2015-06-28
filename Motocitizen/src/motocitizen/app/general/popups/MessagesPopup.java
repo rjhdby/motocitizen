@@ -8,7 +8,7 @@ import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.utils.MyUtils;
 
 public class MessagesPopup extends PopupWindowGeneral {
-    AccidentMessage message;
+    private final AccidentMessage message;
 
     public MessagesPopup(Context context, int id, int acc_id) {
         super(context);

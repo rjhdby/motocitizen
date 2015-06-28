@@ -86,7 +86,7 @@ public class CreateAccidentRequest extends HTTPClient {
                 case "PROBABLY SPAM":
                     return "Нельзя создавать события так часто";
             }
-        } catch (JSONException e) {
+        } catch (JSONException ignored) {
 
         }
         return "Неизвестная ошибка " + response.toString();

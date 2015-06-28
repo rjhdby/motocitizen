@@ -67,7 +67,7 @@ public class AccidentsRequest extends HTTPClient {
             } else {
                 return "Список обновлен";
             }
-        } catch (JSONException e) {
+        } catch (JSONException ignored) {
 
         }
         return "Неизвестная ошибка " + response.toString();

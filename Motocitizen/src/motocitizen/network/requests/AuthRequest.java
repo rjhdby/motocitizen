@@ -33,8 +33,7 @@ public class AuthRequest extends HTTPClient {
 
     @Override
     public boolean error(JSONObject response) {
-        if (response.has("id")) return false;
-        return true;
+        return !response.has("id");
     }
 
     @Override
@@ -47,7 +46,7 @@ public class AuthRequest extends HTTPClient {
             } else {
                 return "Успешная авторизация";
             }
-        } catch (JSONException e) {
+        } catch (JSONException ignored) {
 
         }
         return "Неизвестная ошибка " + response.toString();

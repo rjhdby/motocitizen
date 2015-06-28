@@ -77,7 +77,7 @@ public class NewAccidentReceived extends IntentService {
             GCMBroadcastReceiver.completeWakefulIntent(intent);
             return;
         }
-        if (!prefs.toShowAccType(type)) {
+        if (prefs.toHideAccType(type)) {
             GCMBroadcastReceiver.completeWakefulIntent(intent);
             return;
         }

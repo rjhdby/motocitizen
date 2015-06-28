@@ -16,9 +16,9 @@ import motocitizen.utils.Const;
 
 public class AccidentVolunteer {
     public  int    id;
-    public  String name;
+    private String name;
     private Status status;
-    public  Date   time;
+    private Date   time;
 
     public enum Status {
         INPLACE, LEAVE, ONWAY, CANCEL
@@ -28,30 +28,36 @@ public class AccidentVolunteer {
         status = newStatus;
     }
 
-    public void setStatus(String newStatus) {
-        if (newStatus.equals("inplace"))
-            status = Status.INPLACE;
-        else if (newStatus.equals("leave"))
-            status = Status.LEAVE;
-        else if (newStatus.equals("onway"))
-            status = Status.ONWAY;
-        else if (newStatus.equals("cancel"))
-            status = Status.CANCEL;
+    private void setStatus(String newStatus) {
+        switch (newStatus) {
+            case "inplace":
+                status = Status.INPLACE;
+                break;
+            case "leave":
+                status = Status.LEAVE;
+                break;
+            case "onway":
+                status = Status.ONWAY;
+                break;
+            case "cancel":
+                status = Status.CANCEL;
+                break;
+        }
     }
 
     public Status getStatus() {
         return status;
     }
 
-    public boolean isInplace() {
+    private boolean isInplace() {
         return status == Status.INPLACE;
     }
 
-    public boolean isLeave() {
+    private boolean isLeave() {
         return status == Status.LEAVE;
     }
 
-    public boolean isCancel() {
+    private boolean isCancel() {
         return status == Status.CANCEL;
     }
 

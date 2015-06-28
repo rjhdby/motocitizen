@@ -1,9 +1,7 @@
 package motocitizen.app.general;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.view.View;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -31,10 +29,10 @@ public class Accidents {
     private static final int NORMAL = R.drawable.accident_row_gradient;
     private static final int HIDE   = R.drawable.accident_row_gradient_hide;
     private static final int ENDED  = R.drawable.accident_row_gradient_ended;
-    public final String                 error;
-    private      Map<Integer, Accident> points;
-    private      MyPreferences          prefs;
-    private      Context                context;
+    public final  String                 error;
+    private       Map<Integer, Accident> points;
+    private final MyPreferences          prefs;
+    private final Context                context;
 
     public enum Sort {
         FORWARD, BACKWARD
@@ -134,7 +132,7 @@ public class Accidents {
         Map<Integer, Accident> out = new HashMap<>();
         for (int i : points.keySet()) {
             Accident point = points.get(i);
-            if (!point.isVisible()) continue;
+            if (point.isInvisible()) continue;
             if (point.getHoursAgo() >= prefs.getHoursAgo()) continue;
             out.put(i, point);
         }

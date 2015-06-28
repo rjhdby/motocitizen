@@ -22,10 +22,10 @@ import motocitizen.startup.Startup;
 public class BounceScrollView extends ScrollView {
     private static final int MAX_Y_OVERSCROLL_DISTANCE = 40;
 
-    private Context context;
-    private int     mMaxYOverscrollDistance;
+    private final Context context;
+    private       int     mMaxYOverscrollDistance;
     private boolean isRequestedUpdate = false;
-    RefreshAnimation refreshAnimation;
+    private RefreshAnimation refreshAnimation;
 
     public BounceScrollView(Context context) {
         super(context);
@@ -76,14 +76,14 @@ public class BounceScrollView extends ScrollView {
     private class AccidentsRequestCallback implements AsyncTaskCompleteListener {
         @Override
         public void onTaskComplete(JSONObject result) {
-            if(result.has("error")){
+            if (result.has("error")) {
                 try {
                     Toast.makeText(context, result.getString("error"), Toast.LENGTH_LONG).show();
                 } catch (JSONException e) {
                     Toast.makeText(context, "Неизвестная ошибка", Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
-            }else {
+            } else {
                 AccidentsGeneral.refreshPoints(context, result);
             }
             if (Startup.mMenu != null) {

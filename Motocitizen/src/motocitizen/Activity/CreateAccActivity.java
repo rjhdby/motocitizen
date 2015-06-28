@@ -40,12 +40,12 @@ import motocitizen.utils.MyUtils;
 import motocitizen.utils.Text;
 
 public class CreateAccActivity extends FragmentActivity implements View.OnClickListener {
-    private Context context;
+    private Context       context;
     private MyPreferences prefs;
-    private NewAccident accident;
-    private View listView;
-    private Boolean confirmLock;
-    private final int RADIUS = 1000;
+    private NewAccident   accident;
+    private View          listView;
+    private Boolean       confirmLock;
+    private final int         RADIUS              = 1000;
     private final TextWatcher DetailsTextListener = new TextWatcher() {
 
         @Override
@@ -63,16 +63,21 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         }
     };
 
-    int TYPE;
-    int DESCR;
-    int ACC;
-    int MED;
-    int MAP;
-    int currentScreen;
-    GoogleMap map;
-    Button confirmButton, backButton;
-    View typeFrame, accFrame, mapFrame, medFrame, descrFrame;
-    EditText descrView;
+    private int       TYPE;
+    private int       DESCR;
+    private int       ACC;
+    private int       MED;
+    private int       MAP;
+    private int       currentScreen;
+    private GoogleMap map;
+    private Button    confirmButton;
+    private Button    backButton;
+    private View      typeFrame;
+    private View      accFrame;
+    private View      mapFrame;
+    private View      medFrame;
+    private View      descrFrame;
+    private EditText  descrView;
 
     private void refreshDescription() {
         if (accident.med.equals("mc_m_na")) {
@@ -85,7 +90,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         Text.set(context, listView, R.id.mc_create_when, Const.dateFormat.format(accident.created));
     }
 
-    public void updateAddress(String address) {
+    private void updateAddress(String address) {
         accident.address = address;
         refreshDescription();
     }
@@ -125,7 +130,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         setupListener();
     }
 
-    public void setupListener() {
+    private void setupListener() {
         findViewById(R.id.mc_create_type_break_button).setOnClickListener(this);
         findViewById(R.id.mc_create_type_steal_button).setOnClickListener(this);
         findViewById(R.id.mc_create_type_other_button).setOnClickListener(this);
@@ -390,10 +395,11 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         }
     */
     private class NewAccident {
-        String type;
-        String med;
-        Location location, initialLocation;
-        Date created;
+        String   type;
+        String   med;
+        Location location;
+        final Location initialLocation;
+        final Date     created;
         String address;
         String description;
 

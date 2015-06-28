@@ -25,15 +25,14 @@ import motocitizen.utils.Text;
 
 public class AuthActivity extends ActionBarActivity/* implements View.OnClickListener*/ {
 
-    private MyApp myApp = null;
-
     private Button logoutBtn;
     private Button loginBtn;
+    @SuppressWarnings("FieldCanBeLocal")
     private Button cancelBtn;
 
-    private EditText login;
-    private EditText password;
-    private CheckBox anonim;
+    private EditText      login;
+    private EditText      password;
+    private CheckBox      anonim;
     private MyPreferences prefs;
 
     private static Context context;
@@ -48,7 +47,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.auth);
 
-        myApp = (MyApp) getApplicationContext();
+        MyApp myApp = (MyApp) getApplicationContext();
 
         context = this;
         prefs = myApp.getPreferences();
@@ -144,7 +143,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
         fillCtrls();
     }
 
-    void fillCtrls() {
+    private void fillCtrls() {
 
         login.setText(prefs.getLogin());
         password.setText(prefs.getPassword());

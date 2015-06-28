@@ -23,20 +23,20 @@ import org.json.JSONObject;
 
 import motocitizen.app.general.Accident;
 import motocitizen.main.R;
-import motocitizen.network.requests.AccidentChangeState;
+import motocitizen.network.requests.AccidentChangeStateRequest;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.network.requests.BanRequest;
 import motocitizen.utils.MyUtils;
 
 abstract class PopupWindowGeneral {
 
-    static final String CALL_PREFIX = "Вызов: ";
-    static final String SMS_PREFIX  = "СМС: ";
+    private static final String CALL_PREFIX = "Вызов: ";
+    private static final String SMS_PREFIX  = "СМС: ";
 
     final TableRow.LayoutParams layoutParams;
-    TableLayout content;
-    PopupWindow popupWindow;
-    Context context;
+    final TableLayout           content;
+    final PopupWindow           popupWindow;
+    final Context               context;
 
     PopupWindowGeneral(Context context) {
         this.context = context;
@@ -134,9 +134,9 @@ abstract class PopupWindowGeneral {
             public void onClick(View v) {
                 popupWindow.dismiss();
                 if (point.isEnded()) {
-                    new AccidentChangeState(null, context, point.getId(), AccidentChangeState.ACTIVE);
+                    new AccidentChangeStateRequest(null, context, point.getId(), AccidentChangeStateRequest.ACTIVE);
                 } else {
-                    new AccidentChangeState(null, context, point.getId(), AccidentChangeState.ENDED);
+                    new AccidentChangeStateRequest(null, context, point.getId(), AccidentChangeStateRequest.ENDED);
                 }
             }
         });
@@ -157,9 +157,9 @@ abstract class PopupWindowGeneral {
             public void onClick(View v) {
                 popupWindow.dismiss();
                 if (point.isHidden()) {
-                    new AccidentChangeState(null, context, point.getId(), AccidentChangeState.ACTIVE);
+                    new AccidentChangeStateRequest(null, context, point.getId(), AccidentChangeStateRequest.ACTIVE);
                 } else {
-                    new AccidentChangeState(null, context, point.getId(), AccidentChangeState.HIDE);
+                    new AccidentChangeStateRequest(null, context, point.getId(), AccidentChangeStateRequest.HIDE);
                 }
             }
         });

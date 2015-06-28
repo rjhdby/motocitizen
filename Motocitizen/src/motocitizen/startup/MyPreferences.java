@@ -59,11 +59,11 @@ public class MyPreferences {
         preferences.edit().putBoolean(name, value).commit();
     }
 
-    public static void setOnWay(int id) {
+    public void setOnWay(int id) {
         preferences.edit().putInt(onWay, id).commit();
     }
 
-    public static int getOnWay() {
+    public int getOnWay() {
         return preferences.getInt(onWay, 0);
     }
 
@@ -238,17 +238,17 @@ public class MyPreferences {
         preferences.edit().remove(login).remove(password).commit();
     }
 
-    public boolean toShowAccType(String type) {
+    public boolean toHideAccType(String type) {
         String globalType = type.substring(0, 5);
         switch (globalType) {
             case "acc_m":
-                return toShowAcc();
+                return !toShowAcc();
             case "acc_b":
-                return toShowBreak();
+                return !toShowBreak();
             case "acc_s":
-                return toShowSteal();
+                return !toShowSteal();
             default:
-                return toShowOther();
+                return !toShowOther();
         }
     }
 

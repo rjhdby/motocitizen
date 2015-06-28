@@ -46,7 +46,7 @@ public class SendMessageRequest  extends HTTPClient {
                 case "READONLY":
                     return "Недостаточно прав";
             }
-        } catch (JSONException e) {
+        } catch (JSONException ignored) {
 
         }
         return "Неизвестная ошибка " + response.toString();

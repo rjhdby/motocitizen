@@ -9,9 +9,9 @@ import motocitizen.app.general.user.Role;
 import motocitizen.utils.MyUtils;
 
 public class AccidentListPopup extends PopupWindowGeneral {
-    Accident point;
-    boolean  disableOldItems;
-    String   accText;
+    private final Accident point;
+    private final boolean  disableOldItems;
+    private final String   accText;
 
     public AccidentListPopup(Context context, int id, boolean disableOldItems) {
         super(context);

@@ -35,12 +35,13 @@ public class AccidentHistory {
         actions = Collections.unmodifiableMap(m);
     }
 
-    public       int    id;
-    public       int    owner_id;
-    public       int    table_row;
-    public final int    acc_id;
-    public       String owner, action;
-    public Date time;
+    public        int    id;
+    public        int    owner_id;
+    public        int    table_row;
+    private final int    acc_id;
+    private       String owner;
+    private       String action;
+    private       Date   time;
 
     public AccidentHistory(JSONObject json, int acc_id) throws JSONException {
         this.acc_id = acc_id;
@@ -51,7 +52,7 @@ public class AccidentHistory {
         time = new Date(Long.parseLong(json.getString("uxtime"), 10) * 1000);
     }
 
-    String getAction() {
+    private String getAction() {
         if (actions.containsKey(action)) {
             return actions.get(action);
         } else {

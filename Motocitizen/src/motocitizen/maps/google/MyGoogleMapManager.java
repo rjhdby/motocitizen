@@ -17,7 +17,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import motocitizen.app.general.Accident;
@@ -76,7 +75,7 @@ public class MyGoogleMapManager extends MyMapManager {
         map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
-                String uri    = String.format(Locale.ENGLISH, "geo:" + latLng.latitude + "," + latLng.longitude);
+                String uri    = "geo:" + latLng.latitude + "," + latLng.longitude;
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                 context.startActivity(intent);
             }
@@ -112,7 +111,7 @@ public class MyGoogleMapManager extends MyMapManager {
         accidents.clear();
         for (int id : AccidentsGeneral.points.keySet()) {
             Accident point = AccidentsGeneral.points.getPoint(id);
-            if (!point.isVisible()) continue;
+            if (point.isInvisible()) continue;
             String title = point.getTypeText();
             if (!point.getMedText().equals("")) {
                 title += ", " + point.getMedText();

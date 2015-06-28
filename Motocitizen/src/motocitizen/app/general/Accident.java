@@ -41,7 +41,7 @@ import motocitizen.utils.NewID;
 @SuppressLint({"UseSparseArrays", "RtlHardcoded"})
 public class Accident {
     private MyApp myApp = null;
-    public  Map<String, String>             attributes;
+    private Map<String, String>             attributes;
     public  Map<Integer, AccidentMessage>   messages;
     public  Map<Integer, AccidentVolunteer> volunteers;
     public  Map<Integer, AccidentHistory>   history;
@@ -54,13 +54,13 @@ public class Accident {
         ACTIVE, HIDDEN, ENDED,
     }
 
-    public PointStatus status;
+    private PointStatus status;
 
     public Date created;
 
     private int id, owner_id;
-    public  int     row_id;
-    private Context context;
+    public        int     row_id;
+    private final Context context;
 
     public int getId() {
         return id;
@@ -90,14 +90,17 @@ public class Accident {
         return owner_id;
     }
 
-    public String getStatusString() {
-        if (status == PointStatus.ACTIVE)
-            return "acc_status_act";
-        if (status == PointStatus.HIDDEN)
-            return "acc_status_hide";
-        if (status == PointStatus.ENDED)
-            return "acc_status_end";
-        return "";
+    private String getStatusString() {
+        switch (status) {
+            case ACTIVE:
+                return "acc_status_act";
+            case HIDDEN:
+                return "acc_status_hide";
+            case ENDED:
+                return "acc_status_end";
+            default:
+                return "";
+        }
     }
 
     public String getTextToCopy() {
@@ -113,7 +116,7 @@ public class Accident {
         return res.toString();
     }
 
-    private MyPreferences prefs;
+    private final MyPreferences prefs;
 
     private final View.OnClickListener accRowClick = new View.OnClickListener() {
         public void onClick(View v) {
@@ -255,7 +258,7 @@ public class Accident {
         return keys;
     }
 
-    boolean hasInOwners() {
+    private boolean hasInOwners() {
         if (myApp.getMCAuth().isAnonim())
             return false;
         int user = myApp.getMCAuth().getID();
@@ -446,12 +449,9 @@ public class Accident {
         }
     }
 
-    public boolean isVisible() {
+    public boolean isInvisible() {
         Double dist = getDistanceFromUser();
-        if (isHidden() && !Role.isModerator()) {
-            return false;
-        }
-        return dist == null || (dist < prefs.getVisibleDistance() * 1000) && prefs.toShowAccType(type);
+        return isHidden() && !Role.isModerator() || (dist != null && ((dist >= prefs.getVisibleDistance() * 1000) || prefs.toHideAccType(type)));
     }
 
     public boolean isActive() {

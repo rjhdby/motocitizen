@@ -1,11 +1,10 @@
 package motocitizen.Activity;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -19,7 +18,7 @@ public class SettingsActivity extends Activity {
         setContentView(R.layout.activity_settings);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction().replace(android.R.id.content,
-                    new SettingsFragment()).commit();
+                                                            new SettingsFragment()).commit();
         }
     }
 
@@ -29,11 +28,6 @@ public class SettingsActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         //getMenuInflater().inflate(R.menu.menu_settings, menu);
         return false;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -49,10 +43,5 @@ public class SettingsActivity extends Activity {
                                  Bundle savedInstanceState) {
             return inflater.inflate(R.layout.fragment_settings, container, false);
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 }

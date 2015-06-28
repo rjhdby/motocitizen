@@ -44,7 +44,7 @@ public class CancelOnWayRequest extends HTTPClient {
                 case "ERROR PREREQUISITES":
                     return "Неизвестная ошибка " + response.toString();
             }
-        } catch (JSONException e) {
+        } catch (JSONException ignored) {
 
         }
         return "Неизвестная ошибка " + response.toString();

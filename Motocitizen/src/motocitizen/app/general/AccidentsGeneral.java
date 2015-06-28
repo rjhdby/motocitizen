@@ -25,7 +25,6 @@ import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 
 public class AccidentsGeneral {
-    private MyApp myApp = null;
     private static int       inplaceAcc;
     private static Accident  currentPoint;
     public static  Accidents points;
@@ -62,7 +61,7 @@ public class AccidentsGeneral {
     }
 
     public AccidentsGeneral(Context context) {
-        myApp = (MyApp) context.getApplicationContext();
+        MyApp myApp = (MyApp) context.getApplicationContext();
         inplaceAcc = 0;
         auth = myApp.getMCAuth();
         new MyLocationManager(context);

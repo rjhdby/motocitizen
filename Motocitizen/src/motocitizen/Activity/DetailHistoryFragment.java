@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import motocitizen.app.general.Accident;
-import motocitizen.app.general.AccidentHistory;
 import motocitizen.main.R;
 
 public class DetailHistoryFragment extends AccidentDetailsFragments {
@@ -37,7 +36,7 @@ public class DetailHistoryFragment extends AccidentDetailsFragments {
         return viewMain;
     }
 
-    protected void update() {
+    private void update() {
         Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
 
         ViewGroup logView = (ViewGroup) mcDetLogContent;

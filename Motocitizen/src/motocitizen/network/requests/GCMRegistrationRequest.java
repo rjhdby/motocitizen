@@ -46,7 +46,7 @@ public class GCMRegistrationRequest extends HTTPClient {
                 case "ERROR PREREQUISITES":
                     return "Ошибка соединения " + response.toString();
             }
-        } catch (JSONException e) {
+        } catch (JSONException ignored) {
 
         }
         return "Неизвестная ошибка " + response.toString();

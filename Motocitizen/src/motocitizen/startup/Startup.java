@@ -1,7 +1,6 @@
 package motocitizen.startup;
 
 import android.app.AlertDialog;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -45,7 +44,6 @@ import motocitizen.maps.osm.MyOSMMapManager;
 import motocitizen.network.requests.AccidentsRequest;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.utils.Const;
-import motocitizen.utils.MyUtils;
 import motocitizen.utils.RefreshAnimation;
 
 public class Startup extends ActionBarActivity implements View.OnClickListener {
@@ -56,14 +54,12 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     public static MyMapManager  map;
     public static boolean       fromDetails;
 
-    private ImageButton dialButton;
     private ImageButton createAccButton;
 
     private RadioGroup mainTabsGroup;
 
     private View       accListView;
     private View       mapContainer;
-    private ScrollView accListRefresh;
 
     public static Menu mMenu;
 
@@ -89,7 +85,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
 
         checkUpdate();
 
-        dialButton = (ImageButton) findViewById(R.id.dial_button);
+        ImageButton dialButton = (ImageButton) findViewById(R.id.dial_button);
         dialButton.setOnClickListener(this);
 
         createAccButton = (ImageButton) findViewById(R.id.mc_add_point_button);
@@ -102,7 +98,6 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         mapContainer = findViewById(R.id.map_container);
         mapContainer.setTranslationX(Const.getWidth(context));
 
-        accListRefresh = (ScrollView) this.findViewById(R.id.accListRefresh);
         accListView.setOnDragListener(new View.OnDragListener() {
             @Override
             public boolean onDrag(View v, DragEvent event) {

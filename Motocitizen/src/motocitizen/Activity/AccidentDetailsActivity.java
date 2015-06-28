@@ -27,7 +27,7 @@ import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.app.general.popups.AccidentListPopup;
 import motocitizen.app.general.user.Role;
 import motocitizen.main.R;
-import motocitizen.network.requests.AccidentChangeState;
+import motocitizen.network.requests.AccidentChangeStateRequest;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.startup.MyPreferences;
 import motocitizen.startup.Startup;
@@ -40,11 +40,11 @@ public class AccidentDetailsActivity
 
     private Context context;
 
-    static final int SMS_MENU_MIN_ID = 100;
-    static final int SMS_MENU_MAX_ID = 200;
+    private static final int SMS_MENU_MIN_ID = 100;
+    private static final int SMS_MENU_MAX_ID = 200;
 
-    static final int CALL_MENU_MIN_ID = 400;
-    static final int CALL_MENU_MAX_ID = 500;
+    private static final int CALL_MENU_MIN_ID = 400;
+    private static final int CALL_MENU_MAX_ID = 500;
 
     /*
     Инцидент с которым работаем
@@ -54,9 +54,9 @@ public class AccidentDetailsActivity
 
     private String accNewState = "";
 
-    DetailVolunteersFragment detailVolunteersFragment;
-    DetailMessagesFragment   detailMessagesFragment;
-    DetailHistoryFragment    detailHistoryFragment;
+    private DetailVolunteersFragment detailVolunteersFragment;
+    private DetailMessagesFragment   detailMessagesFragment;
+    private DetailHistoryFragment    detailHistoryFragment;
 
     private TextView generalType;
     private TextView generalStatus;
@@ -68,9 +68,7 @@ public class AccidentDetailsActivity
 
     private Menu mMenu;
 
-    MyPreferences prefs;
-
-    private String userName;
+    private MyPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +85,7 @@ public class AccidentDetailsActivity
 
         //NewAccidentReceived.removeNotification(accidentID);
 
-        userName = ((MyApp) getApplicationContext()).getPreferences().getLogin();
+        String userName = ((MyApp) getApplicationContext()).getPreferences().getLogin();
 
         detailVolunteersFragment = DetailVolunteersFragment.newInstance(accidentID, userName);
         detailMessagesFragment = DetailMessagesFragment.newInstance(accidentID, userName);
@@ -132,7 +130,7 @@ public class AccidentDetailsActivity
         update();
     }
 
-    protected void update() {
+    void update() {
         currentPoint = AccidentsGeneral.points.getPoint(accidentID);
 
         ActionBar actionBar = getSupportActionBar();
@@ -268,24 +266,24 @@ public class AccidentDetailsActivity
     private void sendFinishRequest() {
         if (AccidentsGeneral.points.getPoint(accidentID).isEnded()) {
             //TODO Суперкостыль
-            accNewState = AccidentChangeState.ACTIVE;
-            new AccidentChangeState(new AccidentChangeCallback(), this, accidentID, AccidentChangeState.ACTIVE);
+            accNewState = AccidentChangeStateRequest.ACTIVE;
+            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, AccidentChangeStateRequest.ACTIVE);
         } else {
             //TODO Суперкостыль
-            accNewState = AccidentChangeState.ENDED;
-            new AccidentChangeState(new AccidentChangeCallback(), this, accidentID, AccidentChangeState.ENDED);
+            accNewState = AccidentChangeStateRequest.ENDED;
+            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, AccidentChangeStateRequest.ENDED);
         }
     }
 
     private void sendHideRequest() {
         if (AccidentsGeneral.points.getPoint(accidentID).isEnded()) {
             //TODO Суперкостыль
-            accNewState = AccidentChangeState.ACTIVE;
-            new AccidentChangeState(new AccidentChangeCallback(), this, accidentID, AccidentChangeState.ACTIVE);
+            accNewState = AccidentChangeStateRequest.ACTIVE;
+            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, AccidentChangeStateRequest.ACTIVE);
         } else {
             //TODO Суперкостыль
-            accNewState = AccidentChangeState.HIDE;
-            new AccidentChangeState(new AccidentChangeCallback(), this, accidentID, AccidentChangeState.HIDE);
+            accNewState = AccidentChangeStateRequest.HIDE;
+            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, AccidentChangeStateRequest.HIDE);
         }
     }
 
