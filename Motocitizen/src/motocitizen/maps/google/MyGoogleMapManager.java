@@ -44,15 +44,19 @@ public class MyGoogleMapManager extends MyMapManager {
 
         android.support.v4.app.FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
         final SupportMapFragment               mapFragment     = (SupportMapFragment) fragmentManager.findFragmentById(R.id.google_map);
-        map = mapFragment.getMap();
+
 /* Возможно поможет, хотя и костыль */
-        if (map == null) {
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        for (int i = 0; i < 5; i++) {
             map = mapFragment.getMap();
+            if (map == null) {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                break;
+            }
         }
         init();
         map.setOnMarkerClickListener(new OnMarkerClickListener() {
