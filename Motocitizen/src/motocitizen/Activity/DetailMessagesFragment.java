@@ -102,10 +102,16 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
 */
         ViewGroup messageView = (ViewGroup) mcDetMessagesTable;
         messageView.removeAllViews();
-        Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
-
-        for (int i : accident.getSortedMessagesKeys()) {
-            accident.messages.get(i).inflateRow(getActivity(), messageView);
+        Accident  accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
+        String    last     = "";
+        String    next;
+        Integer[] keys     = accident.getSortedMessagesKeys().toArray(new Integer[accident.getSortedMessagesKeys().size()]);
+        for (int i = 0; i < keys.length; i++) {
+            if (i < keys.length - 1) {
+                next = accident.messages.get(keys[i + 1]).owner;
+            } else next = "";
+            accident.messages.get(keys[i]).inflateRow(getActivity(), messageView, last, next);
+            last = accident.messages.get(keys[i]).owner;
         }
         setupAccess();
     }
