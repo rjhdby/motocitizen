@@ -17,7 +17,7 @@
         android:id="@+id/owner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="rjhdby"
+        android:text=""
         android:textColor="#FFFF00"/>
 
     <TextView
@@ -26,7 +26,7 @@
         android:layout_height="match_parent"
         android:maxLines="10"
         android:singleLine="false"
-        android:text="\nЭто было очень давно, когда я учился классе в десятом. Среди довольно скудного в научном плане фонда районной библиотеки мне попалась книга — Угаров В. А."/>
+        android:text=""/>
 
     <TextView
         android:id="@+id/time"
@@ -34,6 +34,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:gravity="right"
-        android:text="12:38"
+        android:text=""
         android:textColor="@color/material_blue_grey_950"/>
 </FrameLayout>

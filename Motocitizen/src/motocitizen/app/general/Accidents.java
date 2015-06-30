@@ -26,9 +26,14 @@ import motocitizen.startup.MyPreferences;
 
 @SuppressLint("UseSparseArrays")
 public class Accidents {
+    /*
     private static final int NORMAL = R.drawable.accident_row_gradient;
     private static final int HIDE   = R.drawable.accident_row_gradient_hide;
     private static final int ENDED  = R.drawable.accident_row_gradient_ended;
+    */
+    private static final int NORMAL = 0xff808080;
+    private static final int HIDE   = 0xff202020;
+    private static final int ENDED  = 0xff606060;
     public final  String                 error;
     private       Map<Integer, Accident> points;
     private final MyPreferences          prefs;

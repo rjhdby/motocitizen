@@ -351,7 +351,26 @@ public class Accident {
 
     public void inflateRow(final Context context, ViewGroup viewGroup) {
         LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        FrameLayout    fl = (FrameLayout) li.inflate(R.layout.accident_row, viewGroup, false);
+        FrameLayout    fl;
+        if (hasInOwners()) {
+            fl = (FrameLayout) li.inflate(R.layout.accident_row_i_was_here, viewGroup, false);
+            switch (getStatusString()) {
+                case "acc_status_end":
+                    fl.setBackgroundResource(R.drawable.owner_accident_ended);
+                    break;
+                case "acc_status_hide":
+                    fl.setBackgroundResource(R.drawable.owner_accident_hidden);
+            }
+        } else {
+            fl = (FrameLayout) li.inflate(R.layout.accident_row, viewGroup, false);
+            switch (getStatusString()) {
+                case "acc_status_end":
+                    fl.setBackgroundResource(R.drawable.accident_row_ended);
+                    break;
+                case "acc_status_hide":
+                    fl.setBackgroundResource(R.drawable.accident_row_hidden);
+            }
+        }
 
         StringBuilder generalText = new StringBuilder();
         generalText.append(getTypeText());
@@ -363,13 +382,19 @@ public class Accident {
         if (countUnreadMessages() > 0)
             msgText += "<font color=#C62828><b>(" + String.valueOf(countUnreadMessages()) + ")</b></font>";
 
-        ((TextView) fl.findViewById(R.id.accident_row_content)).setText(generalText);
+        switch (getStatusString()) {
+            case "acc_status_end":
+                ((TextView) fl.findViewById(R.id.accident_row_content)).setTextColor(0x70FFFFFF);
+                break;
+            case "acc_status_hide":
+                ((TextView) fl.findViewById(R.id.accident_row_content)).setTextColor(0x30FFFFFF);
+        }
+
+        ((TextView) fl.findViewById(R.id.accident_row_content)).setText(generalText + " \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0");
         ((TextView) fl.findViewById(R.id.accident_row_time)).setText(MyUtils.getIntervalFromNowInText(created));
         ((TextView) fl.findViewById(R.id.accident_row_unread)).setText(Html.fromHtml(msgText));
-        if (hasInOwners()) (fl.findViewById(R.id.i_was_here)).setBackgroundColor(0xFFC62828);
 
         fl.setId(NewID.id());
-        fl.setBackgroundResource(Accidents.getBackground(getStatusString()));
         fl.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 AccidentsGeneral.toDetails(v.getContext(), id);
