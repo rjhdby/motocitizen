@@ -20,6 +20,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +28,8 @@ import org.json.JSONObject;
 import java.util.Date;
 
 import motocitizen.MyApp;
+import motocitizen.app.general.Accident;
+import motocitizen.app.general.AccidentTypes;
 import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.app.general.MyLocationManager;
 import motocitizen.app.general.user.Role;
@@ -320,9 +323,9 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     }
 
     private GoogleMap makeMap() {
-        GoogleMap map;
-        FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
-        SupportMapFragment mapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.mc_create_map_container);
+        GoogleMap          map;
+        FragmentManager    fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+        SupportMapFragment mapFragment     = (SupportMapFragment) fragmentManager.findFragmentById(R.id.mc_create_map_container);
         map = mapFragment.getMap();
 
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(accident.location), 16));
@@ -348,6 +351,28 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 }
             });
         }
+        map.clear();
+        for (int id : AccidentsGeneral.points.keySet()) {
+            Accident point = AccidentsGeneral.points.getPoint(id);
+            if (point.isInvisible()) continue;
+            String title = point.getTypeText();
+            if (!point.getMedText().equals("")) {
+                title += ", " + point.getMedText();
+            }
+            title += ", " + MyUtils.getIntervalFromNowInText(point.created) + " назад";
+
+            float alpha;
+            int age = (int) (((new Date()).getTime() - point.created.getTime()) / 3600000);
+            if (age < 2) {
+                alpha = 1.0f;
+            } else if (age < 6) {
+                alpha = 0.5f;
+            } else {
+                alpha = 0.2f;
+            }
+            map.addMarker(new MarkerOptions().position(MyUtils.LocationToLatLng(point.getLocation())).title(title)
+                                             .icon(AccidentTypes.getBitmapDescriptor(point.getType())).alpha(alpha));
+        }
         return map;
     }
 
@@ -370,30 +395,6 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         setConfirm(accident.isComplete());
     }
 
-    /*
-        public void parseResponse(JSONObject json) {
-            if (json.has("result")) {
-                try {
-                    String result = json.getString("result");
-                    if (result.contains("ID")) {
-                        Toast.makeText(this, this.getString(R.string.send_success), Toast.LENGTH_LONG).show();
-                        finish();
-                    } else if (result.equals("READONLY")) {
-                        Toast.makeText(this, this.getString(R.string.not_have_rights_error), Toast.LENGTH_LONG).show();
-                    } else if (result.equals("PROBABLY SPAM")) {
-                        Toast.makeText(this, this.getString(R.string.too_often_acts), Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(this, result, Toast.LENGTH_LONG).show();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Toast.makeText(this, this.getString(R.string.parse_error), Toast.LENGTH_LONG).show();
-                }
-            } else {
-                Toast.makeText(this, this.getString(R.string.send_error), Toast.LENGTH_LONG).show();
-            }
-        }
-    */
     private class NewAccident {
         String   type;
         String   med;
