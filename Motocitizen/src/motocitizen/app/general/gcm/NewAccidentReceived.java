@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationManager;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.os.Build;
@@ -45,7 +47,7 @@ public class NewAccidentReceived extends IntentService {
         }
         Bundle extras = intent.getExtras();
         try {
-            if(AccidentsGeneral.points == null){
+            if (AccidentsGeneral.points == null) {
                 new AccidentsGeneral(this);
             }
             AccidentsGeneral.points.addPoint(new Accident(extras, this));
@@ -53,15 +55,16 @@ public class NewAccidentReceived extends IntentService {
             e.printStackTrace();
         }
 
-        String type      = extras.getString("type");
-        String message   = extras.getString("message");
-        String title     = extras.getString("title");
-        String idString  = extras.getString("id");
+        String type = extras.getString("type");
+        String message = extras.getString("message");
+        String title = extras.getString("title");
+        String idString = extras.getString("id");
         String latString = extras.getString("lat");
         String lngString = extras.getString("lon");
+
         if (idString == null) return;
         extras.putInt("toDetails", Integer.parseInt(idString));
-        int    id;
+        int id;
         double lat, lng;
         if (MyUtils.isInteger(idString)) {
             id = Integer.valueOf(idString);
@@ -85,11 +88,11 @@ public class NewAccidentReceived extends IntentService {
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         notificationIntent.putExtras(extras);
-        PendingIntent        contentIntent = PendingIntent.getActivity(this, id, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
-        Resources            res           = this.getResources();
-        Notification.Builder builder       = new Notification.Builder(this);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, id, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
+        Resources res = this.getResources();
+        Notification.Builder builder = new Notification.Builder(this);
         builder.setContentIntent(contentIntent).setSmallIcon(R.drawable.logo).setLargeIcon(BitmapFactory.decodeResource(res, R.drawable.logo))
-               .setTicker(title).setWhen(System.currentTimeMillis()).setAutoCancel(true).setContentTitle(title).setContentText(message);
+                .setTicker(title + getDistanceText(distance)).setWhen(System.currentTimeMillis()).setAutoCancel(true).setContentTitle(title).setContentText(message);
 
         if (prefs.getAlarmSoundTitle().equals("default system")) {
             if (prefs.getVibration()) {
@@ -156,5 +159,13 @@ public class NewAccidentReceived extends IntentService {
         }
         (new MyPreferences(context)).setNotificationList(new JSONArray());
         notificationManager.cancelAll();
+    }
+
+    public String getDistanceText(Double dist) {
+        if (dist > 1000) {
+            return " (" + String.valueOf(Math.round(dist / 10) / 100) + "км )";
+        } else {
+            return " (" + String.valueOf(Math.round(dist)) + "м )";
+        }
     }
 }
