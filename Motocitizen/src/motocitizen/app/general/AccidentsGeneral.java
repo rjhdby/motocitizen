@@ -56,6 +56,7 @@ public class AccidentsGeneral {
         return currentPoint.getId();
     }
 
+    //TODO неиспользуемый метод
     public static void setCurrentPoint(Accident point) {
         currentPoint = point;
     }
@@ -133,7 +134,7 @@ public class AccidentsGeneral {
                 Startup.map.placeAcc(context);
                 redraw(context);
                 Startup.map.placeAcc(context);
-                points.saveReadenMsg();
+                points.saveReadMessages();
 
             } catch (JSONException e) {
                 e.printStackTrace();

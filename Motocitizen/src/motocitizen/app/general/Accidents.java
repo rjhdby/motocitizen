@@ -8,13 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -60,27 +53,6 @@ public class Accidents {
         prefs = ((MyApp) context.getApplicationContext()).getPreferences();
     }
 
-    public static String getFileContents(final File file) throws IOException {
-        final InputStream inputStream = new FileInputStream(file);
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        final StringBuilder stringBuilder = new StringBuilder();
-        boolean done = false;
-
-        while (!done) {
-            final String line = reader.readLine();
-            done = (line == null);
-
-            if (line != null) {
-                stringBuilder.append(line);
-            }
-        }
-
-        reader.close();
-        inputStream.close();
-
-        return stringBuilder.toString();
-    }
-
     public boolean containsKey(int id) {
         return points.containsKey(id);
     }
@@ -101,7 +73,7 @@ public class Accidents {
     public void update(JSONArray data) {
         try {
             parseJSON(data);
-            loadReadenMsg();
+            loadReadenMessages();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -127,6 +99,7 @@ public class Accidents {
         points.put(point.getId(), point);
     }
 
+    //TODO Неиспользуемый метод
     static int getBackground(String status) {
         if (status.equals("acc_status_end")) {
             return ENDED;
@@ -193,44 +166,33 @@ public class Accidents {
         return out;
     }
 
-    private boolean loadReadenMsg() {
-        File file = new File(context.getFilesDir(), readMsgFilename);
-        if (file.exists()) {
+    private void loadReadenMessages() {
+        JSONArray accArray = prefs.getMessageReadList();
+        for (int i = 0; i < accArray.length(); i++) {
             try {
-                String content = getFileContents(file);
-                if (!content.isEmpty()) {
-                    JSONArray accArray = new JSONArray(content);
+                JSONObject acc = accArray.getJSONObject(i);
+                int accId = acc.getInt("accId");
 
-                    for (int i = 0; i < accArray.length(); i++) {
-                        JSONObject acc = accArray.getJSONObject(i);
-                        int accId = acc.getInt("accId");
+                JSONArray msgArray = acc.getJSONArray("msg");
+                for (int j = 0; j < msgArray.length(); j++) {
+                    int msgId = msgArray.getInt(j);
 
-                        JSONArray msgArray = acc.getJSONArray("msg");
-                        for (int j = 0; j < msgArray.length(); j++) {
-                            int msgId = msgArray.getInt(j);
-
-                            Accident point = points.get(accId);
-                            if (point != null) {
-                                AccidentMessage msg = point.messages.get(msgId);
-                                if (msg != null) {
-                                    msg.unread = false;
-                                }
-                            }
+                    Accident point = points.get(accId);
+                    if (point != null) {
+                        AccidentMessage msg = point.messages.get(msgId);
+                        if (msg != null) {
+                            msg.unread = false;
                         }
                     }
                 }
-                return true;
-            } catch (IOException e) {
-                e.printStackTrace();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-        return false;
     }
 
-    public void saveReadenMsg() {
-        JSONArray result = new JSONArray();
+    public void saveReadMessages() {
+        JSONArray accArray = new JSONArray();
 
         for (int i : points.keySet()) {
             Accident point = points.get(i);
@@ -247,45 +209,15 @@ public class Accidents {
                 try {
                     acc.put("accId", point.getId());
                     acc.put("msg", msgArray);
-                    result.put(acc);
+                    accArray.put(acc);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         }
 
-        if (result.length() > 0) {
-            File file = new File(context.getFilesDir(), readMsgFilename);
-            FileOutputStream fop = null;
-
-            if (!file.exists()) {
-                try {
-                    file.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return;
-                }
-            }
-            try {
-                String content = result.toString();
-                if (content.length() > 0) {
-                    fop = new FileOutputStream(file);
-                    byte[] contentInBytes = content.getBytes();
-                    fop.write(contentInBytes);
-                    fop.flush();
-                    fop.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (fop != null) {
-                        fop.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+        if (accArray.length() > 0) {
+            prefs.setMessageReadList(accArray);
         }
     }
 }
