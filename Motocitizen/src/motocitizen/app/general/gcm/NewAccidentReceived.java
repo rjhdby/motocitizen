@@ -91,8 +91,11 @@ public class NewAccidentReceived extends IntentService {
         PendingIntent contentIntent = PendingIntent.getActivity(this, id, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
         Resources res = this.getResources();
         Notification.Builder builder = new Notification.Builder(this);
+
+        String distanceString = getDistanceText(distance);
+
         builder.setContentIntent(contentIntent).setSmallIcon(R.drawable.logo).setLargeIcon(BitmapFactory.decodeResource(res, R.drawable.logo))
-                .setTicker(title + getDistanceText(distance)).setWhen(System.currentTimeMillis()).setAutoCancel(true).setContentTitle(title).setContentText(message);
+                .setTicker(title + distanceString).setWhen(System.currentTimeMillis()).setAutoCancel(true).setContentTitle(title + distanceString).setContentText(message);
 
         if (prefs.getAlarmSoundTitle().equals("default system")) {
             if (prefs.getVibration()) {
