@@ -133,6 +133,7 @@ public class AccidentsGeneral {
                 Startup.map.placeAcc(context);
                 redraw(context);
                 Startup.map.placeAcc(context);
+                points.saveReadenMsg();
 
             } catch (JSONException e) {
                 e.printStackTrace();
