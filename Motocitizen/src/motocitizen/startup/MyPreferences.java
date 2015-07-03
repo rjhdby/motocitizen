@@ -44,6 +44,7 @@ public class MyPreferences {
     private final static String savedlng            = "savedlng";
     private final static String savedlat            = "savedlat";
     private final static String notificationList    = "notificationList";
+    private final static String messageReadList    = "messageReadList";
 
     private final static String[] mapProviders = {"google", "osm", "yandex"};
 
@@ -310,6 +311,21 @@ public class MyPreferences {
         JSONArray json;
         try {
             json = new JSONArray(preferences.getString(notificationList, "[]"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            json = new JSONArray();
+        }
+        return json;
+    }
+
+    public void setMessageReadList(JSONArray json) {
+        preferences.edit().putString(messageReadList, json.toString()).commit();
+    }
+
+    public JSONArray getMessageReadList() {
+        JSONArray json;
+        try {
+            json = new JSONArray(preferences.getString(messageReadList, "[]"));
         } catch (JSONException e) {
             e.printStackTrace();
             json = new JSONArray();

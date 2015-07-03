@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.Set;
 
 import motocitizen.MyApp;
-import motocitizen.main.R;
 import motocitizen.network.requests.AccidentsRequest;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.startup.MyPreferences;
@@ -32,12 +31,14 @@ public class Accidents {
     private static final int ENDED  = R.drawable.accident_row_gradient_ended;
     */
     private static final int NORMAL = 0xff808080;
-    private static final int HIDE   = 0xff202020;
-    private static final int ENDED  = 0xff606060;
-    public final  String                 error;
-    private       Map<Integer, Accident> points;
-    private final MyPreferences          prefs;
-    private final Context                context;
+    private static final int HIDE = 0xff202020;
+    private static final int ENDED = 0xff606060;
+    private final String readMsgFilename = "readMsg.json";
+
+    public final String error;
+    private Map<Integer, Accident> points;
+    private final MyPreferences prefs;
+    private final Context context;
 
     public enum Sort {
         FORWARD, BACKWARD
@@ -72,6 +73,7 @@ public class Accidents {
     public void update(JSONArray data) {
         try {
             parseJSON(data);
+            loadReadenMessages();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -97,6 +99,7 @@ public class Accidents {
         points.put(point.getId(), point);
     }
 
+    //TODO Неиспользуемый метод
     static int getBackground(String status) {
         if (status.equals("acc_status_end")) {
             return ENDED;
@@ -161,5 +164,60 @@ public class Accidents {
                 list.toArray(out);
         }
         return out;
+    }
+
+    private void loadReadenMessages() {
+        JSONArray accArray = prefs.getMessageReadList();
+        for (int i = 0; i < accArray.length(); i++) {
+            try {
+                JSONObject acc = accArray.getJSONObject(i);
+                int accId = acc.getInt("accId");
+
+                JSONArray msgArray = acc.getJSONArray("msg");
+                for (int j = 0; j < msgArray.length(); j++) {
+                    int msgId = msgArray.getInt(j);
+
+                    Accident point = points.get(accId);
+                    if (point != null) {
+                        AccidentMessage msg = point.messages.get(msgId);
+                        if (msg != null) {
+                            msg.unread = false;
+                        }
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void saveReadMessages() {
+        JSONArray accArray = new JSONArray();
+
+        for (int i : points.keySet()) {
+            Accident point = points.get(i);
+            JSONArray msgArray = new JSONArray();
+
+            for (int j : point.messages.keySet()) {
+                AccidentMessage message = point.messages.get(j);
+                if (!message.unread) {
+                    msgArray.put(message.id);
+                }
+            }
+            if (msgArray.length() > 0) {
+                JSONObject acc = new JSONObject();
+                try {
+                    acc.put("accId", point.getId());
+                    acc.put("msg", msgArray);
+                    accArray.put(acc);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        if (accArray.length() > 0) {
+            prefs.setMessageReadList(accArray);
+        }
     }
 }
