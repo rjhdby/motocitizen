@@ -8,8 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
-import android.location.Location;
-import android.location.LocationManager;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.os.Build;
@@ -165,10 +163,6 @@ public class NewAccidentReceived extends IntentService {
     }
 
     public String getDistanceText(Double dist) {
-        if (dist > 1000) {
-            return " (" + String.valueOf(Math.round(dist / 10) / 100) + "км )";
-        } else {
-            return " (" + String.valueOf(Math.round(dist)) + "м )";
-        }
+            return " (" + String.valueOf(Math.round(dist)) + "км )";
     }
 }
