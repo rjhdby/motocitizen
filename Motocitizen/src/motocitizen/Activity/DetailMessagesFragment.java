@@ -27,8 +27,8 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
     private OnFragmentInteractionListener mListener;
 
     private ImageButton newMessageButton;
-    private EditText    mcNewMessageText;
-    private String      currentText;
+    private EditText mcNewMessageText;
+    private String currentText;
 
     private View newMessageArea;
 
@@ -43,7 +43,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
 
     public static DetailMessagesFragment newInstance(int accID, String userName) {
         DetailMessagesFragment fragment = new DetailMessagesFragment();
-        Bundle                 args     = new Bundle();
+        Bundle args = new Bundle();
         args.putInt(ACCIDENT_ID, accID);
         args.putString(USER_NAME, userName);
         fragment.setArguments(args);
@@ -102,17 +102,19 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
 */
         ViewGroup messageView = (ViewGroup) mcDetMessagesTable;
         messageView.removeAllViews();
-        Accident  accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
-        String    last     = "";
-        String    next;
-        Integer[] keys     = accident.getSortedMessagesKeys().toArray(new Integer[accident.getSortedMessagesKeys().size()]);
+        Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
+        String last = "";
+        String next;
+        Integer[] keys = accident.getSortedMessagesKeys().toArray(new Integer[accident.getSortedMessagesKeys().size()]);
         for (int i = 0; i < keys.length; i++) {
+            accident.setReadedMsg(keys[i]);
             if (i < keys.length - 1) {
                 next = accident.messages.get(keys[i + 1]).owner;
             } else next = "";
             accident.messages.get(keys[i]).inflateRow(getActivity(), messageView, last, next);
             last = accident.messages.get(keys[i]).owner;
         }
+
         setupAccess();
     }
 

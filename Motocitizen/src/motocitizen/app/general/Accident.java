@@ -310,9 +310,18 @@ public class Accident {
         return counter;
     }
 
+    //TODO Чего она потерялась?
     public void resetMessagesUnreadFlag() {
         for (int i : messages.keySet()) {
             messages.get(i).unread = false;
+        }
+    }
+
+    public void setReadedMsg(int id) {
+        try {
+            messages.get(id).unread = false;
+        } catch (Exception e) {
+            Log.e("Accident", "Can't mark readed msg");
         }
     }
 
