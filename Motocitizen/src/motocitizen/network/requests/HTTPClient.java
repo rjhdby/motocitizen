@@ -44,7 +44,7 @@ abstract class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONOb
     }
 
     JSONObject request(Map<String, String> post) {
-        if (!Startup.isOnline()) {
+        if (!Startup.isOnline(context)) {
             try {
                 JSONObject result = new JSONObject();
                 result.put("error", "Интернет не доступен");

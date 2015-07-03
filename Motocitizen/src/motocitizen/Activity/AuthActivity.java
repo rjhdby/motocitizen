@@ -121,7 +121,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
                     Text.set(context, R.id.auth_error_helper, "");
                     finish();
                 } else { // Авторизация
-                    if (Startup.isOnline()) {
+                    if (Startup.isOnline(context)) {
                         if (AccidentsGeneral.auth.auth(context, login.getText().toString(), password.getText().toString())) {
                             prefs.setAnonim(false);
                             finish();

@@ -22,7 +22,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RadioGroup;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -180,7 +179,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         }
         return super.onKeyUp(keycode, e);
     }
-    public static boolean isOnline() {
+    public static boolean isOnline(Context context) {
         ConnectivityManager cm      = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo         netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
@@ -330,7 +329,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     }
 
     private void getAccidents(boolean silent) {
-        if (Startup.isOnline()) {
+        if (Startup.isOnline(context)) {
             if (mMenu != null) {
                 refreshAnimation.onRefreshBeginning();
             }

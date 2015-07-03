@@ -58,7 +58,7 @@ public class BounceScrollView extends ScrollView {
             isRequestedUpdate = true;
         }
         if (scrollY > -mMaxYOverscrollDistance * 0.1 && isRequestedUpdate) {
-            if (Startup.isOnline()) {
+            if (Startup.isOnline(context)) {
                 isRequestedUpdate = false;
                 if (Startup.mMenu != null) {
                     MenuItem refreshItem = Startup.mMenu.findItem(R.id.action_refresh);
