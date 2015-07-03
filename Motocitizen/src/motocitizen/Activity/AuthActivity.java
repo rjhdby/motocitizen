@@ -16,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import motocitizen.MyApp;
-import motocitizen.app.general.AccidentsGeneral;
 import motocitizen.app.general.user.Role;
 import motocitizen.main.R;
 import motocitizen.startup.MyPreferences;
@@ -34,6 +33,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
     private EditText      password;
     private CheckBox      anonim;
     private MyPreferences prefs;
+    private MyApp myApp = null;
 
     private static Context context;
 
@@ -47,7 +47,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.auth);
 
-        MyApp myApp = (MyApp) getApplicationContext();
+        myApp = (MyApp) getApplicationContext();
 
         context = this;
         prefs = myApp.getPreferences();
@@ -106,7 +106,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
                 //TODO Добавить запрос подтверждения на выход.
                 prefs.resetAuth();
                 prefs.setAnonim(true);
-                AccidentsGeneral.auth.logoff();
+                myApp.getAuth().logoff();
                 fillCtrls();
             }
         });
@@ -122,7 +122,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
                     finish();
                 } else { // Авторизация
                     if (Startup.isOnline(context)) {
-                        if (AccidentsGeneral.auth.auth(context, login.getText().toString(), password.getText().toString())) {
+                        if (myApp.getAuth().auth(context, login.getText().toString(), password.getText().toString())) {
                             prefs.setAnonim(false);
                             finish();
                         } else {
@@ -152,7 +152,8 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
         TextView roleView = (TextView)findViewById(R.id.role);
 
         //Авторизованы?
-        if (AccidentsGeneral.auth.isAuthorized()) {
+
+        if (myApp.getAuth().isAuthorized()) {
             loginBtn.setEnabled(false);
             logoutBtn.setEnabled(true);
             anonim.setEnabled(false);

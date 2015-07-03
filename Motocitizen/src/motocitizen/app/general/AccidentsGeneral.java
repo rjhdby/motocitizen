@@ -64,7 +64,7 @@ public class AccidentsGeneral {
     public AccidentsGeneral(Context context) {
         MyApp myApp = (MyApp) context.getApplicationContext();
         inplaceAcc = 0;
-        auth = myApp.getMCAuth();
+        auth = myApp.getAuth();
         new MyLocationManager(context);
         points = new Accidents(context);
         new GCMRegistration(context);

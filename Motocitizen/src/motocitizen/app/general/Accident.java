@@ -259,9 +259,9 @@ public class Accident {
     }
 
     private boolean hasInOwners() {
-        if (myApp.getMCAuth().isAnonim())
+        if (myApp.getAuth().isAnonim())
             return false;
-        int user = myApp.getMCAuth().getID();
+        int user = myApp.getAuth().getID();
         if (user == owner_id)
             return true;
         for (int key : messages.keySet()) {

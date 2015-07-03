@@ -29,7 +29,7 @@ public class MyApp extends Application {
         return props;
     }
 
-    public Auth getMCAuth() {
+    public Auth getAuth() {
         if(auth == null )
             auth = new Auth(instance);
         return auth;
