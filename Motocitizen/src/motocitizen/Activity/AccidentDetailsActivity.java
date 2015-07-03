@@ -134,6 +134,8 @@ public class AccidentDetailsActivity
         currentPoint = AccidentsGeneral.points.getPoint(accidentID);
 
         ActionBar actionBar = getSupportActionBar();
+        //TODO Разобраться с nullPointerException и убрать костыль
+        if(currentPoint == null || actionBar == null) return;
         actionBar.setTitle(currentPoint.getTypeText() + ". " + currentPoint.getDistanceText());
 
         generalType.setText(currentPoint.getTypeText() + ". " + currentPoint.getMedText());
