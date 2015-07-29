@@ -36,7 +36,6 @@ import motocitizen.app.general.user.Role;
 import motocitizen.main.R;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.network.requests.CreateAccidentRequest;
-import motocitizen.network.requests.GeocodeRequest;
 import motocitizen.startup.MyPreferences;
 import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
@@ -458,7 +457,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
 
         public void updateLocation(Location location) {
             this.location = location;
-            new GeocodeRequest(new GeocodeCallback(), accident.location, context);
+            updateAddress(((MyApp) context.getApplicationContext()).getAddres(accident.location));
         }
 
         public boolean isSteal() {
@@ -475,18 +474,6 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
 
         public boolean isAccident() {
             return (type + "      ").substring(0, 5).equals("acc_m");
-        }
-    }
-
-    private class GeocodeCallback implements AsyncTaskCompleteListener {
-
-        @Override
-        public void onTaskComplete(JSONObject result) {
-            try {
-                updateAddress(result.getString("address"));
-            } catch (JSONException e) {
-                updateAddress("Ошибка геокодирования");
-            }
         }
     }
 
