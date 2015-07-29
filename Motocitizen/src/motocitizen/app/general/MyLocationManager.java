@@ -11,12 +11,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import motocitizen.MyApp;
-import motocitizen.network.requests.AsyncTaskCompleteListener;
-import motocitizen.network.requests.GeocodeRequest;
 import motocitizen.network.requests.InplaceRequest;
 import motocitizen.network.requests.LeaveRequest;
 import motocitizen.startup.MyPreferences;
@@ -144,7 +139,8 @@ public class MyLocationManager {
             if (current == location) {
                 return;
             }
-            new GeocodeRequest(new GeocodeCallback(), location, context);
+        address = ((MyApp) context.getApplicationContext()).getAddres(location);
+        Startup.updateStatusBar(MyLocationManager.address);
     }
 
     private static void checkInPlace(Context context, Location location) {
@@ -197,18 +193,5 @@ public class MyLocationManager {
 
     public static Location getLocation(Context context) {
         return getBestFusionLocation(context);
-    }
-    private static class GeocodeCallback implements AsyncTaskCompleteListener {
-        @Override
-        public void onTaskComplete(JSONObject result) {
-            try {
-                address = result.getString("address");
-                Startup.updateStatusBar(MyLocationManager.address);
-            } catch (JSONException e) {
-                address = "Ошибка геокодирования";
-                Startup.updateStatusBar(MyLocationManager.address);
-                e.printStackTrace();
-            }
-        }
     }
 }
