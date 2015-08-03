@@ -32,6 +32,9 @@ public class MyPreferences {
     public final String hoursAgo         = "hours.ago";
     public final String maxNotifications = "notifications.max";
     public final String useVibration     = "use.vibration";
+    public final String userId           = "userId";
+    public final String userName         = "userName";
+    public final String userRole         = "userRole";
 
     private final static String onWay               = "mc.onway";
     private final static String soundTitle          = "mc.notification.sound.title";
@@ -44,7 +47,7 @@ public class MyPreferences {
     private final static String savedlng            = "savedlng";
     private final static String savedlat            = "savedlat";
     private final static String notificationList    = "notificationList";
-    private final static String messageReadList    = "messageReadList";
+    private final static String messageReadList     = "messageReadList";
 
     private final static String[] mapProviders = {"google", "osm", "yandex"};
 
@@ -91,8 +94,7 @@ public class MyPreferences {
     }
 
     public void saveLatLng(LatLng latlng) {
-        preferences.edit().putFloat(savedlat, (float) latlng.latitude)
-                   .putFloat(savedlng, (float) latlng.longitude).commit();
+        preferences.edit().putFloat(savedlat, (float) latlng.latitude).putFloat(savedlng, (float) latlng.longitude).commit();
     }
 
     public boolean toShowAcc() {
@@ -142,8 +144,7 @@ public class MyPreferences {
         String uriString = preferences.getString(soundURI, "default");
         if (uriString.equals("default")) {
             uri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION);
-        } else
-            uri = Uri.parse(uriString);
+        } else uri = Uri.parse(uriString);
         return uri;
     }
 
@@ -347,5 +348,29 @@ public class MyPreferences {
 
     public boolean getVibration() {
         return preferences.getBoolean(useVibration, true);
+    }
+
+    public void setUserName(String name) {
+        preferences.edit().putString(userName, name).commit();
+    }
+
+    public String getUserName() {
+        return preferences.getString(userName, "");
+    }
+
+    public void setUserId(int id) {
+        preferences.edit().putInt(userId, id).commit();
+    }
+
+    public int getUserId() {
+        return preferences.getInt(userId, 0);
+    }
+
+    public void setUserRole(String role) {
+        preferences.edit().putString(userRole, role).commit();
+    }
+
+    public String getUserRole() {
+        return preferences.getString(userRole, "readonly");
     }
 }

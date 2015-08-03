@@ -114,6 +114,9 @@ public class Auth {
                 name = result.getString("name");
                 role = result.getString("role");
                 id = Integer.parseInt(result.getString("id"));
+                prefs.setUserId(id);
+                prefs.setUserName(name);
+                prefs.setUserRole(role);
                 if (name.length() > 0) {
                     prefs.setLogin(login);
                     prefs.setPassword(password);
