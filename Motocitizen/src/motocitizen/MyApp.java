@@ -51,7 +51,8 @@ public class MyApp extends Application {
         List<Address> list = new ArrayList<>();
         try {
             list = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-            if(list.size() == 0) return "????? ?? ?????????";
+            if(list == null || list.size() == 0)
+                return location.getLatitude() + " " + location.getLongitude();
             Address addr = list.get(0);
             String locality = addr.getLocality();
             if (locality == null)
