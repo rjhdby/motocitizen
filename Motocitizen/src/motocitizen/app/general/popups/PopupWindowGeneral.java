@@ -21,7 +21,6 @@ import com.google.android.gms.maps.model.LatLng;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import motocitizen.app.general.Accident;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentChangeStateRequest;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
@@ -122,7 +121,7 @@ abstract class PopupWindowGeneral {
         return tr;
     }
 
-    TableRow finishButtonRow(final Context context, final Accident point) {
+    TableRow finishButtonRow(final Context context, final motocitizen.accident.Accident point) {
         Button finish = new Button(content.getContext());
         if (point.isEnded()) {
             finish.setText(R.string.unfinish);
@@ -145,7 +144,7 @@ abstract class PopupWindowGeneral {
         return tr;
     }
 
-    TableRow hideButtonRow(final Context context, final Accident point) {
+    TableRow hideButtonRow(final Context context, final motocitizen.accident.Accident point) {
         Button finish = new Button(content.getContext());
         if (point.isHidden()) {
             finish.setText(R.string.show);
@@ -168,7 +167,7 @@ abstract class PopupWindowGeneral {
         return tr;
     }
 
-    TableRow coordinatesButtonRow(final Context context, final Accident point) {
+    TableRow coordinatesButtonRow(final Context context, final motocitizen.accident.Accident point) {
         Button coordinates = new Button(content.getContext());
         coordinates.setText("Скопировать координаты");
         coordinates.setOnClickListener(new OnClickListener() {
@@ -182,7 +181,7 @@ abstract class PopupWindowGeneral {
                 myClip = ClipData.newPlainText("text", text);
                 myClipboard.setPrimaryClip(myClip);
                 popupWindow.dismiss();
-                Toast.makeText(context, "координаты скопированы в буфер обмена", Toast.LENGTH_LONG).show();
+                message("координаты скопированы в буфер обмена");
             }
         });
         TableRow tr = new TableRow(content.getContext());
@@ -190,24 +189,27 @@ abstract class PopupWindowGeneral {
         return tr;
     }
 
-    TableRow banButtonRow(final Context context, final int id) {
+    private void message(String text) {
+        Toast.makeText(context, text, Toast.LENGTH_LONG).show();
+    }
+    TableRow banButtonRow(final int id) {
         Button ban = new Button(content.getContext());
         ban.setText("Забанить");
         ban.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                new BanRequest(context, new AsyncTaskCompleteListener() {
+                new BanRequest(new AsyncTaskCompleteListener() {
                     @Override
                     public void onTaskComplete(JSONObject result) throws JSONException {
                         if (result.has("error")) {
                             try {
-                                Toast.makeText(context, result.getString("error"), Toast.LENGTH_LONG).show();
+                                message(result.getString("error"));
                             } catch (JSONException e) {
-                                Toast.makeText(context, "Неизвестная ошибка", Toast.LENGTH_LONG).show();
+                                message("Неизвестная ошибка");
                                 e.printStackTrace();
                             }
                         } else {
-                            Toast.makeText(context, "Пользователь забанен", Toast.LENGTH_LONG).show();
+                            message("Пользователь забанен");
                         }
                     }
                 }, id);

@@ -7,15 +7,15 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import motocitizen.app.general.AccidentsGeneral;
+import motocitizen.content.Content;
 
 public class OnWayRequest extends HTTPClient {
     public OnWayRequest(AsyncTaskCompleteListener listener, Context context, int id) {
         this.listener = listener;
         this.context = context;
         post = new HashMap<>();
-        post.put("login", AccidentsGeneral.auth.getLogin());
-        post.put("passhash", AccidentsGeneral.auth.makePassHash());
+        post.put("login", Content.auth.getLogin());
+        post.put("passhash", Content.auth.makePassHash());
         post.put("id", String.valueOf(id));
         post.put("calledMethod", "onway");
         execute(post);

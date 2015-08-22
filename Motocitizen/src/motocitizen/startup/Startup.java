@@ -31,16 +31,15 @@ import motocitizen.Activity.AboutActivity;
 import motocitizen.Activity.CreateAccActivity;
 import motocitizen.Activity.SettingsActivity;
 import motocitizen.MyApp;
-import motocitizen.app.general.AccidentsGeneral;
-import motocitizen.app.general.MyLocationManager;
-import motocitizen.app.general.gcm.GCMBroadcastReceiver;
-import motocitizen.app.general.gcm.NewAccidentReceived;
+import motocitizen.geolocation.MyLocationManager;
 import motocitizen.app.general.user.Role;
+import motocitizen.content.Content;
+import motocitizen.gcm.GCMBroadcastReceiver;
+import motocitizen.gcm.NewAccidentReceived;
 import motocitizen.main.R;
-import motocitizen.maps.general.MyMapManager;
+import motocitizen.maps.MyMapManager;
 import motocitizen.maps.google.MyGoogleMapManager;
 import motocitizen.maps.osm.MyOSMMapManager;
-import motocitizen.network.requests.AccidentsRequest;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.utils.Const;
 import motocitizen.utils.RefreshAnimation;
@@ -48,17 +47,17 @@ import motocitizen.utils.RefreshAnimation;
 public class Startup extends ActionBarActivity implements View.OnClickListener {
 
     private MyApp myApp = null;
-    public static Context       context;
-    public static MyPreferences prefs;
-    public static MyMapManager  map;
-    public static boolean       fromDetails;
+    public static Context      context;
+    public static Preferences  prefs;
+    public static MyMapManager map;
+    public static boolean      fromDetails;
 
     private ImageButton createAccButton;
 
     private RadioGroup mainTabsGroup;
 
-    private View       accListView;
-    private View       mapContainer;
+    private View accListView;
+    private View mapContainer;
 
     public static Menu mMenu;
 
@@ -79,7 +78,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         actionBar = getSupportActionBar();
 
         prefs = myApp.getPreferences();
-        prefs.setDoNotDisturb(false);
+        Preferences.setDoNotDisturb(false);
         new Const();
 
         checkUpdate();
@@ -105,7 +104,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
             }
         });
 
-        new AccidentsGeneral(this);
+        new Content(this);
 
         createMap(MyMapManager.GOOGLE);
         new GCMBroadcastReceiver();
@@ -120,11 +119,11 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         } catch (PackageManager.NameNotFoundException e) {
             version = getString(R.string.unknown_code_version);
         }
-        if (!prefs.getCurrentVersion().equals(version)) {
+        if (!Preferences.getCurrentVersion().equals(version)) {
             changeLogDlg = ChangeLog.getDialog(this, true);
             changeLogDlg.show();
         }
-        prefs.setCurrentVersion(version);
+        Preferences.setCurrentVersion(version);
     }
 
     @Override
@@ -155,8 +154,8 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
             fromDetails = intent.getBooleanExtra("fromDetails", false);
         } else if (toDetails != 0) {
             intent.removeExtra("toDetails");
-            AccidentsGeneral.refresh(this);
-            AccidentsGeneral.toDetails(this, toDetails);
+            Content.refresh(this);
+            Content.toDetails(this, toDetails);
             NewAccidentReceived.clearAll(this);
         }
     }
@@ -171,14 +170,17 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     public boolean onKeyUp(int keycode, @NonNull KeyEvent e) {
         switch (keycode) {
             case KeyEvent.KEYCODE_BACK:
+                /*
                 if (fromDetails) {
                     AccidentsGeneral.toDetails(this);
                 }
-                AccidentsGeneral.redraw(this);
+                */
+                Content.redraw(this);
                 return true;
         }
         return super.onKeyUp(keycode, e);
     }
+
     public static boolean isOnline(Context context) {
         ConnectivityManager cm      = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo         netInfo = cm.getActiveNetworkInfo();
@@ -186,8 +188,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     }
 
     public static void createMap(String name) {
-        if (map != null && !map.getName().equals(name))
-            map = null;
+        if (map != null && !map.getName().equals(name)) map = null;
 
         if (name.equals(MyMapManager.OSM)) {
             map = new MyOSMMapManager(context);
@@ -253,8 +254,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         }
 
         actionBar.setTitle(address);
-        if (!subTitle.isEmpty())
-            actionBar.setSubtitle(subTitle);
+        if (!subTitle.isEmpty()) actionBar.setSubtitle(subTitle);
         map.placeUser(context);
     }
 
@@ -266,10 +266,9 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         MenuItem refreshItem        = mMenu.findItem(R.id.action_refresh);
         refreshAnimation = new RefreshAnimation(refreshItem);
         refreshAnimation.onRefreshBeginning();
-        if (prefs.getDoNotDisturb())
+        if (Preferences.getDoNotDisturb())
             itemMenuNotDisturb.setIcon(R.drawable.ic_lock_ringer_off_alpha);
-        else
-            itemMenuNotDisturb.setIcon(R.drawable.ic_lock_ringer_on_alpha);
+        else itemMenuNotDisturb.setIcon(R.drawable.ic_lock_ringer_on_alpha);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -300,14 +299,14 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
                 getAccidents();
                 return true;
             case R.id.do_not_disturb:
-                MyPreferences prefs = myApp.getPreferences();
+                Preferences prefs = myApp.getPreferences();
                 //MenuItem menuItemActionDisturb = mMenu.findItem(R.id.do_not_disturb);
-                if (prefs.getDoNotDisturb()) {
+                if (Preferences.getDoNotDisturb()) {
                     item.setIcon(R.drawable.ic_lock_ringer_on_alpha);
-                    prefs.setDoNotDisturb(false);
+                    Preferences.setDoNotDisturb(false);
                 } else {
                     item.setIcon(R.drawable.ic_lock_ringer_off_alpha);
-                    prefs.setDoNotDisturb(true);
+                    Preferences.setDoNotDisturb(true);
                 }
                 return true;
         }
@@ -333,26 +332,13 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
             if (mMenu != null) {
                 refreshAnimation.onRefreshBeginning();
             }
-            new AccidentsRequest(this, new AccidentsRequestCallback(), silent);
+            //TODO Оставить одно
+            Content.update(this);
         } else {
-            Toast.makeText(context, R.string.inet_not_available, Toast.LENGTH_LONG).show();
+            message(getString(R.string.inet_not_available));
         }
     }
-
-    private class AccidentsRequestCallback implements AsyncTaskCompleteListener {
-        @Override
-        public void onTaskComplete(JSONObject result) {
-            if(result.has("error")){
-                try {
-                    Toast.makeText(context, result.getString("error"), Toast.LENGTH_LONG).show();
-                } catch (JSONException e) {
-                    Toast.makeText(context, "Неизвестная ошибка", Toast.LENGTH_LONG).show();
-                    e.printStackTrace();
-                }
-            }else {
-                AccidentsGeneral.refreshPoints(context, result);
-            }
-            resetUpdating();
-        }
+    private void message(String text) {
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show();
     }
 }

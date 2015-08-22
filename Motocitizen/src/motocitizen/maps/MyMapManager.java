@@ -1,4 +1,4 @@
-package motocitizen.maps.general;
+package motocitizen.maps;
 
 import android.content.Context;
 import android.location.Location;
@@ -18,7 +18,7 @@ import android.location.Location;
         @SuppressWarnings("SameParameterValue")
         public abstract void zoom(int zoom);
 
-        public abstract void placeAcc(Context context);
+        public abstract void placeAccidents(Context context);
 
         public String getName() {
             return name;

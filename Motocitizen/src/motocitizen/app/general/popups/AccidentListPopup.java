@@ -3,21 +3,21 @@ package motocitizen.app.general.popups;
 import android.content.Context;
 import android.widget.PopupWindow;
 
-import motocitizen.app.general.Accident;
-import motocitizen.app.general.AccidentsGeneral;
+import motocitizen.content.Content;
 import motocitizen.app.general.user.Role;
+import motocitizen.draw.Strings;
 import motocitizen.utils.MyUtils;
 
 public class AccidentListPopup extends PopupWindowGeneral {
-    private final Accident point;
-    private final boolean  disableOldItems;
-    private final String   accText;
+    private final motocitizen.accident.Accident point;
+    private final boolean                       disableOldItems;
+    private final String                        accText;
 
     public AccidentListPopup(Context context, int id, boolean disableOldItems) {
         super(context);
-        point = AccidentsGeneral.points.getPoint(id);
+        point = Content.getPoint(id);
         this.disableOldItems = disableOldItems;
-        accText = AccidentsGeneral.points.toString(id);
+        accText = Strings.getAccidentTextToCopy(point);
     }
 
     public PopupWindow getPopupWindow() {
@@ -28,7 +28,7 @@ public class AccidentListPopup extends PopupWindowGeneral {
                 content.addView(smsButtonRow(context, phone), layoutParams);
             }
         }
-        if (Role.isModerator()||AccidentsGeneral.auth.getLogin().equals(point.getOwner())) {
+        if (Role.isModerator()|| Content.auth.getLogin().equals(point.getOwner())) {
             if (!disableOldItems) {
                 content.addView(finishButtonRow(context, point));
             }
@@ -38,7 +38,7 @@ public class AccidentListPopup extends PopupWindowGeneral {
             if (!disableOldItems) {
                 content.addView(hideButtonRow(context, point));
             }
-            content.addView(banButtonRow(context, point.getId()), layoutParams);
+            content.addView(banButtonRow(point.getId()), layoutParams);
         }
         content.addView(shareMessage(context, accText));
         content.addView(coordinatesButtonRow(context, point), layoutParams);

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Gravity;
@@ -22,21 +23,21 @@ import org.json.JSONObject;
 import java.util.List;
 
 import motocitizen.MyApp;
-import motocitizen.app.general.Accident;
-import motocitizen.app.general.AccidentsGeneral;
+import motocitizen.accident.Accident;
+import motocitizen.content.Content;
 import motocitizen.app.general.popups.AccidentListPopup;
 import motocitizen.app.general.user.Role;
+import motocitizen.content.AccidentStatus;
+import motocitizen.draw.Strings;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentChangeStateRequest;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
-import motocitizen.startup.MyPreferences;
+import motocitizen.startup.Preferences;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
 
-public class AccidentDetailsActivity
-        extends ActionBarActivity
-        implements AccidentDetailsFragments.OnFragmentInteractionListener {
+public class AccidentDetailsActivity extends ActionBarActivity implements AccidentDetailsFragments.OnFragmentInteractionListener {
 
     private Context context;
 
@@ -52,7 +53,7 @@ public class AccidentDetailsActivity
     private int      accidentID;
     private Accident currentPoint;
 
-    private String accNewState = "";
+    private AccidentStatus accNewState;
 
     private DetailVolunteersFragment detailVolunteersFragment;
     private DetailMessagesFragment   detailMessagesFragment;
@@ -68,7 +69,7 @@ public class AccidentDetailsActivity
 
     private Menu mMenu;
 
-    private MyPreferences prefs;
+    private Preferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,11 +82,11 @@ public class AccidentDetailsActivity
 
         Bundle b = getIntent().getExtras();
         accidentID = b.getInt("accidentID");
-        currentPoint = AccidentsGeneral.points.getPoint(accidentID);
+        currentPoint = Content.get(accidentID);
 
         //NewAccidentReceived.removeNotification(accidentID);
 
-        String userName = ((MyApp) getApplicationContext()).getPreferences().getLogin();
+        String userName = Preferences.getLogin();
 
         detailVolunteersFragment = DetailVolunteersFragment.newInstance(accidentID, userName);
         detailMessagesFragment = DetailMessagesFragment.newInstance(accidentID, userName);
@@ -102,7 +103,7 @@ public class AccidentDetailsActivity
             @Override
             public boolean onLongClick(View v) {
                 PopupWindow popupWindow;
-                popupWindow = (new AccidentListPopup(context, AccidentsGeneral.getCurrentPointID(), false)).getPopupWindow();
+                popupWindow = (new AccidentListPopup(context, currentPoint.getId(), false)).getPopupWindow();
                 int viewLocation[] = new int[2];
                 v.getLocationOnScreen(viewLocation);
                 popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
@@ -125,24 +126,23 @@ public class AccidentDetailsActivity
     protected void onResume() {
         super.onResume();
         //TODO Вероятно теперь ни когда null не будет.
-        if (prefs == null)
-            prefs = new MyPreferences(this);
+        if (prefs == null) prefs = new Preferences(this);
         update();
     }
 
     void update() {
-        currentPoint = AccidentsGeneral.points.getPoint(accidentID);
+        currentPoint = Content.getPoint(accidentID);
 
         ActionBar actionBar = getSupportActionBar();
         //TODO Разобраться с nullPointerException и убрать костыль
-        if(currentPoint == null || actionBar == null) return;
-        actionBar.setTitle(currentPoint.getTypeText() + ". " + currentPoint.getDistanceText());
+        if (currentPoint == null || actionBar == null) return;
+        actionBar.setTitle(currentPoint.getTypeString() + ". " + currentPoint.getDistanceString());
 
-        generalType.setText(currentPoint.getTypeText() + ". " + currentPoint.getMedText());
-        generalStatus.setText(currentPoint.getStatusText());
-        generalTime.setText(Const.timeFormat.format(currentPoint.created.getTime()));
+        generalType.setText(currentPoint.getTypeString() + ". " + currentPoint.getMedicineString());
+        generalStatus.setText(currentPoint.getStatusString());
+        generalTime.setText(Const.timeFormat.format(currentPoint.getTime()));
         generalOwner.setText(currentPoint.getOwner());
-        generalAddress.setText("(" + currentPoint.getDistanceText() + ") " + currentPoint.getAddress());
+        generalAddress.setText("(" + currentPoint.getDistanceString() + ") " + currentPoint.getAddress());
         generalDescription.setText(currentPoint.getDescription());
 
         menuReconstruction();
@@ -177,19 +177,19 @@ public class AccidentDetailsActivity
 
     private void menuReconstruction() {
         if (mMenu != null) {
-            Accident currentPoint = AccidentsGeneral.points.getPoint(accidentID);
+            Accident currentPoint = Content.getPoint(accidentID);
             MenuItem finish = mMenu.findItem(R.id.menu_acc_finish);
             MenuItem hide = mMenu.findItem(R.id.menu_acc_hide);
             if (Role.isModerator()) {
                 finish.setVisible(true);
-                if (currentPoint.isEnded()) {
+                if (currentPoint.getStatus() == AccidentStatus.ENDED) {
                     finish.setTitle(R.string.unfinish);
                 } else {
                     finish.setTitle(R.string.finish);
                 }
 
                 hide.setVisible(true);
-                if (currentPoint.isHidden()) {
+                if (currentPoint.getStatus() == AccidentStatus.HIDDEN) {
                     hide.setTitle(R.string.show);
                 } else {
                     hide.setTitle(R.string.hide);
@@ -225,7 +225,7 @@ public class AccidentDetailsActivity
             case R.id.action_share:
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, AccidentsGeneral.points.toString(accidentID));
+                sendIntent.putExtra(Intent.EXTRA_TEXT, Strings.getAccidentTextToCopy(currentPoint));
                 sendIntent.setType("text/plain");
                 this.startActivity(sendIntent);
                 return true;
@@ -233,8 +233,7 @@ public class AccidentDetailsActivity
             case R.id.menu_hide_info:
                 if (generalLayout.getVisibility() == View.VISIBLE)
                     showGeneralLayout(View.INVISIBLE);
-                else
-                    showGeneralLayout(View.VISIBLE);
+                else showGeneralLayout(View.VISIBLE);
                 return true;
             case R.id.menu_acc_finish:
                 sendFinishRequest();
@@ -266,29 +265,31 @@ public class AccidentDetailsActivity
     }
 
     private void sendFinishRequest() {
-        if (AccidentsGeneral.points.getPoint(accidentID).isEnded()) {
+        if (Content.getPoint(accidentID).getStatus() == AccidentStatus.ENDED) {
             //TODO Суперкостыль
-            accNewState = AccidentChangeStateRequest.ACTIVE;
+            accNewState = AccidentStatus.ACTIVE;
             new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, AccidentChangeStateRequest.ACTIVE);
         } else {
             //TODO Суперкостыль
-            accNewState = AccidentChangeStateRequest.ENDED;
+            accNewState = AccidentStatus.ENDED;
             new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, AccidentChangeStateRequest.ENDED);
         }
     }
 
     private void sendHideRequest() {
-        if (AccidentsGeneral.points.getPoint(accidentID).isEnded()) {
+        if (Content.getPoint(accidentID).getStatus() == AccidentStatus.ENDED) {
             //TODO Суперкостыль
-            accNewState = AccidentChangeStateRequest.ACTIVE;
+            accNewState = AccidentStatus.ACTIVE;
             new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, AccidentChangeStateRequest.ACTIVE);
         } else {
             //TODO Суперкостыль
-            accNewState = AccidentChangeStateRequest.HIDE;
+            accNewState = AccidentStatus.ENDED;
             new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, AccidentChangeStateRequest.HIDE);
         }
     }
-
+    private void message(String text) {
+        Toast.makeText(context, text, Toast.LENGTH_LONG).show();
+    }
     private class AccidentChangeCallback implements AsyncTaskCompleteListener {
         @Override
         public void onTaskComplete(JSONObject result) {
@@ -301,11 +302,10 @@ public class AccidentDetailsActivity
                     e.printStackTrace();
                     error = "Неизвестная ошибка";
                 }
-                Toast.makeText(context, error, Toast.LENGTH_LONG).show();
+                message(error);
             } else {
                 //TODO Суперкостыль
                 currentPoint.setStatus(accNewState);
-                accNewState = "";
                 update();
             }
         }
@@ -327,7 +327,7 @@ public class AccidentDetailsActivity
 
     void jumpToMap() {
         Intent intent = new Intent(this, Startup.class);
-        intent.putExtra("toMap", AccidentsGeneral.getCurrentPointID());
+        intent.putExtra("toMap", currentPoint.getId());
         intent.putExtra("fromDetails", true);
         this.startActivity(intent);
         finish();

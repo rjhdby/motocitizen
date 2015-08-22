@@ -15,14 +15,16 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import motocitizen.app.general.Accident;
-import motocitizen.app.general.AccidentVolunteer;
-import motocitizen.app.general.AccidentsGeneral;
+import motocitizen.accident.Volunteer;
+import motocitizen.content.Content;
+import motocitizen.content.VolunteerStatus;
+import motocitizen.draw.Rows;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentsRequest;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.network.requests.CancelOnWayRequest;
 import motocitizen.network.requests.OnWayRequest;
+import motocitizen.startup.Preferences;
 
 public class DetailVolunteersFragment extends AccidentDetailsFragments {
 
@@ -86,30 +88,17 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     }
 
     private void update() {
-        Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
+        motocitizen.accident.Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
 
         if (accident != null) {
             setupAccess();
 
             ViewGroup vg_onway = (ViewGroup) onwayContent;
             vg_onway.removeAllViews();
-            for (int i : accident.getSortedVolunteersKeys()) {
-                AccidentVolunteer current = accident.volunteers.get(i);
-                /*
-                switch (current.getStatus()) {
-                    case ONWAY:
-                        vg_onway.addView(getDelimiterRow(getActivity(), "В пути"));
-                        break;
-                    case INPLACE:
-                        vg_onway.addView(getDelimiterRow(getActivity(), "На месте"));
-                        break;
-                    case LEAVE:
-                        vg_onway.addView(getDelimiterRow(getActivity(), "Были"));
-                        break;
-                }
-                */
-                //vg_onway.addView(current.createRow(getActivity()));
-                current.inflateRow(getActivity(), vg_onway);
+            for (int i : accident.getVolunteers().keySet()) {
+                Volunteer current = accident.getVolunteer(i);
+                if (current.getStatus() == VolunteerStatus.LEAVE) continue;
+                vg_onway.addView(Rows.getVolunteerRow(getActivity(), vg_onway, current));
             }
         } else {
             showDialog(DIALOG_ACC_NOT_ACTUAL);
@@ -123,13 +112,13 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     }
 
     private void setupAccess() {
-        Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
-        if (accident.getId() == prefs.getOnWay()) {
+        motocitizen.accident.Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
+        if (accident.getId() == Preferences.getOnWay()) {
             onwayButton.setVisibility(View.GONE);
             onwayCancelButton.setVisibility(View.VISIBLE);
             onwayDisabledButton.setVisibility(View.GONE);
 
-        } else if (accident.getId() == AccidentsGeneral.getInplaceID() || !AccidentsGeneral.auth.isAuthorized() || !accident.isActive()) {
+        } else if (accident.getId() == Content.getInplaceID() || !Content.auth.isAuthorized() || !accident.isActive()) {
             onwayButton.setVisibility(View.GONE);
             onwayCancelButton.setVisibility(View.GONE);
             onwayDisabledButton.setVisibility(View.VISIBLE);
@@ -154,28 +143,19 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
 
         switch (type) {
             case DIALOG_ONWAY_CONFIRM:
-                DialogFragment onwayConfirm = ConfirmDialog.newInstance(
-                        act.getString(R.string.title_dialog_onway_confirm),
-                        act.getString(android.R.string.yes),
-                        act.getString(android.R.string.no));
+                DialogFragment onwayConfirm = ConfirmDialog.newInstance(act.getString(R.string.title_dialog_onway_confirm), act.getString(android.R.string.yes), act.getString(android.R.string.no));
                 onwayConfirm.setTargetFragment(this, type);
                 onwayConfirm.show(getFragmentManager().beginTransaction(), "dialog");
                 break;
 
             case DIALOG_CANCEL_ONWAY_CONFIRM:
-                DialogFragment cancelOnwayConfirm = ConfirmDialog.newInstance(
-                        act.getString(R.string.title_dialog_cancel_onway_confirm),
-                        act.getString(android.R.string.yes),
-                        act.getString(android.R.string.no));
+                DialogFragment cancelOnwayConfirm = ConfirmDialog.newInstance(act.getString(R.string.title_dialog_cancel_onway_confirm), act.getString(android.R.string.yes), act.getString(android.R.string.no));
                 cancelOnwayConfirm.setTargetFragment(this, type);
                 cancelOnwayConfirm.show(getFragmentManager().beginTransaction(), "dialog");
                 break;
 
             case DIALOG_ACC_NOT_ACTUAL:
-                DialogFragment dialogFrag = ConfirmDialog.newInstance(
-                        act.getString(R.string.title_dialod_acc_not_actual),
-                        act.getString(android.R.string.ok),
-                        "");
+                DialogFragment dialogFrag = ConfirmDialog.newInstance(act.getString(R.string.title_dialod_acc_not_actual), act.getString(android.R.string.ok), "");
                 dialogFrag.setTargetFragment(this, type);
                 dialogFrag.show(getFragmentManager().beginTransaction(), "dialog");
                 break;
@@ -207,18 +187,20 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
 
     private void sendOnway() {
         //AccidentsGeneral.setOnWay(accidentID);
-        prefs.setOnWay(accidentID);
+        Preferences.setOnWay(accidentID);
         new OnWayRequest(new OnWayCallback(), this.getActivity(), accidentID);
     }
-
+    private void message(String text) {
+        Toast.makeText(getActivity(), text, Toast.LENGTH_LONG).show();
+    }
     private class OnWayCallback implements AsyncTaskCompleteListener {
         @Override
         public void onTaskComplete(JSONObject result) {
             if (result.has("error")) {
                 try {
-                    Toast.makeText(getActivity(), result.getString("error"), Toast.LENGTH_LONG).show();
+                    message(result.getString("error"));
                 } catch (JSONException e) {
-                    Toast.makeText(getActivity(), "Неизвестная ошибка " + result.toString(), Toast.LENGTH_LONG).show();
+                    message("Неизвестная ошибка " + result.toString());
                 }
             } else {
                 new AccidentsRequest(getActivity(), new UpdateAccidentsCallback());
@@ -229,18 +211,14 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     private class UpdateAccidentsCallback implements AsyncTaskCompleteListener {
         @Override
         public void onTaskComplete(JSONObject result) {
-            try {
-                AccidentsGeneral.points.update(result.getJSONArray("list"));
-                ((AccidentDetailsActivity) getActivity()).update();
-                update();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            Content.update(getActivity());
+            ((AccidentDetailsActivity) getActivity()).update();
+            update();
         }
     }
 
     private void sendCancelOnway() {
-        prefs.setOnWay(0);
+        Preferences.setOnWay(0);
         new CancelOnWayRequest(new OnWayCallback(), this.getActivity(), accidentID);
     }
 }

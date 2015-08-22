@@ -9,10 +9,10 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 import motocitizen.MyApp;
-import motocitizen.app.general.AccidentsGeneral;
-import motocitizen.app.general.MyLocationManager;
-import motocitizen.startup.MyPreferences;
+import motocitizen.geolocation.MyLocationManager;
+import motocitizen.startup.Preferences;
 
+@SuppressWarnings("unchecked")
 public class AccidentsRequest extends HTTPClient {
     private boolean silent;
     public AccidentsRequest(Context context, AsyncTaskCompleteListener listener, boolean silent) {
@@ -22,20 +22,22 @@ public class AccidentsRequest extends HTTPClient {
         post = new HashMap<>();
         Location location = MyLocationManager.getLocation(context);
         myApp = (MyApp) context.getApplicationContext();
-        MyPreferences prefs = new MyPreferences(context);
-        String user = prefs.getLogin();
+        Preferences prefs = new Preferences(context);
+        String user = Preferences.getLogin();
         if (!user.equals("")) {
             post.put("user", user);
         }
+        /*
         if (AccidentsGeneral.points.keySet().size() != 0) {
             post.put("update", "1");
         }
-        post.put("distance", String.valueOf(prefs.getVisibleDistance()));
+        */
+        post.put("distance", String.valueOf(Preferences.getVisibleDistance()));
         post.put("lat", String.valueOf(location.getLatitude()));
         post.put("lon", String.valueOf(location.getLongitude()));
         //post.put("hint", context.getString(R.string.request_get_incidents));
         post.put("calledMethod", "getlist");
-        this.execute(post);
+        execute(post);
     }
     public AccidentsRequest(Context context, AsyncTaskCompleteListener listener){
         new AccidentsRequest(context, listener, false);

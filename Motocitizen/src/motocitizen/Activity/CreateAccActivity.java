@@ -1,7 +1,5 @@
 package motocitizen.Activity;
 
-import android.app.Activity;
-import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +11,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -20,325 +19,116 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
 
 import motocitizen.MyApp;
-import motocitizen.app.general.Accident;
-import motocitizen.app.general.AccidentTypes;
-import motocitizen.app.general.AccidentsGeneral;
-import motocitizen.app.general.MyLocationManager;
+import motocitizen.accident.Accident;
 import motocitizen.app.general.user.Role;
+import motocitizen.content.Content;
+import motocitizen.content.Medicine;
+import motocitizen.content.AccidentStatus;
+import motocitizen.content.Type;
+import motocitizen.draw.Resources;
+import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.network.requests.CreateAccidentRequest;
-import motocitizen.startup.MyPreferences;
+import motocitizen.startup.Preferences;
 import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
-import motocitizen.utils.Text;
 
 public class CreateAccActivity extends FragmentActivity implements View.OnClickListener {
-    private Context       context;
-    private MyPreferences prefs;
-    private NewAccident   accident;
-    private View          listView;
-    private Boolean       confirmLock;
-    private final int         RADIUS              = 1000;
-    private final TextWatcher DetailsTextListener = new TextWatcher() {
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            accident.setDescription(s.toString());
-            setConfirm();
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-        }
-    };
-
-    private int       TYPE;
-    private int       DESCR;
-    private int       ACC;
-    private int       MED;
-    private int       MAP;
+    private final int RADIUS      = 1000;
+    private final int TYPE        = R.id.mc_create_type_frame;
+    private final int DESCRIPTION = R.id.mc_create_final_frame;
+    private final int ACCIDENT    = R.id.mc_create_acc_frame;
+    private final int MEDICINE    = R.id.mc_create_people_frame;
+    private final int MAP         = R.id.mc_create_map;
+    private Accident  accident;
+    private Boolean   confirmLock;
     private int       currentScreen;
     private GoogleMap map;
     private Button    confirmButton;
-    private Button    backButton;
-    private View      typeFrame;
-    private View      accFrame;
-    private View      mapFrame;
-    private View      medFrame;
-    private View      descrFrame;
-    private EditText  descrView;
-
-    private void refreshDescription() {
-        if (accident.med.equals("mc_m_na")) {
-            Text.set(context, listView, R.id.mc_create_what, prefs.getAccidentTypeName(accident.type));
-        } else {
-            Text.set(context, listView, R.id.mc_create_what, prefs.getAccidentTypeName(accident.type) + ". " + prefs.getMedTypeName(accident.med));
-        }
-        Text.set(context, listView, R.id.mc_create_who, AccidentsGeneral.auth.getLogin());
-        Text.set(context, listView, R.id.mc_create_where, accident.address);
-        Text.set(context, listView, R.id.mc_create_when, Const.dateFormat.format(accident.created));
-    }
-
-    private void updateAddress(String address) {
-        accident.address = address;
-        refreshDescription();
-    }
+    private boolean   complete;
+    private Location  initialLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_point);
-        context = this;
-        prefs = ((MyApp) context.getApplicationContext()).getPreferences();
-        accident = new NewAccident();
+        initialLocation = MyLocationManager.getLocation(this);
+        accident = createDefaultAccident();
         confirmLock = false;
         map = makeMap();
-        TYPE = R.id.mc_create_type_frame;
-        DESCR = R.id.mc_create_final_frame;
-        ACC = R.id.mc_create_acc_frame;
-        MED = R.id.mc_create_people_frame;
-        MAP = R.id.mc_create_map;
         currentScreen = MAP;
 
-        confirmButton = (Button) findViewById(R.id.mc_create_create);
-        backButton = (Button) findViewById(R.id.mc_create_back);
+        confirmButton = (Button) findViewById(R.id.CREATE);
+        ((EditText) findViewById(R.id.mc_create_final_text)).addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
-        typeFrame = findViewById(TYPE);
-        mapFrame = findViewById(MAP);
-        accFrame = findViewById(ACC);
-        descrFrame = findViewById(DESCR);
-        medFrame = findViewById(MED);
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                accident.setDescription(s.toString());
+                setComplete();
+            }
 
-        descrView = (EditText) findViewById(R.id.mc_create_final_text);
-        descrView.addTextChangedListener(DetailsTextListener);
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
 
-        listView = findViewById(R.id.mc_create_main);
-
-        goToMap();
+        setUpScreen(MAP);
         refreshDescription();
         setupListener();
     }
 
-    private void setupListener() {
-        findViewById(R.id.mc_create_type_break_button).setOnClickListener(this);
-        findViewById(R.id.mc_create_type_steal_button).setOnClickListener(this);
-        findViewById(R.id.mc_create_type_other_button).setOnClickListener(this);
-        findViewById(R.id.mc_create_type_acc_button).setOnClickListener(this);
-        findViewById(R.id.mc_create_acc_ma_button).setOnClickListener(this);
-        findViewById(R.id.mc_create_acc_solo_button).setOnClickListener(this);
-        findViewById(R.id.mc_create_acc_mm_button).setOnClickListener(this);
-        findViewById(R.id.mc_create_acc_mp_button).setOnClickListener(this);
-        findViewById(R.id.mc_create_people_ok_button).setOnClickListener(this);
-        findViewById(R.id.mc_create_people_light_button).setOnClickListener(this);
-        findViewById(R.id.mc_create_people_hard_button).setOnClickListener(this);
-        findViewById(R.id.mc_create_people_death_button).setOnClickListener(this);
-        findViewById(R.id.mc_create_people_na_button).setOnClickListener(this);
-        findViewById(R.id.mc_create_fine_address_confirm).setOnClickListener(this);
-        findViewById(R.id.mc_create_create).setOnClickListener(this);
-        findViewById(R.id.mc_create_cancel).setOnClickListener(this);
-        findViewById(R.id.mc_create_back).setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        switch (id) {
-            case R.id.mc_create_type_break_button:
-                accident.makeBreak();
-                goToDescription();
-                break;
-            case R.id.mc_create_type_steal_button:
-                accident.makeSteal();
-                goToDescription();
-                break;
-            case R.id.mc_create_type_other_button:
-                accident.makeOther();
-                goToDescription();
-                break;
-            // Кнопки ДТП
-            case R.id.mc_create_type_acc_button:
-                goToAccidentSubType();
-                break;
-            case R.id.mc_create_acc_ma_button:
-                accident.makeAccident("acc_m_a");
-                goToMed();
-                break;
-            case R.id.mc_create_acc_solo_button:
-                accident.makeAccident("acc_m");
-                goToMed();
-                break;
-            case R.id.mc_create_acc_mm_button:
-                accident.makeAccident("acc_m_m");
-                goToMed();
-                break;
-            case R.id.mc_create_acc_mp_button:
-                accident.makeAccident("acc_m_p");
-                goToMed();
-                break;
-            // Кнопки медицины
-            case R.id.mc_create_people_ok_button:
-                accident.setMed("mc_m_wo");
-                goToDescription();
-                break;
-            case R.id.mc_create_people_light_button:
-                accident.setMed("mc_m_l");
-                goToDescription();
-                break;
-            case R.id.mc_create_people_hard_button:
-                accident.setMed("mc_m_h");
-                goToDescription();
-                break;
-            case R.id.mc_create_people_death_button:
-                accident.setMed("mc_m_d");
-                goToDescription();
-                break;
-            case R.id.mc_create_people_na_button:
-                accident.setMed("mc_m_na");
-                goToDescription();
-                break;
-            // Работа с картой
-            case R.id.mc_create_fine_address_confirm:
-                accident.updateLocation(MyUtils.LatLngToLocation(map.getCameraPosition().target));
-                goToType();
-                break;
-            // Кнопки действий
-            case R.id.mc_create_create:
-                confirm();
-                break;
-            case R.id.mc_create_cancel:
-                //TODO Добавить подтверждение
-                finish();
-                break;
-            case R.id.mc_create_back:
-                backButton();
-                break;
+    private Accident createDefaultAccident() {
+        JSONObject accident = new JSONObject();
+        try {
+            accident.put("id", 0);
+            accident.put("lat", initialLocation.getLatitude());
+            accident.put("lon", initialLocation.getLongitude());
+            accident.put("owner_id", Preferences.getUserId());
+            accident.put("owner", Preferences.getUserName());
+            accident.put("status", AccidentStatus.getStatusCode(AccidentStatus.ACTIVE));
+            accident.put("uxtime", String.valueOf(System.currentTimeMillis() / 1000L));
+            accident.put("address", "");
+            accident.put("descr", "");
+            accident.put("mc_accident_orig_type", Type.getTypeCode(Type.OTHER));
+            accident.put("mc_accident_orig_med", Medicine.getCode(Medicine.UNKNOWN));
+            accident.put("messages", new JSONArray("[]"));
+            accident.put("history", new JSONArray("[]"));
+            accident.put("onway", new JSONArray("[]"));
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        setConfirm();
-        refreshDescription();
-    }
-
-    private void backButton() {
-        switch (currentScreen) {
-            case R.id.mc_create_map: //MAP
-                finish();
-                break;
-            case R.id.mc_create_people_frame: //MED
-                goToAccidentSubType();
-                accident.resetType();
-                break;
-            case R.id.mc_create_acc_frame: //ACC
-                goToType();
-                break;
-            case R.id.mc_create_type_frame: //TYPE
-                goToMap();
-                break;
-            case R.id.mc_create_final_frame: //DESCR
-                if (accident.isAccident()) {
-                    goToMed();
-                    accident.resetMed();
-                } else {
-                    goToType();
-                    accident.resetType();
-                }
-                break;
-        }
-        setConfirm();
-        refreshDescription();
-    }
-
-    @Override
-    public boolean onKeyUp(int keycode, @NonNull KeyEvent e) {
-        switch (keycode) {
-            case KeyEvent.KEYCODE_BACK:
-                backButton();
-                return true;
-        }
-        return super.onKeyUp(keycode, e);
-    }
-
-    private void confirm() {
-        disableConfirm();
-        CreateAccidentRequest request = new CreateAccidentRequest(new CreateAccidentCallback(), context);
-        request.setType(accident.type);
-        request.setMed(accident.med);
-        request.setAddress(accident.address);
-        request.setLocation(accident.location);
-        request.setDescription(accident.description);
-        request.setCreated(accident.created);
-        request.execute();
-    }
-
-    private void goToAccidentSubType() {
-        hideAll();
-        accFrame.setVisibility(View.VISIBLE);
-        currentScreen = ACC;
-    }
-
-    private void goToMed() {
-        hideAll();
-        medFrame.setVisibility(View.VISIBLE);
-        currentScreen = MED;
-    }
-
-    private void goToDescription() {
-        hideAll();
-        descrFrame.setVisibility(View.VISIBLE);
-        currentScreen = DESCR;
-    }
-
-    private void goToMap() {
-        hideAll();
-        mapFrame.setVisibility(View.VISIBLE);
-        currentScreen = MAP;
-        backButton.setEnabled(false);
-    }
-
-    private void goToType() {
-        hideAll();
-        typeFrame.setVisibility(View.VISIBLE);
-        currentScreen = TYPE;
-        backButton.setEnabled(true);
-    }
-
-    private void hideAll() {
-        typeFrame.setVisibility(View.INVISIBLE);
-        mapFrame.setVisibility(View.INVISIBLE);
-        medFrame.setVisibility(View.INVISIBLE);
-        descrFrame.setVisibility(View.INVISIBLE);
-        accFrame.setVisibility(View.INVISIBLE);
+        return new Accident(this, accident);
     }
 
     private GoogleMap makeMap() {
-        GoogleMap          map;
-        FragmentManager    fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+        FragmentManager    fragmentManager = this.getSupportFragmentManager();
         SupportMapFragment mapFragment     = (SupportMapFragment) fragmentManager.findFragmentById(R.id.mc_create_map_container);
-        map = mapFragment.getMap();
+        GoogleMap          map             = mapFragment.getMap();
 
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(accident.location), 16));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(accident.getLocation()), 16));
         map.getUiSettings().setMyLocationButtonEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
         if (!Role.isModerator()) {
-            CircleOptions circleOptions = new CircleOptions().center(MyUtils.LocationToLatLng(accident.initialLocation)).radius(RADIUS).fillColor(0x20FF0000);
+            CircleOptions circleOptions = new CircleOptions().center(MyUtils.LocationToLatLng(initialLocation)).radius(RADIUS).fillColor(0x20FF0000);
             map.addCircle(circleOptions);
             map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
                 @Override
                 public void onCameraChange(CameraPosition camera) {
-                    Button mcCreateFineAddressConfirm = (Button) ((Activity) context).findViewById(R.id.mc_create_fine_address_confirm);
-                    if (accident.initialLocation != null) {
-                        double distance = MyUtils.LatLngToLocation(camera.target).distanceTo(accident.initialLocation);
+                    Button mcCreateFineAddressConfirm = (Button) findViewById(R.id.ADDRESS);
+                    if (initialLocation != null) {
+                        double distance = MyUtils.LatLngToLocation(camera.target).distanceTo(initialLocation);
                         if (distance > RADIUS) {
                             mcCreateFineAddressConfirm.setEnabled(false);
                         } else {
@@ -351,17 +141,17 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             });
         }
         map.clear();
-        for (int id : AccidentsGeneral.points.keySet()) {
-            Accident point = AccidentsGeneral.points.getPoint(id);
+        for (int id : Content.getIds()) {
+            motocitizen.accident.Accident point = Content.get(id);
             if (point.isInvisible()) continue;
-            String title = point.getTypeText();
-            if (!point.getMedText().equals("")) {
-                title += ", " + point.getMedText();
+            String title = point.getTypeString();
+            if (point.getMedicine() != Medicine.NO) {
+                title += ", " + point.getMedicineString();
             }
-            title += ", " + MyUtils.getIntervalFromNowInText(point.created) + " назад";
+            title += ", " + MyUtils.getIntervalFromNowInText(point.getTime()) + " назад";
 
             float alpha;
-            int age = (int) (((new Date()).getTime() - point.created.getTime()) / 3600000);
+            int age = (int) (((new Date()).getTime() - point.getTime().getTime()) / 3600000);
             if (age < 2) {
                 alpha = 1.0f;
             } else if (age < 6) {
@@ -369,10 +159,176 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             } else {
                 alpha = 0.2f;
             }
-            map.addMarker(new MarkerOptions().position(MyUtils.LocationToLatLng(point.getLocation())).title(title)
-                                             .icon(AccidentTypes.getBitmapDescriptor(point.getType())).alpha(alpha));
+            map.addMarker(new MarkerOptions().position(new LatLng(point.getLat(), point.getLon())).title(title).icon(Resources.getMapBitmapDescriptor(point.getType())).alpha(alpha));
         }
         return map;
+    }
+
+    public void setComplete() {
+        this.complete = accident.isAccident() || accident.getDescription().length() > 6;
+        setConfirm(isComplete());
+    }
+
+    private void setUpScreen(int id) {
+        hideAll();
+        findViewById(id).setVisibility(View.VISIBLE);
+        currentScreen = id;
+        if (id == MAP) {
+            findViewById(R.id.BACK).setEnabled(false);
+        } else {
+            findViewById(R.id.BACK).setEnabled(true);
+        }
+    }
+
+    private void refreshDescription() {
+        if (accident.getMedicine() == Medicine.UNKNOWN) {
+            ((TextView) findViewById(R.id.mc_create_what)).setText(accident.getTypeString());
+        } else {
+            ((TextView) findViewById(R.id.mc_create_what)).setText(accident.getTypeString() + ". " + accident.getMedicineString());
+        }
+        ((TextView) findViewById(R.id.mc_create_who)).setText(Content.auth.getLogin());
+        ((TextView) findViewById(R.id.mc_create_where)).setText(accident.getAddress());
+        ((TextView) findViewById(R.id.mc_create_when)).setText(Const.dateFormat.format(accident.getTime()));
+    }
+
+    private void setupListener() {
+        Integer[] ids = {R.id.BREAK, R.id.STEAL, R.id.OTHER, R.id.ACCIDENT, R.id.MOTO_AUTO, R.id.SOLO, R.id.MOTO_MOTO, R.id.MOTO_MAN, R.id.PEOPLE_OK, R.id.PEOPLE_LIGHT, R.id.PEOPLE_HEAVY, R.id.PEOPLE_LETHAL, R.id.PEOPLE_UNKNOWN, R.id.ADDRESS, R.id.CREATE, R.id.CANCEL, R.id.BACK};
+        for (int id : ids) findViewById(id).setOnClickListener(this);
+    }
+
+    private void setConfirm(Boolean status) {
+        if (!confirmLock) confirmButton.setEnabled(status);
+    }
+
+    public boolean isComplete() {
+        return complete;
+    }
+
+    private void hideAll() {
+        Integer[] ids = {TYPE, MAP, MEDICINE, DESCRIPTION, ACCIDENT};
+        for (int id : ids) findViewById(id).setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id) {
+            case R.id.BREAK:
+            case R.id.STEAL:
+            case R.id.OTHER:
+                accident.setType(getSelectedType(id));
+                setUpScreen(DESCRIPTION);
+                break;
+            case R.id.MOTO_AUTO:
+            case R.id.SOLO:
+            case R.id.MOTO_MOTO:
+            case R.id.MOTO_MAN:
+                accident.setType(getSelectedType(id));
+                setUpScreen(MEDICINE);
+                break;
+            case R.id.ACCIDENT:
+                setUpScreen(ACCIDENT);
+                break;
+            case R.id.PEOPLE_OK:
+            case R.id.PEOPLE_LIGHT:
+            case R.id.PEOPLE_HEAVY:
+            case R.id.PEOPLE_LETHAL:
+            case R.id.PEOPLE_UNKNOWN:
+                accident.setMedicine(getSelectedMedicine(id));
+                setUpScreen(DESCRIPTION);
+                setComplete();
+                break;
+            case R.id.ADDRESS:
+                accident.setLatLng(map.getCameraPosition().target);
+                accident.setAddress((new MyApp()).getAddres(accident.getLocation()));
+                setUpScreen(TYPE);
+                break;
+            case R.id.CREATE:
+                confirm();
+                break;
+            case R.id.CANCEL:
+                //TODO Добавить подтверждение
+                finish();
+                break;
+            case R.id.BACK:
+                backButton();
+                break;
+        }
+        refreshDescription();
+    }
+
+    private Type getSelectedType(int id) {
+        switch (id) {
+            case R.id.BREAK:
+                return Type.BREAK;
+            case R.id.STEAL:
+                return Type.STEAL;
+            case R.id.MOTO_AUTO:
+                return Type.MOTO_AUTO;
+            case R.id.SOLO:
+                return Type.SOLO;
+            case R.id.MOTO_MOTO:
+                return Type.MOTO_MOTO;
+            case R.id.MOTO_MAN:
+                return Type.MOTO_MAN;
+            case R.id.OTHER:
+            default:
+                return Type.OTHER;
+        }
+    }
+
+    private Medicine getSelectedMedicine(int id) {
+        switch (id) {
+            case R.id.PEOPLE_OK:
+                return Medicine.NO;
+            case R.id.PEOPLE_LIGHT:
+                return Medicine.LIGHT;
+            case R.id.PEOPLE_HEAVY:
+                return Medicine.HEAVY;
+            case R.id.PEOPLE_LETHAL:
+                return Medicine.LETHAL;
+            case R.id.PEOPLE_UNKNOWN:
+            default:
+                return Medicine.UNKNOWN;
+        }
+    }
+
+    private void confirm() {
+        disableConfirm();
+        CreateAccidentRequest request = new CreateAccidentRequest(new CreateAccidentCallback(), this);
+        request.setType(accident.getType());
+        request.setMed(accident.getMedicine());
+        request.setAddress(accident.getAddress());
+        request.setLocation(accident.getLocation());
+        request.setDescription(accident.getDescription());
+        request.setCreated(accident.getTime());
+        request.execute();
+    }
+
+    private void backButton() {
+        switch (currentScreen) {
+            case MAP:
+                finish();
+                break;
+            case MEDICINE:
+                setUpScreen(ACCIDENT);
+                break;
+            case ACCIDENT:
+                setUpScreen(TYPE);
+                break;
+            case TYPE:
+                setUpScreen(MAP);
+                break;
+            case DESCRIPTION:
+                if (accident.isAccident()) {
+                    setUpScreen(MEDICINE);
+                } else {
+                    setUpScreen(TYPE);
+                }
+                break;
+        }
+        setInComplete();
+        refreshDescription();
     }
 
     private void disableConfirm() {
@@ -380,101 +336,28 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         confirmLock = true;
     }
 
+    public void setInComplete() {
+        this.complete = false;
+        setConfirm(false);
+    }
+
+    @Override
+    public boolean onKeyUp(int keycode, @NonNull KeyEvent e) {
+        switch (keycode) {
+            case KeyEvent.KEYCODE_BACK:
+                backButton();
+                return true;
+        }
+        return super.onKeyUp(keycode, e);
+    }
+
     private void enableConfirm() {
         confirmLock = false;
         setConfirm(true);
     }
 
-    private void setConfirm(Boolean status) {
-        if (confirmLock) return;
-        confirmButton.setEnabled(status);
-    }
-
-    private void setConfirm() {
-        setConfirm(accident.isComplete());
-    }
-
-    private class NewAccident {
-        String   type;
-        String   med;
-        Location location;
-        final Location initialLocation;
-        final Date     created;
-        String address;
-        String description;
-
-        public NewAccident() {
-            type = "";
-            med = "mc_m_na";
-            initialLocation = location = MyLocationManager.getLocation(context);
-            created = new Date();
-            address = MyLocationManager.address;
-            description = "";
-        }
-
-        public void makeBreak() {
-            type = "acc_b";
-        }
-
-        public void makeSteal() {
-            type = "acc_s";
-        }
-
-        public void makeOther() {
-            type = "acc_o";
-        }
-
-        public void makeAccident(String type) {
-            this.type = type;
-        }
-
-        public void setMed(String med) {
-            this.med = med;
-        }
-
-        public void setDescription(String description) {
-            this.description = description.replace("^\\s+", "");
-            this.description = description.replace("\\s+$", "");
-        }
-
-        public void resetType() {
-            type = "";
-            med = "mc_m_na";
-        }
-
-        public void resetMed() {
-            med = "mc_m_na";
-        }
-
-        public boolean isComplete() {
-            if (isAccident()) {
-                return true;
-            } else if ((isSteal() || isBreak() || isOther()) && description.length() > 3) {
-                return true;
-            }
-            return false;
-        }
-
-        public void updateLocation(Location location) {
-            this.location = location;
-            updateAddress(((MyApp) context.getApplicationContext()).getAddres(accident.location));
-        }
-
-        public boolean isSteal() {
-            return type.equals("acc_s");
-        }
-
-        public boolean isBreak() {
-            return type.equals("acc_b");
-        }
-
-        public boolean isOther() {
-            return type.equals("acc_o");
-        }
-
-        public boolean isAccident() {
-            return (type + "      ").substring(0, 5).equals("acc_m");
-        }
+    private void message(String text) {
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show();
     }
 
     private class CreateAccidentCallback implements AsyncTaskCompleteListener {
@@ -482,9 +365,9 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         public void onTaskComplete(JSONObject result) {
             if (result.has("error")) {
                 try {
-                    Toast.makeText(context, result.getString("error"), Toast.LENGTH_LONG).show();
+                    message(result.getString("error"));
                 } catch (JSONException e) {
-                    Toast.makeText(context, "Неизвестная ошибка" + result.toString(), Toast.LENGTH_LONG).show();
+                    message("Неизвестная ошибка" + result.toString());
                     e.printStackTrace();
                 }
             } else {

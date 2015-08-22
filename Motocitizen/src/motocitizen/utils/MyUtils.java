@@ -18,17 +18,14 @@ public class MyUtils {
 
     @SuppressWarnings({"SameParameterValue", "WeakerAccess"})
     public static boolean isInteger(String s, int radix) {
-        if (s.isEmpty())
-            return false;
+        if (s == null) return false;
+        if (s.isEmpty()) return false;
         for (int i = 0; i < s.length(); i++) {
             if (i == 0 && s.charAt(i) == '-') {
-                if (s.length() == 1)
-                    return false;
-                else
-                    continue;
+                if (s.length() == 1) return false;
+                else continue;
             }
-            if (Character.digit(s.charAt(i), radix) < 0)
-                return false;
+            if (Character.digit(s.charAt(i), radix) < 0) return false;
         }
         return true;
     }
@@ -61,9 +58,9 @@ public class MyUtils {
 
     @SuppressWarnings({"SameParameterValue", "WeakerAccess"})
     public static String getIntervalFromNowInText(Date date, boolean full) {
-        StringBuilder out = new StringBuilder();
-        Date now = new Date();
-        int minutes = (int) (now.getTime() - date.getTime()) / (60000);
+        StringBuilder out     = new StringBuilder();
+        Date          now     = new Date();
+        int           minutes = (int) (now.getTime() - date.getTime()) / (60000);
         if (minutes <= 0) {
             return "Только что";
         }

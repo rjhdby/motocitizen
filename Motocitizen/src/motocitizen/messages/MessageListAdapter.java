@@ -9,19 +9,19 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import motocitizen.app.general.AccidentMessage;
+import motocitizen.accident.Message;
 import motocitizen.main.R;
 import motocitizen.utils.Const;
 
-public class MessageListAdapter extends ArrayAdapter<AccidentMessage> {
+public class MessageListAdapter extends ArrayAdapter<Message> {
 
     /// the Android Activity owning the ListView
     private final Activity activity;
 
     /// a list of gasoline records for display
-    private final List<AccidentMessage> records;
+    private final List<Message> records;
 
-    public MessageListAdapter(Activity activity, List<AccidentMessage> records) {
+    public MessageListAdapter(Activity activity, List<Message> records) {
         super(activity, R.layout.row_message_list, records);
         this.activity = activity;
         this.records = records;
@@ -37,18 +37,17 @@ public class MessageListAdapter extends ArrayAdapter<AccidentMessage> {
         }
 
         // populate row widgets from record data
-        AccidentMessage record = records.get(position);
+        Message record = records.get(position);
 
         // get widgets from the view
         //TextView columnDate = (TextView) view.findViewById(R.id.columnDate);
         //columnDate.setText(Const.timeFormat.format(record.time.getTime()));
 
         TextView info = (TextView) view.findViewById(R.id.info);
-        info.setText(Const.timeFormat.format(record.time.getTime()) + " - " + record.owner);
+        info.setText(Const.timeFormat.format(record.getTime()) + " - " + record.getOwner());
 
         TextView text = (TextView) view.findViewById(R.id.text);
-        text.setText(record.text);
+        text.setText(record.getText());
         return view;
     }
-
 }

@@ -44,7 +44,7 @@ public class ChangeLog {
     }
 
     public static String getLog(Context context, boolean full) {
-        String lastVersion = (new MyPreferences(context).getCurrentVersion());
+        String lastVersion = Preferences.getCurrentVersion();
         sb = new StringBuffer();
         try {
             InputStream ins = context.getResources().openRawResource(R.raw.changelog);

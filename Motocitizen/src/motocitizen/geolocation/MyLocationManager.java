@@ -1,4 +1,4 @@
-package motocitizen.app.general;
+package motocitizen.geolocation;
 
 import android.content.Context;
 import android.location.Location;
@@ -12,28 +12,29 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
 import motocitizen.MyApp;
+import motocitizen.content.Content;
 import motocitizen.network.requests.InplaceRequest;
 import motocitizen.network.requests.LeaveRequest;
-import motocitizen.startup.MyPreferences;
+import motocitizen.startup.Preferences;
 import motocitizen.startup.Startup;
 
 public class MyLocationManager {
-    public static String address;
-    private static Location current;
-    private static MyPreferences prefs;
+    public static  String          address;
+    private static Location        current;
+    private static Preferences     prefs;
     private static GoogleApiClient mGoogleApiClient;
     private static LocationRequest mLocationRequest;
-    private static Context context;
+    private static Context         context;
     private static final com.google.android.gms.location.LocationListener FusionLocationListener = new com.google.android.gms.location.LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
             current = location;
-            prefs.saveLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
+            Preferences.saveLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
             requestAddress(context);
             checkInPlace(context, location);
         }
     };
-    private static final GoogleApiClient.ConnectionCallbacks connectionCallback = new GoogleApiClient.ConnectionCallbacks() {
+    private static final GoogleApiClient.ConnectionCallbacks              connectionCallback     = new GoogleApiClient.ConnectionCallbacks() {
 
         @Override
         public void onConnected(Bundle connectionHint) {
@@ -100,9 +101,9 @@ public class MyLocationManager {
         if (last == null) {
             last = new Location(LocationManager.NETWORK_PROVIDER);
             if (prefs == null) {
-                prefs = new MyPreferences(context);
+                prefs = new Preferences(context);
             }
-            LatLng latlng = prefs.getSavedLatLng();
+            LatLng latlng = Preferences.getSavedLatLng();
             last.setLatitude(latlng.latitude);
             last.setLongitude(latlng.longitude);
             last.setAccuracy(1000);
@@ -135,59 +136,63 @@ public class MyLocationManager {
     }
 
     private static void requestAddress(Context context) {
-            Location location = getBestFusionLocation(context);
-            if (current == location) {
-                return;
-            }
+        Location location = getBestFusionLocation(context);
+        if (current == location) {
+            return;
+        }
         address = ((MyApp) context.getApplicationContext()).getAddres(location);
         Startup.updateStatusBar(MyLocationManager.address);
     }
 
     private static void checkInPlace(Context context, Location location) {
-        String login = prefs.getLogin();
+        String login = Preferences.getLogin();
         if (login.equals("")) {
             return;
         }
-        int currentInplace = AccidentsGeneral.getInplaceID();
+        int currentInplace = Content.getInplaceID();
         if (currentInplace != 0) {
             if (isInPlace(location, currentInplace)) {
                 return;
             } else {
-                AccidentsGeneral.setLeave(currentInplace);
+                Content.setLeave(currentInplace);
                 new LeaveRequest(context, currentInplace);
             }
         }
-        for (int accId : AccidentsGeneral.points.keySet()) {
+        for (int accId : Content.getPoints().keySet()) {
             if (isArrived(location, accId)) {
-                AccidentsGeneral.setInPlace(accId);
+                Content.setInPlace(accId);
                 new InplaceRequest(context, accId);
             }
         }
     }
 
     private static boolean isArrived(Location location, int accId) {
-        double meters = AccidentsGeneral.points.getPoint(accId).getLocation().distanceTo(location);
-        double limit = Math.max(300, location.getAccuracy());
+        double meters = Content.getPoint(accId).getLocation().distanceTo(location);
+        double limit  = Math.max(300, location.getAccuracy());
         return meters < limit;
     }
 
+    private static void message(String text) {
+        Toast.makeText(context, text, Toast.LENGTH_LONG).show();
+    }
+
     private static boolean isInPlace(Location location, int accId) {
-        Accident acc = AccidentsGeneral.points.getPoint(accId);
-        if(acc == null) {
-            Toast.makeText(context, "Invalid accident", Toast.LENGTH_LONG).show();
+        motocitizen.accident.Accident acc = Content.getPoint(accId);
+        if (acc == null) {
+            message("Invalid accident");
             return false;
         }
-        if(location == null ) {
-            Toast.makeText(context, "Invalid location", Toast.LENGTH_LONG).show();
+        if (location == null) {
+            message("Invalid location");
             return false;
         }
-        if(acc.getLocation() == null ) {
-            Toast.makeText(context, "Invalid accident location", Toast.LENGTH_LONG).show();
+        if (acc.getLocation() == null) {
+            message("Invalid accident location");
             return false;
         }
 
-        double meters = AccidentsGeneral.points.getPoint(accId).getLocation().distanceTo(location);
-        double limit = location.getAccuracy() * 2 + 1000;
+        double meters = Content.getPoint(accId).getLocation().distanceTo(location);
+        double limit  = location.getAccuracy() * 2 + 1000;
         return meters < limit;
     }
 

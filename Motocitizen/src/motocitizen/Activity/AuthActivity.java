@@ -16,10 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import motocitizen.MyApp;
-import motocitizen.app.general.AccidentsGeneral;
+import motocitizen.content.Content;
 import motocitizen.app.general.user.Role;
 import motocitizen.main.R;
-import motocitizen.startup.MyPreferences;
+import motocitizen.startup.Preferences;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Text;
 
@@ -30,10 +30,10 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
     @SuppressWarnings("FieldCanBeLocal")
     private Button cancelBtn;
 
-    private EditText      login;
-    private EditText      password;
-    private CheckBox      anonim;
-    private MyPreferences prefs;
+    private EditText    login;
+    private EditText    password;
+    private CheckBox    anonim;
+    private Preferences prefs;
 
     private static Context context;
 
@@ -104,9 +104,9 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
             @Override
             public void onClick(View v) {
                 //TODO Добавить запрос подтверждения на выход.
-                prefs.resetAuth();
-                prefs.setAnonim(true);
-                AccidentsGeneral.auth.logoff();
+                Preferences.resetAuth();
+                Preferences.setAnonim(true);
+                Content.auth.logoff();
                 fillCtrls();
             }
         });
@@ -117,13 +117,13 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
             public void onClick(View v) {
                 // Анонимный вход
                 if (anonim.isChecked()) {
-                    prefs.setAnonim(true);
+                    Preferences.setAnonim(true);
                     Text.set(context, R.id.auth_error_helper, "");
                     finish();
                 } else { // Авторизация
                     if (Startup.isOnline(context)) {
-                        if (AccidentsGeneral.auth.auth(context, login.getText().toString(), password.getText().toString())) {
-                            prefs.setAnonim(false);
+                        if (Content.auth.auth(context, login.getText().toString(), password.getText().toString())) {
+                            Preferences.setAnonim(false);
                             finish();
                         } else {
                             TextView authErrorHelper = (TextView) findViewById(R.id.auth_error_helper);
@@ -145,14 +145,14 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
 
     private void fillCtrls() {
 
-        login.setText(prefs.getLogin());
-        password.setText(prefs.getPassword());
-        anonim.setChecked(prefs.isAnonim());
+        login.setText(Preferences.getLogin());
+        password.setText(Preferences.getPassword());
+        anonim.setChecked(Preferences.isAnonim());
         View accListYesterdayLine = findViewById(R.id.accListYesterdayLine);
         TextView roleView = (TextView)findViewById(R.id.role);
 
         //Авторизованы?
-        if (AccidentsGeneral.auth.isAuthorized()) {
+        if (Content.auth.isAuthorized()) {
             loginBtn.setEnabled(false);
             logoutBtn.setEnabled(true);
             anonim.setEnabled(false);

@@ -16,9 +16,9 @@ import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
 
-import motocitizen.app.general.MyLocationManager;
+import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
-import motocitizen.maps.general.MyMapManager;
+import motocitizen.maps.MyMapManager;
 import motocitizen.utils.Inflate;
 
 public class MyOSMMapManager extends MyMapManager {
@@ -47,7 +47,7 @@ public class MyOSMMapManager extends MyMapManager {
         goToUser();
     }
 
-    public void placeAcc(Context context) {
+    public void placeAccidents(Context context) {
         map.getOverlays().remove(accOverlay);
         accOverlay = OSMAccOverlay.getOverlay(context);
         map.getOverlays().add(accOverlay);

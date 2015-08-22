@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -22,7 +21,7 @@ import java.util.Map;
 
 import motocitizen.MyApp;
 import motocitizen.main.R;
-import motocitizen.startup.MyPreferences;
+import motocitizen.startup.Preferences;
 import motocitizen.utils.Const;
 import motocitizen.utils.NewID;
 
@@ -33,7 +32,7 @@ public class SelectSoundActivity extends ActionBarActivity {
     private static Uri               currentUri;
     private static String            currentTitle;
     private static RingtoneManager   rm;
-    private        MyPreferences     prefs;
+    private        Preferences       prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,16 +43,16 @@ public class SelectSoundActivity extends ActionBarActivity {
         vg = (ViewGroup) findViewById(R.id.sound_select_table);
         rm = new RingtoneManager(this);
         rm.setType(RingtoneManager.TYPE_NOTIFICATION);
-        currentUri = prefs.getAlarmSoundUri();
-        currentTitle = prefs.getAlarmSoundTitle();
+        currentUri = Preferences.getAlarmSoundUri();
+        currentTitle = Preferences.getAlarmSoundTitle();
 
         Button selectSoundConfirmButton = (Button) findViewById(R.id.select_sound_save_button);
         selectSoundConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (currentTitle.equals("default system")) {
-                    prefs.setDefaultSoundAlarm();
-                } else prefs.setSoundAlarm(currentTitle, currentUri);
+                    Preferences.setDefaultSoundAlarm();
+                } else Preferences.setSoundAlarm(currentTitle, currentUri);
                 finish();
             }
         });

@@ -19,12 +19,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import motocitizen.app.general.Accident;
-import motocitizen.app.general.AccidentTypes;
-import motocitizen.app.general.AccidentsGeneral;
-import motocitizen.app.general.MyLocationManager;
+import motocitizen.accident.Accident;
+import motocitizen.content.Content;
+import motocitizen.content.Medicine;
+import motocitizen.content.Type;
+import motocitizen.geolocation.MyLocationManager;
+import motocitizen.draw.Resources;
 import motocitizen.main.R;
-import motocitizen.maps.general.MyMapManager;
+import motocitizen.maps.MyMapManager;
 import motocitizen.utils.Inflate;
 import motocitizen.utils.MyUtils;
 
@@ -64,7 +66,7 @@ public class MyGoogleMapManager extends MyMapManager {
             public boolean onMarkerClick(Marker marker) {
                 String id = marker.getId();
                 if (selected.equals(id) && accidents.containsKey(id)) {
-                    AccidentsGeneral.toDetails(context, accidents.get(selected));
+                    Content.toDetails(context, accidents.get(selected));
                 } else {
                     marker.showInfoWindow();
                     selected = id;
@@ -90,8 +92,7 @@ public class MyGoogleMapManager extends MyMapManager {
 
         Location location = MyLocationManager.getLocation(context);
         //if(location != null) {
-        user = map.addMarker(new MarkerOptions().position(MyUtils.LocationToLatLng(location)).title("Вы")
-                                                .icon(AccidentTypes.getBitmapDescriptor("user")));
+        user = map.addMarker(new MarkerOptions().position(MyUtils.LocationToLatLng(location)).title("Вы").icon(Resources.getMapBitmapDescriptor(Type.USER)));
         //} else {
         //TODO Отобразить сообщение?
         //Toast.makeText(this, Startup.context.getString(R.string.position_not_available), Toast.LENGTH_LONG).show();
@@ -103,23 +104,23 @@ public class MyGoogleMapManager extends MyMapManager {
     }
 
     @SuppressWarnings("UnusedParameters")
-    public void placeAcc(Context context) {
+    public void placeAccidents(Context context) {
         if (accidents == null) {
             accidents = new HashMap<>();
         }
         init();
         accidents.clear();
-        for (int id : AccidentsGeneral.points.keySet()) {
-            Accident point = AccidentsGeneral.points.getPoint(id);
+        for (int id : Content.getPoints().keySet()) {
+            Accident point = Content.get(id);
             if (point.isInvisible()) continue;
-            String title = point.getTypeText();
-            if (!point.getMedText().equals("")) {
-                title += ", " + point.getMedText();
+            String title = point.getTypeString();
+            if (point.getMedicine() != Medicine.UNKNOWN) {
+                title += ", " + point.getMedicineString();
             }
-            title += ", " + MyUtils.getIntervalFromNowInText(point.created) + " назад";
+            title += ", " + MyUtils.getIntervalFromNowInText(point.getTime()) + " назад";
 
             float alpha;
-            int age = (int) (((new Date()).getTime() - point.created.getTime()) / 3600000);
+            int age = (int) (((new Date()).getTime() - point.getTime().getTime()) / 3600000);
             if (age < 2) {
                 alpha = 1.0f;
             } else if (age < 6) {
@@ -127,8 +128,7 @@ public class MyGoogleMapManager extends MyMapManager {
             } else {
                 alpha = 0.2f;
             }
-            Marker marker = map.addMarker(new MarkerOptions().position(MyUtils.LocationToLatLng(point.getLocation())).title(title)
-                                                             .icon(AccidentTypes.getBitmapDescriptor(point.getType())).alpha(alpha));
+            Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(point.getLat(), point.getLon())).title(title).icon(Resources.getMapBitmapDescriptor(point.getType())).alpha(alpha));
             accidents.put(marker.getId(), id);
         }
     }

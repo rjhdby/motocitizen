@@ -13,7 +13,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import motocitizen.app.general.AccidentsGeneral;
+import motocitizen.content.Content;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentsRequest;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
@@ -33,6 +33,13 @@ public class BounceScrollView extends ScrollView {
         initBounceScrollView();
     }
 
+    private void initBounceScrollView() {
+        final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        final float          density = metrics.density;
+
+        mMaxYOverscrollDistance = (int) (density * MAX_Y_OVERSCROLL_DISTANCE);
+    }
+
     public BounceScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
@@ -43,13 +50,6 @@ public class BounceScrollView extends ScrollView {
         super(context, attrs, defStyle);
         this.context = context;
         initBounceScrollView();
-    }
-
-    private void initBounceScrollView() {
-        final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        final float          density = metrics.density;
-
-        mMaxYOverscrollDistance = (int) (density * MAX_Y_OVERSCROLL_DISTANCE);
     }
 
     @Override
@@ -65,12 +65,17 @@ public class BounceScrollView extends ScrollView {
                     refreshAnimation = new RefreshAnimation(refreshItem);
                     refreshAnimation.onRefreshBeginning();
                 }
+                Content.update(context, new AccidentsRequestCallback());
                 new AccidentsRequest(context, new AccidentsRequestCallback());
             } else {
-                Toast.makeText(context, R.string.inet_not_available, Toast.LENGTH_LONG).show();
+                message(context.getString(R.string.inet_not_available));
             }
         }
         return super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX, mMaxYOverscrollDistance, isTouchEvent);
+    }
+
+    private void message(String text) {
+        Toast.makeText(context, text, Toast.LENGTH_LONG).show();
     }
 
     private class AccidentsRequestCallback implements AsyncTaskCompleteListener {
@@ -78,15 +83,15 @@ public class BounceScrollView extends ScrollView {
         public void onTaskComplete(JSONObject result) {
             if (result.has("error")) {
                 try {
-                    Toast.makeText(context, result.getString("error"), Toast.LENGTH_LONG).show();
+                    message(result.getString("error"));
                 } catch (JSONException e) {
-                    Toast.makeText(context, "Неизвестная ошибка", Toast.LENGTH_LONG).show();
+                    message("Неизвестная ошибка");
                     e.printStackTrace();
                 }
             } else {
-                AccidentsGeneral.refreshPoints(context, result);
-            }
-            if (Startup.mMenu != null) {
+                Content.parseJSON(context, result);
+                Content.redraw(context);
+            } if (Startup.mMenu != null) {
                 MenuItem item = Startup.mMenu.findItem(R.id.action_refresh);
                 if (item.getActionView() != null) {
                     refreshAnimation.onRefreshComplete();

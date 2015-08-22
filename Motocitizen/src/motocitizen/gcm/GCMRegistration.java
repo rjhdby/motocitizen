@@ -1,4 +1,4 @@
-package motocitizen.app.general.gcm;
+package motocitizen.gcm;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -18,18 +18,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 import motocitizen.MyApp;
-import motocitizen.app.general.AccidentsGeneral;
+import motocitizen.content.Content;
 import motocitizen.network.requests.GCMRegistrationRequest;
-import motocitizen.startup.MyPreferences;
+import motocitizen.startup.Preferences;
 
 public class GCMRegistration {
-    private static final String TAG = "GCM";
-    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    private final String SENDER_ID = "258135342835";
-    private GoogleCloudMessaging gcm;
-    private String regid;
-    private static Context context;
-    private static MyPreferences prefs;
+    private static final String TAG                              = "GCM";
+    private final static int    PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private final        String SENDER_ID                        = "258135342835";
+    private        GoogleCloudMessaging gcm;
+    private        String               regid;
+    private static Context              context;
+    private static Preferences          prefs;
 
     public GCMRegistration(Context context) {
         GCMRegistration.context = context;
@@ -60,11 +60,11 @@ public class GCMRegistration {
     private static Map<String, String> createPOST(String regId) {
         String imei = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
         Map<String, String> POST = new HashMap<>();
-        POST.put("owner_id", String.valueOf(AccidentsGeneral.auth.getID()));
+        POST.put("owner_id", String.valueOf(Content.auth.getid()));
         POST.put("gcm_key", regId);
-        POST.put("login", AccidentsGeneral.auth.getLogin());
+        POST.put("login", Content.auth.getLogin());
         POST.put("imei", imei);
-        POST.put("passhash", AccidentsGeneral.auth.makePassHash());
+        POST.put("passhash", Content.auth.makePassHash());
         POST.put("calledMethod", "registerGCM");
         return POST;
     }
@@ -83,12 +83,12 @@ public class GCMRegistration {
     }
 
     private String getRegistrationId() {
-        String registrationId = prefs.getGCMRegistrationCode();
+        String registrationId = Preferences.getGCMRegistrationCode();
         if (registrationId.isEmpty()) {
             Log.d(TAG, "Registration not found.");
             return "";
         }
-        int registeredVersion = prefs.getAppVersion();
+        int registeredVersion = Preferences.getAppVersion();
         int currentVersion = getAppVersion();
         if (registeredVersion != currentVersion) {
             Log.d(TAG, "App version changed.");
@@ -127,8 +127,8 @@ public class GCMRegistration {
     private void storeRegistrationId(String regId) {
         int appVersion = getAppVersion();
         Log.i(TAG, "Saving regId on app version " + appVersion);
-        prefs.setAppVersion(appVersion);
-        prefs.setGCMRegistrationCode(regId);
+        Preferences.setAppVersion(appVersion);
+        Preferences.setGCMRegistrationCode(regId);
         new GCMRegistrationRequest(context, regId);
     }
 }

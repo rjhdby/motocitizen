@@ -9,7 +9,7 @@ import org.osmdroid.views.overlay.OverlayItem;
 
 import java.util.ArrayList;
 
-import motocitizen.app.general.MyLocationManager;
+import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 
 class OSMUserOverlay {

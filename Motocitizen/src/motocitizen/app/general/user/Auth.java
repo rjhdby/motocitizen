@@ -13,28 +13,25 @@ import java.security.NoSuchAlgorithmException;
 import motocitizen.Activity.AuthActivity;
 import motocitizen.main.R;
 import motocitizen.network.requests.AuthRequest;
-import motocitizen.startup.MyPreferences;
+import motocitizen.startup.Preferences;
 
 public class Auth {
-    private       String        role;
-    private       String        name;
-    private       int           id;
-    private final MyPreferences prefs;
-    private boolean isAuthorized = false;
     private final Context context;
+    private String role;
+    private String name;
+    private int    id;
+    private boolean isAuthorized = false;
     private       String  login;
     private       String  password;
 
     public Auth(Context context) {
         this.context = context;
-        prefs = new MyPreferences(context);
         reset();
 
-
-        if (!prefs.isAnonim()) {
-            if (!prefs.getLogin().isEmpty()) {
-                login = prefs.getLogin();
-                password = prefs.getPassword();
+        if (!Preferences.isAnonim()) {
+            if (!Preferences.getLogin().isEmpty()) {
+                login = Preferences.getLogin();
+                password = Preferences.getPassword();
                 if (!auth(context, login, password)) {
                     showLogin(context);
                 }
@@ -44,16 +41,55 @@ public class Auth {
         }
     }
 
+    private void reset() {
+        name = "";
+        role = "";
+        id = 0;
+    }
+
+    public Boolean auth(Context context, String login, String password) {
+        this.password = password;
+        this.login = login;
+        AuthRequest auth = new AuthRequest(context);
+        auth.setLogin(login);
+        auth.setPassword(password);
+        JSONObject result = auth.execute();
+        if (auth.error(result)) {
+            String error = auth.getError(result);
+            message(error);
+            isAuthorized = false;
+        } else {
+            try {
+                name = result.getString("name");
+                role = result.getString("role");
+                id = Integer.parseInt(result.getString("id"));
+                Preferences.setUserId(id);
+                Preferences.setUserName(name);
+                Preferences.setUserRole(role);
+                if (name.length() > 0) {
+                    Preferences.setLogin(login);
+                    Preferences.setPassword(password);
+                    Preferences.setAnonim(false);
+                    isAuthorized = true;
+                } else {
+                    isAuthorized = false;
+                }
+            } catch (JSONException e) {
+                message(context.getString(R.string.unknown_error));
+                isAuthorized = false;
+            }
+        }
+        return isAuthorized;
+    }
+
     private void showLogin(Context context) {
         Intent i = new Intent(context, AuthActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);
     }
 
-    private void reset() {
-        name = "";
-        role = "";
-        id = 0;
+    private void message(String text) {
+        Toast.makeText(context, text, Toast.LENGTH_LONG).show();
     }
 
     public String getName() {
@@ -64,12 +100,17 @@ public class Auth {
         return role;
     }
 
-    public int getID() {
+    public int getid() {
         return id;
     }
 
     public String getLogin() {
-        return prefs.getLogin();
+        return Preferences.getLogin();
+    }
+
+    // Ну нету в java параметров по-умолчанию.
+    public String makePassHash() {
+        return makePassHash(Preferences.getPassword());
     }
 
     public static String makePassHash(String pass) {
@@ -89,48 +130,8 @@ public class Auth {
         return hash;
     }
 
-    // Ну нету в java параметров по-умолчанию.
-    public String makePassHash() {
-        return makePassHash(prefs.getPassword());
-    }
-
     public boolean isAnonim() {
-        return prefs.isAnonim();
-    }
-
-    public Boolean auth(Context context, String login, String password) {
-        this.password = password;
-        this.login = login;
-        AuthRequest auth = new AuthRequest(context);
-        auth.setLogin(login);
-        auth.setPassword(password);
-        JSONObject result = auth.execute();
-        if (auth.error(result)) {
-            String error = auth.getError(result);
-            Toast.makeText(context, error, Toast.LENGTH_LONG).show();
-            isAuthorized = false;
-        } else {
-            try {
-                name = result.getString("name");
-                role = result.getString("role");
-                id = Integer.parseInt(result.getString("id"));
-                prefs.setUserId(id);
-                prefs.setUserName(name);
-                prefs.setUserRole(role);
-                if (name.length() > 0) {
-                    prefs.setLogin(login);
-                    prefs.setPassword(password);
-                    prefs.setAnonim(false);
-                    isAuthorized = true;
-                } else {
-                    isAuthorized = false;
-                }
-            } catch (JSONException e) {
-                Toast.makeText(context, context.getString(R.string.unknown_error), Toast.LENGTH_LONG).show();
-                isAuthorized = false;
-            }
-        }
-        return isAuthorized;
+        return Preferences.isAnonim();
     }
 
     public boolean isAuthorized() {

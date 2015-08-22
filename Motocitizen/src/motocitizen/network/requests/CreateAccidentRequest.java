@@ -9,7 +9,9 @@ import org.json.JSONObject;
 import java.util.Date;
 import java.util.HashMap;
 
-import motocitizen.app.general.AccidentsGeneral;
+import motocitizen.content.Content;
+import motocitizen.content.Medicine;
+import motocitizen.content.Type;
 import motocitizen.main.R;
 import motocitizen.utils.Const;
 
@@ -21,9 +23,9 @@ public class CreateAccidentRequest extends HTTPClient {
         post.put("status", "acc_status_act");
         post.put("calledMethod", "createAcc");
         post.put("hint", context.getString(R.string.request_create_acc));
-        post.put("owner_id", String.valueOf(AccidentsGeneral.auth.getID()));
-        post.put("login", AccidentsGeneral.auth.getLogin());
-        post.put("passhash", AccidentsGeneral.auth.makePassHash());
+        post.put("owner_id", String.valueOf(Content.auth.getid()));
+        post.put("login", Content.auth.getLogin());
+        post.put("passhash", Content.auth.makePassHash());
     }
 
     public void execute() {
@@ -35,8 +37,8 @@ public class CreateAccidentRequest extends HTTPClient {
         post.put("lon", String.valueOf(location.getLongitude()));
     }
 
-    public void setType(String type) {
-        post.put("type", type);
+    public void setType(Type type) {
+        post.put("type", Type.getTypeCode(type));
     }
 
     public void setAddress(String address) {
@@ -51,8 +53,8 @@ public class CreateAccidentRequest extends HTTPClient {
         post.put("created", Const.dateFormat.format(created));
     }
 
-    public void setMed(String med) {
-        post.put("med", med);
+    public void setMed(Medicine medicine) {
+        post.put("med", Medicine.getCode(medicine));
     }
 
     public void setStatus(String status) {

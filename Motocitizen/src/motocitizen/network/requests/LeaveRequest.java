@@ -7,13 +7,13 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import motocitizen.app.general.AccidentsGeneral;
+import motocitizen.content.Content;
 
 public class LeaveRequest extends HTTPClient {
     public LeaveRequest (Context context, int id){
         this.context = context;
         post = new HashMap<>();
-        post.put("login", AccidentsGeneral.auth.getLogin());
+        post.put("login", Content.auth.getLogin());
         post.put("id", String.valueOf(id));
         post.put("calledMethod", "leave");
         execute(post);

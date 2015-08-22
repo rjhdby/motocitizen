@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import motocitizen.app.general.Accident;
+import motocitizen.draw.Rows;
 import motocitizen.main.R;
 
 public class DetailHistoryFragment extends AccidentDetailsFragments {
@@ -37,12 +37,12 @@ public class DetailHistoryFragment extends AccidentDetailsFragments {
     }
 
     private void update() {
-        Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
+        motocitizen.accident.Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
 
         ViewGroup logView = (ViewGroup) mcDetLogContent;
         logView.removeAllViews();
-        for (int i : accident.getSortedHistoryKeys()) {
-            accident.history.get(i).inflateRow(getActivity(), logView);
+        for (int i : accident.getHistory().keySet()) {
+            logView.addView(Rows.getHistoryRow(getActivity(), logView, accident.getHistory().get(i)));
         }
     }
 

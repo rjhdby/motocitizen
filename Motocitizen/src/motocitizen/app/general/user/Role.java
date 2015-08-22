@@ -4,7 +4,7 @@ import android.content.Context;
 
 import java.util.Arrays;
 
-import motocitizen.app.general.AccidentsGeneral;
+import motocitizen.content.Content;
 import motocitizen.main.R;
 
 public class Role {
@@ -15,7 +15,7 @@ public class Role {
     private static final String[] Developer = new String[]{"developer"};
 
     private static String getRole() {
-        String role = AccidentsGeneral.auth.getRole();
+        String role = Content.auth.getRole();
         if (role == null) {
             return "";
         }

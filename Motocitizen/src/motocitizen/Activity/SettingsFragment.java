@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import motocitizen.app.general.user.Role;
 import motocitizen.main.R;
-import motocitizen.startup.MyPreferences;
+import motocitizen.startup.Preferences;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 
@@ -27,16 +27,15 @@ public class SettingsFragment extends PreferenceFragment {
             showSteal,
             showOther,
             hoursAgo,
-            maxNotifications,
-            useVibration;
-    private        MyPreferences prefs;
-    private static Activity      act;
+            maxNotifications, useVibration;
+    private        Preferences prefs;
+    private static Activity    act;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         act = getActivity();
-        prefs = new MyPreferences(act);
+        prefs = new Preferences(act);
         update();
     }
 
@@ -61,37 +60,37 @@ public class SettingsFragment extends PreferenceFragment {
                 return true;
             }
         });
-        nottifDistPreference = findPreference(prefs.distanceShow);
-        nottifAlarmPreference = findPreference(prefs.distanceAlarm);
+        nottifDistPreference = findPreference(Preferences.distanceShow);
+        nottifAlarmPreference = findPreference(Preferences.distanceAlarm);
 
         nottifSoundPreference = findPreference(getResources().getString(R.string.mc_notif_sound));
         authPreference = findPreference(getResources().getString(R.string.mc_settings_auth_button));
 
-        mapProviderPreference = (ListPreference) getPreferenceScreen().findPreference(prefs.mapProvider);
+        mapProviderPreference = (ListPreference) getPreferenceScreen().findPreference(Preferences.mapProvider);
         mapProviderPreference.setOnPreferenceChangeListener(mapProviderListener);
         nottifDistPreference.setOnPreferenceChangeListener(distanceListener);
         nottifAlarmPreference.setOnPreferenceChangeListener(distanceListener);
-        String login = prefs.getLogin();
+        String login = Preferences.getLogin();
         if (login.length() > 0)
             authPreference.setSummary(Role.getName(getActivity()) + ": " + login);
         else
             authPreference.setSummary(Role.getName(getActivity()));
-        nottifSoundPreference.setSummary(prefs.getAlarmSoundTitle());
-        nottifDistPreference.setSummary(String.valueOf(prefs.getVisibleDistance()));
-        nottifAlarmPreference.setSummary(String.valueOf(prefs.getAlarmDistance()));
+        nottifSoundPreference.setSummary(Preferences.getAlarmSoundTitle());
+        nottifDistPreference.setSummary(String.valueOf(Preferences.getVisibleDistance()));
+        nottifAlarmPreference.setSummary(String.valueOf(Preferences.getAlarmDistance()));
 
-        showAcc = findPreference(prefs.showAcc);
-        showBreak = findPreference(prefs.showBreak);
-        showSteal = findPreference(prefs.showSteal);
-        showOther = findPreference(prefs.showOther);
+        showAcc = findPreference(Preferences.showAcc);
+        showBreak = findPreference(Preferences.showBreak);
+        showSteal = findPreference(Preferences.showSteal);
+        showOther = findPreference(Preferences.showOther);
 
         showAcc.setOnPreferenceChangeListener(visibleListener);
         showBreak.setOnPreferenceChangeListener(visibleListener);
         showSteal.setOnPreferenceChangeListener(visibleListener);
         showOther.setOnPreferenceChangeListener(visibleListener);
 
-        hoursAgo = findPreference(prefs.hoursAgo);
-        hoursAgo.setSummary(String.valueOf(prefs.getHoursAgo()));
+        hoursAgo = findPreference(Preferences.hoursAgo);
+        hoursAgo.setSummary(String.valueOf(Preferences.getHoursAgo()));
         hoursAgo.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -108,8 +107,8 @@ public class SettingsFragment extends PreferenceFragment {
                 return true;
             }
         });
-        maxNotifications = findPreference(prefs.maxNotifications);
-        maxNotifications.setSummary(String.valueOf(prefs.getMaxNotifications()));
+        maxNotifications = findPreference(Preferences.maxNotifications);
+        maxNotifications.setSummary(String.valueOf(Preferences.getMaxNotifications()));
         maxNotifications.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -125,11 +124,11 @@ public class SettingsFragment extends PreferenceFragment {
                 return true;
             }
         });
-        useVibration = findPreference(prefs.useVibration);
+        useVibration = findPreference(Preferences.useVibration);
         useVibration.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                prefs.putBoolean(preference.getKey(), (boolean) newValue);
+                Preferences.putBoolean(preference.getKey(), (boolean) newValue);
                 return true;
             }
         });
@@ -165,23 +164,26 @@ public class SettingsFragment extends PreferenceFragment {
             }
 
             if (preference.equals(nottifDistPreference)) {
-                prefs.setVisibleDistance(value);
+                Preferences.setVisibleDistance(value);
             } else if (preference.equals(nottifAlarmPreference)) {
-                prefs.setAlarmDistance(value);
+                Preferences.setAlarmDistance(value);
             }
             update();
             return false;
         }
     };
 
+    private void message(String text) {
+        Toast.makeText(getActivity(), text, Toast.LENGTH_LONG).show();
+    }
+
     private final Preference.OnPreferenceChangeListener visibleListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
-            prefs.putBoolean(preference.getKey(), (boolean) newValue);
-            boolean visible = prefs.toShowAcc() | prefs.toShowBreak() | prefs.toShowOther() | prefs.toShowSteal();
+            Preferences.putBoolean(preference.getKey(), (boolean) newValue);
+            boolean visible = Preferences.toShowAcc() | Preferences.toShowBreak() | Preferences.toShowOther() | Preferences.toShowSteal();
             if (!visible) {
-                Toast toast = Toast.makeText(act, getString(R.string.no_one_accident_visible), Toast.LENGTH_LONG);
-                toast.show();
+                message(getString(R.string.no_one_accident_visible));
             }
             update();
             return false;

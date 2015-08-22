@@ -1,4 +1,4 @@
-package motocitizen.app.general.gcm;
+package motocitizen.gcm;
 
 import android.app.Activity;
 import android.content.ComponentName;
