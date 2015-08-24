@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DbOpenHelper extends SQLiteOpenHelper {
 
-    private static final int    VERSION  = 1;
+    private static final int    VERSION  = 3;
     private static final String DATABASE = "motodtp";
 
     public DbOpenHelper(Context context) {
@@ -15,14 +15,18 @@ public class DbOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableMessages  = "CREATE TABLE IF NOT EXISTS messages (acc_id int, msg_id int)";
-        String createTableFavorites = "CREATE TABLE IF NOT EXISTS favorites (acc_id int)";
-        db.execSQL(createTableMessages);
-        db.execSQL(createTableFavorites);
+        createSchema(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        createSchema(db);
+    }
 
+    private void createSchema(SQLiteDatabase db){
+        String createTableMessages  = "CREATE TABLE IF NOT EXISTS messages (acc_id int, msg_id int)";
+        String createTableFavorites = "CREATE TABLE IF NOT EXISTS favorites (acc_id int)";
+        db.execSQL(createTableMessages);
+        db.execSQL(createTableFavorites);
     }
 }
