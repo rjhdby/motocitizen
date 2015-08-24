@@ -4,9 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-/**
- * Created by U_60A9 on 24.08.2015.
- */
 public class DbOpenHelper extends SQLiteOpenHelper {
 
     private static final int    VERSION  = 1;
@@ -18,8 +15,10 @@ public class DbOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTable = "CREATE TABLE IF NOT EXISTS messages (acc_id int, msg_id int)";
-        db.execSQL(createTable);
+        String createTableMessages  = "CREATE TABLE IF NOT EXISTS messages (acc_id int, msg_id int)";
+        String createTableFavorites = "CREATE TABLE IF NOT EXISTS favorites (acc_id int)";
+        db.execSQL(createTableMessages);
+        db.execSQL(createTableFavorites);
     }
 
     @Override

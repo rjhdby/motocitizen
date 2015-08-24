@@ -18,6 +18,7 @@ import java.util.Map;
 import motocitizen.MyApp;
 import motocitizen.app.general.user.Role;
 import motocitizen.content.AccidentStatus;
+import motocitizen.content.Content;
 import motocitizen.content.Medicine;
 import motocitizen.content.Type;
 import motocitizen.database.StoreMessages;
@@ -48,6 +49,7 @@ public class Accident {
     private Map<Integer, Message>   messages;
     private Map<Integer, Volunteer> volunteers;
     private Map<Integer, History>   history;
+    private boolean                 favorite;
 
     public Accident(Context context, JSONObject json) {
         update(json);
@@ -72,6 +74,7 @@ public class Accident {
             parseMessages(json.getJSONArray("messages"));
             parseVolunteers(json.getJSONArray("onway"));
             parseHistory(json.getJSONArray("history"));
+            favorite = Content.favorites.contains(id);
         } catch (Exception e) {
             e.printStackTrace();
             noError = false;
@@ -312,5 +315,13 @@ public class Accident {
 
     public boolean isAccident() {
         return getType() == Type.MOTO_AUTO || getType() == Type.MOTO_MOTO || getType() == Type.MOTO_MAN;
+    }
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
     }
 }

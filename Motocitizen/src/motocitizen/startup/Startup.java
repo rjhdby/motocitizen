@@ -42,20 +42,20 @@ import motocitizen.utils.RefreshAnimation;
 
 public class Startup extends ActionBarActivity implements View.OnClickListener {
 
-    public static Context      context;
-    public static Preferences  prefs;
-    public static MyMapManager map;
-    public static boolean      fromDetails;
-    public static Menu mMenu;
-    public static Integer          currentGeneral;
-    public static RefreshAnimation refreshAnimation;
-    private static ActionBar actionBar;
+    public static  Context          context;
+    public static  Preferences      prefs;
+    public static  MyMapManager     map;
+    public static  boolean          fromDetails;
+    public static  Menu             mMenu;
+    public static  Integer          currentGeneral;
+    public static  RefreshAnimation refreshAnimation;
+    private static ActionBar        actionBar;
     private static AlertDialog changeLogDlg = null;
-    private MyApp myApp = null;
+    private        MyApp       myApp        = null;
     private ImageButton createAccButton;
-    private RadioGroup mainTabsGroup;
-    private View accListView;
-    private View mapContainer;
+    private RadioGroup  mainTabsGroup;
+    private View        accListView;
+    private View        mapContainer;
     private final RadioGroup.OnCheckedChangeListener mainTabsListener = new RadioGroup.OnCheckedChangeListener() {
         public void onCheckedChanged(RadioGroup group, int checkedId) {
             int id = group.getCheckedRadioButtonId();

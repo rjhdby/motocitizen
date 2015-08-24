@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,6 +23,7 @@ import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.MyApp;
 import motocitizen.accident.Accident;
 import motocitizen.app.general.user.Auth;
+import motocitizen.database.Favorites;
 import motocitizen.draw.Rows;
 import motocitizen.draw.Sort;
 import motocitizen.gcm.GCMRegistration;
@@ -38,12 +40,14 @@ public class Content {
     private static Map<Integer, Accident> points      = new HashMap<>();
     private static int                    inPlace     = 0;
     private static boolean                initialized = false;
+    public static List<Integer> favorites;
 
     public Content(Context context) {
         MyApp myApp = (MyApp) context.getApplicationContext();
         auth = myApp.getMCAuth();
         new MyLocationManager(context);
         new GCMRegistration(context);
+        favorites = Favorites.getFavorites(context);
         initialized = true;
     }
 
