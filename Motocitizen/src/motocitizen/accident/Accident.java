@@ -15,10 +15,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import motocitizen.MyApp;
 import motocitizen.app.general.user.Role;
-import motocitizen.content.Medicine;
 import motocitizen.content.AccidentStatus;
+import motocitizen.content.Medicine;
 import motocitizen.content.Type;
+import motocitizen.database.StoreMessages;
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.startup.Preferences;
 
@@ -85,8 +87,10 @@ public class Accident {
 
     private void parseMessages(JSONArray json) throws JSONException {
         if (messages == null) messages = new HashMap<>();
+        int lastReaded = StoreMessages.getLast(MyApp.getAppContext(), getId());
         for (int i = 0; i < json.length(); i++) {
             Message message = new Message(json.getJSONObject(i));
+            if (message.getId() <= lastReaded) message.setUnread(false);
             if (messages.containsKey(message.getId())) continue;
             if (message.isNoError()) messages.put(message.getId(), message);
         }
@@ -108,7 +112,11 @@ public class Accident {
         }
     }
 
-    public Accident(Context context, Bundle extras) {
+    public int getId() {
+        return id;
+    }
+
+    public Accident(Bundle extras) {
         JSONObject temp = new JSONObject();
         try {
             temp.put("id", extras.getString("id"));
@@ -219,10 +227,6 @@ public class Accident {
 
     public Map<Integer, Volunteer> getVolunteers() {
         return volunteers;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public int getOwnerId() {

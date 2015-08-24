@@ -61,7 +61,7 @@ public class NewAccidentReceived extends IntentService {
         double lat, lng;
         String type, message, title;
         */
-        Accident accident = new Accident(context, extras);
+        Accident accident = new Accident(extras);
         if (!accident.isNoError()) {
             GCMBroadcastReceiver.completeWakefulIntent(intent);
             return;
