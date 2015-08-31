@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 import motocitizen.content.Content;
+import motocitizen.content.VolunteerStatus;
 
 public class OnWayRequest extends HTTPClient {
     public OnWayRequest(AsyncTaskCompleteListener listener, Context context, int id) {
@@ -17,7 +18,7 @@ public class OnWayRequest extends HTTPClient {
         post.put("login", Content.auth.getLogin());
         post.put("passhash", Content.auth.makePassHash());
         post.put("id", String.valueOf(id));
-        post.put("calledMethod", "onway");
+        post.put("calledMethod", Methods.ONWAY.toCode());
         execute(post);
     }
 
@@ -35,7 +36,7 @@ public class OnWayRequest extends HTTPClient {
 
     @Override
     public String getError(JSONObject response) {
-        if (!response.has("result")) return "Ошибка соединения "  + response.toString();
+        if (!response.has("result")) return "Ошибка соединения " + response.toString();
         try {
             String result = response.getString("result");
             switch (result) {

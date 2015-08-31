@@ -42,7 +42,7 @@ public class History {
     }
 
     public String getActionString() {
-        return HistoryAction.getActionString(action);
+        return action.toString();
     }
 
     public int getId() {

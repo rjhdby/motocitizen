@@ -105,7 +105,7 @@ public class NewAccidentReceived extends IntentService {
         Notification.Builder builder       = new Notification.Builder(this);
 
         //String distanceString = getDistanceString(distance);
-        String title = accident.getTypeString() + ", " + accident.getMedicineString() + "(" + accident.getDistanceString() + ")";
+        String title = accident.getType().toString() + ", " + accident.getMedicine().toString() + "(" + accident.getDistanceString() + ")";
         builder.setContentIntent(contentIntent).setSmallIcon(R.drawable.logo).setLargeIcon(BitmapFactory.decodeResource(res, R.drawable.logo)).setTicker(title).setWhen(System.currentTimeMillis()).setAutoCancel(true).setContentTitle(title).setContentText(accident.getDescription());
 
         if (Preferences.getAlarmSoundTitle().equals("default system")) {

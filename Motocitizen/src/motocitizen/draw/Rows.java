@@ -45,9 +45,9 @@ public class Rows {
                 accRow.setBackgroundResource(resources[2]);
         }
         StringBuilder generalText = new StringBuilder();
-        generalText.append(accident.getTypeString());
+        generalText.append(accident.getType().toString());
         if (accident.getMedicine() != Medicine.UNKNOWN) {
-            generalText.append(", ").append(accident.getMedicineString());
+            generalText.append(", ").append(accident.getMedicine().toString());
         }
         generalText.append("(").append(accident.getDistanceString()).append(")\n").append(accident.getAddress()).append("\n").append(accident.getDescription());
         String msgText = "<b>" + String.valueOf(accident.getMessages().size()) + "</b>";
@@ -95,22 +95,10 @@ public class Rows {
 
     public static View getVolunteerRow(Context context, ViewGroup viewGroup, Volunteer volunteer) {
         //TODO Header
-        String type;
-        switch (volunteer.getStatus()) {
-            case INPLACE:
-                type = "На месте";
-                break;
-            case LEAVE:
-                type = "Уехал";
-                break;
-            case ONWAY:
-            default:
-                type = "Выехал";
-        }
         LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         TableRow       tr = (TableRow) li.inflate(R.layout.volunteer_row, viewGroup, false);
         ((TextView) tr.findViewById(R.id.volunteer)).setText(volunteer.getName());
-        ((TextView) tr.findViewById(R.id.action)).setText(type);
+        ((TextView) tr.findViewById(R.id.action)).setText(volunteer.getStatus().toString());
         ((TextView) tr.findViewById(R.id.time)).setText(Const.timeFormat.format(volunteer.getTime()));
         return tr;
     }

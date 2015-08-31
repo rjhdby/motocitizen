@@ -16,7 +16,7 @@ public class BanRequest extends HTTPClient {
         post.put("passhash", Content.auth.makePassHash());
         post.put("id", String.valueOf(id));
         post.put("user_id", String.valueOf(user_id));
-        post.put("calledMethod", "ban");
+        post.put("calledMethod", Methods.BAN.toCode());
         execute(post);
     }
 

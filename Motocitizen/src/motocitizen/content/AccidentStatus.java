@@ -25,6 +25,10 @@ public enum AccidentStatus {
         }
     }
 
+    public String getStatusCode() {
+        return getStatusCode(this);
+    }
+
     public static String getStatusCode(AccidentStatus status) {
         switch (status) {
             case ENDED:
@@ -39,6 +43,11 @@ public enum AccidentStatus {
             default:
                 return active;
         }
+    }
+
+    @Override
+    public String toString() {
+        return getStatusString(this);
     }
 
     public static String getStatusString(AccidentStatus status) {

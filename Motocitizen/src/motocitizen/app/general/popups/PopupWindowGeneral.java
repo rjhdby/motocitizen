@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.LatLng;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import motocitizen.content.AccidentStatus;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentChangeStateRequest;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
@@ -133,9 +134,9 @@ abstract class PopupWindowGeneral {
             public void onClick(View v) {
                 popupWindow.dismiss();
                 if (point.isEnded()) {
-                    new AccidentChangeStateRequest(null, context, point.getId(), AccidentChangeStateRequest.ACTIVE);
+                    new AccidentChangeStateRequest(null, context, point.getId(), AccidentStatus.ACTIVE.toString());
                 } else {
-                    new AccidentChangeStateRequest(null, context, point.getId(), AccidentChangeStateRequest.ENDED);
+                    new AccidentChangeStateRequest(null, context, point.getId(), AccidentStatus.ENDED.toString());
                 }
             }
         });
@@ -156,9 +157,9 @@ abstract class PopupWindowGeneral {
             public void onClick(View v) {
                 popupWindow.dismiss();
                 if (point.isHidden()) {
-                    new AccidentChangeStateRequest(null, context, point.getId(), AccidentChangeStateRequest.ACTIVE);
+                    new AccidentChangeStateRequest(null, context, point.getId(), AccidentStatus.ACTIVE.toString());
                 } else {
-                    new AccidentChangeStateRequest(null, context, point.getId(), AccidentChangeStateRequest.HIDE);
+                    new AccidentChangeStateRequest(null, context, point.getId(), AccidentStatus.ENDED.toString());
                 }
             }
         });

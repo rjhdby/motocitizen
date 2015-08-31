@@ -20,7 +20,7 @@ public class GCMRegistrationRequest extends HTTPClient {
         post.put("login", Content.auth.getLogin());
         post.put("imei", imei);
         post.put("passhash", Content.auth.makePassHash());
-        post.put("calledMethod", "registerGCM");
+        post.put("calledMethod", Methods.REGISTER_GCM.toCode());
         execute(post);
     }
     @Override

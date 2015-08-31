@@ -11,7 +11,7 @@ public enum Type {
     public static final String steal      = "acc_s";
     public static final String other      = "acc_o";
 
-    public static Type parseType(String type) {
+    public static Type parse(String type) {
         switch (type) {
             case moto_break:
                 return BREAK;
@@ -29,6 +29,10 @@ public enum Type {
             default:
                 return OTHER;
         }
+    }
+
+    public String toCode() {
+        return getTypeCode(this);
     }
 
     public static String getTypeCode(Type type) {
@@ -49,6 +53,11 @@ public enum Type {
             default:
                 return other;
         }
+    }
+
+    @Override
+    public String toString() {
+        return getTypeString(this);
     }
 
     public static String getTypeString(Type type) {

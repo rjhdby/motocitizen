@@ -17,7 +17,7 @@ public class CancelOnWayRequest extends HTTPClient {
         post.put("login", Content.auth.getLogin());
         post.put("passhash", Content.auth.makePassHash());
         post.put("id", String.valueOf(id));
-        post.put("calledMethod", "cancelOnWay");
+        post.put("calledMethod", Methods.CANCEL_ONWAY.toCode());
         execute(post);
     }
 

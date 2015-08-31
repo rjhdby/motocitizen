@@ -25,6 +25,10 @@ public enum Medicine {
         }
     }
 
+    public String toCode(){
+        return getCode(this);
+    }
+
     public static String getCode(Medicine medicine) {
         switch (medicine) {
             case LETHAL:
@@ -39,6 +43,11 @@ public enum Medicine {
             default:
                 return unknown;
         }
+    }
+
+    @Override
+    public String toString() {
+        return getMedicineString(this);
     }
 
     public static String getMedicineString(Medicine medicine) {

@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 import motocitizen.content.Content;
+import motocitizen.content.VolunteerStatus;
 
 public class LeaveRequest extends HTTPClient {
     public LeaveRequest (Context context, int id){
@@ -15,7 +16,7 @@ public class LeaveRequest extends HTTPClient {
         post = new HashMap<>();
         post.put("login", Content.auth.getLogin());
         post.put("id", String.valueOf(id));
-        post.put("calledMethod", "leave");
+        post.put("calledMethod", Methods.LEAVE.toCode());
         execute(post);
     }
     @Override

@@ -15,6 +15,7 @@ import motocitizen.startup.Preferences;
 @SuppressWarnings("unchecked")
 public class AccidentsRequest extends HTTPClient {
     private boolean silent;
+
     public AccidentsRequest(Context context, AsyncTaskCompleteListener listener, boolean silent) {
         this.silent = silent;
         this.context = context;
@@ -22,30 +23,25 @@ public class AccidentsRequest extends HTTPClient {
         post = new HashMap<>();
         Location location = MyLocationManager.getLocation(context);
         myApp = (MyApp) context.getApplicationContext();
-        Preferences prefs = new Preferences(context);
-        String user = Preferences.getLogin();
+        String      user  = Preferences.getLogin();
         if (!user.equals("")) {
             post.put("user", user);
         }
-        /*
-        if (AccidentsGeneral.points.keySet().size() != 0) {
-            post.put("update", "1");
-        }
-        */
         post.put("distance", String.valueOf(Preferences.getVisibleDistance()));
         post.put("lat", String.valueOf(location.getLatitude()));
         post.put("lon", String.valueOf(location.getLongitude()));
         //post.put("hint", context.getString(R.string.request_get_incidents));
-        post.put("calledMethod", "getlist");
+        post.put("calledMethod", Methods.GET_LIST.toCode());
         execute(post);
     }
-    public AccidentsRequest(Context context, AsyncTaskCompleteListener listener){
+
+    public AccidentsRequest(Context context, AsyncTaskCompleteListener listener) {
         new AccidentsRequest(context, listener, false);
     }
 
     @Override
     public boolean error(JSONObject response) {
-        if(silent) return false;
+        if (silent) return false;
         if (!response.has("list")) return true;
         try {
             JSONObject error = response.getJSONArray("list").getJSONObject(0);

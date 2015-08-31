@@ -63,7 +63,7 @@ public class Accident {
             ownerId = json.getInt("owner_id");
             owner = json.getString("owner");
             status = AccidentStatus.parse(json.getString("status"));
-            type = Type.parseType(json.getString("mc_accident_orig_type"));
+            type = Type.parse(json.getString("mc_accident_orig_type"));
             medicine = Medicine.parse(json.getString("mc_accident_orig_med"));
             time = new Date(json.getLong("uxtime") * 1000);
             address = json.getString("address");
@@ -151,10 +151,6 @@ public class Accident {
         return self;
     }
 
-    public String getTypeString() {
-        return Type.getTypeString(getType());
-    }
-
     public Type getType() {
         return type;
     }
@@ -163,20 +159,12 @@ public class Accident {
         this.type = type;
     }
 
-    public String getMedicineString() {
-        return Medicine.getMedicineString(getMedicine());
-    }
-
     public Medicine getMedicine() {
         return medicine;
     }
 
     public void setMedicine(Medicine medicine) {
         this.medicine = medicine;
-    }
-
-    public String getStatusString() {
-        return AccidentStatus.getStatusString(getStatus());
     }
 
     public AccidentStatus getStatus() {

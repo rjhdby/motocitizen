@@ -136,10 +136,10 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
         ActionBar actionBar = getSupportActionBar();
         //TODO Разобраться с nullPointerException и убрать костыль
         if (currentPoint == null || actionBar == null) return;
-        actionBar.setTitle(currentPoint.getTypeString() + ". " + currentPoint.getDistanceString());
+        actionBar.setTitle(currentPoint.getType().toString() + ". " + currentPoint.getDistanceString());
 
-        generalType.setText(currentPoint.getTypeString() + ". " + currentPoint.getMedicineString());
-        generalStatus.setText(currentPoint.getStatusString());
+        generalType.setText(currentPoint.getType().toString() + ". " + currentPoint.getMedicine().toString());
+        generalStatus.setText(currentPoint.getStatus().toString());
         generalTime.setText(Const.timeFormat.format(currentPoint.getTime()));
         generalOwner.setText(currentPoint.getOwner());
         generalAddress.setText("(" + currentPoint.getDistanceString() + ") " + currentPoint.getAddress());
@@ -268,11 +268,11 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
         if (Content.getPoint(accidentID).getStatus() == AccidentStatus.ENDED) {
             //TODO Суперкостыль
             accNewState = AccidentStatus.ACTIVE;
-            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, AccidentChangeStateRequest.ACTIVE);
+            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, AccidentStatus.ACTIVE.toString());
         } else {
             //TODO Суперкостыль
             accNewState = AccidentStatus.ENDED;
-            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, AccidentChangeStateRequest.ENDED);
+            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, AccidentStatus.ENDED.toString());
         }
     }
 
@@ -280,11 +280,11 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
         if (Content.getPoint(accidentID).getStatus() == AccidentStatus.ENDED) {
             //TODO Суперкостыль
             accNewState = AccidentStatus.ACTIVE;
-            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, AccidentChangeStateRequest.ACTIVE);
+            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, AccidentStatus.ACTIVE.toString());
         } else {
             //TODO Суперкостыль
             accNewState = AccidentStatus.ENDED;
-            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, AccidentChangeStateRequest.HIDE);
+            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, AccidentStatus.HIDDEN.toString());
         }
     }
     private void message(String text) {

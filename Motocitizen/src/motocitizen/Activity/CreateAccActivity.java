@@ -102,7 +102,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             accident.put("address", "");
             accident.put("descr", "");
             accident.put("mc_accident_orig_type", Type.getTypeCode(Type.OTHER));
-            accident.put("mc_accident_orig_med", Medicine.getCode(Medicine.UNKNOWN));
+            accident.put("mc_accident_orig_med", Medicine.UNKNOWN.toCode());
             accident.put("messages", new JSONArray("[]"));
             accident.put("history", new JSONArray("[]"));
             accident.put("onway", new JSONArray("[]"));
@@ -144,9 +144,9 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         for (int id : Content.getIds()) {
             motocitizen.accident.Accident point = Content.get(id);
             if (point.isInvisible()) continue;
-            String title = point.getTypeString();
+            String title = point.getType().toString();
             if (point.getMedicine() != Medicine.NO) {
-                title += ", " + point.getMedicineString();
+                title += ", " + point.getMedicine().toString();
             }
             title += ", " + MyUtils.getIntervalFromNowInText(point.getTime()) + " назад";
 
@@ -182,9 +182,9 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
 
     private void refreshDescription() {
         if (accident.getMedicine() == Medicine.UNKNOWN) {
-            ((TextView) findViewById(R.id.mc_create_what)).setText(accident.getTypeString());
+            ((TextView) findViewById(R.id.mc_create_what)).setText(accident.getType().toString());
         } else {
-            ((TextView) findViewById(R.id.mc_create_what)).setText(accident.getTypeString() + ". " + accident.getMedicineString());
+            ((TextView) findViewById(R.id.mc_create_what)).setText(accident.getType().toString() + ". " + accident.getMedicine().toString());
         }
         ((TextView) findViewById(R.id.mc_create_who)).setText(Content.auth.getLogin());
         ((TextView) findViewById(R.id.mc_create_where)).setText(accident.getAddress());

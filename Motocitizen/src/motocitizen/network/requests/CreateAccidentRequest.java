@@ -21,7 +21,7 @@ public class CreateAccidentRequest extends HTTPClient {
         this.listener = listener;
         post = new HashMap<>();
         post.put("status", "acc_status_act");
-        post.put("calledMethod", "createAcc");
+        post.put("calledMethod", Methods.CREATE.toCode());
         post.put("hint", context.getString(R.string.request_create_acc));
         post.put("owner_id", String.valueOf(Content.auth.getid()));
         post.put("login", Content.auth.getLogin());
@@ -38,7 +38,7 @@ public class CreateAccidentRequest extends HTTPClient {
     }
 
     public void setType(Type type) {
-        post.put("type", Type.getTypeCode(type));
+        post.put("type", type.toCode());
     }
 
     public void setAddress(String address) {
@@ -54,7 +54,7 @@ public class CreateAccidentRequest extends HTTPClient {
     }
 
     public void setMed(Medicine medicine) {
-        post.put("med", Medicine.getCode(medicine));
+        post.put("med", medicine.toCode());
     }
 
     public void setStatus(String status) {

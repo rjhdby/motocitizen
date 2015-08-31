@@ -10,23 +10,16 @@ import java.util.HashMap;
 import motocitizen.content.Content;
 
 public class AccidentChangeStateRequest extends HTTPClient {
-    public static final String ACTIVE = "acc_status_act";
-    public static final String ENDED  = "acc_status_end";
-    public static final String HIDE   = "acc_status_hide";
-    private final int    id;
-    private final String state;
 
     public AccidentChangeStateRequest(AsyncTaskCompleteListener listener, Context context, int id, String state) {
         this.listener = listener;
         this.context = context;
-        this.id = id;
-        this.state = state;
         post = new HashMap<>();
         post.put("login", Content.auth.getLogin());
         post.put("passhash", Content.auth.makePassHash());
         post.put("state", state);
         post.put("id", String.valueOf(id));
-        post.put("calledMethod", "changeState");
+        post.put("calledMethod", Methods.CHANGE_STATE.toCode());
         execute(post);
     }
 

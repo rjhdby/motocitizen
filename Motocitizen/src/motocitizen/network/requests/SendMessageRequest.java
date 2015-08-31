@@ -18,7 +18,7 @@ public class SendMessageRequest  extends HTTPClient {
         post.put("passhash", Content.auth.makePassHash());
         post.put("id", String.valueOf(id));
         post.put("text", text);
-        post.put("calledMethod", "message");
+        post.put("calledMethod", Methods.MESSAGE.toCode());
         execute(post);
     }
     @Override

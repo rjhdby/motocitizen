@@ -17,7 +17,7 @@ class OSMAccOverlay {
         for (int id : Content.getPoints().keySet()) {
             motocitizen.accident.Accident p = Content.getPoint(id);
             if (p.getLocation() != null) {
-                acc = new OverlayItem(p.getTypeString(), p.getAddress(), new GeoPoint(p.getLocation()));
+                acc = new OverlayItem(p.getType().toString(), p.getAddress(), new GeoPoint(p.getLocation()));
                 //acc.setMarker(AccidentTypes.getDrawable(context, p.getType()));
                 items.add(acc);
             }

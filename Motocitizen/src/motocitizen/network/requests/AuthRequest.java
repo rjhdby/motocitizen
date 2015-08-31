@@ -16,7 +16,7 @@ public class AuthRequest extends HTTPClient {
         String ident = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
         post = new HashMap<>();
         post.put("ident", ident);
-        post.put("calledMethod", "auth");
+        post.put("calledMethod", Methods.AUTH.toCode());
     }
 
     public void setLogin(String login) {

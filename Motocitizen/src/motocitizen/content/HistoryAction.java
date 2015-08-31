@@ -15,6 +15,15 @@ public enum HistoryAction {
     public static final String finish  = "finish_mc_acc";
     public static final String other   = "other";
 
+    @Override
+    public String toString() {
+        return getActionString(this);
+    }
+
+    public String toCode() {
+        return getCode(this);
+    }
+
     public static HistoryAction parse(String action) {
         switch (action) {
             case create:
