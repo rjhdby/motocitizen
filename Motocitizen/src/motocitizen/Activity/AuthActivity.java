@@ -15,7 +15,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import motocitizen.MyApp;
 import motocitizen.app.general.user.Role;
 import motocitizen.content.Content;
 import motocitizen.main.R;
@@ -26,13 +25,11 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
 
     private Button logoutBtn;
     private Button loginBtn;
-    @SuppressWarnings("FieldCanBeLocal")
     private Button cancelBtn;
 
-    private EditText    login;
-    private EditText    password;
-    private CheckBox    anonim;
-    private Preferences prefs;
+    private EditText login;
+    private EditText password;
+    private CheckBox anonim;
 
     private static Context context;
 
@@ -46,10 +43,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.auth);
 
-        MyApp myApp = (MyApp) getApplicationContext();
-
         context = this;
-        prefs = myApp.getPreferences();
         login = (EditText) findViewById(R.id.mc_auth_login);
         login.addTextChangedListener(new TextWatcher() {
 
