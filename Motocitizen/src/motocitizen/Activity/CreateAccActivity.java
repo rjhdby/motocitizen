@@ -97,11 +97,11 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             accident.put("lon", initialLocation.getLongitude());
             accident.put("owner_id", Preferences.getUserId());
             accident.put("owner", Preferences.getUserName());
-            accident.put("status", AccidentStatus.getStatusCode(AccidentStatus.ACTIVE));
+            accident.put("status", AccidentStatus.ACTIVE.toCode());
             accident.put("uxtime", String.valueOf(System.currentTimeMillis() / 1000L));
             accident.put("address", "");
             accident.put("descr", "");
-            accident.put("mc_accident_orig_type", Type.getTypeCode(Type.OTHER));
+            accident.put("mc_accident_orig_type", Type.OTHER.toCode());
             accident.put("mc_accident_orig_med", Medicine.UNKNOWN.toCode());
             accident.put("messages", new JSONArray("[]"));
             accident.put("history", new JSONArray("[]"));

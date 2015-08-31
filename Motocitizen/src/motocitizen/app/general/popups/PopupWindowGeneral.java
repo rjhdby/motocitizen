@@ -159,7 +159,7 @@ abstract class PopupWindowGeneral {
                 if (point.isHidden()) {
                     new AccidentChangeStateRequest(null, context, point.getId(), AccidentStatus.ACTIVE.toString());
                 } else {
-                    new AccidentChangeStateRequest(null, context, point.getId(), AccidentStatus.ENDED.toString());
+                    new AccidentChangeStateRequest(null, context, point.getId(), AccidentStatus.HIDDEN.toString());
                 }
             }
         });
