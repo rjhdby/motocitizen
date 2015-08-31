@@ -86,7 +86,7 @@ public class Content {
         tv.setGravity(Gravity.CENTER);
         tv.setBackgroundColor(Color.GRAY);
         fl.setBackgroundColor(Color.GRAY);
-        fl.addView(tv, Const.lp);
+        fl.addView(tv, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         return fl;
     }
 

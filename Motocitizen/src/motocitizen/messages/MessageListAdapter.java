@@ -41,10 +41,10 @@ public class MessageListAdapter extends ArrayAdapter<Message> {
 
         // get widgets from the view
         //TextView columnDate = (TextView) view.findViewById(R.id.columnDate);
-        //columnDate.setText(Const.timeFormat.format(record.time.getTime()));
+        //columnDate.setText(Const.TIME_FORMAT.format(record.time.getTime()));
 
         TextView info = (TextView) view.findViewById(R.id.info);
-        info.setText(Const.timeFormat.format(record.getTime()) + " - " + record.getOwner());
+        info.setText(Const.TIME_FORMAT.format(record.getTime()) + " - " + record.getOwner());
 
         TextView text = (TextView) view.findViewById(R.id.text);
         text.setText(record.getText());

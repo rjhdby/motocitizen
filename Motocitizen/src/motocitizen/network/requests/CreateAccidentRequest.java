@@ -50,7 +50,7 @@ public class CreateAccidentRequest extends HTTPClient {
     }
 
     public void setCreated(Date created) {
-        post.put("created", Const.dateFormat.format(created));
+        post.put("created", Const.DATE_FORMAT.format(created));
     }
 
     public void setMed(Medicine medicine) {

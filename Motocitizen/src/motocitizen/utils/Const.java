@@ -15,48 +15,21 @@ import java.util.Locale;
 import java.util.Map;
 
 public class Const {
-    public static final SimpleDateFormat fullTimeFormat = new SimpleDateFormat("dd.MM.yy HH:mm", Locale.getDefault());
-    public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-    public static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-    public static final TableRow.LayoutParams trlp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
-    public static final LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-    public static Map<String, String> med_text, status_text, type_text;
-    public final static int EQUATOR = 20038;
+    public static final SimpleDateFormat FULL_TIME_FORMAT = new SimpleDateFormat("dd.MM.yy HH:mm", Locale.getDefault());
+    public static final SimpleDateFormat DATE_FORMAT      = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+    public static final SimpleDateFormat TIME_FORMAT      = new SimpleDateFormat("HH:mm", Locale.getDefault());
+    public final static int              EQUATOR          = 20038;
 
-    @SuppressWarnings("deprecation")
-    public Const() {
-        med_text = new HashMap<>();
-        status_text = new HashMap<>();
-        type_text = new HashMap<>();
-        med_text.put("mc_m_d", "Летальный");
-        med_text.put("mc_m_h", "Тяжелые травмы");
-        med_text.put("mc_m_l", "Легкие травмы");
-        med_text.put("mc_m_wo", "Без травм");
-        med_text.put("mc_m_na", "");
-
-        status_text.put("acc_status_act", "Активно");
-        status_text.put("acc_status_end", "Отбой");
-        status_text.put("acc_status_hide", "Скрыто");
-        status_text.put("acc_status_war", "Конфликт");
-
-        type_text.put("acc_b", "Поломка");
-        type_text.put("acc_o", "Прочее");
-        type_text.put("acc_m", "Один участник");
-        type_text.put("acc_m_a", "ДТП мот/авто");
-        type_text.put("acc_m_m", "ДТП мот/мот");
-        type_text.put("acc_m_p", "Наезд на пешехода");
-        type_text.put("acc_s", "Угон");
-    }
-
-    public static float getDP(Context context){
+    public static float getDP(Context context) {
         return context.getResources().getDisplayMetrics().density;
     }
-    public static int getHeight(Context context){
+
+    public static int getHeight(Context context) {
         Display display = ((Activity) context).getWindowManager().getDefaultDisplay();
         return display.getHeight();
     }
 
-    public static int getWidth(Context context){
+    public static int getWidth(Context context) {
         Display display = ((Activity) context).getWindowManager().getDefaultDisplay();
         return display.getWidth();
     }
@@ -73,10 +46,5 @@ public class Const {
         int color = ta.getIndex(1);
         ta.recycle();
         return color;
-    }
-
-    public static LayoutInflater getLayoutInflater(Context context){
-        Activity act = (Activity) context;
-        return (LayoutInflater) act.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 }

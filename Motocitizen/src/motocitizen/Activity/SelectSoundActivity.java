@@ -23,7 +23,7 @@ import motocitizen.MyApp;
 import motocitizen.main.R;
 import motocitizen.startup.Preferences;
 import motocitizen.utils.Const;
-import motocitizen.utils.NewID;
+import motocitizen.utils.MyUtils;
 
 public class SelectSoundActivity extends ActionBarActivity {
     private static Map<Integer, Uri> notifications;
@@ -88,7 +88,7 @@ public class SelectSoundActivity extends ActionBarActivity {
     private void inflateRow(final Context context, ViewGroup viewGroup, int currentPosition) {
         LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         TableRow       tr = (TableRow) li.inflate(R.layout.sound_row, viewGroup, false);
-        tr.setId(NewID.id());
+        tr.setId(MyUtils.newId());
         ((TextView) tr.findViewById(R.id.sound)).setText(rm.getRingtone(currentPosition).getTitle(context));
         notifications.put(tr.getId(), rm.getRingtoneUri(currentPosition));
         tr.setOnClickListener(new Button.OnClickListener() {

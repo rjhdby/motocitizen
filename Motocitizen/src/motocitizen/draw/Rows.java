@@ -17,13 +17,12 @@ import motocitizen.accident.Accident;
 import motocitizen.accident.History;
 import motocitizen.accident.Message;
 import motocitizen.accident.Volunteer;
-import motocitizen.content.Content;
 import motocitizen.app.general.popups.AccidentListPopup;
+import motocitizen.content.Content;
 import motocitizen.content.Medicine;
 import motocitizen.main.R;
 import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
-import motocitizen.utils.NewID;
 
 public class Rows {
 
@@ -66,7 +65,7 @@ public class Rows {
         ((TextView) accRow.findViewById(R.id.accident_row_time)).setText(MyUtils.getIntervalFromNowInText(accident.getTime()));
         ((TextView) accRow.findViewById(R.id.accident_row_unread)).setText(Html.fromHtml(msgText));
 
-        int rowId = NewID.id();
+        int rowId = MyUtils.newId();
         accident.setRowId(rowId);
         accRow.setId(rowId);
         accRow.setOnClickListener(new View.OnClickListener() {
@@ -99,7 +98,7 @@ public class Rows {
         TableRow       tr = (TableRow) li.inflate(R.layout.volunteer_row, viewGroup, false);
         ((TextView) tr.findViewById(R.id.volunteer)).setText(volunteer.getName());
         ((TextView) tr.findViewById(R.id.action)).setText(volunteer.getStatus().toString());
-        ((TextView) tr.findViewById(R.id.time)).setText(Const.timeFormat.format(volunteer.getTime()));
+        ((TextView) tr.findViewById(R.id.time)).setText(Const.TIME_FORMAT.format(volunteer.getTime()));
         return tr;
     }
 
@@ -142,7 +141,7 @@ public class Rows {
             messageText.append("\n");
         }
         messageText.append(message.getText());
-        String timeText = Const.timeFormat.format(message.getTime());
+        String timeText = Const.TIME_FORMAT.format(message.getTime());
 
         ((TextView) tr.findViewById(R.id.time)).setText(timeText);
         messageText.append(" \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0");

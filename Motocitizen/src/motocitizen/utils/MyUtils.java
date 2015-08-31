@@ -2,34 +2,19 @@ package motocitizen.utils;
 
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
+import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MyUtils {
-    public static boolean isInteger(String s) {
-        return isInteger(s, 10);
-    }
-
-    @SuppressWarnings({"SameParameterValue", "WeakerAccess"})
-    public static boolean isInteger(String s, int radix) {
-        if (s == null) return false;
-        if (s.isEmpty()) return false;
-        for (int i = 0; i < s.length(); i++) {
-            if (i == 0 && s.charAt(i) == '-') {
-                if (s.length() == 1) return false;
-                else continue;
-            }
-            if (Character.digit(s.charAt(i), radix) < 0) return false;
-        }
-        return true;
-    }
-
     public static LatLng LocationToLatLng(Location location) {
         return new LatLng(location.getLatitude(), location.getLongitude());
     }
@@ -56,7 +41,6 @@ public class MyUtils {
         return getIntervalFromNowInText(date, false);
     }
 
-    @SuppressWarnings({"SameParameterValue", "WeakerAccess"})
     public static String getIntervalFromNowInText(Date date, boolean full) {
         StringBuilder out     = new StringBuilder();
         Date          now     = new Date();
@@ -92,17 +76,30 @@ public class MyUtils {
         return out.toString();
     }
 
-    public static String getStringTime(Date date) {
-        return getStringTime(date, false);
-    }
-
     public static String getStringTime(Date date, boolean full) {
         String out;
         if (full) {
-            out = Const.fullTimeFormat.format(date);
+            out = Const.FULL_TIME_FORMAT.format(date);
         } else {
-            out = Const.timeFormat.format(date);
+            out = Const.TIME_FORMAT.format(date);
         }
         return out;
+    }
+
+    public static int newId() {
+        final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
+        if (Build.VERSION.SDK_INT < 17) {
+            for (; ; ) {
+                final int result = sNextGeneratedId.get();
+                int newValue = result + 1;
+                if (newValue > 0x00FFFFFF)
+                    newValue = 1;
+                if (sNextGeneratedId.compareAndSet(result, newValue)) {
+                    return result;
+                }
+            }
+        } else {
+            return View.generateViewId();
+        }
     }
 }

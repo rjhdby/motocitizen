@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Gravity;
@@ -22,7 +21,6 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-import motocitizen.MyApp;
 import motocitizen.accident.Accident;
 import motocitizen.content.Content;
 import motocitizen.app.general.popups.AccidentListPopup;
@@ -140,7 +138,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
 
         generalType.setText(currentPoint.getType().toString() + ". " + currentPoint.getMedicine().toString());
         generalStatus.setText(currentPoint.getStatus().toString());
-        generalTime.setText(Const.timeFormat.format(currentPoint.getTime()));
+        generalTime.setText(Const.TIME_FORMAT.format(currentPoint.getTime()));
         generalOwner.setText(currentPoint.getOwner());
         generalAddress.setText("(" + currentPoint.getDistanceString() + ") " + currentPoint.getAddress());
         generalDescription.setText(currentPoint.getDescription());

@@ -188,7 +188,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         }
         ((TextView) findViewById(R.id.mc_create_who)).setText(Content.auth.getLogin());
         ((TextView) findViewById(R.id.mc_create_where)).setText(accident.getAddress());
-        ((TextView) findViewById(R.id.mc_create_when)).setText(Const.dateFormat.format(accident.getTime()));
+        ((TextView) findViewById(R.id.mc_create_when)).setText(Const.DATE_FORMAT.format(accident.getTime()));
     }
 
     private void setupListener() {

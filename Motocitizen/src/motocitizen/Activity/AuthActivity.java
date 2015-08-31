@@ -16,12 +16,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import motocitizen.MyApp;
-import motocitizen.content.Content;
 import motocitizen.app.general.user.Role;
+import motocitizen.content.Content;
 import motocitizen.main.R;
 import motocitizen.startup.Preferences;
 import motocitizen.startup.Startup;
-import motocitizen.utils.Text;
 
 public class AuthActivity extends ActionBarActivity/* implements View.OnClickListener*/ {
 
@@ -118,7 +117,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
                 // Анонимный вход
                 if (anonim.isChecked()) {
                     Preferences.setAnonim(true);
-                    Text.set(context, R.id.auth_error_helper, "");
+                    ((TextView) findViewById(R.id.auth_error_helper)).setText("");
                     finish();
                 } else { // Авторизация
                     if (Startup.isOnline(context)) {
@@ -148,8 +147,8 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
         login.setText(Preferences.getLogin());
         password.setText(Preferences.getPassword());
         anonim.setChecked(Preferences.isAnonim());
-        View accListYesterdayLine = findViewById(R.id.accListYesterdayLine);
-        TextView roleView = (TextView)findViewById(R.id.role);
+        View     accListYesterdayLine = findViewById(R.id.accListYesterdayLine);
+        TextView roleView             = (TextView) findViewById(R.id.role);
 
         //Авторизованы?
         if (Content.auth.isAuthorized()) {
