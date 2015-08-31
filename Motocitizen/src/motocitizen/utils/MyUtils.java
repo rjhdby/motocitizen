@@ -52,12 +52,21 @@ public class MyUtils {
         minutes -= hours * 60;
         int min = minutes % 10;
         if (full) {
-            if (hours == 1 || hours == 21) {
-                out.append(String.valueOf(hours)).append(" час ");
-            } else if (hours == 2 || hours == 3 || hours == 4 || hours == 22 || hours == 23 || hours == 24) {
-                out.append(String.valueOf(hours)).append(" часа ");
-            } else if (hours > 4 && hours < 21) {
-                out.append(String.valueOf(hours)).append(" часов ");
+            switch(hours){
+                case 1:
+                case 21:
+                    out.append(String.valueOf(hours)).append(" час ");
+                    break;
+                case 2:
+                case 3:
+                case 4:
+                case 22:
+                case 23:
+                case 24:
+                    out.append(String.valueOf(hours)).append(" часа ");
+                    break;
+                default:
+                    out.append(String.valueOf(hours)).append(" часов ");
             }
             if (minutes > 10 && minutes < 20) {
                 out.append(String.valueOf(minutes)).append(" минут");
