@@ -10,7 +10,8 @@ import motocitizen.utils.Const;
 public class Strings {
     public static String getAccidentTextToCopy(Accident accident) {
         StringBuilder res = new StringBuilder();
-        res.append(Const.DATE_FORMAT.format(accident.getTime())).append(". ");
+        res.append(Const.DATE_FORMAT.format(accident.getTime())).append(" ");
+        res.append(accident.getOwner()).append( ": " );
         res.append(accident.getType().toString()).append(". ");
         if (accident.getMedicine() != Medicine.UNKNOWN) {
             res.append(accident.getMedicine().toString()).append(". ");
@@ -19,5 +20,4 @@ public class Strings {
         res.append(accident.getDescription()).append(".");
         return res.toString();
     }
-
 }
