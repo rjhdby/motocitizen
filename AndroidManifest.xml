@@ -124,6 +124,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="motocitizen.startup.Startup" />
         </activity>
+        <activity
+            android:name="motocitizen.Activity.BusinessCardActivity"
+            android:label="@string/title_activity_business_card"
+            android:parentActivityName="motocitizen.Activity.AboutActivity"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="motocitizen.Activity.AboutActivity" />
+        </activity>
     </application>
 
 </manifest>
