@@ -32,7 +32,6 @@ import motocitizen.main.R;
 import motocitizen.network.requests.AccidentsRequest;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.startup.Startup;
-import motocitizen.utils.Const;
 
 public class Content {
     public static Auth auth;
@@ -101,10 +100,7 @@ public class Content {
     }
 
     public static void redraw(Context context) {
-        ViewGroup view;
-        if (context instanceof MyApp)
-            view = (ViewGroup) ((Activity) MyApp.getAppContext()).findViewById(R.id.accListContent);
-        else view = (ViewGroup) ((Activity) context).findViewById(R.id.accListContent);
+        ViewGroup view = (ViewGroup) ((Activity) context).findViewById(R.id.accListContent);
 
         if (view == null) return;
         view.removeAllViews();

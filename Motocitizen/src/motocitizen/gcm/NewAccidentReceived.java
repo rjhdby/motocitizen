@@ -25,7 +25,6 @@ import motocitizen.startup.Startup;
 
 public class NewAccidentReceived extends IntentService {
     private static NotificationManager notificationManager;
-    private        Preferences         prefs;
 
     public NewAccidentReceived() {
         super("Intent");
@@ -41,18 +40,16 @@ public class NewAccidentReceived extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        prefs = new Preferences(this);
         if (Preferences.getDoNotDisturb()) {
             GCMBroadcastReceiver.completeWakefulIntent(intent);
             return;
         }
-        Context context = getApplicationContext();
         Bundle  extras  = intent.getExtras();
         try {
             if (!Content.isInitialized()) {
                 new Content(this);
             }
-            Content.update(getApplication().getApplicationContext());
+            Content.update(this);
         } catch (Exception e) {
             e.printStackTrace();
         }
