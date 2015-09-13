@@ -240,7 +240,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 break;
             case R.id.ADDRESS:
                 accident.setLatLng(map.getCameraPosition().target);
-                accident.setAddress((new MyApp()).getAddres(accident.getLocation()));
+                accident.setAddress(((MyApp) this.getApplicationContext()).getAddres(accident.getLocation()));
                 setUpScreen(TYPE);
                 break;
             case R.id.CREATE:
