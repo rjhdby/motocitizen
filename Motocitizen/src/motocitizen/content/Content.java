@@ -177,6 +177,7 @@ public class Content {
         public void onTaskComplete(JSONObject result) {
             if (!result.has("error")) parseJSON(context, result);
             Content.redraw(context);
+            Startup.map.placeAccidents(context);
         }
     }
 }
