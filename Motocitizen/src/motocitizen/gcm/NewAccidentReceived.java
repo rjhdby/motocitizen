@@ -40,11 +40,12 @@ public class NewAccidentReceived extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        if (Preferences.getDoNotDisturb()) {
+        if ((new Preferences(this)).getDoNotDisturb()) {
             GCMBroadcastReceiver.completeWakefulIntent(intent);
             return;
         }
-        Bundle  extras  = intent.getExtras();
+        Bundle extras = intent.getExtras();
+        /*
         try {
             if (!Content.isInitialized()) {
                 new Content(this);
@@ -53,6 +54,7 @@ public class NewAccidentReceived extends IntentService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        */
 /*
         int    id;
         double lat, lng;
