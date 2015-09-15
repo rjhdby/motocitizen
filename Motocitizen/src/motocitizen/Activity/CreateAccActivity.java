@@ -101,11 +101,11 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             accident.put("uxtime", String.valueOf(System.currentTimeMillis() / 1000L));
             accident.put("address", "");
             accident.put("descr", "");
-            accident.put("mc_accident_orig_type", Type.OTHER.toCode());
-            accident.put("mc_accident_orig_med", Medicine.UNKNOWN.toCode());
-            accident.put("messages", new JSONArray("[]"));
-            accident.put("history", new JSONArray("[]"));
-            accident.put("onway", new JSONArray("[]"));
+            accident.put("type", Type.OTHER.toCode());
+            accident.put("med", Medicine.UNKNOWN.toCode());
+            accident.put("m", new JSONArray("[]"));
+            accident.put("h", new JSONArray("[]"));
+            accident.put("v", new JSONArray("[]"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
