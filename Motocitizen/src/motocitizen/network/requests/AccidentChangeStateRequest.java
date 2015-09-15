@@ -19,7 +19,7 @@ public class AccidentChangeStateRequest extends HTTPClient {
         post.put("passhash", Content.auth.makePassHash());
         post.put("state", state);
         post.put("id", String.valueOf(id));
-        post.put("calledMethod", Methods.CHANGE_STATE.toCode());
+        post.put("m", Methods.CHANGE_STATE.toCode());
         execute(post);
     }
 
