@@ -6,7 +6,7 @@ package motocitizen.network.requests;
 public enum Methods {
     AUTH, GET_LIST, BAN, ONWAY, CANCEL_ONWAY, INPLACE, LEAVE, MESSAGE, CREATE, REGISTER_GCM, CHANGE_STATE;
     final static String auth        = "auth";
-    final static String getList     = "getlist";
+    final static String getList     = "g";
     final static String ban         = "ban";
     final static String onway       = "onway";
     final static String cancelOnway = "cancelOnWay";
@@ -45,7 +45,6 @@ public enum Methods {
                 return changeState;
             default:
                 return unknown;
-
         }
     }
 }

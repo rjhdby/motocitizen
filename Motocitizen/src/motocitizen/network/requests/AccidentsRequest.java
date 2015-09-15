@@ -31,7 +31,10 @@ public class AccidentsRequest extends HTTPClient {
         post.put("lat", String.valueOf(location.getLatitude()));
         post.put("lon", String.valueOf(location.getLongitude()));
         //post.put("hint", context.getString(R.string.request_get_incidents));
+        /*
         post.put("calledMethod", Methods.GET_LIST.toCode());
+        */
+        post.put("m", Methods.GET_LIST.toCode());
         execute(post);
     }
 
