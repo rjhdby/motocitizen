@@ -63,8 +63,8 @@ public class Accident {
             ownerId = json.getInt("owner_id");
             owner = json.getString("owner");
             status = AccidentStatus.parse(json.getString("status"));
-            type = Type.parse(json.getString("mc_accident_orig_type"));
-            medicine = Medicine.parse(json.getString("mc_accident_orig_med"));
+            type = Type.parse(json.getString("type"));
+            medicine = Medicine.parse(json.getString("med"));
             time = new Date(json.getLong("uxtime") * 1000);
             address = json.getString("address");
             description = json.getString("descr");
@@ -131,8 +131,8 @@ public class Accident {
             temp.put("uxtime", String.valueOf(System.currentTimeMillis() / 1000L)); //TODO Fuckup
             temp.put("address", extras.getString("address"));
             temp.put("descr", extras.getString("descr"));
-            temp.put("mc_accident_orig_type", extras.getString("mc_accident_orig_type"));
-            temp.put("mc_accident_orig_med", extras.getString("mc_accident_orig_med"));
+            temp.put("type", extras.getString("mc_accident_orig_type"));
+            temp.put("med", extras.getString("mc_accident_orig_med"));
             temp.put("messages", new JSONArray("[]"));
             temp.put("history", new JSONArray("[]"));
             temp.put("onway", new JSONArray("[]"));

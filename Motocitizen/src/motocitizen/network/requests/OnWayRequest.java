@@ -18,7 +18,7 @@ public class OnWayRequest extends HTTPClient {
         post.put("login", Content.auth.getLogin());
         post.put("passhash", Content.auth.makePassHash());
         post.put("id", String.valueOf(id));
-        post.put("calledMethod", Methods.ONWAY.toCode());
+        post.put("m", Methods.ONWAY.toCode());
         execute(post);
     }
 

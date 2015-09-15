@@ -16,7 +16,7 @@ public class LeaveRequest extends HTTPClient {
         post = new HashMap<>();
         post.put("login", Content.auth.getLogin());
         post.put("id", String.valueOf(id));
-        post.put("calledMethod", Methods.LEAVE.toCode());
+        post.put("m", Methods.LEAVE.toCode());
         execute(post);
     }
     @Override
