@@ -47,7 +47,7 @@ public class MyApp extends Application {
 
     public String getAddres(Location location) {
         if (geocoder == null) {
-            geocoder = new Geocoder(getApplicationContext());
+            geocoder = new Geocoder(this);
         }
         StringBuilder res  = new StringBuilder();
         List<Address> list = new ArrayList<>();
