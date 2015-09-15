@@ -30,7 +30,7 @@ import static motocitizen.content.AccidentStatus.ENDED;
 import static motocitizen.content.AccidentStatus.HIDDEN;
 
 public class Accident {
-    private static final String[] prerequisites = {"id", "owner_id", "owner", "status", "uxtime", "address", "descr", "lat", "lon", "mc_accident_orig_type", "mc_accident_orig_med", "messages", "history", "onway"};
+    private static final String[] prerequisites = {"id", "owner_id", "owner", "status", "uxtime", "address", "descr", "lat", "lon", "type", "med", "m", "h", "v"};
     Context context;
     Integer rowId;
     private int                     id;
@@ -71,9 +71,9 @@ public class Accident {
             lat = json.getDouble("lat");
             lon = json.getDouble("lon");
             self = ownerId == Preferences.getUserId();
-            parseMessages(json.getJSONArray("messages"));
-            parseVolunteers(json.getJSONArray("onway"));
-            parseHistory(json.getJSONArray("history"));
+            parseMessages(json.getJSONArray("m"));
+            parseVolunteers(json.getJSONArray("v"));
+            parseHistory(json.getJSONArray("h"));
             favorite = Content.favorites.contains(id);
         } catch (Exception e) {
             e.printStackTrace();
@@ -133,9 +133,9 @@ public class Accident {
             temp.put("descr", extras.getString("descr"));
             temp.put("type", extras.getString("mc_accident_orig_type"));
             temp.put("med", extras.getString("mc_accident_orig_med"));
-            temp.put("messages", new JSONArray("[]"));
-            temp.put("history", new JSONArray("[]"));
-            temp.put("onway", new JSONArray("[]"));
+            temp.put("m", new JSONArray("[]"));
+            temp.put("h", new JSONArray("[]"));
+            temp.put("v", new JSONArray("[]"));
             update(temp);
         } catch (JSONException e) {
             e.printStackTrace();
