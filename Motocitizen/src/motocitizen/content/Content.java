@@ -70,7 +70,7 @@ public class Content {
         if (inPlace != 0) {
             //TODO setLeave
         }
-        Content.inPlace = inPlace;
+        Content.inPlace = id;
     }
 
     public static void update(Context context, AsyncTaskCompleteListener listener) {

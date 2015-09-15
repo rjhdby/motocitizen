@@ -159,6 +159,7 @@ public class MyLocationManager {
             }
         }
         for (int accId : Content.getPoints().keySet()) {
+            if(accId == currentInplace) continue;
             if (isArrived(location, accId)) {
                 Content.setInPlace(accId);
                 new InplaceRequest(context, accId);
