@@ -54,17 +54,14 @@ public class BounceScrollView extends ScrollView {
 
     @Override
     protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX, int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
+        if(Startup.inTransaction) return true;
         if (scrollY < -mMaxYOverscrollDistance * 0.9 && !isRequestedUpdate) {
             isRequestedUpdate = true;
         }
         if (scrollY > -mMaxYOverscrollDistance * 0.1 && isRequestedUpdate) {
             if (Startup.isOnline(context)) {
                 isRequestedUpdate = false;
-                if (Startup.mMenu != null) {
-                    MenuItem refreshItem = Startup.mMenu.findItem(R.id.action_refresh);
-                    refreshAnimation = new RefreshAnimation(refreshItem);
-                    refreshAnimation.onRefreshBeginning();
-                }
+                Startup.startRefreshAnimation();
                 Content.update(context, new AccidentsRequestCallback());
                 new AccidentsRequest(context, new AccidentsRequestCallback());
             } else {
@@ -91,12 +88,8 @@ public class BounceScrollView extends ScrollView {
             } else {
                 Content.parseJSON(context, result);
                 Content.redraw(context);
-            } if (Startup.mMenu != null) {
-                MenuItem item = Startup.mMenu.findItem(R.id.action_refresh);
-                if (item.getActionView() != null) {
-                    refreshAnimation.onRefreshComplete();
-                }
             }
+            Startup.stopRefreshAnimation();
         }
     }
 }

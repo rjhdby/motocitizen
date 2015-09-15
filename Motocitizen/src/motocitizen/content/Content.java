@@ -99,6 +99,10 @@ public class Content {
         new AccidentsRequest(context, new AccidentsRequestCallback(context), true);
     }
 
+    public static void update(Context context, AccidentsRequestCallback listener) {
+        new AccidentsRequest(context, listener, true);
+    }
+
     public static void redraw(Context context) {
         ViewGroup view = (ViewGroup) ((Activity) context).findViewById(R.id.accListContent);
 

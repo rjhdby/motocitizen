@@ -44,6 +44,21 @@
                 android:src="@drawable/gear" />
         </LinearLayout>
     -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#f000">
+    </LinearLayout>
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:visibility="invisible"
+        android:indeterminate="true"/>
+
     <FrameLayout
         android:id="@+id/tab_content"
         android:layout_width="match_parent"

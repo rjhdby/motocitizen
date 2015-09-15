@@ -21,8 +21,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
+import org.json.JSONObject;
 
 import motocitizen.Activity.AboutActivity;
 import motocitizen.Activity.CreateAccActivity;
@@ -37,6 +40,7 @@ import motocitizen.main.R;
 import motocitizen.maps.MyMapManager;
 import motocitizen.maps.google.MyGoogleMapManager;
 import motocitizen.maps.osm.MyOSMMapManager;
+import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.utils.Const;
 import motocitizen.utils.RefreshAnimation;
 
@@ -56,6 +60,8 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     private RadioGroup  mainTabsGroup;
     private View        accListView;
     private View        mapContainer;
+    static  ProgressBar progressBar;
+    public static boolean                            inTransaction    = false;
     private final RadioGroup.OnCheckedChangeListener mainTabsListener = new RadioGroup.OnCheckedChangeListener() {
         public void onCheckedChanged(RadioGroup group, int checkedId) {
             int id = group.getCheckedRadioButtonId();
@@ -191,14 +197,14 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         Integer toMap     = intent.getIntExtra("toMap", 0);
         Integer toDetails = intent.getIntExtra("toDetails", 0);
         context = this;
-
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
         if (Role.isStandart()) {
             createAccButton.setVisibility(View.VISIBLE);
         } else {
             createAccButton.setVisibility(View.INVISIBLE);
         }
         Content.redraw(this);
-        getAccidents(true);
+        getAccidents();
         if (toMap != 0) {
             intent.removeExtra("toMap");
             mainTabsGroup.check(R.id.tab_map_button);
@@ -211,13 +217,10 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         }
     }
 
-    private void getAccidents(boolean silent) {
+    private void getAccidents() {
         if (Startup.isOnline(context)) {
-            if (mMenu != null) {
-                refreshAnimation.onRefreshBeginning();
-            }
-            //TODO Оставить одно
-            Content.update(this);
+            startRefreshAnimation();
+            Content.update(this, new AccidentsRequestCallback(this));
         } else {
             message(getString(R.string.inet_not_available));
         }
@@ -254,8 +257,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         mMenu = menu;
         MenuItem itemMenuNotDisturb = mMenu.findItem(R.id.do_not_disturb);
         MenuItem refreshItem        = mMenu.findItem(R.id.action_refresh);
-        refreshAnimation = new RefreshAnimation(refreshItem);
-        refreshAnimation.onRefreshBeginning();
+        if (inTransaction) refreshItem.setVisible(false);
         if (Preferences.getDoNotDisturb())
             itemMenuNotDisturb.setIcon(R.drawable.ic_lock_ringer_off_alpha);
         else itemMenuNotDisturb.setIcon(R.drawable.ic_lock_ringer_on_alpha);
@@ -303,10 +305,6 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         return false;
     }
 
-    private void getAccidents() {
-        getAccidents(false);
-    }
-
     @Override
     public void onClick(View v) {
         int id = v.getId();
@@ -326,9 +324,36 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         }
     }
 
-    public void resetUpdating() {
+    private static class AccidentsRequestCallback implements AsyncTaskCompleteListener {
+        private Context context;
+
+        public AccidentsRequestCallback(final Context context) {
+            this.context = context;
+        }
+
+        public void onTaskComplete(JSONObject result) {
+            stopRefreshAnimation();
+            if (!result.has("error")) Content.parseJSON(context, result);
+            Content.redraw(context);
+            Startup.map.placeAccidents(context);
+        }
+    }
+
+    public static void startRefreshAnimation() {
+        progressBar.setVisibility(View.VISIBLE);
+        inTransaction = true;
         if (mMenu != null) {
-            refreshAnimation.onRefreshComplete();
+            MenuItem refreshItem = mMenu.findItem(R.id.action_refresh);
+            refreshItem.setVisible(false);
+        }
+    }
+
+    public static void stopRefreshAnimation() {
+        progressBar.setVisibility(View.INVISIBLE);
+        inTransaction = false;
+        if (mMenu != null) {
+            MenuItem refreshItem = mMenu.findItem(R.id.action_refresh);
+            refreshItem.setVisible(true);
         }
     }
 }
