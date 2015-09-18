@@ -118,6 +118,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         GoogleMap          map             = mapFragment.getMap();
 
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(accident.getLocation()), 16));
+        map.setMyLocationEnabled(true);
         map.getUiSettings().setMyLocationButtonEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
         if (!Role.isModerator()) {
