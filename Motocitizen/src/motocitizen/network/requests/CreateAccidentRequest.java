@@ -37,6 +37,10 @@ public class CreateAccidentRequest extends HTTPClient {
         post.put("lon", String.valueOf(location.getLongitude()));
     }
 
+    public void setForStat() {
+        post.put("stat", "1");
+    }
+
     public void setType(Type type) {
         post.put("type", type.toCode());
     }

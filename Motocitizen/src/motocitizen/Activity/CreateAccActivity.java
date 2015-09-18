@@ -10,6 +10,7 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,9 +32,9 @@ import java.util.Date;
 import motocitizen.MyApp;
 import motocitizen.accident.Accident;
 import motocitizen.app.general.user.Role;
+import motocitizen.content.AccidentStatus;
 import motocitizen.content.Content;
 import motocitizen.content.Medicine;
-import motocitizen.content.AccidentStatus;
 import motocitizen.content.Type;
 import motocitizen.draw.Resources;
 import motocitizen.geolocation.MyLocationManager;
@@ -303,6 +304,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         request.setLocation(accident.getLocation());
         request.setDescription(accident.getDescription());
         request.setCreated(accident.getTime());
+        if (((CheckBox) findViewById(R.id.forStat)).isChecked()) request.setForStat();
         request.execute();
     }
 

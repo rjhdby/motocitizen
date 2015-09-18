@@ -251,6 +251,13 @@
 
                 <requestFocus />
             </EditText>
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Для статистики (рассылки не будет)"
+                android:id="@+id/forStat"
+                android:enabled="true"/>
         </LinearLayout>
 
         <LinearLayout
