@@ -209,7 +209,11 @@ public class Accident {
     }
 
     public boolean isInvisible() {
-        return (status != HIDDEN || Role.isModerator()) && getDistanceFromUser() < Preferences.getVisibleDistance() * 1000 && Preferences.isHidden(getType());
+        boolean hidden         = status == HIDDEN && !Role.isModerator();
+        boolean distanceFilter = getDistanceFromUser() > Preferences.getVisibleDistance() * 1000;
+        boolean typeFilter     = Preferences.isHidden(getType());
+        boolean timeFilter     = time.getTime() + Preferences.getHoursAgo() * 60 * 60 * 1000 < (new Date()).getTime();
+        return hidden || distanceFilter || typeFilter || timeFilter;
     }
 
     public Volunteer getVolunteer(int id) {
