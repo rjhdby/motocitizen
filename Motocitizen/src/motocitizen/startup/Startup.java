@@ -193,9 +193,8 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     protected void onResume() {
         super.onResume();
         MyLocationManager.wakeup();
-        Intent  intent    = getIntent();
-        Integer toMap     = intent.getIntExtra("toMap", 0);
-        Integer toDetails = intent.getIntExtra("toDetails", 0);
+        Intent intent = getIntent();
+        String id     = intent.getStringExtra("id");
         context = this;
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         if (Role.isStandart()) {
@@ -205,14 +204,9 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         }
         Content.redraw(this);
         getAccidents();
-        if (toMap != 0) {
-            intent.removeExtra("toMap");
-            mainTabsGroup.check(R.id.tab_map_button);
-            fromDetails = intent.getBooleanExtra("fromDetails", false);
-        } else if (toDetails != 0) {
-            intent.removeExtra("toDetails");
+        if (id != null) {
             Content.refresh(this);
-            Content.toDetails(this, toDetails);
+            Content.toDetails(this, Integer.parseInt(id));
             NewAccidentReceived.clearAll(this);
         }
     }
