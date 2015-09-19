@@ -205,6 +205,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         Content.redraw(this);
         getAccidents();
         if (id != null) {
+            intent.removeExtra("id");
             Content.refresh(this);
             Content.toDetails(this, Integer.parseInt(id));
             NewAccidentReceived.clearAll(this);
