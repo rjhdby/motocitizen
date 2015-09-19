@@ -22,10 +22,10 @@ import org.json.JSONObject;
 import java.util.List;
 
 import motocitizen.accident.Accident;
-import motocitizen.content.Content;
 import motocitizen.app.general.popups.AccidentListPopup;
 import motocitizen.app.general.user.Role;
 import motocitizen.content.AccidentStatus;
+import motocitizen.content.Content;
 import motocitizen.draw.Strings;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentChangeStateRequest;
@@ -34,6 +34,10 @@ import motocitizen.startup.Preferences;
 import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
+
+import static motocitizen.content.AccidentStatus.ACTIVE;
+import static motocitizen.content.AccidentStatus.ENDED;
+import static motocitizen.content.AccidentStatus.HIDDEN;
 
 public class AccidentDetailsActivity extends ActionBarActivity implements AccidentDetailsFragments.OnFragmentInteractionListener {
 
@@ -178,23 +182,16 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
             Accident currentPoint = Content.getPoint(accidentID);
             MenuItem finish = mMenu.findItem(R.id.menu_acc_finish);
             MenuItem hide = mMenu.findItem(R.id.menu_acc_hide);
-            if (Role.isModerator()) {
-                finish.setVisible(true);
-                if (currentPoint.getStatus() == AccidentStatus.ENDED) {
+            finish.setVisible(Role.isModerator());
+            hide.setVisible(Role.isModerator());
+            finish.setTitle(R.string.finish);
+            hide.setTitle(R.string.hide);
+            switch (currentPoint.getStatus()) {
+                case ENDED:
                     finish.setTitle(R.string.unfinish);
-                } else {
-                    finish.setTitle(R.string.finish);
-                }
-
-                hide.setVisible(true);
-                if (currentPoint.getStatus() == AccidentStatus.HIDDEN) {
+                    break;
+                case HIDDEN:
                     hide.setTitle(R.string.show);
-                } else {
-                    hide.setTitle(R.string.hide);
-                }
-            } else {
-                finish.setVisible(false);
-                hide.setVisible(false);
             }
         }
     }
@@ -263,31 +260,33 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
     }
 
     private void sendFinishRequest() {
-        if (Content.getPoint(accidentID).getStatus() == AccidentStatus.ENDED) {
+        if (Content.getPoint(accidentID).getStatus() == ENDED) {
             //TODO Суперкостыль
-            accNewState = AccidentStatus.ACTIVE;
-            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, AccidentStatus.ACTIVE.toString());
+            accNewState = ACTIVE;
+            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, ACTIVE.toString());
         } else {
             //TODO Суперкостыль
-            accNewState = AccidentStatus.ENDED;
-            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, AccidentStatus.ENDED.toString());
+            accNewState = ENDED;
+            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, ENDED.toString());
         }
     }
 
     private void sendHideRequest() {
-        if (Content.getPoint(accidentID).getStatus() == AccidentStatus.ENDED) {
+        if (Content.getPoint(accidentID).getStatus() == ENDED) {
             //TODO Суперкостыль
-            accNewState = AccidentStatus.ACTIVE;
-            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, AccidentStatus.ACTIVE.toString());
+            accNewState = ACTIVE;
+            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, ACTIVE.toString());
         } else {
             //TODO Суперкостыль
-            accNewState = AccidentStatus.ENDED;
-            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, AccidentStatus.HIDDEN.toString());
+            accNewState = ENDED;
+            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, HIDDEN.toString());
         }
     }
+
     private void message(String text) {
         Toast.makeText(context, text, Toast.LENGTH_LONG).show();
     }
+
     private class AccidentChangeCallback implements AsyncTaskCompleteListener {
         @Override
         public void onTaskComplete(JSONObject result) {
