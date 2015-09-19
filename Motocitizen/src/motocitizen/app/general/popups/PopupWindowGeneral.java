@@ -124,20 +124,12 @@ abstract class PopupWindowGeneral {
 
     TableRow finishButtonRow(final Context context, final motocitizen.accident.Accident point) {
         Button finish = new Button(content.getContext());
-        if (point.isEnded()) {
-            finish.setText(R.string.unfinish);
-        } else {
-            finish.setText(R.string.finish);
-        }
+        finish.setText(point.isEnded() ? R.string.unfinish : R.string.finish);
 
         finish.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 popupWindow.dismiss();
-                if (point.isEnded()) {
-                    new AccidentChangeStateRequest(null, context, point.getId(), AccidentStatus.ACTIVE.toString());
-                } else {
-                    new AccidentChangeStateRequest(null, context, point.getId(), AccidentStatus.ENDED.toString());
-                }
+                new AccidentChangeStateRequest(null, context, point.getId(), point.isEnded() ? AccidentStatus.ACTIVE.toString() : AccidentStatus.ENDED.toString());
             }
         });
         TableRow tr = new TableRow(content.getContext());
@@ -147,20 +139,12 @@ abstract class PopupWindowGeneral {
 
     TableRow hideButtonRow(final Context context, final motocitizen.accident.Accident point) {
         Button finish = new Button(content.getContext());
-        if (point.isHidden()) {
-            finish.setText(R.string.show);
-        } else {
-            finish.setText(R.string.hide);
-        }
+        finish.setText(point.isHidden() ? R.string.show : R.string.hide);
 
         finish.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 popupWindow.dismiss();
-                if (point.isHidden()) {
-                    new AccidentChangeStateRequest(null, context, point.getId(), AccidentStatus.ACTIVE.toString());
-                } else {
-                    new AccidentChangeStateRequest(null, context, point.getId(), AccidentStatus.HIDDEN.toString());
-                }
+                new AccidentChangeStateRequest(null, context, point.getId(), point.isHidden() ? AccidentStatus.ACTIVE.toString() : AccidentStatus.HIDDEN.toString());
             }
         });
         TableRow tr = new TableRow(content.getContext());
@@ -193,6 +177,7 @@ abstract class PopupWindowGeneral {
     private void message(String text) {
         Toast.makeText(context, text, Toast.LENGTH_LONG).show();
     }
+
     TableRow banButtonRow(final int id) {
         Button ban = new Button(content.getContext());
         ban.setText("Забанить");

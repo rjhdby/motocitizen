@@ -30,11 +30,7 @@ public class Rows {
         LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         FrameLayout    accRow;
         int[]          resources;
-        if (accident.isOwner()) {
-            resources = Resources.getAccidentRowSetOwner();
-        } else {
-            resources = Resources.getAccidentRowSetCommon();
-        }
+        resources = accident.isOwner() ? Resources.getAccidentRowSetOwner() : Resources.getAccidentRowSetCommon();
         accRow = (FrameLayout) li.inflate(resources[0], parent, false);
         switch (accident.getStatus()) {
             case ENDED:
@@ -50,8 +46,7 @@ public class Rows {
         }
         generalText.append("(").append(accident.getDistanceString()).append(")\n").append(accident.getAddress()).append("\n").append(accident.getDescription());
         String msgText = "<b>" + String.valueOf(accident.getMessages().size()) + "</b>";
-        if (accident.getUnreadMessagesCount() > 0)
-            msgText += "<font color=#C62828><b>(" + String.valueOf(accident.getUnreadMessagesCount()) + ")</b></font>";
+        msgText += accident.getUnreadMessagesCount() > 0 ? "<font color=#C62828><b>(" + String.valueOf(accident.getUnreadMessagesCount()) + ")</b></font>" : "";
 
         switch (accident.getStatus()) {
             case ENDED:
@@ -77,7 +72,7 @@ public class Rows {
             @Override
             public boolean onLongClick(View v) {
                 PopupWindow popupWindow;
-                popupWindow = (new AccidentListPopup(context, accident.getId(), false)).getPopupWindow();
+                popupWindow = (new AccidentListPopup(context, accident.getId())).getPopupWindow();
                 int viewLocation[] = new int[2];
                 v.getLocationOnScreen(viewLocation);
                 popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
@@ -109,11 +104,7 @@ public class Rows {
         int  user  = Content.auth.getid();
         int  resource;
         int  owner = message.getOwnerId();
-        if (message.getOwnerId() == user) {
-            resource = Resources.getMessageRowDrawableIdOwner();
-        } else {
-            resource = Resources.getMessageRowDrawableIdCommnon();
-        }
+        resource = message.getOwnerId() == user ? Resources.getMessageRowDrawableIdOwner() : Resources.getMessageRowDrawableIdCommnon();
         tr = li.inflate(resource, parent, false);
         FrameLayout              fl  = (FrameLayout) tr.findViewById(R.id.row);
         TableLayout.LayoutParams flp = (TableLayout.LayoutParams) fl.getLayoutParams();
