@@ -109,25 +109,25 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
             @Override
             public void onClick(View v) {
                 // Анонимный вход
+                Preferences.setAnonim(anonim.isChecked());
                 if (anonim.isChecked()) {
-                    Preferences.setAnonim(true);
                     ((TextView) findViewById(R.id.auth_error_helper)).setText("");
                     finish();
-                } else { // Авторизация
-                    if (Startup.isOnline(context)) {
-                        if (Content.auth.auth(context, login.getText().toString(), password.getText().toString())) {
-                            Preferences.setAnonim(false);
-                            finish();
-                        } else {
-                            TextView authErrorHelper = (TextView) findViewById(R.id.auth_error_helper);
-                            authErrorHelper.setText(R.string.auth_password_error);
-                        }
-                    } else {
-                        //TODO Перенести в ресурсы
-                        Toast.makeText(context, R.string.auth_not_available, Toast.LENGTH_LONG).show();
-                    }
+                    return;
+                }
+                if (!Startup.isOnline(context)) {
+                    Toast.makeText(context, R.string.auth_not_available, Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (Content.auth.auth(context, login.getText().toString(), password.getText().toString())) {
+                    finish();
+                } else {
+                    TextView authErrorHelper = (TextView) findViewById(R.id.auth_error_helper);
+                    authErrorHelper.setText(R.string.auth_password_error);
                 }
             }
+
+
         });
 
         TextView accListYesterdayLine = (TextView) findViewById(R.id.accListYesterdayLine);
@@ -144,26 +144,19 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
         View     accListYesterdayLine = findViewById(R.id.accListYesterdayLine);
         TextView roleView             = (TextView) findViewById(R.id.role);
 
+        boolean isAuthorized = Content.auth.isAuthorized();
+        loginBtn.setEnabled(!isAuthorized);
+        logoutBtn.setEnabled(isAuthorized);
+        anonim.setEnabled(!isAuthorized);
+        accListYesterdayLine.setVisibility(isAuthorized ? View.GONE : View.VISIBLE);
+        roleView.setVisibility(isAuthorized ? View.VISIBLE : View.GONE);
+        login.setEnabled(!isAuthorized && !anonim.isChecked());
+        password.setEnabled(!isAuthorized && !anonim.isChecked());
         //Авторизованы?
-        if (Content.auth.isAuthorized()) {
-            loginBtn.setEnabled(false);
-            logoutBtn.setEnabled(true);
-            anonim.setEnabled(false);
-            accListYesterdayLine.setVisibility(View.GONE);
+        if (isAuthorized) {
             String format = getString(R.string.mc_auth_role);
             roleView.setText(String.format(format, Role.getName(this)));
-            roleView.setVisibility(View.VISIBLE);
-            login.setEnabled(false);
-            password.setEnabled(false);
         } else {
-//        if (prefs.isAnonim()) {
-            loginBtn.setEnabled(true);
-            logoutBtn.setEnabled(false);
-            anonim.setEnabled(true);
-            login.setEnabled(!anonim.isChecked());
-            password.setEnabled(!anonim.isChecked());
-            accListYesterdayLine.setVisibility(View.VISIBLE);
-            roleView.setVisibility(View.GONE);
             enableLoginBtn();
         }
     }

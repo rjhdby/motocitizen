@@ -105,7 +105,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
             @Override
             public boolean onLongClick(View v) {
                 PopupWindow popupWindow;
-                popupWindow = (new AccidentListPopup(context, currentPoint.getId(), false)).getPopupWindow();
+                popupWindow = (new AccidentListPopup(context, currentPoint.getId())).getPopupWindow();
                 int viewLocation[] = new int[2];
                 v.getLocationOnScreen(viewLocation);
                 popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
@@ -161,38 +161,36 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
         menuReconstruction();
 
         List<String> contactNumbers = MyUtils.getPhonesFromText(currentPoint.getDescription());
-        if (!contactNumbers.isEmpty()) {
-            if (contactNumbers.size() == 1) {
-                mMenu.add(0, SMS_MENU_MIN_ID, 0, getString(R.string.send_sms) + contactNumbers.get(0));
-                mMenu.add(0, CALL_MENU_MIN_ID, 0, getString(R.string.make_call) + contactNumbers.get(0));
-            } else {
-                SubMenu smsSub = mMenu.addSubMenu(getString(R.string.send_sms));
-                SubMenu callSub = mMenu.addSubMenu(getString(R.string.make_call));
-                for (int i = 0; i < contactNumbers.size(); i++) {
-                    smsSub.add(0, SMS_MENU_MIN_ID + i, 0, contactNumbers.get(i));
-                    callSub.add(0, CALL_MENU_MIN_ID + i, 0, contactNumbers.get(i));
-                }
+        if (contactNumbers.isEmpty()) return super.onCreateOptionsMenu(menu);
+        if (contactNumbers.size() == 1) {
+            mMenu.add(0, SMS_MENU_MIN_ID, 0, getString(R.string.send_sms) + contactNumbers.get(0));
+            mMenu.add(0, CALL_MENU_MIN_ID, 0, getString(R.string.make_call) + contactNumbers.get(0));
+        } else {
+            SubMenu smsSub = mMenu.addSubMenu(getString(R.string.send_sms));
+            SubMenu callSub = mMenu.addSubMenu(getString(R.string.make_call));
+            for (int i = 0; i < contactNumbers.size(); i++) {
+                smsSub.add(0, SMS_MENU_MIN_ID + i, 0, contactNumbers.get(i));
+                callSub.add(0, CALL_MENU_MIN_ID + i, 0, contactNumbers.get(i));
             }
         }
         return super.onCreateOptionsMenu(menu);
     }
 
     private void menuReconstruction() {
-        if (mMenu != null) {
-            Accident currentPoint = Content.getPoint(accidentID);
-            MenuItem finish = mMenu.findItem(R.id.menu_acc_finish);
-            MenuItem hide = mMenu.findItem(R.id.menu_acc_hide);
-            finish.setVisible(Role.isModerator());
-            hide.setVisible(Role.isModerator());
-            finish.setTitle(R.string.finish);
-            hide.setTitle(R.string.hide);
-            switch (currentPoint.getStatus()) {
-                case ENDED:
-                    finish.setTitle(R.string.unfinish);
-                    break;
-                case HIDDEN:
-                    hide.setTitle(R.string.show);
-            }
+        if (mMenu == null) return;
+        Accident currentPoint = Content.getPoint(accidentID);
+        MenuItem finish       = mMenu.findItem(R.id.menu_acc_finish);
+        MenuItem hide         = mMenu.findItem(R.id.menu_acc_hide);
+        finish.setVisible(Role.isModerator());
+        hide.setVisible(Role.isModerator());
+        finish.setTitle(R.string.finish);
+        hide.setTitle(R.string.hide);
+        switch (currentPoint.getStatus()) {
+            case ENDED:
+                finish.setTitle(R.string.unfinish);
+                break;
+            case HIDDEN:
+                hide.setTitle(R.string.show);
         }
     }
 

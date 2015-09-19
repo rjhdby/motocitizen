@@ -90,44 +90,29 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     private void update() {
         motocitizen.accident.Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
 
-        if (accident != null) {
-            setupAccess();
-
-            ViewGroup vg_onway = (ViewGroup) onwayContent;
-            vg_onway.removeAllViews();
-            for (int i : accident.getVolunteers().keySet()) {
-                Volunteer current = accident.getVolunteer(i);
-                if (current.getStatus() == VolunteerStatus.LEAVE) continue;
-                vg_onway.addView(Rows.getVolunteerRow(getActivity(), vg_onway, current));
-            }
-        } else {
+        if (accident == null) {
             showDialog(DIALOG_ACC_NOT_ACTUAL);
+            return;
         }
-    }
 
-    public void notifyDataSetChanged() {
-        update();
-//  ListAdapter
-//        adapter.notifyDataSetChanged();
+        setupAccess();
+        ViewGroup vg_onway = (ViewGroup) onwayContent;
+        vg_onway.removeAllViews();
+        for (int i : accident.getVolunteers().keySet()) {
+            Volunteer current = accident.getVolunteer(i);
+            if (current.getStatus() == VolunteerStatus.LEAVE) continue;
+            vg_onway.addView(Rows.getVolunteerRow(getActivity(), vg_onway, current));
+        }
+
     }
 
     private void setupAccess() {
         motocitizen.accident.Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
-        if (accident.getId() == Preferences.getOnWay()) {
-            onwayButton.setVisibility(View.GONE);
-            onwayCancelButton.setVisibility(View.VISIBLE);
-            onwayDisabledButton.setVisibility(View.GONE);
-
-        } else if (accident.getId() == Content.getInplaceID() || !Content.auth.isAuthorized() || !accident.isActive()) {
-            onwayButton.setVisibility(View.GONE);
-            onwayCancelButton.setVisibility(View.GONE);
-            onwayDisabledButton.setVisibility(View.VISIBLE);
-
-        } else {
-            onwayButton.setVisibility(View.VISIBLE);
-            onwayCancelButton.setVisibility(View.GONE);
-            onwayDisabledButton.setVisibility(View.GONE);
-        }
+        int                           id       = accident.getId();
+        boolean                       active   = accident.isActive() && Content.auth.isAuthorized();
+        onwayButton.setVisibility(id != Preferences.getOnWay() && id != Content.getInplaceID() && active ? View.VISIBLE : View.GONE);
+        onwayCancelButton.setVisibility(id == Preferences.getOnWay() && id != Content.getInplaceID() && active ? View.VISIBLE : View.GONE);
+        onwayDisabledButton.setVisibility(id == Content.getInplaceID() && active ? View.VISIBLE : View.GONE);
     }
 
     private void showDialog(int type) {
@@ -190,9 +175,11 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         Preferences.setOnWay(accidentID);
         new OnWayRequest(new OnWayCallback(), this.getActivity(), accidentID);
     }
+
     private void message(String text) {
         Toast.makeText(getActivity(), text, Toast.LENGTH_LONG).show();
     }
+
     private class OnWayCallback implements AsyncTaskCompleteListener {
         @Override
         public void onTaskComplete(JSONObject result) {

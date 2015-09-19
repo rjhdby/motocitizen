@@ -129,16 +129,10 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 @Override
                 public void onCameraChange(CameraPosition camera) {
                     Button mcCreateFineAddressConfirm = (Button) findViewById(R.id.ADDRESS);
-                    if (initialLocation != null) {
-                        double distance = MyUtils.LatLngToLocation(camera.target).distanceTo(initialLocation);
-                        if (distance > RADIUS) {
-                            mcCreateFineAddressConfirm.setEnabled(false);
-                        } else {
-                            mcCreateFineAddressConfirm.setEnabled(true);
-                        }
-                    } else {
-                        mcCreateFineAddressConfirm.setEnabled(false);
-                    }
+                    mcCreateFineAddressConfirm.setEnabled(false);
+                    if (initialLocation == null) return;
+                    double distance = MyUtils.LatLngToLocation(camera.target).distanceTo(initialLocation);
+                    mcCreateFineAddressConfirm.setEnabled(distance < RADIUS);
                 }
             });
         }
@@ -147,9 +141,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             motocitizen.accident.Accident point = Content.get(id);
             if (point.isInvisible()) continue;
             String title = point.getType().toString();
-            if (point.getMedicine() != Medicine.NO) {
-                title += ", " + point.getMedicine().toString();
-            }
+            title += point.getMedicine() == Medicine.NO ? "" : ", " + point.getMedicine().toString();
             title += ", " + MyUtils.getIntervalFromNowInText(point.getTime()) + " назад";
 
             float alpha;
@@ -175,19 +167,13 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         hideAll();
         findViewById(id).setVisibility(View.VISIBLE);
         currentScreen = id;
-        if (id == MAP) {
-            findViewById(R.id.BACK).setEnabled(false);
-        } else {
-            findViewById(R.id.BACK).setEnabled(true);
-        }
+        findViewById(R.id.BACK).setEnabled(id != MAP);
     }
 
     private void refreshDescription() {
-        if (accident.getMedicine() == Medicine.UNKNOWN) {
-            ((TextView) findViewById(R.id.mc_create_what)).setText(accident.getType().toString());
-        } else {
-            ((TextView) findViewById(R.id.mc_create_what)).setText(accident.getType().toString() + ". " + accident.getMedicine().toString());
-        }
+        String text = accident.getType().toString();
+        text += accident.getMedicine() == Medicine.UNKNOWN ? "" : ". " + accident.getMedicine().toString();
+        ((TextView) findViewById(R.id.mc_create_what)).setText(text);
         ((TextView) findViewById(R.id.mc_create_who)).setText(Content.auth.getLogin());
         ((TextView) findViewById(R.id.mc_create_where)).setText(accident.getAddress());
         ((TextView) findViewById(R.id.mc_create_when)).setText(Const.DATE_FORMAT.format(accident.getTime()));
@@ -323,11 +309,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 setUpScreen(MAP);
                 break;
             case DESCRIPTION:
-                if (accident.isAccident()) {
-                    setUpScreen(MEDICINE);
-                } else {
-                    setUpScreen(TYPE);
-                }
+                setUpScreen(accident.isAccident() ? MEDICINE : TYPE);
                 break;
         }
         setInComplete();

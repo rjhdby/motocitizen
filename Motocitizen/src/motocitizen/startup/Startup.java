@@ -64,23 +64,21 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     public static boolean                            inTransaction    = false;
     private final RadioGroup.OnCheckedChangeListener mainTabsListener = new RadioGroup.OnCheckedChangeListener() {
         public void onCheckedChanged(RadioGroup group, int checkedId) {
-            int id = group.getCheckedRadioButtonId();
+            currentGeneral = group.getCheckedRadioButtonId();
             fromDetails = false;
             accListView.setVisibility(View.VISIBLE);
             mapContainer.setVisibility(View.VISIBLE);
-
-            if (currentGeneral == null) {
-                currentGeneral = R.id.tab_accidents_button;
+            switch (currentGeneral) {
+                case R.id.tab_map_button:
+                    accListView.animate().translationX(-Const.getWidth(context) * 2);
+                    mapContainer.animate().translationX(0);
+                    break;
+                case R.id.tab_accidents_button:
+                default:
+                    accListView.animate().translationX(0);
+                    mapContainer.animate().translationX(Const.getWidth(context) * 2);
+                    break;
             }
-
-            if (id == R.id.tab_accidents_button) {
-                accListView.animate().translationX(0);
-                mapContainer.animate().translationX(Const.getWidth(context) * 2);
-            } else if (id == R.id.tab_map_button) {
-                accListView.animate().translationX(-Const.getWidth(context) * 2);
-                mapContainer.animate().translationX(0);
-            }
-            currentGeneral = id;
         }
     };
 
@@ -165,12 +163,14 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     }
 
     public static void createMap(String name) {
-        if (map != null && !map.getName().equals(name)) map = null;
-
-        if (name.equals(MyMapManager.OSM)) {
-            map = new MyOSMMapManager(context);
-        } else if (name.equals(MyMapManager.GOOGLE)) {
-            map = new MyGoogleMapManager(context);
+        if (map != null && map.getName().equals(name)) return;
+        switch (name) {
+            case MyMapManager.OSM:
+                map = new MyOSMMapManager(context);
+                break;
+            case MyMapManager.GOOGLE:
+            default:
+                map = new MyGoogleMapManager(context);
         }
 
         Location location = MyLocationManager.getLocation(context);
@@ -197,19 +197,14 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         String id     = intent.getStringExtra("id");
         context = this;
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        if (Role.isStandart()) {
-            createAccButton.setVisibility(View.VISIBLE);
-        } else {
-            createAccButton.setVisibility(View.INVISIBLE);
-        }
+        createAccButton.setVisibility(Role.isStandart() ? View.VISIBLE : View.INVISIBLE);
         Content.redraw(this);
         getAccidents();
-        if (id != null) {
-            intent.removeExtra("id");
-            Content.refresh(this);
-            Content.toDetails(this, Integer.parseInt(id));
-            NewAccidentReceived.clearAll(this);
-        }
+        if (id == null) return;
+        intent.removeExtra("id");
+        Content.refresh(this);
+        Content.toDetails(this, Integer.parseInt(id));
+        NewAccidentReceived.clearAll(this);
     }
 
     private void getAccidents() {
@@ -253,10 +248,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         MenuItem itemMenuNotDisturb = mMenu.findItem(R.id.do_not_disturb);
         MenuItem refreshItem        = mMenu.findItem(R.id.action_refresh);
         if (inTransaction) refreshItem.setVisible(false);
-        if (Preferences.getDoNotDisturb())
-            itemMenuNotDisturb.setIcon(R.drawable.ic_lock_ringer_off_alpha);
-        else itemMenuNotDisturb.setIcon(R.drawable.ic_lock_ringer_on_alpha);
-
+        itemMenuNotDisturb.setIcon(Preferences.getDoNotDisturb() ? R.drawable.ic_lock_ringer_off_alpha : R.drawable.ic_lock_ringer_on_alpha);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -286,15 +278,8 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
                 getAccidents();
                 return true;
             case R.id.do_not_disturb:
-                Preferences prefs = myApp.getPreferences();
-                //MenuItem menuItemActionDisturb = mMenu.findItem(R.id.do_not_disturb);
-                if (Preferences.getDoNotDisturb()) {
-                    item.setIcon(R.drawable.ic_lock_ringer_on_alpha);
-                    Preferences.setDoNotDisturb(false);
-                } else {
-                    item.setIcon(R.drawable.ic_lock_ringer_off_alpha);
-                    Preferences.setDoNotDisturb(true);
-                }
+                item.setIcon(Preferences.getDoNotDisturb() ? R.drawable.ic_lock_ringer_on_alpha : R.drawable.ic_lock_ringer_off_alpha);
+                Preferences.setDoNotDisturb(!Preferences.getDoNotDisturb());
                 return true;
         }
         return false;
@@ -337,18 +322,16 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     public static void startRefreshAnimation() {
         progressBar.setVisibility(View.VISIBLE);
         inTransaction = true;
-        if (mMenu != null) {
-            MenuItem refreshItem = mMenu.findItem(R.id.action_refresh);
-            refreshItem.setVisible(false);
-        }
+        if (mMenu == null) return;
+        MenuItem refreshItem = mMenu.findItem(R.id.action_refresh);
+        refreshItem.setVisible(false);
     }
 
     public static void stopRefreshAnimation() {
         progressBar.setVisibility(View.INVISIBLE);
         inTransaction = false;
-        if (mMenu != null) {
-            MenuItem refreshItem = mMenu.findItem(R.id.action_refresh);
-            refreshItem.setVisible(true);
-        }
+        if (mMenu == null) return;
+        MenuItem refreshItem = mMenu.findItem(R.id.action_refresh);
+        refreshItem.setVisible(true);
     }
 }

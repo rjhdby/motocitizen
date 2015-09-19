@@ -272,6 +272,10 @@ public class Accident {
         return noError;
     }
 
+    public boolean isError() {
+        return !noError;
+    }
+
     public Integer getRowId() {
         return rowId;
     }

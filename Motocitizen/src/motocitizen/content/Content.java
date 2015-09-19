@@ -135,23 +135,21 @@ public class Content {
 
     public static void parseJSON(Context context, JSONObject json) {
         noError = true;
-        if (json.has("list")) {
-            try {
-                JSONArray list = json.getJSONArray("list");
-                for (int i = 0; i < list.length(); i++) {
-                    Accident accident = new Accident(context, list.getJSONObject(i));
-                    if (accident.isNoError()) {
-                        if (points.containsKey(accident.getId())) {
-                            points.get(accident.getId()).update(list.getJSONObject(i));
-                        } else {
-                            points.put(accident.getId(), accident);
-                        }
-                    }
+        if (!json.has("list")) return;
+        try {
+            JSONArray list = json.getJSONArray("list");
+            for (int i = 0; i < list.length(); i++) {
+                Accident accident = new Accident(context, list.getJSONObject(i));
+                if (accident.isError()) continue;
+                if (points.containsKey(accident.getId())) {
+                    points.get(accident.getId()).update(list.getJSONObject(i));
+                } else {
+                    points.put(accident.getId(), accident);
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                noError = false;
             }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            noError = false;
         }
     }
 

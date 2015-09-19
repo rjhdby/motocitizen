@@ -48,9 +48,7 @@ public class NewAccidentReceived extends IntentService {
         Bundle extras = intent.getExtras();
 
         try {
-            if (!Content.isInitialized()) {
-                new Content(this);
-            }
+            if (!Content.isInitialized()) new Content(this);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -81,20 +79,14 @@ public class NewAccidentReceived extends IntentService {
         builder.setContentIntent(contentIntent).setSmallIcon(R.drawable.logo).setLargeIcon(BitmapFactory.decodeResource(res, R.drawable.logo)).setTicker(accident.getAddress()).setWhen(System.currentTimeMillis()).setAutoCancel(true).setContentTitle(title).setContentText(accident.getAddress());
 
         if (Preferences.getAlarmSoundTitle().equals("default system")) {
-            if (Preferences.getVibration()) {
-                builder.setDefaults(Notification.DEFAULT_ALL);
-            } else {
-                builder.setDefaults(Notification.DEFAULT_SOUND);
-            }
+            builder.setDefaults(Preferences.getVibration() ? Notification.DEFAULT_ALL : Notification.DEFAULT_SOUND);
         } else {
             if (Build.VERSION.SDK_INT < 21) {
                 builder.setSound(Preferences.getAlarmSoundUri(), AudioManager.STREAM_NOTIFICATION);
             } else {
                 builder.setSound(Preferences.getAlarmSoundUri(), (new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_NOTIFICATION)).build());
             }
-            if (Preferences.getVibration()) {
-                builder.setVibrate(new long[]{1000, 1000, 1000});
-            }
+            if (Preferences.getVibration()) builder.setVibrate(new long[]{1000, 1000, 1000});
         }
         Notification notification;
         if (Build.VERSION.SDK_INT < 16) {
@@ -102,9 +94,8 @@ public class NewAccidentReceived extends IntentService {
         } else {
             notification = builder.build();
         }
-        if (notificationManager == null) {
+        if (notificationManager == null)
             notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-        }
         notificationManager.notify(accident.getId(), notification);
         manageTray(accident.getId());
         GCMBroadcastReceiver.completeWakefulIntent(intent);
