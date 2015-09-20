@@ -1,54 +1,31 @@
 package motocitizen.content;
 
 public enum VolunteerStatus {
-    ONWAY, INPLACE, LEAVE;
+    ON_WAY("onway", "Выехал"),
+    IN_PLACE("inplace", "На месте"),
+    LEAVE("leave", "Уехал");
 
-    public static final String leave   = "leave";
-    public static final String inplace = "inplace";
-    public static final String onway   = "onway";
+    private final String code;
+    private final String text;
 
-    public static VolunteerStatus parse(String status) {
-        switch (status) {
-            case leave:
-                return VolunteerStatus.LEAVE;
-            case inplace:
-                return VolunteerStatus.INPLACE;
-            case onway:
-            default:
-                return VolunteerStatus.ONWAY;
+    VolunteerStatus(String code, String text) {
+        this.text = text;
+        this.code = code;
+    }
+
+    public static VolunteerStatus parse(String medicine) {
+        for (VolunteerStatus a : VolunteerStatus.values()) {
+            if (a.code.equals(medicine)) return a;
         }
+        return VolunteerStatus.ON_WAY;
     }
 
     public String toCode() {
-        return getCode(this);
-    }
-
-    public static String getCode(VolunteerStatus status) {
-        switch (status) {
-            case LEAVE:
-                return leave;
-            case INPLACE:
-                return inplace;
-            case ONWAY:
-            default:
-                return onway;
-        }
+        return this.code;
     }
 
     @Override
     public String toString() {
-        return getString(this);
-    }
-
-    public static String getString(VolunteerStatus status) {
-        switch (status) {
-            case INPLACE:
-                return "На месте";
-            case LEAVE:
-                return "Уехал";
-            case ONWAY:
-            default:
-                return "Выехал";
-        }
+        return this.text;
     }
 }

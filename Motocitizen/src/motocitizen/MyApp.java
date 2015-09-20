@@ -7,7 +7,6 @@ import android.location.Geocoder;
 import android.location.Location;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import motocitizen.app.general.user.Auth;
@@ -17,10 +16,9 @@ import motocitizen.utils.Props;
 public class MyApp extends Application {
 
     private static MyApp instance;
-    public  Preferences prefs    = null;
-    private Props       props    = null;
-    private Auth        auth     = null;
-    private Geocoder    geocoder = null;
+    private Props    props    = null;
+    private Auth     auth     = null;
+    private Geocoder geocoder = null;
 
     public MyApp() {
         instance = this;
@@ -31,8 +29,7 @@ public class MyApp extends Application {
     }
 
     public Preferences getPreferences() {
-        if (prefs == null) prefs = new Preferences(instance.getApplicationContext());
-        return prefs;
+        return new Preferences(instance.getApplicationContext());
     }
 
     public Props getProps() {
@@ -45,15 +42,15 @@ public class MyApp extends Application {
         return auth;
     }
 
-    public String getAddres(Location location) {
+    public String getAddress(Location location) {
         if (geocoder == null) {
             geocoder = new Geocoder(this);
         }
-        StringBuilder res  = new StringBuilder();
-        List<Address> list = new ArrayList<>();
+        StringBuilder res = new StringBuilder();
         try {
+            List<Address> list;
             list = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-            if(list == null || list.size() == 0)
+            if (list == null || list.size() == 0)
                 return location.getLatitude() + " " + location.getLongitude();
             Address addr = list.get(0);
             String locality = addr.getLocality();

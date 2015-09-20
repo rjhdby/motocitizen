@@ -42,18 +42,16 @@ import motocitizen.maps.google.MyGoogleMapManager;
 import motocitizen.maps.osm.MyOSMMapManager;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.utils.Const;
-import motocitizen.utils.RefreshAnimation;
 
 public class Startup extends ActionBarActivity implements View.OnClickListener {
 
-    public static  Context          context;
-    public static  Preferences      prefs;
-    public static  MyMapManager     map;
-    public static  boolean          fromDetails;
-    public static  Menu             mMenu;
-    public static  Integer          currentGeneral;
-    public static  RefreshAnimation refreshAnimation;
-    private static ActionBar        actionBar;
+    public static  Context      context;
+    public static  Preferences  prefs;
+    public static  MyMapManager map;
+    public static  boolean      fromDetails;
+    public static  Menu         mMenu;
+    public static  Integer      currentGeneral;
+    private static ActionBar    actionBar;
     private static AlertDialog changeLogDlg = null;
     private        MyApp       myApp        = null;
     private ImageButton createAccButton;
@@ -195,16 +193,23 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         MyLocationManager.wakeup();
         Intent intent = getIntent();
         String id     = intent.getStringExtra("id");
+        int    toMap  = intent.getIntExtra("toMap", 0);
         context = this;
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         createAccButton.setVisibility(Role.isStandart() ? View.VISIBLE : View.INVISIBLE);
         Content.redraw(this);
         getAccidents();
-        if (id == null) return;
-        intent.removeExtra("id");
-        Content.refresh(this);
-        Content.toDetails(this, Integer.parseInt(id));
-        NewAccidentReceived.clearAll(this);
+
+        if (toMap != 0) {
+            intent.removeExtra("toMap");
+            mainTabsGroup.check(R.id.tab_map_button);
+            fromDetails = intent.getBooleanExtra("fromDetails", false);
+        } else if (id != null) {
+            intent.removeExtra("id");
+            Content.refresh(this);
+            Content.toDetails(this, Integer.parseInt(id));
+            NewAccidentReceived.clearAll(this);
+        }
     }
 
     private void getAccidents() {

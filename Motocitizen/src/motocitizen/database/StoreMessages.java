@@ -8,10 +8,10 @@ import android.database.sqlite.SQLiteDatabase;
 public class StoreMessages {
 
     public static int getLast(Context context, int accidentId) {
-        int            result;
+        int result;
         DbOpenHelper dbOpenHelper = new DbOpenHelper(context);
-        SQLiteDatabase db     = dbOpenHelper.getReadableDatabase();
-        Cursor         cursor = db.rawQuery("SELECT msg_id FROM messages WHERE acc_id=?", new String[]{String.valueOf(accidentId)});
+        SQLiteDatabase db = dbOpenHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT msg_id FROM messages WHERE acc_id=?", new String[]{String.valueOf(accidentId)});
         if (cursor.getCount() == 0) result = 0;
         else {
             cursor.moveToFirst();
@@ -24,8 +24,8 @@ public class StoreMessages {
 
     public static void setLast(Context context, int accidentId, int messageId) {
         DbOpenHelper dbOpenHelper = new DbOpenHelper(context);
-        SQLiteDatabase db            = dbOpenHelper.getWritableDatabase();
-        ContentValues  contentValues = new ContentValues();
+        SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
         contentValues.put("msg_id", messageId);
         int affected = db.update("messages", contentValues, "acc_id=?", new String[]{String.valueOf(accidentId)});
         if (affected == 0) {

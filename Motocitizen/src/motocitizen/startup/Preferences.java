@@ -47,7 +47,6 @@ public class Preferences {
     private final static String savedLng            = "savedlng";
     private final static String savedLat            = "savedlat";
     private final static String notificationList    = "notificationList";
-    private final static String messageReadList     = "messageReadList";
 
     private final static String[] mapProviders = {"google", "osm", "yandex"};
 
@@ -196,22 +195,6 @@ public class Preferences {
         preferences.edit().putInt(appVersion, code).commit();
     }
 
-    public static void setShowAcc(boolean show) {
-        preferences.edit().putBoolean(showAcc, show).commit();
-    }
-
-    public static void setShowBreak(boolean show) {
-        preferences.edit().putBoolean(showBreak, show).commit();
-    }
-
-    public static void setShowSteal(boolean show) {
-        preferences.edit().putBoolean(showSteal, show).commit();
-    }
-
-    public static void setShowOther(boolean show) {
-        preferences.edit().putBoolean(showOther, show).commit();
-    }
-
     public static void setSoundAlarm(String title, Uri uri) {
         preferences.edit().putString(soundTitle, title).putString(soundURI, uri.toString()).commit();
     }
@@ -257,16 +240,8 @@ public class Preferences {
         return preferences.getBoolean(showOther, true);
     }
 
-    public static void resetPreferences() {
-        preferences.edit().clear();
-    }
-
     public static int getMaxNotifications() {
         return Integer.parseInt(preferences.getString(maxNotifications, "3"));
-    }
-
-    public static void setMaxNotifications(int code) {
-        preferences.edit().putInt(maxNotifications, code).commit();
     }
 
     public static JSONArray getNotificationList() {
@@ -284,35 +259,12 @@ public class Preferences {
         preferences.edit().putString(notificationList, json.toString()).commit();
     }
 
-    public static JSONArray getMessageReadList() {
-        JSONArray json;
-        try {
-            json = new JSONArray(preferences.getString(messageReadList, "[]"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-            json = new JSONArray();
-        }
-        return json;
-    }
-
-    public static void setMessageReadList(JSONArray json) {
-        preferences.edit().putString(messageReadList, json.toString()).commit();
-    }
-
     public static int getHoursAgo() {
         return Integer.parseInt(preferences.getString(hoursAgo, "24"));
     }
 
-    public static void setHoursAgo(int hours) {
-        preferences.edit().putString(hoursAgo, String.valueOf(hours)).commit();
-    }
-
     public static boolean getVibration() {
         return preferences.getBoolean(useVibration, true);
-    }
-
-    public static void setVibration(boolean vibration) {
-        preferences.edit().putString(useVibration, String.valueOf(vibration)).commit();
     }
 
     public static String getUserName() {
@@ -329,10 +281,6 @@ public class Preferences {
 
     public static void setUserId(int id) {
         preferences.edit().putInt(userId, id).commit();
-    }
-
-    public static String getUserRole() {
-        return preferences.getString(userRole, "readonly");
     }
 
     public static void setUserRole(String role) {

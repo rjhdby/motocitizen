@@ -68,9 +68,9 @@ public class NewAccidentReceived extends IntentService {
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         notificationIntent.putExtras(extras);
-        PendingIntent        contentIntent = PendingIntent.getActivity(this, accident.getId(), notificationIntent, PendingIntent.FLAG_ONE_SHOT);
-        Resources            res           = this.getResources();
-        Notification.Builder builder       = new Notification.Builder(this);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, accident.getId(), notificationIntent, PendingIntent.FLAG_ONE_SHOT);
+        Resources res = this.getResources();
+        Notification.Builder builder = new Notification.Builder(this);
 
         String title = accident.getType().toString();
         if (accident.getMedicine() != Medicine.UNKNOWN)
@@ -105,25 +105,27 @@ public class NewAccidentReceived extends IntentService {
         JSONArray tray = Preferences.getNotificationList();
         tray.put(String.valueOf(id));
         int max = Preferences.getMaxNotifications();
-        if (max < tray.length()) {
-            JSONArray out = new JSONArray();
-            for (int i = 0; i < tray.length() - max; i++) {
-                try {
-                    int idToCancel = Integer.parseInt(tray.getString(i));
-                    notificationManager.cancel(idToCancel);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            for (int i = tray.length() - max; i < tray.length(); i++) {
-                try {
-                    out.put(tray.getString(i));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            tray = out;
+        if (max > tray.length()) {
+            Preferences.setNotificationList(tray);
+            return;
         }
+        JSONArray out = new JSONArray();
+        for (int i = 0; i < tray.length() - max; i++) {
+            try {
+                int idToCancel = Integer.parseInt(tray.getString(i));
+                notificationManager.cancel(idToCancel);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        for (int i = tray.length() - max; i < tray.length(); i++) {
+            try {
+                out.put(tray.getString(i));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        tray = out;
         Preferences.setNotificationList(tray);
     }
 }

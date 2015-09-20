@@ -18,7 +18,7 @@ public class SettingsActivity extends Activity {
         setContentView(R.layout.activity_settings);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction().replace(android.R.id.content,
-                                                            new SettingsFragment()).commit();
+                    new SettingsFragment()).commit();
         }
     }
 

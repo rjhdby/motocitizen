@@ -1,48 +1,30 @@
 package motocitizen.content;
 
 public enum MessageStatus {
-    HIDDEN, ACTIVE;
+    HIDDEN("hidden", "Скрыто"),
+    ACTIVE("active", "Активно");
 
+    private final String code;
+    private final String text;
 
-    public static final String hidden = "hidden";
-    public static final String active = "active";
-
-    @Override
-    public String toString() {
-        return getString(this);
-    }
-
-    public String toCode() {
-        return getCode(this);
-    }
-
-    public static String getString(MessageStatus status) {
-        switch (status) {
-            case HIDDEN:
-                return "Скрыто";
-            case ACTIVE:
-            default:
-                return "Активно";
-        }
-    }
-
-    public static String getCode(MessageStatus status) {
-        switch (status) {
-            case HIDDEN:
-                return hidden;
-            case ACTIVE:
-            default:
-                return active;
-        }
+    MessageStatus(String code, String text) {
+        this.code = code;
+        this.text = text;
     }
 
     public static MessageStatus parse(String status) {
-        switch (status) {
-            case hidden:
-                return HIDDEN;
-            case active:
-            default:
-                return ACTIVE;
+        for (MessageStatus a : MessageStatus.values()) {
+            if (a.code.equals(status)) return a;
         }
+        return MessageStatus.ACTIVE;
+    }
+
+    @Override
+    public String toString() {
+        return this.text;
+    }
+
+    public String toCode() {
+        return this.code;
     }
 }

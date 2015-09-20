@@ -17,34 +17,35 @@ import motocitizen.startup.Preferences;
 
 public class Auth {
     private final Context context;
-    private String role;
-    private String name;
-    private int    id;
+    private String role = "";
+    private String name = "";
+    private int id = 0;
     private boolean isAuthorized = false;
-    private       String  login;
-    private       String  password;
+    private String login;
+    private String password;
 
     public Auth(Context context) {
         this.context = context;
-        reset();
-
-        if (!Preferences.isAnonim()) {
-            if (!Preferences.getLogin().isEmpty()) {
-                login = Preferences.getLogin();
-                password = Preferences.getPassword();
-                if (!auth(context, login, password)) {
-                    showLogin(context);
-                }
-            } else {
-                showLogin(context);
-            }
-        }
+        if (Preferences.isAnonim()) return;
+        login = Preferences.getLogin();
+        password = Preferences.getPassword();
+        if (!auth(context, login, password)) showLogin(context);
     }
 
-    private void reset() {
-        name = "";
-        role = "";
-        id = 0;
+    public static String makePassHash(String pass) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(pass.getBytes());
+            byte[] digest = md.digest();
+            StringBuilder sb = new StringBuilder();
+            for (byte b : digest) {
+                sb.append(String.format("%02x", b & 0xff));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     public Boolean auth(Context context, String login, String password) {
@@ -54,30 +55,27 @@ public class Auth {
         auth.setLogin(login);
         auth.setPassword(password);
         JSONObject result = auth.execute();
+        isAuthorized = false;
         if (auth.error(result)) {
             String error = auth.getError(result);
             message(error);
-            isAuthorized = false;
-        } else {
-            try {
-                name = result.getString("name");
-                role = result.getString("role");
-                id = Integer.parseInt(result.getString("id"));
-                Preferences.setUserId(id);
-                Preferences.setUserName(name);
-                Preferences.setUserRole(role);
-                if (name.length() > 0) {
-                    Preferences.setLogin(login);
-                    Preferences.setPassword(password);
-                    Preferences.setAnonim(false);
-                    isAuthorized = true;
-                } else {
-                    isAuthorized = false;
-                }
-            } catch (JSONException e) {
-                message(context.getString(R.string.unknown_error));
-                isAuthorized = false;
+            return false;
+        }
+        try {
+            name = result.getString("name");
+            role = result.getString("role");
+            id = Integer.parseInt(result.getString("id"));
+            Preferences.setUserId(id);
+            Preferences.setUserName(name);
+            Preferences.setUserRole(role);
+            if (name.length() > 0) {
+                Preferences.setLogin(login);
+                Preferences.setPassword(password);
+                Preferences.setAnonim(false);
+                isAuthorized = true;
             }
+        } catch (JSONException e) {
+            message(context.getString(R.string.unknown_error));
         }
         return isAuthorized;
     }
@@ -108,26 +106,8 @@ public class Auth {
         return Preferences.getLogin();
     }
 
-    // Ну нету в java параметров по-умолчанию.
     public String makePassHash() {
         return makePassHash(Preferences.getPassword());
-    }
-
-    public static String makePassHash(String pass) {
-        String hash = "";
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            md.update(pass.getBytes());
-            byte[] digest = md.digest();
-            StringBuilder sb = new StringBuilder();
-            for (byte b : digest) {
-                sb.append(String.format("%02x", b & 0xff));
-            }
-            hash = sb.toString();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return hash;
     }
 
     public boolean isAnonim() {
@@ -139,7 +119,9 @@ public class Auth {
     }
 
     public void logoff() {
-        reset();
+        name = "";
+        role = "";
+        id = 0;
         this.isAuthorized = false;
     }
 }

@@ -19,12 +19,12 @@ android {
   sourceSets {
     main {
       manifest.srcFile 'AndroidManifest.xml'
-      java.srcDirs = ['src','assets']
-      resources.srcDirs = ['src','assets']
-      aidl.srcDirs = ['src','assets']
-      renderscript.srcDirs = ['src','assets']
-      res.srcDirs = ['res','res/tablerows']
-      assets.srcDirs = ['assets']
+      java.srcDirs = ['Motocitizen/src','Motocitizen/assets']
+      resources.srcDirs = ['Motocitizen/src','Motocitizen/assets']
+      aidl.srcDirs = ['Motocitizen/src','Motocitizen/assets']
+      renderscript.srcDirs = ['Motocitizen/src','Motocitizen/assets']
+      res.srcDirs = ['Motocitizen/res','Motocitizen/res/tablerows']
+      assets.srcDirs = ['Motocitizen/assets']
     }
     instrumentTest.setRoot('tests')
     debug.setRoot('build-types/debug')
@@ -32,8 +32,8 @@ android {
   }
 }
 dependencies {
-  compile fileTree(include: ['*.jar'], dir: 'libs')
+  compile fileTree(include: ['*.jar'], dir: 'Motocitizen/libs')
   compile 'com.android.support:appcompat-v7:21.+'
   compile 'com.google.android.gms:play-services:7.0.0'
-  compile files('libs/nineoldandroids-2.4.0.jar')
+  compile files('Motocitizen/libs/nineoldandroids-2.4.0.jar')
 }

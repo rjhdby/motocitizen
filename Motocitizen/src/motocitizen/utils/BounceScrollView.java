@@ -6,7 +6,6 @@ package motocitizen.utils;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.view.MenuItem;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -25,7 +24,6 @@ public class BounceScrollView extends ScrollView {
     private final Context context;
     private       int     mMaxYOverscrollDistance;
     private boolean isRequestedUpdate = false;
-    private RefreshAnimation refreshAnimation;
 
     public BounceScrollView(Context context) {
         super(context);
@@ -54,7 +52,7 @@ public class BounceScrollView extends ScrollView {
 
     @Override
     protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX, int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
-        if(Startup.inTransaction) return true;
+        if (Startup.inTransaction) return true;
         if (scrollY < -mMaxYOverscrollDistance * 0.9 && !isRequestedUpdate) {
             isRequestedUpdate = true;
         }

@@ -23,8 +23,8 @@ import motocitizen.accident.Accident;
 import motocitizen.content.Content;
 import motocitizen.content.Medicine;
 import motocitizen.content.Type;
-import motocitizen.geolocation.MyLocationManager;
 import motocitizen.draw.Resources;
+import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.maps.MyMapManager;
 import motocitizen.utils.Inflate;
@@ -32,10 +32,10 @@ import motocitizen.utils.MyUtils;
 
 @SuppressLint("UseSparseArrays")
 public class MyGoogleMapManager extends MyMapManager {
-    private static GoogleMap            map;
-    private static Marker               user;
-    private static Map<String, Integer> accidents;
-    private static String               selected;
+    private static GoogleMap map;
+    private static Marker    user;
+    private static String    selected;
+    private static Map<String, Integer> accidents = new HashMap<>();
 
     public MyGoogleMapManager(final Context context) {
         setName(MyMapManager.GOOGLE);
@@ -44,9 +44,9 @@ public class MyGoogleMapManager extends MyMapManager {
         Inflate.set(context, R.id.map_container, R.layout.google_maps_view);
 
         android.support.v4.app.FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
-        final SupportMapFragment               mapFragment     = (SupportMapFragment) fragmentManager.findFragmentById(R.id.google_map);
+        final SupportMapFragment mapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.google_map);
 
-/* Возможно поможет, хотя и костыль */
+//TODO Это пиздец
         for (int i = 0; i < 5; i++) {
             map = mapFragment.getMap();
             if (map == null) {
@@ -77,7 +77,7 @@ public class MyGoogleMapManager extends MyMapManager {
         map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
-                String uri    = "geo:" + latLng.latitude + "," + latLng.longitude;
+                String uri = "geo:" + latLng.latitude + "," + latLng.longitude;
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                 context.startActivity(intent);
             }
@@ -92,7 +92,7 @@ public class MyGoogleMapManager extends MyMapManager {
 
         Location location = MyLocationManager.getLocation(context);
         //if(location != null) {
-        user = map.addMarker(new MarkerOptions().position(MyUtils.LocationToLatLng(location)).title("Вы").icon(Resources.getMapBitmapDescriptor(Type.USER)));
+        user = map.addMarker(new MarkerOptions().position(MyUtils.LocationToLatLng(location)).title(Type.USER.toString()).icon(Resources.getMapBitmapDescriptor(Type.USER)));
         //} else {
         //TODO Отобразить сообщение?
         //Toast.makeText(this, Startup.context.getString(R.string.position_not_available), Toast.LENGTH_LONG).show();
@@ -105,18 +105,13 @@ public class MyGoogleMapManager extends MyMapManager {
 
     @SuppressWarnings("UnusedParameters")
     public void placeAccidents(Context context) {
-        if (accidents == null) {
-            accidents = new HashMap<>();
-        }
         init();
         accidents.clear();
         for (int id : Content.getPoints().keySet()) {
             Accident point = Content.get(id);
             if (point.isInvisible()) continue;
             String title = point.getType().toString();
-            if (point.getMedicine() != Medicine.UNKNOWN) {
-                title += ", " + point.getMedicine().toString();
-            }
+            title += point.getMedicine() != Medicine.UNKNOWN ? ", " + point.getMedicine().toString() : "";
             title += ", " + MyUtils.getIntervalFromNowInText(point.getTime()) + " назад";
 
             float alpha;

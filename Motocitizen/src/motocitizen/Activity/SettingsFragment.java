@@ -16,7 +16,7 @@ import motocitizen.utils.Const;
 
 public class SettingsFragment extends PreferenceFragment {
 
-    private ListPreference mapProviderPreference;
+    private static Activity act;
     Preference
             nottifDistPreference,
             nottifAlarmPreference,
@@ -28,8 +28,49 @@ public class SettingsFragment extends PreferenceFragment {
             showOther,
             hoursAgo,
             maxNotifications, useVibration;
-    private        Preferences prefs;
-    private static Activity    act;
+    private ListPreference mapProviderPreference;
+    private final Preference.OnPreferenceChangeListener mapProviderListener = new Preference.OnPreferenceChangeListener() {
+        @Override
+        public boolean onPreferenceChange(Preference preference, Object newValue) {
+            mapProviderPreference.setValue(newValue.toString());
+            Startup.createMap(newValue.toString());
+            preference.setSummary(mapProviderPreference.getEntry());
+            return true;
+        }
+    };
+    private final Preference.OnPreferenceChangeListener distanceListener = new Preference.OnPreferenceChangeListener() {
+        @Override
+        public boolean onPreferenceChange(Preference preference, Object newValue) {
+            String valueText = (String) newValue;
+            int value;
+            if (valueText.length() > 6) {
+                valueText = valueText.substring(0, 6);
+            }
+            value = Integer.parseInt(valueText);
+            value = Math.max(Const.EQUATOR, value);
+
+            if (preference.equals(nottifDistPreference)) {
+                Preferences.setVisibleDistance(value);
+            } else if (preference.equals(nottifAlarmPreference)) {
+                Preferences.setAlarmDistance(value);
+            }
+            update();
+            return false;
+        }
+    };
+    private final Preference.OnPreferenceChangeListener visibleListener = new Preference.OnPreferenceChangeListener() {
+        @Override
+        public boolean onPreferenceChange(Preference preference, Object newValue) {
+            Preferences.putBoolean(preference.getKey(), (boolean) newValue);
+            boolean visible = Preferences.toShowAcc() | Preferences.toShowBreak() | Preferences.toShowOther() | Preferences.toShowSteal();
+            if (!visible) {
+                message(getString(R.string.no_one_accident_visible));
+            }
+            update();
+            return false;
+        }
+    };
+    private Preferences prefs;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,14 +153,12 @@ public class SettingsFragment extends PreferenceFragment {
         maxNotifications.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                Integer value;
                 try {
-                    value = Integer.parseInt((String) newValue);
+                    if (Integer.parseInt((String) newValue) < 0) newValue = "0";
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                     return false;
                 }
-                if (value < 0) newValue = "0";
                 preference.setSummary(newValue.toString());
                 return true;
             }
@@ -140,53 +179,7 @@ public class SettingsFragment extends PreferenceFragment {
         update();
     }
 
-    private final Preference.OnPreferenceChangeListener mapProviderListener = new Preference.OnPreferenceChangeListener() {
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object newValue) {
-            mapProviderPreference.setValue(newValue.toString());
-            Startup.createMap(newValue.toString());
-            preference.setSummary(mapProviderPreference.getEntry());
-            return true;
-        }
-    };
-
-    private final Preference.OnPreferenceChangeListener distanceListener = new Preference.OnPreferenceChangeListener() {
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object newValue) {
-            String valueText = (String) newValue;
-            int    value;
-            if (valueText.length() > 6) {
-                valueText = valueText.substring(0, 6);
-            }
-            value = Integer.parseInt(valueText);
-            if (value > Const.EQUATOR) {
-                value = Const.EQUATOR;
-            }
-
-            if (preference.equals(nottifDistPreference)) {
-                Preferences.setVisibleDistance(value);
-            } else if (preference.equals(nottifAlarmPreference)) {
-                Preferences.setAlarmDistance(value);
-            }
-            update();
-            return false;
-        }
-    };
-
     private void message(String text) {
         Toast.makeText(getActivity(), text, Toast.LENGTH_LONG).show();
     }
-
-    private final Preference.OnPreferenceChangeListener visibleListener = new Preference.OnPreferenceChangeListener() {
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object newValue) {
-            Preferences.putBoolean(preference.getKey(), (boolean) newValue);
-            boolean visible = Preferences.toShowAcc() | Preferences.toShowBreak() | Preferences.toShowOther() | Preferences.toShowSteal();
-            if (!visible) {
-                message(getString(R.string.no_one_accident_visible));
-            }
-            update();
-            return false;
-        }
-    };
 }

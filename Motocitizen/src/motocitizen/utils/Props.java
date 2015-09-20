@@ -56,27 +56,6 @@ public class Props {
         return summary.getProperty(key);
     }
 
-    public List<String> keys() {
-        return this.keys("");
-    }
-
-    @SuppressWarnings({"SameParameterValue", "WeakerAccess"})
-    public List<String> keys(String part) {
-        List<String> keys = new ArrayList<>();
-        Enumeration<Object> e = summary.keys();
-        while (e.hasMoreElements()) {
-            String key = e.nextElement().toString();
-            if (key.matches("^" + part + ".*$")) {
-                keys.add(key);
-            }
-        }
-        return keys;
-    }
-
-    public boolean contains(String obj) {
-        return summary.contains(obj);
-    }
-
     public boolean containsKey(String key) {
         return summary.containsKey(key);
     }

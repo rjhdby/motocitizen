@@ -45,14 +45,13 @@ public class MyUtils {
         StringBuilder out     = new StringBuilder();
         Date          now     = new Date();
         int           minutes = (int) (now.getTime() - date.getTime()) / (60000);
-        if (minutes <= 0) {
-            return "Только что";
-        }
+        if (minutes <= 0) return "Только что";
+
         int hours = minutes / 60;
         minutes -= hours * 60;
         int min = minutes % 10;
         if (full) {
-            switch(hours){
+            switch (hours) {
                 case 1:
                 case 21:
                     out.append(String.valueOf(hours)).append(" час ");
@@ -86,13 +85,7 @@ public class MyUtils {
     }
 
     public static String getStringTime(Date date, boolean full) {
-        String out;
-        if (full) {
-            out = Const.FULL_TIME_FORMAT.format(date);
-        } else {
-            out = Const.TIME_FORMAT.format(date);
-        }
-        return out;
+        return full ? Const.FULL_TIME_FORMAT.format(date) : Const.TIME_FORMAT.format(date);
     }
 
     public static int newId() {

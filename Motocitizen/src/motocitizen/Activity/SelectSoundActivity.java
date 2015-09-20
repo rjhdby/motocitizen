@@ -27,12 +27,12 @@ import motocitizen.utils.MyUtils;
 
 public class SelectSoundActivity extends ActionBarActivity {
     private static Map<Integer, Uri> notifications;
-    private static int               currentId;
-    private static ViewGroup         vg;
-    private static Uri               currentUri;
-    private static String            currentTitle;
-    private static RingtoneManager   rm;
-    private        Preferences       prefs;
+    private static int currentId;
+    private static ViewGroup vg;
+    private static Uri currentUri;
+    private static String currentTitle;
+    private static RingtoneManager rm;
+    private Preferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,9 +76,7 @@ public class SelectSoundActivity extends ActionBarActivity {
         currentId = 0;
         notifications = new HashMap<>();
         Cursor cursor = rm.getCursor();
-        if (cursor.getCount() == 0 && !cursor.moveToFirst()) {
-            return;
-        }
+        if (cursor.getCount() == 0 && !cursor.moveToFirst()) return;
         while (!cursor.isAfterLast() && cursor.moveToNext()) {
             int currentPosition = cursor.getPosition();
             inflateRow(context, vg, currentPosition);
@@ -87,7 +85,7 @@ public class SelectSoundActivity extends ActionBarActivity {
 
     private void inflateRow(final Context context, ViewGroup viewGroup, int currentPosition) {
         LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        TableRow       tr = (TableRow) li.inflate(R.layout.sound_row, viewGroup, false);
+        TableRow tr = (TableRow) li.inflate(R.layout.sound_row, viewGroup, false);
         tr.setId(MyUtils.newId());
         ((TextView) tr.findViewById(R.id.sound)).setText(rm.getRingtone(currentPosition).getTitle(context));
         notifications.put(tr.getId(), rm.getRingtoneUri(currentPosition));

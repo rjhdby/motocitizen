@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -14,37 +13,27 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
-import motocitizen.MyApp;
-import motocitizen.content.Content;
 import motocitizen.network.requests.GCMRegistrationRequest;
 import motocitizen.startup.Preferences;
 
 public class GCMRegistration {
-    private static final String TAG                              = "GCM";
-    private final static int    PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    private final        String SENDER_ID                        = "258135342835";
+    private static final String TAG                = "GCM";
+    private final        String SENDER_ID          = "258135342835";
+    private final static int    RESOLUTION_REQUEST = 9000;
+    private static Context              context;
     private        GoogleCloudMessaging gcm;
     private        String               regid;
-    private static Context              context;
-    private static Preferences          prefs;
 
     public GCMRegistration(Context context) {
         GCMRegistration.context = context;
-        prefs = ((MyApp) context.getApplicationContext()).getPreferences();
-        if (checkPlayServices()) {
-            gcm = GoogleCloudMessaging.getInstance(context);
-            regid = getRegistrationId();
-            Log.d(TAG, regid);
-            if (regid.isEmpty()) {
-                registerInBackground();
-            } else {
-                storeRegistrationId(regid);
-            }
+        if (!checkPlayServices()) return;
+        gcm = GoogleCloudMessaging.getInstance(context);
+        regid = getRegistrationId();
+        if (regid.isEmpty()) {
+            registerInBackground();
         } else {
-            Log.d(TAG, "No valid Google Play Services APK found.");
+            storeRegistrationId(regid);
         }
     }
 
@@ -57,23 +46,11 @@ public class GCMRegistration {
         }
     }
 
-    private static Map<String, String> createPOST(String regId) {
-        String imei = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
-        Map<String, String> POST = new HashMap<>();
-        POST.put("owner_id", String.valueOf(Content.auth.getid()));
-        POST.put("gcm_key", regId);
-        POST.put("login", Content.auth.getLogin());
-        POST.put("imei", imei);
-        POST.put("passhash", Content.auth.makePassHash());
-        POST.put("calledMethod", "registerGCM");
-        return POST;
-    }
-
     private boolean checkPlayServices() {
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
         if (resultCode != ConnectionResult.SUCCESS) {
             if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, (Activity) context, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+                GooglePlayServicesUtil.getErrorDialog(resultCode, (Activity) context, RESOLUTION_REQUEST).show();
             } else {
                 Log.d(TAG, "This device is not supported.");
             }
@@ -101,7 +78,7 @@ public class GCMRegistration {
         new AsyncTask<String, String, String>() {
             @Override
             protected String doInBackground(String... params) {
-                @SuppressWarnings("UnusedAssignment") String msg = "";
+                String msg;
                 try {
                     if (gcm == null) {
                         gcm = GoogleCloudMessaging.getInstance(context);

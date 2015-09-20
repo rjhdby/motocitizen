@@ -21,7 +21,6 @@ import motocitizen.startup.Startup;
 public class MyLocationManager {
     public static  String          address;
     private static Location        current;
-    private static Preferences     prefs;
     private static GoogleApiClient mGoogleApiClient;
     private static LocationRequest mLocationRequest;
     private static Context         context;
@@ -38,7 +37,7 @@ public class MyLocationManager {
 
         @Override
         public void onConnected(Bundle connectionHint) {
-
+//TODO Это пиздец
             while (!mGoogleApiClient.isConnected()) {
                 try {
                     Thread.sleep(5000);
@@ -48,7 +47,7 @@ public class MyLocationManager {
             }
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, FusionLocationListener);
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, FusionLocationListener);
-            current = getBestFusionLocation(context);
+            current = getLocation(context);
         }
 
         @Override
@@ -59,9 +58,8 @@ public class MyLocationManager {
 
     public MyLocationManager(Context context) {
         MyLocationManager.context = context;
-        prefs = ((MyApp) context.getApplicationContext()).getPreferences();
         mLocationRequest = getProvider(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        current = getBestFusionLocation(context);
+        current = getLocation(context);
     }
 
     private static LocationRequest getProvider(int accuracy) {
@@ -73,10 +71,6 @@ public class MyLocationManager {
                 displacement = 10;
                 break;
             case LocationRequest.PRIORITY_LOW_POWER:
-                interval = 60000;
-                bestInterval = 30000;
-                displacement = 200;
-                break;
             default:
                 interval = 60000;
                 bestInterval = 30000;
@@ -90,19 +84,13 @@ public class MyLocationManager {
         return lr;
     }
 
-    /*
-     *  Никогда не возвратит null
-     */
-    public static Location getBestFusionLocation(Context context) {
+    public static Location getLocation(Context context) {
         Location last = null;
         if (mGoogleApiClient != null) {
             last = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         }
         if (last == null) {
             last = new Location(LocationManager.NETWORK_PROVIDER);
-            if (prefs == null) {
-                prefs = new Preferences(context);
-            }
             LatLng latlng = Preferences.getSavedLatLng();
             last.setLatitude(latlng.latitude);
             last.setLongitude(latlng.longitude);
@@ -136,30 +124,23 @@ public class MyLocationManager {
     }
 
     private static void requestAddress(Context context) {
-        Location location = getBestFusionLocation(context);
-        if (current == location) {
-            return;
-        }
-        address = ((MyApp) context.getApplicationContext()).getAddres(location);
+        Location location = getLocation(context);
+        if (current == location) return;
+        address = ((MyApp) context.getApplicationContext()).getAddress(location);
         Startup.updateStatusBar(MyLocationManager.address);
     }
 
     private static void checkInPlace(Context context, Location location) {
         String login = Preferences.getLogin();
-        if (login.equals("")) {
-            return;
-        }
+        if (login.equals("")) return;
         int currentInplace = Content.getInplaceID();
         if (currentInplace != 0) {
-            if (isInPlace(location, currentInplace)) {
-                return;
-            } else {
-                Content.setLeave(currentInplace);
-                new LeaveRequest(context, currentInplace);
-            }
+            if (isInPlace(location, currentInplace)) return;
+            Content.setLeave(currentInplace);
+            new LeaveRequest(context, currentInplace);
         }
         for (int accId : Content.getPoints().keySet()) {
-            if(accId == currentInplace) continue;
+            if (accId == currentInplace) continue;
             if (isArrived(location, accId)) {
                 Content.setInPlace(accId);
                 new InplaceRequest(context, accId);
@@ -169,7 +150,7 @@ public class MyLocationManager {
 
     private static boolean isArrived(Location location, int accId) {
         double meters = Content.getPoint(accId).getLocation().distanceTo(location);
-        double limit  = Math.max(300, location.getAccuracy());
+        double limit = Math.max(300, location.getAccuracy());
         return meters < limit;
     }
 
@@ -193,11 +174,7 @@ public class MyLocationManager {
         }
 
         double meters = Content.getPoint(accId).getLocation().distanceTo(location);
-        double limit  = location.getAccuracy() * 2 + 1000;
+        double limit = location.getAccuracy() * 2 + 1000;
         return meters < limit;
-    }
-
-    public static Location getLocation(Context context) {
-        return getBestFusionLocation(context);
     }
 }
