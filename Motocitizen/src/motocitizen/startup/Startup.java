@@ -30,7 +30,6 @@ import org.json.JSONObject;
 import motocitizen.Activity.AboutActivity;
 import motocitizen.Activity.CreateAccActivity;
 import motocitizen.Activity.SettingsActivity;
-import motocitizen.MyApp;
 import motocitizen.app.general.user.Role;
 import motocitizen.content.Content;
 import motocitizen.gcm.GCMBroadcastReceiver;
@@ -46,14 +45,12 @@ import motocitizen.utils.Const;
 public class Startup extends ActionBarActivity implements View.OnClickListener {
 
     public static  Context      context;
-    public static  Preferences  prefs;
     public static  MyMapManager map;
     public static  boolean      fromDetails;
     public static  Menu         mMenu;
     public static  Integer      currentGeneral;
     private static ActionBar    actionBar;
     private static AlertDialog changeLogDlg = null;
-    private        MyApp       myApp        = null;
     private ImageButton createAccButton;
     private RadioGroup  mainTabsGroup;
     private View        accListView;
@@ -104,14 +101,12 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        myApp = (MyApp) getApplicationContext();
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         setContentView(R.layout.main);
         context = this;
         actionBar = getSupportActionBar();
-
-        prefs = myApp.getPreferences();
+        new Preferences(this);
         Preferences.setDoNotDisturb(false);
         new Const();
 
@@ -133,7 +128,6 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         accListView.setOnDragListener(new View.OnDragListener() {
             @Override
             public boolean onDrag(View v, DragEvent event) {
-
                 return true;
             }
         });
