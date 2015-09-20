@@ -21,7 +21,7 @@ public class AccidentsRequest extends HTTPClient {
         this.context = context;
         this.listener = listener;
         post = new HashMap<>();
-        Location location = MyLocationManager.getLocation(context);
+        Location location = MyLocationManager.getLocation();
         myApp = (MyApp) context.getApplicationContext();
         String      user  = Preferences.getLogin();
         if (!user.equals("")) {

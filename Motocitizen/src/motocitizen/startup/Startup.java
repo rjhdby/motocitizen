@@ -165,7 +165,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
                 map = new MyGoogleMapManager(context);
         }
 
-        Location location = MyLocationManager.getLocation(context);
+        Location location = MyLocationManager.getLocation();
         map.jumpToPoint(location);
     }
 
@@ -312,7 +312,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
 
         public void onTaskComplete(JSONObject result) {
             stopRefreshAnimation();
-            if (!result.has("error")) Content.parseJSON(context, result);
+            if (!result.has("error")) Content.parseJSON(result);
             Content.redraw(context);
             Startup.map.placeAccidents(context);
         }

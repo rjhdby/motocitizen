@@ -17,7 +17,7 @@ class OSMUserOverlay {
         ArrayList<OverlayItem> items;
         OverlayItem user;
 
-        Location location = MyLocationManager.getLocation(context);
+        Location location = MyLocationManager.getLocation();
         //if( location != null) {
             user = new OverlayItem("Ваша позиция", "Ваша позиция", new GeoPoint(location));
             user.setMarker(context.getResources().getDrawable(R.drawable.osm_moto_icon));

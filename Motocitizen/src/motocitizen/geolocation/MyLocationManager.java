@@ -47,7 +47,7 @@ public class MyLocationManager {
             }
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, FusionLocationListener);
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, FusionLocationListener);
-            current = getLocation(context);
+            current = getLocation();
         }
 
         @Override
@@ -59,7 +59,7 @@ public class MyLocationManager {
     public MyLocationManager(Context context) {
         MyLocationManager.context = context;
         mLocationRequest = getProvider(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        current = getLocation(context);
+        current = getLocation();
     }
 
     private static LocationRequest getProvider(int accuracy) {
@@ -84,7 +84,7 @@ public class MyLocationManager {
         return lr;
     }
 
-    public static Location getLocation(Context context) {
+    public static Location getLocation() {
         Location last = null;
         if (mGoogleApiClient != null) {
             last = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
@@ -124,7 +124,7 @@ public class MyLocationManager {
     }
 
     private static void requestAddress(Context context) {
-        Location location = getLocation(context);
+        Location location = getLocation();
         if (current == location) return;
         address = ((MyApp) context.getApplicationContext()).getAddress(location);
         Startup.updateStatusBar(MyLocationManager.address);

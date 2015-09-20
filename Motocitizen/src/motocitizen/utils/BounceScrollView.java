@@ -84,7 +84,7 @@ public class BounceScrollView extends ScrollView {
                     e.printStackTrace();
                 }
             } else {
-                Content.parseJSON(context, result);
+                Content.parseJSON(result);
                 Content.redraw(context);
             }
             Startup.stopRefreshAnimation();

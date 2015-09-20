@@ -183,7 +183,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         @Override
         public void onTaskComplete(JSONObject result) {
             mcNewMessageText.setText("");
-            if (!result.has("error")) Content.parseJSON(getActivity(), result);
+            if (!result.has("error")) Content.parseJSON(result);
             ((AccidentDetailsActivity) getActivity()).update();
             update();
         }

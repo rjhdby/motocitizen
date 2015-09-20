@@ -64,7 +64,7 @@ public class MyOSMMapManager extends MyMapManager {
 
     private static void goToUser() {
 
-        Location location = MyLocationManager.getLocation(context);
+        Location location = MyLocationManager.getLocation();
         //if( location != null) {
             GeoPoint gp = new GeoPoint(location);
             map.getController().animateTo(gp);

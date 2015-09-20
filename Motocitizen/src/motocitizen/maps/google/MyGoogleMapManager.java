@@ -90,7 +90,7 @@ public class MyGoogleMapManager extends MyMapManager {
             user.remove();
         }
 
-        Location location = MyLocationManager.getLocation(context);
+        Location location = MyLocationManager.getLocation();
         //if(location != null) {
         user = map.addMarker(new MarkerOptions().position(MyUtils.LocationToLatLng(location)).title(Type.USER.toString()).icon(Resources.getMapBitmapDescriptor(Type.USER)));
         //} else {

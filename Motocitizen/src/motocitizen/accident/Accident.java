@@ -31,7 +31,6 @@ import static motocitizen.content.AccidentStatus.HIDDEN;
 
 public class Accident {
     private static final String[] prerequisites = {"id", "owner_id", "owner", "status", "uxtime", "address", "descr", "lat", "lon", "type", "med", "m", "h", "v"};
-    Context context;
     Integer rowId;
     private int                     id;
     private int                     ownerId;
@@ -51,9 +50,8 @@ public class Accident {
     private Map<Integer, History>   history;
     private boolean                 favorite;
 
-    public Accident(Context context, JSONObject json) {
+    public Accident(JSONObject json) {
         update(json);
-        this.context = context;
     }
 
     public void update(JSONObject json) {
@@ -189,7 +187,7 @@ public class Accident {
     }
 
     public Double getDistanceFromUser() {
-        Location userLocation = MyLocationManager.getLocation(context);
+        Location userLocation = MyLocationManager.getLocation();
         return (double) getLocation().distanceTo(userLocation);
     }
 

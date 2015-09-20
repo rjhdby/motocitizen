@@ -64,7 +64,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_point);
-        initialLocation = MyLocationManager.getLocation(this);
+        initialLocation = MyLocationManager.getLocation();
         accident = createDefaultAccident();
         confirmLock = false;
         map = makeMap();
@@ -110,7 +110,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return new Accident(this, accident);
+        return new Accident(accident);
     }
 
     private GoogleMap makeMap() {

@@ -133,13 +133,13 @@ public class Content {
         context.startActivity(intent);
     }
 
-    public static void parseJSON(Context context, JSONObject json) {
+    public static void parseJSON(JSONObject json) {
         noError = true;
         if (!json.has("list")) return;
         try {
             JSONArray list = json.getJSONArray("list");
             for (int i = 0; i < list.length(); i++) {
-                Accident accident = new Accident(context, list.getJSONObject(i));
+                Accident accident = new Accident(list.getJSONObject(i));
                 if (accident.isError()) continue;
                 if (points.containsKey(accident.getId())) {
                     points.get(accident.getId()).update(list.getJSONObject(i));
@@ -177,7 +177,7 @@ public class Content {
         }
 
         public void onTaskComplete(JSONObject result) {
-            if (!result.has("error")) parseJSON(context, result);
+            if (!result.has("error")) parseJSON(result);
             Content.redraw(context);
             Startup.map.placeAccidents(context);
         }
