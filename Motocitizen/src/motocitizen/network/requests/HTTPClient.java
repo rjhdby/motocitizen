@@ -141,6 +141,7 @@ abstract class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONOb
             }
         }
         JSONObject reader;
+        //TODO порнография какая то
         try {
             reader = new JSONObject(response.toString());
         } catch (JSONException e) {
@@ -165,13 +166,10 @@ abstract class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONOb
 
     private String makePOST(Map<String, String> post) {
         StringBuilder result = new StringBuilder();
-        boolean first = true;
+        //TODO Нафига здесь final?
         for (final String key : post.keySet())
             try {
-                if (first)
-                    first = false;
-                else
-                    result.append("&");
+                result.append("&");
                 if (post.get(key) == null) {
                     //TODO Caused by: java.lang.RuntimeException: Can't create handler inside thread that has not called Looper.prepare()
                     return "ERROR";
@@ -182,25 +180,16 @@ abstract class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONOb
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-        // Log.d("JSON POST", result.toString());
-        return result.toString();
+        return result.toString().substring(1);
     }
 
     private URL createUrl(String app, String method, Boolean https) {
         String protocol;
-        if (https) {
-            protocol = "https";
-        } else {
-            protocol = "http";
-        }
+        protocol = https ? "https" : "http";
         String script;
         String defaultMethod = myApp.getProps().get("app." + app + ".json.method.default");
         String server = myApp.getProps().get("app." + app + ".json.server");
-        if (myApp.getProps().containsKey("app." + app + ".json.method." + method)) {
-            script = myApp.getProps().get("app." + app + ".json.method." + method);
-        } else {
-            script = defaultMethod;
-        }
+        script = myApp.getProps().containsKey("app." + app + ".json.method." + method) ? myApp.getProps().get("app." + app + ".json.method." + method) : defaultMethod;
         try {
             return new URL(protocol + "://" + server + "/" + script);
         } catch (MalformedURLException e) {

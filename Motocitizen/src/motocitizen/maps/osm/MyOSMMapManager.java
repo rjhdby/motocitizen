@@ -6,7 +6,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.location.Location;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
@@ -19,17 +22,20 @@ import org.osmdroid.views.overlay.ScaleBarOverlay;
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.maps.MyMapManager;
-import motocitizen.utils.Inflate;
 
 public class MyOSMMapManager extends MyMapManager {
-    private static MapView map;
+    private static MapView                          map;
     private static ItemizedIconOverlay<OverlayItem> userOverlay, accOverlay;
     private static Context context;
 
     public MyOSMMapManager(Context context) {
         MyOSMMapManager.context = context;
         setName(MyMapManager.OSM);
-        Inflate.set(context, R.id.map_container, R.layout.osm_view_content);
+        LayoutInflater li     = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        ViewGroup      parent = (ViewGroup) ((Activity) context).findViewById(R.id.map_container);
+        View           child  = li.inflate(R.layout.osm_view_content, parent, false);
+        if (parent.getChildCount() > 0) parent.removeAllViews();
+        parent.addView(child);
         userOverlay = OSMUserOverlay.getUserOverlay(context);
         accOverlay = OSMAccOverlay.getOverlay(context);
         Activity act = (Activity) context;
@@ -40,7 +46,7 @@ public class MyOSMMapManager extends MyMapManager {
         map.getController().setZoom(16);
 
         ScaleBarOverlay myScaleBarOverlay = new ScaleBarOverlay(act);
-        JumpToLocation jumpToLocation = new JumpToLocation(act);
+        JumpToLocation  jumpToLocation    = new JumpToLocation(act);
 
         map.getOverlays().add(myScaleBarOverlay);
         map.getOverlays().add(jumpToLocation);
@@ -66,9 +72,9 @@ public class MyOSMMapManager extends MyMapManager {
 
         Location location = MyLocationManager.getLocation();
         //if( location != null) {
-            GeoPoint gp = new GeoPoint(location);
-            map.getController().animateTo(gp);
-            map.invalidate();
+        GeoPoint gp = new GeoPoint(location);
+        map.getController().animateTo(gp);
+        map.invalidate();
         //}
     }
 
@@ -92,7 +98,7 @@ public class MyOSMMapManager extends MyMapManager {
         @Override
         public boolean onSingleTapConfirmed(MotionEvent event, MapView map) {
             int[] location = new int[2];
-            float x = event.getRawX();
+            float x        = event.getRawX();
             map.getLocationInWindow(location);
             lastZoom = -1;
             float y = event.getRawY() - location[1];

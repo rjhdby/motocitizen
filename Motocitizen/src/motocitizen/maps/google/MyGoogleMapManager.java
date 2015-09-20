@@ -1,11 +1,15 @@
 package motocitizen.maps.google;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -27,7 +31,6 @@ import motocitizen.draw.Resources;
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.maps.MyMapManager;
-import motocitizen.utils.Inflate;
 import motocitizen.utils.MyUtils;
 
 @SuppressLint("UseSparseArrays")
@@ -41,10 +44,14 @@ public class MyGoogleMapManager extends MyMapManager {
         setName(MyMapManager.GOOGLE);
         selected = "";
 
-        Inflate.set(context, R.id.map_container, R.layout.google_maps_view);
+        LayoutInflater li     = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        ViewGroup      parent = (ViewGroup) ((Activity) context).findViewById(R.id.map_container);
+        View           child  = li.inflate(R.layout.google_maps_view, parent, false);
+        if (parent.getChildCount() > 0) parent.removeAllViews();
+        parent.addView(child);
 
         android.support.v4.app.FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
-        final SupportMapFragment mapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.google_map);
+        final SupportMapFragment               mapFragment     = (SupportMapFragment) fragmentManager.findFragmentById(R.id.google_map);
 
 //TODO Это пиздец
         for (int i = 0; i < 5; i++) {
@@ -77,7 +84,7 @@ public class MyGoogleMapManager extends MyMapManager {
         map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
-                String uri = "geo:" + latLng.latitude + "," + latLng.longitude;
+                String uri    = "geo:" + latLng.latitude + "," + latLng.longitude;
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                 context.startActivity(intent);
             }
