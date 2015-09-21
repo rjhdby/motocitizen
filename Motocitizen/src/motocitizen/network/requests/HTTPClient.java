@@ -26,6 +26,7 @@ import java.util.zip.GZIPInputStream;
 import motocitizen.MyApp;
 import motocitizen.network.CustomTrustManager;
 import motocitizen.startup.Startup;
+import motocitizen.utils.Props;
 
 
 abstract class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONObject> {
@@ -55,22 +56,9 @@ abstract class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONOb
             }
         }
         URL    url;
-        String app, method;
         myApp = (MyApp) context.getApplicationContext();
         try {
-            if (post.containsKey("app")) {
-                app = post.get("app");
-                post.remove("app");
-            } else {
-                app = myApp.getProps().get("default.app");
-            }
-            if (post.containsKey("method")) {
-                method = post.get("method");
-                post.remove("method");
-            } else {
-                method = "default";
-            }
-            url = createUrl(app, method, false);
+            url = createUrl(false);
             if (post.containsKey("hint")) {
                 final String hint = post.get("hint");
                 post.remove("hint");
@@ -91,7 +79,7 @@ abstract class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONOb
             return new JSONObject();
         }
         HttpURLConnection connection = null;
-        StringBuilder response = new StringBuilder();
+        StringBuilder     response   = new StringBuilder();
         CustomTrustManager.allowAllSSL();
         try {
             connection = (HttpURLConnection) url.openConnection();
@@ -183,15 +171,12 @@ abstract class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONOb
         return result.toString().substring(1);
     }
 
-    private URL createUrl(String app, String method, Boolean https) {
+    private URL createUrl(Boolean https) {
         String protocol;
         protocol = https ? "https" : "http";
-        String script;
-        String defaultMethod = myApp.getProps().get("app." + app + ".json.method.default");
-        String server = myApp.getProps().get("app." + app + ".json.server");
-        script = myApp.getProps().containsKey("app." + app + ".json.method." + method) ? myApp.getProps().get("app." + app + ".json.method." + method) : defaultMethod;
+        String server = myApp.getProps().get(Props.SERVER);
         try {
-            return new URL(protocol + "://" + server + "/" + script);
+            return new URL(protocol + "://" + server);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -200,8 +185,7 @@ abstract class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONOb
 
     private void dismiss() {
         try {
-            if (dialog != null && dialog.isShowing())
-                dialog.dismiss();
+            if (dialog != null && dialog.isShowing()) dialog.dismiss();
         } catch (final Exception e) {
             // Handle or log or ignore
         } finally {

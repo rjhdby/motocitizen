@@ -4,9 +4,6 @@ import motocitizen.accident.Accident;
 import motocitizen.content.Medicine;
 import motocitizen.utils.Const;
 
-/**
- * Created by U_60A9 on 14.08.2015.
- */
 public class Strings {
     public static String getAccidentTextToCopy(Accident accident) {
         StringBuilder res = new StringBuilder();
