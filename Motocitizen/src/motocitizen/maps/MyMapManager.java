@@ -3,29 +3,29 @@ package motocitizen.maps;
 import android.content.Context;
 import android.location.Location;
 
-    public abstract class MyMapManager {
+public abstract class MyMapManager {
 
-        public static final String OSM = "osm";
-        public static final String GOOGLE = "google";
-        public static final String YANDEX = "yandex";
+    public static final String OSM    = "osm";
+    public static final String GOOGLE = "google";
+    public static final String YANDEX = "yandex";
 
-        private String name;
+    private String name;
 
-        public abstract void placeUser(Context context);
+    public abstract void placeUser(Context context);
 
-        public abstract void jumpToPoint(Location location);
+    public abstract void jumpToPoint(Location location);
 
-        @SuppressWarnings("SameParameterValue")
-        public abstract void zoom(int zoom);
+    @SuppressWarnings("SameParameterValue")
+    public abstract void zoom(int zoom);
 
-        public abstract void placeAccidents(Context context);
+    public abstract void placeAccidents(Context context);
 
-        public String getName() {
-            return name;
-        }
+    public String getName() {
+        return name;
+    }
 
-        protected void setName(String name) {
-            this.name = name;
-        }
-   }
+    protected void setName(String name) {
+        this.name = name;
+    }
+}
 

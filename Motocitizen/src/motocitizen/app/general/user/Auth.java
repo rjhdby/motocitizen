@@ -17,9 +17,9 @@ import motocitizen.startup.Preferences;
 
 public class Auth {
     private final Context context;
-    private String role = "";
-    private String name = "";
-    private int id = 0;
+    private Role    role         = Role.RO;
+    private String  name         = "";
+    private int     id           = 0;
     private boolean isAuthorized = false;
     private String login;
     private String password;
@@ -63,11 +63,11 @@ public class Auth {
         }
         try {
             name = result.getString("name");
-            role = result.getString("role");
+            role = Role.parse(result.getString("role"));
             id = Integer.parseInt(result.getString("id"));
             Preferences.setUserId(id);
             Preferences.setUserName(name);
-            Preferences.setUserRole(role);
+            Preferences.setUserRole(role.getCode());
             if (name.length() > 0) {
                 Preferences.setLogin(login);
                 Preferences.setPassword(password);
@@ -94,7 +94,7 @@ public class Auth {
         return name;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
@@ -120,7 +120,7 @@ public class Auth {
 
     public void logoff() {
         name = "";
-        role = "";
+        role = Role.RO;
         id = 0;
         this.isAuthorized = false;
     }

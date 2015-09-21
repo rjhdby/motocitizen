@@ -181,8 +181,8 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
         Accident currentPoint = Content.getPoint(accidentID);
         MenuItem finish       = mMenu.findItem(R.id.menu_acc_finish);
         MenuItem hide         = mMenu.findItem(R.id.menu_acc_hide);
-        finish.setVisible(Role.isModerator());
-        hide.setVisible(Role.isModerator());
+        finish.setVisible(Content.auth.getRole().isModerator());
+        hide.setVisible(Content.auth.getRole().isModerator());
         finish.setTitle(R.string.finish);
         hide.setTitle(R.string.hide);
         switch (currentPoint.getStatus()) {

@@ -190,7 +190,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         int    toMap  = intent.getIntExtra("toMap", 0);
         context = this;
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        createAccButton.setVisibility(Role.isStandart() ? View.VISIBLE : View.INVISIBLE);
+        createAccButton.setVisibility(Content.auth.getRole().isStandart() ? View.VISIBLE : View.INVISIBLE);
         Content.redraw(this);
         getAccidents();
 

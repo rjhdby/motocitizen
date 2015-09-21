@@ -138,7 +138,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
     }
 
     private void setupAccess() {
-        if (Role.isStandart()) {
+        if (Content.auth.getRole().isStandart()) {
             newMessageArea.setVisibility(View.VISIBLE);
         } else {
             newMessageArea.setVisibility(View.INVISIBLE);

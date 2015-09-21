@@ -9,6 +9,7 @@ import android.preference.PreferenceFragment;
 import android.widget.Toast;
 
 import motocitizen.app.general.user.Role;
+import motocitizen.content.Content;
 import motocitizen.main.R;
 import motocitizen.startup.Preferences;
 import motocitizen.startup.Startup;
@@ -113,9 +114,9 @@ public class SettingsFragment extends PreferenceFragment {
         nottifAlarmPreference.setOnPreferenceChangeListener(distanceListener);
         String login = Preferences.getLogin();
         if (login.length() > 0)
-            authPreference.setSummary(Role.getName(getActivity()) + ": " + login);
+            authPreference.setSummary(Content.auth.getRole().getName() + ": " + login);
         else
-            authPreference.setSummary(Role.getName(getActivity()));
+            authPreference.setSummary(Content.auth.getRole().getName());
         nottifSoundPreference.setSummary(Preferences.getAlarmSoundTitle());
         nottifDistPreference.setSummary(String.valueOf(Preferences.getVisibleDistance()));
         nottifAlarmPreference.setSummary(String.valueOf(Preferences.getAlarmDistance()));

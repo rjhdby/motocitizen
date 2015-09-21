@@ -24,10 +24,10 @@ public class AccidentListPopup extends PopupWindowGeneral {
             content.addView(phoneButtonRow(context, phone), layoutParams);
             content.addView(smsButtonRow(context, phone), layoutParams);
         }
-        if (Role.isModerator() || Content.auth.getLogin().equals(point.getOwner()))
+        if (Content.auth.getRole().isModerator() || Content.auth.getLogin().equals(point.getOwner()))
             content.addView(finishButtonRow(context, point));
 
-        if (Role.isModerator()) {
+        if (Content.auth.getRole().isModerator()) {
             content.addView(hideButtonRow(context, point));
             content.addView(banButtonRow(point.getId()), layoutParams);
         }

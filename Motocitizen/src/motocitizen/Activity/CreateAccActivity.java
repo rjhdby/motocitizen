@@ -122,7 +122,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         map.setMyLocationEnabled(true);
         map.getUiSettings().setMyLocationButtonEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
-        if (!Role.isModerator()) {
+        if (!Content.auth.getRole().isModerator()) {
             CircleOptions circleOptions = new CircleOptions().center(MyUtils.LocationToLatLng(initialLocation)).radius(RADIUS).fillColor(0x20FF0000);
             map.addCircle(circleOptions);
             map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {

@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import motocitizen.MyApp;
+import motocitizen.app.general.user.Auth;
 import motocitizen.app.general.user.Role;
 import motocitizen.content.AccidentStatus;
 import motocitizen.content.Content;
@@ -207,7 +208,7 @@ public class Accident {
     }
 
     public boolean isInvisible() {
-        boolean hidden         = status == HIDDEN && !Role.isModerator();
+        boolean hidden         = status == HIDDEN && !Content.auth.getRole().isModerator();
         boolean distanceFilter = getDistanceFromUser() > Preferences.getVisibleDistance() * 1000;
         boolean typeFilter     = Preferences.isHidden(getType());
         boolean timeFilter     = time.getTime() + Preferences.getHoursAgo() * 60 * 60 * 1000 < (new Date()).getTime();

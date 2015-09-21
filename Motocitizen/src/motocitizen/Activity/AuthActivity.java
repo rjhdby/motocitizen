@@ -155,7 +155,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
         //Авторизованы?
         if (isAuthorized) {
             String format = getString(R.string.mc_auth_role);
-            roleView.setText(String.format(format, Role.getName(this)));
+            roleView.setText(String.format(format, Content.auth.getRole().getName()));
         } else {
             enableLoginBtn();
         }
