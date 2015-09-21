@@ -11,12 +11,10 @@ import java.util.List;
 
 import motocitizen.app.general.user.Auth;
 import motocitizen.startup.Preferences;
-import motocitizen.utils.Props;
 
 public class MyApp extends Application {
 
     private static MyApp instance;
-    private Props    props    = null;
     private Auth     auth     = null;
     private Geocoder geocoder = null;
 
@@ -30,11 +28,6 @@ public class MyApp extends Application {
 
     public Preferences getPreferences() {
         return new Preferences(instance.getApplicationContext());
-    }
-
-    public Props getProps() {
-        if (props == null) props = new Props(instance);
-        return props;
     }
 
     public Auth getMCAuth() {
@@ -52,16 +45,16 @@ public class MyApp extends Application {
             list = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
             if (list == null || list.size() == 0)
                 return location.getLatitude() + " " + location.getLongitude();
-            Address addr = list.get(0);
-            String locality = addr.getLocality();
-            if (locality == null) locality = addr.getAdminArea();
-            if (locality == null && addr.getMaxAddressLineIndex() > 0)
-                locality = addr.getAddressLine(0);
+            Address address = list.get(0);
+            String locality = address.getLocality();
+            if (locality == null) locality = address.getAdminArea();
+            if (locality == null && address.getMaxAddressLineIndex() > 0)
+                locality = address.getAddressLine(0);
 
-            String thoroughfare = addr.getThoroughfare();
-            if (thoroughfare == null) thoroughfare = addr.getSubAdminArea();
+            String thoroughfare = address.getThoroughfare();
+            if (thoroughfare == null) thoroughfare = address.getSubAdminArea();
 
-            String featureName = addr.getFeatureName();
+            String featureName = address.getFeatureName();
 
             if (locality != null) res.append(locality);
             if (thoroughfare != null) {
