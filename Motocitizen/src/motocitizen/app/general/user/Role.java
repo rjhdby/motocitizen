@@ -1,12 +1,10 @@
 package motocitizen.app.general.user;
 
-import motocitizen.content.Content;
-
 public enum Role {
-    RO("только чтение", "readonly"),
-    BANNED("забанен", "banned"),
-    STANDARD("пользователь", "standart"),
-    MODERATOR("standart", "модератор"),
+    RO("readonly", "только чтение"),
+    BANNED("banned", "забанен"),
+    STANDARD("standart", "пользователь"),
+    MODERATOR("moderator", "модератор"),
     ADMINISTRATOR("admin", "администратор"),
     DEVELOPER("developer", "разработчик");
 
@@ -18,21 +16,15 @@ public enum Role {
         this.text = text;
     }
 
-    private static final String[] ReadOnly  = new String[]{"readonly", "banned", "standart", "moderator", "admin", "developer"};
-    private static final String[] Standart  = new String[]{"standart", "moderator", "admin", "developer"};
-    private static final String[] Moderator = new String[]{"moderator", "admin", "developer"};
-    private static final String[] Admin     = new String[]{"admin", "developer"};
-    private static final String[] Developer = new String[]{"developer"};
-
     public static Role parse(String role) {
         for (Role a : Role.values()) {
             if (a.code.equals(role)) return a;
         }
-        return Role.RO;
+        return RO;
     }
 
     public boolean isRO() {
-        return this.compareTo(RO) >= 0;
+        return this == RO;
     }
 
     public boolean isStandart() {

@@ -122,6 +122,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
 //        ((ScrollView) findViewById(R.id.mc_det_messages_scroll)).fullScroll(View.FOCUS_UP);
 
         getFragmentManager().beginTransaction().replace(R.id.mc_det_tab_content, detailVolunteersFragment).commit();
+        menuReconstruction();
     }
 
     @Override
@@ -158,7 +159,6 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_accident_details, menu);
         mMenu = menu;
-        menuReconstruction();
 
         List<String> contactNumbers = MyUtils.getPhonesFromText(currentPoint.getDescription());
         if (contactNumbers.isEmpty()) return super.onCreateOptionsMenu(menu);
@@ -178,7 +178,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
 
     private void menuReconstruction() {
         if (mMenu == null) return;
-        Accident currentPoint = Content.getPoint(accidentID);
+        currentPoint = Content.getPoint(accidentID);
         MenuItem finish       = mMenu.findItem(R.id.menu_acc_finish);
         MenuItem hide         = mMenu.findItem(R.id.menu_acc_hide);
         finish.setVisible(Content.auth.getRole().isModerator());
@@ -261,11 +261,11 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
         if (Content.getPoint(accidentID).getStatus() == ENDED) {
             //TODO Суперкостыль
             accNewState = ACTIVE;
-            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, ACTIVE.toString());
+            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, ACTIVE.toCode());
         } else {
             //TODO Суперкостыль
             accNewState = ENDED;
-            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, ENDED.toString());
+            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, ENDED.toCode());
         }
     }
 
@@ -273,11 +273,11 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
         if (Content.getPoint(accidentID).getStatus() == ENDED) {
             //TODO Суперкостыль
             accNewState = ACTIVE;
-            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, ACTIVE.toString());
+            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, ACTIVE.toCode());
         } else {
             //TODO Суперкостыль
             accNewState = ENDED;
-            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, HIDDEN.toString());
+            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, HIDDEN.toCode());
         }
     }
 
