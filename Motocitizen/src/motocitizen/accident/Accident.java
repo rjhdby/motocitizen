@@ -1,6 +1,5 @@
 package motocitizen.accident;
 
-import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -16,8 +15,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import motocitizen.MyApp;
-import motocitizen.app.general.user.Auth;
-import motocitizen.app.general.user.Role;
 import motocitizen.content.AccidentStatus;
 import motocitizen.content.Content;
 import motocitizen.content.Medicine;

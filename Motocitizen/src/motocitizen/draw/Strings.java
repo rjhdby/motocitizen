@@ -5,6 +5,7 @@ import motocitizen.content.Medicine;
 import motocitizen.utils.Const;
 
 public class Strings {
+    //TODO выпилить к херам
     public static String getAccidentTextToCopy(Accident accident) {
         StringBuilder res = new StringBuilder();
         res.append(Const.DATE_FORMAT.format(accident.getTime())).append(" ");

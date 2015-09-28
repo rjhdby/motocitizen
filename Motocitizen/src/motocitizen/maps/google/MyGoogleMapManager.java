@@ -27,7 +27,6 @@ import motocitizen.accident.Accident;
 import motocitizen.content.Content;
 import motocitizen.content.Medicine;
 import motocitizen.content.Type;
-import motocitizen.draw.Resources;
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.maps.MyMapManager;
@@ -99,7 +98,7 @@ public class MyGoogleMapManager extends MyMapManager {
 
         Location location = MyLocationManager.getLocation();
         //if(location != null) {
-        user = map.addMarker(new MarkerOptions().position(MyUtils.LocationToLatLng(location)).title(Type.USER.toString()).icon(Resources.getMapBitmapDescriptor(Type.USER)));
+        user = map.addMarker(new MarkerOptions().position(MyUtils.LocationToLatLng(location)).title(Type.USER.toString()).icon(Type.USER.getIcon()));
         //} else {
         //TODO Отобразить сообщение?
         //Toast.makeText(this, Startup.context.getString(R.string.position_not_available), Toast.LENGTH_LONG).show();
@@ -130,7 +129,7 @@ public class MyGoogleMapManager extends MyMapManager {
             } else {
                 alpha = 0.2f;
             }
-            Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(point.getLat(), point.getLon())).title(title).icon(Resources.getMapBitmapDescriptor(point.getType())).alpha(alpha));
+            Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(point.getLat(), point.getLon())).title(title).icon(point.getType().getIcon()).alpha(alpha));
             accidents.put(marker.getId(), id);
         }
     }

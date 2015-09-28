@@ -20,26 +20,29 @@ import java.io.InputStreamReader;
 import motocitizen.main.R;
 
 public class ChangeLog {
-
+    /* constants */
     private static final String EOCL = "END_OF_CHANGE_LOG";
-    private static StringBuffer sb = null;
-    private static Listmode currentListMode = Listmode.NONE;
+    /* end constants */
+
+    private static StringBuffer sb;
+    private static ListMode     currentListMode;
+
+    static {
+        sb = null;
+        currentListMode = ListMode.NONE;
+    }
 
     public static AlertDialog getDialog(Context context, boolean full) {
         WebView wv = new WebView(context);
 
         wv.setBackgroundColor(Color.BLACK);
-        wv.loadDataWithBaseURL(null, getLog(context, full), "text/html", "UTF-8",
-                null);
+        wv.loadDataWithBaseURL(null, getLog(context, full), "text/html", "UTF-8", null);
         Log.d("LOG", wv.toString());
-        AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(context, android.R.style.Theme_Dialog));
-        builder.setTitle("Что нового").setView(wv).setCancelable(false)
-                .setPositiveButton("ОК", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,
-                                        int which) {
-                    }
-                });
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, android.R.style.Theme_Dialog));
+        builder.setTitle("Что нового").setView(wv).setCancelable(false).setPositiveButton("ОК", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
         return builder.create();
     }
 
@@ -85,12 +88,12 @@ public class ChangeLog {
                             break;
                         case '#':
                             // line contains numbered list item
-                            openList(Listmode.ORDERED);
+                            openList(ListMode.ORDERED);
                             sb.append("<li>").append(line.substring(1).trim()).append("</li>\n");
                             break;
                         case '*':
                             // line contains bullet list item
-                            openList(Listmode.UNORDERED);
+                            openList(ListMode.UNORDERED);
                             sb.append("<li>").append(line.substring(1).trim()).append("</li>\n");
                             break;
                         default:
@@ -108,12 +111,12 @@ public class ChangeLog {
         return sb.toString();
     }
 
-    private static void openList(Listmode listMode) {
+    private static void openList(ListMode listMode) {
         if (currentListMode != listMode) {
             closeList();
-            if (listMode == Listmode.ORDERED) {
+            if (listMode == ListMode.ORDERED) {
                 sb.append("<div class='list'><ol>\n");
-            } else if (listMode == Listmode.UNORDERED) {
+            } else if (listMode == ListMode.UNORDERED) {
                 sb.append("<div class='list'><ul>\n");
             }
         }
@@ -121,16 +124,18 @@ public class ChangeLog {
     }
 
     private static void closeList() {
-        if (currentListMode == Listmode.ORDERED) {
-            sb.append("</ol></div>\n");
-        } else if (currentListMode == Listmode.UNORDERED) {
-            sb.append("</ul></div>\n");
+        switch (currentListMode) {
+            case ORDERED:
+                sb.append("</ol></div>\n");
+                break;
+            case UNORDERED:
+                sb.append("</ul></div>\n");
+                break;
         }
-        currentListMode = Listmode.NONE;
+        currentListMode = ListMode.NONE;
     }
 
-    private enum Listmode {
+    private enum ListMode {
         NONE, ORDERED, UNORDERED,
     }
-
 }

@@ -30,7 +30,6 @@ import org.json.JSONObject;
 import motocitizen.Activity.AboutActivity;
 import motocitizen.Activity.CreateAccActivity;
 import motocitizen.Activity.SettingsActivity;
-import motocitizen.app.general.user.Role;
 import motocitizen.content.Content;
 import motocitizen.gcm.GCMBroadcastReceiver;
 import motocitizen.gcm.NewAccidentReceived;
@@ -44,38 +43,47 @@ import motocitizen.utils.Const;
 
 public class Startup extends ActionBarActivity implements View.OnClickListener {
 
-    public static  Context      context;
-    public static  MyMapManager map;
-    public static  boolean      fromDetails;
-    public static  Menu         mMenu;
-    public static  Integer      currentGeneral;
-    private static ActionBar    actionBar;
-    private static AlertDialog changeLogDlg = null;
-    private ImageButton createAccButton;
-    private RadioGroup  mainTabsGroup;
-    private View        accListView;
-    private View        mapContainer;
-    static  ProgressBar progressBar;
-    public static boolean                            inTransaction    = false;
-    private final RadioGroup.OnCheckedChangeListener mainTabsListener = new RadioGroup.OnCheckedChangeListener() {
-        public void onCheckedChanged(RadioGroup group, int checkedId) {
-            currentGeneral = group.getCheckedRadioButtonId();
-            fromDetails = false;
-            accListView.setVisibility(View.VISIBLE);
-            mapContainer.setVisibility(View.VISIBLE);
-            switch (currentGeneral) {
-                case R.id.tab_map_button:
-                    accListView.animate().translationX(-Const.getWidth(context) * 2);
-                    mapContainer.animate().translationX(0);
-                    break;
-                case R.id.tab_accidents_button:
-                default:
-                    accListView.animate().translationX(0);
-                    mapContainer.animate().translationX(Const.getWidth(context) * 2);
-                    break;
+    public static  Context                            context;
+    public static  MyMapManager                       map;
+    public static  boolean                            fromDetails;
+    public static  Menu                               mMenu;
+    public static  Integer                            currentGeneral;
+    private static ActionBar                          actionBar;
+    private static AlertDialog                        changeLogDlg;
+    private        ImageButton                        createAccButton;
+    private        RadioGroup                         mainTabsGroup;
+    private        View                               accListView;
+    private        View                               mapContainer;
+    static         ProgressBar                        progressBar;
+    public static  boolean                            inTransaction;
+    private final  RadioGroup.OnCheckedChangeListener mainTabsListener;
+
+    static {
+        changeLogDlg = null;
+        inTransaction = false;
+    }
+
+    {
+        mainTabsListener = new RadioGroup.OnCheckedChangeListener() {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                currentGeneral = group.getCheckedRadioButtonId();
+                fromDetails = false;
+                accListView.setVisibility(View.VISIBLE);
+                mapContainer.setVisibility(View.VISIBLE);
+                switch (currentGeneral) {
+                    case R.id.tab_map_button:
+                        accListView.animate().translationX(-Const.getWidth(context) * 2);
+                        mapContainer.animate().translationX(0);
+                        break;
+                    case R.id.tab_accidents_button:
+                    default:
+                        accListView.animate().translationX(0);
+                        mapContainer.animate().translationX(Const.getWidth(context) * 2);
+                        break;
+                }
             }
-        }
-    };
+        };
+    }
 
     public static void updateStatusBar(String address) {
 

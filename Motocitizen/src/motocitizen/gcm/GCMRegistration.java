@@ -18,9 +18,12 @@ import motocitizen.network.requests.GCMRegistrationRequest;
 import motocitizen.startup.Preferences;
 
 public class GCMRegistration {
+    /* constants */
     private static final String TAG                = "GCM";
-    private final        String SENDER_ID          = "258135342835";
-    private final static int    RESOLUTION_REQUEST = 9000;
+    private static final String SENDER_ID          = "258135342835";
+    private static final int    RESOLUTION_REQUEST = 9000;
+    /* end constants */
+
     private static Context              context;
     private        GoogleCloudMessaging gcm;
     private        String               regid;
@@ -66,7 +69,7 @@ public class GCMRegistration {
             return "";
         }
         int registeredVersion = Preferences.getAppVersion();
-        int currentVersion = getAppVersion();
+        int currentVersion    = getAppVersion();
         if (registeredVersion != currentVersion) {
             Log.d(TAG, "App version changed.");
             return "";

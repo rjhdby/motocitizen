@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
@@ -19,46 +20,62 @@ import motocitizen.startup.Preferences;
 import motocitizen.startup.Startup;
 
 public class MyLocationManager {
-    public static  String          address;
-    private static Location        current;
-    private static GoogleApiClient mGoogleApiClient;
-    private static LocationRequest mLocationRequest;
-    private static Context         context;
-    private static final com.google.android.gms.location.LocationListener FusionLocationListener = new com.google.android.gms.location.LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-            current = location;
-            Preferences.saveLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
-            requestAddress(context);
-            checkInPlace(context, location);
-        }
-    };
-    private static final GoogleApiClient.ConnectionCallbacks              connectionCallback     = new GoogleApiClient.ConnectionCallbacks() {
+    /* constants */
+    private static final int LOW_INTERVAL     = 60000;
+    private static final int LOW_BEST         = 30000;
+    private static final int LOW_DISPLACEMENT = 200;
 
-        @Override
-        public void onConnected(Bundle connectionHint) {
+    private static final int HIGH_INTERVAL     = 5000;
+    private static final int HIGH_BEST         = 1000;
+    private static final int HIGH_DISPLACEMENT = 10;
+
+    private static final int DEFAULT_ACCURACY     = 1000;
+    private static final int ARRIVED_MAX_ACCURACY = 300;
+    /* end constants */
+
+    public static        String                              address;
+    private static       Location                            current;
+    private static       GoogleApiClient                     googleApiClient;
+    private static       LocationRequest                     locationRequest;
+    private static       Context                             context;
+    private static final LocationListener                    locationListener;
+    private static final GoogleApiClient.ConnectionCallbacks connectionCallback;
+
+
+    static {
+        connectionCallback = new GoogleApiClient.ConnectionCallbacks() {
+            @Override
+            public void onConnected(Bundle connectionHint) {
 //TODO Это пиздец
-            while (!mGoogleApiClient.isConnected()) {
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                while (!googleApiClient.isConnected()) {
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
+                LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, locationListener);
+                LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, locationListener);
+                current = getLocation();
             }
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, FusionLocationListener);
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, FusionLocationListener);
-            current = getLocation();
-        }
 
-        @Override
-        public void onConnectionSuspended(int arg0) {
-
-        }
-    };
+            @Override
+            public void onConnectionSuspended(int arg0) { }
+        };
+        locationListener = new com.google.android.gms.location.LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                current = location;
+                Preferences.saveLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
+                requestAddress(context);
+                checkInPlace(context, location);
+            }
+        };
+    }
 
     public MyLocationManager(Context context) {
         MyLocationManager.context = context;
-        mLocationRequest = getProvider(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest = getProvider(LocationRequest.PRIORITY_HIGH_ACCURACY);
         current = getLocation();
     }
 
@@ -66,15 +83,15 @@ public class MyLocationManager {
         int interval, bestInterval, displacement;
         switch (accuracy) {
             case LocationRequest.PRIORITY_HIGH_ACCURACY:
-                interval = 5000;
-                bestInterval = 1000;
-                displacement = 10;
+                interval = HIGH_INTERVAL;
+                bestInterval = HIGH_BEST;
+                displacement = HIGH_DISPLACEMENT;
                 break;
             case LocationRequest.PRIORITY_LOW_POWER:
             default:
-                interval = 60000;
-                bestInterval = 30000;
-                displacement = 200;
+                interval = LOW_INTERVAL;
+                bestInterval = LOW_BEST;
+                displacement = LOW_DISPLACEMENT;
         }
         LocationRequest lr = new LocationRequest();
         lr.setInterval(interval);
@@ -86,31 +103,31 @@ public class MyLocationManager {
 
     public static Location getLocation() {
         Location last = null;
-        if (mGoogleApiClient != null) {
-            last = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (googleApiClient != null) {
+            last = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         }
         if (last == null) {
             last = new Location(LocationManager.NETWORK_PROVIDER);
             LatLng latlng = Preferences.getSavedLatLng();
             last.setLatitude(latlng.latitude);
             last.setLongitude(latlng.longitude);
-            last.setAccuracy(1000);
+            last.setAccuracy(DEFAULT_ACCURACY);
         }
         return last;
     }
 
     private static void runLocationService(int accuracy) {
-        mLocationRequest = getProvider(accuracy);
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(context).addConnectionCallbacks(connectionCallback).addApi(LocationServices.API).build();
-            mGoogleApiClient.connect();
+        locationRequest = getProvider(accuracy);
+        if (googleApiClient == null) {
+            googleApiClient = new GoogleApiClient.Builder(context).addConnectionCallbacks(connectionCallback).addApi(LocationServices.API).build();
+            googleApiClient.connect();
         }
-        if (mGoogleApiClient.isConnected()) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, FusionLocationListener);
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, FusionLocationListener);
+        if (googleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, locationListener);
+            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, locationListener);
         } else {
-            if (!mGoogleApiClient.isConnecting()) {
-                mGoogleApiClient.connect();
+            if (!googleApiClient.isConnecting()) {
+                googleApiClient.connect();
             }
         }
     }
@@ -150,7 +167,7 @@ public class MyLocationManager {
 
     private static boolean isArrived(Location location, int accId) {
         double meters = Content.getPoint(accId).getLocation().distanceTo(location);
-        double limit = Math.max(300, location.getAccuracy());
+        double limit  = Math.max(ARRIVED_MAX_ACCURACY, location.getAccuracy());
         return meters < limit;
     }
 
@@ -174,7 +191,7 @@ public class MyLocationManager {
         }
 
         double meters = Content.getPoint(accId).getLocation().distanceTo(location);
-        double limit = location.getAccuracy() * 2 + 1000;
+        double limit  = location.getAccuracy() * 2 + 1000;
         return meters < limit;
     }
 }

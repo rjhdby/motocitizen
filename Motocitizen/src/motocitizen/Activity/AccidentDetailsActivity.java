@@ -23,7 +23,6 @@ import java.util.List;
 
 import motocitizen.accident.Accident;
 import motocitizen.app.general.popups.AccidentListPopup;
-import motocitizen.app.general.user.Role;
 import motocitizen.content.AccidentStatus;
 import motocitizen.content.Content;
 import motocitizen.draw.Strings;
@@ -43,11 +42,10 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
 
     private Context context;
 
-    private static final int SMS_MENU_MIN_ID = 100;
-    private static final int SMS_MENU_MAX_ID = 200;
-
-    private static final int CALL_MENU_MIN_ID = 400;
-    private static final int CALL_MENU_MAX_ID = 500;
+    private static final int SMS_MENU_MIN_ID;
+    private static final int SMS_MENU_MAX_ID;
+    private static final int CALL_MENU_MIN_ID;
+    private static final int CALL_MENU_MAX_ID;
 
     /*
     Инцидент с которым работаем
@@ -72,6 +70,13 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
     private Menu mMenu;
 
     private Preferences prefs;
+
+    static {
+        SMS_MENU_MIN_ID = 100;
+        SMS_MENU_MAX_ID = 200;
+        CALL_MENU_MIN_ID = 400;
+        CALL_MENU_MAX_ID = 500;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,8 +184,8 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
     private void menuReconstruction() {
         if (mMenu == null) return;
         currentPoint = Content.getPoint(accidentID);
-        MenuItem finish       = mMenu.findItem(R.id.menu_acc_finish);
-        MenuItem hide         = mMenu.findItem(R.id.menu_acc_hide);
+        MenuItem finish = mMenu.findItem(R.id.menu_acc_finish);
+        MenuItem hide   = mMenu.findItem(R.id.menu_acc_hide);
         finish.setVisible(Content.auth.getRole().isModerator());
         hide.setVisible(Content.auth.getRole().isModerator());
         finish.setTitle(R.string.finish);

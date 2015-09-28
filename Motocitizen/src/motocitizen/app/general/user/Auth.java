@@ -17,12 +17,19 @@ import motocitizen.startup.Preferences;
 
 public class Auth {
     private final Context context;
-    private Role    role         = Role.RO;
-    private String  name         = "";
-    private int     id           = 0;
-    private boolean isAuthorized = false;
-    private String login;
-    private String password;
+    private       Role    role;
+    private       String  name;
+    private       int     id;
+    private       boolean isAuthorized;
+    private       String  login;
+    private       String  password;
+
+    {
+        role = Role.RO;
+        name = "";
+        id = 0;
+        isAuthorized = false;
+    }
 
     public Auth(Context context) {
         this.context = context;

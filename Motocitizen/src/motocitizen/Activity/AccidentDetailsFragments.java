@@ -10,17 +10,22 @@ import motocitizen.startup.Preferences;
 
 public class AccidentDetailsFragments extends Fragment {
 
-    static final String ACCIDENT_ID = "accidentID";
-    static final String USER_NAME   = "userName";
-
+    static final String ACCIDENT_ID;
+    static final String USER_NAME;
     int accidentID;
+    int mStackLevel;
     private String userName;
-
-    Preferences
-            prefs;
-
-    int mStackLevel = 0;
     private OnFragmentInteractionListener mListener;
+    Preferences prefs;
+
+    static {
+        ACCIDENT_ID = "accidentID";
+        USER_NAME = "userName";
+    }
+
+    {
+        mStackLevel = 0;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,8 +68,7 @@ public class AccidentDetailsFragments extends Fragment {
         try {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+            throw new ClassCastException(activity.toString() + " must implement OnFragmentInteractionListener");
         }
     }
 

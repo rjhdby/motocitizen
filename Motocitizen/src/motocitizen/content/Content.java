@@ -34,12 +34,17 @@ import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.startup.Startup;
 
 public class Content {
-    public static Auth auth;
-    private static boolean                noError     = true;
-    private static Map<Integer, Accident> points      = new HashMap<>();
-    private static int                    inPlace     = 0;
-    private static boolean                initialized = false;
-    public static List<Integer> favorites;
+    public static  Auth                   auth;
+    private static Map<Integer, Accident> points;
+    private static int                    inPlace;
+    private static boolean                initialized;
+    public static  List<Integer>          favorites;
+
+    {
+        points = new HashMap<>();
+        inPlace = 0;
+        initialized = false;
+    }
 
     public Content(Context context) {
         MyApp myApp = (MyApp) context.getApplicationContext();
@@ -134,7 +139,6 @@ public class Content {
     }
 
     public static void parseJSON(JSONObject json) {
-        noError = true;
         if (!json.has("list")) return;
         try {
             JSONArray list = json.getJSONArray("list");
@@ -149,7 +153,6 @@ public class Content {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            noError = false;
         }
     }
 

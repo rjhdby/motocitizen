@@ -20,38 +20,77 @@ import motocitizen.utils.Const;
 
 @SuppressLint("CommitPrefEdits")
 public class Preferences {
+    /* constants */
+    private final static float DEFAULT_LATITUDE          = 55.752295f;
+    private final static float DEFAULT_LONGITUDE         = 37.622735f;
+    private final static int   DEFAULT_SHOW_DISTANCE     = 200;
+    private final static int   DEFAULT_ALARM_DISTANCE    = 20;
+    private final static int   DEFAULT_MAX_NOTIFICATIONS = 3;
+    private final static int   DEFAULT_MAX_AGE           = 24;
+    /* end constants */
 
-    public final static  String showAcc             = "mc.show.acc";
-    public final static  String showBreak           = "mc.show.break";
-    public final static  String showSteal           = "mc.show.steal";
-    public final static  String showOther           = "mc.show.other";
-    public final static  String distanceShow        = "mc.distance.show";
-    public final static  String distanceAlarm       = "mc.distance.alarm";
-    public final static  String mapProvider         = "mc.map.provider";
-    public final static  String currentVersion      = "version";
-    public final static  String doNotDisturb        = "do.not.disturb";
-    public final static  String hoursAgo            = "hours.ago";
-    public final static  String maxNotifications    = "notifications.max";
-    public final static  String useVibration        = "use.vibration";
-    public final static  String userId              = "userId";
-    public final static  String userName            = "userName";
-    public final static  String userRole            = "userRole";
-    private final static String onWay               = "mc.onway";
-    private final static String soundTitle          = "mc.notification.sound.title";
-    private final static String soundURI            = "mc.notification.sound";
-    private final static String login               = "mc.login";
-    private final static String password            = "mc.password";
-    private final static String anonim              = "mc.anonim";
-    private final static String GCMRegistrationCode = "mc.gcm.id";
-    private final static String appVersion          = "mc.app.version";
-    private final static String savedLng            = "savedlng";
-    private final static String savedLat            = "savedlat";
-    private final static String notificationList    = "notificationList";
+    public final static  String showAcc;
+    public final static  String showBreak;
+    public final static  String showSteal;
+    public final static  String showOther;
+    public final static  String distanceShow;
+    public final static  String distanceAlarm;
+    public final static  String mapProvider;
+    public final static  String currentVersion;
+    public final static  String doNotDisturb;
+    public final static  String hoursAgo;
+    public final static  String maxNotifications;
+    public final static  String useVibration;
+    public final static  String userId;
+    public final static  String userName;
+    public final static  String userRole;
+    private final static String onWay;
+    private final static String soundTitle;
+    private final static String soundURI;
+    private final static String login;
+    private final static String password;
+    private final static String anonim;
+    private final static String GCMRegistrationCode;
+    private final static String appVersion;
+    private final static String savedLng;
+    private final static String savedLat;
+    private final static String notificationList;
 
-    private final static String[] mapProviders = {"google", "osm", "yandex"};
+    private final static String[] mapProviders;
 
     private static SharedPreferences preferences;
     private static Context           context;
+
+    static {
+        showAcc = "mc.show.acc";
+        showBreak = "mc.show.break";
+        showSteal = "mc.show.steal";
+        showOther = "mc.show.other";
+        distanceShow = "mc.distance.show";
+        distanceAlarm = "mc.distance.alarm";
+        mapProvider = "mc.map.provider";
+        currentVersion = "version";
+        doNotDisturb = "do.not.disturb";
+        hoursAgo = "hours.ago";
+        maxNotifications = "notifications.max";
+        useVibration = "use.vibration";
+        userId = "userId";
+        userName = "userName";
+        userRole = "userRole";
+        onWay = "mc.onway";
+        soundTitle = "mc.notification.sound.title";
+        soundURI = "mc.notification.sound";
+        login = "mc.login";
+        password = "mc.password";
+        anonim = "mc.anonim";
+        GCMRegistrationCode = "mc.gcm.id";
+        appVersion = "mc.app.version";
+        savedLng = "savedlng";
+        savedLat = "savedlat";
+        notificationList = "notificationList";
+
+        mapProviders = new String[]{"google", "osm", "yandex"};
+    }
 
     public Preferences(Context context) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -71,8 +110,8 @@ public class Preferences {
     }
 
     public static LatLng getSavedLatLng() {
-        double lat = (double) preferences.getFloat(savedLat, 55.752295f);
-        double lng = (double) preferences.getFloat(savedLng, 37.622735f);
+        double lat = (double) preferences.getFloat(savedLat, DEFAULT_LATITUDE);
+        double lng = (double) preferences.getFloat(savedLng, DEFAULT_LONGITUDE);
         return new LatLng(lat, lng);
     }
 
@@ -99,9 +138,9 @@ public class Preferences {
     public static int getVisibleDistance() {
         int distance;
         try {
-            distance = preferences.getInt(distanceShow, 200);
+            distance = preferences.getInt(distanceShow, DEFAULT_SHOW_DISTANCE);
         } catch (Exception e) {
-            String distanceString = preferences.getString(distanceShow, "200");
+            String distanceString = preferences.getString(distanceShow, String.valueOf(DEFAULT_SHOW_DISTANCE));
             distance = Integer.parseInt(distanceString);
         }
         return distance;
@@ -117,9 +156,9 @@ public class Preferences {
     public static int getAlarmDistance() {
         int distance;
         try {
-            distance = preferences.getInt(distanceAlarm, 20);
+            distance = preferences.getInt(distanceAlarm, DEFAULT_ALARM_DISTANCE);
         } catch (Exception e) {
-            String distanceString = preferences.getString(distanceAlarm, "20");
+            String distanceString = preferences.getString(distanceAlarm, String.valueOf(DEFAULT_ALARM_DISTANCE));
             distance = Integer.parseInt(distanceString);
         }
         return distance;
@@ -241,7 +280,7 @@ public class Preferences {
     }
 
     public static int getMaxNotifications() {
-        return Integer.parseInt(preferences.getString(maxNotifications, "3"));
+        return Integer.parseInt(preferences.getString(maxNotifications, String.valueOf(DEFAULT_MAX_NOTIFICATIONS)));
     }
 
     public static JSONArray getNotificationList() {
@@ -260,7 +299,7 @@ public class Preferences {
     }
 
     public static int getHoursAgo() {
-        return Integer.parseInt(preferences.getString(hoursAgo, "24"));
+        return Integer.parseInt(preferences.getString(hoursAgo, String.valueOf(DEFAULT_MAX_AGE)));
     }
 
     public static boolean getVibration() {

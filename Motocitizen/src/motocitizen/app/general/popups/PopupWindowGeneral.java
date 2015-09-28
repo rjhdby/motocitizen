@@ -30,8 +30,10 @@ import motocitizen.utils.MyUtils;
 
 abstract class PopupWindowGeneral {
 
+    /* constants */
     private static final String CALL_PREFIX = "Вызов: ";
     private static final String SMS_PREFIX  = "СМС: ";
+    /* end constants */
 
     final TableRow.LayoutParams layoutParams;
     final TableLayout           content;

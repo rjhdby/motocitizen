@@ -3,14 +3,14 @@ package motocitizen.app.general.popups;
 import android.content.Context;
 import android.widget.PopupWindow;
 
-import motocitizen.app.general.user.Role;
+import motocitizen.accident.Accident;
 import motocitizen.content.Content;
 import motocitizen.draw.Strings;
 import motocitizen.utils.MyUtils;
 
 public class AccidentListPopup extends PopupWindowGeneral {
-    private final motocitizen.accident.Accident point;
-    private final String                        accText;
+    private final Accident point;
+    private final String   accText;
 
     public AccidentListPopup(Context context, int id) {
         super(context);

@@ -31,12 +31,10 @@ import java.util.Date;
 
 import motocitizen.MyApp;
 import motocitizen.accident.Accident;
-import motocitizen.app.general.user.Role;
 import motocitizen.content.AccidentStatus;
 import motocitizen.content.Content;
 import motocitizen.content.Medicine;
 import motocitizen.content.Type;
-import motocitizen.draw.Resources;
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
@@ -46,32 +44,39 @@ import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
 
 public class CreateAccActivity extends FragmentActivity implements View.OnClickListener {
-    private final int RADIUS      = 1000;
-    private final int TYPE        = R.id.mc_create_type_frame;
-    private final int DESCRIPTION = R.id.mc_create_final_frame;
-    private final int ACCIDENT    = R.id.mc_create_acc_frame;
-    private final int MEDICINE    = R.id.mc_create_people_frame;
-    private final int MAP         = R.id.mc_create_map;
-    private Accident  accident;
-    private Boolean   confirmLock;
+    /* constants */
+    private static final int RADIUS      = 1000;
+    private final        int TYPE        = R.id.mc_create_type_frame;
+    private final        int DESCRIPTION = R.id.mc_create_final_frame;
+    private final        int ACCIDENT    = R.id.mc_create_acc_frame;
+    private final        int MEDICINE    = R.id.mc_create_people_frame;
+    private final        int MAP         = R.id.mc_create_map;
+    /* end of constants */
+
     private int       currentScreen;
+    private boolean   confirmLock;
+    private boolean   complete;
+    private Accident  accident;
     private GoogleMap map;
     private Button    confirmButton;
-    private boolean   complete;
+    private EditText  createFinalText;
     private Location  initialLocation;
+
+    {
+        confirmLock = false;
+        currentScreen = MAP;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_point);
-        initialLocation = MyLocationManager.getLocation();
         accident = createDefaultAccident();
-        confirmLock = false;
+        initialLocation = MyLocationManager.getLocation();
         map = makeMap();
-        currentScreen = MAP;
-
         confirmButton = (Button) findViewById(R.id.CREATE);
-        ((EditText) findViewById(R.id.mc_create_final_text)).addTextChangedListener(new TextWatcher() {
+        createFinalText = (EditText) findViewById(R.id.mc_create_final_text);
+        createFinalText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -153,7 +158,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             } else {
                 alpha = 0.2f;
             }
-            map.addMarker(new MarkerOptions().position(new LatLng(point.getLat(), point.getLon())).title(title).icon(Resources.getMapBitmapDescriptor(point.getType())).alpha(alpha));
+            map.addMarker(new MarkerOptions().position(new LatLng(point.getLat(), point.getLon())).title(title).icon(point.getType().getIcon()).alpha(alpha));
         }
         return map;
     }

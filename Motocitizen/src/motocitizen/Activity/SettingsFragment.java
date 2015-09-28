@@ -1,6 +1,5 @@
 package motocitizen.Activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -8,7 +7,6 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.widget.Toast;
 
-import motocitizen.app.general.user.Role;
 import motocitizen.content.Content;
 import motocitizen.main.R;
 import motocitizen.startup.Preferences;
@@ -16,19 +14,18 @@ import motocitizen.startup.Startup;
 import motocitizen.utils.Const;
 
 public class SettingsFragment extends PreferenceFragment {
+    Preference nottifDistPreference;
+    Preference nottifAlarmPreference;
+    Preference authPreference;
+    Preference nottifSoundPreference;
+    Preference showAcc;
+    Preference showBreak;
+    Preference showSteal;
+    Preference showOther;
+    Preference hoursAgo;
+    Preference maxNotifications;
+    Preference useVibration;
 
-    private static Activity act;
-    Preference
-            nottifDistPreference,
-            nottifAlarmPreference,
-            authPreference,
-            nottifSoundPreference,
-            showAcc,
-            showBreak,
-            showSteal,
-            showOther,
-            hoursAgo,
-            maxNotifications, useVibration;
     private ListPreference mapProviderPreference;
     private final Preference.OnPreferenceChangeListener mapProviderListener = new Preference.OnPreferenceChangeListener() {
         @Override
@@ -39,11 +36,11 @@ public class SettingsFragment extends PreferenceFragment {
             return true;
         }
     };
-    private final Preference.OnPreferenceChangeListener distanceListener = new Preference.OnPreferenceChangeListener() {
+    private final Preference.OnPreferenceChangeListener distanceListener    = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             String valueText = (String) newValue;
-            int value;
+            int    value;
             if (valueText.length() > 6) {
                 valueText = valueText.substring(0, 6);
             }
@@ -59,7 +56,7 @@ public class SettingsFragment extends PreferenceFragment {
             return false;
         }
     };
-    private final Preference.OnPreferenceChangeListener visibleListener = new Preference.OnPreferenceChangeListener() {
+    private final Preference.OnPreferenceChangeListener visibleListener     = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             Preferences.putBoolean(preference.getKey(), (boolean) newValue);
@@ -71,13 +68,10 @@ public class SettingsFragment extends PreferenceFragment {
             return false;
         }
     };
-    private Preferences prefs;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        act = getActivity();
-        prefs = new Preferences(act);
         update();
     }
 
@@ -88,8 +82,8 @@ public class SettingsFragment extends PreferenceFragment {
         buttonAuth.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference arg0) {
-                Intent i = new Intent(act, AuthActivity.class);
-                act.startActivity(i);
+                Intent i = new Intent(getActivity(), AuthActivity.class);
+                getActivity().startActivity(i);
                 return true;
             }
         });
@@ -97,8 +91,8 @@ public class SettingsFragment extends PreferenceFragment {
         buttonSound.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference arg0) {
-                Intent i = new Intent(act, SelectSoundActivity.class);
-                act.startActivity(i);
+                Intent i = new Intent(getActivity(), SelectSoundActivity.class);
+                getActivity().startActivity(i);
                 return true;
             }
         });
@@ -115,8 +109,7 @@ public class SettingsFragment extends PreferenceFragment {
         String login = Preferences.getLogin();
         if (login.length() > 0)
             authPreference.setSummary(Content.auth.getRole().getName() + ": " + login);
-        else
-            authPreference.setSummary(Content.auth.getRole().getName());
+        else authPreference.setSummary(Content.auth.getRole().getName());
         nottifSoundPreference.setSummary(Preferences.getAlarmSoundTitle());
         nottifDistPreference.setSummary(String.valueOf(Preferences.getVisibleDistance()));
         nottifAlarmPreference.setSummary(String.valueOf(Preferences.getAlarmDistance()));

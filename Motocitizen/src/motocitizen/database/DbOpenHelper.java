@@ -6,8 +6,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DbOpenHelper extends SQLiteOpenHelper {
 
+    /* constants */
     private static final int    VERSION  = 3;
     private static final String DATABASE = "motodtp";
+    /* end constants */
 
     public DbOpenHelper(Context context) {
         super(context, DATABASE, null, VERSION);
