@@ -1,6 +1,8 @@
 package motocitizen.network.requests;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.telephony.TelephonyManager;
 
 import org.json.JSONException;
@@ -14,9 +16,19 @@ public class AuthRequest extends HTTPClient {
     public AuthRequest(Context context) {
         this.context = context;
         String ident = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+
+        String versionName = "0";
+        try {
+            PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            versionName = pInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
         post = new HashMap<>();
         post.put("ident", ident);
         post.put("calledMethod", Methods.AUTH.toCode());
+        post.put("versionName", versionName);
     }
 
     public void setLogin(String login) {
