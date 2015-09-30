@@ -63,7 +63,7 @@ public class AboutActivity extends ActionBarActivity implements View.OnClickList
 
     @Override
     protected void onResume() {
-        super.onPostResume();
+        super.onResume();
         MyApp.setCurrentActivity(this);
     }
 }
