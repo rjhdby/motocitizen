@@ -1,6 +1,5 @@
 package motocitizen.geolocation;
 
-import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -37,7 +36,6 @@ public class MyLocationManager {
     private static       Location                            current;
     private static       GoogleApiClient                     googleApiClient;
     private static       LocationRequest                     locationRequest;
-    private static       Context                             context;
     private static final LocationListener                    locationListener;
     private static final GoogleApiClient.ConnectionCallbacks connectionCallback;
 
@@ -67,14 +65,13 @@ public class MyLocationManager {
             public void onLocationChanged(Location location) {
                 current = location;
                 Preferences.saveLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
-                requestAddress(context);
-                checkInPlace(context, location);
+                requestAddress();
+                checkInPlace(location);
             }
         };
     }
 
-    public MyLocationManager(Context context) {
-        MyLocationManager.context = context;
+    public MyLocationManager() {
         locationRequest = getProvider(LocationRequest.PRIORITY_HIGH_ACCURACY);
         current = getLocation();
     }
@@ -119,7 +116,7 @@ public class MyLocationManager {
     private static void runLocationService(int accuracy) {
         locationRequest = getProvider(accuracy);
         if (googleApiClient == null) {
-            googleApiClient = new GoogleApiClient.Builder(context).addConnectionCallbacks(connectionCallback).addApi(LocationServices.API).build();
+            googleApiClient = new GoogleApiClient.Builder(MyApp.getAppContext()).addConnectionCallbacks(connectionCallback).addApi(LocationServices.API).build();
             googleApiClient.connect();
         }
         if (googleApiClient.isConnected()) {
@@ -140,27 +137,27 @@ public class MyLocationManager {
         runLocationService(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
-    private static void requestAddress(Context context) {
+    private static void requestAddress() {
         Location location = getLocation();
         if (current == location) return;
-        address = ((MyApp) context.getApplicationContext()).getAddress(location);
+        address = MyApp.getAddress(location);
         Startup.updateStatusBar(MyLocationManager.address);
     }
 
-    private static void checkInPlace(Context context, Location location) {
+    private static void checkInPlace(Location location) {
         String login = Preferences.getLogin();
         if (login.equals("")) return;
         int currentInplace = Content.getInplaceID();
         if (currentInplace != 0) {
             if (isInPlace(location, currentInplace)) return;
             Content.setLeave(currentInplace);
-            new LeaveRequest(context, currentInplace);
+            new LeaveRequest(currentInplace);
         }
         for (int accId : Content.getPoints().keySet()) {
             if (accId == currentInplace) continue;
             if (isArrived(location, accId)) {
                 Content.setInPlace(accId);
-                new InplaceRequest(context, accId);
+                new InplaceRequest(accId);
             }
         }
     }
@@ -172,7 +169,7 @@ public class MyLocationManager {
     }
 
     private static void message(String text) {
-        Toast.makeText(context, text, Toast.LENGTH_LONG).show();
+        Toast.makeText(MyApp.getCurrentActivity(), text, Toast.LENGTH_LONG).show();
     }
 
     private static boolean isInPlace(Location location, int accId) {

@@ -1,19 +1,15 @@
 package motocitizen.network.requests;
 
-import android.content.Context;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 
 import motocitizen.content.Content;
-import motocitizen.content.VolunteerStatus;
 
 public class OnWayRequest extends HTTPClient {
-    public OnWayRequest(AsyncTaskCompleteListener listener, Context context, int id) {
+    public OnWayRequest(AsyncTaskCompleteListener listener, int id) {
         this.listener = listener;
-        this.context = context;
         post = new HashMap<>();
         post.put("login", Content.auth.getLogin());
         post.put("passhash", Content.auth.makePassHash());

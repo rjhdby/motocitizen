@@ -11,14 +11,14 @@ public abstract class MyMapManager {
 
     private String name;
 
-    public abstract void placeUser(Context context);
+    public abstract void placeUser();
 
     public abstract void jumpToPoint(Location location);
 
     @SuppressWarnings("SameParameterValue")
     public abstract void zoom(int zoom);
 
-    public abstract void placeAccidents(Context context);
+    public abstract void placeAccidents();
 
     public String getName() {
         return name;

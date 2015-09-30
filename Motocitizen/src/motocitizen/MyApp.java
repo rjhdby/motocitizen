@@ -1,5 +1,6 @@
 package motocitizen;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.location.Address;
@@ -10,13 +11,27 @@ import java.io.IOException;
 import java.util.List;
 
 import motocitizen.app.general.user.Auth;
-import motocitizen.startup.Preferences;
 
 public class MyApp extends Application {
 
-    private static MyApp instance;
-    private Auth     auth     = null;
-    private Geocoder geocoder = null;
+    private static MyApp    instance;
+    public static  Auth     auth;
+    private static Geocoder geocoder;
+    private static Activity currentActivity;
+
+    static {
+        auth = null;
+        geocoder = null;
+        currentActivity = null;
+    }
+
+    public static Activity getCurrentActivity() {
+        return currentActivity;
+    }
+
+    public static void setCurrentActivity(Activity currentActivity) {
+        MyApp.currentActivity = currentActivity;
+    }
 
     public MyApp() {
         instance = this;
@@ -26,18 +41,14 @@ public class MyApp extends Application {
         return instance.getApplicationContext();
     }
 
-    public Preferences getPreferences() {
-        return new Preferences(instance.getApplicationContext());
-    }
-
-    public Auth getMCAuth() {
-        if (auth == null) auth = new Auth(instance);
+    public static Auth getAuth() {
+        if (auth == null) auth = new Auth();
         return auth;
     }
 
-    public String getAddress(Location location) {
+    public static String getAddress(Location location) {
         if (geocoder == null) {
-            geocoder = new Geocoder(this);
+            geocoder = new Geocoder(currentActivity);
         }
         StringBuilder res = new StringBuilder();
         try {

@@ -1,7 +1,5 @@
 package motocitizen.content;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -26,19 +24,21 @@ import motocitizen.app.general.user.Auth;
 import motocitizen.database.Favorites;
 import motocitizen.draw.Rows;
 import motocitizen.draw.Sort;
-import motocitizen.gcm.GCMRegistration;
-import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentsRequest;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.startup.Startup;
 
 public class Content {
-    public static  Auth                   auth;
     private static Map<Integer, Accident> points;
     private static int                    inPlace;
     private static boolean                initialized;
     public static  List<Integer>          favorites;
+    public static  Auth                   auth;
+
+    static {
+        initialized = true;
+    }
 
     {
         points = new HashMap<>();
@@ -46,13 +46,9 @@ public class Content {
         initialized = false;
     }
 
-    public Content(Context context) {
-        MyApp myApp = (MyApp) context.getApplicationContext();
-        auth = myApp.getMCAuth();
-        new MyLocationManager(context);
-        new GCMRegistration(context);
-        favorites = Favorites.getFavorites(context);
-        initialized = true;
+    public Content() {
+        auth = MyApp.getAuth();
+        favorites = Favorites.getFavorites();
     }
 
     public static boolean isInitialized() {
@@ -78,13 +74,13 @@ public class Content {
         Content.inPlace = id;
     }
 
-    public static void update(Context context, AsyncTaskCompleteListener listener) {
-        new AccidentsRequest(context, listener, true);
+    public static void update(AsyncTaskCompleteListener listener) {
+        new AccidentsRequest(listener, true);
     }
 
-    private static FrameLayout noAccidentsNotification(Context context) {
-        FrameLayout fl = new FrameLayout(context);
-        TextView    tv = new TextView(context);
+    private static FrameLayout noAccidentsNotification() {
+        FrameLayout fl = new FrameLayout(MyApp.getCurrentActivity());
+        TextView    tv = new TextView(MyApp.getCurrentActivity());
         tv.setText("Нет событий");
         tv.setTextColor(Color.RED);
         tv.setGravity(Gravity.CENTER);
@@ -94,22 +90,18 @@ public class Content {
         return fl;
     }
 
-    public static void refresh(Context context) {
-        update(context);
-        Startup.map.placeAccidents(context);
-        redraw(context);
+    public static void refresh() {
+        update();
+        Startup.map.placeAccidents();
+        redraw();
     }
 
-    public static void update(Context context) {
-        new AccidentsRequest(context, new AccidentsRequestCallback(context), true);
+    public static void update() {
+        new AccidentsRequest(new AccidentsRequestCallback(), true);
     }
 
-    public static void update(Context context, AccidentsRequestCallback listener) {
-        new AccidentsRequest(context, listener, true);
-    }
-
-    public static void redraw(Context context) {
-        ViewGroup view = (ViewGroup) ((Activity) context).findViewById(R.id.accListContent);
+    public static void redraw() {
+        ViewGroup view = (ViewGroup) MyApp.getCurrentActivity().findViewById(R.id.accListContent);
 
         if (view == null) return;
         view.removeAllViews();
@@ -119,23 +111,23 @@ public class Content {
 
         for (int id : Sort.getSortedAccidentsKeys(points)) {
             if (points.get(id).isInvisible()) continue;
-            view.addView(Rows.getAccidentRow(context, view, points.get(id)));
+            view.addView(Rows.getAccidentRow(view, points.get(id)));
         }
     }
 
-    public static void refreshPoints(Context context) {
-        update(context);
-        redraw(context);
-        Startup.map.placeAccidents(context);
+    public static void refreshPoints() {
+        update();
+        redraw();
+        Startup.map.placeAccidents();
         //points.saveReadMessages();
     }
 
-    public static void toDetails(Context context, int id) {
-        Intent intent = new Intent(context, AccidentDetailsActivity.class);
+    public static void toDetails(int id) {
+        Intent intent = new Intent(MyApp.getAppContext(), AccidentDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt("accidentID", id);
         intent.putExtras(bundle);
-        context.startActivity(intent);
+        MyApp.getCurrentActivity().startActivity(intent);
     }
 
     public static void parseJSON(JSONObject json) {
@@ -173,16 +165,11 @@ public class Content {
     }
 
     private static class AccidentsRequestCallback implements AsyncTaskCompleteListener {
-        private Context context;
-
-        public AccidentsRequestCallback(final Context context) {
-            this.context = context;
-        }
 
         public void onTaskComplete(JSONObject result) {
             if (!result.has("error")) parseJSON(result);
-            Content.redraw(context);
-            Startup.map.placeAccidents(context);
+            Content.redraw();
+            Startup.map.placeAccidents();
         }
     }
 }

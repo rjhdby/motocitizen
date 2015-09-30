@@ -7,6 +7,8 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import motocitizen.MyApp;
+
 public class ConfirmDialog extends DialogFragment {
 
     public static ConfirmDialog newInstance(String title, String positiveButton, String negativeButton) {

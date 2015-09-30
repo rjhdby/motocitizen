@@ -1,8 +1,9 @@
 package motocitizen.database;
 
-import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import motocitizen.MyApp;
 
 public class DbOpenHelper extends SQLiteOpenHelper {
 
@@ -11,8 +12,8 @@ public class DbOpenHelper extends SQLiteOpenHelper {
     private static final String DATABASE = "motodtp";
     /* end constants */
 
-    public DbOpenHelper(Context context) {
-        super(context, DATABASE, null, VERSION);
+    public DbOpenHelper() {
+        super(MyApp.getAppContext(), DATABASE, null, VERSION);
     }
 
     @Override
@@ -25,7 +26,7 @@ public class DbOpenHelper extends SQLiteOpenHelper {
         createSchema(db);
     }
 
-    private void createSchema(SQLiteDatabase db){
+    private void createSchema(SQLiteDatabase db) {
         String createTableMessages  = "CREATE TABLE IF NOT EXISTS messages (acc_id int, msg_id int)";
         String createTableFavorites = "CREATE TABLE IF NOT EXISTS favorites (acc_id int)";
         db.execSQL(createTableMessages);

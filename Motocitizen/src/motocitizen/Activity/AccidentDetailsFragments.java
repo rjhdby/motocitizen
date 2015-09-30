@@ -10,18 +10,15 @@ import motocitizen.startup.Preferences;
 
 public class AccidentDetailsFragments extends Fragment {
 
-    static final String ACCIDENT_ID;
-    static final String USER_NAME;
+    /* constants */
+    static final String ACCIDENT_ID = "accidentID";
+    static final String USER_NAME = "userName";
+    /* end constants */
+
     int accidentID;
     int mStackLevel;
     private String userName;
     private OnFragmentInteractionListener mListener;
-    Preferences prefs;
-
-    static {
-        ACCIDENT_ID = "accidentID";
-        USER_NAME = "userName";
-    }
 
     {
         mStackLevel = 0;
@@ -39,7 +36,6 @@ public class AccidentDetailsFragments extends Fragment {
             accidentID = getArguments().getInt(ACCIDENT_ID);
             userName = getArguments().getString(USER_NAME);
         }
-        prefs = ((MyApp) getActivity().getApplicationContext()).getPreferences();
     }
 
     @Override

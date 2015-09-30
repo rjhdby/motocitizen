@@ -1,6 +1,5 @@
 package motocitizen.network.requests;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -22,7 +21,6 @@ import java.net.URLEncoder;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
-import motocitizen.MyApp;
 import motocitizen.network.CustomTrustManager;
 import motocitizen.startup.Startup;
 
@@ -36,8 +34,6 @@ abstract class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONOb
     /* end constants */
 
     private   ProgressDialog            dialog;
-    protected Context                   context;
-    protected MyApp                     myApp;
     protected AsyncTaskCompleteListener listener;
     protected Map<String, String>       post;
 
@@ -48,7 +44,7 @@ abstract class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONOb
     }
 
     JSONObject request(Map<String, String> post) {
-        if (!Startup.isOnline(context)) {
+        if (!Startup.isOnline()) {
             try {
                 JSONObject result = new JSONObject();
                 result.put("error", "Интернет не доступен");
@@ -59,9 +55,13 @@ abstract class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONOb
             }
         }
         URL url;
-        myApp = (MyApp) context.getApplicationContext();
         try {
             url = createUrl(false);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return new JSONObject();
+        }
+            /*
             if (post.containsKey("hint")) {
                 final String hint = post.get("hint");
                 post.remove("hint");
@@ -77,10 +77,7 @@ abstract class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONOb
                 };
                 ((Activity) context).runOnUiThread(execute);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new JSONObject();
-        }
+            */
 
         StringBuilder response = new StringBuilder();
         CustomTrustManager.allowAllSSL();
@@ -173,15 +170,10 @@ abstract class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONOb
         return result.toString().substring(1);
     }
 
-    private URL createUrl(Boolean https) {
+    private URL createUrl(Boolean https) throws MalformedURLException {
         String protocol;
         protocol = https ? "https" : "http";
-        try {
-            return new URL(protocol + "://" + SERVER);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return new URL(protocol + "://" + SERVER);
     }
 
     private void dismiss() {

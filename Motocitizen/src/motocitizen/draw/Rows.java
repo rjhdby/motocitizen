@@ -13,6 +13,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import motocitizen.MyApp;
 import motocitizen.accident.Accident;
 import motocitizen.accident.History;
 import motocitizen.accident.Message;
@@ -25,9 +26,9 @@ import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
 
 public class Rows {
-
-    public static View getAccidentRow(final Context context, ViewGroup parent, final Accident accident) {
-        LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    //TODO context
+    public static View getAccidentRow(ViewGroup parent, final Accident accident) {
+        LayoutInflater li = (LayoutInflater) MyApp.getCurrentActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         FrameLayout    accRow;
         int[]          resources;
         resources = accident.isOwner() ? Resources.getAccidentRowSetOwner() : Resources.getAccidentRowSetCommon();
@@ -65,14 +66,14 @@ public class Rows {
         accRow.setId(rowId);
         accRow.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Content.toDetails(v.getContext(), accident.getId());
+                Content.toDetails(accident.getId());
             }
         });
         accRow.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 PopupWindow popupWindow;
-                popupWindow = (new AccidentListPopup(context, accident.getId())).getPopupWindow();
+                popupWindow = (new AccidentListPopup(MyApp.getCurrentActivity(), accident.getId())).getPopupWindow();
                 int viewLocation[] = new int[2];
                 v.getLocationOnScreen(viewLocation);
                 popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
@@ -82,14 +83,14 @@ public class Rows {
         return accRow;
     }
 
-    private static View getYesterdayDelimiter(Context context, ViewGroup view) {
-        LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    private static View getYesterdayDelimiter(ViewGroup view) {
+        LayoutInflater li = (LayoutInflater) MyApp.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         return li.inflate(R.layout.yesterday_row, view, false);
     }
 
-    public static View getVolunteerRow(Context context, ViewGroup viewGroup, Volunteer volunteer) {
+    public static View getVolunteerRow(ViewGroup viewGroup, Volunteer volunteer) {
         //TODO Header
-        LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater li = (LayoutInflater) MyApp.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         TableRow       tr = (TableRow) li.inflate(R.layout.volunteer_row, viewGroup, false);
         ((TextView) tr.findViewById(R.id.volunteer)).setText(volunteer.getName());
         ((TextView) tr.findViewById(R.id.action)).setText(volunteer.getStatus().toString());
@@ -97,14 +98,14 @@ public class Rows {
         return tr;
     }
 
-    public static View getMessageRow(final Context context, ViewGroup parent, final Message message, int last, int next) {
-        LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public static View getMessageRow(ViewGroup parent, final Message message, int last, int next) {
+        LayoutInflater li = (LayoutInflater) MyApp.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View tr;
         int  user  = Content.auth.getid();
         int  resource;
         int  owner = message.getOwnerId();
-        resource = message.getOwnerId() == user ? Resources.getMessageRowDrawableIdOwner() : Resources.getMessageRowDrawableIdCommnon();
+        resource = message.getOwnerId() == user ? R.layout.owner_message_row : R.layout.message_row;
         tr = li.inflate(resource, parent, false);
         FrameLayout              fl  = (FrameLayout) tr.findViewById(R.id.row);
         TableLayout.LayoutParams flp = (TableLayout.LayoutParams) fl.getLayoutParams();
@@ -141,14 +142,14 @@ public class Rows {
         return tr;
     }
 
-    public static View getHistoryRow(Context context, ViewGroup parent, History history) {
+    public static View getHistoryRow(ViewGroup parent, History history) {
         /*
         if (tableLayout.getChildCount() == 0) {
             inflateHeader(context, tableLayout);
         }
         */
         //TODO header
-        LayoutInflater li        = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater li        = (LayoutInflater) MyApp.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         TableRow       tr        = (TableRow) li.inflate(R.layout.history_row, parent, false);
         TextView       ownerView = (TextView) tr.findViewById(R.id.owner);
         if (history.getOwner_id() == Content.auth.getid()) {

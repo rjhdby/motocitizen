@@ -53,7 +53,7 @@ public class MyOSMMapManager extends MyMapManager {
         goToUser();
     }
 
-    public void placeAccidents(Context context) {
+    public void placeAccidents() {
         map.getOverlays().remove(accOverlay);
         accOverlay = OSMAccOverlay.getOverlay(context);
         map.getOverlays().add(accOverlay);
@@ -61,7 +61,7 @@ public class MyOSMMapManager extends MyMapManager {
     }
 
     @SuppressWarnings("UnusedParameters")
-    public void placeUser(Context context) {
+    public void placeUser() {
         map.getOverlays().remove(userOverlay);
         userOverlay = OSMUserOverlay.getUserOverlay(context);
         map.getOverlays().add(userOverlay);

@@ -10,16 +10,16 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import motocitizen.MyApp;
 import motocitizen.app.general.user.Auth;
 
 public class AuthRequest extends HTTPClient {
-    public AuthRequest(Context context) {
-        this.context = context;
-        String ident = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+    public AuthRequest() {
+        String ident = ((TelephonyManager) MyApp.getAppContext().getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
 
         String versionName = "0";
         try {
-            PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            PackageInfo pInfo = MyApp.getAppContext().getPackageManager().getPackageInfo(MyApp.getAppContext().getPackageName(), 0);
             versionName = pInfo.versionName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();

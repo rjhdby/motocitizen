@@ -1,7 +1,5 @@
 package motocitizen.network.requests;
 
-import android.content.Context;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,9 +9,8 @@ import motocitizen.content.Content;
 
 public class AccidentChangeStateRequest extends HTTPClient {
 
-    public AccidentChangeStateRequest(AsyncTaskCompleteListener listener, Context context, int id, String state) {
+    public AccidentChangeStateRequest(AsyncTaskCompleteListener listener, int id, String state) {
         this.listener = listener;
-        this.context = context;
         post = new HashMap<>();
         post.put("login", Content.auth.getLogin());
         post.put("passhash", Content.auth.makePassHash());
@@ -37,7 +34,7 @@ public class AccidentChangeStateRequest extends HTTPClient {
 
     @Override
     public String getError(JSONObject response) {
-        if (!response.has("result")) return "Ошибка соединения "  + response.toString();
+        if (!response.has("result")) return "Ошибка соединения " + response.toString();
         try {
             String result = response.getString("result");
             switch (result) {

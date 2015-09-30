@@ -1,6 +1,5 @@
 package motocitizen.Activity;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,9 +15,9 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import motocitizen.MyApp;
 import motocitizen.accident.Message;
 import motocitizen.app.general.popups.MessagesPopup;
-import motocitizen.app.general.user.Role;
 import motocitizen.content.Content;
 import motocitizen.database.StoreMessages;
 import motocitizen.draw.Rows;
@@ -28,8 +27,6 @@ import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.network.requests.SendMessageRequest;
 
 public class DetailMessagesFragment extends AccidentDetailsFragments {
-
-    private OnFragmentInteractionListener mListener;
 
     private ImageButton newMessageButton;
     private final TextWatcher mcNewMessageTextListener = new TextWatcher() {
@@ -78,7 +75,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
             @Override
             public void onClick(View v) {
                 String text = mcNewMessageText.getText().toString();
-                new SendMessageRequest(new SendMessageCallback(), getActivity(), accidentID, text);
+                new SendMessageRequest(new SendMessageCallback(), accidentID, text);
                 newMessageButton.setEnabled(false);
             }
         });
@@ -114,7 +111,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
             } else nextOwner = 0;
             final Message message = accident.getMessages().get(keys[i]);
             message.setUnread(false);
-            View row = Rows.getMessageRow(getActivity(), messageView, message, lastOwner, nextOwner);
+            View row = Rows.getMessageRow(messageView, message, lastOwner, nextOwner);
             lastOwner = accident.getMessages().get(keys[i]).getOwnerId();
             row.setOnLongClickListener(new View.OnLongClickListener() {
 
@@ -134,7 +131,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
     }
 
     private void updateUnreadedMessages(int accidentId, int messageId) {
-        StoreMessages.setLast(getActivity(), accidentId, messageId);
+        StoreMessages.setLast(accidentId, messageId);
     }
 
     private void setupAccess() {
@@ -148,13 +145,6 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
     public void notifyDataSetChanged() {
         update();
         mcNewMessageText.setText("");
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     private void message(String text) {
@@ -173,7 +163,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
                 }
             } else {
                 //new AccidentsRequest(getActivity(), new UpdateAccidentsCallback());
-                Content.update(getActivity(), new UpdateAccidentsCallback());
+                Content.update(new UpdateAccidentsCallback());
             }
             newMessageButton.setEnabled(true);
         }
@@ -188,5 +178,4 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
             update();
         }
     }
-
 }

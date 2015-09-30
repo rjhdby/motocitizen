@@ -1,7 +1,6 @@
 package motocitizen.gcm;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -14,6 +13,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
 
+import motocitizen.MyApp;
 import motocitizen.network.requests.GCMRegistrationRequest;
 import motocitizen.startup.Preferences;
 
@@ -24,14 +24,12 @@ public class GCMRegistration {
     private static final int    RESOLUTION_REQUEST = 9000;
     /* end constants */
 
-    private static Context              context;
-    private        GoogleCloudMessaging gcm;
-    private        String               regid;
+    private GoogleCloudMessaging gcm;
+    private String               regid;
 
-    public GCMRegistration(Context context) {
-        GCMRegistration.context = context;
+    public GCMRegistration() {
         if (!checkPlayServices()) return;
-        gcm = GoogleCloudMessaging.getInstance(context);
+        gcm = GoogleCloudMessaging.getInstance(MyApp.getAppContext());
         regid = getRegistrationId();
         if (regid.isEmpty()) {
             registerInBackground();
@@ -42,7 +40,7 @@ public class GCMRegistration {
 
     private static int getAppVersion() {
         try {
-            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            PackageInfo packageInfo = MyApp.getAppContext().getPackageManager().getPackageInfo(MyApp.getAppContext().getPackageName(), 0);
             return packageInfo.versionCode;
         } catch (NameNotFoundException e) {
             throw new RuntimeException("Could not get package name: " + e);
@@ -50,10 +48,10 @@ public class GCMRegistration {
     }
 
     private boolean checkPlayServices() {
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(MyApp.getAppContext());
         if (resultCode != ConnectionResult.SUCCESS) {
             if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, (Activity) context, RESOLUTION_REQUEST).show();
+                GooglePlayServicesUtil.getErrorDialog(resultCode, MyApp.getCurrentActivity(), RESOLUTION_REQUEST).show();
             } else {
                 Log.d(TAG, "This device is not supported.");
             }
@@ -84,7 +82,7 @@ public class GCMRegistration {
                 String msg;
                 try {
                     if (gcm == null) {
-                        gcm = GoogleCloudMessaging.getInstance(context);
+                        gcm = GoogleCloudMessaging.getInstance(MyApp.getAppContext());
                     }
                     regid = gcm.register(SENDER_ID);
                     msg = "Device registered, registration ID=" + regid;
@@ -109,6 +107,6 @@ public class GCMRegistration {
         Log.i(TAG, "Saving regId on app version " + appVersion);
         Preferences.setAppVersion(appVersion);
         Preferences.setGCMRegistrationCode(regId);
-        new GCMRegistrationRequest(context, regId);
+        new GCMRegistrationRequest(regId);
     }
 }

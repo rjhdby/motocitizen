@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import motocitizen.MyApp;
 import motocitizen.main.R;
 
 public class BusinessCardActivityFragment extends Fragment {

@@ -1,7 +1,6 @@
 package motocitizen.maps.google;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -23,6 +22,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import motocitizen.MyApp;
 import motocitizen.accident.Accident;
 import motocitizen.content.Content;
 import motocitizen.content.Medicine;
@@ -39,17 +39,17 @@ public class MyGoogleMapManager extends MyMapManager {
     private static String    selected;
     private static Map<String, Integer> accidents = new HashMap<>();
 
-    public MyGoogleMapManager(final Context context) {
+    public MyGoogleMapManager() {
         setName(MyMapManager.GOOGLE);
         selected = "";
 
-        LayoutInflater li     = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        ViewGroup      parent = (ViewGroup) ((Activity) context).findViewById(R.id.map_container);
+        LayoutInflater li     = (LayoutInflater) MyApp.getCurrentActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        ViewGroup      parent = (ViewGroup) MyApp.getCurrentActivity().findViewById(R.id.map_container);
         View           child  = li.inflate(R.layout.google_maps_view, parent, false);
         if (parent.getChildCount() > 0) parent.removeAllViews();
         parent.addView(child);
 
-        android.support.v4.app.FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+        android.support.v4.app.FragmentManager fragmentManager = ((FragmentActivity) MyApp.getCurrentActivity()).getSupportFragmentManager();
         final SupportMapFragment               mapFragment     = (SupportMapFragment) fragmentManager.findFragmentById(R.id.google_map);
 
 //TODO Это пиздец
@@ -72,7 +72,7 @@ public class MyGoogleMapManager extends MyMapManager {
             public boolean onMarkerClick(Marker marker) {
                 String id = marker.getId();
                 if (selected.equals(id) && accidents.containsKey(id)) {
-                    Content.toDetails(context, accidents.get(selected));
+                    Content.toDetails(accidents.get(selected));
                 } else {
                     marker.showInfoWindow();
                     selected = id;
@@ -85,13 +85,12 @@ public class MyGoogleMapManager extends MyMapManager {
             public void onMapLongClick(LatLng latLng) {
                 String uri    = "geo:" + latLng.latitude + "," + latLng.longitude;
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                context.startActivity(intent);
+                MyApp.getCurrentActivity().startActivity(intent);
             }
         });
     }
 
-    @SuppressWarnings("UnusedParameters")
-    public void placeUser(Context context) {
+    public void placeUser() {
         if (user != null) {
             user.remove();
         }
@@ -109,8 +108,7 @@ public class MyGoogleMapManager extends MyMapManager {
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(location), 16));
     }
 
-    @SuppressWarnings("UnusedParameters")
-    public void placeAccidents(Context context) {
+    public void placeAccidents() {
         init();
         accidents.clear();
         for (int id : Content.getPoints().keySet()) {

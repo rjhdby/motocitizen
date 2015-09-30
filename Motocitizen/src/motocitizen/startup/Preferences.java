@@ -1,7 +1,6 @@
 package motocitizen.startup;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -14,6 +13,7 @@ import org.json.JSONException;
 
 import java.util.Arrays;
 
+import motocitizen.MyApp;
 import motocitizen.content.Type;
 import motocitizen.main.R;
 import motocitizen.utils.Const;
@@ -59,7 +59,6 @@ public class Preferences {
     private final static String[] mapProviders;
 
     private static SharedPreferences preferences;
-    private static Context           context;
 
     static {
         showAcc = "mc.show.acc";
@@ -90,11 +89,10 @@ public class Preferences {
         notificationList = "notificationList";
 
         mapProviders = new String[]{"google", "osm", "yandex"};
+        preferences = PreferenceManager.getDefaultSharedPreferences(MyApp.getAppContext());
     }
 
-    public Preferences(Context context) {
-        preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        Preferences.context = context;
+    public Preferences() {
     }
 
     public static void putBoolean(String name, boolean value) {
@@ -124,7 +122,7 @@ public class Preferences {
     }
 
     public static String getCurrentVersion() {
-        return preferences.getString(currentVersion, context.getString(R.string.unknown_code_version));
+        return preferences.getString(currentVersion, MyApp.getAppContext().getString(R.string.unknown_code_version));
     }
 
     public static void setCurrentVersion(String version) {
@@ -179,7 +177,7 @@ public class Preferences {
         Uri    uri;
         String uriString = preferences.getString(soundURI, "default");
         if (uriString.equals("default")) {
-            uri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION);
+            uri = RingtoneManager.getActualDefaultRingtoneUri(MyApp.getCurrentActivity(), RingtoneManager.TYPE_NOTIFICATION);
         } else uri = Uri.parse(uriString);
         return uri;
     }

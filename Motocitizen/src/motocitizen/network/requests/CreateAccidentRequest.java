@@ -1,6 +1,5 @@
 package motocitizen.network.requests;
 
-import android.content.Context;
 import android.location.Location;
 
 import org.json.JSONException;
@@ -12,17 +11,14 @@ import java.util.HashMap;
 import motocitizen.content.Content;
 import motocitizen.content.Medicine;
 import motocitizen.content.Type;
-import motocitizen.main.R;
 import motocitizen.utils.Const;
 
 public class CreateAccidentRequest extends HTTPClient {
-    public CreateAccidentRequest(AsyncTaskCompleteListener listener, Context context) {
-        this.context = context;
+    public CreateAccidentRequest(AsyncTaskCompleteListener listener) {
         this.listener = listener;
         post = new HashMap<>();
         post.put("status", "acc_status_act");
         post.put("calledMethod", Methods.CREATE.toCode());
-        post.put("hint", context.getString(R.string.request_create_acc));
         post.put("owner_id", String.valueOf(Content.auth.getid()));
         post.put("login", Content.auth.getLogin());
         post.put("passhash", Content.auth.makePassHash());

@@ -5,12 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import motocitizen.MyApp;
 import motocitizen.draw.Rows;
 import motocitizen.main.R;
 
 public class DetailHistoryFragment extends AccidentDetailsFragments {
-
-    private OnFragmentInteractionListener mListener;
 
     private View mcDetLogContent;
 
@@ -42,7 +41,7 @@ public class DetailHistoryFragment extends AccidentDetailsFragments {
         ViewGroup logView = (ViewGroup) mcDetLogContent;
         logView.removeAllViews();
         for (int i : accident.getHistory().keySet()) {
-            logView.addView(Rows.getHistoryRow(getActivity(), logView, accident.getHistory().get(i)));
+            logView.addView(Rows.getHistoryRow(logView, accident.getHistory().get(i)));
         }
     }
 

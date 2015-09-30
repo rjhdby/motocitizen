@@ -1,24 +1,21 @@
 package motocitizen.network.requests;
 
-import android.content.Context;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 
 import motocitizen.content.Content;
-import motocitizen.content.VolunteerStatus;
 
 public class LeaveRequest extends HTTPClient {
-    public LeaveRequest (Context context, int id){
-        this.context = context;
+    public LeaveRequest(int id) {
         post = new HashMap<>();
         post.put("login", Content.auth.getLogin());
         post.put("id", String.valueOf(id));
         post.put("m", Methods.LEAVE.toCode());
         execute(post);
     }
+
     @Override
     public boolean error(JSONObject response) {
         if (!response.has("result")) return true;
@@ -33,7 +30,7 @@ public class LeaveRequest extends HTTPClient {
 
     @Override
     public String getError(JSONObject response) {
-        if (!response.has("result")) return "Ошибка соединения "  + response.toString();
+        if (!response.has("result")) return "Ошибка соединения " + response.toString();
         try {
             String result = response.getString("result");
             switch (result) {

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import motocitizen.MyApp;
 import motocitizen.main.R;
 
 public class MainScreenFragment extends Fragment {
@@ -41,5 +42,4 @@ public class MainScreenFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-
 }

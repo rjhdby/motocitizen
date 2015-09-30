@@ -1,7 +1,5 @@
 package motocitizen.network.requests;
 
-import android.content.Context;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,14 +8,14 @@ import java.util.HashMap;
 import motocitizen.content.Content;
 
 public class InplaceRequest extends HTTPClient {
-    public InplaceRequest (Context context, int id){
-        this.context = context;
+    public InplaceRequest(int id) {
         post = new HashMap<>();
         post.put("login", Content.auth.getLogin());
         post.put("id", String.valueOf(id));
         post.put("m", Methods.INPLACE.toCode());
         execute(post);
     }
+
     @Override
     public boolean error(JSONObject response) {
         if (!response.has("result")) return true;
@@ -32,7 +30,7 @@ public class InplaceRequest extends HTTPClient {
 
     @Override
     public String getError(JSONObject response) {
-        if (!response.has("result")) return "Ошибка соединения "  + response.toString();
+        if (!response.has("result")) return "Ошибка соединения " + response.toString();
         try {
             String result = response.getString("result");
             switch (result) {

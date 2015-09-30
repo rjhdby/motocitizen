@@ -131,7 +131,7 @@ abstract class PopupWindowGeneral {
         finish.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 popupWindow.dismiss();
-                new AccidentChangeStateRequest(null, context, point.getId(), point.isEnded() ? AccidentStatus.ACTIVE.toCode() : AccidentStatus.ENDED.toCode());
+                new AccidentChangeStateRequest(null, point.getId(), point.isEnded() ? AccidentStatus.ACTIVE.toCode() : AccidentStatus.ENDED.toCode());
             }
         });
         TableRow tr = new TableRow(content.getContext());
@@ -146,7 +146,7 @@ abstract class PopupWindowGeneral {
         finish.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 popupWindow.dismiss();
-                new AccidentChangeStateRequest(null, context, point.getId(), point.isHidden() ? AccidentStatus.ACTIVE.toCode() : AccidentStatus.HIDDEN.toCode());
+                new AccidentChangeStateRequest(null, point.getId(), point.isHidden() ? AccidentStatus.ACTIVE.toCode() : AccidentStatus.HIDDEN.toCode());
             }
         });
         TableRow tr = new TableRow(content.getContext());

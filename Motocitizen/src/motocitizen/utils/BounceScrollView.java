@@ -57,11 +57,11 @@ public class BounceScrollView extends ScrollView {
             isRequestedUpdate = true;
         }
         if (scrollY > -mMaxYOverscrollDistance * 0.1 && isRequestedUpdate) {
-            if (Startup.isOnline(context)) {
+            if (Startup.isOnline()) {
                 isRequestedUpdate = false;
                 Startup.startRefreshAnimation();
-                Content.update(context, new AccidentsRequestCallback());
-                new AccidentsRequest(context, new AccidentsRequestCallback());
+                Content.update(new AccidentsRequestCallback());
+                new AccidentsRequest(new AccidentsRequestCallback());
             } else {
                 message(context.getString(R.string.inet_not_available));
             }
@@ -85,7 +85,7 @@ public class BounceScrollView extends ScrollView {
                 }
             } else {
                 Content.parseJSON(result);
-                Content.redraw(context);
+                Content.redraw();
             }
             Startup.stopRefreshAnimation();
         }

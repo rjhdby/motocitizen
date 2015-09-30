@@ -12,6 +12,7 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
 
+import motocitizen.MyApp;
 import motocitizen.main.R;
 import motocitizen.startup.ChangeLog;
 import motocitizen.startup.Preferences;
@@ -25,6 +26,7 @@ public class AboutActivity extends ActionBarActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MyApp.setCurrentActivity(this);
         setContentView(R.layout.activity_about);
 
         ((TextView) this.findViewById(R.id.about_code_version)).setText(getString(R.string.code_version_prefix) + ": " + Preferences.getCurrentVersion());
@@ -57,6 +59,11 @@ public class AboutActivity extends ActionBarActivity implements View.OnClickList
                 this.startActivity(new Intent(this, BusinessCardActivity.class));
                 break;
         }
+    }
 
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        MyApp.setCurrentActivity(this);
     }
 }

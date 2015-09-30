@@ -1,6 +1,5 @@
 package motocitizen.Activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,11 +20,11 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import motocitizen.MyApp;
 import motocitizen.accident.Accident;
 import motocitizen.app.general.popups.AccidentListPopup;
 import motocitizen.content.AccidentStatus;
 import motocitizen.content.Content;
-import motocitizen.draw.Strings;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentChangeStateRequest;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
@@ -39,8 +38,6 @@ import static motocitizen.content.AccidentStatus.ENDED;
 import static motocitizen.content.AccidentStatus.HIDDEN;
 
 public class AccidentDetailsActivity extends ActionBarActivity implements AccidentDetailsFragments.OnFragmentInteractionListener {
-
-    private Context context;
 
     private static final int SMS_MENU_MIN_ID;
     private static final int SMS_MENU_MAX_ID;
@@ -69,8 +66,6 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
 
     private Menu mMenu;
 
-    private Preferences prefs;
-
     static {
         SMS_MENU_MIN_ID = 100;
         SMS_MENU_MAX_ID = 200;
@@ -81,8 +76,8 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MyApp.setCurrentActivity(this);
         setContentView(R.layout.activity_accident_details);
-        context = this;
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -106,18 +101,6 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
         mcDetTabsGroup.setOnCheckedChangeListener(accDetTabsListener);
 
         generalLayout = findViewById(R.id.mc_acc_details_general);
-        generalLayout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                PopupWindow popupWindow;
-                popupWindow = (new AccidentListPopup(context, currentPoint.getId())).getPopupWindow();
-                int viewLocation[] = new int[2];
-                v.getLocationOnScreen(viewLocation);
-                popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
-                return true;
-            }
-        });
-
         generalType = (TextView) findViewById(R.id.acc_details_general_type);
         generalStatus = (TextView) findViewById(R.id.acc_details_general_status);
         generalTime = (TextView) findViewById(R.id.acc_details_general_time);
@@ -133,8 +116,19 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
     @Override
     protected void onResume() {
         super.onResume();
+        MyApp.setCurrentActivity(this);
         //TODO Вероятно теперь ни когда null не будет.
-        if (prefs == null) prefs = new Preferences(this);
+        generalLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                PopupWindow popupWindow;
+                popupWindow = (new AccidentListPopup(MyApp.getCurrentActivity(), currentPoint.getId())).getPopupWindow();
+                int viewLocation[] = new int[2];
+                v.getLocationOnScreen(viewLocation);
+                popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
+                return true;
+            }
+        });
         update();
     }
 
@@ -223,7 +217,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
             case R.id.action_share:
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, Strings.getAccidentTextToCopy(currentPoint));
+                sendIntent.putExtra(Intent.EXTRA_TEXT, AccidentListPopup.getAccidentTextToCopy(currentPoint));
                 sendIntent.setType("text/plain");
                 this.startActivity(sendIntent);
                 return true;
@@ -248,7 +242,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
             if (number.contains(smsPrefix))
                 number = number.substring(smsPrefix.length(), number.length());
             intent.setData(Uri.parse("sms:" + number));
-            context.startActivity(intent);
+            startActivity(intent);
         } else if (item.getItemId() >= CALL_MENU_MIN_ID && item.getItemId() < CALL_MENU_MAX_ID) {
             Intent intent = new Intent(Intent.ACTION_DIAL);
             String callPrefix = getString(R.string.make_call);
@@ -257,7 +251,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
             if (number.contains(callPrefix))
                 number = number.substring(callPrefix.length(), number.length());
             intent.setData(Uri.parse("tel:" + number));
-            context.startActivity(intent);
+            startActivity(intent);
         }
         return false;
     }
@@ -266,11 +260,11 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
         if (Content.getPoint(accidentID).getStatus() == ENDED) {
             //TODO Суперкостыль
             accNewState = ACTIVE;
-            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, ACTIVE.toCode());
+            new AccidentChangeStateRequest(new AccidentChangeCallback(), accidentID, ACTIVE.toCode());
         } else {
             //TODO Суперкостыль
             accNewState = ENDED;
-            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, ENDED.toCode());
+            new AccidentChangeStateRequest(new AccidentChangeCallback(), accidentID, ENDED.toCode());
         }
     }
 
@@ -278,16 +272,16 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
         if (Content.getPoint(accidentID).getStatus() == ENDED) {
             //TODO Суперкостыль
             accNewState = ACTIVE;
-            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, ACTIVE.toCode());
+            new AccidentChangeStateRequest(new AccidentChangeCallback(), accidentID, ACTIVE.toCode());
         } else {
             //TODO Суперкостыль
             accNewState = ENDED;
-            new AccidentChangeStateRequest(new AccidentChangeCallback(), this, accidentID, HIDDEN.toCode());
+            new AccidentChangeStateRequest(new AccidentChangeCallback(), accidentID, HIDDEN.toCode());
         }
     }
 
     private void message(String text) {
-        Toast.makeText(context, text, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show();
     }
 
     private class AccidentChangeCallback implements AsyncTaskCompleteListener {

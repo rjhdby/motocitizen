@@ -8,18 +8,18 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import motocitizen.MyApp;
 import motocitizen.content.Content;
 
 public class GCMRegistrationRequest extends HTTPClient {
-    public GCMRegistrationRequest(Context context, String regId) {
-        this.context = context;
+    public GCMRegistrationRequest(String regId) {
         post = new HashMap<>();
-        String imei = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
-        post.put("owner_id", String.valueOf(Content.auth.getid()));
+        String imei = ((TelephonyManager) MyApp.getAppContext().getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+        post.put("owner_id", String.valueOf(MyApp.getAuth().getid()));
         post.put("gcm_key", regId);
-        post.put("login", Content.auth.getLogin());
+        post.put("login", MyApp.getAuth().getLogin());
         post.put("imei", imei);
-        post.put("passhash", Content.auth.makePassHash());
+        post.put("passhash", MyApp.getAuth().makePassHash());
         post.put("calledMethod", Methods.REGISTER_GCM.toCode());
         execute(post);
     }

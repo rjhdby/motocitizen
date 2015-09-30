@@ -36,7 +36,6 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     private ImageButton onwayCancelButton;
     private ImageButton onwayDisabledButton;
     private View        onwayContent;
-    //private View        inplaceContent;
 
     // TODO: Rename and change types and number of parameters
     public static DetailVolunteersFragment newInstance(int accID, String userName) {
@@ -101,7 +100,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         for (int i : accident.getVolunteers().keySet()) {
             Volunteer current = accident.getVolunteer(i);
             if (current.getStatus() == VolunteerStatus.LEAVE) continue;
-            vg_onway.addView(Rows.getVolunteerRow(getActivity(), vg_onway, current));
+            vg_onway.addView(Rows.getVolunteerRow(vg_onway, current));
         }
 
     }
@@ -173,7 +172,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     private void sendOnway() {
         //AccidentsGeneral.setOnWay(accidentID);
         Preferences.setOnWay(accidentID);
-        new OnWayRequest(new OnWayCallback(), this.getActivity(), accidentID);
+        new OnWayRequest(new OnWayCallback(), accidentID);
     }
 
     private void message(String text) {
@@ -190,7 +189,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
                     message("Неизвестная ошибка " + result.toString());
                 }
             } else {
-                new AccidentsRequest(getActivity(), new UpdateAccidentsCallback());
+                new AccidentsRequest(new UpdateAccidentsCallback());
             }
         }
     }
@@ -198,7 +197,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     private class UpdateAccidentsCallback implements AsyncTaskCompleteListener {
         @Override
         public void onTaskComplete(JSONObject result) {
-            Content.update(getActivity());
+            Content.update();
             ((AccidentDetailsActivity) getActivity()).update();
             update();
         }
@@ -206,6 +205,6 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
 
     private void sendCancelOnway() {
         Preferences.setOnWay(0);
-        new CancelOnWayRequest(new OnWayCallback(), this.getActivity(), accidentID);
+        new CancelOnWayRequest(new OnWayCallback(), accidentID);
     }
 }

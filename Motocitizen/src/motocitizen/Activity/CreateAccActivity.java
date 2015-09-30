@@ -70,6 +70,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MyApp.setCurrentActivity(this);
         setContentView(R.layout.create_point);
         accident = createDefaultAccident();
         initialLocation = MyLocationManager.getLocation();
@@ -288,7 +289,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
 
     private void confirm() {
         disableConfirm();
-        CreateAccidentRequest request = new CreateAccidentRequest(new CreateAccidentCallback(), this);
+        CreateAccidentRequest request = new CreateAccidentRequest(new CreateAccidentCallback());
         request.setType(accident.getType());
         request.setMed(accident.getMedicine());
         request.setAddress(accident.getAddress());
@@ -365,5 +366,11 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             }
             enableConfirm();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MyApp.setCurrentActivity(this);
     }
 }

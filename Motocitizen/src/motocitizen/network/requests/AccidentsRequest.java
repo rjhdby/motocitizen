@@ -1,6 +1,5 @@
 package motocitizen.network.requests;
 
-import android.content.Context;
 import android.location.Location;
 
 import org.json.JSONException;
@@ -8,38 +7,30 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import motocitizen.MyApp;
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.startup.Preferences;
 
-@SuppressWarnings("unchecked")
 public class AccidentsRequest extends HTTPClient {
     private boolean silent;
 
-    public AccidentsRequest(Context context, AsyncTaskCompleteListener listener, boolean silent) {
+    public AccidentsRequest(AsyncTaskCompleteListener listener, boolean silent) {
         this.silent = silent;
-        this.context = context;
         this.listener = listener;
         post = new HashMap<>();
         Location location = MyLocationManager.getLocation();
-        myApp = (MyApp) context.getApplicationContext();
-        String      user  = Preferences.getLogin();
+        String   user     = Preferences.getLogin();
         if (!user.equals("")) {
             post.put("user", user);
         }
         post.put("distance", String.valueOf(Preferences.getVisibleDistance()));
         post.put("lat", String.valueOf(location.getLatitude()));
         post.put("lon", String.valueOf(location.getLongitude()));
-        //post.put("hint", context.getString(R.string.request_get_incidents));
-        /*
-        post.put("calledMethod", Methods.GET_LIST.toCode());
-        */
         post.put("m", Methods.GET_LIST.toCode());
         execute(post);
     }
 
-    public AccidentsRequest(Context context, AsyncTaskCompleteListener listener) {
-        new AccidentsRequest(context, listener, false);
+    public AccidentsRequest(AsyncTaskCompleteListener listener) {
+        new AccidentsRequest(listener, false);
     }
 
     @Override

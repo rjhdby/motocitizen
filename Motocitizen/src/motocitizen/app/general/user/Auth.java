@@ -1,6 +1,5 @@
 package motocitizen.app.general.user;
 
-import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
@@ -11,18 +10,18 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import motocitizen.Activity.AuthActivity;
+import motocitizen.MyApp;
 import motocitizen.main.R;
 import motocitizen.network.requests.AuthRequest;
 import motocitizen.startup.Preferences;
 
 public class Auth {
-    private final Context context;
-    private       Role    role;
-    private       String  name;
-    private       int     id;
-    private       boolean isAuthorized;
-    private       String  login;
-    private       String  password;
+    private Role    role;
+    private String  name;
+    private int     id;
+    private boolean isAuthorized;
+    private String  login;
+    private String  password;
 
     {
         role = Role.RO;
@@ -31,12 +30,11 @@ public class Auth {
         isAuthorized = false;
     }
 
-    public Auth(Context context) {
-        this.context = context;
+    public Auth() {
         if (Preferences.isAnonim()) return;
         login = Preferences.getLogin();
         password = Preferences.getPassword();
-        if (!auth(context, login, password)) showLogin(context);
+        if (!auth(login, password)) showLogin();
     }
 
     public static String makePassHash(String pass) {
@@ -55,10 +53,10 @@ public class Auth {
         }
     }
 
-    public Boolean auth(Context context, String login, String password) {
+    public Boolean auth(String login, String password) {
         this.password = password;
         this.login = login;
-        AuthRequest auth = new AuthRequest(context);
+        AuthRequest auth = new AuthRequest();
         auth.setLogin(login);
         auth.setPassword(password);
         JSONObject result = auth.execute();
@@ -82,19 +80,19 @@ public class Auth {
                 isAuthorized = true;
             }
         } catch (JSONException e) {
-            message(context.getString(R.string.unknown_error));
+            message(MyApp.getAppContext().getString(R.string.unknown_error));
         }
         return isAuthorized;
     }
 
-    private void showLogin(Context context) {
-        Intent i = new Intent(context, AuthActivity.class);
+    private void showLogin() {
+        Intent i = new Intent(MyApp.getAppContext(), AuthActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(i);
+        MyApp.getCurrentActivity().startActivity(i);
     }
 
     private void message(String text) {
-        Toast.makeText(context, text, Toast.LENGTH_LONG).show();
+        Toast.makeText(MyApp.getAppContext(), text, Toast.LENGTH_LONG).show();
     }
 
     public String getName() {

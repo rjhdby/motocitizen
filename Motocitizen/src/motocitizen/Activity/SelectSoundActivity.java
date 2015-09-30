@@ -19,6 +19,7 @@ import android.widget.TextView;
 import java.util.HashMap;
 import java.util.Map;
 
+import motocitizen.MyApp;
 import motocitizen.main.R;
 import motocitizen.startup.Preferences;
 import motocitizen.utils.Const;
@@ -35,6 +36,7 @@ public class SelectSoundActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MyApp.setCurrentActivity(this);
         setContentView(R.layout.select_sound);
         vg = (ViewGroup) findViewById(R.id.sound_select_table);
         rm = new RingtoneManager(this);
@@ -65,17 +67,18 @@ public class SelectSoundActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        drawList(this);
+        MyApp.setCurrentActivity(this);
+        drawList();
     }
 
-    private void drawList(Context context) {
+    private void drawList() {
         currentId = 0;
         notifications = new HashMap<>();
         Cursor cursor = rm.getCursor();
         if (cursor.getCount() == 0 && !cursor.moveToFirst()) return;
         while (!cursor.isAfterLast() && cursor.moveToNext()) {
             int currentPosition = cursor.getPosition();
-            inflateRow(context, vg, currentPosition);
+            inflateRow(this, vg, currentPosition);
         }
     }
 
@@ -90,7 +93,7 @@ public class SelectSoundActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 if (currentId != 0) {
-                    vg.findViewById(currentId).setBackgroundColor(Const.getDefaultBGColor(context));
+                    vg.findViewById(currentId).setBackgroundColor(Const.getDefaultBGColor());
                 }
                 currentId = v.getId();
                 vg.findViewById(currentId).setBackgroundColor(Color.GRAY);

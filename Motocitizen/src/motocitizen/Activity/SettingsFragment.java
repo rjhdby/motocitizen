@@ -7,6 +7,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.widget.Toast;
 
+import motocitizen.MyApp;
 import motocitizen.content.Content;
 import motocitizen.main.R;
 import motocitizen.startup.Preferences;

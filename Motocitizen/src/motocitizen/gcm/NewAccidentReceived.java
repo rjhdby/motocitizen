@@ -16,6 +16,7 @@ import android.os.Bundle;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import motocitizen.MyApp;
 import motocitizen.accident.Accident;
 import motocitizen.content.Content;
 import motocitizen.content.Medicine;
@@ -31,9 +32,9 @@ public class NewAccidentReceived extends IntentService {
         super("Intent");
     }
 
-    public static void clearAll(Context context) {
+    public static void clearAll() {
         if (notificationManager == null) {
-            notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager = (NotificationManager) MyApp.getAppContext().getSystemService(Context.NOTIFICATION_SERVICE);
         }
         Preferences.setNotificationList(new JSONArray());
         notificationManager.cancelAll();
@@ -41,14 +42,13 @@ public class NewAccidentReceived extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        if ((new Preferences(this)).getDoNotDisturb()) {
+        if (Preferences.getDoNotDisturb()) {
             GCMBroadcastReceiver.completeWakefulIntent(intent);
             return;
         }
         Bundle extras = intent.getExtras();
-
         try {
-            if (!Content.isInitialized()) new Content(this);
+            if (!Content.isInitialized()) new Content();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -68,6 +68,7 @@ public class NewAccidentReceived extends IntentService {
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         notificationIntent.putExtras(extras);
+
         PendingIntent contentIntent = PendingIntent.getActivity(this, accident.getId(), notificationIntent, PendingIntent.FLAG_ONE_SHOT);
         Resources res = this.getResources();
         Notification.Builder builder = new Notification.Builder(this);

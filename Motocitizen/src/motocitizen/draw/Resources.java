@@ -11,13 +11,5 @@ public class Resources {
     public static int[] getAccidentRowSetOwner() {
         return new int[]{R.layout.accident_row_i_was_here, R.drawable.owner_accident_ended, R.drawable.owner_accident_hidden};
     }
-
-    public static int getMessageRowDrawableIdOwner() {
-        return R.layout.owner_message_row;
-    }
-
-    public static int getMessageRowDrawableIdCommnon() {
-        return R.layout.message_row;
-    }
 }
 
