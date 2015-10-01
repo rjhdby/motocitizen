@@ -27,6 +27,8 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
+import java.util.Date;
+
 import motocitizen.Activity.AboutActivity;
 import motocitizen.Activity.CreateAccActivity;
 import motocitizen.Activity.SettingsActivity;
@@ -58,10 +60,12 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     static         ProgressBar                        progressBar;
     public static  boolean                            inTransaction;
     private final  RadioGroup.OnCheckedChangeListener mainTabsListener;
+    public static  long                               start;
 
     static {
         changeLogDlg = null;
         inTransaction = false;
+        start = (new Date()).getTime();
     }
 
     {
@@ -100,7 +104,6 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
 
         actionBar.setTitle(address);
         if (!subTitle.isEmpty()) actionBar.setSubtitle(subTitle);
-        map.placeUser();
     }
 
     public static boolean isChangeLogDlgShowing() {
@@ -111,15 +114,14 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MyApp.setCurrentActivity(this);
+        Log.d("START ON_CREATE", String.valueOf((new Date()).getTime() - start));
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         setContentView(R.layout.main);
         actionBar = getSupportActionBar();
         Preferences.setDoNotDisturb(false);
-        new Const();
-
+        Log.d("START CHECK UPDATE", String.valueOf((new Date()).getTime() - start));
         checkUpdate();
-
         ImageButton dialButton = (ImageButton) findViewById(R.id.dial_button);
         dialButton.setOnClickListener(this);
 
@@ -139,12 +141,17 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
                 return true;
             }
         });
+        Log.d("START LOCATION MANAGER", String.valueOf((new Date()).getTime() - start));
         new MyLocationManager();
+        Log.d("START GCM REGISTRATION", String.valueOf((new Date()).getTime() - start));
         new GCMRegistration();
+        Log.d("START CONTENT", String.valueOf((new Date()).getTime() - start));
         new Content();
-
+        Log.d("START CREATE MAP", String.valueOf((new Date()).getTime() - start));
         createMap(MyMapManager.GOOGLE);
+        Log.d("START BROADCAST", String.valueOf((new Date()).getTime() - start));
         new GCMBroadcastReceiver();
+        Log.d("START END ON_CREATE", String.valueOf((new Date()).getTime() - start));
     }
 
     private void checkUpdate() {
@@ -173,9 +180,6 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
             default:
                 map = new MyGoogleMapManager();
         }
-
-        Location location = MyLocationManager.getLocation();
-        map.jumpToPoint(location);
     }
 
     @Override
@@ -194,13 +198,16 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     protected void onResume() {
         super.onResume();
         MyApp.setCurrentActivity(this);
+        Log.d("START ON_RESUME", String.valueOf((new Date()).getTime() - start));
         MyLocationManager.wakeup();
         Intent intent = getIntent();
         String id     = intent.getStringExtra("id");
         int    toMap  = intent.getIntExtra("toMap", 0);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         createAccButton.setVisibility(Content.auth.getRole().isStandart() ? View.VISIBLE : View.INVISIBLE);
+        Log.d("START REDRAW", String.valueOf((new Date()).getTime() - start));
         Content.redraw();
+        Log.d("START GET ACCIDENTS", String.valueOf((new Date()).getTime() - start));
         getAccidents();
 
         if (toMap != 0) {
@@ -213,6 +220,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
             Content.toDetails(Integer.parseInt(id));
             NewAccidentReceived.clearAll();
         }
+        Log.d("START END ON_RESUME", String.valueOf((new Date()).getTime() - start));
     }
 
     private void getAccidents() {

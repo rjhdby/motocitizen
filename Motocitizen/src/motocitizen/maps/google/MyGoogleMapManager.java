@@ -1,10 +1,10 @@
 package motocitizen.maps.google;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +32,6 @@ import motocitizen.main.R;
 import motocitizen.maps.MyMapManager;
 import motocitizen.utils.MyUtils;
 
-@SuppressLint("UseSparseArrays")
 public class MyGoogleMapManager extends MyMapManager {
     private static GoogleMap map;
     private static Marker    user;
@@ -42,7 +41,6 @@ public class MyGoogleMapManager extends MyMapManager {
     public MyGoogleMapManager() {
         setName(MyMapManager.GOOGLE);
         selected = "";
-
         LayoutInflater li     = (LayoutInflater) MyApp.getCurrentActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         ViewGroup      parent = (ViewGroup) MyApp.getCurrentActivity().findViewById(R.id.map_container);
         View           child  = li.inflate(R.layout.google_maps_view, parent, false);
@@ -52,42 +50,29 @@ public class MyGoogleMapManager extends MyMapManager {
         android.support.v4.app.FragmentManager fragmentManager = ((FragmentActivity) MyApp.getCurrentActivity()).getSupportFragmentManager();
         final SupportMapFragment               mapFragment     = (SupportMapFragment) fragmentManager.findFragmentById(R.id.google_map);
 
-//TODO Это пиздец
-        for (int i = 0; i < 5; i++) {
-            map = mapFragment.getMap();
-            if (map == null) {
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        new AsyncTask<Map<String, Integer>, Integer, Integer>() {
+            @Override
+            protected Integer doInBackground(Map<String, Integer>... params) {
+                for (int i = 0; i < 5; i++) {
+                    map = mapFragment.getMap();
+                    if (map != null) break;
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                    }
                 }
-            } else {
-                break;
+                return map == null ? 0 : 1;
             }
-        }
-        init();
-        map.setOnMarkerClickListener(new OnMarkerClickListener() {
 
             @Override
-            public boolean onMarkerClick(Marker marker) {
-                String id = marker.getId();
-                if (selected.equals(id) && accidents.containsKey(id)) {
-                    Content.toDetails(accidents.get(selected));
-                } else {
-                    marker.showInfoWindow();
-                    selected = id;
-                }
-                return true;
+            protected void onPostExecute(Integer integer) {
+                super.onPostExecute(integer);
+                if (integer == 0) return;
+                init();
+                jumpToPoint(MyLocationManager.getLocation());
+                placeUser();
             }
-        });
-        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-            @Override
-            public void onMapLongClick(LatLng latLng) {
-                String uri    = "geo:" + latLng.latitude + "," + latLng.longitude;
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                MyApp.getCurrentActivity().startActivity(intent);
-            }
-        });
+        }.execute(null, null, null);
     }
 
     public void placeUser() {
@@ -105,10 +90,12 @@ public class MyGoogleMapManager extends MyMapManager {
     }
 
     public void jumpToPoint(Location location) {
+        if (map == null) return;
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(location), 16));
     }
 
     public void placeAccidents() {
+        if (map == null) return;
         init();
         accidents.clear();
         for (int id : Content.getPoints().keySet()) {
@@ -132,14 +119,36 @@ public class MyGoogleMapManager extends MyMapManager {
         }
     }
 
-    private static void init() {
+    private void init() {
         map.clear();
         map.setMyLocationEnabled(true);
         map.getUiSettings().setMyLocationButtonEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
+        map.setOnMarkerClickListener(new OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                String id = marker.getId();
+                if (selected.equals(id) && accidents.containsKey(id)) {
+                    Content.toDetails(accidents.get(selected));
+                } else {
+                    marker.showInfoWindow();
+                    selected = id;
+                }
+                return true;
+            }
+        });
+        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                String uri    = "geo:" + latLng.latitude + "," + latLng.longitude;
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                MyApp.getCurrentActivity().startActivity(intent);
+            }
+        });
     }
 
     public void zoom(int zoom) {
+        if (map == null) return;
         map.animateCamera(CameraUpdateFactory.zoomTo(zoom));
     }
 }

@@ -11,6 +11,8 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.Date;
+
 import motocitizen.MyApp;
 import motocitizen.content.Content;
 import motocitizen.network.requests.InplaceRequest;
@@ -38,7 +40,6 @@ public class MyLocationManager {
     private static       LocationRequest                     locationRequest;
     private static final LocationListener                    locationListener;
     private static final GoogleApiClient.ConnectionCallbacks connectionCallback;
-
 
     static {
         connectionCallback = new GoogleApiClient.ConnectionCallbacks() {
@@ -98,19 +99,23 @@ public class MyLocationManager {
         return lr;
     }
 
+    public static Location getDirtyLocation(){
+        if (current != null && current.getTime() - (new Date()).getTime() < 30000) return current;
+        return getLocation();
+    }
+
     public static Location getLocation() {
-        Location last = null;
         if (googleApiClient != null) {
-            last = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+            current = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         }
-        if (last == null) {
-            last = new Location(LocationManager.NETWORK_PROVIDER);
+        if (current == null) {
+            current = new Location(LocationManager.NETWORK_PROVIDER);
             LatLng latlng = Preferences.getSavedLatLng();
-            last.setLatitude(latlng.latitude);
-            last.setLongitude(latlng.longitude);
-            last.setAccuracy(DEFAULT_ACCURACY);
+            current.setLatitude(latlng.latitude);
+            current.setLongitude(latlng.longitude);
+            current.setAccuracy(DEFAULT_ACCURACY);
         }
-        return last;
+        return current;
     }
 
     private static void runLocationService(int accuracy) {

@@ -72,8 +72,8 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         MyApp.setCurrentActivity(this);
         setContentView(R.layout.create_point);
-        accident = createDefaultAccident();
         initialLocation = MyLocationManager.getLocation();
+        accident = createDefaultAccident();
         map = makeMap();
         confirmButton = (Button) findViewById(R.id.CREATE);
         createFinalText = (EditText) findViewById(R.id.mc_create_final_text);

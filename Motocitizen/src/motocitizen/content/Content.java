@@ -3,6 +3,7 @@ package motocitizen.content;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -12,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -134,6 +136,7 @@ public class Content {
         if (!json.has("list")) return;
         try {
             JSONArray list = json.getJSONArray("list");
+            Log.d("START PARSE POINTS", String.valueOf((new Date()).getTime()));
             for (int i = 0; i < list.length(); i++) {
                 Accident accident = new Accident(list.getJSONObject(i));
                 if (accident.isError()) continue;
@@ -143,6 +146,7 @@ public class Content {
                     points.put(accident.getId(), accident);
                 }
             }
+            Log.d("END PARSE POINTS", String.valueOf((new Date()).getTime()));
         } catch (JSONException e) {
             e.printStackTrace();
         }
