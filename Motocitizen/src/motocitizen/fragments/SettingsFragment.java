@@ -32,7 +32,7 @@ public class SettingsFragment extends PreferenceFragment {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             mapProviderPreference.setValue(newValue.toString());
-            MainScreenActivity.createMap(newValue.toString());
+            //MyApp.getMap().createMap(newValue.toString());
             preference.setSummary(mapProviderPreference.getEntry());
             return true;
         }

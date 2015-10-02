@@ -152,8 +152,8 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
 
         menuReconstruction();
 
-        MainScreenActivity.map.zoom(16);
-        MainScreenActivity.map.jumpToPoint(currentPoint.getLocation());
+        MyApp.getMap().zoom(16);
+        MyApp.getMap().jumpToPoint(currentPoint.getLocation());
     }
 
     @Override

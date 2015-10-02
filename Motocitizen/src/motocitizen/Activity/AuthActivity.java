@@ -93,7 +93,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
                     finish();
                     return;
                 }
-                if (!MainScreenActivity.isOnline()) {
+                if (!MyApp.isOnline()) {
                     showToast(R.string.auth_not_available);
                     return;
                 }

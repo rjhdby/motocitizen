@@ -20,6 +20,7 @@ import java.net.URLEncoder;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
+import motocitizen.MyApp;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.CustomTrustManager;
 import motocitizen.Activity.MainScreenActivity;
@@ -44,7 +45,7 @@ abstract public class HTTPClient extends AsyncTask<Map<String, String>, Integer,
     }
 
     protected JSONObject request(Map<String, String> post) {
-        if (!MainScreenActivity.isOnline()) {
+        if (!MyApp.isOnline()) {
             try {
                 JSONObject result = new JSONObject();
                 result.put("error", "Интернет не доступен");

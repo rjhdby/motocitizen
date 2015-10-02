@@ -6,6 +6,8 @@ package motocitizen.utils;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
@@ -44,6 +46,20 @@ public class ChangeLog {
             }
         });
         return builder.create();
+    }
+
+    public static boolean isNewVersion() {
+        PackageManager manager        = MyApp.getAppContext().getPackageManager();
+        String         version;
+        String         currentVersion = Preferences.getCurrentVersion();
+        try {
+            PackageInfo info = manager.getPackageInfo(MyApp.getAppContext().getPackageName(), 0);
+            version = info.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            version = MyApp.getAppContext().getString(R.string.unknown_code_version);
+        }
+        Preferences.setCurrentVersion(version);
+        return !currentVersion.equals(version);
     }
 
     public static String getLog(boolean full) {

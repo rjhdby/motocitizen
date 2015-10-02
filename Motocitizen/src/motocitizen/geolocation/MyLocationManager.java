@@ -203,7 +203,7 @@ public class MyLocationManager {
         StringBuilder res = new StringBuilder();
         try {
             List<Address> list;
-            list = MyApp.geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            list = MyApp.getGeocoder().getFromLocation(location.getLatitude(), location.getLongitude(), 1);
             if (list == null || list.size() == 0)
                 return location.getLatitude() + " " + location.getLongitude();
             Address address = list.get(0);

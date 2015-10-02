@@ -13,6 +13,7 @@ public class Const {
     public static final SimpleDateFormat DATE_FORMAT      = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
     public static final SimpleDateFormat TIME_FORMAT      = new SimpleDateFormat("HH:mm", Locale.getDefault());
     public final static int              EQUATOR          = 20038;
+    public final static String           PHONE            = "78007751734";
 
     public static float getDP() {
         return MyApp.getCurrentActivity().getResources().getDisplayMetrics().density;

@@ -91,7 +91,7 @@ public class Content {
 
     public static void refresh() {
         update();
-        MainScreenActivity.map.placeAccidents();
+        MyApp.getMap().placeAccidents();
         redraw();
     }
 
@@ -117,7 +117,7 @@ public class Content {
     public static void refreshPoints() {
         update();
         redraw();
-        MainScreenActivity.map.placeAccidents();
+        MyApp.getMap().placeAccidents();
         //points.saveReadMessages();
     }
 
@@ -170,7 +170,7 @@ public class Content {
         public void onTaskComplete(JSONObject result) {
             if (!result.has("error")) parseJSON(result);
             Content.redraw();
-            MainScreenActivity.map.placeAccidents();
+            MyApp.getMap().placeAccidents();
         }
     }
 }

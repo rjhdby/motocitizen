@@ -12,11 +12,12 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import motocitizen.Activity.MainScreenActivity;
+import motocitizen.MyApp;
 import motocitizen.content.Content;
 import motocitizen.main.R;
-import motocitizen.network.requests.AccidentsRequest;
 import motocitizen.network.AsyncTaskCompleteListener;
-import motocitizen.Activity.MainScreenActivity;
+import motocitizen.network.requests.AccidentsRequest;
 
 public class BounceScrollView extends ScrollView {
     private static final int MAX_Y_OVER_SCROLL_DISTANCE = 40;
@@ -57,7 +58,7 @@ public class BounceScrollView extends ScrollView {
             isRequestedUpdate = true;
         }
         if (scrollY > -mMaxYOverScrollDistance * 0.1 && isRequestedUpdate) {
-            if (MainScreenActivity.isOnline()) {
+            if (MyApp.isOnline()) {
                 isRequestedUpdate = false;
                 MainScreenActivity.startRefreshAnimation();
                 Content.update(new AccidentsRequestCallback());

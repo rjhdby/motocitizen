@@ -4,7 +4,8 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.location.Geocoder;
-import android.os.StrictMode;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 import motocitizen.app.general.user.Auth;
 import motocitizen.app.general.user.Role;
@@ -12,19 +13,26 @@ import motocitizen.content.Content;
 import motocitizen.gcm.GCMBroadcastReceiver;
 import motocitizen.gcm.GCMRegistration;
 import motocitizen.geolocation.MyLocationManager;
+import motocitizen.maps.MyMapManager;
 import motocitizen.utils.Preferences;
 
 public class MyApp extends Application {
 
-    private static MyApp    instance;
-    public static  Auth     auth;
-    public static Geocoder geocoder;
-    private static Activity currentActivity;
+    private static MyApp        instance;
+    private static Auth         auth;
+    private static Geocoder     geocoder;
+    private static Activity     currentActivity;
+    private static MyMapManager map;
 
     static {
         auth = null;
         geocoder = null;
         currentActivity = null;
+        map = null;
+    }
+
+    {
+        instance = this;
     }
 
     public static Activity getCurrentActivity() {
@@ -35,16 +43,11 @@ public class MyApp extends Application {
         MyApp.currentActivity = currentActivity;
     }
 
-    public MyApp() {
-        instance = this;
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
         new Preferences(this);
+        Preferences.setDoNotDisturb(false);
         auth = new Auth();
         geocoder = new Geocoder(this);
         new MyLocationManager();
@@ -71,5 +74,22 @@ public class MyApp extends Application {
 
     public static void logoff() {
         auth.logoff();
+    }
+
+    public static MyMapManager getMap() {
+        return map;
+    }
+
+    public static Geocoder getGeocoder() {
+        return geocoder;
+    }
+
+    public static void setMap(MyMapManager map) {
+        MyApp.map = map;
+    }
+    public static boolean isOnline() {
+        ConnectivityManager cm      = (ConnectivityManager) instance.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo         netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }

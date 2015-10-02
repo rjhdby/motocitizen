@@ -3,6 +3,7 @@ package motocitizen.network.requests;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.StrictMode;
 import android.telephony.TelephonyManager;
 
 import org.json.JSONException;
@@ -17,6 +18,8 @@ import motocitizen.network.Methods;
 
 public class AuthRequest extends HTTPClient {
     public AuthRequest() {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         String ident = ((TelephonyManager) MyApp.getAppContext().getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
 
         String versionName = "0";

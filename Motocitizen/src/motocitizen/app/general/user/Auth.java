@@ -88,7 +88,7 @@ public class Auth {
     private void showLogin() {
         Intent i = new Intent(MyApp.getAppContext(), AuthActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        MyApp.getCurrentActivity().startActivity(i);
+        MyApp.getAppContext().startActivity(i);
     }
 
     private void message(String text) {
