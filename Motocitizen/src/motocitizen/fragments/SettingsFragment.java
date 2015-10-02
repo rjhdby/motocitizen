@@ -61,8 +61,7 @@ public class SettingsFragment extends PreferenceFragment {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             Preferences.putBoolean(preference.getKey(), (boolean) newValue);
-            boolean visible = Preferences.toShowAcc() | Preferences.toShowBreak() | Preferences.toShowOther() | Preferences.toShowSteal();
-            if (!visible) {
+            if (!(Preferences.toShowAcc() || Preferences.toShowBreak() || Preferences.toShowOther() || Preferences.toShowSteal())) {
                 message(getString(R.string.no_one_accident_visible));
             }
             update();
@@ -73,19 +72,15 @@ public class SettingsFragment extends PreferenceFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        update();
     }
 
     private void update() {
-        setPreferenceScreen(null);
-        addPreferencesFromResource(R.xml.preferences);
         Preference buttonAuth = findPreference(getResources().getString(R.string.mc_settings_auth_button));
         buttonAuth.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference arg0) {
                 Intent i = new Intent(getActivity(), AuthActivity.class);
                 getActivity().startActivity(i);
-
                 return true;
             }
         });
@@ -171,6 +166,8 @@ public class SettingsFragment extends PreferenceFragment {
     @Override
     public void onResume() {
         super.onResume();
+        setPreferenceScreen(null);
+        addPreferencesFromResource(R.xml.preferences);
         update();
     }
 

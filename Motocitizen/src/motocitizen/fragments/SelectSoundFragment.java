@@ -22,7 +22,7 @@ import motocitizen.main.R;
 import motocitizen.startup.Preferences;
 import motocitizen.utils.Const;
 
-public class SelectSoundFragment extends Fragment{
+public class SelectSoundFragment extends Fragment {
     private static Map<Integer, Uri> notifications;
     private static int               currentId;
     private static ViewGroup         vg;
@@ -33,8 +33,14 @@ public class SelectSoundFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActivity().setContentView(R.layout.select_sound);
+        getActivity().setContentView(R.layout.select_sound_fragment);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         vg = (ViewGroup) getActivity().findViewById(R.id.sound_select_table);
+        getActivity().findViewById(R.id.select_sound_fragment).setVisibility(View.VISIBLE);
         rm = new RingtoneManager(getActivity());
         rm.setType(RingtoneManager.TYPE_NOTIFICATION);
         currentUri = Preferences.getAlarmSoundUri();
@@ -58,11 +64,6 @@ public class SelectSoundFragment extends Fragment{
                 finish();
             }
         });
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         drawList();
     }
 
@@ -102,7 +103,8 @@ public class SelectSoundFragment extends Fragment{
         viewGroup.addView(tr);
     }
 
-    private void finish(){
-        getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
+    private void finish() {
+        getActivity().findViewById(R.id.select_sound_fragment).setVisibility(View.GONE);
+        getFragmentManager().beginTransaction().remove(this).replace(android.R.id.content, new SettingsFragment()).commit();
     }
 }
