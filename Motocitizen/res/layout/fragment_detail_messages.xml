@@ -6,7 +6,7 @@
               android:orientation="vertical"
               android:tag="mc_det_messages_content"
               android:weightSum="1"
-              tools:context="motocitizen.Activity.DetailMessagesFragment">
+              tools:context="motocitizen.fragments.DetailMessagesFragment">
 
     <ScrollView
         android:id="@+id/mc_det_messages_scroll"

@@ -25,6 +25,10 @@ import motocitizen.accident.Accident;
 import motocitizen.app.general.popups.AccidentListPopup;
 import motocitizen.content.AccidentStatus;
 import motocitizen.content.Content;
+import motocitizen.fragments.AccidentDetailsFragments;
+import motocitizen.fragments.DetailHistoryFragment;
+import motocitizen.fragments.DetailMessagesFragment;
+import motocitizen.fragments.DetailVolunteersFragment;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentChangeStateRequest;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
@@ -132,7 +136,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
         update();
     }
 
-    void update() {
+    public void update() {
         currentPoint = Content.getPoint(accidentID);
 
         ActionBar actionBar = getSupportActionBar();
@@ -319,7 +323,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
         }
     };
 
-    void jumpToMap() {
+    public void jumpToMap() {
         Intent intent = new Intent(this, Startup.class);
         intent.putExtra("toMap", currentPoint.getId());
         intent.putExtra("fromDetails", true);

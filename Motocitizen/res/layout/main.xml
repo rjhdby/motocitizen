@@ -9,7 +9,7 @@
     android:paddingTop="0dp"
     tools:context="motocitizen.startup.Startup" >
     <fragment
-        class ="motocitizen.Activity.MainScreenFragment"
+        class ="motocitizen.fragments.MainScreenFragment"
         android:id="@+id/main_screen_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

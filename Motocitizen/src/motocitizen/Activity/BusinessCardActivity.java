@@ -2,9 +2,6 @@ package motocitizen.Activity;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.ImageView;
 
 import motocitizen.MyApp;
 import motocitizen.main.R;

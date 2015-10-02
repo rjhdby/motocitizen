@@ -1,4 +1,4 @@
-package motocitizen.Activity;
+package motocitizen.fragments;
 
 import android.app.Activity;
 import android.app.DialogFragment;
@@ -15,6 +15,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.accident.Volunteer;
 import motocitizen.content.Content;
 import motocitizen.content.VolunteerStatus;

@@ -1,11 +1,11 @@
-package motocitizen.Activity;
+package motocitizen.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import motocitizen.MyApp;
+import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.draw.Rows;
 import motocitizen.main.R;
 

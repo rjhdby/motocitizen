@@ -1,4 +1,4 @@
-package motocitizen.Activity;
+package motocitizen.fragments;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,7 +15,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import motocitizen.MyApp;
+import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.accident.Message;
 import motocitizen.app.general.popups.MessagesPopup;
 import motocitizen.content.Content;

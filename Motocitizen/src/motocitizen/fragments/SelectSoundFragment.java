@@ -1,5 +1,6 @@
-package motocitizen.Activity;
+package motocitizen.fragments;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -7,9 +8,7 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -25,7 +24,7 @@ import motocitizen.startup.Preferences;
 import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
 
-public class SelectSoundActivity extends ActionBarActivity {
+public class SelectSoundFragment extends Fragment{
     private static Map<Integer, Uri> notifications;
     private static int               currentId;
     private static ViewGroup         vg;
@@ -34,17 +33,16 @@ public class SelectSoundActivity extends ActionBarActivity {
     private static RingtoneManager   rm;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MyApp.setCurrentActivity(this);
-        setContentView(R.layout.select_sound);
-        vg = (ViewGroup) findViewById(R.id.sound_select_table);
-        rm = new RingtoneManager(this);
+        getActivity().setContentView(R.layout.select_sound);
+        vg = (ViewGroup) getActivity().findViewById(R.id.sound_select_table);
+        rm = new RingtoneManager(getActivity());
         rm.setType(RingtoneManager.TYPE_NOTIFICATION);
         currentUri = Preferences.getAlarmSoundUri();
         currentTitle = Preferences.getAlarmSoundTitle();
 
-        Button selectSoundConfirmButton = (Button) findViewById(R.id.select_sound_save_button);
+        Button selectSoundConfirmButton = (Button) getActivity().findViewById(R.id.select_sound_save_button);
         selectSoundConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,7 +53,7 @@ public class SelectSoundActivity extends ActionBarActivity {
             }
         });
 
-        Button selectSoundCancelButton = (Button) findViewById(R.id.select_sound_cancel_button);
+        Button selectSoundCancelButton = (Button) getActivity().findViewById(R.id.select_sound_cancel_button);
         selectSoundCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,9 +63,8 @@ public class SelectSoundActivity extends ActionBarActivity {
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
-        MyApp.setCurrentActivity(this);
         drawList();
     }
 
@@ -78,37 +75,36 @@ public class SelectSoundActivity extends ActionBarActivity {
         if (cursor.getCount() == 0 && !cursor.moveToFirst()) return;
         while (!cursor.isAfterLast() && cursor.moveToNext()) {
             int currentPosition = cursor.getPosition();
-            inflateRow(this, vg, currentPosition);
+            inflateRow(getActivity(), vg, currentPosition);
         }
     }
 
     private void inflateRow(final Context context, ViewGroup viewGroup, int currentPosition) {
         LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         TableRow       tr = (TableRow) li.inflate(R.layout.sound_row, viewGroup, false);
-        tr.setId(MyUtils.newId());
+        tr.setTag(currentPosition);
         ((TextView) tr.findViewById(R.id.sound)).setText(rm.getRingtone(currentPosition).getTitle(context));
-        notifications.put(tr.getId(), rm.getRingtoneUri(currentPosition));
+        notifications.put(currentPosition, rm.getRingtoneUri(currentPosition));
         tr.setOnClickListener(new Button.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+                int tag = (Integer) v.getTag();
                 if (currentId != 0) {
-                    vg.findViewById(currentId).setBackgroundColor(Const.getDefaultBGColor());
+                    vg.findViewWithTag(currentId).setBackgroundColor(Const.getDefaultBGColor());
                 }
-                currentId = v.getId();
-                vg.findViewById(currentId).setBackgroundColor(Color.GRAY);
-                Ringtone current = RingtoneManager.getRingtone(v.getContext(), notifications.get(v.getId()));
+                currentId = tag;
+                v.setBackgroundColor(Color.GRAY);
+                Ringtone current = RingtoneManager.getRingtone(v.getContext(), notifications.get(tag));
                 current.play();
-                currentUri = notifications.get(v.getId());
+                currentUri = notifications.get(tag);
                 currentTitle = current.getTitle(v.getContext());
             }
         });
         viewGroup.addView(tr);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return true;
+    private void finish(){
+        getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
     }
-
 }

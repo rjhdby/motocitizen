@@ -1,4 +1,4 @@
-package motocitizen.Activity;
+package motocitizen.fragments;
 
 import android.app.Fragment;
 import android.net.Uri;

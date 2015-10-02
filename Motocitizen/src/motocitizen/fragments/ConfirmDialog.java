@@ -1,4 +1,4 @@
-package motocitizen.Activity;
+package motocitizen.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -6,8 +6,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-
-import motocitizen.MyApp;
 
 public class ConfirmDialog extends DialogFragment {
 

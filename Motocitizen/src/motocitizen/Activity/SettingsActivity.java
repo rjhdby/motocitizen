@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import motocitizen.MyApp;
+import motocitizen.fragments.SettingsFragment;
 import motocitizen.main.R;
 
 public class SettingsActivity extends Activity {
@@ -19,22 +20,15 @@ public class SettingsActivity extends Activity {
         MyApp.setCurrentActivity(this);
         setContentView(R.layout.activity_settings);
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction().replace(android.R.id.content,
-                    new SettingsFragment()).commit();
+            getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
         }
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_settings, menu);
         return false;
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
     public static class PlaceholderFragment extends Fragment {
 
         public PlaceholderFragment() {

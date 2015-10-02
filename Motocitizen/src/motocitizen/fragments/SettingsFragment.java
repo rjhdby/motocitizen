@@ -1,4 +1,4 @@
-package motocitizen.Activity;
+package motocitizen.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +7,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.widget.Toast;
 
-import motocitizen.MyApp;
+import motocitizen.Activity.AuthActivity;
 import motocitizen.content.Content;
 import motocitizen.main.R;
 import motocitizen.startup.Preferences;
@@ -85,6 +85,7 @@ public class SettingsFragment extends PreferenceFragment {
             public boolean onPreferenceClick(Preference arg0) {
                 Intent i = new Intent(getActivity(), AuthActivity.class);
                 getActivity().startActivity(i);
+
                 return true;
             }
         });
@@ -92,8 +93,7 @@ public class SettingsFragment extends PreferenceFragment {
         buttonSound.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference arg0) {
-                Intent i = new Intent(getActivity(), SelectSoundActivity.class);
-                getActivity().startActivity(i);
+                getFragmentManager().beginTransaction().replace(android.R.id.content, new SelectSoundFragment()).commit();
                 return true;
             }
         });

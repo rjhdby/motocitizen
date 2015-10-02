@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:tag="mc_det_log_content"
-    tools:context="motocitizen.Activity.DetailHistoryFragment">
+    tools:context="motocitizen.fragments.DetailHistoryFragment">
 
     <TableLayout
         android:id="@+id/mc_det_log_content"
