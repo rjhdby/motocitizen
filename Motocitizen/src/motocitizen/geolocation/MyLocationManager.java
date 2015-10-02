@@ -217,7 +217,7 @@ public class MyLocationManager {
     private class MyConnectionCallback implements GoogleApiClient.ConnectionCallbacks {
         @Override
         public void onConnected(Bundle connectionHint) {
-//TODO Это пиздец
+            //TODO Это пиздец
             while (!googleApiClient.isConnected()) {
                 try {
                     Thread.sleep(5000);
