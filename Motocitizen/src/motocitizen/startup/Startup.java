@@ -173,8 +173,6 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
         if (map != null && map.getName().equals(name)) return;
         switch (name) {
             case MyMapManager.OSM:
-                map = new MyOSMMapManager(MyApp.getCurrentActivity());
-                break;
             case MyMapManager.GOOGLE:
             default:
                 map = new MyGoogleMapManager();
