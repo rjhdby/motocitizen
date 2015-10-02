@@ -31,7 +31,7 @@ import motocitizen.fragments.DetailMessagesFragment;
 import motocitizen.fragments.DetailVolunteersFragment;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentChangeStateRequest;
-import motocitizen.network.requests.AsyncTaskCompleteListener;
+import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.utils.Preferences;
 import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;

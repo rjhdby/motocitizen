@@ -7,6 +7,9 @@ import java.util.HashMap;
 
 import motocitizen.MyApp;
 import motocitizen.content.Content;
+import motocitizen.network.AsyncTaskCompleteListener;
+import motocitizen.network.HTTPClient;
+import motocitizen.network.Methods;
 
 public class BanRequest extends HTTPClient {
     public BanRequest(AsyncTaskCompleteListener listener, int id) {

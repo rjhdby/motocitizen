@@ -32,7 +32,7 @@ import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.maps.MyMapManager;
 import motocitizen.maps.google.MyGoogleMapManager;
-import motocitizen.network.requests.AsyncTaskCompleteListener;
+import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.utils.ChangeLog;
 import motocitizen.utils.Preferences;
 import motocitizen.utils.Const;

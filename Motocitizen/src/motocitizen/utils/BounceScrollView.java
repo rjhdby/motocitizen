@@ -15,7 +15,7 @@ import org.json.JSONObject;
 import motocitizen.content.Content;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentsRequest;
-import motocitizen.network.requests.AsyncTaskCompleteListener;
+import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.Activity.MainScreenActivity;
 
 public class BounceScrollView extends ScrollView {

@@ -9,9 +9,11 @@ import java.util.Date;
 import java.util.HashMap;
 
 import motocitizen.MyApp;
-import motocitizen.content.Content;
 import motocitizen.content.Medicine;
 import motocitizen.content.Type;
+import motocitizen.network.AsyncTaskCompleteListener;
+import motocitizen.network.HTTPClient;
+import motocitizen.network.Methods;
 import motocitizen.utils.Const;
 
 public class CreateAccidentRequest extends HTTPClient {

@@ -1,4 +1,4 @@
-package motocitizen.network.requests;
+package motocitizen.network;
 
 public enum Methods {
     AUTH("auth"),

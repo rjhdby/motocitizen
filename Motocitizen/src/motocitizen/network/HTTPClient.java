@@ -1,4 +1,4 @@
-package motocitizen.network.requests;
+package motocitizen.network;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
@@ -20,11 +20,12 @@ import java.net.URLEncoder;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
+import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.CustomTrustManager;
 import motocitizen.Activity.MainScreenActivity;
 
 
-abstract class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONObject> {
+abstract public class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONObject> {
     /* constants */
     private final static String CHARSET       = "UTF-8";
     private final static String USERAGENT     = "Mozilla/5.0 (Linux; Android 4.4; Nexus 5 Build/_BuildID_) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/30.0.0.0 Mobile Safari/537.36";
@@ -42,7 +43,7 @@ abstract class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONOb
         return request(params[0]);
     }
 
-    JSONObject request(Map<String, String> post) {
+    protected JSONObject request(Map<String, String> post) {
         if (!MainScreenActivity.isOnline()) {
             try {
                 JSONObject result = new JSONObject();

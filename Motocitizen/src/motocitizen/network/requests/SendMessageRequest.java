@@ -6,7 +6,9 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 import motocitizen.MyApp;
-import motocitizen.content.Content;
+import motocitizen.network.AsyncTaskCompleteListener;
+import motocitizen.network.HTTPClient;
+import motocitizen.network.Methods;
 
 public class SendMessageRequest extends HTTPClient {
     public SendMessageRequest(AsyncTaskCompleteListener listener, int id, String text) {

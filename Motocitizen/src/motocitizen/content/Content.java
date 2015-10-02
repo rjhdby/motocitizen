@@ -22,13 +22,12 @@ import java.util.Set;
 import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.MyApp;
 import motocitizen.accident.Accident;
-import motocitizen.app.general.user.Auth;
 import motocitizen.database.Favorites;
 import motocitizen.draw.Rows;
 import motocitizen.draw.Sort;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentsRequest;
-import motocitizen.network.requests.AsyncTaskCompleteListener;
+import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.Activity.MainScreenActivity;
 
 public class Content {

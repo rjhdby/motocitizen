@@ -12,6 +12,8 @@ import java.util.HashMap;
 
 import motocitizen.MyApp;
 import motocitizen.app.general.user.Auth;
+import motocitizen.network.HTTPClient;
+import motocitizen.network.Methods;
 
 public class AuthRequest extends HTTPClient {
     public AuthRequest() {

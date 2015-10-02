@@ -24,7 +24,7 @@ import motocitizen.database.StoreMessages;
 import motocitizen.draw.Rows;
 import motocitizen.draw.Sort;
 import motocitizen.main.R;
-import motocitizen.network.requests.AsyncTaskCompleteListener;
+import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.SendMessageRequest;
 
 public class DetailMessagesFragment extends AccidentDetailsFragments {

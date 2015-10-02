@@ -37,7 +37,7 @@ import motocitizen.content.Medicine;
 import motocitizen.content.Type;
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
-import motocitizen.network.requests.AsyncTaskCompleteListener;
+import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.CreateAccidentRequest;
 import motocitizen.utils.Preferences;
 import motocitizen.utils.Const;

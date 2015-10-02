@@ -6,7 +6,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 import motocitizen.MyApp;
-import motocitizen.content.Content;
+import motocitizen.network.HTTPClient;
+import motocitizen.network.Methods;
 
 public class InplaceRequest extends HTTPClient {
     public InplaceRequest(int id) {

@@ -26,7 +26,7 @@ import motocitizen.accident.Accident;
 import motocitizen.content.AccidentStatus;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentChangeStateRequest;
-import motocitizen.network.requests.AsyncTaskCompleteListener;
+import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.BanRequest;
 import motocitizen.utils.MyUtils;
 

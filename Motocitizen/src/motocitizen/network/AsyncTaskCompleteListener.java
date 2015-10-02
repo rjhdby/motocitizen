@@ -1,4 +1,4 @@
-package motocitizen.network.requests;
+package motocitizen.network;
 
 import org.json.JSONException;
 import org.json.JSONObject;

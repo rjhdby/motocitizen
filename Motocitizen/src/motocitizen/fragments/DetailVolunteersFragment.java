@@ -23,7 +23,7 @@ import motocitizen.content.VolunteerStatus;
 import motocitizen.draw.Rows;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentsRequest;
-import motocitizen.network.requests.AsyncTaskCompleteListener;
+import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.CancelOnWayRequest;
 import motocitizen.network.requests.OnWayRequest;
 import motocitizen.utils.Preferences;
