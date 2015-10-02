@@ -24,7 +24,7 @@ import motocitizen.MyApp;
 import motocitizen.accident.Accident;
 import motocitizen.database.Favorites;
 import motocitizen.draw.Rows;
-import motocitizen.draw.Sort;
+import motocitizen.utils.Sort;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentsRequest;
 import motocitizen.network.AsyncTaskCompleteListener;
