@@ -40,7 +40,6 @@ import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.maps.MyMapManager;
 import motocitizen.maps.google.MyGoogleMapManager;
-import motocitizen.maps.osm.MyOSMMapManager;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.utils.Const;
 
