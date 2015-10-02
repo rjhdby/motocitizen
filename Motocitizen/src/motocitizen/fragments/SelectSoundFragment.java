@@ -23,12 +23,34 @@ import motocitizen.startup.Preferences;
 import motocitizen.utils.Const;
 
 public class SelectSoundFragment extends Fragment {
-    private static Map<Integer, Uri> notifications;
-    private static int               currentId;
-    private static ViewGroup         vg;
-    private static Uri               currentUri;
-    private static String            currentTitle;
-    private static RingtoneManager   rm;
+    private static Map<Integer, Sound> notifications;
+    private static int                 currentId;
+    private static ViewGroup           vg;
+    private static Uri                 currentUri;
+    private static String              currentTitle;
+
+
+    private class Sound {
+        private final Uri      uri;
+        private final Ringtone ringtone;
+
+        public Sound(Uri uri, Ringtone ringtone) {
+            this.uri = uri;
+            this.ringtone = ringtone;
+        }
+
+        public Uri getUri() {
+            return uri;
+        }
+
+        public String getTitle() {
+            return ringtone.getTitle(getActivity());
+        }
+
+        public void play() {
+            ringtone.play();
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,8 +63,8 @@ public class SelectSoundFragment extends Fragment {
         super.onResume();
         vg = (ViewGroup) getActivity().findViewById(R.id.sound_select_table);
         getActivity().findViewById(R.id.select_sound_fragment).setVisibility(View.VISIBLE);
-        rm = new RingtoneManager(getActivity());
-        rm.setType(RingtoneManager.TYPE_NOTIFICATION);
+        if (notifications == null) getSystemSounds();
+
         currentUri = Preferences.getAlarmSoundUri();
         currentTitle = Preferences.getAlarmSoundTitle();
 
@@ -67,14 +89,22 @@ public class SelectSoundFragment extends Fragment {
         drawList();
     }
 
-    private void drawList() {
-        currentId = 0;
+    private void getSystemSounds() {
+        RingtoneManager rm = new RingtoneManager(getActivity());
+        rm.setType(RingtoneManager.TYPE_NOTIFICATION);
         notifications = new HashMap<>();
         Cursor cursor = rm.getCursor();
         if (cursor.getCount() == 0 && !cursor.moveToFirst()) return;
         while (!cursor.isAfterLast() && cursor.moveToNext()) {
             int currentPosition = cursor.getPosition();
-            inflateRow(vg, currentPosition);
+            notifications.put(currentPosition, new Sound(rm.getRingtoneUri(currentPosition), rm.getRingtone(currentPosition)));
+        }
+    }
+
+    private void drawList() {
+        currentId = 0;
+        for (int key : notifications.keySet()) {
+            inflateRow(vg, key);
         }
     }
 
@@ -82,8 +112,9 @@ public class SelectSoundFragment extends Fragment {
         LayoutInflater li = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         TableRow       tr = (TableRow) li.inflate(R.layout.sound_row, viewGroup, false);
         tr.setTag(currentPosition);
-        ((TextView) tr.findViewById(R.id.sound)).setText(rm.getRingtone(currentPosition).getTitle(getActivity()));
-        notifications.put(currentPosition, rm.getRingtoneUri(currentPosition));
+
+        ((TextView) tr.findViewById(R.id.sound)).setText(notifications.get(currentPosition).getTitle());
+
         tr.setOnClickListener(new Button.OnClickListener() {
 
             @Override
@@ -94,10 +125,9 @@ public class SelectSoundFragment extends Fragment {
                 }
                 currentId = tag;
                 v.setBackgroundColor(Color.GRAY);
-                Ringtone current = RingtoneManager.getRingtone(v.getContext(), notifications.get(tag));
-                current.play();
-                currentUri = notifications.get(tag);
-                currentTitle = current.getTitle(v.getContext());
+                notifications.get(tag).play();
+                currentUri = notifications.get(tag).getUri();
+                currentTitle = notifications.get(tag).getTitle();
             }
         });
         viewGroup.addView(tr);
