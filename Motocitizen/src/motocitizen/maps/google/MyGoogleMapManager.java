@@ -69,7 +69,7 @@ public class MyGoogleMapManager extends MyMapManager {
                 super.onPostExecute(integer);
                 if (integer == 0) return;
                 init();
-                jumpToPoint(MyLocationManager.getLocation());
+                jumpToPoint(MyApp.getLocationManager().getLocation());
                 placeUser();
             }
         }.execute(null, null, null);
@@ -80,7 +80,7 @@ public class MyGoogleMapManager extends MyMapManager {
             user.remove();
         }
 
-        Location location = MyLocationManager.getLocation();
+        Location location = MyApp.getLocationManager().getLocation();
         //if(location != null) {
         user = map.addMarker(new MarkerOptions().position(MyUtils.LocationToLatLng(location)).title(Type.USER.toString()).icon(Type.USER.getIcon()));
         //} else {

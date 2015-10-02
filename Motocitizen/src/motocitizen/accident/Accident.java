@@ -185,7 +185,7 @@ public class Accident {
     }
 
     public Double getDistanceFromUser() {
-        Location userLocation = MyLocationManager.getDirtyLocation();
+        Location userLocation = MyApp.getLocationManager().getDirtyLocation();
         return (double) getLocation().distanceTo(userLocation);
     }
 

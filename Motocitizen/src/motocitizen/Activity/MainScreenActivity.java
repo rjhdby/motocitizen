@@ -77,7 +77,7 @@ public class MainScreenActivity extends ActionBarActivity {
         MyApp.setCurrentActivity(this);
 
         createAccButton.setVisibility(MyApp.getRole().isStandart() ? View.VISIBLE : View.INVISIBLE);
-        MyLocationManager.wakeup();
+        MyApp.getLocationManager().wakeup();
         getAccidents();
         Content.redraw();
         redirectIfNeeded(getIntent());
@@ -86,7 +86,7 @@ public class MainScreenActivity extends ActionBarActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        MyLocationManager.sleep();
+        MyApp.getLocationManager().sleep();
     }
 
     @Override

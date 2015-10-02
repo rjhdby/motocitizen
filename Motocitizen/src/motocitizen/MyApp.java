@@ -18,11 +18,12 @@ import motocitizen.utils.Preferences;
 
 public class MyApp extends Application {
 
-    private static MyApp        instance;
-    private static Auth         auth;
-    private static Geocoder     geocoder;
-    private static Activity     currentActivity;
-    private static MyMapManager map;
+    private static MyApp             instance;
+    private static Auth              auth;
+    private static Geocoder          geocoder;
+    private static Activity          currentActivity;
+    private static MyMapManager      map;
+    private static MyLocationManager locationManager;
 
     static {
         auth = null;
@@ -50,7 +51,7 @@ public class MyApp extends Application {
         Preferences.setDoNotDisturb(false);
         auth = new Auth();
         geocoder = new Geocoder(this);
-        new MyLocationManager();
+        locationManager = new MyLocationManager();
         new GCMRegistration();
         new Content();
         new GCMBroadcastReceiver();
@@ -58,6 +59,10 @@ public class MyApp extends Application {
 
     public static Context getAppContext() {
         return instance.getApplicationContext();
+    }
+
+    public static MyLocationManager getLocationManager() {
+        return locationManager;
     }
 
     public static Auth getAuth() {
@@ -87,6 +92,7 @@ public class MyApp extends Application {
     public static void setMap(MyMapManager map) {
         MyApp.map = map;
     }
+
     public static boolean isOnline() {
         ConnectivityManager cm      = (ConnectivityManager) instance.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo         netInfo = cm.getActiveNetworkInfo();

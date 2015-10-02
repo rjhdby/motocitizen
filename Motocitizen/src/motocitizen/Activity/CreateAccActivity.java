@@ -72,7 +72,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         MyApp.setCurrentActivity(this);
         setContentView(R.layout.create_point);
-        initialLocation = MyLocationManager.getLocation();
+        initialLocation = MyApp.getLocationManager().getLocation();
         accident = createDefaultAccident();
         map = makeMap();
         confirmButton = (Button) findViewById(R.id.CREATE);
@@ -234,7 +234,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 break;
             case R.id.ADDRESS:
                 accident.setLatLng(map.getCameraPosition().target);
-                accident.setAddress(MyLocationManager.getAddress(accident.getLocation()));
+                accident.setAddress(MyApp.getLocationManager().getAddress(accident.getLocation()));
                 setUpScreen(TYPE);
                 break;
             case R.id.CREATE:

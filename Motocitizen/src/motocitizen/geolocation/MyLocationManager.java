@@ -16,12 +16,12 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+import motocitizen.Activity.MainScreenActivity;
 import motocitizen.MyApp;
 import motocitizen.content.Content;
 import motocitizen.network.requests.InplaceRequest;
 import motocitizen.network.requests.LeaveRequest;
 import motocitizen.utils.Preferences;
-import motocitizen.Activity.MainScreenActivity;
 
 public class MyLocationManager {
     /* constants */
@@ -37,50 +37,21 @@ public class MyLocationManager {
     private static final int ARRIVED_MAX_ACCURACY = 300;
     /* end constants */
 
-    public static        String                              address;
-    private static       Location                            current;
-    private static       GoogleApiClient                     googleApiClient;
-    private static       LocationRequest                     locationRequest;
-    private static final LocationListener                    locationListener;
-    private static final GoogleApiClient.ConnectionCallbacks connectionCallback;
-
-    static {
-        connectionCallback = new GoogleApiClient.ConnectionCallbacks() {
-            @Override
-            public void onConnected(Bundle connectionHint) {
-//TODO Это пиздец
-                while (!googleApiClient.isConnected()) {
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, locationListener);
-                LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, locationListener);
-                current = getLocation();
-            }
-
-            @Override
-            public void onConnectionSuspended(int arg0) { }
-        };
-        locationListener = new com.google.android.gms.location.LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                current = location;
-                Preferences.saveLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
-                requestAddress();
-                checkInPlace(location);
-            }
-        };
-    }
+    public        String                              address;
+    private       Location                            current;
+    private       GoogleApiClient                     googleApiClient;
+    private       LocationRequest                     locationRequest;
+    private final LocationListener                    locationListener;
+    private final GoogleApiClient.ConnectionCallbacks connectionCallback;
 
     public MyLocationManager() {
+        connectionCallback = new MyConnectionCallback();
+        locationListener = new MyLocationListener();
         locationRequest = getProvider(LocationRequest.PRIORITY_HIGH_ACCURACY);
         current = getLocation();
     }
 
-    private static LocationRequest getProvider(int accuracy) {
+    private LocationRequest getProvider(int accuracy) {
         int interval, bestInterval, displacement;
         switch (accuracy) {
             case LocationRequest.PRIORITY_HIGH_ACCURACY:
@@ -102,12 +73,12 @@ public class MyLocationManager {
         return lr;
     }
 
-    public static Location getDirtyLocation(){
+    public Location getDirtyLocation() {
         if (current != null && current.getTime() - (new Date()).getTime() < 30000) return current;
         return getLocation();
     }
 
-    public static Location getLocation() {
+    public Location getLocation() {
         if (googleApiClient != null) {
             current = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         }
@@ -121,7 +92,7 @@ public class MyLocationManager {
         return current;
     }
 
-    private static void runLocationService(int accuracy) {
+    private void runLocationService(int accuracy) {
         locationRequest = getProvider(accuracy);
         if (googleApiClient == null) {
             googleApiClient = new GoogleApiClient.Builder(MyApp.getAppContext()).addConnectionCallbacks(connectionCallback).addApi(LocationServices.API).build();
@@ -137,22 +108,22 @@ public class MyLocationManager {
         }
     }
 
-    public static void sleep() {
+    public void sleep() {
         runLocationService(LocationRequest.PRIORITY_LOW_POWER);
     }
 
-    public static void wakeup() {
+    public void wakeup() {
         runLocationService(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
-    private static void requestAddress() {
+    private void requestAddress() {
         Location location = getLocation();
         if (current == location) return;
         address = getAddress(location);
-        MainScreenActivity.updateStatusBar(MyLocationManager.address);
+        MainScreenActivity.updateStatusBar(address);
     }
 
-    private static void checkInPlace(Location location) {
+    private void checkInPlace(Location location) {
         String login = Preferences.getLogin();
         if (login.equals("")) return;
         int currentInplace = Content.getInplaceID();
@@ -170,17 +141,17 @@ public class MyLocationManager {
         }
     }
 
-    private static boolean isArrived(Location location, int accId) {
+    private boolean isArrived(Location location, int accId) {
         double meters = Content.getPoint(accId).getLocation().distanceTo(location);
         double limit  = Math.max(ARRIVED_MAX_ACCURACY, location.getAccuracy());
         return meters < limit;
     }
 
-    private static void message(String text) {
+    private void message(String text) {
         Toast.makeText(MyApp.getCurrentActivity(), text, Toast.LENGTH_LONG).show();
     }
 
-    private static boolean isInPlace(Location location, int accId) {
+    private boolean isInPlace(Location location, int accId) {
         motocitizen.accident.Accident acc = Content.getPoint(accId);
         if (acc == null) {
             message("Invalid accident");
@@ -199,7 +170,8 @@ public class MyLocationManager {
         double limit  = location.getAccuracy() * 2 + 1000;
         return meters < limit;
     }
-    public static String getAddress(Location location) {
+
+    public String getAddress(Location location) {
         StringBuilder res = new StringBuilder();
         try {
             List<Address> list;
@@ -229,5 +201,36 @@ public class MyLocationManager {
             e.printStackTrace();
         }
         return res.toString();
+    }
+
+    private class MyLocationListener implements com.google.android.gms.location.LocationListener {
+        @Override
+        public void onLocationChanged(Location location) {
+            current = location;
+            Preferences.saveLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
+            requestAddress();
+            checkInPlace(location);
+        }
+    }
+
+    private class MyConnectionCallback implements GoogleApiClient.ConnectionCallbacks {
+        @Override
+        public void onConnected(Bundle connectionHint) {
+//TODO Это пиздец
+            while (!googleApiClient.isConnected()) {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, locationListener);
+            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, locationListener);
+            current = getLocation();
+        }
+
+        @Override
+        public void onConnectionSuspended(int arg0) {
+        }
     }
 }
