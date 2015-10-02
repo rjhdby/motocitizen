@@ -1,4 +1,4 @@
-package motocitizen.startup;
+package motocitizen.Activity;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -9,7 +9,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -26,24 +25,19 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
-import java.util.Date;
-
-import motocitizen.Activity.AboutActivity;
-import motocitizen.Activity.CreateAccActivity;
-import motocitizen.Activity.SettingsActivity;
 import motocitizen.MyApp;
 import motocitizen.content.Content;
-import motocitizen.gcm.GCMBroadcastReceiver;
-import motocitizen.gcm.GCMRegistration;
 import motocitizen.gcm.NewAccidentReceived;
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.maps.MyMapManager;
 import motocitizen.maps.google.MyGoogleMapManager;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
+import motocitizen.utils.ChangeLog;
+import motocitizen.utils.Preferences;
 import motocitizen.utils.Const;
 
-public class Startup extends ActionBarActivity implements View.OnClickListener {
+public class MainScreenActivity extends ActionBarActivity implements View.OnClickListener {
 
     public static  MyMapManager                       map;
     public static  boolean                            fromDetails;
@@ -58,12 +52,10 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     static         ProgressBar                        progressBar;
     public static  boolean                            inTransaction;
     private final  RadioGroup.OnCheckedChangeListener mainTabsListener;
-    public static  long                               start;
 
     static {
         changeLogDlg = null;
         inTransaction = false;
-        start = (new Date()).getTime();
     }
 
     {
@@ -111,14 +103,13 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MyApp.setCurrentActivity(this);
-        Log.d("START ON_CREATE", String.valueOf((new Date()).getTime() - start));
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+        //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        //StrictMode.setThreadPolicy(policy);
         setContentView(R.layout.main);
+        MyApp.setCurrentActivity(this);
+
         actionBar = getSupportActionBar();
         Preferences.setDoNotDisturb(false);
-        Log.d("START CHECK UPDATE", String.valueOf((new Date()).getTime() - start));
         checkUpdate();
         ImageButton dialButton = (ImageButton) findViewById(R.id.dial_button);
         dialButton.setOnClickListener(this);
@@ -139,17 +130,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
                 return true;
             }
         });
-        Log.d("START LOCATION MANAGER", String.valueOf((new Date()).getTime() - start));
-        new MyLocationManager();
-        Log.d("START GCM REGISTRATION", String.valueOf((new Date()).getTime() - start));
-        new GCMRegistration();
-        Log.d("START CONTENT", String.valueOf((new Date()).getTime() - start));
-        new Content();
-        Log.d("START CREATE MAP", String.valueOf((new Date()).getTime() - start));
         createMap(MyMapManager.GOOGLE);
-        Log.d("START BROADCAST", String.valueOf((new Date()).getTime() - start));
-        new GCMBroadcastReceiver();
-        Log.d("START END ON_CREATE", String.valueOf((new Date()).getTime() - start));
     }
 
     private void checkUpdate() {
@@ -194,16 +175,13 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     protected void onResume() {
         super.onResume();
         MyApp.setCurrentActivity(this);
-        Log.d("START ON_RESUME", String.valueOf((new Date()).getTime() - start));
         MyLocationManager.wakeup();
         Intent intent = getIntent();
         String id     = intent.getStringExtra("id");
         int    toMap  = intent.getIntExtra("toMap", 0);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        createAccButton.setVisibility(Content.auth.getRole().isStandart() ? View.VISIBLE : View.INVISIBLE);
-        Log.d("START REDRAW", String.valueOf((new Date()).getTime() - start));
+        createAccButton.setVisibility(MyApp.getRole().isStandart() ? View.VISIBLE : View.INVISIBLE);
         Content.redraw();
-        Log.d("START GET ACCIDENTS", String.valueOf((new Date()).getTime() - start));
         getAccidents();
 
         if (toMap != 0) {
@@ -216,11 +194,10 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
             Content.toDetails(Integer.parseInt(id));
             NewAccidentReceived.clearAll();
         }
-        Log.d("START END ON_RESUME", String.valueOf((new Date()).getTime() - start));
     }
 
     private void getAccidents() {
-        if (Startup.isOnline()) {
+        if (MainScreenActivity.isOnline()) {
             startRefreshAnimation();
             Content.update(new AccidentsRequestCallback());
         } else {
@@ -240,16 +217,13 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
 
     @Override
     public boolean onKeyUp(int keycode, @NonNull KeyEvent e) {
+        /*
         switch (keycode) {
             case KeyEvent.KEYCODE_BACK:
-                /*
-                if (fromDetails) {
-                    AccidentsGeneral.toDetails(this);
-                }
-                */
                 Content.redraw();
                 return true;
         }
+    */
         return super.onKeyUp(keycode, e);
     }
 
@@ -322,7 +296,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
             stopRefreshAnimation();
             if (!result.has("error")) Content.parseJSON(result);
             Content.redraw();
-            Startup.map.placeAccidents();
+            MainScreenActivity.map.placeAccidents();
         }
     }
 

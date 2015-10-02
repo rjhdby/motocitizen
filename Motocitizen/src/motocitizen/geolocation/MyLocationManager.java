@@ -1,5 +1,6 @@
 package motocitizen.geolocation;
 
+import android.location.Address;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -11,14 +12,16 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 import motocitizen.MyApp;
 import motocitizen.content.Content;
 import motocitizen.network.requests.InplaceRequest;
 import motocitizen.network.requests.LeaveRequest;
-import motocitizen.startup.Preferences;
-import motocitizen.startup.Startup;
+import motocitizen.utils.Preferences;
+import motocitizen.Activity.MainScreenActivity;
 
 public class MyLocationManager {
     /* constants */
@@ -145,8 +148,8 @@ public class MyLocationManager {
     private static void requestAddress() {
         Location location = getLocation();
         if (current == location) return;
-        address = MyApp.getAddress(location);
-        Startup.updateStatusBar(MyLocationManager.address);
+        address = getAddress(location);
+        MainScreenActivity.updateStatusBar(MyLocationManager.address);
     }
 
     private static void checkInPlace(Location location) {
@@ -195,5 +198,36 @@ public class MyLocationManager {
         double meters = Content.getPoint(accId).getLocation().distanceTo(location);
         double limit  = location.getAccuracy() * 2 + 1000;
         return meters < limit;
+    }
+    public static String getAddress(Location location) {
+        StringBuilder res = new StringBuilder();
+        try {
+            List<Address> list;
+            list = MyApp.geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            if (list == null || list.size() == 0)
+                return location.getLatitude() + " " + location.getLongitude();
+            Address address = list.get(0);
+            String locality = address.getLocality();
+            if (locality == null) locality = address.getAdminArea();
+            if (locality == null && address.getMaxAddressLineIndex() > 0)
+                locality = address.getAddressLine(0);
+
+            String thoroughfare = address.getThoroughfare();
+            if (thoroughfare == null) thoroughfare = address.getSubAdminArea();
+
+            String featureName = address.getFeatureName();
+
+            if (locality != null) res.append(locality);
+            if (thoroughfare != null) {
+                if (res.length() > 0) res.append(" ");
+                res.append(thoroughfare);
+            }
+            if (featureName != null) if (res.length() > 0) res.append(" ");
+            res.append(featureName);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return res.toString();
     }
 }

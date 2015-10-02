@@ -13,7 +13,7 @@ import motocitizen.Activity.AuthActivity;
 import motocitizen.MyApp;
 import motocitizen.main.R;
 import motocitizen.network.requests.AuthRequest;
-import motocitizen.startup.Preferences;
+import motocitizen.utils.Preferences;
 
 public class Auth {
     private Role    role;

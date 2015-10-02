@@ -39,7 +39,7 @@ import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.network.requests.CreateAccidentRequest;
-import motocitizen.startup.Preferences;
+import motocitizen.utils.Preferences;
 import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
 
@@ -128,7 +128,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         map.setMyLocationEnabled(true);
         map.getUiSettings().setMyLocationButtonEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
-        if (!Content.auth.getRole().isModerator()) {
+        if (!MyApp.getRole().isModerator()) {
             CircleOptions circleOptions = new CircleOptions().center(MyUtils.LocationToLatLng(initialLocation)).radius(RADIUS).fillColor(0x20FF0000);
             map.addCircle(circleOptions);
             map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
@@ -180,7 +180,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         String text = accident.getType().toString();
         text += accident.getMedicine() == Medicine.UNKNOWN ? "" : ". " + accident.getMedicine().toString();
         ((TextView) findViewById(R.id.mc_create_what)).setText(text);
-        ((TextView) findViewById(R.id.mc_create_who)).setText(Content.auth.getLogin());
+        ((TextView) findViewById(R.id.mc_create_who)).setText(MyApp.getAuth().getLogin());
         ((TextView) findViewById(R.id.mc_create_where)).setText(accident.getAddress());
         ((TextView) findViewById(R.id.mc_create_when)).setText(Const.DATE_FORMAT.format(accident.getTime()));
     }
@@ -234,7 +234,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 break;
             case R.id.ADDRESS:
                 accident.setLatLng(map.getCameraPosition().target);
-                accident.setAddress(((MyApp) this.getApplicationContext()).getAddress(accident.getLocation()));
+                accident.setAddress(MyLocationManager.getAddress(accident.getLocation()));
                 setUpScreen(TYPE);
                 break;
             case R.id.CREATE:

@@ -1,4 +1,4 @@
-package motocitizen.startup;
+package motocitizen.utils;
 /*
  * Special thanx to Karsten Priegnitz for idea of this class
  * https://code.google.com/p/android-change-log/

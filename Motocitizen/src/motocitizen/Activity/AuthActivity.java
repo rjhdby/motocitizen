@@ -15,10 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import motocitizen.MyApp;
-import motocitizen.content.Content;
 import motocitizen.main.R;
-import motocitizen.startup.Preferences;
-import motocitizen.startup.Startup;
+import motocitizen.utils.Preferences;
 
 public class AuthActivity extends ActionBarActivity/* implements View.OnClickListener*/ {
 
@@ -59,7 +57,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
         View     accListYesterdayLine = findViewById(R.id.accListYesterdayLine);
         TextView roleView             = (TextView) findViewById(R.id.role);
 
-        boolean isAuthorized = Content.auth.isAuthorized();
+        boolean isAuthorized = MyApp.isAuthorized();
         loginBtn.setEnabled(!isAuthorized);
         logoutBtn.setEnabled(isAuthorized);
         anonim.setEnabled(!isAuthorized);
@@ -70,7 +68,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
         //Авторизованы?
         if (isAuthorized) {
             String format = getString(R.string.mc_auth_role);
-            roleView.setText(String.format(format, Content.auth.getRole().getName()));
+            roleView.setText(String.format(format, MyApp.getRole().getName()));
         } else {
             enableLoginBtn();
         }
@@ -95,7 +93,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
                     finish();
                     return;
                 }
-                if (!Startup.isOnline()) {
+                if (!MainScreenActivity.isOnline()) {
                     showToast(R.string.auth_not_available);
                     return;
                 }
@@ -116,7 +114,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
                 //TODO Добавить запрос подтверждения на выход.
                 Preferences.resetAuth();
                 Preferences.setAnonim(true);
-                Content.auth.logoff();
+                MyApp.logoff();
                 fillCtrls();
             }
         });

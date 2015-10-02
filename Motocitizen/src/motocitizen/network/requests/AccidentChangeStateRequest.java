@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import motocitizen.MyApp;
 import motocitizen.content.Content;
 
 public class AccidentChangeStateRequest extends HTTPClient {
@@ -12,8 +13,8 @@ public class AccidentChangeStateRequest extends HTTPClient {
     public AccidentChangeStateRequest(AsyncTaskCompleteListener listener, int id, String state) {
         this.listener = listener;
         post = new HashMap<>();
-        post.put("login", Content.auth.getLogin());
-        post.put("passhash", Content.auth.makePassHash());
+        post.put("login", MyApp.getAuth().getLogin());
+        post.put("passhash", MyApp.getAuth().makePassHash());
         post.put("state", state);
         post.put("id", String.valueOf(id));
         post.put("m", Methods.CHANGE_STATE.toCode());

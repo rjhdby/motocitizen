@@ -1,6 +1,7 @@
-package motocitizen.startup;
+package motocitizen.utils;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -89,10 +90,10 @@ public class Preferences {
         notificationList = "notificationList";
 
         mapProviders = new String[]{"google", "osm", "yandex"};
-        preferences = PreferenceManager.getDefaultSharedPreferences(MyApp.getAppContext());
     }
 
-    public Preferences() {
+    public Preferences(Context context) {
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     public static void putBoolean(String name, boolean value) {

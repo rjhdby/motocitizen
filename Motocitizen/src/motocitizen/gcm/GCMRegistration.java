@@ -1,7 +1,6 @@
 package motocitizen.gcm;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
@@ -15,7 +14,7 @@ import java.io.IOException;
 
 import motocitizen.MyApp;
 import motocitizen.network.requests.GCMRegistrationRequest;
-import motocitizen.startup.Preferences;
+import motocitizen.utils.Preferences;
 
 public class GCMRegistration {
     /* constants */

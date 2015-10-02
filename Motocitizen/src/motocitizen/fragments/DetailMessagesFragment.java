@@ -16,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import motocitizen.Activity.AccidentDetailsActivity;
+import motocitizen.MyApp;
 import motocitizen.accident.Message;
 import motocitizen.app.general.popups.MessagesPopup;
 import motocitizen.content.Content;
@@ -135,7 +136,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
     }
 
     private void setupAccess() {
-        if (Content.auth.getRole().isStandart()) {
+        if (MyApp.getRole().isStandart()) {
             newMessageArea.setVisibility(View.VISIBLE);
         } else {
             newMessageArea.setVisibility(View.INVISIBLE);

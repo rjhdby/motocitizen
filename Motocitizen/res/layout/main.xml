@@ -7,7 +7,7 @@
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingTop="0dp"
-    tools:context="motocitizen.startup.Startup" >
+    tools:context="motocitizen.Activity.MainScreenActivity" >
     <fragment
         class ="motocitizen.fragments.MainScreenFragment"
         android:id="@+id/main_screen_fragment"

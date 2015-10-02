@@ -21,8 +21,8 @@ import motocitizen.accident.Accident;
 import motocitizen.content.Content;
 import motocitizen.content.Medicine;
 import motocitizen.main.R;
-import motocitizen.startup.Preferences;
-import motocitizen.startup.Startup;
+import motocitizen.utils.Preferences;
+import motocitizen.Activity.MainScreenActivity;
 
 
 public class NewAccidentReceived extends IntentService {
@@ -64,7 +64,7 @@ public class NewAccidentReceived extends IntentService {
             return;
         }
 
-        Intent notificationIntent = new Intent(this, Startup.class);
+        Intent notificationIntent = new Intent(this, MainScreenActivity.class);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         notificationIntent.putExtras(extras);

@@ -8,10 +8,10 @@ import android.preference.PreferenceFragment;
 import android.widget.Toast;
 
 import motocitizen.Activity.AuthActivity;
-import motocitizen.content.Content;
+import motocitizen.MyApp;
 import motocitizen.main.R;
-import motocitizen.startup.Preferences;
-import motocitizen.startup.Startup;
+import motocitizen.utils.Preferences;
+import motocitizen.Activity.MainScreenActivity;
 import motocitizen.utils.Const;
 
 public class SettingsFragment extends PreferenceFragment {
@@ -32,7 +32,7 @@ public class SettingsFragment extends PreferenceFragment {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             mapProviderPreference.setValue(newValue.toString());
-            Startup.createMap(newValue.toString());
+            MainScreenActivity.createMap(newValue.toString());
             preference.setSummary(mapProviderPreference.getEntry());
             return true;
         }
@@ -104,8 +104,8 @@ public class SettingsFragment extends PreferenceFragment {
         nottifAlarmPreference.setOnPreferenceChangeListener(distanceListener);
         String login = Preferences.getLogin();
         if (login.length() > 0)
-            authPreference.setSummary(Content.auth.getRole().getName() + ": " + login);
-        else authPreference.setSummary(Content.auth.getRole().getName());
+            authPreference.setSummary(MyApp.getRole().getName() + ": " + login);
+        else authPreference.setSummary(MyApp.getRole().getName());
         nottifSoundPreference.setSummary(Preferences.getAlarmSoundTitle());
         nottifDistPreference.setSummary(String.valueOf(Preferences.getVisibleDistance()));
         nottifAlarmPreference.setSummary(String.valueOf(Preferences.getAlarmDistance()));

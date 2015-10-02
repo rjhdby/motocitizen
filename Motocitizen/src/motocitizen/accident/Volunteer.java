@@ -5,7 +5,7 @@ import org.json.JSONObject;
 import java.util.Date;
 
 import motocitizen.content.VolunteerStatus;
-import motocitizen.startup.Preferences;
+import motocitizen.utils.Preferences;
 
 public class Volunteer {
     private int             id;

@@ -5,12 +5,13 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import motocitizen.MyApp;
 import motocitizen.content.Content;
 
 public class LeaveRequest extends HTTPClient {
     public LeaveRequest(int id) {
         post = new HashMap<>();
-        post.put("login", Content.auth.getLogin());
+        post.put("login", MyApp.getAuth().getLogin());
         post.put("id", String.valueOf(id));
         post.put("m", Methods.LEAVE.toCode());
         execute(post);

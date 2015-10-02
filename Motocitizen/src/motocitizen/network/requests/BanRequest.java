@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import motocitizen.MyApp;
 import motocitizen.content.Content;
 
 public class BanRequest extends HTTPClient {
@@ -12,8 +13,8 @@ public class BanRequest extends HTTPClient {
         this.listener = listener;
         int user_id = Content.getPoint(id).getOwnerId();
         post = new HashMap<>();
-        post.put("login", Content.auth.getLogin());
-        post.put("passhash", Content.auth.makePassHash());
+        post.put("login", MyApp.getAuth().getLogin());
+        post.put("passhash", MyApp.getAuth().makePassHash());
         post.put("id", String.valueOf(id));
         post.put("user_id", String.valueOf(user_id));
         post.put("calledMethod", Methods.BAN.toCode());

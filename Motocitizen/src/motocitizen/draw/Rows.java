@@ -101,7 +101,7 @@ public class Rows {
         LayoutInflater li = (LayoutInflater) MyApp.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View tr;
-        int  user  = Content.auth.getid();
+        int  user  = MyApp.getAuth().getid();
         int  resource;
         int  owner = message.getOwnerId();
         resource = message.getOwnerId() == user ? R.layout.owner_message_row : R.layout.message_row;
@@ -146,7 +146,7 @@ public class Rows {
         LayoutInflater li        = (LayoutInflater) MyApp.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         TableRow       tr        = (TableRow) li.inflate(R.layout.history_row, parent, false);
         TextView       ownerView = (TextView) tr.findViewById(R.id.owner);
-        if (history.getOwner_id() == Content.auth.getid()) {
+        if (history.getOwner_id() == MyApp.getAuth().getid()) {
             ownerView.setBackgroundColor(Color.DKGRAY);
         }
         ownerView.setText(history.getOwner());

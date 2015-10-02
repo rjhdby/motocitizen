@@ -1,7 +1,6 @@
 package motocitizen.network.requests;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -22,7 +21,7 @@ import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 import motocitizen.network.CustomTrustManager;
-import motocitizen.startup.Startup;
+import motocitizen.Activity.MainScreenActivity;
 
 
 abstract class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONObject> {
@@ -44,7 +43,7 @@ abstract class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONOb
     }
 
     JSONObject request(Map<String, String> post) {
-        if (!Startup.isOnline()) {
+        if (!MainScreenActivity.isOnline()) {
             try {
                 JSONObject result = new JSONObject();
                 result.put("error", "Интернет не доступен");

@@ -8,7 +8,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 import motocitizen.geolocation.MyLocationManager;
-import motocitizen.startup.Preferences;
+import motocitizen.utils.Preferences;
 
 public class AccidentsRequest extends HTTPClient {
     private boolean silent;

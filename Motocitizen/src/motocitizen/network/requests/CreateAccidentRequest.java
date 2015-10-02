@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import java.util.Date;
 import java.util.HashMap;
 
+import motocitizen.MyApp;
 import motocitizen.content.Content;
 import motocitizen.content.Medicine;
 import motocitizen.content.Type;
@@ -19,9 +20,9 @@ public class CreateAccidentRequest extends HTTPClient {
         post = new HashMap<>();
         post.put("status", "acc_status_act");
         post.put("calledMethod", Methods.CREATE.toCode());
-        post.put("owner_id", String.valueOf(Content.auth.getid()));
-        post.put("login", Content.auth.getLogin());
-        post.put("passhash", Content.auth.makePassHash());
+        post.put("owner_id", String.valueOf(MyApp.getAuth().getid()));
+        post.put("login", MyApp.getAuth().getLogin());
+        post.put("passhash", MyApp.getAuth().makePassHash());
     }
 
     public void execute() {

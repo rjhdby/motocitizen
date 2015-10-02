@@ -5,7 +5,7 @@ import org.json.JSONObject;
 import java.util.Date;
 
 import motocitizen.content.MessageStatus;
-import motocitizen.startup.Preferences;
+import motocitizen.utils.Preferences;
 
 public class Message {
     private static final String[] prerequisites = {"id", "id_user", "owner", "status", "text", "uxtime"};

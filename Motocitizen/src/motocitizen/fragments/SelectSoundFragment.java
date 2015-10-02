@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import motocitizen.main.R;
-import motocitizen.startup.Preferences;
+import motocitizen.utils.Preferences;
 import motocitizen.utils.Const;
 
 public class SelectSoundFragment extends Fragment {

@@ -16,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import motocitizen.Activity.AccidentDetailsActivity;
+import motocitizen.MyApp;
 import motocitizen.accident.Volunteer;
 import motocitizen.content.Content;
 import motocitizen.content.VolunteerStatus;
@@ -25,7 +26,7 @@ import motocitizen.network.requests.AccidentsRequest;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.network.requests.CancelOnWayRequest;
 import motocitizen.network.requests.OnWayRequest;
-import motocitizen.startup.Preferences;
+import motocitizen.utils.Preferences;
 
 public class DetailVolunteersFragment extends AccidentDetailsFragments {
 
@@ -109,7 +110,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     private void setupAccess() {
         motocitizen.accident.Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
         int                           id       = accident.getId();
-        boolean                       active   = accident.isActive() && Content.auth.isAuthorized();
+        boolean                       active   = accident.isActive() && MyApp.isAuthorized();
         onwayButton.setVisibility(id != Preferences.getOnWay() && id != Content.getInplaceID() && active ? View.VISIBLE : View.GONE);
         onwayCancelButton.setVisibility(id == Preferences.getOnWay() && id != Content.getInplaceID() && active ? View.VISIBLE : View.GONE);
         onwayDisabledButton.setVisibility(id == Content.getInplaceID() && active ? View.VISIBLE : View.GONE);

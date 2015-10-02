@@ -29,14 +29,13 @@ import motocitizen.draw.Sort;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentsRequest;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
-import motocitizen.startup.Startup;
+import motocitizen.Activity.MainScreenActivity;
 
 public class Content {
     private static Map<Integer, Accident> points;
     private static int                    inPlace;
     private static boolean                initialized;
     public static  List<Integer>          favorites;
-    public static  Auth                   auth;
 
     static {
         initialized = true;
@@ -49,7 +48,6 @@ public class Content {
     }
 
     public Content() {
-        auth = MyApp.getAuth();
         favorites = Favorites.getFavorites();
     }
 
@@ -94,7 +92,7 @@ public class Content {
 
     public static void refresh() {
         update();
-        Startup.map.placeAccidents();
+        MainScreenActivity.map.placeAccidents();
         redraw();
     }
 
@@ -120,7 +118,7 @@ public class Content {
     public static void refreshPoints() {
         update();
         redraw();
-        Startup.map.placeAccidents();
+        MainScreenActivity.map.placeAccidents();
         //points.saveReadMessages();
     }
 
@@ -173,7 +171,7 @@ public class Content {
         public void onTaskComplete(JSONObject result) {
             if (!result.has("error")) parseJSON(result);
             Content.redraw();
-            Startup.map.placeAccidents();
+            MainScreenActivity.map.placeAccidents();
         }
     }
 }

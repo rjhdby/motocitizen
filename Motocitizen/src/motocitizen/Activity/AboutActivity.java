@@ -14,8 +14,8 @@ import android.widget.TextView;
 
 import motocitizen.MyApp;
 import motocitizen.main.R;
-import motocitizen.startup.ChangeLog;
-import motocitizen.startup.Preferences;
+import motocitizen.utils.ChangeLog;
+import motocitizen.utils.Preferences;
 
 public class AboutActivity extends ActionBarActivity implements View.OnClickListener {
 

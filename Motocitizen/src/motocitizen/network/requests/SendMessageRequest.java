@@ -5,14 +5,15 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import motocitizen.MyApp;
 import motocitizen.content.Content;
 
 public class SendMessageRequest extends HTTPClient {
     public SendMessageRequest(AsyncTaskCompleteListener listener, int id, String text) {
         this.listener = listener;
         post = new HashMap<>();
-        post.put("login", Content.auth.getLogin());
-        post.put("passhash", Content.auth.makePassHash());
+        post.put("login", MyApp.getAuth().getLogin());
+        post.put("passhash", MyApp.getAuth().makePassHash());
         post.put("id", String.valueOf(id));
         post.put("text", text);
         post.put("calledMethod", Methods.MESSAGE.toCode());

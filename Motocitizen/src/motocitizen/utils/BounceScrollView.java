@@ -16,7 +16,7 @@ import motocitizen.content.Content;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentsRequest;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
-import motocitizen.startup.Startup;
+import motocitizen.Activity.MainScreenActivity;
 
 public class BounceScrollView extends ScrollView {
     private static final int MAX_Y_OVER_SCROLL_DISTANCE = 40;
@@ -52,14 +52,14 @@ public class BounceScrollView extends ScrollView {
 
     @Override
     protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX, int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
-        if (Startup.inTransaction) return true;
+        if (MainScreenActivity.inTransaction) return true;
         if (scrollY < -mMaxYOverScrollDistance * 0.9 && !isRequestedUpdate) {
             isRequestedUpdate = true;
         }
         if (scrollY > -mMaxYOverScrollDistance * 0.1 && isRequestedUpdate) {
-            if (Startup.isOnline()) {
+            if (MainScreenActivity.isOnline()) {
                 isRequestedUpdate = false;
-                Startup.startRefreshAnimation();
+                MainScreenActivity.startRefreshAnimation();
                 Content.update(new AccidentsRequestCallback());
                 new AccidentsRequest(new AccidentsRequestCallback());
             } else {
@@ -87,7 +87,7 @@ public class BounceScrollView extends ScrollView {
                 Content.parseJSON(result);
                 Content.redraw();
             }
-            Startup.stopRefreshAnimation();
+            MainScreenActivity.stopRefreshAnimation();
         }
     }
 }

@@ -32,8 +32,7 @@ import motocitizen.fragments.DetailVolunteersFragment;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentChangeStateRequest;
 import motocitizen.network.requests.AsyncTaskCompleteListener;
-import motocitizen.startup.Preferences;
-import motocitizen.startup.Startup;
+import motocitizen.utils.Preferences;
 import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
 
@@ -153,8 +152,8 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
 
         menuReconstruction();
 
-        Startup.map.zoom(16);
-        Startup.map.jumpToPoint(currentPoint.getLocation());
+        MainScreenActivity.map.zoom(16);
+        MainScreenActivity.map.jumpToPoint(currentPoint.getLocation());
     }
 
     @Override
@@ -184,8 +183,8 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
         currentPoint = Content.getPoint(accidentID);
         MenuItem finish = mMenu.findItem(R.id.menu_acc_finish);
         MenuItem hide   = mMenu.findItem(R.id.menu_acc_hide);
-        finish.setVisible(Content.auth.getRole().isModerator());
-        hide.setVisible(Content.auth.getRole().isModerator());
+        finish.setVisible(MyApp.getRole().isModerator());
+        hide.setVisible(MyApp.getRole().isModerator());
         finish.setTitle(R.string.finish);
         hide.setTitle(R.string.hide);
         switch (currentPoint.getStatus()) {
@@ -324,7 +323,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
     };
 
     public void jumpToMap() {
-        Intent intent = new Intent(this, Startup.class);
+        Intent intent = new Intent(this, MainScreenActivity.class);
         intent.putExtra("toMap", currentPoint.getId());
         intent.putExtra("fromDetails", true);
         this.startActivity(intent);
