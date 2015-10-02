@@ -172,6 +172,7 @@ public class MyLocationManager {
     }
 
     public String getAddress(Location location) {
+        //TODO Разобраться. Выглядит страшно.
         StringBuilder res = new StringBuilder();
         try {
             List<Address> list;
