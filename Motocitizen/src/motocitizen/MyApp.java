@@ -26,8 +26,6 @@ public class MyApp extends Application {
     private static MyLocationManager locationManager;
 
     static {
-        auth = null;
-        geocoder = null;
         currentActivity = null;
         map = null;
     }
