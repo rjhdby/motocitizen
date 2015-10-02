@@ -24,11 +24,16 @@ import motocitizen.utils.Const;
 
 public class SelectSoundFragment extends Fragment {
     private static Map<Integer, Sound> notifications;
+    private static ViewGroup           ringtoneList;
     private static int                 currentId;
-    private static ViewGroup           vg;
     private static Uri                 currentUri;
     private static String              currentTitle;
 
+    static {
+        currentId = 0;
+        currentUri = Preferences.getAlarmSoundUri();
+        currentTitle = Preferences.getAlarmSoundTitle();
+    }
 
     private class Sound {
         private final Uri      uri;
@@ -61,12 +66,9 @@ public class SelectSoundFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        vg = (ViewGroup) getActivity().findViewById(R.id.sound_select_table);
+        ringtoneList = (ViewGroup) getActivity().findViewById(R.id.sound_select_table);
         getActivity().findViewById(R.id.select_sound_fragment).setVisibility(View.VISIBLE);
         if (notifications == null) getSystemSounds();
-
-        currentUri = Preferences.getAlarmSoundUri();
-        currentTitle = Preferences.getAlarmSoundTitle();
 
         Button selectSoundConfirmButton = (Button) getActivity().findViewById(R.id.select_sound_save_button);
         selectSoundConfirmButton.setOnClickListener(new View.OnClickListener() {
@@ -102,9 +104,8 @@ public class SelectSoundFragment extends Fragment {
     }
 
     private void drawList() {
-        currentId = 0;
         for (int key : notifications.keySet()) {
-            inflateRow(vg, key);
+            inflateRow(ringtoneList, key);
         }
     }
 
@@ -121,7 +122,7 @@ public class SelectSoundFragment extends Fragment {
             public void onClick(View v) {
                 int tag = (Integer) v.getTag();
                 if (currentId != 0) {
-                    vg.findViewWithTag(currentId).setBackgroundColor(Const.getDefaultBGColor());
+                    ringtoneList.findViewWithTag(currentId).setBackgroundColor(Const.getDefaultBGColor());
                 }
                 currentId = tag;
                 v.setBackgroundColor(Color.GRAY);
