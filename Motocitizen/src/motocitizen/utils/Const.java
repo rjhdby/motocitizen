@@ -1,7 +1,6 @@
 package motocitizen.utils;
 
 import android.content.res.TypedArray;
-import android.view.Display;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -15,30 +14,14 @@ public class Const {
     public final static int              EQUATOR          = 20038;
     public final static String           PHONE            = "78007751734";
 
-    public static float getDP() {
-        return MyApp.getCurrentActivity().getResources().getDisplayMetrics().density;
-    }
-
-    public static int getHeight() {
-        Display display = MyApp.getCurrentActivity().getWindowManager().getDefaultDisplay();
-        return display.getHeight();
-    }
-
     public static int getWidth() {
-        Display display = MyApp.getCurrentActivity().getWindowManager().getDefaultDisplay();
-        return display.getWidth();
+        return MyApp.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
     }
 
+    //TODO ??????????? ?????!
     public static int getDefaultBGColor() {
         TypedArray ta    = MyApp.getCurrentActivity().obtainStyledAttributes(new int[]{android.R.attr.colorBackground, android.R.attr.textColorPrimary});
         int        color = ta.getIndex(0);
-        ta.recycle();
-        return color;
-    }
-
-    public static int getDefaultColor() {
-        TypedArray ta    = MyApp.getCurrentActivity().obtainStyledAttributes(new int[]{android.R.attr.colorBackground, android.R.attr.textColorPrimary});
-        int        color = ta.getIndex(1);
         ta.recycle();
         return color;
     }

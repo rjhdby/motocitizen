@@ -17,17 +17,21 @@ import java.util.Arrays;
 import motocitizen.MyApp;
 import motocitizen.content.Type;
 import motocitizen.main.R;
-import motocitizen.utils.Const;
 
 @SuppressLint("CommitPrefEdits")
 public class Preferences {
     /* constants */
-    private final static float DEFAULT_LATITUDE          = 55.752295f;
-    private final static float DEFAULT_LONGITUDE         = 37.622735f;
-    private final static int   DEFAULT_SHOW_DISTANCE     = 200;
-    private final static int   DEFAULT_ALARM_DISTANCE    = 20;
-    private final static int   DEFAULT_MAX_NOTIFICATIONS = 3;
-    private final static int   DEFAULT_MAX_AGE           = 24;
+    private final static float   DEFAULT_LATITUDE          = 55.752295f;
+    private final static float   DEFAULT_LONGITUDE         = 37.622735f;
+    private final static int     DEFAULT_SHOW_DISTANCE     = 200;
+    private final static int     DEFAULT_ALARM_DISTANCE    = 20;
+    private final static int     DEFAULT_MAX_NOTIFICATIONS = 3;
+    private final static int     DEFAULT_MAX_AGE           = 24;
+    private final static boolean DEFAULT_VIBRATION         = true;
+    private final static boolean DEFAULT_DO_NOT_DISTURB    = false;
+    private final static boolean DEFAULT_IS_ANONYMOUS      = false;
+    private final static boolean DEFAULT_SHOW_TYPE         = true;
+    private final static String  DEFAULT_VERSION           = MyApp.getAppContext().getString(R.string.unknown_code_version);
     /* end constants */
 
     public final static  String showAcc;
@@ -115,7 +119,7 @@ public class Preferences {
     }
 
     public static boolean getDoNotDisturb() {
-        return preferences.getBoolean(doNotDisturb, false);
+        return preferences.getBoolean(doNotDisturb, DEFAULT_DO_NOT_DISTURB);
     }
 
     public static void setDoNotDisturb(boolean value) {
@@ -123,7 +127,7 @@ public class Preferences {
     }
 
     public static String getCurrentVersion() {
-        return preferences.getString(currentVersion, MyApp.getAppContext().getString(R.string.unknown_code_version));
+        return preferences.getString(currentVersion, DEFAULT_VERSION);
     }
 
     public static void setCurrentVersion(String version) {
@@ -210,7 +214,7 @@ public class Preferences {
     }
 
     public static boolean isAnonim() {
-        return preferences.getBoolean(anonim, false);
+        return preferences.getBoolean(anonim, DEFAULT_IS_ANONYMOUS);
     }
 
     public static void setAnonim(boolean value) {
@@ -225,6 +229,7 @@ public class Preferences {
         preferences.edit().putString(GCMRegistrationCode, code).commit();
     }
 
+    //TODO ????? ??????????? ??????????
     public static int getAppVersion() {
         return preferences.getInt(appVersion, 0);
     }
@@ -263,25 +268,26 @@ public class Preferences {
     }
 
     public static boolean toShowBreak() {
-        return preferences.getBoolean(showBreak, true);
+        return preferences.getBoolean(showBreak, DEFAULT_SHOW_TYPE);
     }
 
     public static boolean toShowAcc() {
-        return preferences.getBoolean(showAcc, true);
+        return preferences.getBoolean(showAcc, DEFAULT_SHOW_TYPE);
     }
 
     public static boolean toShowSteal() {
-        return preferences.getBoolean(showSteal, true);
+        return preferences.getBoolean(showSteal, DEFAULT_SHOW_TYPE);
     }
 
     public static boolean toShowOther() {
-        return preferences.getBoolean(showOther, true);
+        return preferences.getBoolean(showOther, DEFAULT_SHOW_TYPE);
     }
 
     public static int getMaxNotifications() {
         return Integer.parseInt(preferences.getString(maxNotifications, String.valueOf(DEFAULT_MAX_NOTIFICATIONS)));
     }
 
+    //TODO ?????????? ?? ???????? ? ??
     public static JSONArray getNotificationList() {
         JSONArray json;
         try {
@@ -302,7 +308,7 @@ public class Preferences {
     }
 
     public static boolean getVibration() {
-        return preferences.getBoolean(useVibration, true);
+        return preferences.getBoolean(useVibration, DEFAULT_VIBRATION);
     }
 
     public static String getUserName() {
