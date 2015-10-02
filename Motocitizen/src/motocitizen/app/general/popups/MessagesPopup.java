@@ -10,15 +10,15 @@ import motocitizen.utils.MyUtils;
 public class MessagesPopup extends PopupWindowGeneral {
     private final Message message;
 
-    public MessagesPopup(Context context, int id, int acc_id) {
-        super(context);
+    public MessagesPopup(int id, int acc_id) {
+        super();
         message = Content.getPoint(acc_id).getMessages().get(id);
     }
 
     public PopupWindow getPopupWindow() {
-        content.addView(copyButtonRow(context, message.getOwner() + ": " + message.getText()), layoutParams);
+        content.addView(copyButtonRow(message.getOwner() + ": " + message.getText()), layoutParams);
         for (String phone : MyUtils.getPhonesFromText(message.getText())) {
-            content.addView(phoneButtonRow(context, phone), layoutParams);
+            content.addView(phoneButtonRow(phone), layoutParams);
         }
         popupWindow.setContentView(content);
         return popupWindow;

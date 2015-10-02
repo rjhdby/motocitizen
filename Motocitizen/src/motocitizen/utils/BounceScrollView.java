@@ -19,10 +19,10 @@ import motocitizen.network.requests.AsyncTaskCompleteListener;
 import motocitizen.startup.Startup;
 
 public class BounceScrollView extends ScrollView {
-    private static final int MAX_Y_OVERSCROLL_DISTANCE = 40;
+    private static final int MAX_Y_OVER_SCROLL_DISTANCE = 40;
 
     private final Context context;
-    private       int     mMaxYOverscrollDistance;
+    private       int     mMaxYOverScrollDistance;
     private boolean isRequestedUpdate = false;
 
     public BounceScrollView(Context context) {
@@ -35,7 +35,7 @@ public class BounceScrollView extends ScrollView {
         final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         final float          density = metrics.density;
 
-        mMaxYOverscrollDistance = (int) (density * MAX_Y_OVERSCROLL_DISTANCE);
+        mMaxYOverScrollDistance = (int) (density * MAX_Y_OVER_SCROLL_DISTANCE);
     }
 
     public BounceScrollView(Context context, AttributeSet attrs) {
@@ -53,10 +53,10 @@ public class BounceScrollView extends ScrollView {
     @Override
     protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX, int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
         if (Startup.inTransaction) return true;
-        if (scrollY < -mMaxYOverscrollDistance * 0.9 && !isRequestedUpdate) {
+        if (scrollY < -mMaxYOverScrollDistance * 0.9 && !isRequestedUpdate) {
             isRequestedUpdate = true;
         }
-        if (scrollY > -mMaxYOverscrollDistance * 0.1 && isRequestedUpdate) {
+        if (scrollY > -mMaxYOverScrollDistance * 0.1 && isRequestedUpdate) {
             if (Startup.isOnline()) {
                 isRequestedUpdate = false;
                 Startup.startRefreshAnimation();
@@ -66,7 +66,7 @@ public class BounceScrollView extends ScrollView {
                 message(context.getString(R.string.inet_not_available));
             }
         }
-        return super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX, mMaxYOverscrollDistance, isTouchEvent);
+        return super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX, mMaxYOverScrollDistance, isTouchEvent);
     }
 
     private void message(String text) {

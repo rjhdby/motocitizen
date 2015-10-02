@@ -163,7 +163,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
             version = getString(R.string.unknown_code_version);
         }
         if (!Preferences.getCurrentVersion().equals(version)) {
-            changeLogDlg = ChangeLog.getDialog(this, true);
+            changeLogDlg = ChangeLog.getDialog(true);
             changeLogDlg.show();
         }
         Preferences.setCurrentVersion(version);
@@ -225,7 +225,7 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     private void getAccidents() {
         if (Startup.isOnline()) {
             startRefreshAnimation();
-            Content.update(new AccidentsRequestCallback(this));
+            Content.update(new AccidentsRequestCallback());
         } else {
             message(getString(R.string.inet_not_available));
         }
@@ -320,11 +320,6 @@ public class Startup extends ActionBarActivity implements View.OnClickListener {
     }
 
     private static class AccidentsRequestCallback implements AsyncTaskCompleteListener {
-        private Context context;
-
-        public AccidentsRequestCallback(final Context context) {
-            this.context = context;
-        }
 
         public void onTaskComplete(JSONObject result) {
             stopRefreshAnimation();

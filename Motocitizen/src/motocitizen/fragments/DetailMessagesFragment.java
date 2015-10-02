@@ -118,7 +118,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
                 @Override
                 public boolean onLongClick(View v) {
                     PopupWindow popupWindow;
-                    popupWindow = (new MessagesPopup(getActivity(), message.getId(), accident.getId())).getPopupWindow();
+                    popupWindow = (new MessagesPopup(message.getId(), accident.getId())).getPopupWindow();
                     int viewLocation[] = new int[2];
                     v.getLocationOnScreen(viewLocation);
                     popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);

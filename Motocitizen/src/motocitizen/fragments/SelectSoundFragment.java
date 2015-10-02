@@ -18,11 +18,9 @@ import android.widget.TextView;
 import java.util.HashMap;
 import java.util.Map;
 
-import motocitizen.MyApp;
 import motocitizen.main.R;
 import motocitizen.startup.Preferences;
 import motocitizen.utils.Const;
-import motocitizen.utils.MyUtils;
 
 public class SelectSoundFragment extends Fragment{
     private static Map<Integer, Uri> notifications;
@@ -75,15 +73,15 @@ public class SelectSoundFragment extends Fragment{
         if (cursor.getCount() == 0 && !cursor.moveToFirst()) return;
         while (!cursor.isAfterLast() && cursor.moveToNext()) {
             int currentPosition = cursor.getPosition();
-            inflateRow(getActivity(), vg, currentPosition);
+            inflateRow(vg, currentPosition);
         }
     }
 
-    private void inflateRow(final Context context, ViewGroup viewGroup, int currentPosition) {
-        LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    private void inflateRow(ViewGroup viewGroup, int currentPosition) {
+        LayoutInflater li = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         TableRow       tr = (TableRow) li.inflate(R.layout.sound_row, viewGroup, false);
         tr.setTag(currentPosition);
-        ((TextView) tr.findViewById(R.id.sound)).setText(rm.getRingtone(currentPosition).getTitle(context));
+        ((TextView) tr.findViewById(R.id.sound)).setText(rm.getRingtone(currentPosition).getTitle(getActivity()));
         notifications.put(currentPosition, rm.getRingtoneUri(currentPosition));
         tr.setOnClickListener(new Button.OnClickListener() {
 

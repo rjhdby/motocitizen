@@ -26,7 +26,6 @@ import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
 
 public class Rows {
-    //TODO context
     public static View getAccidentRow(ViewGroup parent, final Accident accident) {
         LayoutInflater li = (LayoutInflater) MyApp.getCurrentActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         FrameLayout    accRow;
@@ -73,7 +72,7 @@ public class Rows {
             @Override
             public boolean onLongClick(View v) {
                 PopupWindow popupWindow;
-                popupWindow = (new AccidentListPopup(MyApp.getCurrentActivity(), accident.getId())).getPopupWindow();
+                popupWindow = (new AccidentListPopup(accident.getId())).getPopupWindow();
                 int viewLocation[] = new int[2];
                 v.getLocationOnScreen(viewLocation);
                 popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
@@ -143,11 +142,6 @@ public class Rows {
     }
 
     public static View getHistoryRow(ViewGroup parent, History history) {
-        /*
-        if (tableLayout.getChildCount() == 0) {
-            inflateHeader(context, tableLayout);
-        }
-        */
         //TODO header
         LayoutInflater li        = (LayoutInflater) MyApp.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         TableRow       tr        = (TableRow) li.inflate(R.layout.history_row, parent, false);

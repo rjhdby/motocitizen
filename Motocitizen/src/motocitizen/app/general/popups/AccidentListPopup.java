@@ -13,28 +13,28 @@ public class AccidentListPopup extends PopupWindowGeneral {
     private final Accident point;
     private final String   accText;
 
-    public AccidentListPopup(Context context, int id) {
-        super(context);
+    public AccidentListPopup(int id) {
+        super();
         point = Content.getPoint(id);
         accText = getAccidentTextToCopy(point);
     }
 
     public PopupWindow getPopupWindow() {
-        content.addView(copyButtonRow(context, accText));
+        content.addView(copyButtonRow(accText));
         for (String phone : MyUtils.getPhonesFromText(point.getDescription())) {
-            content.addView(phoneButtonRow(context, phone), layoutParams);
-            content.addView(smsButtonRow(context, phone), layoutParams);
+            content.addView(phoneButtonRow(phone), layoutParams);
+            content.addView(smsButtonRow(phone), layoutParams);
         }
         if (Content.auth.getRole().isModerator() || Content.auth.getLogin().equals(point.getOwner()))
-            content.addView(finishButtonRow(context, point));
+            content.addView(finishButtonRow(point));
 
         if (Content.auth.getRole().isModerator()) {
-            content.addView(hideButtonRow(context, point));
+            content.addView(hideButtonRow(point));
             content.addView(banButtonRow(point.getId()), layoutParams);
         }
 
-        content.addView(shareMessage(context, accText));
-        content.addView(coordinatesButtonRow(context, point), layoutParams);
+        content.addView(shareMessage(accText));
+        content.addView(coordinatesButtonRow(point), layoutParams);
         popupWindow.setContentView(content);
         return popupWindow;
     }

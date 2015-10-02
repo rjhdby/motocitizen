@@ -25,16 +25,16 @@ public class CustomTrustManager {
             }
         });
 
-        javax.net.ssl.SSLContext context;
+        javax.net.ssl.SSLContext sslContext;
 
         if (trustManagers == null) {
             trustManagers = new javax.net.ssl.TrustManager[]{new _FakeX509TrustManager()};
         }
 
         try {
-            context = javax.net.ssl.SSLContext.getInstance("TLS");
-            context.init(null, trustManagers, new SecureRandom());
-            javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
+            sslContext = javax.net.ssl.SSLContext.getInstance("TLS");
+            sslContext.init(null, trustManagers, new SecureRandom());
+            javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
             Log.e("allowAllSSL", e.toString());
         }

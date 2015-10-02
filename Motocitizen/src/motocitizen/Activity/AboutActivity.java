@@ -36,7 +36,7 @@ public class AboutActivity extends ActionBarActivity implements View.OnClickList
 
         WebView wv = (WebView) findViewById(R.id.change_log);
         wv.setBackgroundColor(Color.rgb(48, 48, 48));
-        wv.loadDataWithBaseURL(null, ChangeLog.getLog(this, true), "text/html", "UTF-8", null);
+        wv.loadDataWithBaseURL(null, ChangeLog.getLog(true), "text/html", "UTF-8", null);
 
         bussinesCardButton = (Button) findViewById(R.id.bussinesCardButton);
         bussinesCardButton.setOnClickListener(this);

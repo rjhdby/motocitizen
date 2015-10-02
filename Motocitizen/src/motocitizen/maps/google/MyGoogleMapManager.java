@@ -85,7 +85,7 @@ public class MyGoogleMapManager extends MyMapManager {
         user = map.addMarker(new MarkerOptions().position(MyUtils.LocationToLatLng(location)).title(Type.USER.toString()).icon(Type.USER.getIcon()));
         //} else {
         //TODO Отобразить сообщение?
-        //Toast.makeText(this, Startup.context.getString(R.string.position_not_available), Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, MyApp.getCurrentActivity().getString(R.string.position_not_available), Toast.LENGTH_LONG).show();
         //}
     }
 

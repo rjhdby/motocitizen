@@ -68,14 +68,14 @@ abstract class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONOb
                 Runnable execute = new Runnable() {
                     @Override
                     public void run() {
-                        dialog = new ProgressDialog(context);
+                        dialog = new ProgressDialog(MyApp.getCurrentActivity());
                         dialog.setMessage("Обмен данными...\n" + hint);
                         dialog.setIndeterminate(true);
                         dialog.setCancelable(true);
                         dialog.show();
                     }
                 };
-                ((Activity) context).runOnUiThread(execute);
+                ((Activity) context).runOnUiThread(MyApp.getCurrentActivity());
             }
             */
 

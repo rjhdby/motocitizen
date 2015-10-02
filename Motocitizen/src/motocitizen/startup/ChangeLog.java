@@ -5,7 +5,6 @@ package motocitizen.startup;
  */
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.util.Log;
@@ -17,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import motocitizen.MyApp;
 import motocitizen.main.R;
 
 public class ChangeLog {
@@ -32,13 +32,13 @@ public class ChangeLog {
         currentListMode = ListMode.NONE;
     }
 
-    public static AlertDialog getDialog(Context context, boolean full) {
-        WebView wv = new WebView(context);
+    public static AlertDialog getDialog(boolean full) {
+        WebView wv = new WebView(MyApp.getCurrentActivity());
 
         wv.setBackgroundColor(Color.BLACK);
-        wv.loadDataWithBaseURL(null, getLog(context, full), "text/html", "UTF-8", null);
+        wv.loadDataWithBaseURL(null, getLog(full), "text/html", "UTF-8", null);
         Log.d("LOG", wv.toString());
-        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, android.R.style.Theme_Dialog));
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(MyApp.getCurrentActivity(), android.R.style.Theme_Dialog));
         builder.setTitle("Что нового").setView(wv).setCancelable(false).setPositiveButton("ОК", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
             }
@@ -46,11 +46,11 @@ public class ChangeLog {
         return builder.create();
     }
 
-    public static String getLog(Context context, boolean full) {
+    public static String getLog(boolean full) {
         String lastVersion = Preferences.getCurrentVersion();
         sb = new StringBuffer();
         try {
-            InputStream ins = context.getResources().openRawResource(R.raw.changelog);
+            InputStream ins = MyApp.getCurrentActivity().getResources().openRawResource(R.raw.changelog);
             BufferedReader br = new BufferedReader(new InputStreamReader(ins));
 
             String line;
