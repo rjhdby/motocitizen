@@ -26,18 +26,26 @@ import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
 
 public class Rows {
+    /* constants */
+    private static final int ACCIDENT_ROW_LAYOUT     = R.layout.accident_row;
+    private static final int ACCIDENT_ROW_OWN_LAYOUT = R.layout.accident_row_i_was_here;
+
+    private static final int ACCIDENT_ROW_ENDED      = R.drawable.accident_row_ended;
+    private static final int ACCIDENT_ROW_HIDDEN     = R.drawable.accident_row_hidden;
+    private static final int ACCIDENT_ROW_OWN_ENDED  = R.drawable.owner_accident_ended;
+    private static final int ACCIDENT_ROW_OWN_HIDDEN = R.drawable.owner_accident_hidden;
+    /* end constants */
+
     public static View getAccidentRow(ViewGroup parent, final Accident accident) {
         LayoutInflater li = (LayoutInflater) MyApp.getCurrentActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         FrameLayout    accRow;
-        int[]          resources;
-        resources = accident.isOwner() ? Resources.getAccidentRowSetOwner() : Resources.getAccidentRowSetCommon();
-        accRow = (FrameLayout) li.inflate(resources[0], parent, false);
+        accRow = (FrameLayout) li.inflate(accident.isOwner() ? ACCIDENT_ROW_OWN_LAYOUT : ACCIDENT_ROW_LAYOUT, parent, false);
         switch (accident.getStatus()) {
             case ENDED:
-                accRow.setBackgroundResource(resources[1]);
+                accRow.setBackgroundResource(accident.isOwner() ? ACCIDENT_ROW_OWN_ENDED : ACCIDENT_ROW_ENDED);
                 break;
             case HIDDEN:
-                accRow.setBackgroundResource(resources[2]);
+                accRow.setBackgroundResource(accident.isOwner() ? ACCIDENT_ROW_OWN_HIDDEN : ACCIDENT_ROW_HIDDEN);
         }
         StringBuilder generalText = new StringBuilder();
         generalText.append(accident.getType().toString());
