@@ -70,7 +70,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View viewMain = inflater.inflate(R.layout.fragment_detail_messages, container, false);
 
-        newMessageButton = (ImageButton) viewMain.findViewById(R.id.mc_new_message_send);
+        newMessageButton = (ImageButton) viewMain.findViewById(R.id.new_message_send);
         newMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,12 +82,12 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
 
         newMessageButton.setEnabled(false);
 
-        mcNewMessageText = (EditText) viewMain.findViewById(R.id.mc_new_message_text);
+        mcNewMessageText = (EditText) viewMain.findViewById(R.id.new_message_text);
         mcNewMessageText.addTextChangedListener(mcNewMessageTextListener);
 
-        mcDetMessagesTable = viewMain.findViewById(R.id.mc_det_messages_table);
+        mcDetMessagesTable = viewMain.findViewById(R.id.details_messages_table);
 
-        newMessageArea = viewMain.findViewById(R.id.mc_new_message_area);
+        newMessageArea = viewMain.findViewById(R.id.new_message_area);
 
         update();
 

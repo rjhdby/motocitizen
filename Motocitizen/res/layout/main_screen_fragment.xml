@@ -102,7 +102,7 @@
                 android:src="@drawable/dial"/>
 
             <ImageButton
-                android:id="@+id/mc_add_point_button"
+                android:id="@+id/add_point_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -110,7 +110,7 @@
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="8dp"
                 android:background="@null"
-                android:contentDescription="@string/mc_add_point_button"
+                android:contentDescription="@string/activity_main_add_point_button"
                 android:src="@drawable/create"/>
 
             <RadioGroup

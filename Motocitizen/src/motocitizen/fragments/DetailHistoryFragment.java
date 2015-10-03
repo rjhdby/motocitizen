@@ -29,7 +29,7 @@ public class DetailHistoryFragment extends AccidentDetailsFragments {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View viewMain = inflater.inflate(R.layout.fragment_detail_history, container, false);
-        mcDetLogContent = viewMain.findViewById(R.id.mc_det_log_content);
+        mcDetLogContent = viewMain.findViewById(R.id.details_log_content);
 
         update();
         return viewMain;

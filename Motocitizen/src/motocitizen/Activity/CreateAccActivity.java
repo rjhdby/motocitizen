@@ -44,11 +44,11 @@ import motocitizen.utils.Preferences;
 public class CreateAccActivity extends FragmentActivity implements View.OnClickListener {
     /* constants */
     private static final int RADIUS      = 1000;
-    private final        int TYPE        = R.id.mc_create_type_frame;
-    private final        int DESCRIPTION = R.id.mc_create_final_frame;
-    private final        int ACCIDENT    = R.id.mc_create_acc_frame;
-    private final        int MEDICINE    = R.id.mc_create_people_frame;
-    private final        int MAP         = R.id.mc_create_map;
+    private final        int TYPE        = R.id.create_type_frame;
+    private final        int DESCRIPTION = R.id.create_final_frame;
+    private final        int ACCIDENT    = R.id.create_acc_frame;
+    private final        int MEDICINE    = R.id.create_people_frame;
+    private final        int MAP         = R.id.create_map;
     /* end of constants */
 
     private int       currentScreen;
@@ -74,7 +74,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         accident = createDefaultAccident();
         map = makeMap();
         confirmButton = (Button) findViewById(R.id.CREATE);
-        createFinalText = (EditText) findViewById(R.id.mc_create_final_text);
+        createFinalText = (EditText) findViewById(R.id.create_final_text);
         createFinalText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -119,7 +119,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
 
     private GoogleMap makeMap() {
         FragmentManager    fragmentManager = this.getSupportFragmentManager();
-        SupportMapFragment mapFragment     = (SupportMapFragment) fragmentManager.findFragmentById(R.id.mc_create_map_container);
+        SupportMapFragment mapFragment     = (SupportMapFragment) fragmentManager.findFragmentById(R.id.create_map_container);
         GoogleMap          map             = mapFragment.getMap();
 
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(accident.getLocation()), 16));
@@ -177,10 +177,10 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     private void refreshDescription() {
         String text = accident.getType().toString();
         text += accident.getMedicine() == Medicine.UNKNOWN ? "" : ". " + accident.getMedicine().toString();
-        ((TextView) findViewById(R.id.mc_create_what)).setText(text);
-        ((TextView) findViewById(R.id.mc_create_who)).setText(MyApp.getAuth().getLogin());
-        ((TextView) findViewById(R.id.mc_create_where)).setText(accident.getAddress());
-        ((TextView) findViewById(R.id.mc_create_when)).setText(Const.DATE_FORMAT.format(accident.getTime()));
+        ((TextView) findViewById(R.id.create_what)).setText(text);
+        ((TextView) findViewById(R.id.create_who)).setText(MyApp.getAuth().getLogin());
+        ((TextView) findViewById(R.id.create_where)).setText(accident.getAddress());
+        ((TextView) findViewById(R.id.create_when)).setText(Const.DATE_FORMAT.format(accident.getTime()));
     }
 
     private void setupListener() {

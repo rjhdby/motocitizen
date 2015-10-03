@@ -4,19 +4,17 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              android:tag="mc_det_messages_content"
               android:weightSum="1"
               tools:context="motocitizen.fragments.DetailMessagesFragment">
 
     <ScrollView
-        android:id="@+id/mc_det_messages_scroll"
+        android:id="@+id/activity__details_messages_scroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:tag="mc_det_messages_content">
+        android:layout_weight="1">
 
         <TableLayout
-            android:id="@+id/mc_det_messages_table"
+            android:id="@+id/details_messages_table"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:shrinkColumns="1"
@@ -25,7 +23,7 @@
     </ScrollView>
 
     <LinearLayout
-        android:id="@+id/mc_new_message_area"
+        android:id="@+id/new_message_area"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
@@ -33,7 +31,7 @@
         android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/mc_new_message_text"
+            android:id="@+id/new_message_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
@@ -47,7 +45,7 @@
         </EditText>
 
         <ImageButton
-            android:id="@+id/mc_new_message_send"
+            android:id="@+id/new_message_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"

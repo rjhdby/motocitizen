@@ -38,9 +38,9 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
         super.onCreate(savedInstanceState);
         MyApp.setCurrentActivity(this);
         setContentView(R.layout.auth);
-        login = (EditText) findViewById(R.id.mc_auth_login);
-        password = (EditText) findViewById(R.id.mc_auth_password);
-        anonim = (CheckBox) findViewById(R.id.mc_auth_anonim);
+        login = (EditText) findViewById(R.id.auth_login);
+        password = (EditText) findViewById(R.id.auth_password);
+        anonim = (CheckBox) findViewById(R.id.auth_anonim);
         cancelBtn = (Button) findViewById(R.id.cancel_button);
         logoutBtn = (Button) findViewById(R.id.logout_button);
         loginBtn = (Button) findViewById(R.id.login_button);
@@ -67,7 +67,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
         password.setEnabled(!isAuthorized && !anonim.isChecked());
         //Авторизованы?
         if (isAuthorized) {
-            String format = getString(R.string.mc_auth_role);
+            String format = getString(R.string.auth_role);
             roleView.setText(String.format(format, MyApp.getRole().getName()));
         } else {
             enableLoginBtn();

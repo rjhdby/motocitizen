@@ -94,19 +94,18 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
         /*
         * Описание группы закладок внутри деталей происшествия
         */
-        RadioGroup mcDetTabsGroup = (RadioGroup) findViewById(R.id.mc_det_tabs_group);
+        RadioGroup mcDetTabsGroup = (RadioGroup) findViewById(R.id.details_tabs_group);
         mcDetTabsGroup.setOnCheckedChangeListener(accDetTabsListener);
 
-        generalLayout = findViewById(R.id.mc_acc_details_general);
+        generalLayout = findViewById(R.id.acc_details_general);
         generalType = (TextView) findViewById(R.id.acc_details_general_type);
         generalStatus = (TextView) findViewById(R.id.acc_details_general_status);
         generalTime = (TextView) findViewById(R.id.acc_details_general_time);
         generalOwner = (TextView) findViewById(R.id.acc_details_general_owner);
         generalAddress = (TextView) findViewById(R.id.acc_details_general_address);
         generalDescription = (TextView) findViewById(R.id.acc_details_general_description);
-//        ((ScrollView) findViewById(R.id.mc_det_messages_scroll)).fullScroll(View.FOCUS_UP);
 
-        getFragmentManager().beginTransaction().replace(R.id.mc_det_tab_content, detailVolunteersFragment).commit();
+        getFragmentManager().beginTransaction().replace(R.id.details_tab_content, detailVolunteersFragment).commit();
         menuReconstruction();
     }
 
@@ -306,12 +305,12 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
         public void onCheckedChanged(RadioGroup group, int checkedId) {
             int id = group.getCheckedRadioButtonId();
 
-            if (id == R.id.mc_det_tab_messages) {
-                getFragmentManager().beginTransaction().replace(R.id.mc_det_tab_content, detailMessagesFragment).commit();
-            } else if (id == R.id.mc_det_tab_history) {
-                getFragmentManager().beginTransaction().replace(R.id.mc_det_tab_content, detailHistoryFragment).commit();
-            } else if (id == R.id.mc_det_tab_people) {
-                getFragmentManager().beginTransaction().replace(R.id.mc_det_tab_content, detailVolunteersFragment).commit();
+            if (id == R.id.details_tab_messages) {
+                getFragmentManager().beginTransaction().replace(R.id.details_tab_content, detailMessagesFragment).commit();
+            } else if (id == R.id.details_tab_history) {
+                getFragmentManager().beginTransaction().replace(R.id.details_tab_content, detailHistoryFragment).commit();
+            } else if (id == R.id.details_tab_people) {
+                getFragmentManager().beginTransaction().replace(R.id.details_tab_content, detailVolunteersFragment).commit();
             }
         }
     };

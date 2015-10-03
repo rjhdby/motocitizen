@@ -51,9 +51,9 @@ public class MainScreenActivity extends ActionBarActivity {
         MyApp.setMap(new MyGoogleMapManager());
 
         actionBar = getSupportActionBar();
-        createAccButton = (ImageButton) findViewById(R.id.mc_add_point_button);
+        createAccButton = (ImageButton) findViewById(R.id.add_point_button);
         mainTabsGroup = (RadioGroup) findViewById(R.id.main_tabs_group);
-        accListView = findViewById(R.id.mc_acc_list);
+        accListView = findViewById(R.id.acc_list);
         mapContainer = findViewById(R.id.map_container);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 

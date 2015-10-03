@@ -140,7 +140,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
                 break;
 
             case DIALOG_ACC_NOT_ACTUAL:
-                DialogFragment dialogFrag = ConfirmDialog.newInstance(act.getString(R.string.title_dialod_acc_not_actual), act.getString(android.R.string.ok), "");
+                DialogFragment dialogFrag = ConfirmDialog.newInstance(act.getString(R.string.title_dialog_acc_not_actual), act.getString(android.R.string.ok), "");
                 dialogFrag.setTargetFragment(this, type);
                 dialogFrag.show(getFragmentManager().beginTransaction(), "dialog");
                 break;

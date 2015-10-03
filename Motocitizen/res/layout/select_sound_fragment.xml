@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:text="@string/mc_create_cancel"/>
+            android:text="@string/activity_auth_cancel_label"/>
 
         <Button
             android:id="@+id/select_sound_save_button"

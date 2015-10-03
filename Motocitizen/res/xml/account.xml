@@ -5,19 +5,19 @@
       android:title="Account">
     <EditTextPreference
         android:defaultValue="10"
-        android:dialogTitle="@string/mc_settings_distance"
+        android:dialogTitle="@string/settings_distance"
         android:key="mc.distance.show"
-        android:summary="@string/mc_auth_login"
-        android:title="@string/mc_auth_login"
+        android:summary="@string/activity_auth_login"
+        android:title="@string/activity_auth_login"
         android:inputType="number"
         android:tag="mc.distance.show" />
     <EditTextPreference
         android:defaultValue="10"
-        android:dialogTitle="@string/mc_settings_distance_alarm"
+        android:dialogTitle="@string/settings_distance_alarm"
         android:key="mc.distance.alarm"
-        android:summary="@string/mc_auth_password"
-        android:title="@string/mc_auth_password"
-        android:id="@+id/mc_auth_password"
+        android:summary="@string/activity_auth_password"
+        android:title="@string/activity_auth_password"
+        android:id="@+id/auth_password"
         android:tag="mc.distance.alarm" />
   </PreferenceCategory>
 </PreferenceScreen>

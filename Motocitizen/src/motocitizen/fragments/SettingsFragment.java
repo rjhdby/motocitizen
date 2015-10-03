@@ -11,7 +11,6 @@ import motocitizen.Activity.AuthActivity;
 import motocitizen.MyApp;
 import motocitizen.main.R;
 import motocitizen.utils.Preferences;
-import motocitizen.Activity.MainScreenActivity;
 import motocitizen.utils.Const;
 
 public class SettingsFragment extends PreferenceFragment {
@@ -75,7 +74,7 @@ public class SettingsFragment extends PreferenceFragment {
     }
 
     private void update() {
-        Preference buttonAuth = findPreference(getResources().getString(R.string.mc_settings_auth_button));
+        Preference buttonAuth = findPreference(getResources().getString(R.string.settings_auth_button));
         buttonAuth.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference arg0) {
@@ -84,7 +83,7 @@ public class SettingsFragment extends PreferenceFragment {
                 return true;
             }
         });
-        Preference buttonSound = findPreference(getResources().getString(R.string.mc_notif_sound));
+        Preference buttonSound = findPreference(getResources().getString(R.string.notification_sound));
         buttonSound.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference arg0) {
@@ -95,8 +94,8 @@ public class SettingsFragment extends PreferenceFragment {
         nottifDistPreference = findPreference(Preferences.distanceShow);
         nottifAlarmPreference = findPreference(Preferences.distanceAlarm);
 
-        nottifSoundPreference = findPreference(getResources().getString(R.string.mc_notif_sound));
-        authPreference = findPreference(getResources().getString(R.string.mc_settings_auth_button));
+        nottifSoundPreference = findPreference(getResources().getString(R.string.notification_sound));
+        authPreference = findPreference(getResources().getString(R.string.settings_auth_button));
 
         mapProviderPreference = (ListPreference) getPreferenceScreen().findPreference(Preferences.mapProvider);
         mapProviderPreference.setOnPreferenceChangeListener(mapProviderListener);
