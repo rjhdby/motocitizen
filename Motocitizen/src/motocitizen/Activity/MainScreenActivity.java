@@ -27,16 +27,16 @@ import motocitizen.utils.Preferences;
 
 public class MainScreenActivity extends ActionBarActivity {
 
-    public static  boolean     fromDetails;
-    public static  Menu        mMenu;
-    public static  Integer     currentGeneral;
     private static ActionBar   actionBar;
-    private        ImageButton createAccButton;
-    private        RadioGroup  mainTabsGroup;
-    private        View        accListView;
-    private        View        mapContainer;
-    static         ProgressBar progressBar;
+    private static ProgressBar progressBar;
+    public static  Menu        mMenu;
     public static  boolean     inTransaction;
+
+    private   ImageButton createAccButton;
+    private   RadioGroup  mainTabsGroup;
+    private   View        accListView;
+    private   View        mapContainer;
+    protected boolean     fromDetails;
 
     static {
         inTransaction = false;
@@ -223,11 +223,10 @@ public class MainScreenActivity extends ActionBarActivity {
 
         @Override
         public void onCheckedChanged(RadioGroup radioGroup, int i) {
-            currentGeneral = radioGroup.getCheckedRadioButtonId();
             fromDetails = false;
             accListView.setVisibility(View.VISIBLE);
             mapContainer.setVisibility(View.VISIBLE);
-            switch (currentGeneral) {
+            switch (radioGroup.getCheckedRadioButtonId()) {
                 case R.id.tab_map_button:
                     accListView.animate().translationX(-Const.getWidth() * 2);
                     mapContainer.animate().translationX(0);

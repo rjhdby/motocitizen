@@ -31,10 +31,10 @@ import motocitizen.maps.MyMapManager;
 import motocitizen.utils.MyUtils;
 
 public class MyGoogleMapManager extends MyMapManager {
-    private static GoogleMap map;
-    private static Marker    user;
-    private static String    selected;
-    private static Map<String, Integer> accidents = new HashMap<>();
+    private GoogleMap map;
+    private Marker    user;
+    private String    selected;
+    private Map<String, Integer> accidents = new HashMap<>();
 
     public MyGoogleMapManager() {
         setName(MyMapManager.GOOGLE);

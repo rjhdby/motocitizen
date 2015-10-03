@@ -8,14 +8,14 @@ import motocitizen.content.VolunteerStatus;
 import motocitizen.utils.Preferences;
 
 public class Volunteer {
+    private static final String[] prerequisites = {"id", "name", "status", "uxtime"};
+
     private int             id;
-    private String          name;
-    private VolunteerStatus status;
-    private Date            time;
     private boolean         self;
     private boolean         noError;
-
-    private static final String[] prerequisites = {"id", "name", "status", "uxtime"};
+    private String          name;
+    private Date            time;
+    private VolunteerStatus status;
 
     public Volunteer(JSONObject json) {
         noError = checkPrerequisites(json);
@@ -31,7 +31,7 @@ public class Volunteer {
         }
     }
 
-    private static boolean checkPrerequisites(JSONObject message) {
+    private boolean checkPrerequisites(JSONObject message) {
         for (String field : prerequisites) {
             if (!message.has(field)) return false;
         }

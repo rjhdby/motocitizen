@@ -19,17 +19,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import motocitizen.main.R;
-import motocitizen.utils.Preferences;
 import motocitizen.utils.Const;
+import motocitizen.utils.Preferences;
 
 public class SelectSoundFragment extends Fragment {
-    private static Map<Integer, Sound> notifications;
-    private static ViewGroup           ringtoneList;
-    private static int                 currentId;
-    private static Uri                 currentUri;
-    private static String              currentTitle;
+    private Map<Integer, Sound> notifications;
+    private ViewGroup           ringtoneList;
+    private int                 currentId;
+    private Uri                 currentUri;
+    private String              currentTitle;
 
-    static {
+    {
         currentId = 0;
         currentUri = Preferences.getAlarmSoundUri();
         currentTitle = Preferences.getAlarmSoundTitle();

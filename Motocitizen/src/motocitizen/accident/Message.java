@@ -9,15 +9,16 @@ import motocitizen.utils.Preferences;
 
 public class Message {
     private static final String[] prerequisites = {"id", "id_user", "owner", "status", "text", "uxtime"};
+
     private int           id;
     private int           ownerId;
-    private String        owner;
-    private MessageStatus status;
-    private String        text;
-    private Date          time;
     private boolean       unread;
     private boolean       self;
     private boolean       noError;
+    private String        owner;
+    private String        text;
+    private Date          time;
+    private MessageStatus status;
 
     public Message(JSONObject json) {
         noError = checkPrerequisites(json);
@@ -37,7 +38,7 @@ public class Message {
         }
     }
 
-    private static boolean checkPrerequisites(JSONObject message) {
+    private boolean checkPrerequisites(JSONObject message) {
         for (String field : prerequisites) {
             if (!message.has(field)) return false;
         }

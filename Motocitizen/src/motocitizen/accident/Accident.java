@@ -27,24 +27,25 @@ import static motocitizen.content.AccidentStatus.HIDDEN;
 
 public class Accident {
     private static final String[] prerequisites = {"id", "owner_id", "owner", "status", "uxtime", "address", "descr", "lat", "lon", "type", "med", "m", "h", "v"};
-    Integer rowId;
+
     private int                     id;
     private int                     ownerId;
-    private String                  owner;
-    private AccidentStatus          status;
-    private Date                    time;
-    private String                  address;
-    private String                  description;
     private double                  lat;
     private double                  lon;
-    private Type                    type;
-    private Medicine                medicine;
     private boolean                 self;
     private boolean                 noError;
+    private boolean                 favorite;
+    private Integer                 rowId;
+    private String                  owner;
+    private String                  address;
+    private String                  description;
+    private Date                    time;
     private Map<Integer, Message>   messages;
     private Map<Integer, Volunteer> volunteers;
     private Map<Integer, History>   history;
-    private boolean                 favorite;
+    private AccidentStatus          status;
+    private Type                    type;
+    private Medicine                medicine;
 
     public Accident(JSONObject json) {
         update(json);
@@ -75,7 +76,7 @@ public class Accident {
         }
     }
 
-    private static boolean checkPrerequisites(JSONObject message) {
+    private boolean checkPrerequisites(JSONObject message) {
         for (String field : prerequisites) {
             if (!message.has(field)) return false;
         }

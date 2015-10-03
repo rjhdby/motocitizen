@@ -41,10 +41,12 @@ import static motocitizen.content.AccidentStatus.HIDDEN;
 
 public class AccidentDetailsActivity extends ActionBarActivity implements AccidentDetailsFragments.OnFragmentInteractionListener {
 
-    private static final int SMS_MENU_MIN_ID;
-    private static final int SMS_MENU_MAX_ID;
-    private static final int CALL_MENU_MIN_ID;
-    private static final int CALL_MENU_MAX_ID;
+    /* constants */
+    private static final int SMS_MENU_MIN_ID = 100;
+    private static final int SMS_MENU_MAX_ID = 200;
+    private static final int CALL_MENU_MIN_ID = 400;
+    private static final int CALL_MENU_MAX_ID = 500;
+    /* end constants */
 
     /*
     Инцидент с которым работаем
@@ -67,13 +69,6 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
     private View     generalLayout;
 
     private Menu mMenu;
-
-    static {
-        SMS_MENU_MIN_ID = 100;
-        SMS_MENU_MAX_ID = 200;
-        CALL_MENU_MIN_ID = 400;
-        CALL_MENU_MAX_ID = 500;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

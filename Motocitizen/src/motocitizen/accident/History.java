@@ -9,14 +9,15 @@ import motocitizen.utils.Preferences;
 
 public class History {
     private static final String[] prerequisites = {"id", "id_user", "owner", "action", "uxtime"};
+
     private int           id;
     private int           owner_id;
-    private String        owner;
-    private HistoryAction action;
-    private String        actionText;
-    private Date          time;
     private boolean       self;
     private boolean       noError;
+    private String        owner;
+    private String        actionText;
+    private Date          time;
+    private HistoryAction action;
 
     public History(JSONObject json) {
         noError = checkPrerequisites(json);
@@ -34,7 +35,7 @@ public class History {
         }
     }
 
-    private static boolean checkPrerequisites(JSONObject message) {
+    private boolean checkPrerequisites(JSONObject message) {
         for (String field : prerequisites) {
             if (!message.has(field)) return false;
         }
