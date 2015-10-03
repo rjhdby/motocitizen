@@ -10,7 +10,6 @@ import android.os.Bundle;
 public class ConfirmDialog extends DialogFragment {
 
     public static ConfirmDialog newInstance(String title, String positiveButton, String negativeButton) {
-
         ConfirmDialog dialogFragment = new ConfirmDialog();
         Bundle        bundle         = new Bundle();
         bundle.putString("title", title);
@@ -26,19 +25,25 @@ public class ConfirmDialog extends DialogFragment {
         res.setTitle(getArguments().getString("title"));
         res.setIcon(android.R.drawable.ic_dialog_alert);
         String positive = getArguments().getString("positive");
-        if ((positive != null ? positive.length() : 0) > 0)
-            res.setPositiveButton(positive, new DialogInterface.OnClickListener() {
-                                      public void onClick(DialogInterface dialog, int whichButton) {
-                                          getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent());
-                                      }
-                                  });
         String negative = getArguments().getString("negative");
-        if ((negative != null ? negative.length() : 0) > 0)
-            res.setNegativeButton(negative, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, getActivity().getIntent());
-                }
-            });
+        if (positive != null && !positive.isEmpty())
+            res.setPositiveButton(positive, new PositiveOnClickListener());
+        if (negative != null && !negative.isEmpty())
+            res.setNegativeButton(negative, new NegativeOnClickListener());
         return res.create();
+    }
+
+    private class PositiveOnClickListener implements DialogInterface.OnClickListener {
+        @Override
+        public void onClick(DialogInterface dialog, int whichButton) {
+            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent());
+        }
+    }
+
+    private class NegativeOnClickListener implements DialogInterface.OnClickListener {
+        @Override
+        public void onClick(DialogInterface dialog, int whichButton) {
+            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, getActivity().getIntent());
+        }
     }
 }

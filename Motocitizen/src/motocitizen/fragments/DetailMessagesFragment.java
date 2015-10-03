@@ -29,6 +29,7 @@ import motocitizen.utils.Sort;
 public class DetailMessagesFragment extends AccidentDetailsFragments {
 
     private ImageButton newMessageButton;
+    //TODO Вынести листенер в отдельный приватный класс
     private final TextWatcher mcNewMessageTextListener = new TextWatcher() {
 
         @Override
@@ -71,6 +72,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         View viewMain = inflater.inflate(R.layout.fragment_detail_messages, container, false);
 
         newMessageButton = (ImageButton) viewMain.findViewById(R.id.new_message_send);
+        //TODO Вынести листенер в отдельный приватный класс
         newMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,6 +115,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
             message.setRead();
             View row = Rows.getMessageRow(messageView, message, lastOwner, nextOwner);
             lastOwner = accident.getMessages().get(keys[i]).getOwnerId();
+            //TODO Вынести листенер в отдельный приватный класс
             row.setOnLongClickListener(new View.OnLongClickListener() {
 
                 @Override

@@ -23,6 +23,7 @@ import motocitizen.utils.Const;
 import motocitizen.utils.Preferences;
 
 public class SelectSoundFragment extends Fragment {
+    //TODO Разобраться с листенерами и именованием переменных
     private Map<Integer, Sound> notifications;
     private ViewGroup           ringtoneList;
     private int                 currentId;

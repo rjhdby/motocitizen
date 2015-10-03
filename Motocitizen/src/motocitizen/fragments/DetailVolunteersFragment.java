@@ -77,6 +77,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         onwayContent = viewMain.findViewById(R.id.acc_onway_table);
         //inplaceContent = viewMain.findViewById(R.id.acc_inplace_table);
         View toMap = viewMain.findViewById(R.id.details_to_map_button);
+        //TODO Вынести листенер в отдельный приватный класс
         toMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
