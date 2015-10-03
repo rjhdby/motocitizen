@@ -14,7 +14,6 @@ import org.json.JSONObject;
 
 import motocitizen.Activity.MainScreenActivity;
 import motocitizen.MyApp;
-import motocitizen.content.Content;
 import motocitizen.main.R;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.AccidentsRequest;
@@ -61,7 +60,7 @@ public class BounceScrollView extends ScrollView {
             if (MyApp.isOnline()) {
                 isRequestedUpdate = false;
                 MainScreenActivity.startRefreshAnimation();
-                Content.update(new AccidentsRequestCallback());
+                MyApp.getContent().update(new AccidentsRequestCallback());
                 new AccidentsRequest(new AccidentsRequestCallback());
             } else {
                 message(context.getString(R.string.inet_not_available));
@@ -85,8 +84,8 @@ public class BounceScrollView extends ScrollView {
                     e.printStackTrace();
                 }
             } else {
-                Content.parseJSON(result);
-                Content.redraw();
+                MyApp.getContent().parseJSON(result);
+                MyApp.getContent().redraw();
             }
             MainScreenActivity.stopRefreshAnimation();
         }

@@ -6,7 +6,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 import motocitizen.MyApp;
-import motocitizen.content.Content;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
@@ -14,7 +13,7 @@ import motocitizen.network.Methods;
 public class BanRequest extends HTTPClient {
     public BanRequest(AsyncTaskCompleteListener listener, int id) {
         this.listener = listener;
-        int user_id = Content.getPoint(id).getOwnerId();
+        int user_id = MyApp.getContent().getPoint(id).getOwnerId();
         post = new HashMap<>();
         post.put("login", MyApp.getAuth().getLogin());
         post.put("passhash", MyApp.getAuth().makePassHash());

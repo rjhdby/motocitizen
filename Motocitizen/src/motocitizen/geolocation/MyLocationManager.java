@@ -18,7 +18,6 @@ import java.util.List;
 
 import motocitizen.Activity.MainScreenActivity;
 import motocitizen.MyApp;
-import motocitizen.content.Content;
 import motocitizen.network.requests.InplaceRequest;
 import motocitizen.network.requests.LeaveRequest;
 import motocitizen.utils.Preferences;
@@ -126,23 +125,23 @@ public class MyLocationManager {
     private void checkInPlace(Location location) {
         String login = Preferences.getLogin();
         if (login.equals("")) return;
-        int currentInplace = Content.getInplaceID();
+        int currentInplace = MyApp.getContent().getInplaceId();
         if (currentInplace != 0) {
             if (isInPlace(location, currentInplace)) return;
-            Content.setLeave(currentInplace);
+            MyApp.getContent().setLeave(currentInplace);
             new LeaveRequest(currentInplace);
         }
-        for (int accId : Content.getPoints().keySet()) {
+        for (int accId : MyApp.getContent().getPoints().keySet()) {
             if (accId == currentInplace) continue;
             if (isArrived(location, accId)) {
-                Content.setInPlace(accId);
+                MyApp.getContent().setInPlace(accId);
                 new InplaceRequest(accId);
             }
         }
     }
 
     private boolean isArrived(Location location, int accId) {
-        double meters = Content.getPoint(accId).getLocation().distanceTo(location);
+        double meters = MyApp.getContent().getPoint(accId).getLocation().distanceTo(location);
         double limit  = Math.max(ARRIVED_MAX_ACCURACY, location.getAccuracy());
         return meters < limit;
     }
@@ -152,7 +151,7 @@ public class MyLocationManager {
     }
 
     private boolean isInPlace(Location location, int accId) {
-        motocitizen.accident.Accident acc = Content.getPoint(accId);
+        motocitizen.accident.Accident acc = MyApp.getContent().getPoint(accId);
         if (acc == null) {
             message("Invalid accident");
             return false;
@@ -166,7 +165,7 @@ public class MyLocationManager {
             return false;
         }
 
-        double meters = Content.getPoint(accId).getLocation().distanceTo(location);
+        double meters = MyApp.getContent().getPoint(accId).getLocation().distanceTo(location);
         double limit  = location.getAccuracy() * 2 + 1000;
         return meters < limit;
     }

@@ -19,13 +19,12 @@ import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.MyApp;
 import motocitizen.accident.Message;
 import motocitizen.app.general.popups.MessagesPopup;
-import motocitizen.content.Content;
 import motocitizen.database.StoreMessages;
 import motocitizen.draw.Rows;
-import motocitizen.utils.Sort;
 import motocitizen.main.R;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.SendMessageRequest;
+import motocitizen.utils.Sort;
 
 public class DetailMessagesFragment extends AccidentDetailsFragments {
 
@@ -164,7 +163,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
                 }
             } else {
                 //new AccidentsRequest(getActivity(), new UpdateAccidentsCallback());
-                Content.update(new UpdateAccidentsCallback());
+                MyApp.getContent().update(new UpdateAccidentsCallback());
             }
             newMessageButton.setEnabled(true);
         }
@@ -174,7 +173,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         @Override
         public void onTaskComplete(JSONObject result) {
             mcNewMessageText.setText("");
-            if (!result.has("error")) Content.parseJSON(result);
+            if (!result.has("error")) MyApp.getContent().parseJSON(result);
             ((AccidentDetailsActivity) getActivity()).update();
             update();
         }

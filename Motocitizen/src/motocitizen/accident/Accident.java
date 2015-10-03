@@ -16,11 +16,9 @@ import java.util.Map;
 
 import motocitizen.MyApp;
 import motocitizen.content.AccidentStatus;
-import motocitizen.content.Content;
 import motocitizen.content.Medicine;
 import motocitizen.content.Type;
 import motocitizen.database.StoreMessages;
-import motocitizen.geolocation.MyLocationManager;
 import motocitizen.utils.Preferences;
 
 import static motocitizen.content.AccidentStatus.ACTIVE;
@@ -70,7 +68,7 @@ public class Accident {
             parseMessages(json.getJSONArray("m"));
             parseVolunteers(json.getJSONArray("v"));
             parseHistory(json.getJSONArray("h"));
-            favorite = Content.favorites.contains(id);
+            favorite = MyApp.getFavorites().contains(id);
         } catch (Exception e) {
             e.printStackTrace();
             noError = false;

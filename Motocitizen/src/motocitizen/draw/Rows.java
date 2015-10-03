@@ -19,7 +19,6 @@ import motocitizen.accident.History;
 import motocitizen.accident.Message;
 import motocitizen.accident.Volunteer;
 import motocitizen.app.general.popups.AccidentListPopup;
-import motocitizen.content.Content;
 import motocitizen.content.Medicine;
 import motocitizen.main.R;
 import motocitizen.utils.Const;
@@ -73,7 +72,7 @@ public class Rows {
         accRow.setId(rowId);
         accRow.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Content.toDetails(accident.getId());
+                MyApp.toDetails(accident.getId());
             }
         });
         accRow.setOnLongClickListener(new View.OnLongClickListener() {

@@ -18,12 +18,11 @@ import org.json.JSONObject;
 import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.MyApp;
 import motocitizen.accident.Volunteer;
-import motocitizen.content.Content;
 import motocitizen.content.VolunteerStatus;
 import motocitizen.draw.Rows;
 import motocitizen.main.R;
-import motocitizen.network.requests.AccidentsRequest;
 import motocitizen.network.AsyncTaskCompleteListener;
+import motocitizen.network.requests.AccidentsRequest;
 import motocitizen.network.requests.CancelOnWayRequest;
 import motocitizen.network.requests.OnWayRequest;
 import motocitizen.utils.Preferences;
@@ -111,9 +110,9 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         motocitizen.accident.Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
         int                           id       = accident.getId();
         boolean                       active   = accident.isActive() && MyApp.isAuthorized();
-        onwayButton.setVisibility(id != Preferences.getOnWay() && id != Content.getInplaceID() && active ? View.VISIBLE : View.GONE);
-        onwayCancelButton.setVisibility(id == Preferences.getOnWay() && id != Content.getInplaceID() && active ? View.VISIBLE : View.GONE);
-        onwayDisabledButton.setVisibility(id == Content.getInplaceID() && active ? View.VISIBLE : View.GONE);
+        onwayButton.setVisibility(id != Preferences.getOnWay() && id != MyApp.getContent().getInplaceId() && active ? View.VISIBLE : View.GONE);
+        onwayCancelButton.setVisibility(id == Preferences.getOnWay() && id != MyApp.getContent().getInplaceId() && active ? View.VISIBLE : View.GONE);
+        onwayDisabledButton.setVisibility(id == MyApp.getContent().getInplaceId() && active ? View.VISIBLE : View.GONE);
     }
 
     private void showDialog(int type) {
@@ -199,7 +198,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     private class UpdateAccidentsCallback implements AsyncTaskCompleteListener {
         @Override
         public void onTaskComplete(JSONObject result) {
-            Content.update();
+            MyApp.getContent().update();
             ((AccidentDetailsActivity) getActivity()).update();
             update();
         }

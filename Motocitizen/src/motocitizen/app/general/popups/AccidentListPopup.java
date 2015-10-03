@@ -1,11 +1,9 @@
 package motocitizen.app.general.popups;
 
-import android.content.Context;
 import android.widget.PopupWindow;
 
 import motocitizen.MyApp;
 import motocitizen.accident.Accident;
-import motocitizen.content.Content;
 import motocitizen.content.Medicine;
 import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
@@ -16,7 +14,7 @@ public class AccidentListPopup extends PopupWindowGeneral {
 
     public AccidentListPopup(int id) {
         super();
-        point = Content.getPoint(id);
+        point = MyApp.getContent().getPoint(id);
         accText = getAccidentTextToCopy(point);
     }
 
@@ -39,10 +37,11 @@ public class AccidentListPopup extends PopupWindowGeneral {
         popupWindow.setContentView(content);
         return popupWindow;
     }
+
     public static String getAccidentTextToCopy(Accident accident) {
         StringBuilder res = new StringBuilder();
         res.append(Const.DATE_FORMAT.format(accident.getTime())).append(" ");
-        res.append(accident.getOwner()).append( ": " );
+        res.append(accident.getOwner()).append(": ");
         res.append(accident.getType().toString()).append(". ");
         if (accident.getMedicine() != Medicine.UNKNOWN) {
             res.append(accident.getMedicine().toString()).append(". ");

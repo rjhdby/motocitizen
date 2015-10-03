@@ -32,16 +32,14 @@ import java.util.Date;
 import motocitizen.MyApp;
 import motocitizen.accident.Accident;
 import motocitizen.content.AccidentStatus;
-import motocitizen.content.Content;
 import motocitizen.content.Medicine;
 import motocitizen.content.Type;
-import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.CreateAccidentRequest;
-import motocitizen.utils.Preferences;
 import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
+import motocitizen.utils.Preferences;
 
 public class CreateAccActivity extends FragmentActivity implements View.OnClickListener {
     /* constants */
@@ -143,8 +141,8 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             });
         }
         map.clear();
-        for (int id : Content.getIds()) {
-            motocitizen.accident.Accident point = Content.get(id);
+        for (int id : MyApp.getContent().getIds()) {
+            motocitizen.accident.Accident point = MyApp.getContent().get(id);
             if (point.isInvisible()) continue;
             String title = point.getType().toString();
             title += point.getMedicine() == Medicine.NO ? "" : ", " + point.getMedicine().toString();

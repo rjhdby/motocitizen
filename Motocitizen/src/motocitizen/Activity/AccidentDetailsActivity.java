@@ -24,17 +24,16 @@ import motocitizen.MyApp;
 import motocitizen.accident.Accident;
 import motocitizen.app.general.popups.AccidentListPopup;
 import motocitizen.content.AccidentStatus;
-import motocitizen.content.Content;
 import motocitizen.fragments.AccidentDetailsFragments;
 import motocitizen.fragments.DetailHistoryFragment;
 import motocitizen.fragments.DetailMessagesFragment;
 import motocitizen.fragments.DetailVolunteersFragment;
 import motocitizen.main.R;
-import motocitizen.network.requests.AccidentChangeStateRequest;
 import motocitizen.network.AsyncTaskCompleteListener;
-import motocitizen.utils.Preferences;
+import motocitizen.network.requests.AccidentChangeStateRequest;
 import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
+import motocitizen.utils.Preferences;
 
 import static motocitizen.content.AccidentStatus.ACTIVE;
 import static motocitizen.content.AccidentStatus.ENDED;
@@ -87,7 +86,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
 
         Bundle b = getIntent().getExtras();
         accidentID = b.getInt("accidentID");
-        currentPoint = Content.get(accidentID);
+        currentPoint = MyApp.getContent().get(accidentID);
 
         //NewAccidentReceived.removeNotification(accidentID);
 
@@ -136,7 +135,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
     }
 
     public void update() {
-        currentPoint = Content.getPoint(accidentID);
+        currentPoint = MyApp.getContent().getPoint(accidentID);
 
         ActionBar actionBar = getSupportActionBar();
         //TODO Разобраться с nullPointerException и убрать костыль
@@ -180,7 +179,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
 
     private void menuReconstruction() {
         if (mMenu == null) return;
-        currentPoint = Content.getPoint(accidentID);
+        currentPoint = MyApp.getContent().getPoint(accidentID);
         MenuItem finish = mMenu.findItem(R.id.menu_acc_finish);
         MenuItem hide   = mMenu.findItem(R.id.menu_acc_hide);
         finish.setVisible(MyApp.getRole().isModerator());
@@ -260,7 +259,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
     }
 
     private void sendFinishRequest() {
-        if (Content.getPoint(accidentID).getStatus() == ENDED) {
+        if (MyApp.getContent().getPoint(accidentID).getStatus() == ENDED) {
             //TODO Суперкостыль
             accNewState = ACTIVE;
             new AccidentChangeStateRequest(new AccidentChangeCallback(), accidentID, ACTIVE.toCode());
@@ -272,7 +271,7 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
     }
 
     private void sendHideRequest() {
-        if (Content.getPoint(accidentID).getStatus() == ENDED) {
+        if (MyApp.getContent().getPoint(accidentID).getStatus() == ENDED) {
             //TODO Суперкостыль
             accNewState = ACTIVE;
             new AccidentChangeStateRequest(new AccidentChangeCallback(), accidentID, ACTIVE.toCode());

@@ -1,10 +1,9 @@
 package motocitizen.app.general.popups;
 
-import android.content.Context;
 import android.widget.PopupWindow;
 
+import motocitizen.MyApp;
 import motocitizen.accident.Message;
-import motocitizen.content.Content;
 import motocitizen.utils.MyUtils;
 
 public class MessagesPopup extends PopupWindowGeneral {
@@ -12,7 +11,7 @@ public class MessagesPopup extends PopupWindowGeneral {
 
     public MessagesPopup(int id, int acc_id) {
         super();
-        message = Content.getPoint(acc_id).getMessages().get(id);
+        message = MyApp.getContent().getPoint(acc_id).getMessages().get(id);
     }
 
     public PopupWindow getPopupWindow() {

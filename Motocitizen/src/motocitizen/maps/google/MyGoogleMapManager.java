@@ -24,10 +24,8 @@ import java.util.Map;
 
 import motocitizen.MyApp;
 import motocitizen.accident.Accident;
-import motocitizen.content.Content;
 import motocitizen.content.Medicine;
 import motocitizen.content.Type;
-import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.maps.MyMapManager;
 import motocitizen.utils.MyUtils;
@@ -98,8 +96,8 @@ public class MyGoogleMapManager extends MyMapManager {
         if (map == null) return;
         init();
         accidents.clear();
-        for (int id : Content.getPoints().keySet()) {
-            Accident point = Content.get(id);
+        for (int id : MyApp.getContent().getPoints().keySet()) {
+            Accident point = MyApp.getContent().get(id);
             if (point.isInvisible()) continue;
             String title = point.getType().toString();
             title += point.getMedicine() != Medicine.UNKNOWN ? ", " + point.getMedicine().toString() : "";
@@ -129,7 +127,7 @@ public class MyGoogleMapManager extends MyMapManager {
             public boolean onMarkerClick(Marker marker) {
                 String id = marker.getId();
                 if (selected.equals(id) && accidents.containsKey(id)) {
-                    Content.toDetails(accidents.get(selected));
+                    MyApp.toDetails(accidents.get(selected));
                 } else {
                     marker.showInfoWindow();
                     selected = id;

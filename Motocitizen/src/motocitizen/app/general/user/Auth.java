@@ -18,10 +18,10 @@ import motocitizen.utils.Preferences;
 public class Auth {
     private Role    role;
     private String  name;
-    private int     id;
-    private boolean isAuthorized;
     private String  login;
     private String  password;
+    private int     id;
+    private boolean isAuthorized;
 
     {
         role = Role.RO;

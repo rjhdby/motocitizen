@@ -17,9 +17,7 @@ import android.widget.Toast;
 import org.json.JSONObject;
 
 import motocitizen.MyApp;
-import motocitizen.content.Content;
 import motocitizen.gcm.NewAccidentReceived;
-import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.maps.google.MyGoogleMapManager;
 import motocitizen.network.AsyncTaskCompleteListener;
@@ -79,7 +77,7 @@ public class MainScreenActivity extends ActionBarActivity {
         createAccButton.setVisibility(MyApp.getRole().isStandart() ? View.VISIBLE : View.INVISIBLE);
         MyApp.getLocationManager().wakeup();
         getAccidents();
-        Content.redraw();
+        MyApp.getContent().redraw();
         redirectIfNeeded(getIntent());
     }
 
@@ -105,8 +103,8 @@ public class MainScreenActivity extends ActionBarActivity {
             fromDetails = intent.getBooleanExtra("fromDetails", false);
         } else if (id != null) {
             intent.removeExtra("id");
-            Content.refresh();
-            Content.toDetails(Integer.parseInt(id));
+            MyApp.getContent().refresh();
+            MyApp.toDetails(Integer.parseInt(id));
             NewAccidentReceived.clearAll();
         }
     }
@@ -114,7 +112,7 @@ public class MainScreenActivity extends ActionBarActivity {
     private void getAccidents() {
         if (MyApp.isOnline()) {
             startRefreshAnimation();
-            Content.update(new AccidentsRequestCallback());
+            MyApp.getContent().update(new AccidentsRequestCallback());
         } else {
             Toast.makeText(this, getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
         }
@@ -215,8 +213,8 @@ public class MainScreenActivity extends ActionBarActivity {
 
         public void onTaskComplete(JSONObject result) {
             stopRefreshAnimation();
-            if (!result.has("error")) Content.parseJSON(result);
-            Content.redraw();
+            if (!result.has("error")) MyApp.getContent().parseJSON(result);
+            MyApp.getContent().redraw();
             MyApp.getMap().placeAccidents();
         }
     }

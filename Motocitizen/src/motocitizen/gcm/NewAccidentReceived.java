@@ -16,13 +16,13 @@ import android.os.Bundle;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import motocitizen.Activity.MainScreenActivity;
 import motocitizen.MyApp;
 import motocitizen.accident.Accident;
 import motocitizen.content.Content;
 import motocitizen.content.Medicine;
 import motocitizen.main.R;
 import motocitizen.utils.Preferences;
-import motocitizen.Activity.MainScreenActivity;
 
 
 public class NewAccidentReceived extends IntentService {
@@ -48,7 +48,7 @@ public class NewAccidentReceived extends IntentService {
         }
         Bundle extras = intent.getExtras();
         try {
-            if (!Content.isInitialized()) new Content();
+            if (MyApp.getContent() == null) MyApp.setContent(new Content());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -57,7 +57,7 @@ public class NewAccidentReceived extends IntentService {
             GCMBroadcastReceiver.completeWakefulIntent(intent);
             return;
         }
-        Content.getPoints().put(accident.getId(), accident);
+        MyApp.getContent().getPoints().put(accident.getId(), accident);
 
         if (accident.isInvisible()) {
             GCMBroadcastReceiver.completeWakefulIntent(intent);
@@ -69,9 +69,9 @@ public class NewAccidentReceived extends IntentService {
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         notificationIntent.putExtras(extras);
 
-        PendingIntent contentIntent = PendingIntent.getActivity(this, accident.getId(), notificationIntent, PendingIntent.FLAG_ONE_SHOT);
-        Resources res = this.getResources();
-        Notification.Builder builder = new Notification.Builder(this);
+        PendingIntent        contentIntent = PendingIntent.getActivity(this, accident.getId(), notificationIntent, PendingIntent.FLAG_ONE_SHOT);
+        Resources            res           = this.getResources();
+        Notification.Builder builder       = new Notification.Builder(this);
 
         String title = accident.getType().toString();
         if (accident.getMedicine() != Medicine.UNKNOWN)
