@@ -1,6 +1,8 @@
 package motocitizen.utils;
 
 import android.content.res.TypedArray;
+import android.os.Build;
+import android.util.DisplayMetrics;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -14,11 +16,18 @@ public class Const {
     public final static int              EQUATOR          = 20038;
     public final static String           PHONE            = "78007751734";
 
+    @SuppressWarnings("deprecation")
     public static int getWidth() {
-        return MyApp.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
+        if (Build.VERSION.SDK_INT < 13) {
+            return MyApp.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
+        } else {
+            DisplayMetrics displaymetrics = new DisplayMetrics();
+            MyApp.getCurrentActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+            return displaymetrics.widthPixels;
+        }
     }
 
-    //TODO ??????????? ?????!
+    //TODO изничтожить
     public static int getDefaultBGColor() {
         TypedArray ta    = MyApp.getCurrentActivity().obtainStyledAttributes(new int[]{android.R.attr.colorBackground, android.R.attr.textColorPrimary});
         int        color = ta.getIndex(0);

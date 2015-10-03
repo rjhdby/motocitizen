@@ -44,8 +44,4 @@ public class DetailHistoryFragment extends AccidentDetailsFragments {
             logView.addView(Rows.getHistoryRow(logView, accident.getHistory().get(i)));
         }
     }
-
-    public void notifyDataSetChanged() {
-        update();
-    }
 }

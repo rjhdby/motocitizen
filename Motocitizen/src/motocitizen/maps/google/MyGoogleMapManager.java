@@ -49,14 +49,16 @@ public class MyGoogleMapManager extends MyMapManager {
         final SupportMapFragment               mapFragment     = (SupportMapFragment) fragmentManager.findFragmentById(R.id.google_map);
 
         new AsyncTask<Map<String, Integer>, Integer, Integer>() {
+            @SafeVarargs
             @Override
-            protected Integer doInBackground(Map<String, Integer>... params) {
+            protected final Integer doInBackground(Map<String, Integer>... params) {
                 for (int i = 0; i < 5; i++) {
                     map = mapFragment.getMap();
                     if (map != null) break;
                     try {
                         Thread.sleep(2000);
                     } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
                 }
                 return map == null ? 0 : 1;

@@ -34,11 +34,11 @@ public class ChangeLog {
         currentListMode = ListMode.NONE;
     }
 
-    public static AlertDialog getDialog(boolean full) {
+    public static AlertDialog getDialog() {
         WebView wv = new WebView(MyApp.getCurrentActivity());
 
         wv.setBackgroundColor(Color.BLACK);
-        wv.loadDataWithBaseURL(null, getLog(full), "text/html", "UTF-8", null);
+        wv.loadDataWithBaseURL(null, getLog(true), "text/html", "UTF-8", null);
         Log.d("LOG", wv.toString());
         AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(MyApp.getCurrentActivity(), android.R.style.Theme_Dialog));
         builder.setTitle("Что нового").setView(wv).setCancelable(false).setPositiveButton("ОК", new DialogInterface.OnClickListener() {

@@ -11,6 +11,7 @@ import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
 
 public class OnWayRequest extends HTTPClient {
+    @SuppressWarnings("unchecked")
     public OnWayRequest(AsyncTaskCompleteListener listener, int id) {
         this.listener = listener;
         post = new HashMap<>();

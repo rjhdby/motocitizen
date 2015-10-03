@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 import motocitizen.MyApp;
-import motocitizen.geolocation.MyLocationManager;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
@@ -17,6 +16,7 @@ import motocitizen.utils.Preferences;
 public class AccidentsRequest extends HTTPClient {
     private boolean silent;
 
+    @SuppressWarnings("unchecked")
     public AccidentsRequest(AsyncTaskCompleteListener listener, boolean silent) {
         this.silent = silent;
         this.listener = listener;

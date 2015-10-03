@@ -11,6 +11,7 @@ import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
 
 public class BanRequest extends HTTPClient {
+    @SuppressWarnings("unchecked")
     public BanRequest(AsyncTaskCompleteListener listener, int id) {
         this.listener = listener;
         int user_id = MyApp.getContent().getPoint(id).getOwnerId();

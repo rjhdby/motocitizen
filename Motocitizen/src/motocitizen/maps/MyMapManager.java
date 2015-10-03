@@ -1,13 +1,12 @@
 package motocitizen.maps;
 
-import android.content.Context;
 import android.location.Location;
 
 public abstract class MyMapManager {
 
-    public static final String OSM    = "osm";
-    public static final String GOOGLE = "google";
-    public static final String YANDEX = "yandex";
+    protected static final String OSM    = "osm";
+    protected static final String GOOGLE = "google";
+    protected static final String YANDEX = "yandex";
 
     private String name;
 

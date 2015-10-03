@@ -23,7 +23,6 @@ import java.util.zip.GZIPInputStream;
 import motocitizen.MyApp;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.CustomTrustManager;
-import motocitizen.Activity.MainScreenActivity;
 
 
 abstract public class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONObject> {

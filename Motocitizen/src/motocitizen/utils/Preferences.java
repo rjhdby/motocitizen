@@ -41,14 +41,14 @@ public class Preferences {
     public final static  String distanceShow;
     public final static  String distanceAlarm;
     public final static  String mapProvider;
-    public final static  String currentVersion;
-    public final static  String doNotDisturb;
     public final static  String hoursAgo;
     public final static  String maxNotifications;
     public final static  String useVibration;
-    public final static  String userId;
-    public final static  String userName;
-    public final static  String userRole;
+    private final static String currentVersion;
+    private final static String doNotDisturb;
+    private final static String userId;
+    private final static String userName;
+    private final static String userRole;
     private final static String onWay;
     private final static String soundTitle;
     private final static String soundURI;
@@ -253,41 +253,41 @@ public class Preferences {
     public static boolean isHidden(Type type) {
         switch (type) {
             case BREAK:
-                return !toShowBreak();
+                return hideBreaks();
             case MOTO_AUTO:
             case MOTO_MOTO:
             case MOTO_MAN:
             case SOLO:
-                return !toShowAcc();
+                return hideAccidents();
             case STEAL:
-                return !toShowSteal();
+                return hideSteals();
             case OTHER:
             default:
-                return !toShowOther();
+                return hideOthers();
         }
     }
 
-    public static boolean toShowBreak() {
-        return preferences.getBoolean(showBreak, DEFAULT_SHOW_TYPE);
+    public static boolean hideBreaks() {
+        return !preferences.getBoolean(showBreak, DEFAULT_SHOW_TYPE);
     }
 
-    public static boolean toShowAcc() {
-        return preferences.getBoolean(showAcc, DEFAULT_SHOW_TYPE);
+    public static boolean hideAccidents() {
+        return !preferences.getBoolean(showAcc, DEFAULT_SHOW_TYPE);
     }
 
-    public static boolean toShowSteal() {
-        return preferences.getBoolean(showSteal, DEFAULT_SHOW_TYPE);
+    public static boolean hideSteals() {
+        return !preferences.getBoolean(showSteal, DEFAULT_SHOW_TYPE);
     }
 
-    public static boolean toShowOther() {
-        return preferences.getBoolean(showOther, DEFAULT_SHOW_TYPE);
+    public static boolean hideOthers() {
+        return !preferences.getBoolean(showOther, DEFAULT_SHOW_TYPE);
     }
 
     public static int getMaxNotifications() {
         return Integer.parseInt(preferences.getString(maxNotifications, String.valueOf(DEFAULT_MAX_NOTIFICATIONS)));
     }
 
-    //TODO ?????????? ?? ???????? ? ??
+    //TODO Переделать на хранение в локальной БД
     public static JSONArray getNotificationList() {
         JSONArray json;
         try {

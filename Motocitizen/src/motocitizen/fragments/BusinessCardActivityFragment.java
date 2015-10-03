@@ -7,12 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import motocitizen.MyApp;
 import motocitizen.main.R;
 
 public class BusinessCardActivityFragment extends Fragment {
-
-    ImageView imageViewQrForum;
 
     public BusinessCardActivityFragment() {
     }
@@ -20,7 +17,7 @@ public class BusinessCardActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View viewMain = inflater.inflate(R.layout.fragment_business_card, container, false);
-        imageViewQrForum = (ImageView) viewMain.findViewById(R.id.imageViewQrForum);
+        ImageView imageViewQrForum = (ImageView) viewMain.findViewById(R.id.imageViewQrForum);
         imageViewQrForum.setImageResource(R.drawable.qr_forum);
         return viewMain;
     }

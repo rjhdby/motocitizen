@@ -37,10 +37,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_weight="0.5"
             android:adjustViewBounds="false"
-            android:contentDescription="onway"
+            android:layout_weight="1"
+            android:contentDescription="@string/onway_button"
             android:src="@drawable/onway"
+            android:visibility="visible"
             android:text="@string/onway_button"/>
 
         <ImageButton
@@ -49,9 +50,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_weight="0.5"
             android:adjustViewBounds="false"
-            android:contentDescription="onway"
+            android:contentDescription="@string/onway_cancel_button"
+            android:visibility="gone"
+            android:layout_weight="1"
             android:src="@drawable/onway_cancel"
             android:text="@string/onway_cancel_button"/>
 
@@ -61,9 +63,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_weight="0.5"
+            android:visibility="gone"
             android:adjustViewBounds="false"
-            android:contentDescription="onway"
+            android:layout_weight="1"
+            android:contentDescription="@string/onway_cancel_button"
             android:src="@drawable/onway_disabled"
             android:text="@string/onway_cancel_button"/>
 
@@ -72,7 +75,7 @@
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
+            android:layout_weight="1"
             android:text="@string/to_map"/>
     </LinearLayout>
 </LinearLayout>

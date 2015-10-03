@@ -20,7 +20,7 @@ public class Sort {
         return sorted;
     }
 
-    public static class ReverseOrder implements Comparator<Integer> {
+    private static class ReverseOrder implements Comparator<Integer> {
 
         @Override
         public int compare(Integer o1, Integer o2) {

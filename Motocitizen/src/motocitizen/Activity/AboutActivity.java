@@ -9,7 +9,6 @@ import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.View;
 import android.webkit.WebView;
-import android.widget.Button;
 import android.widget.TextView;
 
 import motocitizen.MyApp;
@@ -20,8 +19,6 @@ import motocitizen.utils.Preferences;
 public class AboutActivity extends ActionBarActivity implements View.OnClickListener {
 
 //Посмотреть http://android-developers.blogspot.in/2013/08/actionbarcompat-and-io-2013-app-source.html
-
-    Button bussinesCardButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +35,7 @@ public class AboutActivity extends ActionBarActivity implements View.OnClickList
         wv.setBackgroundColor(Color.rgb(48, 48, 48));
         wv.loadDataWithBaseURL(null, ChangeLog.getLog(true), "text/html", "UTF-8", null);
 
-        bussinesCardButton = (Button) findViewById(R.id.bussinesCardButton);
-        bussinesCardButton.setOnClickListener(this);
+        findViewById(R.id.businessCardButton).setOnClickListener(this);
 
         TextView url_support = (TextView) findViewById(R.id.about_url_support);
         url_support.setMovementMethod(LinkMovementMethod.getInstance());
@@ -55,7 +51,7 @@ public class AboutActivity extends ActionBarActivity implements View.OnClickList
     public void onClick(View view) {
         int id = view.getId();
         switch (id) {
-            case R.id.bussinesCardButton:
+            case R.id.businessCardButton:
                 this.startActivity(new Intent(this, BusinessCardActivity.class));
                 break;
         }

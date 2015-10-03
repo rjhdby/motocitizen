@@ -12,6 +12,7 @@ import motocitizen.network.Methods;
 
 public class AccidentChangeStateRequest extends HTTPClient {
 
+    @SuppressWarnings("unchecked")
     public AccidentChangeStateRequest(AsyncTaskCompleteListener listener, int id, String state) {
         this.listener = listener;
         post = new HashMap<>();

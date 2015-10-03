@@ -51,7 +51,4 @@ public enum Role {
         return code;
     }
 
-    public String getText() {
-        return text;
-    }
 }

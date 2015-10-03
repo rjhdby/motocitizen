@@ -39,7 +39,7 @@ import static motocitizen.content.AccidentStatus.ACTIVE;
 import static motocitizen.content.AccidentStatus.ENDED;
 import static motocitizen.content.AccidentStatus.HIDDEN;
 
-public class AccidentDetailsActivity extends ActionBarActivity implements AccidentDetailsFragments.OnFragmentInteractionListener {
+public class AccidentDetailsActivity extends ActionBarActivity {
 
     /* constants */
     private static final int SMS_MENU_MIN_ID = 100;
@@ -322,17 +322,6 @@ public class AccidentDetailsActivity extends ActionBarActivity implements Accide
         this.startActivity(intent);
         finish();
     }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
-
-//    MyPreferences getPref() {
-//        if (prefs == null)
-//            prefs = new MyPreferences(this);
-//        return prefs;
-//    }
 
     public Accident getCurrentPoint() {
         return currentPoint;

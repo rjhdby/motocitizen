@@ -40,6 +40,7 @@ public class NewAccidentReceived extends IntentService {
         notificationManager.cancelAll();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onHandleIntent(Intent intent) {
         if (Preferences.getDoNotDisturb()) {

@@ -11,6 +11,7 @@ import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
 
 public class SendMessageRequest extends HTTPClient {
+    @SuppressWarnings("unchecked")
     public SendMessageRequest(AsyncTaskCompleteListener listener, int id, String text) {
         this.listener = listener;
         post = new HashMap<>();

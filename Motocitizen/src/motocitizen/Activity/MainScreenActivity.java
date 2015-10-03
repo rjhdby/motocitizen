@@ -29,7 +29,7 @@ public class MainScreenActivity extends ActionBarActivity {
 
     private static ActionBar   actionBar;
     private static ProgressBar progressBar;
-    public static  Menu        mMenu;
+    private static Menu        mMenu;
     public static  boolean     inTransaction;
 
     private   ImageButton createAccButton;
@@ -64,7 +64,7 @@ public class MainScreenActivity extends ActionBarActivity {
         findViewById(R.id.dial_button).setOnClickListener(new DialOnClickListener());
 
         if (ChangeLog.isNewVersion()) {
-            AlertDialog changeLogDlg = ChangeLog.getDialog(true);
+            AlertDialog changeLogDlg = ChangeLog.getDialog();
             changeLogDlg.show();
         }
     }
@@ -161,7 +161,7 @@ public class MainScreenActivity extends ActionBarActivity {
         return false;
     }
 
-    public static void setRefreshAnimation(boolean status) {
+    private static void setRefreshAnimation(boolean status) {
         progressBar.setVisibility(status ? View.VISIBLE : View.INVISIBLE);
         inTransaction = status;
         if (mMenu == null) return;

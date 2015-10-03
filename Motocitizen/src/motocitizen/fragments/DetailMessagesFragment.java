@@ -103,14 +103,14 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
 
         Integer[] keys = Sort.getSortedMessagesKeys(accident.getMessages());
         if (keys.length > 0) {
-            updateUnreadedMessages(accident.getId(), Math.max(keys[0], keys[keys.length - 1]));
+            updateUnreadMessages(accident.getId(), Math.max(keys[0], keys[keys.length - 1]));
         }
         for (int i = 0; i < keys.length; i++) {
             if (i < keys.length - 1) {
                 nextOwner = accident.getMessages().get(keys[i + 1]).getOwnerId();
             } else nextOwner = 0;
             final Message message = accident.getMessages().get(keys[i]);
-            message.setUnread(false);
+            message.setRead();
             View row = Rows.getMessageRow(messageView, message, lastOwner, nextOwner);
             lastOwner = accident.getMessages().get(keys[i]).getOwnerId();
             row.setOnLongClickListener(new View.OnLongClickListener() {
@@ -130,7 +130,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         setupAccess();
     }
 
-    private void updateUnreadedMessages(int accidentId, int messageId) {
+    private void updateUnreadMessages(int accidentId, int messageId) {
         StoreMessages.setLast(accidentId, messageId);
     }
 
@@ -140,11 +140,6 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         } else {
             newMessageArea.setVisibility(View.INVISIBLE);
         }
-    }
-
-    public void notifyDataSetChanged() {
-        update();
-        mcNewMessageText.setText("");
     }
 
     private void message(String text) {

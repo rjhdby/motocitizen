@@ -10,6 +10,7 @@ import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
 
 public class LeaveRequest extends HTTPClient {
+    @SuppressWarnings("unchecked")
     public LeaveRequest(int id) {
         post = new HashMap<>();
         post.put("login", MyApp.getAuth().getLogin());

@@ -80,7 +80,6 @@
         <activity
             android:name="motocitizen.Activity.AboutActivity"
             android:label="@string/title_activity_about"
-            android:parentActivityName="motocitizen.Activity.MainScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat" >
             <meta-data
@@ -95,8 +94,7 @@
         <activity
             android:name="motocitizen.Activity.CreateAccActivity"
             android:label="@string/title_activity_create_acc"
-            android:screenOrientation="portrait"
-            android:parentActivityName="motocitizen.Activity.MainScreenActivity" >
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="motocitizen.Activity.MainScreenActivity" />
@@ -104,7 +102,6 @@
         <activity
             android:name="motocitizen.Activity.AccidentDetailsActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName="motocitizen.Activity.MainScreenActivity"
             android:theme="@style/Theme.AppCompat" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -113,8 +110,7 @@
         <activity
             android:name="motocitizen.Activity.SettingsActivity"
             android:theme="@style/Theme.AppCompat"
-            android:screenOrientation="portrait"
-            android:parentActivityName="motocitizen.Activity.MainScreenActivity" >
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="motocitizen.Activity.MainScreenActivity" />
@@ -122,7 +118,6 @@
         <activity
             android:name="motocitizen.Activity.BusinessCardActivity"
             android:label="@string/title_activity_business_card"
-            android:parentActivityName="motocitizen.Activity.AboutActivity"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

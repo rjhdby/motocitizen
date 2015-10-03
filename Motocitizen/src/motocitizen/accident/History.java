@@ -62,10 +62,6 @@ public class History {
         return action;
     }
 
-    public String getActionText() {
-        return actionText;
-    }
-
     public Date getTime() {
         return time;
     }

@@ -1,37 +1,37 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="motocitizen.fragments.BusinessCardActivityFragment">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:paddingBottom="@dimen/activity_vertical_margin"
+              android:paddingLeft="@dimen/activity_horizontal_margin"
+              android:paddingRight="@dimen/activity_horizontal_margin"
+              android:paddingTop="@dimen/activity_vertical_margin"
+              tools:context="motocitizen.fragments.BusinessCardActivityFragment">
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="ДТП, поломка? Звоните"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:text="@string/business_card_header"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="8-800-775-17-34"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:text="@string/business_card_phone"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="и помошь придет."
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:text="@string/business_card_sub_header"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     <TextView
         android:id="@+id/textView5"
@@ -39,14 +39,15 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:paddingTop="10dp"
-        android:text="Форум" />
+        android:text="@string/business_card_forum"/>
 
     <ImageView
         android:id="@+id/imageViewQrForum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/qr_forum" />
+        android:src="@drawable/qr_forum"
+        android:contentDescription="@string/business_card_forum"/>
 
     <TextView
         android:id="@+id/textView6"
@@ -54,12 +55,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:paddingTop="10dp"
-        android:text="Приложение Android" />
+        android:text="@string/business_card_application"/>
 
     <ImageView
         android:id="@+id/imageViewQrAndroid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/qr_android" />
+        android:src="@drawable/qr_android"
+        android:contentDescription="@string/business_card_application"/>
 </LinearLayout>

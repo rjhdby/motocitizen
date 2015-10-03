@@ -95,15 +95,11 @@ public class Auth {
         Toast.makeText(MyApp.getAppContext(), text, Toast.LENGTH_LONG).show();
     }
 
-    public String getName() {
-        return name;
-    }
-
     public Role getRole() {
         return role;
     }
 
-    public int getid() {
+    public int getId() {
         return id;
     }
 
@@ -113,10 +109,6 @@ public class Auth {
 
     public String makePassHash() {
         return makePassHash(Preferences.getPassword());
-    }
-
-    public boolean isAnonim() {
-        return Preferences.isAnonim();
     }
 
     public boolean isAuthorized() {

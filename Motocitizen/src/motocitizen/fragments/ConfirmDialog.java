@@ -12,7 +12,7 @@ public class ConfirmDialog extends DialogFragment {
     public static ConfirmDialog newInstance(String title, String positiveButton, String negativeButton) {
 
         ConfirmDialog dialogFragment = new ConfirmDialog();
-        Bundle bundle = new Bundle();
+        Bundle        bundle         = new Bundle();
         bundle.putString("title", title);
         bundle.putString("positive", positiveButton);
         bundle.putString("negative", negativeButton);
@@ -22,25 +22,23 @@ public class ConfirmDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder res  = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder res = new AlertDialog.Builder(getActivity());
         res.setTitle(getArguments().getString("title"));
         res.setIcon(android.R.drawable.ic_dialog_alert);
         String positive = getArguments().getString("positive");
-        if(positive.length() > 0)
-            res.setPositiveButton(positive,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent());
-                            }
-                        }
-                );
+        if ((positive != null ? positive.length() : 0) > 0)
+            res.setPositiveButton(positive, new DialogInterface.OnClickListener() {
+                                      public void onClick(DialogInterface dialog, int whichButton) {
+                                          getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent());
+                                      }
+                                  });
         String negative = getArguments().getString("negative");
-        if(negative.length() > 0)
+        if ((negative != null ? negative.length() : 0) > 0)
             res.setNegativeButton(negative, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, getActivity().getIntent());
-                    }
-                });
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, getActivity().getIntent());
+                }
+            });
         return res.create();
     }
 }

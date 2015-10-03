@@ -36,7 +36,7 @@ public class MyLocationManager {
     private static final int ARRIVED_MAX_ACCURACY = 300;
     /* end constants */
 
-    public        String                              address;
+    private       String                              address;
     private       Location                            current;
     private       GoogleApiClient                     googleApiClient;
     private       LocationRequest                     locationRequest;
@@ -175,7 +175,7 @@ public class MyLocationManager {
         StringBuilder res = new StringBuilder();
         try {
             List<Address> list;
-            list = MyApp.getGeocoder().getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            list = MyApp.getGeoCoder().getFromLocation(location.getLatitude(), location.getLongitude(), 1);
             if (list == null || list.size() == 0)
                 return location.getLatitude() + " " + location.getLongitude();
             Address address = list.get(0);

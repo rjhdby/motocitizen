@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:text="@string/business_card"
         android:paddingTop="10dp"
-        android:id="@+id/bussinesCardButton" />
+        android:id="@+id/businessCardButton" />
 
     <WebView
             android:id="@+id/change_log"

@@ -90,7 +90,7 @@ public class MyApp extends Application {
         return map;
     }
 
-    public static Geocoder getGeocoder() {
+    public static Geocoder getGeoCoder() {
         return geocoder;
     }
 

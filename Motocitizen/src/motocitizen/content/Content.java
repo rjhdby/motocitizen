@@ -117,7 +117,7 @@ public class Content {
     }
 
     public void setLeave(int currentInplace) {
-        //TODO Setleave
+        //TODO SetLeave
     }
 
     public Map<Integer, Accident> getPoints() {

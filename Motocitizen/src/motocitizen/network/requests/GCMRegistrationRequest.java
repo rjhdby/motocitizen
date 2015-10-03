@@ -13,10 +13,11 @@ import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
 
 public class GCMRegistrationRequest extends HTTPClient {
+    @SuppressWarnings("unchecked")
     public GCMRegistrationRequest(String regId) {
         post = new HashMap<>();
         String imei = ((TelephonyManager) MyApp.getAppContext().getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
-        post.put("owner_id", String.valueOf(MyApp.getAuth().getid()));
+        post.put("owner_id", String.valueOf(MyApp.getAuth().getId()));
         post.put("gcm_key", regId);
         post.put("login", MyApp.getAuth().getLogin());
         post.put("imei", imei);

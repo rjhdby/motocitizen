@@ -11,6 +11,7 @@ import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
 
 public class CancelOnWayRequest extends HTTPClient {
+    @SuppressWarnings("unchecked")
     public CancelOnWayRequest(AsyncTaskCompleteListener listener, int id) {
         this.listener = listener;
         post = new HashMap<>();

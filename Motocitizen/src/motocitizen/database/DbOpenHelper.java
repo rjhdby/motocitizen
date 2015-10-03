@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import motocitizen.MyApp;
 
-public class DbOpenHelper extends SQLiteOpenHelper {
+class DbOpenHelper extends SQLiteOpenHelper {
 
     /* constants */
     private static final int    VERSION  = 3;

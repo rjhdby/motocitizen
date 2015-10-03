@@ -20,7 +20,6 @@
                     android:id="@+id/acc_details_general_type"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_span="2"
                     android:background="#f0f0f0"
                     android:textColor="#ff000000"/>
             <RelativeLayout
@@ -71,7 +70,6 @@
                     android:id="@+id/acc_details_general_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_span="2"
                     android:background="#e0e0e0"
                     android:textColor="#ff000000"/>
     </LinearLayout>

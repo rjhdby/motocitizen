@@ -85,10 +85,10 @@ public class Accident {
 
     private void parseMessages(JSONArray json) throws JSONException {
         if (messages == null) messages = new HashMap<>();
-        int lastReaded = StoreMessages.getLast(getId());
+        int lastRead = StoreMessages.getLast(getId());
         for (int i = 0; i < json.length(); i++) {
             Message message = new Message(json.getJSONObject(i));
-            if (message.getId() <= lastReaded) message.setUnread(false);
+            if (message.getId() <= lastRead) message.setRead();
             if (messages.containsKey(message.getId())) continue;
             if (message.isNoError()) messages.put(message.getId(), message);
         }
@@ -123,7 +123,7 @@ public class Accident {
             temp.put("owner_id", extras.getString("owner_id"));
             temp.put("owner", extras.getString("owner"));
             temp.put("status", extras.getString("status"));
-            temp.put("uxtime", String.valueOf(System.currentTimeMillis() / 1000L)); //TODO Fuckup
+            temp.put("uxtime", String.valueOf(System.currentTimeMillis() / 1000L)); //TODO FuckUp
             temp.put("address", extras.getString("address"));
             temp.put("descr", extras.getString("descr"));
             temp.put("type", extras.getString("mc_accident_orig_type"));
@@ -139,10 +139,6 @@ public class Accident {
     }
 
     public boolean isOwner() {
-        return isSelf();
-    }
-
-    public boolean isSelf() {
         return self;
     }
 
@@ -183,7 +179,7 @@ public class Accident {
         }
     }
 
-    public Double getDistanceFromUser() {
+    private Double getDistanceFromUser() {
         Location userLocation = MyApp.getLocationManager().getDirtyLocation();
         return (double) getLocation().distanceTo(userLocation);
     }
@@ -251,16 +247,8 @@ public class Accident {
         return lat;
     }
 
-    public void setLat(double lat) {
-        this.lat = lat;
-    }
-
     public double getLon() {
         return lon;
-    }
-
-    public void setLon(double lon) {
-        this.lon = lon;
     }
 
     public boolean isNoError() {
@@ -269,10 +257,6 @@ public class Accident {
 
     public boolean isError() {
         return !noError;
-    }
-
-    public Integer getRowId() {
-        return rowId;
     }
 
     public void setRowId(Integer rowId) {

@@ -57,10 +57,6 @@ public class Message {
         return owner;
     }
 
-    public MessageStatus getStatus() {
-        return status;
-    }
-
     public String getText() {
         return text;
     }
@@ -73,8 +69,8 @@ public class Message {
         return unread;
     }
 
-    public void setUnread(boolean unread) {
-        this.unread = unread;
+    public void setRead() {
+        this.unread = false;
     }
 
     public boolean isSelf() {

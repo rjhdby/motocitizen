@@ -22,11 +22,12 @@ public class CreateAccidentRequest extends HTTPClient {
         post = new HashMap<>();
         post.put("status", "acc_status_act");
         post.put("calledMethod", Methods.CREATE.toCode());
-        post.put("owner_id", String.valueOf(MyApp.getAuth().getid()));
+        post.put("owner_id", String.valueOf(MyApp.getAuth().getId()));
         post.put("login", MyApp.getAuth().getLogin());
         post.put("passhash", MyApp.getAuth().makePassHash());
     }
 
+    @SuppressWarnings("unchecked")
     public void execute() {
         super.execute(post);
     }
@@ -58,10 +59,6 @@ public class CreateAccidentRequest extends HTTPClient {
 
     public void setMed(Medicine medicine) {
         post.put("med", medicine.toCode());
-    }
-
-    public void setStatus(String status) {
-        post.put("status", status);
     }
 
     @Override

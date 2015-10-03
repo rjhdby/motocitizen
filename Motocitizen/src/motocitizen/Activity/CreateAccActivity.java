@@ -44,11 +44,11 @@ import motocitizen.utils.Preferences;
 public class CreateAccActivity extends FragmentActivity implements View.OnClickListener {
     /* constants */
     private static final int RADIUS      = 1000;
-    private final        int TYPE        = R.id.create_type_frame;
-    private final        int DESCRIPTION = R.id.create_final_frame;
-    private final        int ACCIDENT    = R.id.create_acc_frame;
-    private final        int MEDICINE    = R.id.create_people_frame;
-    private final        int MAP         = R.id.create_map;
+    private static final int TYPE        = R.id.create_type_frame;
+    private static final int DESCRIPTION = R.id.create_final_frame;
+    private static final int ACCIDENT    = R.id.create_acc_frame;
+    private static final int MEDICINE    = R.id.create_people_frame;
+    private static final int MAP         = R.id.create_map;
     /* end of constants */
 
     private int       currentScreen;
@@ -57,7 +57,6 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     private Accident  accident;
     private GoogleMap map;
     private Button    confirmButton;
-    private EditText  createFinalText;
     private Location  initialLocation;
 
     {
@@ -74,20 +73,8 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         accident = createDefaultAccident();
         map = makeMap();
         confirmButton = (Button) findViewById(R.id.CREATE);
-        createFinalText = (EditText) findViewById(R.id.create_final_text);
-        createFinalText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                accident.setDescription(s.toString());
-                setComplete();
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
+        EditText createFinalText = (EditText) findViewById(R.id.create_final_text);
+        createFinalText.addTextChangedListener(new FinalTextWatcher());
 
         setUpScreen(MAP);
         refreshDescription();
@@ -162,7 +149,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         return map;
     }
 
-    public void setComplete() {
+    private void setComplete() {
         this.complete = accident.isAccident() || accident.getDescription().length() > 6;
         setConfirm(isComplete());
     }
@@ -192,7 +179,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         if (!confirmLock) confirmButton.setEnabled(status);
     }
 
-    public boolean isComplete() {
+    private boolean isComplete() {
         return complete;
     }
 
@@ -325,7 +312,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         confirmLock = true;
     }
 
-    public void setInComplete() {
+    private void setInComplete() {
         this.complete = false;
         setConfirm(false);
     }
@@ -370,5 +357,19 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     protected void onResume() {
         super.onResume();
         MyApp.setCurrentActivity(this);
+    }
+
+    private class FinalTextWatcher implements TextWatcher {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            accident.setDescription(s.toString());
+            setComplete();
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {}
     }
 }

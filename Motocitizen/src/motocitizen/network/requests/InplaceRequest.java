@@ -10,6 +10,7 @@ import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
 
 public class InplaceRequest extends HTTPClient {
+    @SuppressWarnings("unchecked")
     public InplaceRequest(int id) {
         post = new HashMap<>();
         post.put("login", MyApp.getAuth().getLogin());
