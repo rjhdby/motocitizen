@@ -23,7 +23,6 @@ import motocitizen.utils.Const;
 import motocitizen.utils.Preferences;
 
 public class SelectSoundFragment extends Fragment {
-    //TODO Разобраться с листенерами и именованием переменных
     private Map<Integer, Sound> notifications;
     private ViewGroup           ringtoneList;
     private int                 currentId;
@@ -36,28 +35,6 @@ public class SelectSoundFragment extends Fragment {
         currentTitle = Preferences.getAlarmSoundTitle();
     }
 
-    private class Sound {
-        private final Uri      uri;
-        private final Ringtone ringtone;
-
-        public Sound(Uri uri, Ringtone ringtone) {
-            this.uri = uri;
-            this.ringtone = ringtone;
-        }
-
-        public Uri getUri() {
-            return uri;
-        }
-
-        public String getTitle() {
-            return ringtone.getTitle(getActivity());
-        }
-
-        public void play() {
-            ringtone.play();
-        }
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,28 +44,16 @@ public class SelectSoundFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ringtoneList = (ViewGroup) getActivity().findViewById(R.id.sound_select_table);
         getActivity().findViewById(R.id.select_sound_fragment).setVisibility(View.VISIBLE);
         if (notifications == null) getSystemSounds();
 
+        ringtoneList = (ViewGroup) getActivity().findViewById(R.id.sound_select_table);
         Button selectSoundConfirmButton = (Button) getActivity().findViewById(R.id.select_sound_save_button);
-        selectSoundConfirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (currentTitle.equals("default system")) {
-                    Preferences.setDefaultSoundAlarm();
-                } else Preferences.setSoundAlarm(currentTitle, currentUri);
-                finish();
-            }
-        });
+        Button selectSoundCancelButton  = (Button) getActivity().findViewById(R.id.select_sound_cancel_button);
 
-        Button selectSoundCancelButton = (Button) getActivity().findViewById(R.id.select_sound_cancel_button);
-        selectSoundCancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        selectSoundConfirmButton.setOnClickListener(new ConfirmButtonListener());
+        selectSoundCancelButton.setOnClickListener(new CancelButtonListener());
+
         drawList();
     }
 
@@ -112,31 +77,71 @@ public class SelectSoundFragment extends Fragment {
 
     private void inflateRow(ViewGroup viewGroup, int currentPosition) {
         LayoutInflater li = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
         TableRow       tr = (TableRow) li.inflate(R.layout.sound_row, viewGroup, false);
         tr.setTag(currentPosition);
+        tr.setOnClickListener(new SoundRowClickListener());
 
         ((TextView) tr.findViewById(R.id.sound)).setText(notifications.get(currentPosition).getTitle());
-
-        tr.setOnClickListener(new Button.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                int tag = (Integer) v.getTag();
-                if (currentId != 0) {
-                    ringtoneList.findViewWithTag(currentId).setBackgroundColor(Const.getDefaultBGColor());
-                }
-                currentId = tag;
-                v.setBackgroundColor(Color.GRAY);
-                notifications.get(tag).play();
-                currentUri = notifications.get(tag).getUri();
-                currentTitle = notifications.get(tag).getTitle();
-            }
-        });
         viewGroup.addView(tr);
     }
 
     private void finish() {
         getActivity().findViewById(R.id.select_sound_fragment).setVisibility(View.GONE);
         getFragmentManager().beginTransaction().remove(this).replace(android.R.id.content, new SettingsFragment()).commit();
+    }
+
+    private class SoundRowClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            int tag = (Integer) v.getTag();
+            if (currentId != 0) {
+                ringtoneList.findViewWithTag(currentId).setBackgroundColor(Const.getDefaultBGColor());
+            }
+            currentId = tag;
+            v.setBackgroundColor(Color.GRAY);
+            notifications.get(tag).play();
+            currentUri = notifications.get(tag).getUri();
+            currentTitle = notifications.get(tag).getTitle();
+        }
+    }
+
+    private class CancelButtonListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            finish();
+        }
+    }
+
+    private class ConfirmButtonListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            if (currentTitle.equals("default system")) {
+                Preferences.setDefaultSoundAlarm();
+            } else Preferences.setSoundAlarm(currentTitle, currentUri);
+            finish();
+        }
+    }
+
+    private class Sound {
+        private final Uri      uri;
+        private final Ringtone ringtone;
+
+        public Sound(Uri uri, Ringtone ringtone) {
+            this.uri = uri;
+            this.ringtone = ringtone;
+        }
+
+        public Uri getUri() {
+            return uri;
+        }
+
+        public String getTitle() {
+            return ringtone.getTitle(getActivity());
+        }
+
+        public void play() {
+            ringtone.play();
+        }
     }
 }

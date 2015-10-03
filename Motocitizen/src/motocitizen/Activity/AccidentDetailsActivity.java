@@ -113,7 +113,6 @@ public class AccidentDetailsActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
         MyApp.setCurrentActivity(this);
-        //TODO Вероятно теперь ни когда null не будет.
         generalLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {

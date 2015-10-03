@@ -56,35 +56,20 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View viewMain = inflater.inflate(R.layout.fragment_detail_volunteers, container, false);
 
-        onwayButton = (ImageButton) viewMain.findViewById(R.id.onway_button);
-        onwayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialog(DIALOG_ONWAY_CONFIRM);
-            }
-        });
-
-        onwayCancelButton = (ImageButton) viewMain.findViewById(R.id.onway_cancel_button);
-        onwayCancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialog(DIALOG_CANCEL_ONWAY_CONFIRM);
-            }
-        });
-
-        onwayDisabledButton = (ImageButton) viewMain.findViewById(R.id.onway_disabled_button);
-        onwayDisabledButton.setEnabled(false);
-        onwayContent = viewMain.findViewById(R.id.acc_onway_table);
-        //inplaceContent = viewMain.findViewById(R.id.acc_inplace_table);
         View toMap = viewMain.findViewById(R.id.details_to_map_button);
-        //TODO Вынести листенер в отдельный приватный класс
-        toMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((AccidentDetailsActivity) getActivity()).jumpToMap();
-            }
-        });
+        onwayButton = (ImageButton) viewMain.findViewById(R.id.onway_button);
+        onwayCancelButton = (ImageButton) viewMain.findViewById(R.id.onway_cancel_button);
+        onwayDisabledButton = (ImageButton) viewMain.findViewById(R.id.onway_disabled_button);
+        onwayContent = viewMain.findViewById(R.id.acc_onway_table);
+
+        onwayDisabledButton.setEnabled(false);
+
+        onwayButton.setOnClickListener(new OnWayButtonListener());
+        onwayCancelButton.setOnClickListener(new OnWayCancelButtonListener());
+        toMap.setOnClickListener(new ToMapButtonListener());
+
         update();
+
         return viewMain;
     }
 
@@ -208,5 +193,26 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     private void sendCancelOnway() {
         Preferences.setOnWay(0);
         new CancelOnWayRequest(new OnWayCallback(), accidentID);
+    }
+
+    private class ToMapButtonListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            ((AccidentDetailsActivity) getActivity()).jumpToMap();
+        }
+    }
+
+    private class OnWayButtonListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            showDialog(DIALOG_ONWAY_CONFIRM);
+        }
+    }
+
+    private class OnWayCancelButtonListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            showDialog(DIALOG_CANCEL_ONWAY_CONFIRM);
+        }
     }
 }

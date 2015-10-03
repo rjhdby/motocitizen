@@ -17,6 +17,7 @@ import org.json.JSONObject;
 
 import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.MyApp;
+import motocitizen.accident.Accident;
 import motocitizen.accident.Message;
 import motocitizen.app.general.popups.MessagesPopup;
 import motocitizen.database.StoreMessages;
@@ -29,33 +30,13 @@ import motocitizen.utils.Sort;
 public class DetailMessagesFragment extends AccidentDetailsFragments {
 
     private ImageButton newMessageButton;
-    //TODO Вынести листенер в отдельный приватный класс
-    private final TextWatcher mcNewMessageTextListener = new TextWatcher() {
 
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
 
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            String temp = s.toString().replaceAll("\\s", "");
-            if (temp.length() == 0) {
-                newMessageButton.setEnabled(false);
-            } else {
-                newMessageButton.setEnabled(true);
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-        }
-    };
-    private EditText mcNewMessageText;
-    private View     newMessageArea;
-    private View     mcDetMessagesTable;
+    private EditText  mcNewMessageText;
+    private View      newMessageArea;
+    private ViewGroup messagesTable;
 
     public DetailMessagesFragment() {
-        // Required empty public constructor
     }
 
     public static DetailMessagesFragment newInstance(int accID, String userName) {
@@ -67,68 +48,43 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         return fragment;
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View viewMain = inflater.inflate(R.layout.fragment_detail_messages, container, false);
 
         newMessageButton = (ImageButton) viewMain.findViewById(R.id.new_message_send);
-        //TODO Вынести листенер в отдельный приватный класс
-        newMessageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String text = mcNewMessageText.getText().toString();
-                new SendMessageRequest(new SendMessageCallback(), accidentID, text);
-                newMessageButton.setEnabled(false);
-            }
-        });
+        mcNewMessageText = (EditText) viewMain.findViewById(R.id.new_message_text);
+        messagesTable = (ViewGroup) viewMain.findViewById(R.id.details_messages_table);
+        newMessageArea = viewMain.findViewById(R.id.new_message_area);
 
         newMessageButton.setEnabled(false);
 
-        mcNewMessageText = (EditText) viewMain.findViewById(R.id.new_message_text);
-        mcNewMessageText.addTextChangedListener(mcNewMessageTextListener);
-
-        mcDetMessagesTable = viewMain.findViewById(R.id.details_messages_table);
-
-        newMessageArea = viewMain.findViewById(R.id.new_message_area);
-
+        mcNewMessageText.addTextChangedListener(new NewMessageTextWatcher());
+        newMessageButton.setOnClickListener(new SendMessageClickListener());
         update();
 
         return viewMain;
     }
 
     private void update() {
-        ViewGroup messageView = (ViewGroup) mcDetMessagesTable;
-        messageView.removeAllViews();
-        final motocitizen.accident.Accident accident  = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
-        int                                 lastOwner = 1;
-        int                                 nextOwner;
+        messagesTable.removeAllViews();
+        final Accident accident  = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
+        int            lastOwner = 1;
+        int            nextOwner;
 
         Integer[] keys = Sort.getSortedMessagesKeys(accident.getMessages());
         if (keys.length > 0) {
             updateUnreadMessages(accident.getId(), Math.max(keys[0], keys[keys.length - 1]));
         }
         for (int i = 0; i < keys.length; i++) {
-            if (i < keys.length - 1) {
-                nextOwner = accident.getMessages().get(keys[i + 1]).getOwnerId();
-            } else nextOwner = 0;
+            nextOwner = keys.length > i + 1 ? accident.getMessages().get(keys[i + 1]).getOwnerId() : 0;
             final Message message = accident.getMessages().get(keys[i]);
             message.setRead();
-            View row = Rows.getMessageRow(messageView, message, lastOwner, nextOwner);
+            View row = Rows.getMessageRow(messagesTable, message, lastOwner, nextOwner);
             lastOwner = accident.getMessages().get(keys[i]).getOwnerId();
-            //TODO Вынести листенер в отдельный приватный класс
-            row.setOnLongClickListener(new View.OnLongClickListener() {
-
-                @Override
-                public boolean onLongClick(View v) {
-                    PopupWindow popupWindow;
-                    popupWindow = (new MessagesPopup(message.getId(), accident.getId())).getPopupWindow();
-                    int viewLocation[] = new int[2];
-                    v.getLocationOnScreen(viewLocation);
-                    popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
-                    return true;
-                }
-            });
-            messageView.addView(row);
+            row.setOnLongClickListener(new MessageRowLongClickListener(message, accident));
+            messagesTable.addView(row);
         }
         setupAccess();
     }
@@ -138,11 +94,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
     }
 
     private void setupAccess() {
-        if (MyApp.getRole().isStandart()) {
-            newMessageArea.setVisibility(View.VISIBLE);
-        } else {
-            newMessageArea.setVisibility(View.INVISIBLE);
-        }
+        newMessageArea.setVisibility(MyApp.getRole().isStandart() ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void message(String text) {
@@ -160,7 +112,6 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
                     e.printStackTrace();
                 }
             } else {
-                //new AccidentsRequest(getActivity(), new UpdateAccidentsCallback());
                 MyApp.getContent().update(new UpdateAccidentsCallback());
             }
             newMessageButton.setEnabled(true);
@@ -174,6 +125,55 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
             if (!result.has("error")) MyApp.getContent().parseJSON(result);
             ((AccidentDetailsActivity) getActivity()).update();
             update();
+        }
+    }
+
+    private class NewMessageTextWatcher implements TextWatcher {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            String temp = s.toString().replaceAll("\\s", "");
+            if (temp.length() == 0) {
+                newMessageButton.setEnabled(false);
+            } else {
+                newMessageButton.setEnabled(true);
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    }
+
+    private class SendMessageClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            String text = mcNewMessageText.getText().toString();
+            new SendMessageRequest(new SendMessageCallback(), accidentID, text);
+            newMessageButton.setEnabled(false);
+        }
+    }
+
+    private class MessageRowLongClickListener implements View.OnLongClickListener {
+        private final Message  message;
+        private final Accident accident;
+
+        public MessageRowLongClickListener(Message message, Accident accident) {
+            this.message = message;
+            this.accident = accident;
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            PopupWindow popupWindow;
+            popupWindow = (new MessagesPopup(message.getId(), accident.getId())).getPopupWindow();
+            int viewLocation[] = new int[2];
+            v.getLocationOnScreen(viewLocation);
+            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
+            return true;
         }
     }
 }
