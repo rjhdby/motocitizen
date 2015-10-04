@@ -24,7 +24,6 @@ import motocitizen.MyApp;
 import motocitizen.accident.Accident;
 import motocitizen.app.general.popups.AccidentListPopup;
 import motocitizen.content.AccidentStatus;
-import motocitizen.fragments.AccidentDetailsFragments;
 import motocitizen.fragments.DetailHistoryFragment;
 import motocitizen.fragments.DetailMessagesFragment;
 import motocitizen.fragments.DetailVolunteersFragment;
@@ -42,8 +41,8 @@ import static motocitizen.content.AccidentStatus.HIDDEN;
 public class AccidentDetailsActivity extends ActionBarActivity {
 
     /* constants */
-    private static final int SMS_MENU_MIN_ID = 100;
-    private static final int SMS_MENU_MAX_ID = 200;
+    private static final int SMS_MENU_MIN_ID  = 100;
+    private static final int SMS_MENU_MAX_ID  = 200;
     private static final int CALL_MENU_MIN_ID = 400;
     private static final int CALL_MENU_MAX_ID = 500;
     /* end constants */
@@ -153,7 +152,8 @@ public class AccidentDetailsActivity extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_accident_details, menu);
         mMenu = menu;
-
+        //TODO Костыль
+        if (currentPoint == null) return super.onCreateOptionsMenu(menu);
         List<String> contactNumbers = MyUtils.getPhonesFromText(currentPoint.getDescription());
         if (contactNumbers.isEmpty()) return super.onCreateOptionsMenu(menu);
         if (contactNumbers.size() == 1) {
