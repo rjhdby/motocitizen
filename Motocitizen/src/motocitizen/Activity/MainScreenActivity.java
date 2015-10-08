@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,7 +24,7 @@ import motocitizen.utils.ChangeLog;
 import motocitizen.utils.Const;
 import motocitizen.utils.Preferences;
 
-public class MainScreenActivity extends ActionBarActivity {
+public class MainScreenActivity extends MyActivity {
 
     private static ActionBar   actionBar;
     private static ProgressBar progressBar;
@@ -74,7 +73,7 @@ public class MainScreenActivity extends ActionBarActivity {
         super.onResume();
         MyApp.setCurrentActivity(this);
 
-        createAccButton.setVisibility(MyApp.getRole().isStandart() ? View.VISIBLE : View.INVISIBLE);
+        setPermissions();
         MyApp.getLocationManager().wakeup();
         getAccidents();
         MyApp.getContent().redraw();
@@ -190,6 +189,16 @@ public class MainScreenActivity extends ActionBarActivity {
 
         actionBar.setTitle(address);
         if (!subTitle.isEmpty()) actionBar.setSubtitle(subTitle);
+    }
+
+    @Override
+    public void setPermissions() {
+        createAccButton.setVisibility(MyApp.getRole().isStandart() ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    @Override
+    public void redraw() {
+
     }
 
     private class DialOnClickListener implements View.OnClickListener {

@@ -40,7 +40,7 @@ public class Content {
         favorites = Favorites.getFavorites();
     }
 
-    public motocitizen.accident.Accident getPoint(int id) {
+    public Accident getPoint(int id) {
         return points.get(id);
     }
 

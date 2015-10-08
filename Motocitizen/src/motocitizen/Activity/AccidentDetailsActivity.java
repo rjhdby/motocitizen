@@ -24,6 +24,7 @@ import motocitizen.MyApp;
 import motocitizen.accident.Accident;
 import motocitizen.app.general.popups.AccidentListPopup;
 import motocitizen.content.AccidentStatus;
+import motocitizen.content.Medicine;
 import motocitizen.fragments.DetailHistoryFragment;
 import motocitizen.fragments.DetailMessagesFragment;
 import motocitizen.fragments.DetailVolunteersFragment;
@@ -59,12 +60,8 @@ public class AccidentDetailsActivity extends ActionBarActivity {
     private DetailMessagesFragment   detailMessagesFragment;
     private DetailHistoryFragment    detailHistoryFragment;
 
-    private TextView generalType;
-    private TextView generalStatus;
-    private TextView generalTime;
-    private TextView generalOwner;
-    private TextView generalAddress;
-    private TextView generalDescription;
+    private TextView statusView;
+    private TextView medicineView;
     private View     generalLayout;
 
     private Menu mMenu;
@@ -97,12 +94,8 @@ public class AccidentDetailsActivity extends ActionBarActivity {
         mcDetTabsGroup.setOnCheckedChangeListener(accDetTabsListener);
 
         generalLayout = findViewById(R.id.acc_details_general);
-        generalType = (TextView) findViewById(R.id.acc_details_general_type);
-        generalStatus = (TextView) findViewById(R.id.acc_details_general_status);
-        generalTime = (TextView) findViewById(R.id.acc_details_general_time);
-        generalOwner = (TextView) findViewById(R.id.acc_details_general_owner);
-        generalAddress = (TextView) findViewById(R.id.acc_details_general_address);
-        generalDescription = (TextView) findViewById(R.id.acc_details_general_description);
+        statusView = (TextView) findViewById(R.id.acc_details_general_status);
+        medicineView = (TextView) findViewById(R.id.acc_details_medicine);
 
         getFragmentManager().beginTransaction().replace(R.id.details_tab_content, detailVolunteersFragment).commit();
         menuReconstruction();
@@ -112,17 +105,7 @@ public class AccidentDetailsActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
         MyApp.setCurrentActivity(this);
-        generalLayout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                PopupWindow popupWindow;
-                popupWindow = (new AccidentListPopup(currentPoint.getId())).getPopupWindow();
-                int viewLocation[] = new int[2];
-                v.getLocationOnScreen(viewLocation);
-                popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
-                return true;
-            }
-        });
+        generalLayout.setOnLongClickListener(new DetailsLongClickListener());
         update();
     }
 
@@ -134,12 +117,17 @@ public class AccidentDetailsActivity extends ActionBarActivity {
         if (currentPoint == null || actionBar == null) return;
         actionBar.setTitle(currentPoint.getType().toString() + ". " + currentPoint.getDistanceString());
 
-        generalType.setText(currentPoint.getType().toString() + ". " + currentPoint.getMedicine().toString());
-        generalStatus.setText(currentPoint.getStatus().toString());
-        generalTime.setText(Const.TIME_FORMAT.format(currentPoint.getTime()));
-        generalOwner.setText(currentPoint.getOwner());
-        generalAddress.setText("(" + currentPoint.getDistanceString() + ") " + currentPoint.getAddress());
-        generalDescription.setText(currentPoint.getDescription());
+        statusView.setVisibility(currentPoint.getStatus() == ACTIVE ? View.GONE : View.VISIBLE);
+        medicineView.setVisibility(currentPoint.getMedicine() == Medicine.UNKNOWN ? View.GONE : View.VISIBLE);
+
+        ((TextView) findViewById(R.id.acc_details_general_type)).setText(currentPoint.getType().toString());
+        medicineView.setText("(" + currentPoint.getMedicine().toString() + ")");
+        statusView.setText(currentPoint.getStatus().toString());
+        ((TextView) findViewById(R.id.acc_details_general_time)).setText(Const.TIME_FORMAT.format(currentPoint.getTime()));
+        ((TextView) findViewById(R.id.acc_details_general_owner)).setText(currentPoint.getOwner());
+        ((TextView) findViewById(R.id.acc_details_general_address)).setText(currentPoint.getAddress());
+        ((TextView) findViewById(R.id.acc_details_general_distance)).setText(currentPoint.getDistanceString());
+        ((TextView) findViewById(R.id.acc_details_general_description)).setText(currentPoint.getDescription());
 
         menuReconstruction();
 
@@ -324,5 +312,17 @@ public class AccidentDetailsActivity extends ActionBarActivity {
 
     public Accident getCurrentPoint() {
         return currentPoint;
+    }
+
+    private class DetailsLongClickListener implements View.OnLongClickListener {
+        @Override
+        public boolean onLongClick(View v) {
+            PopupWindow popupWindow;
+            popupWindow = (new AccidentListPopup(currentPoint.getId())).getPopupWindow();
+            int viewLocation[] = new int[2];
+            v.getLocationOnScreen(viewLocation);
+            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
+            return true;
+        }
     }
 }

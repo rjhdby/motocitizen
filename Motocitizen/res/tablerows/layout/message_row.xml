@@ -3,22 +3,16 @@
              xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
-             android:layout_marginBottom="2dp"
-             android:layout_marginEnd="16dp"
-             android:layout_marginLeft="4dp"
-             android:layout_marginRight="16dp"
-             android:layout_marginStart="4dp"
-             android:layout_marginTop="2dp"
              android:background="@drawable/message_row"
              android:orientation="vertical"
-    >
+             style="@style/accident_row_outer">
 
     <TextView
         android:id="@+id/owner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text=""
-        android:textColor="#FFFF00"/>
+        android:textColor="@color/light_yellow"/>
 
     <TextView
         android:id="@+id/text"
@@ -35,5 +29,5 @@
         android:layout_gravity="bottom"
         android:gravity="right"
         android:text=""
-        android:textColor="@color/material_blue_grey_950"/>
+        android:textColor="@color/dark_blue"/>
 </FrameLayout>
