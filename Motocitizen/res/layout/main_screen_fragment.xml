@@ -1,8 +1,11 @@
-<LinearLayout android:id="@+id/main_frame_applications"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+<LinearLayout
+    android:id="@+id/main_frame_applications"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".SupportMapFragmentActivity"
+    xmlns:tools="http://schemas.android.com/tools">
     <!--
         <LinearLayout
             android:id="@+id/status_bar"
@@ -68,12 +71,11 @@
         <include
             layout="@layout/acc_list"/>
 
-        <LinearLayout
-            android:id="@+id/map_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-        </LinearLayout>
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:id="@+id/google_map"
+                  android:name="com.google.android.gms.maps.SupportMapFragment"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent" />
     </FrameLayout>
 
     <LinearLayout
@@ -86,7 +88,7 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <ImageButton
@@ -99,7 +101,8 @@
                 android:layout_marginLeft="8dp"
                 android:background="@null"
                 android:contentDescription="@string/dial_button"
-                android:src="@drawable/dial"/>
+                android:src="@drawable/dial"
+                android:layout_weight="1"/>
 
             <ImageButton
                 android:id="@+id/add_point_button"
@@ -111,40 +114,35 @@
                 android:layout_marginBottom="8dp"
                 android:background="@null"
                 android:contentDescription="@string/activity_main_add_point_button"
-                android:src="@drawable/create"/>
+                android:src="@drawable/create"
+                android:layout_weight="1"/>
 
-            <RadioGroup
-                android:id="@+id/main_tabs_group"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="top"
-                android:gravity="top"
+            <ImageButton
+                android:id="@+id/list_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|right"
                 android:layout_marginLeft="8dp"
-                android:layout_marginTop="4dp"
-                android:orientation="horizontal">
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="8dp"
+                android:background="@null"
+                android:contentDescription="@string/activity_main_add_point_button"
+                android:src="@drawable/ic_view_headline_white_48dp"
+                android:layout_weight="1"/>
+            <ImageButton
+                android:id="@+id/map_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="8dp"
+                android:background="@null"
+                android:contentDescription="@string/activity_main_add_point_button"
+                android:src="@drawable/ic_map_white_48dp"
+                android:alpha="0.3"/>
 
-                <RadioButton
-                    android:id="@+id/tab_accidents_button"
-                    style="@style/statusText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/tab"
-                    android:button="@color/white"
-                    android:checked="true"
-                    android:text="@string/tab_accidents">
-                </RadioButton>
-                <RadioButton
-                    android:id="@+id/tab_map_button"
-                    style="@style/statusText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/tab"
-                    android:button="@color/white"
-                    android:checked="false"
-                    android:layout_marginLeft="2dp"
-                    android:text="@string/tab_map">
-                </RadioButton>
-            </RadioGroup>
         </LinearLayout>
 
         <LinearLayout

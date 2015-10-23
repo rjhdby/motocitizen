@@ -8,12 +8,5 @@
     android:paddingRight="0dp"
     android:paddingTop="0dp"
     tools:context="motocitizen.Activity.MainScreenActivity" >
-    <fragment
-        class ="motocitizen.fragments.MainScreenFragment"
-        android:id="@+id/main_screen_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:tag="main_screen">
 
-        </fragment>
 </FrameLayout>

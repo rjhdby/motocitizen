@@ -20,11 +20,8 @@ import java.util.Set;
 import motocitizen.MyApp;
 import motocitizen.accident.Accident;
 import motocitizen.database.Favorites;
-import motocitizen.draw.Rows;
-import motocitizen.main.R;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.AccidentsRequest;
-import motocitizen.utils.Sort;
 
 public class Content {
     private Map<Integer, Accident> points;
@@ -55,7 +52,7 @@ public class Content {
         inPlace = id;
     }
 
-    public void update(AsyncTaskCompleteListener listener) {
+    public void requestUpdate(AsyncTaskCompleteListener listener) {
         new AccidentsRequest(listener, true);
     }
 
@@ -71,29 +68,8 @@ public class Content {
         return fl;
     }
 
-    public void refresh() {
-        update();
-        MyApp.getMap().placeAccidents();
-        redraw();
-    }
-
-    public void update() {
+    public void requestUpdate() {
         new AccidentsRequest(new AccidentsRequestCallback(), true);
-    }
-
-    public void redraw() {
-        ViewGroup view = (ViewGroup) MyApp.getCurrentActivity().findViewById(R.id.accListContent);
-
-        if (view == null) return;
-        view.removeAllViews();
-
-        //TODO YesterdayRow ???
-        //TODO Нет событий
-
-        for (int id : Sort.getSortedAccidentsKeys(points)) {
-            if (points.get(id).isInvisible()) continue;
-            view.addView(Rows.getAccidentRow(view, points.get(id)));
-        }
     }
 
     public void parseJSON(JSONObject json) {
@@ -136,8 +112,29 @@ public class Content {
 
         public void onTaskComplete(JSONObject result) {
             if (!result.has("error")) parseJSON(result);
-            MyApp.getContent().redraw();
-            MyApp.getMap().placeAccidents();
+            //((MyActivity) MyApp.getCurrentActivity()).redraw();
+            //MyApp.getMap().placeAccidents();
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Content content = (Content) o;
+
+        if (inPlace != content.inPlace) return false;
+        if (points != null ? !points.equals(content.points) : content.points != null) return false;
+        return !(favorites != null ? !favorites.equals(content.favorites) : content.favorites != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = points != null ? points.hashCode() : 0;
+        result = 31 * result + inPlace;
+        result = 31 * result + (favorites != null ? favorites.hashCode() : 0);
+        return result;
     }
 }

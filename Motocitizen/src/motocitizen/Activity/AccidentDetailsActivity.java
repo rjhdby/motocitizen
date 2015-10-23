@@ -130,9 +130,6 @@ public class AccidentDetailsActivity extends ActionBarActivity {
         ((TextView) findViewById(R.id.acc_details_general_description)).setText(currentPoint.getDescription());
 
         menuReconstruction();
-
-        MyApp.getMap().zoom(16);
-        MyApp.getMap().jumpToPoint(currentPoint.getLocation());
     }
 
     @Override

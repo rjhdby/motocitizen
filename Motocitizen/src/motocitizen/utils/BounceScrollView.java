@@ -7,16 +7,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.widget.ScrollView;
-import android.widget.Toast;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import motocitizen.Activity.MainScreenActivity;
-import motocitizen.MyApp;
-import motocitizen.main.R;
-import motocitizen.network.AsyncTaskCompleteListener;
-import motocitizen.network.requests.AccidentsRequest;
 
 public class BounceScrollView extends ScrollView {
     private static final int MAX_Y_OVER_SCROLL_DISTANCE = 40;
@@ -24,11 +14,16 @@ public class BounceScrollView extends ScrollView {
     private final Context context;
     private       int     mMaxYOverScrollDistance;
     private boolean isRequestedUpdate = false;
+    private OverScrollListenerInterface listener;
 
     public BounceScrollView(Context context) {
         super(context);
         this.context = context;
         initBounceScrollView();
+    }
+
+    public void setOverScrollListener(OverScrollListenerInterface listener) {
+        this.listener = listener;
     }
 
     private void initBounceScrollView() {
@@ -52,42 +47,15 @@ public class BounceScrollView extends ScrollView {
 
     @Override
     protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX, int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
-        if (MainScreenActivity.inTransaction) return true;
+
         if (scrollY < -mMaxYOverScrollDistance * 0.9 && !isRequestedUpdate) {
             isRequestedUpdate = true;
         }
         if (scrollY > -mMaxYOverScrollDistance * 0.1 && isRequestedUpdate) {
-            if (MyApp.isOnline()) {
-                isRequestedUpdate = false;
-                MainScreenActivity.startRefreshAnimation();
-                MyApp.getContent().update(new AccidentsRequestCallback());
-                new AccidentsRequest(new AccidentsRequestCallback());
-            } else {
-                message(context.getString(R.string.inet_not_available));
-            }
+            isRequestedUpdate = false;
+            if (listener == null) return false;
+            listener.onOverScroll();
         }
         return super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX, mMaxYOverScrollDistance, isTouchEvent);
-    }
-
-    private void message(String text) {
-        Toast.makeText(context, text, Toast.LENGTH_LONG).show();
-    }
-
-    private class AccidentsRequestCallback implements AsyncTaskCompleteListener {
-        @Override
-        public void onTaskComplete(JSONObject result) {
-            if (result.has("error")) {
-                try {
-                    message(result.getString("error"));
-                } catch (JSONException e) {
-                    message("Неизвестная ошибка");
-                    e.printStackTrace();
-                }
-            } else {
-                MyApp.getContent().parseJSON(result);
-                MyApp.getContent().redraw();
-            }
-            MainScreenActivity.stopRefreshAnimation();
-        }
     }
 }

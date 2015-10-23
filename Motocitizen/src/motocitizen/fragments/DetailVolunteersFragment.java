@@ -184,7 +184,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     private class UpdateAccidentsCallback implements AsyncTaskCompleteListener {
         @Override
         public void onTaskComplete(JSONObject result) {
-            MyApp.getContent().update();
+            MyApp.getContent().requestUpdate();
             ((AccidentDetailsActivity) getActivity()).update();
             update();
         }

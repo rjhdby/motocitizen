@@ -1,30 +1,18 @@
 package motocitizen.maps;
 
 import android.location.Location;
+import android.view.ViewGroup;
 
-public abstract class MyMapManager {
+public interface MyMapManager {
 
-    protected static final String OSM    = "osm";
-    protected static final String GOOGLE = "google";
-    protected static final String YANDEX = "yandex";
+    public void placeUser();
 
-    private String name;
+    public void animateToPoint(Location location);
 
-    public abstract void placeUser();
+    public void jumpToPoint(Location location);
 
-    public abstract void jumpToPoint(Location location);
+    public void zoom(int zoom);
 
-    @SuppressWarnings("SameParameterValue")
-    public abstract void zoom(int zoom);
-
-    public abstract void placeAccidents();
-
-    public String getName() {
-        return name;
-    }
-
-    protected void setName(String name) {
-        this.name = name;
-    }
+    public void placeAccidents();
 }
 

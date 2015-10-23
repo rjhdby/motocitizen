@@ -1,14 +1,10 @@
 package motocitizen.maps.google;
 
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,25 +24,36 @@ import motocitizen.content.Medicine;
 import motocitizen.content.Type;
 import motocitizen.main.R;
 import motocitizen.maps.MyMapManager;
+import motocitizen.utils.DelayedAction;
 import motocitizen.utils.MyUtils;
 
-public class MyGoogleMapManager extends MyMapManager {
+public class MyGoogleMapManager implements MyMapManager {
+    private static final int DEFAULT_ZOOM = 16;
+
     private GoogleMap map;
     private Marker    user;
     private String    selected;
     private Map<String, Integer> accidents = new HashMap<>();
 
-    public MyGoogleMapManager() {
-        setName(MyMapManager.GOOGLE);
-        selected = "";
-        LayoutInflater li     = (LayoutInflater) MyApp.getCurrentActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        ViewGroup      parent = (ViewGroup) MyApp.getCurrentActivity().findViewById(R.id.map_container);
-        View           child  = li.inflate(R.layout.google_maps_view, parent, false);
-        if (parent.getChildCount() > 0) parent.removeAllViews();
-        parent.addView(child);
+    private DelayedAction delayedAction;
 
-        android.support.v4.app.FragmentManager fragmentManager = ((FragmentActivity) MyApp.getCurrentActivity()).getSupportFragmentManager();
-        final SupportMapFragment               mapFragment     = (SupportMapFragment) fragmentManager.findFragmentById(R.id.google_map);
+    public MyGoogleMapManager(FragmentActivity activity) {
+        jumpToPoint(MyApp.getLocationManager().getLocation());
+        selected = "";
+        //parent.removeAllViews();
+        //inflate(parent);
+        /*
+        final SupportMapFragment mapFragment = SupportMapFragment.newInstance();
+        FragmentTransaction fragmentTransaction = ((ActionBarActivity) MyApp.getCurrentActivity()).getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(parent, (Fragment) mapFragment);
+        fragmentTransaction.commit();
+        */
+        //android.support.v4.app.FragmentManager fragmentManager = ((FragmentActivity) MyApp.getCurrentActivity()).getSupportFragmentManager();
+        android.support.v4.app.FragmentManager     fragmentManager     = activity.getSupportFragmentManager();
+        final SupportMapFragment                   mapFragment         = new SupportMapFragment();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.google_map, mapFragment, "MAP").commit();
+        //= (SupportMapFragment) fragmentManager.findFragmentById(R.id.google_map);
 
         new AsyncTask<Map<String, Integer>, Integer, Integer>() {
             @SafeVarargs
@@ -68,8 +75,8 @@ public class MyGoogleMapManager extends MyMapManager {
             protected void onPostExecute(Integer integer) {
                 super.onPostExecute(integer);
                 if (integer == 0) return;
+                delayedAction.makeAction();
                 init();
-                jumpToPoint(MyApp.getLocationManager().getLocation());
                 placeUser();
             }
         }.execute(null, null, null);
@@ -89,9 +96,16 @@ public class MyGoogleMapManager extends MyMapManager {
         //}
     }
 
+    public void animateToPoint(Location location) {
+        if (map == null) delayedAction = new DelayedAnimateToLocation(location);
+        else
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(location), DEFAULT_ZOOM));
+    }
+
     public void jumpToPoint(Location location) {
-        if (map == null) return;
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(location), 16));
+        if (map == null) delayedAction = new DelayedJumpToLocation(location);
+        else
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(location), DEFAULT_ZOOM));
     }
 
     public void placeAccidents() {
@@ -150,5 +164,32 @@ public class MyGoogleMapManager extends MyMapManager {
     public void zoom(int zoom) {
         if (map == null) return;
         map.animateCamera(CameraUpdateFactory.zoomTo(zoom));
+    }
+
+
+    private class DelayedAnimateToLocation implements DelayedAction {
+        Location location;
+
+        public DelayedAnimateToLocation(Location location) {
+            this.location = location;
+        }
+
+        @Override
+        public void makeAction() {
+            animateToPoint(location);
+        }
+    }
+
+    private class DelayedJumpToLocation implements DelayedAction {
+        Location location;
+
+        public DelayedJumpToLocation(Location location) {
+            this.location = location;
+        }
+
+        @Override
+        public void makeAction() {
+            jumpToPoint(location);
+        }
     }
 }
