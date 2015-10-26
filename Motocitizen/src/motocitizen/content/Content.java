@@ -11,34 +11,29 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import motocitizen.MyApp;
 import motocitizen.accident.Accident;
 import motocitizen.database.Favorites;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.AccidentsRequest;
+import motocitizen.utils.SortedHashMap;
 
-public class Content {
-    private Map<Integer, Accident> points;
-    private int                    inPlace;
-    public  List<Integer>          favorites;
+public class Content extends SortedHashMap<Accident> {
+    private int           inPlace;
+    public  List<Integer> favorites;
 
     {
-        points = new HashMap<>();
         inPlace = 0;
     }
 
     public Content() {
         favorites = Favorites.getFavorites();
-    }
-
-    public Accident getPoint(int id) {
-        return points.get(id);
     }
 
     public int getInplaceId() {
@@ -80,10 +75,10 @@ public class Content {
             for (int i = 0; i < list.length(); i++) {
                 Accident accident = new Accident(list.getJSONObject(i));
                 if (accident.isError()) continue;
-                if (points.containsKey(accident.getId())) {
-                    points.get(accident.getId()).update(list.getJSONObject(i));
+                if (containsKey(accident.getId())) {
+                    get(accident.getId()).update(list.getJSONObject(i));
                 } else {
-                    points.put(accident.getId(), accident);
+                    put(accident.getId(), accident);
                 }
             }
             Log.d("END PARSE POINTS", String.valueOf((new Date()).getTime()));
@@ -96,18 +91,6 @@ public class Content {
         //TODO SetLeave
     }
 
-    public Map<Integer, Accident> getPoints() {
-        return points;
-    }
-
-    public Accident get(int id) {
-        return points.get(id);
-    }
-
-    public Set<Integer> getIds() {
-        return points.keySet();
-    }
-
     private class AccidentsRequestCallback implements AsyncTaskCompleteListener {
 
         public void onTaskComplete(JSONObject result) {
@@ -115,26 +98,5 @@ public class Content {
             //((MyActivity) MyApp.getCurrentActivity()).redraw();
             //MyApp.getMap().placeAccidents();
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Content content = (Content) o;
-
-        if (inPlace != content.inPlace) return false;
-        if (points != null ? !points.equals(content.points) : content.points != null) return false;
-        return !(favorites != null ? !favorites.equals(content.favorites) : content.favorites != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = points != null ? points.hashCode() : 0;
-        result = 31 * result + inPlace;
-        result = 31 * result + (favorites != null ? favorites.hashCode() : 0);
-        return result;
     }
 }

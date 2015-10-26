@@ -11,8 +11,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import motocitizen.MyApp;
 import motocitizen.content.AccidentStatus;
@@ -20,6 +18,7 @@ import motocitizen.content.Medicine;
 import motocitizen.content.Type;
 import motocitizen.database.StoreMessages;
 import motocitizen.utils.Preferences;
+import motocitizen.utils.SortedHashMap;
 
 import static motocitizen.content.AccidentStatus.ACTIVE;
 import static motocitizen.content.AccidentStatus.ENDED;
@@ -28,24 +27,30 @@ import static motocitizen.content.AccidentStatus.HIDDEN;
 public class Accident {
     private static final String[] prerequisites = {"id", "owner_id", "owner", "status", "uxtime", "address", "descr", "lat", "lon", "type", "med", "m", "h", "v"};
 
-    private int                     id;
-    private int                     ownerId;
-    private double                  lat;
-    private double                  lon;
-    private boolean                 self;
-    private boolean                 noError;
-    private boolean                 favorite;
-    private Integer                 rowId;
-    private String                  owner;
-    private String                  address;
-    private String                  description;
-    private Date                    time;
-    private Map<Integer, Message>   messages;
-    private Map<Integer, Volunteer> volunteers;
-    private Map<Integer, History>   history;
-    private AccidentStatus          status;
-    private Type                    type;
-    private Medicine                medicine;
+    private int                      id;
+    private int                      ownerId;
+    private double                   lat;
+    private double                   lon;
+    private boolean                  self;
+    private boolean                  noError;
+    private boolean                  favorite;
+    private Integer                  rowId;
+    private String                   owner;
+    private String                   address;
+    private String                   description;
+    private Date                     time;
+    private SortedHashMap<Message>   messages;
+    private SortedHashMap<Volunteer> volunteers;
+    private SortedHashMap<History>   history;
+    private AccidentStatus           status;
+    private Type                     type;
+    private Medicine                 medicine;
+
+    {
+        messages = new SortedHashMap<>();
+        volunteers = new SortedHashMap<>();
+        history = new SortedHashMap<>();
+    }
 
     public Accident(JSONObject json) {
         update(json);
@@ -84,7 +89,6 @@ public class Accident {
     }
 
     private void parseMessages(JSONArray json) throws JSONException {
-        if (messages == null) messages = new HashMap<>();
         int lastRead = StoreMessages.getLast(getId());
         for (int i = 0; i < json.length(); i++) {
             Message message = new Message(json.getJSONObject(i));
@@ -95,7 +99,6 @@ public class Accident {
     }
 
     private void parseVolunteers(JSONArray json) throws JSONException {
-        if (volunteers == null) volunteers = new HashMap<>();
         for (int i = 0; i < json.length(); i++) {
             Volunteer volunteer = new Volunteer(json.getJSONObject(i));
             if (volunteer.isNoError()) volunteers.put(volunteer.getId(), volunteer);
@@ -103,7 +106,6 @@ public class Accident {
     }
 
     private void parseHistory(JSONArray json) throws JSONException {
-        if (history == null) history = new HashMap<>();
         for (int i = 0; i < json.length(); i++) {
             History action = new History(json.getJSONObject(i));
             if (action.isNoError()) history.put(action.getId(), action);
@@ -168,14 +170,10 @@ public class Accident {
 
     public String getDistanceString() {
         Double distance = getDistanceFromUser();
-        if (distance == null) {
-            return "? км";
+        if (distance > 1000) {
+            return String.valueOf(Math.round(distance / 10) / 100) + "км";
         } else {
-            if (distance > 1000) {
-                return String.valueOf(Math.round(distance / 10) / 100) + "км";
-            } else {
-                return String.valueOf(Math.round(distance)) + "м";
-            }
+            return String.valueOf(Math.round(distance)) + "м";
         }
     }
 
@@ -208,10 +206,10 @@ public class Accident {
     }
 
     public Volunteer getVolunteer(int id) {
-        return getVolunteers().get(id);
+        return volunteers.get(id);
     }
 
-    public Map<Integer, Volunteer> getVolunteers() {
+    public SortedHashMap<Volunteer> getVolunteers() {
         return volunteers;
     }
 
@@ -263,11 +261,11 @@ public class Accident {
         this.rowId = rowId;
     }
 
-    public Map<Integer, Message> getMessages() {
+    public SortedHashMap<Message> getMessages() {
         return messages;
     }
 
-    public Map<Integer, History> getHistory() {
+    public SortedHashMap<History> getHistory() {
         return history;
     }
 

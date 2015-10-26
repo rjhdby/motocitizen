@@ -112,7 +112,7 @@ public class MyGoogleMapManager implements MyMapManager {
         if (map == null) return;
         init();
         accidents.clear();
-        for (int id : MyApp.getContent().getPoints().keySet()) {
+        for (int id : MyApp.getContent().keySet()) {
             Accident point = MyApp.getContent().get(id);
             if (point.isInvisible()) continue;
             String title = point.getType().toString();

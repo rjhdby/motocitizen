@@ -15,14 +15,12 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
-import java.util.Map;
-
 import motocitizen.Activity.AboutActivity;
 import motocitizen.Activity.CreateAccActivity;
 import motocitizen.Activity.MyFragment;
 import motocitizen.Activity.SettingsActivity;
 import motocitizen.MyApp;
-import motocitizen.accident.Accident;
+import motocitizen.content.Content;
 import motocitizen.draw.Rows;
 import motocitizen.gcm.NewAccidentReceived;
 import motocitizen.main.R;
@@ -33,7 +31,6 @@ import motocitizen.utils.BounceScrollView;
 import motocitizen.utils.Const;
 import motocitizen.utils.OverScrollListenerInterface;
 import motocitizen.utils.Preferences;
-import motocitizen.utils.Sort;
 
 public class MainScreenFragment extends MyFragment {
     private        ViewGroup    mapContainer;
@@ -120,8 +117,8 @@ public class MainScreenFragment extends MyFragment {
         //TODO YesterdayRow ???
         //TODO Нет событий
 
-        Map<Integer, Accident> points = MyApp.getContent().getPoints();
-        for (int id : Sort.getSortedAccidentsKeys(points)) {
+        Content points = MyApp.getContent();
+        for (int id : points.reverseSortedKeySet()) {
             if (points.get(id).isInvisible()) continue;
             view.addView(Rows.getAccidentRow(view, points.get(id)));
         }

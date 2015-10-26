@@ -153,7 +153,7 @@ public class Rows {
         LayoutInflater li        = (LayoutInflater) MyApp.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         TableRow       tr        = (TableRow) li.inflate(R.layout.history_row, parent, false);
         TextView       ownerView = (TextView) tr.findViewById(R.id.owner);
-        if (history.getOwner_id() == MyApp.getAuth().getId()) {
+        if (history.getOwnerId() == MyApp.getAuth().getId()) {
             ownerView.setBackgroundColor(Color.DKGRAY);
         }
         ownerView.setText(history.getOwner());

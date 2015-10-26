@@ -128,7 +128,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             });
         }
         map.clear();
-        for (int id : MyApp.getContent().getIds()) {
+        for (int id : MyApp.getContent().keySet()) {
             motocitizen.accident.Accident point = MyApp.getContent().get(id);
             if (point.isInvisible()) continue;
             String title = point.getType().toString();

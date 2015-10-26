@@ -25,7 +25,6 @@ import motocitizen.draw.Rows;
 import motocitizen.main.R;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.SendMessageRequest;
-import motocitizen.utils.Sort;
 
 public class DetailMessagesFragment extends AccidentDetailsFragments {
 
@@ -73,7 +72,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         int            lastOwner = 1;
         int            nextOwner;
 
-        Integer[] keys = Sort.getSortedMessagesKeys(accident.getMessages());
+        Integer[] keys = accident.getMessages().sortedKeySet();
         if (keys.length > 0) {
             updateUnreadMessages(accident.getId(), Math.max(keys[0], keys[keys.length - 1]));
         }

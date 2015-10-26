@@ -131,7 +131,7 @@ public class MyLocationManager {
             MyApp.getContent().setLeave(currentInplace);
             new LeaveRequest(currentInplace);
         }
-        for (int accId : MyApp.getContent().getPoints().keySet()) {
+        for (int accId : MyApp.getContent().keySet()) {
             if (accId == currentInplace) continue;
             if (isArrived(location, accId)) {
                 MyApp.getContent().setInPlace(accId);
@@ -141,7 +141,7 @@ public class MyLocationManager {
     }
 
     private boolean isArrived(Location location, int accId) {
-        double meters = MyApp.getContent().getPoint(accId).getLocation().distanceTo(location);
+        double meters = MyApp.getContent().get(accId).getLocation().distanceTo(location);
         double limit  = Math.max(ARRIVED_MAX_ACCURACY, location.getAccuracy());
         return meters < limit;
     }
@@ -151,7 +151,7 @@ public class MyLocationManager {
     }
 
     private boolean isInPlace(Location location, int accId) {
-        motocitizen.accident.Accident acc = MyApp.getContent().getPoint(accId);
+        motocitizen.accident.Accident acc = MyApp.getContent().get(accId);
         if (acc == null) {
             message("Invalid accident");
             return false;
@@ -165,7 +165,7 @@ public class MyLocationManager {
             return false;
         }
 
-        double meters = MyApp.getContent().getPoint(accId).getLocation().distanceTo(location);
+        double meters = MyApp.getContent().get(accId).getLocation().distanceTo(location);
         double limit  = location.getAccuracy() * 2 + 1000;
         return meters < limit;
     }

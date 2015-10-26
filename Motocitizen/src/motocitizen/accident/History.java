@@ -11,7 +11,7 @@ public class History {
     private static final String[] prerequisites = {"id", "id_user", "owner", "action", "uxtime"};
 
     private int           id;
-    private int           owner_id;
+    private int           ownerId;
     private boolean       self;
     private boolean       noError;
     private String        owner;
@@ -23,12 +23,12 @@ public class History {
         noError = checkPrerequisites(json);
         if (noError) try {
             id = json.getInt("id");
-            owner_id = json.getInt("id_user");
+            ownerId = json.getInt("id_user");
             owner = json.getString("owner");
             time = new Date(json.getLong("uxtime") * 1000);
             actionText = json.getString("action");
             action = HistoryAction.parse(json.getString("action"));
-            self = owner_id == Preferences.getUserId();
+            self = ownerId == Preferences.getUserId();
         } catch (Exception e) {
             e.printStackTrace();
             noError = false;
@@ -50,8 +50,8 @@ public class History {
         return id;
     }
 
-    public int getOwner_id() {
-        return owner_id;
+    public int getOwnerId() {
+        return ownerId;
     }
 
     public String getOwner() {

@@ -11,7 +11,7 @@ public class MessagesPopup extends PopupWindowGeneral {
 
     public MessagesPopup(int id, int acc_id) {
         super();
-        message = MyApp.getContent().getPoint(acc_id).getMessages().get(id);
+        message = MyApp.getContent().get(acc_id).getMessages().get(id);
     }
 
     public PopupWindow getPopupWindow() {

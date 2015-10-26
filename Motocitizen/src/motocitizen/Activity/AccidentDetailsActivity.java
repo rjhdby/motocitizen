@@ -110,7 +110,7 @@ public class AccidentDetailsActivity extends ActionBarActivity {
     }
 
     public void update() {
-        currentPoint = MyApp.getContent().getPoint(accidentID);
+        currentPoint = MyApp.getContent().get(accidentID);
 
         ActionBar actionBar = getSupportActionBar();
         //TODO Разобраться с nullPointerException и убрать костыль
@@ -157,7 +157,7 @@ public class AccidentDetailsActivity extends ActionBarActivity {
 
     private void menuReconstruction() {
         if (mMenu == null) return;
-        currentPoint = MyApp.getContent().getPoint(accidentID);
+        currentPoint = MyApp.getContent().get(accidentID);
         MenuItem finish = mMenu.findItem(R.id.menu_acc_finish);
         MenuItem hide   = mMenu.findItem(R.id.menu_acc_hide);
         finish.setVisible(MyApp.getRole().isModerator());
@@ -237,7 +237,7 @@ public class AccidentDetailsActivity extends ActionBarActivity {
     }
 
     private void sendFinishRequest() {
-        if (MyApp.getContent().getPoint(accidentID).getStatus() == ENDED) {
+        if (MyApp.getContent().get(accidentID).getStatus() == ENDED) {
             //TODO Суперкостыль
             accNewState = ACTIVE;
             new AccidentChangeStateRequest(new AccidentChangeCallback(), accidentID, ACTIVE.toCode());
@@ -249,7 +249,7 @@ public class AccidentDetailsActivity extends ActionBarActivity {
     }
 
     private void sendHideRequest() {
-        if (MyApp.getContent().getPoint(accidentID).getStatus() == ENDED) {
+        if (MyApp.getContent().get(accidentID).getStatus() == ENDED) {
             //TODO Суперкостыль
             accNewState = ACTIVE;
             new AccidentChangeStateRequest(new AccidentChangeCallback(), accidentID, ACTIVE.toCode());

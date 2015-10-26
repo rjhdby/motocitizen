@@ -58,7 +58,7 @@ public class NewAccidentReceived extends IntentService {
             GCMBroadcastReceiver.completeWakefulIntent(intent);
             return;
         }
-        MyApp.getContent().getPoints().put(accident.getId(), accident);
+        MyApp.getContent().put(accident.getId(), accident);
 
         if (accident.isInvisible()) {
             GCMBroadcastReceiver.completeWakefulIntent(intent);

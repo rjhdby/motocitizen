@@ -14,7 +14,7 @@ public class BanRequest extends HTTPClient {
     @SuppressWarnings("unchecked")
     public BanRequest(AsyncTaskCompleteListener listener, int id) {
         this.listener = listener;
-        int user_id = MyApp.getContent().getPoint(id).getOwnerId();
+        int user_id = MyApp.getContent().get(id).getOwnerId();
         post = new HashMap<>();
         post.put("login", MyApp.getAuth().getLogin());
         post.put("passhash", MyApp.getAuth().makePassHash());
