@@ -9,9 +9,9 @@ import motocitizen.utils.MyUtils;
 public class MessagesPopup extends PopupWindowGeneral {
     private final Message message;
 
-    public MessagesPopup(int id, int acc_id) {
+    public MessagesPopup(int id, int accId) {
         super();
-        message = MyApp.getContent().get(acc_id).getMessages().get(id);
+        message = MyApp.getContent().get(accId).getMessages().get(id);
     }
 
     public PopupWindow getPopupWindow() {
