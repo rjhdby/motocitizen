@@ -26,9 +26,10 @@ public class AccidentsRequest extends HTTPClient {
         if (!user.equals("")) {
             post.put("user", user);
         }
-        post.put("distance", String.valueOf(Preferences.getVisibleDistance()));
+        //post.put("distance", String.valueOf(Preferences.getVisibleDistance()));
         post.put("lat", String.valueOf(location.getLatitude()));
         post.put("lon", String.valueOf(location.getLongitude()));
+        post.put("age", String.valueOf(Preferences.getHoursAgo()));
         post.put("m", Methods.GET_LIST.toCode());
         execute(post);
     }

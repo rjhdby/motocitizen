@@ -21,7 +21,7 @@ import motocitizen.accident.Accident;
 import motocitizen.accident.Message;
 import motocitizen.app.general.popups.MessagesPopup;
 import motocitizen.database.StoreMessages;
-import motocitizen.draw.Rows;
+import motocitizen.draw.MessageRow;
 import motocitizen.main.R;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.SendMessageRequest;
@@ -80,7 +80,8 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
             nextOwner = keys.length > i + 1 ? accident.getMessages().get(keys[i + 1]).getOwnerId() : 0;
             final Message message = accident.getMessages().get(keys[i]);
             message.setRead();
-            View row = Rows.getMessageRow(messagesTable, message, lastOwner, nextOwner);
+            //View row = Rows.getMessageRow(messagesTable, message, lastOwner, nextOwner);
+            View row = new MessageRow(getActivity(), message, lastOwner, nextOwner);
             lastOwner = accident.getMessages().get(keys[i]).getOwnerId();
             row.setOnLongClickListener(new MessageRowLongClickListener(message, accident));
             messagesTable.addView(row);

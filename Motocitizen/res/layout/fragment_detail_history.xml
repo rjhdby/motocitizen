@@ -4,10 +4,9 @@
     android:layout_height="match_parent"
     tools:context="motocitizen.fragments.DetailHistoryFragment">
 
-    <TableLayout
+    <LinearLayout
         android:id="@+id/details_log_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:shrinkColumns="*"
-        android:stretchColumns="*"/>
+        android:orientation="vertical"/>
 </ScrollView>

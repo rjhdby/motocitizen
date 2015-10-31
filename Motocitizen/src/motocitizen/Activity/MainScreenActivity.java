@@ -23,11 +23,6 @@ public class MainScreenActivity extends ActionBarActivity {
         MyApp.setCurrentActivity(this);
 
         actionBar = getSupportActionBar();
-
-        if (ChangeLog.isNewVersion()) {
-            AlertDialog changeLogDlg = ChangeLog.getDialog();
-            changeLogDlg.show();
-        }
     }
 
     @Override
@@ -37,7 +32,10 @@ public class MainScreenActivity extends ActionBarActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, new MainScreenFragment()).commit();
 
         MyApp.getLocationManager().wakeup();
-
+        if (ChangeLog.isNewVersion()) {
+            AlertDialog changeLogDlg = ChangeLog.getDialog();
+            changeLogDlg.show();
+        }
     }
 
     @Override

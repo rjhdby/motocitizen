@@ -19,7 +19,7 @@ import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.MyApp;
 import motocitizen.accident.Volunteer;
 import motocitizen.content.VolunteerStatus;
-import motocitizen.draw.Rows;
+import motocitizen.draw.VolunteerRow;
 import motocitizen.main.R;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.AccidentsRequest;
@@ -87,9 +87,9 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         for (int i : accident.getVolunteers().keySet()) {
             Volunteer current = accident.getVolunteer(i);
             if (current.getStatus() == VolunteerStatus.LEAVE) continue;
-            vg_onway.addView(Rows.getVolunteerRow(vg_onway, current));
+            //vg_onway.addView(Rows.getVolunteerRow(vg_onway, current));
+            vg_onway.addView(new VolunteerRow(getActivity(), current));
         }
-
     }
 
     private void setupAccess() {

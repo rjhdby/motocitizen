@@ -4,14 +4,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import motocitizen.Activity.AccidentDetailsActivity;
-import motocitizen.draw.Rows;
+import motocitizen.draw.HistoryRow;
 import motocitizen.main.R;
 
 public class DetailHistoryFragment extends AccidentDetailsFragments {
 
-    private View mcDetLogContent;
+    private LinearLayout logContent;
 
     public static DetailHistoryFragment newInstance(int accID, String userName) {
         DetailHistoryFragment fragment = new DetailHistoryFragment();
@@ -29,7 +30,7 @@ public class DetailHistoryFragment extends AccidentDetailsFragments {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View viewMain = inflater.inflate(R.layout.fragment_detail_history, container, false);
-        mcDetLogContent = viewMain.findViewById(R.id.details_log_content);
+        logContent = (LinearLayout) viewMain.findViewById(R.id.details_log_content);
 
         update();
         return viewMain;
@@ -38,10 +39,9 @@ public class DetailHistoryFragment extends AccidentDetailsFragments {
     private void update() {
         motocitizen.accident.Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
 
-        ViewGroup logView = (ViewGroup) mcDetLogContent;
-        logView.removeAllViews();
+        logContent.removeAllViews();
         for (int i : accident.getHistory().keySet()) {
-            logView.addView(Rows.getHistoryRow(logView, accident.getHistory().get(i)));
+            logContent.addView(new HistoryRow(getActivity(), accident.getHistory().get(i)));
         }
     }
 }
