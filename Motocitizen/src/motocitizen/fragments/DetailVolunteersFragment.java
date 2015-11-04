@@ -88,7 +88,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
             Volunteer current = accident.getVolunteer(i);
             if (current.getStatus() == VolunteerStatus.LEAVE) continue;
             //vg_onway.addView(Rows.getVolunteerRow(vg_onway, current));
-            vg_onway.addView(new VolunteerRow(getActivity(), current));
+            vg_onway.addView(VolunteerRow.makeView(getActivity(), vg_onway, current));
         }
     }
 

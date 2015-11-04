@@ -41,7 +41,7 @@ public class DetailHistoryFragment extends AccidentDetailsFragments {
 
         logContent.removeAllViews();
         for (int i : accident.getHistory().keySet()) {
-            logContent.addView(new HistoryRow(getActivity(), accident.getHistory().get(i)));
+            logContent.addView(HistoryRow.makeView(getActivity(), logContent, accident.getHistory().get(i)));
         }
     }
 }

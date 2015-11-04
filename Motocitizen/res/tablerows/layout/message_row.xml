@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout android:id="@+id/row"
-             xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:background="@drawable/message_row"
-             android:orientation="vertical"
-             style="@style/accident_row_outer">
+<FrameLayout
+    android:id="@+id/row"
+    style="@style/accident_row_outer"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/message_row"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/owner"

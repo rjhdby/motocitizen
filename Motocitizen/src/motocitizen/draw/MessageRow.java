@@ -3,8 +3,11 @@ package motocitizen.draw;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.TableLayout;
+import android.widget.LinearLayout;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.LayoutParams;
 import android.widget.TextView;
 
 import motocitizen.MyApp;
@@ -12,19 +15,17 @@ import motocitizen.accident.Message;
 import motocitizen.main.R;
 import motocitizen.utils.Const;
 
-public class MessageRow extends FrameLayout {
+public class MessageRow {
 
-    public MessageRow(Context context, final Message message, int last, int next) {
-        super(context);
-
+    public static View makeView(Context context, ViewGroup parent, final Message message, int last, int next) {
         int user  = MyApp.getAuth().getId();
         int resource;
         int owner = message.getOwnerId();
         resource = message.getOwnerId() == user ? R.layout.owner_message_row : R.layout.message_row;
-        LayoutInflater.from(context).inflate(resource, this, true);
+        View row = LayoutInflater.from(context).inflate(resource, parent, false);
 
-        FrameLayout              fl  = (FrameLayout) this.findViewById(R.id.row);
-        FrameLayout.LayoutParams flp = (FrameLayout.LayoutParams) fl.getLayoutParams();
+        FrameLayout              fl  = (FrameLayout) row.findViewById(R.id.row);
+        LinearLayout.LayoutParams  flp = (LinearLayout.LayoutParams) fl.getLayoutParams();
         if (last == owner && next == owner) {
             fl.setBackgroundResource(R.drawable.message_row_middle);
             flp.topMargin = 0;
@@ -39,8 +40,8 @@ public class MessageRow extends FrameLayout {
             fl.setLayoutParams(flp);
         }
 
-        TextView ownerView   = (TextView) this.findViewById(R.id.owner);
-        TextView messageView = (TextView) this.findViewById(R.id.text);
+        TextView ownerView   = (TextView) row.findViewById(R.id.owner);
+        TextView messageView = (TextView) row.findViewById(R.id.text);
         ownerView.setText(message.getOwner());
         StringBuilder messageText = new StringBuilder();
         if (owner == last) {
@@ -51,8 +52,9 @@ public class MessageRow extends FrameLayout {
         messageText.append(message.getText());
         String timeText = Const.TIME_FORMAT.format(message.getTime());
 
-        ((TextView) this.findViewById(R.id.time)).setText(timeText);
+        ((TextView) row.findViewById(R.id.time)).setText(timeText);
         messageText.append(" \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0");
         messageView.setText(messageText);
+        return row;
     }
 }
