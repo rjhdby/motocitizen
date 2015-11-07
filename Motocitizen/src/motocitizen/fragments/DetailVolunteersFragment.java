@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -17,9 +18,7 @@ import org.json.JSONObject;
 
 import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.MyApp;
-import motocitizen.accident.Volunteer;
-import motocitizen.content.VolunteerStatus;
-import motocitizen.draw.VolunteerRow;
+import motocitizen.draw.VolunteerListAdapter;
 import motocitizen.main.R;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.AccidentsRequest;
@@ -36,9 +35,8 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     private ImageButton onwayButton;
     private ImageButton onwayCancelButton;
     private ImageButton onwayDisabledButton;
-    private View        onwayContent;
+    private ListView    onwayContent;
 
-    // TODO: Rename and change types and number of parameters
     public static DetailVolunteersFragment newInstance(int accID, String userName) {
         DetailVolunteersFragment fragment = new DetailVolunteersFragment();
         Bundle                   args     = new Bundle();
@@ -60,7 +58,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         onwayButton = (ImageButton) viewMain.findViewById(R.id.onway_button);
         onwayCancelButton = (ImageButton) viewMain.findViewById(R.id.onway_cancel_button);
         onwayDisabledButton = (ImageButton) viewMain.findViewById(R.id.onway_disabled_button);
-        onwayContent = viewMain.findViewById(R.id.acc_onway_table);
+        onwayContent = (ListView) viewMain.findViewById(R.id.volunteerList);
 
         onwayDisabledButton.setEnabled(false);
 
@@ -82,14 +80,8 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         }
 
         setupAccess();
-        ViewGroup vg_onway = (ViewGroup) onwayContent;
-        vg_onway.removeAllViews();
-        for (int i : accident.getVolunteers().keySet()) {
-            Volunteer current = accident.getVolunteer(i);
-            if (current.getStatus() == VolunteerStatus.LEAVE) continue;
-            //vg_onway.addView(Rows.getVolunteerRow(vg_onway, current));
-            vg_onway.addView(VolunteerRow.makeView(getActivity(), vg_onway, current));
-        }
+        VolunteerListAdapter adapter = new VolunteerListAdapter(getActivity(), accident);
+        onwayContent.setAdapter(adapter);
     }
 
     private void setupAccess() {

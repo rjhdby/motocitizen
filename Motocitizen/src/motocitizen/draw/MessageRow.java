@@ -6,8 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
-import android.widget.RadioGroup.LayoutParams;
 import android.widget.TextView;
 
 import motocitizen.MyApp;
@@ -24,8 +22,8 @@ public class MessageRow {
         resource = message.getOwnerId() == user ? R.layout.owner_message_row : R.layout.message_row;
         View row = LayoutInflater.from(context).inflate(resource, parent, false);
 
-        FrameLayout              fl  = (FrameLayout) row.findViewById(R.id.row);
-        LinearLayout.LayoutParams  flp = (LinearLayout.LayoutParams) fl.getLayoutParams();
+        FrameLayout               fl  = (FrameLayout) row.findViewById(R.id.row);
+        LinearLayout.LayoutParams flp = (LinearLayout.LayoutParams) fl.getLayoutParams();
         if (last == owner && next == owner) {
             fl.setBackgroundResource(R.drawable.message_row_middle);
             flp.topMargin = 0;

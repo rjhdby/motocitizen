@@ -3,8 +3,9 @@ package motocitizen.utils;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 
-public class SortedHashMap<T> extends HashMap<Integer, T> {
+public class SortedHashMap<T> extends HashMap<Integer, T> implements Iterable<T> {
     public Integer[] sortedKeySet() {
         Integer[] sorted = keySet().toArray(new Integer[keySet().size()]);
         Arrays.sort(sorted);
@@ -21,5 +22,10 @@ public class SortedHashMap<T> extends HashMap<Integer, T> {
             }
         });
         return sorted;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return this.values().iterator();
     }
 }

@@ -8,21 +8,13 @@
     android:visibility="visible"
     tools:context="motocitizen.fragments.DetailVolunteersFragment">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+    <ListView
+        android:id="@+id/volunteerList"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:fillViewport="true">
-
-        <TableLayout
-            android:id="@+id/acc_onway_table"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:shrinkColumns="*"
-            android:stretchColumns="*">
-
-        </TableLayout>
-    </ScrollView>
+        >
+    </ListView>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,12 +29,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:adjustViewBounds="false"
             android:layout_weight="1"
+            android:adjustViewBounds="false"
             android:contentDescription="@string/onway_button"
             android:src="@drawable/onway"
-            android:visibility="visible"
-            android:text="@string/onway_button"/>
+            android:text="@string/onway_button"
+            android:visibility="visible"/>
 
         <ImageButton
             android:id="@+id/onway_cancel_button"
@@ -50,12 +42,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:layout_weight="1"
             android:adjustViewBounds="false"
             android:contentDescription="@string/onway_cancel_button"
-            android:visibility="gone"
-            android:layout_weight="1"
             android:src="@drawable/onway_cancel"
-            android:text="@string/onway_cancel_button"/>
+            android:text="@string/onway_cancel_button"
+            android:visibility="gone"/>
 
         <ImageButton
             android:id="@+id/onway_disabled_button"
@@ -63,12 +55,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:visibility="gone"
-            android:adjustViewBounds="false"
             android:layout_weight="1"
+            android:adjustViewBounds="false"
             android:contentDescription="@string/onway_cancel_button"
             android:src="@drawable/onway_disabled"
-            android:text="@string/onway_cancel_button"/>
+            android:text="@string/onway_cancel_button"
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/details_to_map_button"

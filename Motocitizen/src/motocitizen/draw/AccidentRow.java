@@ -24,7 +24,7 @@ import motocitizen.main.R;
 import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
 
-public class Rows {
+public class AccidentRow {
     /* constants */
     private static final int ACCIDENT_ROW_LAYOUT     = R.layout.accident_row;
     private static final int ACCIDENT_ROW_OWN_LAYOUT = R.layout.accident_row_i_was_here;
@@ -35,7 +35,7 @@ public class Rows {
     private static final int ACCIDENT_ROW_OWN_HIDDEN = R.drawable.owner_accident_hidden;
     /* end constants */
 
-    public static View getAccidentRow(ViewGroup parent, final Accident accident) {
+    public static View makeView(ViewGroup parent, final Accident accident) {
         LayoutInflater li = (LayoutInflater) MyApp.getCurrentActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         FrameLayout    accRow;
         accRow = (FrameLayout) li.inflate(accident.isOwner() ? ACCIDENT_ROW_OWN_LAYOUT : ACCIDENT_ROW_LAYOUT, parent, false);

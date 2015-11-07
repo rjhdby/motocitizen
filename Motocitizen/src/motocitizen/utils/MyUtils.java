@@ -88,6 +88,10 @@ public class MyUtils {
         return full ? Const.FULL_TIME_FORMAT.format(date) : Const.TIME_FORMAT.format(date);
     }
 
+    public static String getStringTime(Date date) {
+        return getStringTime(date, false);
+    }
+
     public static int newId() {
         final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
         if (Build.VERSION.SDK_INT < 17) {
