@@ -81,7 +81,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
             final Message message = accident.getMessages().get(keys[i]);
             message.setRead();
             //View row = Rows.getMessageRow(messagesTable, message, lastOwner, nextOwner);
-            View row = MessageRow.makeView(getActivity(), messagesTable, message, lastOwner, nextOwner);
+            View row = new MessageRow(getActivity(), message, lastOwner, nextOwner);
             lastOwner = accident.getMessages().get(keys[i]).getOwnerId();
             row.setOnLongClickListener(new MessageRowLongClickListener(message, accident));
             messagesTable.addView(row);

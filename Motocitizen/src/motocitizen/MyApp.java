@@ -8,7 +8,6 @@ import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.view.ViewGroup;
 
 import java.util.List;
 
@@ -19,16 +18,14 @@ import motocitizen.content.Content;
 import motocitizen.gcm.GCMBroadcastReceiver;
 import motocitizen.gcm.GCMRegistration;
 import motocitizen.geolocation.MyLocationManager;
-import motocitizen.maps.MyMapManager;
-import motocitizen.maps.google.MyGoogleMapManager;
 import motocitizen.utils.Preferences;
 
 public class MyApp extends Application {
 
-    private static MyApp             instance;
-    private static Auth              auth;
-    private static Geocoder          geocoder;
-    private static Activity          currentActivity;
+    private static MyApp    instance;
+    private static Auth     auth;
+    private static Geocoder geocoder;
+    private static Activity currentActivity;
 
     private static MyLocationManager locationManager;
     private static Content           content;

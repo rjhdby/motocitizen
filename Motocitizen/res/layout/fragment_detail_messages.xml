@@ -13,13 +13,12 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <LinearLayout
+        <TableLayout
             android:id="@+id/details_messages_table"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:shrinkColumns="1"
-            android:stretchColumns="1"
-            android:orientation="vertical"/>
+            android:stretchColumns="1"/>
 
     </ScrollView>
 

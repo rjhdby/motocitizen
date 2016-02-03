@@ -24,7 +24,7 @@ import motocitizen.main.R;
 import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
 
-public class AccidentRow {
+public class Rows {
     /* constants */
     private static final int ACCIDENT_ROW_LAYOUT     = R.layout.accident_row;
     private static final int ACCIDENT_ROW_OWN_LAYOUT = R.layout.accident_row_i_was_here;
@@ -35,7 +35,7 @@ public class AccidentRow {
     private static final int ACCIDENT_ROW_OWN_HIDDEN = R.drawable.owner_accident_hidden;
     /* end constants */
 
-    public static View makeView(ViewGroup parent, final Accident accident) {
+    public static View getAccidentRow(ViewGroup parent, final Accident accident) {
         LayoutInflater li = (LayoutInflater) MyApp.getCurrentActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         FrameLayout    accRow;
         accRow = (FrameLayout) li.inflate(accident.isOwner() ? ACCIDENT_ROW_OWN_LAYOUT : ACCIDENT_ROW_LAYOUT, parent, false);
@@ -87,5 +87,78 @@ public class AccidentRow {
             }
         });
         return accRow;
+    }
+
+    private static View getYesterdayDelimiter(ViewGroup view) {
+        LayoutInflater li = (LayoutInflater) MyApp.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        return li.inflate(R.layout.yesterday_row, view, false);
+    }
+
+    public static View getVolunteerRow(ViewGroup viewGroup, Volunteer volunteer) {
+        //TODO Header
+        LayoutInflater li = (LayoutInflater) MyApp.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        TableRow       tr = (TableRow) li.inflate(R.layout.volunteer_row, viewGroup, false);
+        ((TextView) tr.findViewById(R.id.volunteer)).setText(volunteer.getName());
+        ((TextView) tr.findViewById(R.id.action)).setText(volunteer.getStatus().toString());
+        ((TextView) tr.findViewById(R.id.time)).setText(Const.TIME_FORMAT.format(volunteer.getTime()));
+        return tr;
+    }
+
+    public static View getMessageRow(ViewGroup parent, final Message message, int last, int next) {
+        LayoutInflater li = (LayoutInflater) MyApp.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        View tr;
+        int  user  = MyApp.getAuth().getId();
+        int  resource;
+        int  owner = message.getOwnerId();
+        resource = message.getOwnerId() == user ? R.layout.owner_message_row : R.layout.message_row;
+        tr = li.inflate(resource, parent, false);
+        FrameLayout              fl  = (FrameLayout) tr.findViewById(R.id.row);
+        TableLayout.LayoutParams flp = (TableLayout.LayoutParams) fl.getLayoutParams();
+        if (last == owner && next == owner) {
+            fl.setBackgroundResource(R.drawable.message_row_middle);
+            flp.topMargin = 0;
+            fl.setLayoutParams(flp);
+        } else if (next == owner && owner == user) {
+            fl.setBackgroundResource(R.drawable.owner_message_row_first);
+        } else if (next == owner) {
+            fl.setBackgroundResource(R.drawable.message_row_first);
+        } else if (last == owner) {
+            fl.setBackgroundResource(R.drawable.message_row_last);
+            flp.topMargin = 0;
+            fl.setLayoutParams(flp);
+        }
+
+        TextView ownerView   = (TextView) tr.findViewById(R.id.owner);
+        TextView messageView = (TextView) tr.findViewById(R.id.text);
+        ownerView.setText(message.getOwner());
+        StringBuilder messageText = new StringBuilder();
+        if (owner == last) {
+            ownerView.setVisibility(View.INVISIBLE);
+        } else {
+            messageText.append("\n");
+        }
+        messageText.append(message.getText());
+        String timeText = Const.TIME_FORMAT.format(message.getTime());
+
+        ((TextView) tr.findViewById(R.id.time)).setText(timeText);
+        messageText.append(" \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0");
+        messageView.setText(messageText);
+
+        return tr;
+    }
+
+    public static View getHistoryRow(ViewGroup parent, History history) {
+        //TODO header
+        LayoutInflater li        = (LayoutInflater) MyApp.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        TableRow       tr        = (TableRow) li.inflate(R.layout.history_row, parent, false);
+        TextView       ownerView = (TextView) tr.findViewById(R.id.owner);
+        if (history.getOwnerId() == MyApp.getAuth().getId()) {
+            ownerView.setBackgroundColor(Color.DKGRAY);
+        }
+        ownerView.setText(history.getOwner());
+        ((TextView) tr.findViewById(R.id.text)).setText(history.getActionString());
+        ((TextView) tr.findViewById(R.id.date)).setText(MyUtils.getStringTime(history.getTime(), true));
+        return tr;
     }
 }

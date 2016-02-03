@@ -21,7 +21,7 @@ import motocitizen.Activity.MyFragment;
 import motocitizen.Activity.SettingsActivity;
 import motocitizen.MyApp;
 import motocitizen.content.Content;
-import motocitizen.draw.AccidentRow;
+import motocitizen.draw.Rows;
 import motocitizen.gcm.NewAccidentReceived;
 import motocitizen.main.R;
 import motocitizen.maps.MyMapManager;
@@ -120,7 +120,7 @@ public class MainScreenFragment extends MyFragment {
         Content points = MyApp.getContent();
         for (int id : points.reverseSortedKeySet()) {
             if (points.get(id).isInvisible()) continue;
-            view.addView(AccidentRow.makeView(view, points.get(id)));
+            view.addView(Rows.getAccidentRow(view, points.get(id)));
         }
         map.placeAccidents();
     }
@@ -137,8 +137,9 @@ public class MainScreenFragment extends MyFragment {
         } else if (id != null) {
             intent.removeExtra("id");
 
+            NewAccidentReceived.removeFromTray(MyApp.getContent().get(Integer.parseInt(id)).getLocation().hashCode());
             MyApp.toDetails(Integer.parseInt(id));
-            NewAccidentReceived.clearAll();
+            //NewAccidentReceived.clearAll();
         } else {
             goToAccList();
         }

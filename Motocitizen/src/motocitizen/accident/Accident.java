@@ -201,7 +201,7 @@ public class Accident {
         boolean hidden         = status == HIDDEN && !MyApp.getRole().isModerator();
         boolean distanceFilter = getDistanceFromUser() > Preferences.getVisibleDistance() * 1000;
         boolean typeFilter     = Preferences.isHidden(getType());
-        boolean timeFilter     = time.getTime() + Preferences.getHoursAgo() * 60 * 60 * 1000 < (new Date()).getTime();
+        boolean timeFilter     = time.getTime() + (long) Preferences.getHoursAgo() * 60 * 60 * 1000 < (new Date()).getTime();
         return hidden || distanceFilter || typeFilter || timeFilter;
     }
 

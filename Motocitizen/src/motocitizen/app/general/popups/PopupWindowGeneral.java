@@ -45,10 +45,10 @@ abstract class PopupWindowGeneral {
         layoutParams = new TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         content = new TableLayout(MyApp.getCurrentActivity());
         content.setOrientation(LinearLayout.HORIZONTAL);
-        content.setBackgroundColor(0xFF202020);
+        content.setBackgroundColor(0xFF202020); //TODO ёбаный стыд
         content.setLayoutParams(layoutParams);
         popupWindow = new PopupWindow(content, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        popupWindow.setBackgroundDrawable(new ColorDrawable(0x00ffffff));
+        popupWindow.setBackgroundDrawable(new ColorDrawable(0x00ffffff)); //TODO ёбаный стыд 2
         popupWindow.setOutsideTouchable(true);
     }
 
@@ -183,6 +183,7 @@ abstract class PopupWindowGeneral {
     TableRow banButtonRow(final int id) {
         Button ban = new Button(content.getContext());
         ban.setText("Забанить");
+        //TODO разобраться с пирамидой зла
         ban.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -1,7 +1,6 @@
 package motocitizen.utils;
 
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.util.DisplayMetrics;
 
 import java.text.SimpleDateFormat;
@@ -18,13 +17,9 @@ public class Const {
 
     @SuppressWarnings("deprecation")
     public static int getWidth() {
-        if (Build.VERSION.SDK_INT < 13) {
-            return MyApp.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
-        } else {
-            DisplayMetrics displaymetrics = new DisplayMetrics();
-            MyApp.getCurrentActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-            return displaymetrics.widthPixels;
-        }
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        MyApp.getCurrentActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        return displaymetrics.widthPixels;
     }
 
     //TODO изничтожить
