@@ -16,10 +16,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import motocitizen.Activity.AccidentDetailsActivity;
-import motocitizen.MyApp;
 import motocitizen.accident.Accident;
 import motocitizen.accident.Message;
 import motocitizen.app.general.popups.MessagesPopup;
+import motocitizen.app.general.user.Auth;
+import motocitizen.content.Content;
 import motocitizen.database.StoreMessages;
 import motocitizen.draw.MessageRow;
 import motocitizen.main.R;
@@ -94,7 +95,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
     }
 
     private void setupAccess() {
-        newMessageArea.setVisibility(MyApp.getRole().isStandart() ? View.VISIBLE : View.INVISIBLE);
+        newMessageArea.setVisibility(Auth.getInstance().getRole().isStandart() ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void message(String text) {
@@ -112,7 +113,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
                     e.printStackTrace();
                 }
             } else {
-                MyApp.getContent().requestUpdate(new UpdateAccidentsCallback());
+                Content.getInstance().requestUpdate(new UpdateAccidentsCallback());
             }
             newMessageButton.setEnabled(true);
         }
@@ -122,7 +123,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         @Override
         public void onTaskComplete(JSONObject result) {
             mcNewMessageText.setText("");
-            if (!result.has("error")) MyApp.getContent().parseJSON(result);
+            if (!result.has("error")) Content.getInstance().parseJSON(result);
             ((AccidentDetailsActivity) getActivity()).update();
             update();
         }

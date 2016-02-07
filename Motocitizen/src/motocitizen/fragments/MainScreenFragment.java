@@ -20,6 +20,7 @@ import motocitizen.Activity.CreateAccActivity;
 import motocitizen.Activity.MyFragment;
 import motocitizen.Activity.SettingsActivity;
 import motocitizen.MyApp;
+import motocitizen.app.general.user.Auth;
 import motocitizen.content.Content;
 import motocitizen.draw.Rows;
 import motocitizen.gcm.NewAccidentReceived;
@@ -49,7 +50,8 @@ public class MainScreenFragment extends MyFragment {
         inTransaction = false;
     }
 
-    public MainScreenFragment() { }
+    public MainScreenFragment() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -104,7 +106,7 @@ public class MainScreenFragment extends MyFragment {
 
     @Override
     public void setPermissions() {
-        createAccButton.setVisibility(MyApp.getRole().isStandart() ? View.VISIBLE : View.INVISIBLE);
+        createAccButton.setVisibility(Auth.getInstance().getRole().isStandart() ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
@@ -117,7 +119,7 @@ public class MainScreenFragment extends MyFragment {
         //TODO YesterdayRow ???
         //TODO Нет событий
 
-        Content points = MyApp.getContent();
+        Content points = Content.getInstance();
         for (int id : points.reverseSortedKeySet()) {
             if (points.get(id).isInvisible()) continue;
             view.addView(Rows.getAccidentRow(view, points.get(id)));
@@ -131,13 +133,13 @@ public class MainScreenFragment extends MyFragment {
 
         if (toMap != 0) {
             map.zoom(16);
-            map.animateToPoint(MyApp.getContent().get(toMap).getLocation());
+            map.animateToPoint(Content.getInstance().get(toMap).getLocation());
             fromDetails = intent.getBooleanExtra("fromDetails", false);
             goToMap(toMap);
         } else if (id != null) {
             intent.removeExtra("id");
 
-            NewAccidentReceived.removeFromTray(MyApp.getContent().get(Integer.parseInt(id)).getLocation().hashCode());
+            NewAccidentReceived.removeFromTray(Content.getInstance().get(Integer.parseInt(id)).getLocation().hashCode());
             MyApp.toDetails(Integer.parseInt(id));
             //NewAccidentReceived.clearAll();
         } else {
@@ -148,7 +150,7 @@ public class MainScreenFragment extends MyFragment {
     private void getAccidents() {
         if (MyApp.isOnline()) {
             startRefreshAnimation();
-            MyApp.getContent().requestUpdate(new AccidentsRequestCallback());
+            Content.getInstance().requestUpdate(new AccidentsRequestCallback());
         } else {
             Toast.makeText(getActivity(), getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
         }
@@ -172,7 +174,7 @@ public class MainScreenFragment extends MyFragment {
     private class AccidentsRequestCallback implements AsyncTaskCompleteListener {
 
         public void onTaskComplete(JSONObject result) {
-            if (!result.has("error")) MyApp.getContent().parseJSON(result);
+            if (!result.has("error")) Content.getInstance().parseJSON(result);
             if (!isVisible()) return;
             stopRefreshAnimation();
             redraw();
@@ -226,7 +228,7 @@ public class MainScreenFragment extends MyFragment {
             if (inTransaction) return;
             if (MyApp.isOnline()) {
                 startRefreshAnimation();
-                MyApp.getContent().requestUpdate(new AccidentsRequestCallback());
+                Content.getInstance().requestUpdate(new AccidentsRequestCallback());
             } else {
                 Toast.makeText(getActivity(), getActivity().getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
             }
@@ -243,7 +245,7 @@ public class MainScreenFragment extends MyFragment {
     }
 
     private void goToMap(int id) {
-        map.jumpToPoint(MyApp.getContent().get(id).getLocation());
+        map.jumpToPoint(Content.getInstance().get(id).getLocation());
         goToMap();
     }
 

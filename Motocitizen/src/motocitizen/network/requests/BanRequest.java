@@ -5,7 +5,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import motocitizen.MyApp;
+import motocitizen.app.general.user.Auth;
+import motocitizen.content.Content;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
@@ -14,10 +15,10 @@ public class BanRequest extends HTTPClient {
     @SuppressWarnings("unchecked")
     public BanRequest(AsyncTaskCompleteListener listener, int id) {
         this.listener = listener;
-        int user_id = MyApp.getContent().get(id).getOwnerId();
+        int user_id = Content.getInstance().get(id).getOwnerId();
         post = new HashMap<>();
-        post.put("login", MyApp.getAuth().getLogin());
-        post.put("passhash", MyApp.getAuth().makePassHash());
+        post.put("login", Auth.getInstance().getLogin());
+        post.put("passhash", Auth.getInstance().makePassHash());
         post.put("id", String.valueOf(id));
         post.put("user_id", String.valueOf(user_id));
         post.put("calledMethod", Methods.BAN.toCode());

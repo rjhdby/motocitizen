@@ -1,14 +1,20 @@
 package motocitizen.Activity;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Geocoder;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 
 import motocitizen.MyApp;
 import motocitizen.fragments.MainScreenFragment;
+import motocitizen.gcm.GCMBroadcastReceiver;
+import motocitizen.gcm.GCMRegistration;
+import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.utils.ChangeLog;
 
@@ -19,15 +25,15 @@ public class MainScreenActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.main_screen_activity);
         MyApp.setCurrentActivity(this);
-
         actionBar = getSupportActionBar();
-        PackageManager pm = this.getPackageManager();
-        if (!pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
-            this.findViewById(R.id.dial_button).setEnabled(false);
-        }
+    }
+
+    private void initSecuredComponents() {
+        MyApp.geocoder = new Geocoder(this);
+        new GCMRegistration();
+        new GCMBroadcastReceiver();
     }
 
     @Override
@@ -35,18 +41,22 @@ public class MainScreenActivity extends ActionBarActivity {
         super.onResume();
         MyApp.setCurrentActivity(this);
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, new MainScreenFragment()).commit();
+        MyLocationManager.getInstance().wakeup();
 
-        MyApp.getLocationManager().wakeup();
         if (ChangeLog.isNewVersion()) {
             AlertDialog changeLogDlg = ChangeLog.getDialog();
             changeLogDlg.show();
+        }
+        PackageManager pm = this.getPackageManager();
+        if (!pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
+            this.findViewById(R.id.dial_button).setEnabled(false);
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        MyApp.getLocationManager().sleep();
+        MyLocationManager.getInstance().sleep();
     }
 
     @Override
@@ -68,5 +78,20 @@ public class MainScreenActivity extends ActionBarActivity {
 
         actionBar.setTitle(address);
         if (!subTitle.isEmpty()) actionBar.setSubtitle(subTitle);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length == 0) return;
+        switch (requestCode) {
+            case MyApp.LOCATION_PERMISSION:
+                if (this.checkSelfPermission(Manifest.permission_group.LOCATION) == PackageManager.PERMISSION_GRANTED)
+                    MyLocationManager.getInstance();
+                MyLocationManager.permissionRequested = false;
+                break;
+            default:
+                initSecuredComponents();
+        }
     }
 }

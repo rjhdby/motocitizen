@@ -16,7 +16,6 @@ import android.os.Bundle;
 import java.util.LinkedList;
 
 import motocitizen.Activity.MainScreenActivity;
-import motocitizen.MyApp;
 import motocitizen.accident.Accident;
 import motocitizen.content.Content;
 import motocitizen.content.Medicine;
@@ -34,7 +33,7 @@ public class NewAccidentReceived extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        if (MyApp.getContent() == null) MyApp.setContent(new Content());
+        Content.getInstance();
         parsePush(intent.getExtras());
         GCMBroadcastReceiver.completeWakefulIntent(intent);
     }
@@ -43,7 +42,7 @@ public class NewAccidentReceived extends IntentService {
         Accident accident = new Accident(extras);
 
         if (!accident.isNoError()) return;
-        MyApp.getContent().put(accident.getId(), accident);
+        Content.getInstance().put(accident.getId(), accident);
 
         if (accident.isInvisible() || Preferences.getDoNotDisturb()) return;
 

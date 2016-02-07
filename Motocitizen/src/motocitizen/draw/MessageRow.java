@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import motocitizen.MyApp;
 import motocitizen.accident.Message;
+import motocitizen.app.general.user.Auth;
 import motocitizen.main.R;
 import motocitizen.utils.Const;
 
@@ -17,7 +18,7 @@ public class MessageRow extends FrameLayout {
     public MessageRow(Context context, final Message message, int last, int next) {
         super(context);
 
-        int user  = MyApp.getAuth().getId();
+        int user  = Auth.getInstance().getId();
         int resource;
         int owner = message.getOwnerId();
         resource = message.getOwnerId() == user ? R.layout.owner_message_row : R.layout.message_row;

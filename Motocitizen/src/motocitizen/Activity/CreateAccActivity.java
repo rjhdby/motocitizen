@@ -31,9 +31,12 @@ import java.util.Date;
 
 import motocitizen.MyApp;
 import motocitizen.accident.Accident;
+import motocitizen.app.general.user.Auth;
 import motocitizen.content.AccidentStatus;
+import motocitizen.content.Content;
 import motocitizen.content.Medicine;
 import motocitizen.content.Type;
+import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.CreateAccidentRequest;
@@ -69,7 +72,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         MyApp.setCurrentActivity(this);
         setContentView(R.layout.create_point);
-        initialLocation = MyApp.getLocationManager().getLocation();
+        initialLocation = MyLocationManager.getInstance().getLocation();
         accident = createDefaultAccident();
         map = makeMap();
         confirmButton = (Button) findViewById(R.id.CREATE);
@@ -113,7 +116,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         map.setMyLocationEnabled(true);
         map.getUiSettings().setMyLocationButtonEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
-        if (!MyApp.getRole().isModerator()) {
+        if (!Auth.getInstance().getRole().isModerator()) {
             CircleOptions circleOptions = new CircleOptions().center(MyUtils.LocationToLatLng(initialLocation)).radius(RADIUS).fillColor(0x20FF0000);
             map.addCircle(circleOptions);
             map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
@@ -128,8 +131,8 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             });
         }
         map.clear();
-        for (int id : MyApp.getContent().keySet()) {
-            motocitizen.accident.Accident point = MyApp.getContent().get(id);
+        for (int id : Content.getInstance().keySet()) {
+            motocitizen.accident.Accident point = Content.getInstance().get(id);
             if (point.isInvisible()) continue;
             String title = point.getType().toString();
             title += point.getMedicine() == Medicine.NO ? "" : ", " + point.getMedicine().toString();
@@ -165,7 +168,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         String text = accident.getType().toString();
         text += accident.getMedicine() == Medicine.UNKNOWN ? "" : ". " + accident.getMedicine().toString();
         ((TextView) findViewById(R.id.create_what)).setText(text);
-        ((TextView) findViewById(R.id.create_who)).setText(MyApp.getAuth().getLogin());
+        ((TextView) findViewById(R.id.create_who)).setText(Auth.getInstance().getLogin());
         ((TextView) findViewById(R.id.create_where)).setText(accident.getAddress());
         ((TextView) findViewById(R.id.create_when)).setText(Const.DATE_FORMAT.format(accident.getTime()));
     }
@@ -219,7 +222,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 break;
             case R.id.ADDRESS:
                 accident.setLatLng(map.getCameraPosition().target);
-                accident.setAddress(MyApp.getLocationManager().getAddress(accident.getLocation()));
+                accident.setAddress(MyLocationManager.getInstance().getAddress(accident.getLocation()));
                 setUpScreen(TYPE);
                 break;
             case R.id.CREATE:
@@ -361,7 +364,8 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
 
     private class FinalTextWatcher implements TextWatcher {
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -370,6 +374,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         }
 
         @Override
-        public void afterTextChanged(Editable s) {}
+        public void afterTextChanged(Editable s) {
+        }
     }
 }

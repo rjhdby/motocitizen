@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import motocitizen.MyApp;
 import motocitizen.accident.History;
+import motocitizen.app.general.user.Auth;
 import motocitizen.main.R;
 import motocitizen.utils.MyUtils;
 
@@ -21,7 +22,7 @@ public class HistoryRow extends LinearLayout {
         LayoutInflater.from(context).inflate(R.layout.history_row, this, true);
 
         TextView ownerView = (TextView) this.findViewById(R.id.owner);
-        if (history.getOwnerId() == MyApp.getAuth().getId()) {
+        if (history.getOwnerId() == Auth.getInstance().getId()) {
             ownerView.setBackgroundColor(Color.DKGRAY);
         }
         ownerView.setText(history.getOwner());

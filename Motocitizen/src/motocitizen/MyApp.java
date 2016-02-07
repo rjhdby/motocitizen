@@ -9,30 +9,24 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 
-import java.util.List;
-
 import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.app.general.user.Auth;
-import motocitizen.app.general.user.Role;
 import motocitizen.content.Content;
 import motocitizen.gcm.GCMBroadcastReceiver;
 import motocitizen.gcm.GCMRegistration;
-import motocitizen.geolocation.MyLocationManager;
 import motocitizen.utils.Preferences;
 
 public class MyApp extends Application {
 
-    private static MyApp    instance;
-    private static Auth     auth;
-    private static Geocoder geocoder;
-    private static Activity currentActivity;
+    public static final int LOCATION_PERMISSION = 1;
+    public static final int NETWORK_PERMISSION  = 2;
 
-    private static MyLocationManager locationManager;
-    private static Content           content;
+    private static MyApp    instance;
+    public static  Geocoder geocoder;
+    private static Activity currentActivity;
 
     static {
         currentActivity = null;
-        content = null;
     }
 
     {
@@ -44,11 +38,9 @@ public class MyApp extends Application {
         super.onCreate();
         new Preferences(this);
         Preferences.setDoNotDisturb(false);
-        auth = new Auth();
         geocoder = new Geocoder(this);
-        locationManager = new MyLocationManager();
         new GCMRegistration();
-        content = new Content();
+        Content.getInstance();
         new GCMBroadcastReceiver();
     }
 
@@ -56,32 +48,8 @@ public class MyApp extends Application {
         return instance.getApplicationContext();
     }
 
-    public static MyLocationManager getLocationManager() {
-        return locationManager;
-    }
-
-    public static Auth getAuth() {
-        return auth;
-    }
-
-    public static Role getRole() {
-        return auth.getRole();
-    }
-
-    public static Content getContent() {
-        return content;
-    }
-
-    public static void setContent(Content content) {
-        MyApp.content = content;
-    }
-
-    public static boolean isAuthorized() {
-        return auth.isAuthorized();
-    }
-
     public static void logoff() {
-        auth.logoff();
+        Auth.getInstance().logoff();
     }
 
     public static Geocoder getGeoCoder() {
@@ -108,9 +76,5 @@ public class MyApp extends Application {
         bundle.putInt("accidentID", id);
         intent.putExtras(bundle);
         getCurrentActivity().startActivity(intent);
-    }
-
-    public static List<Integer> getFavorites() {
-        return content.favorites;
     }
 }

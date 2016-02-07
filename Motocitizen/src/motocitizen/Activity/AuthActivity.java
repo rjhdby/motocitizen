@@ -1,6 +1,7 @@
 package motocitizen.Activity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import motocitizen.MyApp;
+import motocitizen.app.general.user.Auth;
 import motocitizen.main.R;
 import motocitizen.utils.Preferences;
 
@@ -37,6 +39,9 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MyApp.setCurrentActivity(this);
+        if(Auth.getInstance().isAuthorized()){
+            MyApp.getCurrentActivity().startActivity(new Intent(MyApp.getCurrentActivity(), MainScreenActivity.class));
+        }
         setContentView(R.layout.auth);
         login = (EditText) findViewById(R.id.auth_login);
         password = (EditText) findViewById(R.id.auth_password);
@@ -57,7 +62,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
         View     accListYesterdayLine = findViewById(R.id.accListYesterdayLine);
         TextView roleView             = (TextView) findViewById(R.id.role);
 
-        boolean isAuthorized = MyApp.isAuthorized();
+        boolean isAuthorized = Auth.getInstance().isAuthorized();
         loginBtn.setEnabled(!isAuthorized);
         logoutBtn.setEnabled(isAuthorized);
         anonim.setEnabled(!isAuthorized);
@@ -68,7 +73,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
         //Авторизованы?
         if (isAuthorized) {
             String format = getString(R.string.auth_role);
-            roleView.setText(String.format(format, MyApp.getRole().getName()));
+            roleView.setText(String.format(format, Auth.getInstance().getRole().getName()));
         } else {
             enableLoginBtn();
         }
@@ -90,15 +95,15 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
                 Preferences.setAnonim(anonim.isChecked());
                 if (anonim.isChecked()) {
                     ((TextView) findViewById(R.id.auth_error_helper)).setText("");
-                    finish();
+                    MyApp.getCurrentActivity().startActivity(new Intent(MyApp.getCurrentActivity(), MainScreenActivity.class));
                     return;
                 }
                 if (!MyApp.isOnline()) {
                     showToast(R.string.auth_not_available);
                     return;
                 }
-                if (MyApp.getAuth().auth(login.getText().toString(), password.getText().toString())) {
-                    finish();
+                if (Auth.getInstance().auth(login.getText().toString(), password.getText().toString())) {
+                    MyApp.getCurrentActivity().startActivity(new Intent(MyApp.getCurrentActivity(), MainScreenActivity.class));
                 } else {
                     TextView authErrorHelper = (TextView) findViewById(R.id.auth_error_helper);
                     authErrorHelper.setText(R.string.auth_password_error);

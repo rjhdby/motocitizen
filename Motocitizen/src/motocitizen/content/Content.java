@@ -11,10 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import motocitizen.MyApp;
@@ -32,8 +29,16 @@ public class Content extends SortedHashMap<Accident> {
         inPlace = 0;
     }
 
-    public Content() {
+    private Content() {
         favorites = Favorites.getFavorites();
+    }
+
+    private static class Holder {
+        private static final Content instance = new Content();
+    }
+
+    public static Content getInstance() {
+        return Holder.instance;
     }
 
     public int getInplaceId() {

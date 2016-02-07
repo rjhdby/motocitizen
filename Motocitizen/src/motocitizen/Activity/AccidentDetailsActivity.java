@@ -23,7 +23,9 @@ import java.util.List;
 import motocitizen.MyApp;
 import motocitizen.accident.Accident;
 import motocitizen.app.general.popups.AccidentListPopup;
+import motocitizen.app.general.user.Auth;
 import motocitizen.content.AccidentStatus;
+import motocitizen.content.Content;
 import motocitizen.content.Medicine;
 import motocitizen.fragments.DetailHistoryFragment;
 import motocitizen.fragments.DetailMessagesFragment;
@@ -77,7 +79,7 @@ public class AccidentDetailsActivity extends ActionBarActivity {
 
         Bundle b = getIntent().getExtras();
         accidentID = b.getInt("accidentID");
-        currentPoint = MyApp.getContent().get(accidentID);
+        currentPoint = Content.getInstance().get(accidentID);
 
         //NewAccidentReceived.removeNotification(accidentID);
 
@@ -110,7 +112,7 @@ public class AccidentDetailsActivity extends ActionBarActivity {
     }
 
     public void update() {
-        currentPoint = MyApp.getContent().get(accidentID);
+        currentPoint = Content.getInstance().get(accidentID);
 
         ActionBar actionBar = getSupportActionBar();
         //TODO Разобраться с nullPointerException и убрать костыль
@@ -157,11 +159,11 @@ public class AccidentDetailsActivity extends ActionBarActivity {
 
     private void menuReconstruction() {
         if (mMenu == null) return;
-        currentPoint = MyApp.getContent().get(accidentID);
+        currentPoint = Content.getInstance().get(accidentID);
         MenuItem finish = mMenu.findItem(R.id.menu_acc_finish);
         MenuItem hide   = mMenu.findItem(R.id.menu_acc_hide);
-        finish.setVisible(MyApp.getRole().isModerator());
-        hide.setVisible(MyApp.getRole().isModerator());
+        finish.setVisible(Auth.getInstance().getRole().isModerator());
+        hide.setVisible(Auth.getInstance().getRole().isModerator());
         finish.setTitle(R.string.finish);
         hide.setTitle(R.string.hide);
         switch (currentPoint.getStatus()) {
@@ -237,7 +239,7 @@ public class AccidentDetailsActivity extends ActionBarActivity {
     }
 
     private void sendFinishRequest() {
-        if (MyApp.getContent().get(accidentID).getStatus() == ENDED) {
+        if (Content.getInstance().get(accidentID).getStatus() == ENDED) {
             //TODO Суперкостыль
             accNewState = ACTIVE;
             new AccidentChangeStateRequest(new AccidentChangeCallback(), accidentID, ACTIVE.toCode());
@@ -249,7 +251,7 @@ public class AccidentDetailsActivity extends ActionBarActivity {
     }
 
     private void sendHideRequest() {
-        if (MyApp.getContent().get(accidentID).getStatus() == ENDED) {
+        if (Content.getInstance().get(accidentID).getStatus() == ENDED) {
             //TODO Суперкостыль
             accNewState = ACTIVE;
             new AccidentChangeStateRequest(new AccidentChangeCallback(), accidentID, ACTIVE.toCode());

@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 import motocitizen.MyApp;
+import motocitizen.geolocation.MyLocationManager;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
@@ -21,7 +22,7 @@ public class AccidentsRequest extends HTTPClient {
         this.silent = silent;
         this.listener = listener;
         post = new HashMap<>();
-        Location location = MyApp.getLocationManager().getLocation();
+        Location location = MyLocationManager.getInstance().getLocation();
         String   user     = Preferences.getLogin();
         if (!user.equals("")) {
             post.put("user", user);

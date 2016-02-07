@@ -18,6 +18,8 @@ import org.json.JSONObject;
 import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.MyApp;
 import motocitizen.accident.Volunteer;
+import motocitizen.app.general.user.Auth;
+import motocitizen.content.Content;
 import motocitizen.content.VolunteerStatus;
 import motocitizen.draw.VolunteerRow;
 import motocitizen.main.R;
@@ -95,10 +97,10 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     private void setupAccess() {
         motocitizen.accident.Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
         int                           id       = accident.getId();
-        boolean                       active   = accident.isActive() && MyApp.isAuthorized();
-        onwayButton.setVisibility(id != Preferences.getOnWay() && id != MyApp.getContent().getInplaceId() && active ? View.VISIBLE : View.GONE);
-        onwayCancelButton.setVisibility(id == Preferences.getOnWay() && id != MyApp.getContent().getInplaceId() && active ? View.VISIBLE : View.GONE);
-        onwayDisabledButton.setVisibility(id == MyApp.getContent().getInplaceId() && active ? View.VISIBLE : View.GONE);
+        boolean                       active   = accident.isActive() && Auth.getInstance().isAuthorized();
+        onwayButton.setVisibility(id != Preferences.getOnWay() && id != Content.getInstance().getInplaceId() && active ? View.VISIBLE : View.GONE);
+        onwayCancelButton.setVisibility(id == Preferences.getOnWay() && id != Content.getInstance().getInplaceId() && active ? View.VISIBLE : View.GONE);
+        onwayDisabledButton.setVisibility(id == Content.getInstance().getInplaceId() && active ? View.VISIBLE : View.GONE);
     }
 
     private void showDialog(int type) {
@@ -184,7 +186,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     private class UpdateAccidentsCallback implements AsyncTaskCompleteListener {
         @Override
         public void onTaskComplete(JSONObject result) {
-            MyApp.getContent().requestUpdate();
+            Content.getInstance().requestUpdate();
             ((AccidentDetailsActivity) getActivity()).update();
             update();
         }

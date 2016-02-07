@@ -19,6 +19,7 @@ import motocitizen.accident.History;
 import motocitizen.accident.Message;
 import motocitizen.accident.Volunteer;
 import motocitizen.app.general.popups.AccidentListPopup;
+import motocitizen.app.general.user.Auth;
 import motocitizen.content.Medicine;
 import motocitizen.main.R;
 import motocitizen.utils.Const;
@@ -108,7 +109,7 @@ public class Rows {
         LayoutInflater li = (LayoutInflater) MyApp.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View tr;
-        int  user  = MyApp.getAuth().getId();
+        int  user  = Auth.getInstance().getId();
         int  resource;
         int  owner = message.getOwnerId();
         resource = message.getOwnerId() == user ? R.layout.owner_message_row : R.layout.message_row;
@@ -153,7 +154,7 @@ public class Rows {
         LayoutInflater li        = (LayoutInflater) MyApp.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         TableRow       tr        = (TableRow) li.inflate(R.layout.history_row, parent, false);
         TextView       ownerView = (TextView) tr.findViewById(R.id.owner);
-        if (history.getOwnerId() == MyApp.getAuth().getId()) {
+        if (history.getOwnerId() == Auth.getInstance().getId()) {
             ownerView.setBackgroundColor(Color.DKGRAY);
         }
         ownerView.setText(history.getOwner());

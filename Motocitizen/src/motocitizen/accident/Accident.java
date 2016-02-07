@@ -12,11 +12,13 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
-import motocitizen.MyApp;
+import motocitizen.app.general.user.Auth;
 import motocitizen.content.AccidentStatus;
+import motocitizen.content.Content;
 import motocitizen.content.Medicine;
 import motocitizen.content.Type;
 import motocitizen.database.StoreMessages;
+import motocitizen.geolocation.MyLocationManager;
 import motocitizen.utils.Preferences;
 import motocitizen.utils.SortedHashMap;
 
@@ -74,7 +76,7 @@ public class Accident {
             parseMessages(json.getJSONArray("m"));
             parseVolunteers(json.getJSONArray("v"));
             parseHistory(json.getJSONArray("h"));
-            favorite = MyApp.getFavorites().contains(id);
+            favorite = Content.getInstance().favorites.contains(id);
         } catch (Exception e) {
             e.printStackTrace();
             noError = false;
@@ -178,7 +180,7 @@ public class Accident {
     }
 
     private Double getDistanceFromUser() {
-        Location userLocation = MyApp.getLocationManager().getDirtyLocation();
+        Location userLocation = MyLocationManager.getInstance().getDirtyLocation();
         return (double) getLocation().distanceTo(userLocation);
     }
 
@@ -198,7 +200,7 @@ public class Accident {
     }
 
     public boolean isInvisible() {
-        boolean hidden         = status == HIDDEN && !MyApp.getRole().isModerator();
+        boolean hidden         = status == HIDDEN && !Auth.getInstance().getRole().isModerator();
         boolean distanceFilter = getDistanceFromUser() > Preferences.getVisibleDistance() * 1000;
         boolean typeFilter     = Preferences.isHidden(getType());
         boolean timeFilter     = time.getTime() + (long) Preferences.getHoursAgo() * 60 * 60 * 1000 < (new Date()).getTime();

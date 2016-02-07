@@ -20,8 +20,10 @@ import java.util.Map;
 
 import motocitizen.MyApp;
 import motocitizen.accident.Accident;
+import motocitizen.content.Content;
 import motocitizen.content.Medicine;
 import motocitizen.content.Type;
+import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.maps.MyMapManager;
 import motocitizen.utils.DelayedAction;
@@ -38,7 +40,7 @@ public class MyGoogleMapManager implements MyMapManager {
     private DelayedAction delayedAction;
 
     public MyGoogleMapManager(FragmentActivity activity) {
-        jumpToPoint(MyApp.getLocationManager().getLocation());
+        jumpToPoint(MyLocationManager.getInstance().getLocation());
         selected = "";
         //parent.removeAllViews();
         //inflate(parent);
@@ -87,7 +89,7 @@ public class MyGoogleMapManager implements MyMapManager {
             user.remove();
         }
 
-        Location location = MyApp.getLocationManager().getLocation();
+        Location location = MyLocationManager.getInstance().getLocation();
         //if(location != null) {
         user = map.addMarker(new MarkerOptions().position(MyUtils.LocationToLatLng(location)).title(Type.USER.toString()).icon(Type.USER.getIcon()));
         //} else {
@@ -112,8 +114,8 @@ public class MyGoogleMapManager implements MyMapManager {
         if (map == null) return;
         init();
         accidents.clear();
-        for (int id : MyApp.getContent().keySet()) {
-            Accident point = MyApp.getContent().get(id);
+        for (int id : Content.getInstance().keySet()) {
+            Accident point = Content.getInstance().get(id);
             if (point.isInvisible()) continue;
             String title = point.getType().toString();
             title += point.getMedicine() != Medicine.UNKNOWN ? ", " + point.getMedicine().toString() : "";

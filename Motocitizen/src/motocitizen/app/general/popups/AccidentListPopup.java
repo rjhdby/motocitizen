@@ -2,8 +2,9 @@ package motocitizen.app.general.popups;
 
 import android.widget.PopupWindow;
 
-import motocitizen.MyApp;
 import motocitizen.accident.Accident;
+import motocitizen.app.general.user.Auth;
+import motocitizen.content.Content;
 import motocitizen.content.Medicine;
 import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
@@ -14,7 +15,7 @@ public class AccidentListPopup extends PopupWindowGeneral {
 
     public AccidentListPopup(int id) {
         super();
-        point = MyApp.getContent().get(id);
+        point = Content.getInstance().get(id);
         accText = getAccidentTextToCopy(point);
     }
 
@@ -24,10 +25,10 @@ public class AccidentListPopup extends PopupWindowGeneral {
             content.addView(phoneButtonRow(phone), layoutParams);
             content.addView(smsButtonRow(phone), layoutParams);
         }
-        if (MyApp.getRole().isModerator() || MyApp.getAuth().getLogin().equals(point.getOwner()))
+        if (Auth.getInstance().getRole().isModerator() || Auth.getInstance().getLogin().equals(point.getOwner()))
             content.addView(finishButtonRow(point));
 
-        if (MyApp.getRole().isModerator()) {
+        if (Auth.getInstance().getRole().isModerator()) {
             content.addView(hideButtonRow(point));
             content.addView(banButtonRow(point.getId()), layoutParams);
         }

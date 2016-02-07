@@ -5,7 +5,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import motocitizen.MyApp;
+import motocitizen.app.general.user.Auth;
 import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
 
@@ -13,7 +13,7 @@ public class InplaceRequest extends HTTPClient {
     @SuppressWarnings("unchecked")
     public InplaceRequest(int id) {
         post = new HashMap<>();
-        post.put("login", MyApp.getAuth().getLogin());
+        post.put("login", Auth.getInstance().getLogin());
         post.put("id", String.valueOf(id));
         post.put("m", Methods.INPLACE.toCode());
         execute(post);

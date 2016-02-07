@@ -10,6 +10,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import motocitizen.Activity.AuthActivity;
+import motocitizen.Activity.MainScreenActivity;
 import motocitizen.MyApp;
 import motocitizen.main.R;
 import motocitizen.network.requests.AuthRequest;
@@ -30,11 +31,20 @@ public class Auth {
         isAuthorized = false;
     }
 
-    public Auth() {
+    private Auth() {
         if (Preferences.isAnonim()) return;
         login = Preferences.getLogin();
         password = Preferences.getPassword();
-        if (!auth(login, password)) showLogin();
+        //if (!auth(login, password)) showLogin();
+        auth(login, password);
+    }
+
+    private static class Holder {
+        private final static Auth instance = new Auth();
+    }
+
+    public static Auth getInstance() {
+        return Holder.instance;
     }
 
     public static String makePassHash(String pass) {
@@ -89,6 +99,10 @@ public class Auth {
         Intent i = new Intent(MyApp.getAppContext(), AuthActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         MyApp.getAppContext().startActivity(i);
+    }
+
+    private void logined() {
+        MyApp.getCurrentActivity().startActivity(new Intent(MyApp.getCurrentActivity(), MainScreenActivity.class));
     }
 
     private void message(String text) {
