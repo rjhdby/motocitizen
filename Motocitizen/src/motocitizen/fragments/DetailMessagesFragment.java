@@ -1,6 +1,11 @@
 package motocitizen.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -14,6 +19,9 @@ import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
 
 import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.accident.Accident;
@@ -30,6 +38,7 @@ import motocitizen.network.requests.SendMessageRequest;
 public class DetailMessagesFragment extends AccidentDetailsFragments {
 
     private ImageButton newMessageButton;
+    private ImageButton newPhotoButton;
 
 
     private EditText  mcNewMessageText;
@@ -54,6 +63,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         View viewMain = inflater.inflate(R.layout.fragment_detail_messages, container, false);
 
         newMessageButton = (ImageButton) viewMain.findViewById(R.id.new_message_send);
+        newPhotoButton = (ImageButton) viewMain.findViewById(R.id.new_photo);
         mcNewMessageText = (EditText) viewMain.findViewById(R.id.new_message_text);
         messagesTable = (ViewGroup) viewMain.findViewById(R.id.details_messages_table);
         newMessageArea = viewMain.findViewById(R.id.new_message_area);
@@ -62,6 +72,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
 
         mcNewMessageText.addTextChangedListener(new NewMessageTextWatcher());
         newMessageButton.setOnClickListener(new SendMessageClickListener());
+        newPhotoButton.setOnClickListener(new TakePhotoClickListener());
         update();
 
         return viewMain;
@@ -175,6 +186,35 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
             v.getLocationOnScreen(viewLocation);
             popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
             return true;
+        }
+    }
+
+    private class TakePhotoClickListener implements View.OnClickListener{
+
+        @Override
+        public void onClick(View view) {
+            final String appDirectoryName = "motoDTP";
+            final File imageRoot = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), appDirectoryName);
+            if(!imageRoot.isDirectory()){
+                imageRoot.mkdir();
+            }
+
+            String fileName = (int) Math.random()*10000 + ".jpg";
+            File newFile = new File(fileName);
+            while (newFile.isFile()){
+                fileName = (int) Math.random()*10000 + ".jpg";
+                newFile = new File(fileName);
+            }
+            try {
+                newFile.createNewFile();
+            } catch (IOException e) {}
+
+            Uri outputFileUri = Uri.fromFile(newFile);
+
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+
+            startActivityForResult(cameraIntent, 0);
         }
     }
 }
