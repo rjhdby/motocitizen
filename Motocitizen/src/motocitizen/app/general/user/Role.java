@@ -1,6 +1,6 @@
 package motocitizen.app.general.user;
 
-enum Role {
+public enum Role {
     RO("readonly", "только чтение"),
     BANNED("banned", "забанен"),
     STANDARD("standart", "пользователь"),
