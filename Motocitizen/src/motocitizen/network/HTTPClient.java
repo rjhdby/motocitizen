@@ -29,7 +29,7 @@ abstract public class HTTPClient extends AsyncTask<Map<String, String>, Integer,
     /* constants */
     private final static String CHARSET       = "UTF-8";
     private final static String USERAGENT     = "Mozilla/5.0 (Linux; Android 4.4; Nexus 5 Build/_BuildID_) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/30.0.0.0 Mobile Safari/537.36";
-    private final static String SERVER        = "forum.moto.msk.ru/mobile/main_mc_acc_json.php";
+    private final static String SERVER        = "motodtp.info/mobile/main_mc_acc_json.php";
     private final static int    GOOD_RESPONSE = 200;
     /* end constants */
 
@@ -120,6 +120,7 @@ abstract public class HTTPClient extends AsyncTask<Map<String, String>, Integer,
         JSONObject reader;
         //TODO порнография какая то
         try {
+            Log.d("HTTP RESPONSE", response.toString());
             reader = new JSONObject(response.toString());
         } catch (JSONException e) {
             e.printStackTrace();

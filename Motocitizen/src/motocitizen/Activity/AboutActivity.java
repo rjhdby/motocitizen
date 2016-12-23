@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.View;
@@ -16,7 +16,7 @@ import motocitizen.main.R;
 import motocitizen.utils.ChangeLog;
 import motocitizen.utils.Preferences;
 
-public class AboutActivity extends ActionBarActivity implements View.OnClickListener {
+public class AboutActivity extends AppCompatActivity implements View.OnClickListener {
 
 //Посмотреть http://android-developers.blogspot.in/2013/08/actionbarcompat-and-io-2013-app-source.html
 
@@ -29,8 +29,7 @@ public class AboutActivity extends ActionBarActivity implements View.OnClickList
         ((TextView) this.findViewById(R.id.about_code_version)).setText(getString(R.string.code_version_prefix) + ": " + Preferences.getCurrentVersion());
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
+        if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
         WebView wv = (WebView) findViewById(R.id.change_log);
         wv.setBackgroundColor(Color.rgb(48, 48, 48));
         wv.loadDataWithBaseURL(null, ChangeLog.getLog(true), "text/html", "UTF-8", null);

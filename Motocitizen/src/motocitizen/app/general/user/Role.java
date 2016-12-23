@@ -1,6 +1,6 @@
 package motocitizen.app.general.user;
 
-public enum Role {
+enum Role {
     RO("readonly", "только чтение"),
     BANNED("banned", "забанен"),
     STANDARD("standart", "пользователь"),
@@ -23,24 +23,12 @@ public enum Role {
         return RO;
     }
 
-    public boolean isRO() {
-        return this == RO;
-    }
-
     public boolean isStandart() {
         return this.compareTo(STANDARD) >= 0;
     }
 
     public boolean isModerator() {
         return this.compareTo(MODERATOR) >= 0;
-    }
-
-    public boolean isAdmin() {
-        return this.compareTo(ADMINISTRATOR) >= 0;
-    }
-
-    public boolean isDeveloper() {
-        return this.compareTo(DEVELOPER) >= 0;
     }
 
     public String getName() {

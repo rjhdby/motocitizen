@@ -4,29 +4,26 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
-import motocitizen.content.MessageStatus;
 import motocitizen.utils.Preferences;
 
 public class Message {
-    private static final String[] prerequisites = {"id", "id_user", "owner", "status", "text", "uxtime"};
+    private static final String[] prerequisites = { "id", "id_user", "owner", "status", "text", "uxtime" };
 
-    private int           id;
-    private int           ownerId;
-    private boolean       unread;
-    private boolean       self;
-    private boolean       noError;
-    private String        owner;
-    private String        text;
-    private Date          time;
-    private MessageStatus status;
+    private int     id;
+    private int     ownerId;
+    private boolean unread;
+    private boolean self;
+    private boolean noError;
+    private String  owner;
+    private String  text;
+    private Date    time;
 
-    public Message(JSONObject json) {
+    Message(JSONObject json) {
         noError = checkPrerequisites(json);
         if (noError) try {
             id = json.getInt("id");
             ownerId = json.getInt("id_user");
             owner = json.getString("owner");
-            status = MessageStatus.parse(json.getString("status"));
             text = json.getString("text");
             time = new Date(json.getLong("uxtime") * 1000);
             self = ownerId == Preferences.getUserId();
@@ -65,7 +62,7 @@ public class Message {
         return time;
     }
 
-    public boolean isUnread() {
+    boolean isUnread() {
         return unread;
     }
 
@@ -73,11 +70,7 @@ public class Message {
         this.unread = false;
     }
 
-    public boolean isSelf() {
-        return self;
-    }
-
-    public boolean isNoError() {
+    boolean isNoError() {
         return noError;
     }
 }

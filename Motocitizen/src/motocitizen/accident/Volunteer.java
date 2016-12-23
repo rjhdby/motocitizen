@@ -17,7 +17,7 @@ public class Volunteer {
     private Date            time;
     private VolunteerStatus status;
 
-    public Volunteer(JSONObject json) {
+    Volunteer(JSONObject json) {
         noError = checkPrerequisites(json);
         if (noError) try {
             id = json.getInt("id");
@@ -58,7 +58,7 @@ public class Volunteer {
         return self;
     }
 
-    public boolean isNoError() {
+    boolean isNoError() {
         return noError;
     }
 }

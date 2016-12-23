@@ -3,12 +3,12 @@ package motocitizen.maps.google;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -39,6 +39,17 @@ public class MyGoogleMapManager implements MyMapManager {
 
     private DelayedAction delayedAction;
 
+    private class OnMapCreated implements OnMapReadyCallback {
+
+        @Override
+        public void onMapReady(GoogleMap googleMap) {
+            map = googleMap;
+            delayedAction.makeAction();
+            init();
+            placeUser();
+        }
+    }
+
     public MyGoogleMapManager(FragmentActivity activity) {
         jumpToPoint(MyLocationManager.getInstance().getLocation());
         selected = "";
@@ -57,31 +68,9 @@ public class MyGoogleMapManager implements MyMapManager {
         fragmentTransaction.add(R.id.google_map, mapFragment, "MAP").commit();
         //= (SupportMapFragment) fragmentManager.findFragmentById(R.id.google_map);
 
-        new AsyncTask<Map<String, Integer>, Integer, Integer>() {
-            @SafeVarargs
-            @Override
-            protected final Integer doInBackground(Map<String, Integer>... params) {
-                for (int i = 0; i < 5; i++) {
-                    map = mapFragment.getMap();
-                    if (map != null) break;
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                return map == null ? 0 : 1;
-            }
 
-            @Override
-            protected void onPostExecute(Integer integer) {
-                super.onPostExecute(integer);
-                if (integer == 0) return;
-                delayedAction.makeAction();
-                init();
-                placeUser();
-            }
-        }.execute(null, null, null);
+        mapFragment.getMapAsync(new OnMapCreated());
+
     }
 
     public void placeUser() {
@@ -122,7 +111,7 @@ public class MyGoogleMapManager implements MyMapManager {
             title += ", " + MyUtils.getIntervalFromNowInText(point.getTime()) + " назад";
 
             float alpha;
-            int age = (int) (((new Date()).getTime() - point.getTime().getTime()) / 3600000);
+            int   age = (int) (((new Date()).getTime() - point.getTime().getTime()) / 3600000);
             if (age < 2) {
                 alpha = 1.0f;
             } else if (age < 6) {

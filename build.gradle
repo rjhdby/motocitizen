@@ -1,39 +1,47 @@
 buildscript {
-  repositories {
-    mavenCentral()
-  }
-  dependencies {
-    classpath 'com.android.tools.build:gradle:1.2.3'
-  }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.3'
+    }
 }
 apply plugin: 'com.android.application'
 
 
 
 android {
-  compileSdkVersion 23
-  buildToolsVersion '23.0.2'
-  dependencies {
+    compileSdkVersion 25
+    buildToolsVersion '25.0.2'
+    dependencies {
 
-  }
-  sourceSets {
-    main {
-      manifest.srcFile 'AndroidManifest.xml'
-      java.srcDirs = ['Motocitizen/src','Motocitizen/assets']
-      resources.srcDirs = ['Motocitizen/src','Motocitizen/assets']
-      aidl.srcDirs = ['Motocitizen/src','Motocitizen/assets']
-      renderscript.srcDirs = ['Motocitizen/src','Motocitizen/assets']
-      res.srcDirs = ['Motocitizen/res','Motocitizen/res/tablerows']
-      assets.srcDirs = ['Motocitizen/assets']
     }
-    instrumentTest.setRoot('tests')
-    debug.setRoot('build-types/debug')
-    release.setRoot('build-types/release')
-  }
+    defaultConfig {
+        multiDexEnabled true
+        applicationId "motocitizen.main"
+    }
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['Motocitizen/src', 'Motocitizen/assets']
+            resources.srcDirs = ['Motocitizen/src', 'Motocitizen/assets']
+            aidl.srcDirs = ['Motocitizen/src', 'Motocitizen/assets']
+            renderscript.srcDirs = ['Motocitizen/src', 'Motocitizen/assets']
+            res.srcDirs = ['Motocitizen/res', 'Motocitizen/res/tablerows']
+            assets.srcDirs = ['Motocitizen/assets']
+        }
+        instrumentTest.setRoot('tests')
+        debug.setRoot('build-types/debug')
+        release.setRoot('build-types/release')
+    }
 }
 dependencies {
-  compile fileTree(include: ['*.jar'], dir: 'Motocitizen/libs')
-  compile 'com.android.support:appcompat-v7:23.+'
-  compile 'com.google.android.gms:play-services:7.0.0'
-  compile files('Motocitizen/libs/nineoldandroids-2.4.0.jar')
+    compile fileTree(include: ['*.jar'], dir: 'Motocitizen/libs')
+    compile 'com.android.support:appcompat-v7:25.0.1'
+    compile 'com.google.android.gms:play-services:10.0.1'
+    compile 'com.android.support:multidex:1.0.1'
+//  compile files('Motocitizen/libs/nineoldandroids-2.4.0.jar')
 }

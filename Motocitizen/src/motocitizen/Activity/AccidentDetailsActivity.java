@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,7 +41,7 @@ import static motocitizen.content.AccidentStatus.ACTIVE;
 import static motocitizen.content.AccidentStatus.ENDED;
 import static motocitizen.content.AccidentStatus.HIDDEN;
 
-public class AccidentDetailsActivity extends ActionBarActivity {
+public class AccidentDetailsActivity extends AppCompatActivity {
 
     /* constants */
     private static final int SMS_MENU_MIN_ID  = 100;
@@ -75,7 +75,7 @@ public class AccidentDetailsActivity extends ActionBarActivity {
         setContentView(R.layout.activity_accident_details);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
 
         Bundle b = getIntent().getExtras();
         accidentID = b.getInt("accidentID");
@@ -147,7 +147,7 @@ public class AccidentDetailsActivity extends ActionBarActivity {
             mMenu.add(0, SMS_MENU_MIN_ID, 0, getString(R.string.send_sms) + contactNumbers.get(0));
             mMenu.add(0, CALL_MENU_MIN_ID, 0, getString(R.string.make_call) + contactNumbers.get(0));
         } else {
-            SubMenu smsSub = mMenu.addSubMenu(getString(R.string.send_sms));
+            SubMenu smsSub  = mMenu.addSubMenu(getString(R.string.send_sms));
             SubMenu callSub = mMenu.addSubMenu(getString(R.string.make_call));
             for (int i = 0; i < contactNumbers.size(); i++) {
                 smsSub.add(0, SMS_MENU_MIN_ID + i, 0, contactNumbers.get(i));
@@ -217,18 +217,18 @@ public class AccidentDetailsActivity extends ActionBarActivity {
                 return true;
         }
         if (item.getItemId() >= SMS_MENU_MIN_ID && item.getItemId() < SMS_MENU_MAX_ID) {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
+            Intent intent    = new Intent(Intent.ACTION_VIEW);
             String smsPrefix = getString(R.string.send_sms);
-            String number = (String) item.getTitle();
+            String number    = (String) item.getTitle();
             //if (number.indexOf(smsPrefix) != -1)
             if (number.contains(smsPrefix))
                 number = number.substring(smsPrefix.length(), number.length());
             intent.setData(Uri.parse("sms:" + number));
             startActivity(intent);
         } else if (item.getItemId() >= CALL_MENU_MIN_ID && item.getItemId() < CALL_MENU_MAX_ID) {
-            Intent intent = new Intent(Intent.ACTION_DIAL);
+            Intent intent     = new Intent(Intent.ACTION_DIAL);
             String callPrefix = getString(R.string.make_call);
-            String number = (String) item.getTitle();
+            String number     = (String) item.getTitle();
             //if (number.indexOf(callPrefix) != -1)
             if (number.contains(callPrefix))
                 number = number.substring(callPrefix.length(), number.length());
@@ -318,9 +318,9 @@ public class AccidentDetailsActivity extends ActionBarActivity {
         public boolean onLongClick(View v) {
             PopupWindow popupWindow;
             popupWindow = (new AccidentListPopup(currentPoint.getId())).getPopupWindow();
-            int viewLocation[] = new int[2];
+            int viewLocation[] = new int[ 2 ];
             v.getLocationOnScreen(viewLocation);
-            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
+            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[ 0 ], viewLocation[ 1 ]);
             return true;
         }
     }

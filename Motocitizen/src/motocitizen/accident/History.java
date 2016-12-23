@@ -15,18 +15,16 @@ public class History {
     private boolean       self;
     private boolean       noError;
     private String        owner;
-    private String        actionText;
     private Date          time;
     private HistoryAction action;
 
-    public History(JSONObject json) {
+    History(JSONObject json) {
         noError = checkPrerequisites(json);
         if (noError) try {
             id = json.getInt("id");
             ownerId = json.getInt("id_user");
             owner = json.getString("owner");
             time = new Date(json.getLong("uxtime") * 1000);
-            actionText = json.getString("action");
             action = HistoryAction.parse(json.getString("action"));
             self = ownerId == Preferences.getUserId();
         } catch (Exception e) {
@@ -66,11 +64,7 @@ public class History {
         return time;
     }
 
-    public boolean isSelf() {
-        return self;
-    }
-
-    public boolean isNoError() {
+    boolean isNoError() {
         return noError;
     }
 }

@@ -7,8 +7,11 @@ import android.content.pm.PackageManager;
 import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import motocitizen.MyApp;
 import motocitizen.fragments.MainScreenFragment;
@@ -18,7 +21,7 @@ import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.utils.ChangeLog;
 
-public class MainScreenActivity extends ActionBarActivity {
+public class MainScreenActivity extends AppCompatActivity {
 
     private static ActionBar actionBar;
 
@@ -32,7 +35,7 @@ public class MainScreenActivity extends ActionBarActivity {
 
     private void initSecuredComponents() {
         MyApp.geocoder = new Geocoder(this);
-        new GCMRegistration();
+        new GCMRegistration(this);
         new GCMBroadcastReceiver();
     }
 
@@ -80,8 +83,9 @@ public class MainScreenActivity extends ActionBarActivity {
         if (!subTitle.isEmpty()) actionBar.setSubtitle(subTitle);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults.length == 0) return;
         switch (requestCode) {

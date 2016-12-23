@@ -1,13 +1,15 @@
 package motocitizen.gcm;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
@@ -26,8 +28,8 @@ public class GCMRegistration {
     private GoogleCloudMessaging gcm;
     private String               regid;
 
-    public GCMRegistration() {
-        if (!checkPlayServices()) return;
+    public GCMRegistration(Context context) {
+        if (!checkPlayServices(context)) return;
         gcm = GoogleCloudMessaging.getInstance(MyApp.getAppContext());
         regid = getRegistrationId();
         if (regid.isEmpty()) {
@@ -46,11 +48,12 @@ public class GCMRegistration {
         }
     }
 
-    private boolean checkPlayServices() {
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(MyApp.getAppContext());
+    private boolean checkPlayServices(Context context) {
+        GoogleApiAvailability app        = GoogleApiAvailability.getInstance();
+        int                   resultCode = app.isGooglePlayServicesAvailable(context);
         if (resultCode != ConnectionResult.SUCCESS) {
-            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, MyApp.getCurrentActivity(), RESOLUTION_REQUEST).show();
+            if (GoogleApiAvailability.getInstance().isUserResolvableError(resultCode)) {
+                GoogleApiAvailability.getInstance().getErrorDialog((Activity) context, resultCode, RESOLUTION_REQUEST).show();
             } else {
                 Log.d(TAG, "This device is not supported.");
             }

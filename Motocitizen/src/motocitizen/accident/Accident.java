@@ -292,11 +292,4 @@ public class Accident {
         return getType() == Type.MOTO_AUTO || getType() == Type.MOTO_MOTO || getType() == Type.MOTO_MAN;
     }
 
-    public boolean isFavorite() {
-        return favorite;
-    }
-
-    public void setFavorite(boolean favorite) {
-        this.favorite = favorite;
-    }
 }

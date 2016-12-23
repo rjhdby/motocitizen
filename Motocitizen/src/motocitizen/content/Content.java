@@ -1,11 +1,6 @@
 package motocitizen.content;
 
-import android.graphics.Color;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,7 +9,6 @@ import org.json.JSONObject;
 import java.util.Date;
 import java.util.List;
 
-import motocitizen.MyApp;
 import motocitizen.accident.Accident;
 import motocitizen.database.Favorites;
 import motocitizen.network.AsyncTaskCompleteListener;
@@ -56,18 +50,6 @@ public class Content extends SortedHashMap<Accident> {
         new AccidentsRequest(listener, true);
     }
 
-    private FrameLayout noAccidentsNotification() {
-        FrameLayout fl = new FrameLayout(MyApp.getCurrentActivity());
-        TextView    tv = new TextView(MyApp.getCurrentActivity());
-        tv.setText("Нет событий");
-        tv.setTextColor(Color.RED);
-        tv.setGravity(Gravity.CENTER);
-        tv.setBackgroundColor(Color.GRAY);
-        fl.setBackgroundColor(Color.GRAY);
-        fl.addView(tv, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        return fl;
-    }
-
     public void requestUpdate() {
         new AccidentsRequest(new AccidentsRequestCallback(), true);
     }
@@ -100,8 +82,6 @@ public class Content extends SortedHashMap<Accident> {
 
         public void onTaskComplete(JSONObject result) {
             if (!result.has("error")) parseJSON(result);
-            //((MyActivity) MyApp.getCurrentActivity()).redraw();
-            //MyApp.getMap().placeAccidents();
         }
     }
 }

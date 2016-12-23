@@ -1,7 +1,7 @@
 package motocitizen.Activity;
 
-public interface MyFragmentInterface {
-    public void setPermissions();
+interface MyFragmentInterface {
+    void setPermissions();
 
-    public void redraw();
+    void redraw();
 }

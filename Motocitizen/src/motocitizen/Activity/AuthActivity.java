@@ -3,7 +3,7 @@ package motocitizen.Activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
@@ -20,7 +20,7 @@ import motocitizen.app.general.user.Auth;
 import motocitizen.main.R;
 import motocitizen.utils.Preferences;
 
-public class AuthActivity extends ActionBarActivity/* implements View.OnClickListener*/ {
+public class AuthActivity extends AppCompatActivity/* implements View.OnClickListener*/ {
 
     private Button logoutBtn;
     private Button loginBtn;
@@ -39,7 +39,7 @@ public class AuthActivity extends ActionBarActivity/* implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MyApp.setCurrentActivity(this);
-        if(Auth.getInstance().isAuthorized()){
+        if (Auth.getInstance().isAuthorized()) {
             MyApp.getCurrentActivity().startActivity(new Intent(MyApp.getCurrentActivity(), MainScreenActivity.class));
         }
         setContentView(R.layout.auth);

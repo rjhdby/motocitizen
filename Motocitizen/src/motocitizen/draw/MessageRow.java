@@ -4,10 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
-import motocitizen.MyApp;
 import motocitizen.accident.Message;
 import motocitizen.app.general.user.Auth;
 import motocitizen.main.R;

@@ -1,8 +1,11 @@
 package motocitizen.Activity;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
@@ -17,8 +20,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -74,7 +77,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         setContentView(R.layout.create_point);
         initialLocation = MyLocationManager.getInstance().getLocation();
         accident = createDefaultAccident();
-        map = makeMap();
+        makeMap();
         confirmButton = (Button) findViewById(R.id.CREATE);
         EditText createFinalText = (EditText) findViewById(R.id.create_final_text);
         createFinalText.addTextChangedListener(new FinalTextWatcher());
@@ -107,49 +110,62 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         return new Accident(accident);
     }
 
-    private GoogleMap makeMap() {
+    private void enableMyLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+            map.setMyLocationEnabled(true);
+    }
+
+    private class OnMapCreated implements OnMapReadyCallback {
+
+        @Override
+        public void onMapReady(GoogleMap googleMap) {
+            map = googleMap;
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(accident.getLocation()), 16));
+            enableMyLocation();
+            map.getUiSettings().setMyLocationButtonEnabled(true);
+            map.getUiSettings().setZoomControlsEnabled(true);
+            if (!Auth.getInstance().getRole().isModerator()) {
+                CircleOptions circleOptions = new CircleOptions().center(MyUtils.LocationToLatLng(initialLocation)).radius(RADIUS).fillColor(0x20FF0000);
+                map.addCircle(circleOptions);
+                map.setOnCameraMoveCanceledListener(new GoogleMap.OnCameraMoveCanceledListener() {
+                    @Override
+                    public void onCameraMoveCanceled() {
+                        Button mcCreateFineAddressConfirm = (Button) findViewById(R.id.ADDRESS);
+                        mcCreateFineAddressConfirm.setEnabled(false);
+                        if (initialLocation == null) return;
+                        double distance = MyUtils.LatLngToLocation(map.getCameraPosition().target).distanceTo(initialLocation);
+                        mcCreateFineAddressConfirm.setEnabled(distance < RADIUS);
+                    }
+                });
+            }
+            map.clear();
+            for (int id : Content.getInstance().keySet()) {
+                motocitizen.accident.Accident point = Content.getInstance().get(id);
+                if (point.isInvisible()) continue;
+                String title = point.getType().toString();
+                title += point.getMedicine() == Medicine.NO ? "" : ", " + point.getMedicine().toString();
+                title += ", " + MyUtils.getIntervalFromNowInText(point.getTime()) + " назад";
+
+                float alpha;
+                int   age = (int) (((new Date()).getTime() - point.getTime().getTime()) / 3600000);
+                if (age < 2) {
+                    alpha = 1.0f;
+                } else if (age < 6) {
+                    alpha = 0.5f;
+                } else {
+                    alpha = 0.2f;
+                }
+                map.addMarker(new MarkerOptions().position(new LatLng(point.getLat(), point.getLon())).title(title).icon(point.getType().getIcon()).alpha(alpha));
+            }
+        }
+    }
+
+    private void makeMap() {
         FragmentManager    fragmentManager = this.getSupportFragmentManager();
         SupportMapFragment mapFragment     = (SupportMapFragment) fragmentManager.findFragmentById(R.id.create_map_container);
-        GoogleMap          map             = mapFragment.getMap();
+        mapFragment.getMapAsync(new OnMapCreated());
 
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(accident.getLocation()), 16));
-        map.setMyLocationEnabled(true);
-        map.getUiSettings().setMyLocationButtonEnabled(true);
-        map.getUiSettings().setZoomControlsEnabled(true);
-        if (!Auth.getInstance().getRole().isModerator()) {
-            CircleOptions circleOptions = new CircleOptions().center(MyUtils.LocationToLatLng(initialLocation)).radius(RADIUS).fillColor(0x20FF0000);
-            map.addCircle(circleOptions);
-            map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-                @Override
-                public void onCameraChange(CameraPosition camera) {
-                    Button mcCreateFineAddressConfirm = (Button) findViewById(R.id.ADDRESS);
-                    mcCreateFineAddressConfirm.setEnabled(false);
-                    if (initialLocation == null) return;
-                    double distance = MyUtils.LatLngToLocation(camera.target).distanceTo(initialLocation);
-                    mcCreateFineAddressConfirm.setEnabled(distance < RADIUS);
-                }
-            });
-        }
-        map.clear();
-        for (int id : Content.getInstance().keySet()) {
-            motocitizen.accident.Accident point = Content.getInstance().get(id);
-            if (point.isInvisible()) continue;
-            String title = point.getType().toString();
-            title += point.getMedicine() == Medicine.NO ? "" : ", " + point.getMedicine().toString();
-            title += ", " + MyUtils.getIntervalFromNowInText(point.getTime()) + " назад";
-
-            float alpha;
-            int age = (int) (((new Date()).getTime() - point.getTime().getTime()) / 3600000);
-            if (age < 2) {
-                alpha = 1.0f;
-            } else if (age < 6) {
-                alpha = 0.5f;
-            } else {
-                alpha = 0.2f;
-            }
-            map.addMarker(new MarkerOptions().position(new LatLng(point.getLat(), point.getLon())).title(title).icon(point.getType().getIcon()).alpha(alpha));
-        }
-        return map;
     }
 
     private void setComplete() {
@@ -174,7 +190,23 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     }
 
     private void setupListener() {
-        Integer[] ids = {R.id.BREAK, R.id.STEAL, R.id.OTHER, R.id.ACCIDENT, R.id.MOTO_AUTO, R.id.SOLO, R.id.MOTO_MOTO, R.id.MOTO_MAN, R.id.PEOPLE_OK, R.id.PEOPLE_LIGHT, R.id.PEOPLE_HEAVY, R.id.PEOPLE_LETHAL, R.id.PEOPLE_UNKNOWN, R.id.ADDRESS, R.id.CREATE, R.id.CANCEL, R.id.BACK};
+        Integer[] ids = { R.id.BREAK,
+                          R.id.STEAL,
+                          R.id.OTHER,
+                          R.id.ACCIDENT,
+                          R.id.MOTO_AUTO,
+                          R.id.SOLO,
+                          R.id.MOTO_MOTO,
+                          R.id.MOTO_MAN,
+                          R.id.PEOPLE_OK,
+                          R.id.PEOPLE_LIGHT,
+                          R.id.PEOPLE_HEAVY,
+                          R.id.PEOPLE_LETHAL,
+                          R.id.PEOPLE_UNKNOWN,
+                          R.id.ADDRESS,
+                          R.id.CREATE,
+                          R.id.CANCEL,
+                          R.id.BACK };
         for (int id : ids) findViewById(id).setOnClickListener(this);
     }
 
@@ -187,7 +219,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     }
 
     private void hideAll() {
-        Integer[] ids = {TYPE, MAP, MEDICINE, DESCRIPTION, ACCIDENT};
+        Integer[] ids = { TYPE, MAP, MEDICINE, DESCRIPTION, ACCIDENT };
         for (int id : ids) findViewById(id).setVisibility(View.INVISIBLE);
     }
 

@@ -1,12 +1,12 @@
 package motocitizen.Activity;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import motocitizen.MyApp;
 import motocitizen.main.R;
 
-public class BusinessCardActivity extends ActionBarActivity {
+public class BusinessCardActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

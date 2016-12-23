@@ -1,6 +1,5 @@
 package motocitizen.app.general.user;
 
-import android.content.Intent;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -9,8 +8,6 @@ import org.json.JSONObject;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import motocitizen.Activity.AuthActivity;
-import motocitizen.Activity.MainScreenActivity;
 import motocitizen.MyApp;
 import motocitizen.main.R;
 import motocitizen.network.requests.AuthRequest;
@@ -35,7 +32,6 @@ public class Auth {
         if (Preferences.isAnonim()) return;
         login = Preferences.getLogin();
         password = Preferences.getPassword();
-        //if (!auth(login, password)) showLogin();
         auth(login, password);
     }
 
@@ -51,8 +47,8 @@ public class Auth {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(pass.getBytes());
-            byte[] digest = md.digest();
-            StringBuilder sb = new StringBuilder();
+            byte[]        digest = md.digest();
+            StringBuilder sb     = new StringBuilder();
             for (byte b : digest) {
                 sb.append(String.format("%02x", b & 0xff));
             }
@@ -93,16 +89,6 @@ public class Auth {
             message(MyApp.getAppContext().getString(R.string.unknown_error));
         }
         return isAuthorized;
-    }
-
-    private void showLogin() {
-        Intent i = new Intent(MyApp.getAppContext(), AuthActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        MyApp.getAppContext().startActivity(i);
-    }
-
-    private void logined() {
-        MyApp.getCurrentActivity().startActivity(new Intent(MyApp.getCurrentActivity(), MainScreenActivity.class));
     }
 
     private void message(String text) {
