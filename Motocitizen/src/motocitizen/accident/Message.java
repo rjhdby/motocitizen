@@ -12,7 +12,6 @@ public class Message {
     private int     id;
     private int     ownerId;
     private boolean unread;
-    private boolean self;
     private boolean noError;
     private String  owner;
     private String  text;
@@ -26,8 +25,7 @@ public class Message {
             owner = json.getString("owner");
             text = json.getString("text");
             time = new Date(json.getLong("uxtime") * 1000);
-            self = ownerId == Preferences.getUserId();
-            unread = !self;
+            unread = ownerId != Preferences.getUserId();
 
         } catch (Exception e) {
             noError = false;

@@ -12,7 +12,6 @@ public class History {
 
     private int           id;
     private int           ownerId;
-    private boolean       self;
     private boolean       noError;
     private String        owner;
     private Date          time;
@@ -26,7 +25,6 @@ public class History {
             owner = json.getString("owner");
             time = new Date(json.getLong("uxtime") * 1000);
             action = HistoryAction.parse(json.getString("action"));
-            self = ownerId == Preferences.getUserId();
         } catch (Exception e) {
             e.printStackTrace();
             noError = false;

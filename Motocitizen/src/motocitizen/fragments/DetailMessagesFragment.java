@@ -1,6 +1,5 @@
 package motocitizen.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,8 +25,8 @@ import java.io.IOException;
 import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.accident.Accident;
 import motocitizen.accident.Message;
-import motocitizen.app.general.popups.MessagesPopup;
-import motocitizen.app.general.user.Auth;
+import motocitizen.utils.popups.MessagesPopup;
+import motocitizen.user.Auth;
 import motocitizen.content.Content;
 import motocitizen.database.StoreMessages;
 import motocitizen.draw.MessageRow;
@@ -106,7 +105,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
     }
 
     private void setupAccess() {
-        newMessageArea.setVisibility(Auth.getInstance().getRole().isStandart() ? View.VISIBLE : View.INVISIBLE);
+        newMessageArea.setVisibility(Auth.getInstance().getRole().isStandard() ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void message(String text) {
@@ -181,7 +180,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         @Override
         public boolean onLongClick(View v) {
             PopupWindow popupWindow;
-            popupWindow = (new MessagesPopup(message.getId(), accident.getId())).getPopupWindow();
+            popupWindow = (new MessagesPopup(getActivity(), message.getId(), accident.getId())).getPopupWindow(getActivity());
             int viewLocation[] = new int[2];
             v.getLocationOnScreen(viewLocation);
             popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);

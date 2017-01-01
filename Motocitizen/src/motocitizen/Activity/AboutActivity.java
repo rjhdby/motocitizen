@@ -23,16 +23,15 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MyApp.setCurrentActivity(this);
         setContentView(R.layout.activity_about);
 
-        ((TextView) this.findViewById(R.id.about_code_version)).setText(getString(R.string.code_version_prefix) + ": " + Preferences.getCurrentVersion());
+        ((TextView) this.findViewById(R.id.about_code_version)).setText(getString(R.string.code_version_prefix) + ": " + Preferences.getAppVersion());
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
         WebView wv = (WebView) findViewById(R.id.change_log);
         wv.setBackgroundColor(Color.rgb(48, 48, 48));
-        wv.loadDataWithBaseURL(null, ChangeLog.getLog(true), "text/html", "UTF-8", null);
+        wv.loadDataWithBaseURL(null, ChangeLog.getLog(this, true), "text/html", "UTF-8", null);
 
         findViewById(R.id.businessCardButton).setOnClickListener(this);
 
@@ -54,11 +53,5 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
                 this.startActivity(new Intent(this, BusinessCardActivity.class));
                 break;
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MyApp.setCurrentActivity(this);
     }
 }

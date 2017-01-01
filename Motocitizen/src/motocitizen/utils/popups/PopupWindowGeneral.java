@@ -1,4 +1,4 @@
-package motocitizen.app.general.popups;
+package motocitizen.utils.popups;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -21,29 +21,23 @@ import com.google.android.gms.maps.model.LatLng;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import motocitizen.MyApp;
 import motocitizen.accident.Accident;
 import motocitizen.content.AccidentStatus;
 import motocitizen.main.R;
-import motocitizen.network.requests.AccidentChangeStateRequest;
 import motocitizen.network.AsyncTaskCompleteListener;
+import motocitizen.network.requests.AccidentChangeStateRequest;
 import motocitizen.network.requests.BanRequest;
 import motocitizen.utils.MyUtils;
 
 abstract class PopupWindowGeneral {
 
-    /* constants */
-    private static final String CALL_PREFIX = "Вызов: ";
-    private static final String SMS_PREFIX  = "СМС: ";
-    /* end constants */
-
     final TableRow.LayoutParams layoutParams;
     final TableLayout           content;
     final PopupWindow           popupWindow;
 
-    PopupWindowGeneral() {
+    PopupWindowGeneral(Context context) {
         layoutParams = new TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        content = new TableLayout(MyApp.getCurrentActivity());
+        content = new TableLayout(context);
         content.setOrientation(LinearLayout.HORIZONTAL);
         content.setBackgroundColor(0xFF202020); //TODO ёбаный стыд
         content.setLayoutParams(layoutParams);
@@ -52,7 +46,7 @@ abstract class PopupWindowGeneral {
         popupWindow.setOutsideTouchable(true);
     }
 
-    TableRow shareMessage(final String textToShare) {
+    TableRow shareMessage(final Context context, final String textToShare) {
         TableRow tr = new TableRow(content.getContext());
         Button   b  = new Button(content.getContext());
         b.setText(R.string.share);
@@ -63,7 +57,7 @@ abstract class PopupWindowGeneral {
                 sendIntent.setAction(Intent.ACTION_SEND);
                 sendIntent.putExtra(Intent.EXTRA_TEXT, textToShare);
                 sendIntent.setType("text/plain");
-                MyApp.getCurrentActivity().startActivity(sendIntent);
+                context.startActivity(sendIntent);
                 popupWindow.dismiss();
             }
         });
@@ -71,7 +65,7 @@ abstract class PopupWindowGeneral {
         return tr;
     }
 
-    TableRow copyButtonRow(final String textToCopy) {
+    TableRow copyButtonRow(final Context context, final String textToCopy) {
         TableRow tr = new TableRow(content.getContext());
         Button   b  = new Button(content.getContext());
         b.setText(R.string.copy);
@@ -79,7 +73,7 @@ abstract class PopupWindowGeneral {
             @Override
             public void onClick(View v) {
                 ClipboardManager myClipboard;
-                myClipboard = (ClipboardManager) MyApp.getCurrentActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                myClipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData myClip;
                 myClip = ClipData.newPlainText("text", textToCopy);
                 myClipboard.setPrimaryClip(myClip);
@@ -90,16 +84,15 @@ abstract class PopupWindowGeneral {
         return tr;
     }
 
-    TableRow phoneButtonRow(String phone) {
+    TableRow phoneButtonRow(final Context context, final String phone) {
         Button dial = new Button(content.getContext());
-        dial.setText(CALL_PREFIX + phone);
+        dial.setText(context.getResources().getString(R.string.popup_dial, phone));
         dial.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 popupWindow.dismiss();
                 Intent intent = new Intent(Intent.ACTION_DIAL);
-                String number = (String) ((Button) v).getText();
-                intent.setData(Uri.parse("tel:" + number.replace(CALL_PREFIX, "")));
-                MyApp.getCurrentActivity().startActivity(intent);
+                intent.setData(Uri.parse("tel:" + phone));
+                context.startActivity(intent);
             }
         });
         TableRow tr = new TableRow(content.getContext());
@@ -107,16 +100,15 @@ abstract class PopupWindowGeneral {
         return tr;
     }
 
-    TableRow smsButtonRow(String phone) {
+    TableRow smsButtonRow(final Context context, final String phone) {
         Button dial = new Button(content.getContext());
-        dial.setText(SMS_PREFIX + phone);
+        dial.setText(context.getResources().getString(R.string.popup_sms, phone));
         dial.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 popupWindow.dismiss();
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                String number = (String) ((Button) v).getText();
-                intent.setData(Uri.parse("sms:" + number.replace(SMS_PREFIX, "")));
-                MyApp.getCurrentActivity().startActivity(intent);
+                intent.setData(Uri.parse("sms:" + phone));
+                context.startActivity(intent);
             }
         });
         TableRow tr = new TableRow(content.getContext());
@@ -154,21 +146,21 @@ abstract class PopupWindowGeneral {
         return tr;
     }
 
-    TableRow coordinatesButtonRow(final Accident point) {
+    TableRow coordinatesButtonRow(final Context context, final Accident point) {
         Button coordinates = new Button(content.getContext());
-        coordinates.setText("Скопировать координаты");
+        coordinates.setText(R.string.copy_coordinates);
         coordinates.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 LatLng           latlng = MyUtils.LocationToLatLng(point.getLocation());
                 String           text   = String.valueOf(latlng.latitude) + "," + String.valueOf(latlng.longitude);
                 ClipboardManager myClipboard;
-                myClipboard = (ClipboardManager) MyApp.getCurrentActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                myClipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData myClip;
                 myClip = ClipData.newPlainText("text", text);
                 myClipboard.setPrimaryClip(myClip);
                 popupWindow.dismiss();
-                message("координаты скопированы в буфер обмена");
+                message(context, context.getString(R.string.coordinates_copied));
             }
         });
         TableRow tr = new TableRow(content.getContext());
@@ -176,11 +168,11 @@ abstract class PopupWindowGeneral {
         return tr;
     }
 
-    private void message(String text) {
-        Toast.makeText(MyApp.getCurrentActivity(), text, Toast.LENGTH_LONG).show();
+    private void message(Context context, String text) {
+        Toast.makeText(context, text, Toast.LENGTH_LONG).show();
     }
 
-    TableRow banButtonRow(final int id) {
+    TableRow banButtonRow(final Context context, final int id) {
         Button ban = new Button(content.getContext());
         ban.setText("Забанить");
         //TODO разобраться с пирамидой зла
@@ -192,13 +184,13 @@ abstract class PopupWindowGeneral {
                     public void onTaskComplete(JSONObject result) throws JSONException {
                         if (result.has("error")) {
                             try {
-                                message(result.getString("error"));
+                                message(context, result.getString("error"));
                             } catch (JSONException e) {
-                                message("Неизвестная ошибка");
+                                message(context, "Неизвестная ошибка");
                                 e.printStackTrace();
                             }
                         } else {
-                            message("Пользователь забанен");
+                            message(context, "Пользователь забанен");
                         }
                     }
                 }, id);

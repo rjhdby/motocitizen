@@ -8,6 +8,7 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,19 +16,16 @@ import android.widget.Button;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import motocitizen.main.R;
 import motocitizen.utils.Const;
 import motocitizen.utils.Preferences;
 
 public class SelectSoundFragment extends Fragment {
-    private Map<Integer, Sound> notifications;
-    private ViewGroup           ringtoneList;
-    private int                 currentId;
-    private Uri                 currentUri;
-    private String              currentTitle;
+    private SparseArray<Sound> notifications;
+    private ViewGroup          ringtoneList;
+    private int                currentId;
+    private Uri                currentUri;
+    private String             currentTitle;
 
     {
         currentId = 0;
@@ -60,7 +58,7 @@ public class SelectSoundFragment extends Fragment {
     private void getSystemSounds() {
         RingtoneManager rm = new RingtoneManager(getActivity());
         rm.setType(RingtoneManager.TYPE_NOTIFICATION);
-        notifications = new HashMap<>();
+        notifications = new SparseArray<>();
         Cursor cursor = rm.getCursor();
         if (cursor.getCount() == 0 && !cursor.moveToFirst()) return;
         while (!cursor.isAfterLast() && cursor.moveToNext()) {
@@ -70,15 +68,15 @@ public class SelectSoundFragment extends Fragment {
     }
 
     private void drawList() {
-        for (int key : notifications.keySet()) {
-            inflateRow(ringtoneList, key);
+        for(int i=0;i<notifications.size();i++){
+            inflateRow(ringtoneList, notifications.keyAt(i));
         }
     }
 
     private void inflateRow(ViewGroup viewGroup, int currentPosition) {
         LayoutInflater li = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        TableRow       tr = (TableRow) li.inflate(R.layout.sound_row, viewGroup, false);
+        TableRow tr = (TableRow) li.inflate(R.layout.sound_row, viewGroup, false);
         tr.setTag(currentPosition);
         tr.setOnClickListener(new SoundRowClickListener());
 
@@ -96,7 +94,7 @@ public class SelectSoundFragment extends Fragment {
         public void onClick(View v) {
             int tag = (Integer) v.getTag();
             if (currentId != 0) {
-                ringtoneList.findViewWithTag(currentId).setBackgroundColor(Const.getDefaultBGColor());
+                ringtoneList.findViewWithTag(currentId).setBackgroundColor(Const.getDefaultBGColor(getActivity()));
             }
             currentId = tag;
             v.setBackgroundColor(Color.GRAY);
@@ -119,6 +117,7 @@ public class SelectSoundFragment extends Fragment {
             if (currentTitle.equals("default system")) {
                 Preferences.setDefaultSoundAlarm();
             } else Preferences.setSoundAlarm(currentTitle, currentUri);
+            Preferences.initAlarmSoundUri(getActivity());
             finish();
         }
     }
@@ -127,12 +126,12 @@ public class SelectSoundFragment extends Fragment {
         private final Uri      uri;
         private final Ringtone ringtone;
 
-        public Sound(Uri uri, Ringtone ringtone) {
+        Sound(Uri uri, Ringtone ringtone) {
             this.uri = uri;
             this.ringtone = ringtone;
         }
 
-        public Uri getUri() {
+        Uri getUri() {
             return uri;
         }
 

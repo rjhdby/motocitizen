@@ -1,6 +1,8 @@
 package motocitizen.geolocation;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
@@ -15,35 +17,26 @@ public class MyLocationManager {
     }
 
     private static class Holder {
-        private static SecuredLocationManagerInterface instance;
+        private static SecuredLocationManagerInterface instance = new FakeLocationManager();
     }
 
-    public static SecuredLocationManagerInterface getInstance() {
-        if (Holder.instance == null) {
-            setProvider();
-        }
-        if (Holder.instance instanceof FakeLocationManager && permissionGranted()) {
-            setProvider();
-        }
-        if (Holder.instance instanceof NormalLocationManager && !permissionGranted()) {
-            setProvider();
-        }
-        return Holder.instance;
-    }
-
-    private static void setProvider() {
-        if (permissionGranted()) Holder.instance = new NormalLocationManager();
+    public static void init(Context context) {
+        if (permissionGranted(context)) Holder.instance = new NormalLocationManager();
         else Holder.instance = new FakeLocationManager();
     }
 
-    private static boolean permissionGranted() {
+    public static SecuredLocationManagerInterface getInstance() {
+        return Holder.instance;
+    }
+
+    private static boolean permissionGranted(Context context) {
         if (Build.VERSION.SDK_INT < 23) return true;
-        if (ContextCompat.checkSelfPermission(MyApp.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             return true;
         if (!permissionRequested) {
-            MyApp.getCurrentActivity().requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MyApp.LOCATION_PERMISSION);
+            ((Activity) context).requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MyApp.LOCATION_PERMISSION);
             permissionRequested = true;
         }
-        return ContextCompat.checkSelfPermission(MyApp.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        return ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 }

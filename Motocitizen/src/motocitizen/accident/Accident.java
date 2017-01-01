@@ -12,9 +12,8 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
-import motocitizen.app.general.user.Auth;
+import motocitizen.user.Auth;
 import motocitizen.content.AccidentStatus;
-import motocitizen.content.Content;
 import motocitizen.content.Medicine;
 import motocitizen.content.Type;
 import motocitizen.database.StoreMessages;
@@ -76,7 +75,7 @@ public class Accident {
             parseMessages(json.getJSONArray("m"));
             parseVolunteers(json.getJSONArray("v"));
             parseHistory(json.getJSONArray("h"));
-            favorite = Content.getInstance().favorites.contains(id);
+//            favorite = Content.getInstance().favorites.contains(id);
         } catch (Exception e) {
             e.printStackTrace();
             noError = false;

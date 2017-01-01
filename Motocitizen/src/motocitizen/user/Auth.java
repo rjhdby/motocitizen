@@ -1,6 +1,6 @@
-package motocitizen.app.general.user;
+package motocitizen.user;
 
-import android.widget.Toast;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,16 +8,12 @@ import org.json.JSONObject;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import motocitizen.MyApp;
-import motocitizen.main.R;
 import motocitizen.network.requests.AuthRequest;
 import motocitizen.utils.Preferences;
 
 public class Auth {
     private Role    role;
     private String  name;
-    private String  login;
-    private String  password;
     private int     id;
     private boolean isAuthorized;
 
@@ -29,10 +25,22 @@ public class Auth {
     }
 
     private Auth() {
+
+    }
+
+    public static void init(){
+        initialAuth();
+    }
+
+
+    private static void initialAuth() {
         if (Preferences.isAnonim()) return;
-        login = Preferences.getLogin();
-        password = Preferences.getPassword();
-        auth(login, password);
+        if (Preferences.getLogin().equals("")) return;
+        try {
+            getInstance().auth(Preferences.getLogin(), Preferences.getPassword());
+        } catch (Error e) {
+            Log.d("AUTH ERROR", e.getLocalizedMessage());
+        }
     }
 
     private static class Holder {
@@ -59,9 +67,7 @@ public class Auth {
         }
     }
 
-    public Boolean auth(String login, String password) {
-        this.password = password;
-        this.login = login;
+    public Boolean auth(String login, String password) throws Error {
         AuthRequest auth = new AuthRequest();
         auth.setLogin(login);
         auth.setPassword(password);
@@ -69,8 +75,7 @@ public class Auth {
         isAuthorized = false;
         if (auth.error(result)) {
             String error = auth.getError(result);
-            message(error);
-            return false;
+            throw new Error(error);
         }
         try {
             name = result.getString("name");
@@ -86,13 +91,9 @@ public class Auth {
                 isAuthorized = true;
             }
         } catch (JSONException e) {
-            message(MyApp.getAppContext().getString(R.string.unknown_error));
+            return false;
         }
         return isAuthorized;
-    }
-
-    private void message(String text) {
-        Toast.makeText(MyApp.getAppContext(), text, Toast.LENGTH_LONG).show();
     }
 
     public Role getRole() {
@@ -101,10 +102,6 @@ public class Auth {
 
     public int getId() {
         return id;
-    }
-
-    public String getLogin() {
-        return Preferences.getLogin();
     }
 
     public String makePassHash() {

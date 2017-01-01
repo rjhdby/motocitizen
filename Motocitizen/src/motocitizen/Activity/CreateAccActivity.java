@@ -32,9 +32,8 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
-import motocitizen.MyApp;
 import motocitizen.accident.Accident;
-import motocitizen.app.general.user.Auth;
+import motocitizen.user.Auth;
 import motocitizen.content.AccidentStatus;
 import motocitizen.content.Content;
 import motocitizen.content.Medicine;
@@ -73,7 +72,6 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MyApp.setCurrentActivity(this);
         setContentView(R.layout.create_point);
         initialLocation = MyLocationManager.getInstance().getLocation();
         accident = createDefaultAccident();
@@ -145,7 +143,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 if (point.isInvisible()) continue;
                 String title = point.getType().toString();
                 title += point.getMedicine() == Medicine.NO ? "" : ", " + point.getMedicine().toString();
-                title += ", " + MyUtils.getIntervalFromNowInText(point.getTime()) + " назад";
+                title += ", " + MyUtils.getIntervalFromNowInText(getApplicationContext(), point.getTime()) + " назад";
 
                 float alpha;
                 int   age = (int) (((new Date()).getTime() - point.getTime().getTime()) / 3600000);
@@ -184,29 +182,29 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         String text = accident.getType().toString();
         text += accident.getMedicine() == Medicine.UNKNOWN ? "" : ". " + accident.getMedicine().toString();
         ((TextView) findViewById(R.id.create_what)).setText(text);
-        ((TextView) findViewById(R.id.create_who)).setText(Auth.getInstance().getLogin());
+        ((TextView) findViewById(R.id.create_who)).setText(Preferences.getLogin());
         ((TextView) findViewById(R.id.create_where)).setText(accident.getAddress());
         ((TextView) findViewById(R.id.create_when)).setText(Const.DATE_FORMAT.format(accident.getTime()));
     }
 
     private void setupListener() {
-        Integer[] ids = { R.id.BREAK,
-                          R.id.STEAL,
-                          R.id.OTHER,
-                          R.id.ACCIDENT,
-                          R.id.MOTO_AUTO,
-                          R.id.SOLO,
-                          R.id.MOTO_MOTO,
-                          R.id.MOTO_MAN,
-                          R.id.PEOPLE_OK,
-                          R.id.PEOPLE_LIGHT,
-                          R.id.PEOPLE_HEAVY,
-                          R.id.PEOPLE_LETHAL,
-                          R.id.PEOPLE_UNKNOWN,
-                          R.id.ADDRESS,
-                          R.id.CREATE,
-                          R.id.CANCEL,
-                          R.id.BACK };
+        Integer[] ids = {R.id.BREAK,
+                         R.id.STEAL,
+                         R.id.OTHER,
+                         R.id.ACCIDENT,
+                         R.id.MOTO_AUTO,
+                         R.id.SOLO,
+                         R.id.MOTO_MOTO,
+                         R.id.MOTO_MAN,
+                         R.id.PEOPLE_OK,
+                         R.id.PEOPLE_LIGHT,
+                         R.id.PEOPLE_HEAVY,
+                         R.id.PEOPLE_LETHAL,
+                         R.id.PEOPLE_UNKNOWN,
+                         R.id.ADDRESS,
+                         R.id.CREATE,
+                         R.id.CANCEL,
+                         R.id.BACK};
         for (int id : ids) findViewById(id).setOnClickListener(this);
     }
 
@@ -219,7 +217,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     }
 
     private void hideAll() {
-        Integer[] ids = { TYPE, MAP, MEDICINE, DESCRIPTION, ACCIDENT };
+        Integer[] ids = {TYPE, MAP, MEDICINE, DESCRIPTION, ACCIDENT};
         for (int id : ids) findViewById(id).setVisibility(View.INVISIBLE);
     }
 
@@ -386,12 +384,6 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             }
             enableConfirm();
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MyApp.setCurrentActivity(this);
     }
 
     private class FinalTextWatcher implements TextWatcher {

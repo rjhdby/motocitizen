@@ -1,4 +1,4 @@
-package motocitizen.app.general.user;
+package motocitizen.user;
 
 public enum Role {
     RO("readonly", "только чтение"),
@@ -23,7 +23,7 @@ public enum Role {
         return RO;
     }
 
-    public boolean isStandart() {
+    public boolean isStandard() {
         return this.compareTo(STANDARD) >= 0;
     }
 

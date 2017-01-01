@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import motocitizen.accident.History;
-import motocitizen.app.general.user.Auth;
+import motocitizen.user.Auth;
 import motocitizen.main.R;
 import motocitizen.utils.MyUtils;
 

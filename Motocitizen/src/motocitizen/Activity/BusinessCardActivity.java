@@ -11,13 +11,6 @@ public class BusinessCardActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MyApp.setCurrentActivity(this);
         setContentView(R.layout.activity_business_card);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MyApp.setCurrentActivity(this);
     }
 }

@@ -7,7 +7,7 @@ import android.preference.PreferenceFragment;
 import android.widget.Toast;
 
 import motocitizen.Activity.AuthActivity;
-import motocitizen.app.general.user.Auth;
+import motocitizen.user.Auth;
 import motocitizen.main.R;
 import motocitizen.utils.Const;
 import motocitizen.utils.Preferences;

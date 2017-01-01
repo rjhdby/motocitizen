@@ -5,17 +5,18 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import motocitizen.app.general.user.Auth;
+import motocitizen.user.Auth;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
+import motocitizen.utils.Preferences;
 
 public class SendMessageRequest extends HTTPClient {
     @SuppressWarnings("unchecked")
     public SendMessageRequest(AsyncTaskCompleteListener listener, int id, String text) {
         this.listener = listener;
         post = new HashMap<>();
-        post.put("login", Auth.getInstance().getLogin());
+        post.put("login", Preferences.getLogin());
         post.put("passhash", Auth.getInstance().makePassHash());
         post.put("id", String.valueOf(id));
         post.put("text", text);

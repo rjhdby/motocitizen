@@ -103,4 +103,9 @@
     <string name="business_card_application">Приложение Android</string>
     <string name="business_card_forum">Форум</string>
     <string name="activity_create_for_stat">Для статистики (рассылки не будет)</string>
+    <string name="popup_dial">Вызов: %1$s</string>
+    <string name="popup_sms">СМС: %1$s</string>
+    <string name="copy_coordinates">Скопировать координаты</string>
+    <string name="coordinates_copied">координаты скопированы в буфер обмена</string>
+    <string name="time_interval_short">%1$dч %2$dм</string>
 </resources>

@@ -1,7 +1,8 @@
 package motocitizen.draw;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.content.Intent;
+import android.os.Bundle;
 import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -9,20 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.PopupWindow;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
-import motocitizen.MyApp;
+import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.accident.Accident;
-import motocitizen.accident.History;
-import motocitizen.accident.Message;
-import motocitizen.accident.Volunteer;
-import motocitizen.app.general.popups.AccidentListPopup;
-import motocitizen.app.general.user.Auth;
+import motocitizen.utils.popups.AccidentListPopup;
 import motocitizen.content.Medicine;
 import motocitizen.main.R;
-import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
 
 public class Rows {
@@ -36,8 +30,8 @@ public class Rows {
     private static final int ACCIDENT_ROW_OWN_HIDDEN = R.drawable.owner_accident_hidden;
     /* end constants */
 
-    public static View getAccidentRow(ViewGroup parent, final Accident accident) {
-        LayoutInflater li = (LayoutInflater) MyApp.getCurrentActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public static View getAccidentRow(final Context context, ViewGroup parent, final Accident accident) {
+        LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         FrameLayout    accRow;
         accRow = (FrameLayout) li.inflate(accident.isOwner() ? ACCIDENT_ROW_OWN_LAYOUT : ACCIDENT_ROW_LAYOUT, parent, false);
         switch (accident.getStatus()) {
@@ -65,7 +59,7 @@ public class Rows {
         }
 
         ((TextView) accRow.findViewById(R.id.accident_row_content)).setText(generalText + " \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0");
-        ((TextView) accRow.findViewById(R.id.accident_row_time)).setText(MyUtils.getIntervalFromNowInText(accident.getTime()));
+        ((TextView) accRow.findViewById(R.id.accident_row_time)).setText(MyUtils.getIntervalFromNowInText(context, accident.getTime()));
         ((TextView) accRow.findViewById(R.id.accident_row_unread)).setText(Html.fromHtml(msgText));
 
         int rowId = MyUtils.newId();
@@ -73,14 +67,15 @@ public class Rows {
         accRow.setId(rowId);
         accRow.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                MyApp.toDetails(accident.getId());
+                toDetails(context, accident.getId());
             }
         });
+
         accRow.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 PopupWindow popupWindow;
-                popupWindow = (new AccidentListPopup(accident.getId())).getPopupWindow();
+                popupWindow = (new AccidentListPopup(context, accident.getId())).getPopupWindow(context);
                 int viewLocation[] = new int[2];
                 v.getLocationOnScreen(viewLocation);
                 popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
@@ -88,6 +83,13 @@ public class Rows {
             }
         });
         return accRow;
+    }
+    private static void toDetails(Context context, int id) {
+        Intent intent = new Intent(context, AccidentDetailsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("accidentID", id);
+        intent.putExtras(bundle);
+        context.startActivity(intent);
     }
 
 }

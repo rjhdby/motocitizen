@@ -20,10 +20,9 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-import motocitizen.MyApp;
 import motocitizen.accident.Accident;
-import motocitizen.app.general.popups.AccidentListPopup;
-import motocitizen.app.general.user.Auth;
+import motocitizen.utils.popups.AccidentListPopup;
+import motocitizen.user.Auth;
 import motocitizen.content.AccidentStatus;
 import motocitizen.content.Content;
 import motocitizen.content.Medicine;
@@ -71,7 +70,6 @@ public class AccidentDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MyApp.setCurrentActivity(this);
         setContentView(R.layout.activity_accident_details);
 
         ActionBar actionBar = getSupportActionBar();
@@ -106,7 +104,6 @@ public class AccidentDetailsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        MyApp.setCurrentActivity(this);
         generalLayout.setOnLongClickListener(new DetailsLongClickListener());
         update();
     }
@@ -317,7 +314,7 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         @Override
         public boolean onLongClick(View v) {
             PopupWindow popupWindow;
-            popupWindow = (new AccidentListPopup(currentPoint.getId())).getPopupWindow();
+            popupWindow = (new AccidentListPopup(getApplicationContext(), currentPoint.getId())).getPopupWindow(getApplicationContext());
             int viewLocation[] = new int[ 2 ];
             v.getLocationOnScreen(viewLocation);
             popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[ 0 ], viewLocation[ 1 ]);

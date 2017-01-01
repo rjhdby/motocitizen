@@ -5,6 +5,7 @@ package motocitizen.utils;
  */
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -34,13 +35,13 @@ public class ChangeLog {
         currentListMode = ListMode.NONE;
     }
 
-    public static AlertDialog getDialog() {
-        WebView wv = new WebView(MyApp.getCurrentActivity());
+    public static AlertDialog getDialog(Context context) {
+        WebView wv = new WebView(context);
 
         wv.setBackgroundColor(Color.BLACK);
-        wv.loadDataWithBaseURL(null, getLog(true), "text/html", "UTF-8", null);
+        wv.loadDataWithBaseURL(null, getLog(context, true), "text/html", "UTF-8", null);
         Log.d("LOG", wv.toString());
-        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(MyApp.getCurrentActivity(), android.R.style.Theme_Dialog));
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, android.R.style.Theme_Dialog));
         builder.setTitle("Что нового").setView(wv).setCancelable(false).setPositiveButton("ОК", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
             }
@@ -48,25 +49,11 @@ public class ChangeLog {
         return builder.create();
     }
 
-    public static boolean isNewVersion() {
-        PackageManager manager        = MyApp.getAppContext().getPackageManager();
-        String         version;
-        String         currentVersion = Preferences.getCurrentVersion();
-        try {
-            PackageInfo info = manager.getPackageInfo(MyApp.getAppContext().getPackageName(), 0);
-            version = info.versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            version = MyApp.getAppContext().getString(R.string.unknown_code_version);
-        }
-        Preferences.setCurrentVersion(version);
-        return !currentVersion.equals(version);
-    }
-
-    public static String getLog(boolean full) {
-        String lastVersion = Preferences.getCurrentVersion();
+    public static String getLog(Context context, boolean full) {
+        String lastVersion = String.valueOf(Preferences.getAppVersion());
         sb = new StringBuffer();
         try {
-            InputStream ins = MyApp.getCurrentActivity().getResources().openRawResource(R.raw.changelog);
+            InputStream ins = context.getResources().openRawResource(R.raw.changelog);
             BufferedReader br = new BufferedReader(new InputStreamReader(ins));
 
             String line;
