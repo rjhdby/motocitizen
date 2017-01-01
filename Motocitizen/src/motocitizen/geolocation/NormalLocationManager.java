@@ -1,10 +1,10 @@
 package motocitizen.geolocation;
 
+import android.content.Context;
 import android.location.Address;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -98,11 +98,11 @@ public class NormalLocationManager implements SecuredLocationManagerInterface{
         return current;
     }
 
-    private void runLocationService(int accuracy) {
+    private void runLocationService(Context context, int accuracy) {
         setup();
         locationRequest = getProvider(accuracy);
         if (googleApiClient == null) {
-            googleApiClient = new GoogleApiClient.Builder(MyApp.getAppContext()).addConnectionCallbacks(connectionCallback).addApi(LocationServices.API).build();
+            googleApiClient = new GoogleApiClient.Builder(context).addConnectionCallbacks(connectionCallback).addApi(LocationServices.API).build();
             googleApiClient.connect();
         }
         if (googleApiClient.isConnected()) {
@@ -115,12 +115,12 @@ public class NormalLocationManager implements SecuredLocationManagerInterface{
         }
     }
 
-    public void sleep() {
-        runLocationService(LocationRequest.PRIORITY_LOW_POWER);
+    public void sleep(Context context) {
+        runLocationService(context, LocationRequest.PRIORITY_LOW_POWER);
     }
 
-    public void wakeup() {
-        runLocationService(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    public void wakeup(Context context) {
+        runLocationService(context, LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
     private void requestAddress() {
@@ -155,21 +155,21 @@ public class NormalLocationManager implements SecuredLocationManagerInterface{
     }
 
     private void message(String text) {
-        Toast.makeText(MyApp.getCurrentActivity(), text, Toast.LENGTH_LONG).show();
+//        Toast.makeText(MyApp.getCurrentActivity(), text, Toast.LENGTH_LONG).show();
     }
 
     private boolean isInPlace(Location location, int accId) {
         Accident acc = Content.getInstance().get(accId);
         if (acc == null) {
-            message("Invalid accident");
+//            message("Invalid accident");
             return false;
         }
         if (location == null) {
-            message("Invalid location");
+//            message("Invalid location");
             return false;
         }
         if (acc.getLocation() == null) {
-            message("Invalid accident location");
+//            message("Invalid accident location");
             return false;
         }
 

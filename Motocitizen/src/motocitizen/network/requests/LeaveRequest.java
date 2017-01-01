@@ -5,15 +5,15 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import motocitizen.app.general.user.Auth;
 import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
+import motocitizen.utils.Preferences;
 
 public class LeaveRequest extends HTTPClient {
     @SuppressWarnings("unchecked")
     public LeaveRequest(int id) {
         post = new HashMap<>();
-        post.put("login", Auth.getInstance().getLogin());
+        post.put("login", Preferences.getLogin());
         post.put("id", String.valueOf(id));
         post.put("m", Methods.LEAVE.toCode());
         execute(post);

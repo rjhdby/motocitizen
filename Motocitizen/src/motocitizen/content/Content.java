@@ -24,7 +24,7 @@ public class Content extends SortedHashMap<Accident> {
     }
 
     private Content() {
-        favorites = Favorites.getFavorites();
+        //favorites = Favorites.getFavorites();
     }
 
     private static class Holder {

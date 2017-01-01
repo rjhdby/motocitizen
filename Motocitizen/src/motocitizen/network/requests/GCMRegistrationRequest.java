@@ -1,17 +1,14 @@
 package motocitizen.network.requests;
 
-import android.content.Context;
-import android.telephony.TelephonyManager;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import motocitizen.MyApp;
-import motocitizen.app.general.user.Auth;
+import motocitizen.user.Auth;
 import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
+import motocitizen.utils.Preferences;
 
 public class GCMRegistrationRequest extends HTTPClient {
     @SuppressWarnings("unchecked")
@@ -20,7 +17,7 @@ public class GCMRegistrationRequest extends HTTPClient {
         //String imei = ((TelephonyManager) MyApp.getAppContext().getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
         post.put("owner_id", String.valueOf(Auth.getInstance().getId()));
         post.put("gcm_key", regId);
-        post.put("login", Auth.getInstance().getLogin());
+        post.put("login", Preferences.getLogin());
         //post.put("imei", imei);
         post.put("passhash", Auth.getInstance().makePassHash());
         post.put("calledMethod", Methods.REGISTER_GCM.toCode());

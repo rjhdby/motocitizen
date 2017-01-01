@@ -1,8 +1,10 @@
 package motocitizen.maps.google;
 
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -18,7 +20,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import motocitizen.MyApp;
+import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.accident.Accident;
 import motocitizen.content.Content;
 import motocitizen.content.Medicine;
@@ -40,12 +42,17 @@ public class MyGoogleMapManager implements MyMapManager {
     private DelayedAction delayedAction;
 
     private class OnMapCreated implements OnMapReadyCallback {
+        private Context context;
+        public OnMapCreated(Context context) {
+            super();
+            this.context=context;
+        }
 
         @Override
         public void onMapReady(GoogleMap googleMap) {
             map = googleMap;
             delayedAction.makeAction();
-            init();
+            init(context);
             placeUser();
         }
     }
@@ -69,7 +76,7 @@ public class MyGoogleMapManager implements MyMapManager {
         //= (SupportMapFragment) fragmentManager.findFragmentById(R.id.google_map);
 
 
-        mapFragment.getMapAsync(new OnMapCreated());
+        mapFragment.getMapAsync(new OnMapCreated(activity));
 
     }
 
@@ -99,16 +106,16 @@ public class MyGoogleMapManager implements MyMapManager {
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(location), DEFAULT_ZOOM));
     }
 
-    public void placeAccidents() {
+    public void placeAccidents(Context context) {
         if (map == null) return;
-        init();
+        init(context);
         accidents.clear();
         for (int id : Content.getInstance().keySet()) {
             Accident point = Content.getInstance().get(id);
             if (point.isInvisible()) continue;
             String title = point.getType().toString();
             title += point.getMedicine() != Medicine.UNKNOWN ? ", " + point.getMedicine().toString() : "";
-            title += ", " + MyUtils.getIntervalFromNowInText(point.getTime()) + " назад";
+            title += ", " + MyUtils.getIntervalFromNowInText(context, point.getTime()) + " назад";
 
             float alpha;
             int   age = (int) (((new Date()).getTime() - point.getTime().getTime()) / 3600000);
@@ -124,7 +131,7 @@ public class MyGoogleMapManager implements MyMapManager {
         }
     }
 
-    private void init() {
+    private void init(final Context context) {
         map.clear();
         map.setMyLocationEnabled(true);
         map.getUiSettings().setMyLocationButtonEnabled(true);
@@ -134,7 +141,7 @@ public class MyGoogleMapManager implements MyMapManager {
             public boolean onMarkerClick(Marker marker) {
                 String id = marker.getId();
                 if (selected.equals(id) && accidents.containsKey(id)) {
-                    MyApp.toDetails(accidents.get(selected));
+                    toDetails(context, accidents.get(selected));
                 } else {
                     marker.showInfoWindow();
                     selected = id;
@@ -147,9 +154,17 @@ public class MyGoogleMapManager implements MyMapManager {
             public void onMapLongClick(LatLng latLng) {
                 String uri    = "geo:" + latLng.latitude + "," + latLng.longitude;
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                MyApp.getCurrentActivity().startActivity(intent);
+                context.startActivity(intent);
             }
         });
+    }
+
+    private void toDetails(Context context, int id) {
+        Intent intent = new Intent(context, AccidentDetailsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("accidentID", id);
+        intent.putExtras(bundle);
+        context.startActivity(intent);
     }
 
     public void zoom(int zoom) {

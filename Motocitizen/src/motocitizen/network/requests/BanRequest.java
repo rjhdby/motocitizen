@@ -5,11 +5,12 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import motocitizen.app.general.user.Auth;
+import motocitizen.user.Auth;
 import motocitizen.content.Content;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
+import motocitizen.utils.Preferences;
 
 public class BanRequest extends HTTPClient {
     @SuppressWarnings("unchecked")
@@ -17,7 +18,7 @@ public class BanRequest extends HTTPClient {
         this.listener = listener;
         int user_id = Content.getInstance().get(id).getOwnerId();
         post = new HashMap<>();
-        post.put("login", Auth.getInstance().getLogin());
+        post.put("login", Preferences.getLogin());
         post.put("passhash", Auth.getInstance().makePassHash());
         post.put("id", String.valueOf(id));
         post.put("user_id", String.valueOf(user_id));

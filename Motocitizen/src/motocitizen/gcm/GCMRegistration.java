@@ -3,14 +3,13 @@ package motocitizen.gcm;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.iid.InstanceID;
 
 import java.io.IOException;
 
@@ -25,28 +24,31 @@ public class GCMRegistration {
     private static final int    RESOLUTION_REQUEST = 9000;
     /* end constants */
 
-    private GoogleCloudMessaging gcm;
+//    private GoogleCloudMessaging gcm;
+private InstanceID gcm;
     private String               regid;
 
     public GCMRegistration(Context context) {
         if (!checkPlayServices(context)) return;
-        gcm = GoogleCloudMessaging.getInstance(MyApp.getAppContext());
-        regid = getRegistrationId();
+//        gcm = GoogleCloudMessaging.getInstance(context);
+        gcm= InstanceID.getInstance(context);
+//        regid = getRegistrationId();
+        regid = Preferences.getGCMRegistrationCode();
         if (regid.isEmpty()) {
-            registerInBackground();
+            registerInBackground(context);
         } else {
             storeRegistrationId(regid);
         }
     }
 
-    private static int getAppVersion() {
-        try {
-            PackageInfo packageInfo = MyApp.getAppContext().getPackageManager().getPackageInfo(MyApp.getAppContext().getPackageName(), 0);
-            return packageInfo.versionCode;
-        } catch (NameNotFoundException e) {
-            throw new RuntimeException("Could not get package name: " + e);
-        }
-    }
+//    private static int getAppVersion() {
+//        try {
+//            PackageInfo packageInfo = MyApp.getAppContext().getPackageManager().getPackageInfo(MyApp.getAppContext().getPackageName(), 0);
+//            return packageInfo.versionCode;
+//        } catch (NameNotFoundException e) {
+//            throw new RuntimeException("Could not get package name: " + e);
+//        }
+//    }
 
     private boolean checkPlayServices(Context context) {
         GoogleApiAvailability app        = GoogleApiAvailability.getInstance();
@@ -62,31 +64,33 @@ public class GCMRegistration {
         return true;
     }
 
-    private String getRegistrationId() {
-        String registrationId = Preferences.getGCMRegistrationCode();
-        if (registrationId.isEmpty()) {
-            Log.d(TAG, "Registration not found.");
-            return "";
-        }
-        int registeredVersion = Preferences.getAppVersion();
-        int currentVersion    = getAppVersion();
-        if (registeredVersion != currentVersion) {
-            Log.d(TAG, "App version changed.");
-            return "";
-        }
-        return registrationId;
-    }
+//    private String getRegistrationId() {
+//        return Preferences.getGCMRegistrationCode();
+//        String registrationId = Preferences.getGCMRegistrationCode();
+//        if (registrationId.isEmpty()) {
+//            Log.d(TAG, "Registration not found.");
+//            return "";
+//        }
+//        int registeredVersion = Preferences.getAppVersion();
+//        //int currentVersion    = Preferences.getAppVersion();
+//        if (registeredVersion != currentVersion) {
+//            Log.d(TAG, "App version changed.");
+//            return "";
+//        }
+//        return registrationId;
+//    }
 
-    private void registerInBackground() {
+    private void registerInBackground(final Context context) {
         new AsyncTask<String, String, String>() {
             @Override
             protected String doInBackground(String... params) {
                 String msg;
                 try {
                     if (gcm == null) {
-                        gcm = GoogleCloudMessaging.getInstance(MyApp.getAppContext());
-                    }
-                    regid = gcm.register(SENDER_ID);
+//                        gcm = GoogleCloudMessaging.getInstance(context);
+                        gcm= InstanceID.getInstance(context);
+                    }regid=gcm.getToken(SENDER_ID, "GCM");
+//                    regid = gcm.register(SENDER_ID);
                     msg = "Device registered, registration ID=" + regid;
                     storeRegistrationId(regid);
                 } catch (IOException ex) {
@@ -105,9 +109,9 @@ public class GCMRegistration {
 
     @SuppressLint("CommitPrefEdits")
     private void storeRegistrationId(String regId) {
-        int appVersion = getAppVersion();
-        Log.i(TAG, "Saving regId on app version " + appVersion);
-        Preferences.setAppVersion(appVersion);
+//        int appVersion = getAppVersion();
+//        Log.i(TAG, "Saving regId on app version " + appVersion);
+//        Preferences.setAppVersion(appVersion);
         Preferences.setGCMRegistrationCode(regId);
         new GCMRegistrationRequest(regId);
     }

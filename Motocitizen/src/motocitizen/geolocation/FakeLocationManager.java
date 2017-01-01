@@ -1,5 +1,6 @@
 package motocitizen.geolocation;
 
+import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 
@@ -11,12 +12,12 @@ public class FakeLocationManager implements SecuredLocationManagerInterface {
     private static final int DEFAULT_ACCURACY = 1000;
 
     @Override
-    public void wakeup() {
+    public void wakeup(Context context) {
 
     }
 
     @Override
-    public void sleep() {
+    public void sleep(Context context) {
 
     }
 

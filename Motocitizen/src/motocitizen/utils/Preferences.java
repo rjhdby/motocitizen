@@ -3,6 +3,7 @@ package motocitizen.utils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.preference.PreferenceManager;
@@ -20,6 +21,7 @@ import motocitizen.main.R;
 
 @SuppressLint("CommitPrefEdits")
 public class Preferences {
+    private static       boolean newVersion                = false;
     /* constants */
     private final static float   DEFAULT_LATITUDE          = 55.752295f;
     private final static float   DEFAULT_LONGITUDE         = 37.622735f;
@@ -31,7 +33,6 @@ public class Preferences {
     private final static boolean DEFAULT_DO_NOT_DISTURB    = false;
     private final static boolean DEFAULT_IS_ANONYMOUS      = false;
     private final static boolean DEFAULT_SHOW_TYPE         = true;
-    private final static String  DEFAULT_VERSION           = MyApp.getAppContext().getString(R.string.unknown_code_version);
     /* end constants */
 
     public final static  String showAcc;
@@ -44,7 +45,6 @@ public class Preferences {
     public final static  String hoursAgo;
     public final static  String maxNotifications;
     public final static  String useVibration;
-    private final static String currentVersion;
     private final static String doNotDisturb;
     private final static String userId;
     private final static String userName;
@@ -57,6 +57,7 @@ public class Preferences {
     private final static String anonim;
     private final static String GCMRegistrationCode;
     private final static String appVersion;
+    private final static String GCMappVersion;
     private final static String savedLng;
     private final static String savedLat;
     private final static String notificationList;
@@ -73,7 +74,6 @@ public class Preferences {
         distanceShow = "mc.distance.show";
         distanceAlarm = "mc.distance.alarm";
         mapProvider = "mc.map.provider";
-        currentVersion = "version";
         doNotDisturb = "do.not.disturb";
         hoursAgo = "hours.ago";
         maxNotifications = "notifications.max";
@@ -89,6 +89,7 @@ public class Preferences {
         anonim = "mc.anonim";
         GCMRegistrationCode = "mc.gcm.id";
         appVersion = "mc.app.version";
+        GCMappVersion = "gcm.app.version";
         savedLng = "savedlng";
         savedLat = "savedlat";
         notificationList = "notificationList";
@@ -98,6 +99,16 @@ public class Preferences {
 
     public Preferences(Context context) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        initAlarmSoundUri(context);
+        try {
+            int version = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
+            if (version != getAppVersion()) {
+                setNewVersion();
+                setAppVersion(version);
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void putBoolean(String name, boolean value) {
@@ -124,14 +135,6 @@ public class Preferences {
 
     public static void setDoNotDisturb(boolean value) {
         preferences.edit().putBoolean(doNotDisturb, value).commit();
-    }
-
-    public static String getCurrentVersion() {
-        return preferences.getString(currentVersion, DEFAULT_VERSION);
-    }
-
-    public static void setCurrentVersion(String version) {
-        preferences.edit().putString(currentVersion, version).commit();
     }
 
     public static void saveLatLng(LatLng latlng) {
@@ -178,23 +181,18 @@ public class Preferences {
         return preferences.getString(soundTitle, "default system");
     }
 
-    public static Uri getAlarmSoundUri() {
-        Uri    uri;
+    private static Uri alarmSoundUri;
+
+    public static void initAlarmSoundUri(Context context) {
         String uriString = preferences.getString(soundURI, "default");
         if (uriString.equals("default")) {
-            uri = RingtoneManager.getActualDefaultRingtoneUri(MyApp.getCurrentActivity(), RingtoneManager.TYPE_NOTIFICATION);
-        } else uri = Uri.parse(uriString);
-        return uri;
+            alarmSoundUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION);
+        } else alarmSoundUri = Uri.parse(uriString);
     }
 
-    public static String getMapProvider() {
-        return preferences.getString(mapProvider, "google");
-    }
+    public static Uri getAlarmSoundUri() {
 
-    public static void setMapProvider(String provider) {
-        if (Arrays.asList(mapProviders).contains(provider)) {
-            preferences.edit().putString(mapProvider, provider);
-        }
+        return alarmSoundUri;
     }
 
     public static String getLogin() {
@@ -222,10 +220,12 @@ public class Preferences {
     }
 
     public static String getGCMRegistrationCode() {
+        if (getAppVersion() != preferences.getInt(GCMappVersion, -1)) return "";
         return preferences.getString(GCMRegistrationCode, "");
     }
 
     public static void setGCMRegistrationCode(String code) {
+        preferences.edit().putInt(GCMappVersion, getAppVersion());
         preferences.edit().putString(GCMRegistrationCode, code).commit();
     }
 
@@ -329,5 +329,17 @@ public class Preferences {
 
     public static void setUserRole(String role) {
         preferences.edit().putString(userRole, role).commit();
+    }
+
+    public static boolean isNewVersion() {
+        return newVersion;
+    }
+
+    public static void setNewVersion() {
+        Preferences.newVersion = true;
+    }
+
+    public static void resetNewVersion() {
+        Preferences.newVersion = false;
     }
 }

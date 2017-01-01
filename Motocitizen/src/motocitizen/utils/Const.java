@@ -1,12 +1,12 @@
 package motocitizen.utils;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.DisplayMetrics;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
-
-import motocitizen.MyApp;
 
 public class Const {
     public static final SimpleDateFormat FULL_TIME_FORMAT = new SimpleDateFormat("dd.MM.yy HH:mm", Locale.getDefault());
@@ -15,16 +15,15 @@ public class Const {
     public final static int              EQUATOR          = 20038;
     public final static String           PHONE            = "78007751734";
 
-    @SuppressWarnings("deprecation")
-    public static int getWidth() {
+    public static int getWidth(Context context) {
         DisplayMetrics displaymetrics = new DisplayMetrics();
-        MyApp.getCurrentActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         return displaymetrics.widthPixels;
     }
 
     //TODO изничтожить
-    public static int getDefaultBGColor() {
-        TypedArray ta    = MyApp.getCurrentActivity().obtainStyledAttributes(new int[]{android.R.attr.colorBackground, android.R.attr.textColorPrimary});
+    public static int getDefaultBGColor(Context context) {
+        TypedArray ta    = context.obtainStyledAttributes(new int[]{android.R.attr.colorBackground, android.R.attr.textColorPrimary});
         int        color = ta.getIndex(0);
         ta.recycle();
         return color;

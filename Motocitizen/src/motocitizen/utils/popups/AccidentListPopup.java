@@ -1,40 +1,42 @@
-package motocitizen.app.general.popups;
+package motocitizen.utils.popups;
 
+import android.content.Context;
 import android.widget.PopupWindow;
 
 import motocitizen.accident.Accident;
-import motocitizen.app.general.user.Auth;
+import motocitizen.user.Auth;
 import motocitizen.content.Content;
 import motocitizen.content.Medicine;
 import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
+import motocitizen.utils.Preferences;
 
 public class AccidentListPopup extends PopupWindowGeneral {
     private final Accident point;
     private final String   accText;
 
-    public AccidentListPopup(int id) {
-        super();
+    public AccidentListPopup(Context context, int id) {
+        super(context);
         point = Content.getInstance().get(id);
         accText = getAccidentTextToCopy(point);
     }
 
-    public PopupWindow getPopupWindow() {
-        content.addView(copyButtonRow(accText));
+    public PopupWindow getPopupWindow(Context context) {
+        content.addView(copyButtonRow(context, accText));
         for (String phone : MyUtils.getPhonesFromText(point.getDescription())) {
-            content.addView(phoneButtonRow(phone), layoutParams);
-            content.addView(smsButtonRow(phone), layoutParams);
+            content.addView(phoneButtonRow(context, phone), layoutParams);
+            content.addView(smsButtonRow(context, phone), layoutParams);
         }
-        if (Auth.getInstance().getRole().isModerator() || Auth.getInstance().getLogin().equals(point.getOwner()))
+        if (Auth.getInstance().getRole().isModerator() || Preferences.getLogin().equals(point.getOwner()))
             content.addView(finishButtonRow(point));
 
         if (Auth.getInstance().getRole().isModerator()) {
             content.addView(hideButtonRow(point));
-            content.addView(banButtonRow(point.getId()), layoutParams);
+            content.addView(banButtonRow(context, point.getId()), layoutParams);
         }
 
-        content.addView(shareMessage(accText));
-        content.addView(coordinatesButtonRow(point), layoutParams);
+        content.addView(shareMessage(context, accText));
+        content.addView(coordinatesButtonRow(context, point), layoutParams);
         popupWindow.setContentView(content);
         return popupWindow;
     }

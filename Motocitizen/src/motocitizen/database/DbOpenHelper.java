@@ -1,19 +1,30 @@
 package motocitizen.database;
 
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import motocitizen.MyApp;
-
-class DbOpenHelper extends SQLiteOpenHelper {
+public class DbOpenHelper extends SQLiteOpenHelper {
 
     /* constants */
     private static final int    VERSION  = 3;
     private static final String DATABASE = "motodtp";
     /* end constants */
 
-    public DbOpenHelper() {
-        super(MyApp.getAppContext(), DATABASE, null, VERSION);
+    private static class Holder {
+        private static DbOpenHelper instance;
+    }
+
+    public static DbOpenHelper getInstance() {
+        return Holder.instance;
+    }
+
+    public static void init(Context context) {
+        Holder.instance = new DbOpenHelper(context);
+    }
+
+    private DbOpenHelper(Context context) {
+        super(context, DATABASE, null, VERSION);
     }
 
     @Override

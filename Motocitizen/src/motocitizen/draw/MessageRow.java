@@ -7,7 +7,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import motocitizen.accident.Message;
-import motocitizen.app.general.user.Auth;
+import motocitizen.user.Auth;
 import motocitizen.main.R;
 import motocitizen.utils.Const;
 

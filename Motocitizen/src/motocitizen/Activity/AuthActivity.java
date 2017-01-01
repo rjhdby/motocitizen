@@ -1,6 +1,7 @@
 package motocitizen.Activity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import motocitizen.MyApp;
-import motocitizen.app.general.user.Auth;
+import motocitizen.user.Auth;
 import motocitizen.main.R;
 import motocitizen.utils.Preferences;
 
@@ -38,9 +39,13 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MyApp.setCurrentActivity(this);
-        if (Auth.getInstance().isAuthorized()) {
-            MyApp.getCurrentActivity().startActivity(new Intent(MyApp.getCurrentActivity(), MainScreenActivity.class));
+        try {
+            Auth.init();
+            if (Auth.getInstance().isAuthorized()) {
+                startActivity(new Intent(this, MainScreenActivity.class));
+            }
+        } catch (Error e) {
+            Toast.makeText(this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
         }
         setContentView(R.layout.auth);
         login = (EditText) findViewById(R.id.auth_login);
@@ -87,7 +92,7 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
     @Override
     protected void onResume() {
         super.onResume();
-        MyApp.setCurrentActivity(this);
+        final Activity local = this;
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,15 +100,15 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
                 Preferences.setAnonim(anonim.isChecked());
                 if (anonim.isChecked()) {
                     ((TextView) findViewById(R.id.auth_error_helper)).setText("");
-                    MyApp.getCurrentActivity().startActivity(new Intent(MyApp.getCurrentActivity(), MainScreenActivity.class));
+                    local.startActivity(new Intent(local, MainScreenActivity.class));
                     return;
                 }
-                if (!MyApp.isOnline()) {
+                if (!MyApp.isOnline(getApplicationContext())) {
                     showToast(R.string.auth_not_available);
                     return;
                 }
                 if (Auth.getInstance().auth(login.getText().toString(), password.getText().toString())) {
-                    MyApp.getCurrentActivity().startActivity(new Intent(MyApp.getCurrentActivity(), MainScreenActivity.class));
+                    local.startActivity(new Intent(local, MainScreenActivity.class));
                 } else {
                     TextView authErrorHelper = (TextView) findViewById(R.id.auth_error_helper);
                     authErrorHelper.setText(R.string.auth_password_error);

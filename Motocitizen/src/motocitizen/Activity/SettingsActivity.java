@@ -17,7 +17,6 @@ public class SettingsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MyApp.setCurrentActivity(this);
         setContentView(R.layout.activity_settings);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
@@ -39,11 +38,5 @@ public class SettingsActivity extends Activity {
                                  Bundle savedInstanceState) {
             return inflater.inflate(R.layout.fragment_settings, container, false);
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MyApp.setCurrentActivity(this);
     }
 }

@@ -8,13 +8,14 @@ import org.json.JSONObject;
 import java.util.Date;
 import java.util.HashMap;
 
-import motocitizen.app.general.user.Auth;
+import motocitizen.user.Auth;
 import motocitizen.content.Medicine;
 import motocitizen.content.Type;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
 import motocitizen.utils.Const;
+import motocitizen.utils.Preferences;
 
 public class CreateAccidentRequest extends HTTPClient {
     public CreateAccidentRequest(AsyncTaskCompleteListener listener) {
@@ -23,7 +24,7 @@ public class CreateAccidentRequest extends HTTPClient {
         post.put("status", "acc_status_act");
         post.put("calledMethod", Methods.CREATE.toCode());
         post.put("owner_id", String.valueOf(Auth.getInstance().getId()));
-        post.put("login", Auth.getInstance().getLogin());
+        post.put("login", Preferences.getLogin());
         post.put("passhash", Auth.getInstance().makePassHash());
     }
 

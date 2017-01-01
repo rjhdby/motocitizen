@@ -11,7 +11,6 @@ public class Volunteer {
     private static final String[] prerequisites = {"id", "name", "status", "uxtime"};
 
     private int             id;
-    private boolean         self;
     private boolean         noError;
     private String          name;
     private Date            time;
@@ -24,7 +23,6 @@ public class Volunteer {
             name = json.getString("name");
             status = VolunteerStatus.parse(json.getString("status"));
             time = new Date(json.getLong("uxtime") * 1000);
-            self = id == Preferences.getUserId();
         } catch (Exception e) {
             noError = false;
             e.printStackTrace();
@@ -52,10 +50,6 @@ public class Volunteer {
 
     public Date getTime() {
         return time;
-    }
-
-    public boolean isSelf() {
-        return self;
     }
 
     boolean isNoError() {

@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 
 import motocitizen.MyApp;
@@ -20,6 +19,7 @@ import motocitizen.gcm.GCMRegistration;
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.utils.ChangeLog;
+import motocitizen.utils.Preferences;
 
 public class MainScreenActivity extends AppCompatActivity {
 
@@ -29,8 +29,8 @@ public class MainScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_screen_activity);
-        MyApp.setCurrentActivity(this);
         actionBar = getSupportActionBar();
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, new MainScreenFragment()).commit();
     }
 
     private void initSecuredComponents() {
@@ -42,13 +42,12 @@ public class MainScreenActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        MyApp.setCurrentActivity(this);
-        getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, new MainScreenFragment()).commit();
-        MyLocationManager.getInstance().wakeup();
+        MyLocationManager.getInstance().wakeup(this);
 
-        if (ChangeLog.isNewVersion()) {
-            AlertDialog changeLogDlg = ChangeLog.getDialog();
+        if (Preferences.isNewVersion()) {
+            AlertDialog changeLogDlg = ChangeLog.getDialog(this);
             changeLogDlg.show();
+            Preferences.resetNewVersion();
         }
         PackageManager pm = this.getPackageManager();
         if (!pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
@@ -59,7 +58,7 @@ public class MainScreenActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        MyLocationManager.getInstance().sleep();
+        MyLocationManager.getInstance().sleep(this);
     }
 
     @Override

@@ -9,10 +9,9 @@ import java.util.List;
 
 public class Favorites {
     public static List<Integer> getFavorites() {
-        List<Integer>  result       = new ArrayList<>();
-        DbOpenHelper   dbOpenHelper = new DbOpenHelper();
-        SQLiteDatabase db           = dbOpenHelper.getReadableDatabase();
-        Cursor         cursor       = db.rawQuery("SELECT acc_id FROM favorites", new String[]{});
+        List<Integer>  result = new ArrayList<>();
+        SQLiteDatabase db     = DbOpenHelper.getInstance().getReadableDatabase();
+        Cursor         cursor = db.rawQuery("SELECT acc_id FROM favorites", new String[]{});
         while (cursor.moveToNext()) {
             result.add(cursor.getInt(0));
         }
@@ -22,8 +21,7 @@ public class Favorites {
     }
 
     public static void setFavorite(int accidentId) {
-        DbOpenHelper   dbOpenHelper  = new DbOpenHelper();
-        SQLiteDatabase db            = dbOpenHelper.getWritableDatabase();
+        SQLiteDatabase db            = DbOpenHelper.getInstance().getWritableDatabase();
         ContentValues  contentValues = new ContentValues();
         contentValues.put("acc_id", accidentId);
         db.insert("messages", null, contentValues);

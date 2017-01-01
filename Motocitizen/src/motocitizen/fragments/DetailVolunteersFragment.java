@@ -16,9 +16,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import motocitizen.Activity.AccidentDetailsActivity;
-import motocitizen.MyApp;
 import motocitizen.accident.Volunteer;
-import motocitizen.app.general.user.Auth;
+import motocitizen.user.Auth;
 import motocitizen.content.Content;
 import motocitizen.content.VolunteerStatus;
 import motocitizen.draw.VolunteerRow;

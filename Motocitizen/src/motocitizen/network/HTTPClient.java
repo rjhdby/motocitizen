@@ -21,8 +21,6 @@ import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 import motocitizen.MyApp;
-import motocitizen.network.AsyncTaskCompleteListener;
-import motocitizen.network.CustomTrustManager;
 
 
 abstract public class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONObject> {
@@ -44,16 +42,16 @@ abstract public class HTTPClient extends AsyncTask<Map<String, String>, Integer,
     }
 
     protected JSONObject request(Map<String, String> post) {
-        if (!MyApp.isOnline()) {
-            try {
-                JSONObject result = new JSONObject();
-                result.put("error", "Интернет не доступен");
-                return result;
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return new JSONObject();
-            }
-        }
+//        if (!MyApp.isOnline()) {
+//            try {
+//                JSONObject result = new JSONObject();
+//                result.put("error", "Интернет не доступен");
+//                return result;
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//                return new JSONObject();
+//            }
+//        }
         URL url;
         try {
             url = createUrl(false);

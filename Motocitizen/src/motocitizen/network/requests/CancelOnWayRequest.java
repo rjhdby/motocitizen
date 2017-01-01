@@ -5,17 +5,18 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import motocitizen.app.general.user.Auth;
+import motocitizen.user.Auth;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
+import motocitizen.utils.Preferences;
 
 public class CancelOnWayRequest extends HTTPClient {
     @SuppressWarnings("unchecked")
     public CancelOnWayRequest(AsyncTaskCompleteListener listener, int id) {
         this.listener = listener;
         post = new HashMap<>();
-        post.put("login", Auth.getInstance().getLogin());
+        post.put("login", Preferences.getLogin());
         post.put("passhash", Auth.getInstance().makePassHash());
         post.put("id", String.valueOf(id));
         post.put("calledMethod", Methods.CANCEL_ONWAY.toCode());

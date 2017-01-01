@@ -3,6 +3,8 @@ package motocitizen.fragments;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,23 +19,22 @@ import org.json.JSONObject;
 
 import motocitizen.Activity.AboutActivity;
 import motocitizen.Activity.CreateAccActivity;
-import motocitizen.Activity.MyFragment;
+import motocitizen.Activity.MyFragmentInterface;
 import motocitizen.Activity.SettingsActivity;
 import motocitizen.MyApp;
-import motocitizen.app.general.user.Auth;
 import motocitizen.content.Content;
 import motocitizen.draw.Rows;
-import motocitizen.gcm.NewAccidentReceived;
 import motocitizen.main.R;
 import motocitizen.maps.MyMapManager;
 import motocitizen.maps.google.MyGoogleMapManager;
 import motocitizen.network.AsyncTaskCompleteListener;
+import motocitizen.user.Auth;
 import motocitizen.utils.BounceScrollView;
 import motocitizen.utils.Const;
 import motocitizen.utils.OverScrollListenerInterface;
 import motocitizen.utils.Preferences;
 
-public class MainScreenFragment extends MyFragment {
+public class MainScreenFragment extends Fragment implements MyFragmentInterface {
     private        ViewGroup    mapContainer;
     private        ImageButton  createAccButton;
     private        ImageButton  toAccListButton;
@@ -43,6 +44,12 @@ public class MainScreenFragment extends MyFragment {
     public static  boolean      inTransaction;
     private static MenuItem     refreshItem;
     private static MyMapManager map;
+
+    private enum Screen {
+        LIST, MAP
+    }
+
+    private static Screen currentScreen = Screen.LIST;
 
     protected boolean fromDetails;
 
@@ -60,29 +67,39 @@ public class MainScreenFragment extends MyFragment {
         return inflater.inflate(R.layout.main_screen_fragment, container, false);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    private void bindButtons() {
         mapContainer = (ViewGroup) getActivity().findViewById(R.id.google_map);
         createAccButton = (ImageButton) getActivity().findViewById(R.id.add_point_button);
         toAccListButton = (ImageButton) getActivity().findViewById(R.id.list_button);
         toMapButton = (ImageButton) getActivity().findViewById(R.id.map_button);
-
-        accListView = getActivity().findViewById(R.id.acc_list);
-
-        progressBar = (ProgressBar) getActivity().findViewById(R.id.progressBar);
         getActivity().findViewById(R.id.dial_button).setOnClickListener(new DialOnClickListener());
-        ((BounceScrollView) getActivity().findViewById(R.id.accListRefresh)).setOverScrollListener(new OnOverScrollUpdateListener());
-
-
         createAccButton.setOnClickListener(new CreateOnClickListener());
         toAccListButton.setOnClickListener(new TabsOnClickListener());
         toMapButton.setOnClickListener(new TabsOnClickListener());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        accListView = getActivity().findViewById(R.id.acc_list);
+        progressBar = (ProgressBar) getActivity().findViewById(R.id.progressBar);
+        ((BounceScrollView) getActivity().findViewById(R.id.accListRefresh)).setOverScrollListener(new OnOverScrollUpdateListener());
+
+        bindButtons();
 
         map = new MyGoogleMapManager(getActivity());
 
         setPermissions();
-        setUpRightFragment(getActivity().getIntent());
+
+        switch (currentScreen) {
+            case LIST:
+                goToAccList();
+                break;
+            case MAP:
+                goToMap();
+                break;
+        }
+
         redraw();
         getAccidents();
     }
@@ -93,25 +110,25 @@ public class MainScreenFragment extends MyFragment {
             Intent intent = new Intent(Intent.ACTION_DIAL);
             //TODO Сделать забор телефона из преференсов
             intent.setData(Uri.parse("tel:+" + Const.PHONE));
-            MyApp.getCurrentActivity().startActivity(intent);
+            getActivity().startActivity(intent);
         }
     }
 
     private class CreateOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            startActivity(new Intent(MyApp.getCurrentActivity(), CreateAccActivity.class));
+            startActivity(new Intent(getActivity(), CreateAccActivity.class));
         }
     }
 
     @Override
     public void setPermissions() {
-        createAccButton.setVisibility(Auth.getInstance().getRole().isStandart() ? View.VISIBLE : View.INVISIBLE);
+        createAccButton.setVisibility(Auth.getInstance().getRole().isStandard() ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
     public void redraw() {
-        ViewGroup view = (ViewGroup) MyApp.getCurrentActivity().findViewById(R.id.accListContent);
+        ViewGroup view = (ViewGroup) getActivity().findViewById(R.id.accListContent);
 
         if (view == null) return;
         view.removeAllViews();
@@ -122,33 +139,43 @@ public class MainScreenFragment extends MyFragment {
         Content points = Content.getInstance();
         for (int id : points.reverseSortedKeySet()) {
             if (points.get(id).isInvisible()) continue;
-            view.addView(Rows.getAccidentRow(view, points.get(id)));
+            view.addView(Rows.getAccidentRow(getActivity(), view, points.get(id)));
         }
-        map.placeAccidents();
+        map.placeAccidents(getActivity());
     }
 
-    private void setUpRightFragment(Intent intent) {
-        String id    = intent.getStringExtra("id");
-        int    toMap = intent.getIntExtra("toMap", 0);
-
-        if (toMap != 0) {
-            map.zoom(16);
-            map.animateToPoint(Content.getInstance().get(toMap).getLocation());
-            fromDetails = intent.getBooleanExtra("fromDetails", false);
-            goToMap(toMap);
-        } else if (id != null) {
-            intent.removeExtra("id");
-
-            NewAccidentReceived.removeFromTray(Content.getInstance().get(Integer.parseInt(id)).getLocation().hashCode());
-            MyApp.toDetails(Integer.parseInt(id));
-            //NewAccidentReceived.clearAll();
-        } else {
-            goToAccList();
-        }
-    }
+//    private void setUpRightFragment(Intent intent) {
+//
+//        switch (currentScreen) {
+//            case LIST:
+//                goToAccList();
+//                break;
+//            case MAP:
+//                goToMap();
+//                break;
+//        }
+//
+//        String id    = intent.getStringExtra("id");
+//        int    toMap = intent.getIntExtra("toMap", 0);
+//
+//        if (toMap != 0) {
+//            map.zoom(16);
+//            map.animateToPoint(Content.getInstance().get(toMap).getLocation());
+//            fromDetails = intent.getBooleanExtra("fromDetails", false);
+//            goToMap(toMap);
+//        } else if (id != null) {
+//            intent.removeExtra("id");
+//
+//            NewAccidentReceived.removeFromTray(Content.getInstance().get(Integer.parseInt(id)).getLocation().hashCode());
+//            MyApp.toDetails(Integer.parseInt(id));
+//            //NewAccidentReceived.clearAll();
+//        } else {
+//            goToAccList();
+//        }
+//    }
 
     private void getAccidents() {
-        if (MyApp.isOnline()) {
+        if (MyApp.isOnline(getContext())) {
             startRefreshAnimation();
             Content.getInstance().requestUpdate(new AccidentsRequestCallback());
         } else {
@@ -226,7 +253,7 @@ public class MainScreenFragment extends MyFragment {
         @Override
         public void onOverScroll() {
             if (inTransaction) return;
-            if (MyApp.isOnline()) {
+            if (MyApp.isOnline(getActivity())) {
                 startRefreshAnimation();
                 Content.getInstance().requestUpdate(new AccidentsRequestCallback());
             } else {
@@ -236,12 +263,12 @@ public class MainScreenFragment extends MyFragment {
     }
 
     private void goToAccList() {
-        Intent intent = getActivity().getIntent();
-        if (intent.hasExtra("toMap")) intent.removeExtra("toMap");
+        Log.d("SCREEN TO LIST", String.valueOf(Const.getWidth(getActivity()) * 2));
         accListView.animate().translationX(0);
-        mapContainer.animate().translationX(Const.getWidth() * 2);
+        mapContainer.animate().translationX(Const.getWidth(getActivity()) * 2);
         toMapButton.setAlpha(0.3f);
         toAccListButton.setAlpha(1f);
+        currentScreen = Screen.LIST;
     }
 
     private void goToMap(int id) {
@@ -250,10 +277,12 @@ public class MainScreenFragment extends MyFragment {
     }
 
     private void goToMap() {
-        accListView.animate().translationX(-Const.getWidth() * 2);
+        accListView.animate().translationX(-Const.getWidth(getActivity()) * 2);
+        Log.d("SCREEN TO ACC", String.valueOf(-Const.getWidth(getActivity()) * 2));
         mapContainer.animate().translationX(0);
         toMapButton.setAlpha(1f);
         toAccListButton.setAlpha(0.3f);
+        currentScreen = Screen.MAP;
     }
 
     private class TabsOnClickListener implements View.OnClickListener {
