@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,8 +20,6 @@ import org.json.JSONObject;
 import java.util.List;
 
 import motocitizen.accident.Accident;
-import motocitizen.utils.popups.AccidentListPopup;
-import motocitizen.user.Auth;
 import motocitizen.content.AccidentStatus;
 import motocitizen.content.Content;
 import motocitizen.content.Medicine;
@@ -32,9 +29,12 @@ import motocitizen.fragments.DetailVolunteersFragment;
 import motocitizen.main.R;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.AccidentChangeStateRequest;
+import motocitizen.user.Auth;
 import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
 import motocitizen.utils.Preferences;
+import motocitizen.utils.ShowToast;
+import motocitizen.utils.popups.AccidentListPopup;
 
 import static motocitizen.content.AccidentStatus.ACTIVE;
 import static motocitizen.content.AccidentStatus.ENDED;
@@ -259,10 +259,6 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         }
     }
 
-    private void message(String text) {
-        Toast.makeText(this, text, Toast.LENGTH_LONG).show();
-    }
-
     private class AccidentChangeCallback implements AsyncTaskCompleteListener {
         @Override
         public void onTaskComplete(JSONObject result) {
@@ -275,7 +271,7 @@ public class AccidentDetailsActivity extends AppCompatActivity {
                     e.printStackTrace();
                     error = "Неизвестная ошибка";
                 }
-                message(error);
+                ShowToast.message(getBaseContext(), error);
             } else {
                 //TODO Суперкостыль
                 currentPoint.setStatus(accNewState);
@@ -315,9 +311,9 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         public boolean onLongClick(View v) {
             PopupWindow popupWindow;
             popupWindow = (new AccidentListPopup(getApplicationContext(), currentPoint.getId())).getPopupWindow(getApplicationContext());
-            int viewLocation[] = new int[ 2 ];
+            int viewLocation[] = new int[2];
             v.getLocationOnScreen(viewLocation);
-            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[ 0 ], viewLocation[ 1 ]);
+            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
             return true;
         }
     }

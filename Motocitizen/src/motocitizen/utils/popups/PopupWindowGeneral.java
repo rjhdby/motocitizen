@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -28,6 +27,7 @@ import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.AccidentChangeStateRequest;
 import motocitizen.network.requests.BanRequest;
 import motocitizen.utils.MyUtils;
+import motocitizen.utils.ShowToast;
 
 abstract class PopupWindowGeneral {
 
@@ -86,7 +86,7 @@ abstract class PopupWindowGeneral {
 
     TableRow phoneButtonRow(final Context context, final String phone) {
         Button dial = new Button(content.getContext());
-        dial.setText(context.getResources().getString(R.string.popup_dial, phone));
+        dial.setText(context.getString(R.string.popup_dial, phone));
         dial.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 popupWindow.dismiss();
@@ -102,7 +102,7 @@ abstract class PopupWindowGeneral {
 
     TableRow smsButtonRow(final Context context, final String phone) {
         Button dial = new Button(content.getContext());
-        dial.setText(context.getResources().getString(R.string.popup_sms, phone));
+        dial.setText(context.getString(R.string.popup_sms, phone));
         dial.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 popupWindow.dismiss();
@@ -160,16 +160,12 @@ abstract class PopupWindowGeneral {
                 myClip = ClipData.newPlainText("text", text);
                 myClipboard.setPrimaryClip(myClip);
                 popupWindow.dismiss();
-                message(context, context.getString(R.string.coordinates_copied));
+                ShowToast.message(context, context.getString(R.string.coordinates_copied));
             }
         });
         TableRow tr = new TableRow(content.getContext());
         tr.addView(coordinates, layoutParams);
         return tr;
-    }
-
-    private void message(Context context, String text) {
-        Toast.makeText(context, text, Toast.LENGTH_LONG).show();
     }
 
     TableRow banButtonRow(final Context context, final int id) {
@@ -184,13 +180,13 @@ abstract class PopupWindowGeneral {
                     public void onTaskComplete(JSONObject result) throws JSONException {
                         if (result.has("error")) {
                             try {
-                                message(context, result.getString("error"));
+                                ShowToast.message(context, result.getString("error"));
                             } catch (JSONException e) {
-                                message(context, "Неизвестная ошибка");
+                                ShowToast.message(context, "Неизвестная ошибка");
                                 e.printStackTrace();
                             }
                         } else {
-                            message(context, "Пользователь забанен");
+                            ShowToast.message(context, "Пользователь забанен");
                         }
                     }
                 }, id);

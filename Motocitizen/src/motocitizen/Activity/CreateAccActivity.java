@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -33,7 +32,6 @@ import org.json.JSONObject;
 import java.util.Date;
 
 import motocitizen.accident.Accident;
-import motocitizen.user.Auth;
 import motocitizen.content.AccidentStatus;
 import motocitizen.content.Content;
 import motocitizen.content.Medicine;
@@ -42,9 +40,11 @@ import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.CreateAccidentRequest;
+import motocitizen.user.Auth;
 import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
 import motocitizen.utils.Preferences;
+import motocitizen.utils.ShowToast;
 
 public class CreateAccActivity extends FragmentActivity implements View.OnClickListener {
     /* constants */
@@ -365,18 +365,14 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         setConfirm(true);
     }
 
-    private void message(String text) {
-        Toast.makeText(this, text, Toast.LENGTH_LONG).show();
-    }
-
     private class CreateAccidentCallback implements AsyncTaskCompleteListener {
         @Override
         public void onTaskComplete(JSONObject result) {
             if (result.has("error")) {
                 try {
-                    message(result.getString("error"));
+                    ShowToast.message(getBaseContext(), result.getString("error"));
                 } catch (JSONException e) {
-                    message("Неизвестная ошибка" + result.toString());
+                    ShowToast.message(getBaseContext(), "Неизвестная ошибка" + result.toString());
                     e.printStackTrace();
                 }
             } else {

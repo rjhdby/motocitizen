@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,14 +24,15 @@ import java.io.IOException;
 import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.accident.Accident;
 import motocitizen.accident.Message;
-import motocitizen.utils.popups.MessagesPopup;
-import motocitizen.user.Auth;
 import motocitizen.content.Content;
 import motocitizen.database.StoreMessages;
 import motocitizen.draw.MessageRow;
 import motocitizen.main.R;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.SendMessageRequest;
+import motocitizen.user.Auth;
+import motocitizen.utils.ShowToast;
+import motocitizen.utils.popups.MessagesPopup;
 
 public class DetailMessagesFragment extends AccidentDetailsFragments {
 
@@ -91,7 +91,6 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
             nextOwner = keys.length > i + 1 ? accident.getMessages().get(keys[i + 1]).getOwnerId() : 0;
             final Message message = accident.getMessages().get(keys[i]);
             message.setRead();
-            //View row = Rows.getMessageRow(messagesTable, message, lastOwner, nextOwner);
             View row = new MessageRow(getActivity(), message, lastOwner, nextOwner);
             lastOwner = accident.getMessages().get(keys[i]).getOwnerId();
             row.setOnLongClickListener(new MessageRowLongClickListener(message, accident));
@@ -108,18 +107,14 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         newMessageArea.setVisibility(Auth.getInstance().getRole().isStandard() ? View.VISIBLE : View.INVISIBLE);
     }
 
-    private void message(String text) {
-        Toast.makeText(getActivity(), text, Toast.LENGTH_LONG).show();
-    }
-
     private class SendMessageCallback implements AsyncTaskCompleteListener {
         @Override
         public void onTaskComplete(JSONObject result) {
             if (result.has("error")) {
                 try {
-                    message(result.getString("error"));
+                    ShowToast.message(getActivity(), result.getString("error"));
                 } catch (JSONException e) {
-                    message("Неизвестная ошибка" + result.toString());
+                    ShowToast.message(getActivity(), "Неизвестная ошибка" + result.toString());
                     e.printStackTrace();
                 }
             } else {
@@ -172,7 +167,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         private final Message  message;
         private final Accident accident;
 
-        public MessageRowLongClickListener(Message message, Accident accident) {
+        MessageRowLongClickListener(Message message, Accident accident) {
             this.message = message;
             this.accident = accident;
         }
@@ -188,25 +183,26 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         }
     }
 
-    private class TakePhotoClickListener implements View.OnClickListener{
+    private class TakePhotoClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View view) {
             final String appDirectoryName = "motoDTP";
-            final File imageRoot = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), appDirectoryName);
-            if(!imageRoot.isDirectory()){
+            final File   imageRoot        = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), appDirectoryName);
+            if (!imageRoot.isDirectory()) {
                 imageRoot.mkdir();
             }
 
-            String fileName = (int) Math.random()*10000 + ".jpg";
-            File newFile = new File(fileName);
-            while (newFile.isFile()){
-                fileName = (int) Math.random()*10000 + ".jpg";
+            String fileName = (int) Math.random() * 10000 + ".jpg";
+            File   newFile  = new File(fileName);
+            while (newFile.isFile()) {
+                fileName = (int) Math.random() * 10000 + ".jpg";
                 newFile = new File(fileName);
             }
             try {
                 newFile.createNewFile();
-            } catch (IOException e) {}
+            } catch (IOException e) {
+            }
 
             Uri outputFileUri = Uri.fromFile(newFile);
 

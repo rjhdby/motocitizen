@@ -14,12 +14,12 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import motocitizen.MyApp;
-import motocitizen.user.Auth;
 import motocitizen.main.R;
+import motocitizen.user.Auth;
 import motocitizen.utils.Preferences;
+import motocitizen.utils.ShowToast;
 
 public class AuthActivity extends AppCompatActivity/* implements View.OnClickListener*/ {
 
@@ -45,7 +45,7 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
                 startActivity(new Intent(this, MainScreenActivity.class));
             }
         } catch (Error e) {
-            Toast.makeText(this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            ShowToast.message(this, e.getLocalizedMessage());
         }
         setContentView(R.layout.auth);
         login = (EditText) findViewById(R.id.auth_login);
@@ -104,7 +104,7 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
                     return;
                 }
                 if (!MyApp.isOnline(getApplicationContext())) {
-                    showToast(R.string.auth_not_available);
+                    ShowToast.message(getBaseContext(), getBaseContext().getString(R.string.auth_not_available));
                     return;
                 }
                 if (Auth.getInstance().auth(login.getText().toString(), password.getText().toString())) {
@@ -167,9 +167,5 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
                 finish();
             }
         });
-    }
-
-    private void showToast(int res) {
-        Toast.makeText(this, res, Toast.LENGTH_LONG).show();
     }
 }
