@@ -43,9 +43,10 @@ public class MyGoogleMapManager implements MyMapManager {
 
     private class OnMapCreated implements OnMapReadyCallback {
         private Context context;
-        public OnMapCreated(Context context) {
+
+        OnMapCreated(Context context) {
             super();
-            this.context=context;
+            this.context = context;
         }
 
         @Override
@@ -60,21 +61,10 @@ public class MyGoogleMapManager implements MyMapManager {
     public MyGoogleMapManager(FragmentActivity activity) {
         jumpToPoint(MyLocationManager.getInstance().getLocation());
         selected = "";
-        //parent.removeAllViews();
-        //inflate(parent);
-        /*
-        final SupportMapFragment mapFragment = SupportMapFragment.newInstance();
-        FragmentTransaction fragmentTransaction = ((ActionBarActivity) MyApp.getCurrentActivity()).getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(parent, (Fragment) mapFragment);
-        fragmentTransaction.commit();
-        */
-        //android.support.v4.app.FragmentManager fragmentManager = ((FragmentActivity) MyApp.getCurrentActivity()).getSupportFragmentManager();
         android.support.v4.app.FragmentManager     fragmentManager     = activity.getSupportFragmentManager();
         final SupportMapFragment                   mapFragment         = new SupportMapFragment();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.google_map, mapFragment, "MAP").commit();
-        //= (SupportMapFragment) fragmentManager.findFragmentById(R.id.google_map);
-
 
         mapFragment.getMapAsync(new OnMapCreated(activity));
 
@@ -86,12 +76,8 @@ public class MyGoogleMapManager implements MyMapManager {
         }
 
         Location location = MyLocationManager.getInstance().getLocation();
-        //if(location != null) {
         user = map.addMarker(new MarkerOptions().position(MyUtils.LocationToLatLng(location)).title(Type.USER.toString()).icon(Type.USER.getIcon()));
-        //} else {
         //TODO Отобразить сообщение?
-        //Toast.makeText(this, MyApp.getCurrentActivity().getString(R.string.position_not_available), Toast.LENGTH_LONG).show();
-        //}
     }
 
     public void animateToPoint(Location location) {
@@ -117,15 +103,10 @@ public class MyGoogleMapManager implements MyMapManager {
             title += point.getMedicine() != Medicine.UNKNOWN ? ", " + point.getMedicine().toString() : "";
             title += ", " + MyUtils.getIntervalFromNowInText(context, point.getTime()) + " назад";
 
-            float alpha;
-            int   age = (int) (((new Date()).getTime() - point.getTime().getTime()) / 3600000);
-            if (age < 2) {
-                alpha = 1.0f;
-            } else if (age < 6) {
-                alpha = 0.5f;
-            } else {
-                alpha = 0.2f;
-            }
+            int age = (int) (((new Date()).getTime() - point.getTime().getTime()) / 3600000);
+
+            float alpha = age < 2 ? 1.0f : age < 6 ? 0.5f : 0.2f;
+
             Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(point.getLat(), point.getLon())).title(title).icon(point.getType().getIcon()).alpha(alpha));
             accidents.put(marker.getId(), id);
         }
@@ -176,7 +157,7 @@ public class MyGoogleMapManager implements MyMapManager {
     private class DelayedAnimateToLocation implements DelayedAction {
         Location location;
 
-        public DelayedAnimateToLocation(Location location) {
+        DelayedAnimateToLocation(Location location) {
             this.location = location;
         }
 
@@ -189,7 +170,7 @@ public class MyGoogleMapManager implements MyMapManager {
     private class DelayedJumpToLocation implements DelayedAction {
         Location location;
 
-        public DelayedJumpToLocation(Location location) {
+        DelayedJumpToLocation(Location location) {
             this.location = location;
         }
 

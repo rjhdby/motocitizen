@@ -24,7 +24,7 @@ import motocitizen.network.requests.InplaceRequest;
 import motocitizen.network.requests.LeaveRequest;
 import motocitizen.utils.Preferences;
 
-public class NormalLocationManager implements SecuredLocationManagerInterface{
+class NormalLocationManager implements SecuredLocationManagerInterface {
     /* constants */
     private static final int LOW_INTERVAL     = 60000;
     private static final int LOW_BEST         = 30000;
@@ -38,14 +38,13 @@ public class NormalLocationManager implements SecuredLocationManagerInterface{
     private static final int ARRIVED_MAX_ACCURACY = 300;
     /* end constants */
 
-    private String                              address;
     private Location                            current;
     private GoogleApiClient                     googleApiClient;
     private LocationRequest                     locationRequest;
     private LocationListener                    locationListener;
     private GoogleApiClient.ConnectionCallbacks connectionCallback;
 
-    public NormalLocationManager() {
+    NormalLocationManager() {
         setup();
         current = getLocation();
     }
@@ -126,8 +125,7 @@ public class NormalLocationManager implements SecuredLocationManagerInterface{
     private void requestAddress() {
         Location location = getLocation();
         if (current == location) return;
-        address = getAddress(location);
-        MainScreenActivity.updateStatusBar(address);
+        MainScreenActivity.updateStatusBar(getAddress(location));
     }
 
     private void checkInPlace(Location location) {
@@ -149,33 +147,12 @@ public class NormalLocationManager implements SecuredLocationManagerInterface{
     }
 
     private boolean isArrived(Location location, int accId) {
-        double meters = Content.getInstance().get(accId).getLocation().distanceTo(location);
-        double limit  = Math.max(ARRIVED_MAX_ACCURACY, location.getAccuracy());
-        return meters < limit;
-    }
-
-    private void message(String text) {
-//        Toast.makeText(MyApp.getCurrentActivity(), text, Toast.LENGTH_LONG).show();
+        return Content.getInstance().get(accId).getLocation().distanceTo(location) < Math.max(ARRIVED_MAX_ACCURACY, location.getAccuracy());
     }
 
     private boolean isInPlace(Location location, int accId) {
         Accident acc = Content.getInstance().get(accId);
-        if (acc == null) {
-//            message("Invalid accident");
-            return false;
-        }
-        if (location == null) {
-//            message("Invalid location");
-            return false;
-        }
-        if (acc.getLocation() == null) {
-//            message("Invalid accident location");
-            return false;
-        }
-
-        double meters = Content.getInstance().get(accId).getLocation().distanceTo(location);
-        double limit  = location.getAccuracy() * 2 + 1000;
-        return meters < limit;
+        return acc != null && location != null && (acc.getLocation().distanceTo(location) - location.getAccuracy() * 2 - 1000 < 0);
     }
 
     public String getAddress(Location location) {
@@ -186,14 +163,14 @@ public class NormalLocationManager implements SecuredLocationManagerInterface{
             list = MyApp.getGeoCoder().getFromLocation(location.getLatitude(), location.getLongitude(), 1);
             if (list == null || list.size() == 0)
                 return location.getLatitude() + " " + location.getLongitude();
-            Address address = list.get(0);
-            String locality = address.getLocality();
+
+            Address address  = list.get(0);
+            String  locality = address.getLocality();
             if (locality == null) locality = address.getAdminArea();
             if (locality == null && address.getMaxAddressLineIndex() > 0)
                 locality = address.getAddressLine(0);
 
-            String thoroughfare = address.getThoroughfare();
-            if (thoroughfare == null) thoroughfare = address.getSubAdminArea();
+            String thoroughfare = null != address.getThoroughfare() ? address.getThoroughfare() : address.getSubAdminArea();
 
             String featureName = address.getFeatureName();
 
