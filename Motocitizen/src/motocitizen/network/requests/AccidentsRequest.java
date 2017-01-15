@@ -7,7 +7,6 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import motocitizen.MyApp;
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.HTTPClient;
@@ -23,14 +22,14 @@ public class AccidentsRequest extends HTTPClient {
         this.listener = listener;
         post = new HashMap<>();
         Location location = MyLocationManager.getInstance().getLocation();
-        String   user     = Preferences.getLogin();
+        String   user     = Preferences.getInstance().getLogin();
         if (!user.equals("")) {
             post.put("user", user);
         }
         //post.put("distance", String.valueOf(Preferences.getVisibleDistance()));
         post.put("lat", String.valueOf(location.getLatitude()));
         post.put("lon", String.valueOf(location.getLongitude()));
-        post.put("age", String.valueOf(Preferences.getHoursAgo()));
+        post.put("age", String.valueOf(Preferences.getInstance().getHoursAgo()));
         post.put("m", Methods.GET_LIST.toCode());
         execute(post);
     }

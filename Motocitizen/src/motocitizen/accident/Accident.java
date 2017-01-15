@@ -12,12 +12,12 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
-import motocitizen.user.Auth;
 import motocitizen.content.AccidentStatus;
 import motocitizen.content.Medicine;
 import motocitizen.content.Type;
 import motocitizen.database.StoreMessages;
 import motocitizen.geolocation.MyLocationManager;
+import motocitizen.user.Auth;
 import motocitizen.utils.Preferences;
 import motocitizen.utils.SortedHashMap;
 
@@ -26,7 +26,7 @@ import static motocitizen.content.AccidentStatus.ENDED;
 import static motocitizen.content.AccidentStatus.HIDDEN;
 
 public class Accident {
-    private static final String[] prerequisites = {"id", "owner_id", "owner", "status", "uxtime", "address", "descr", "lat", "lon", "type", "med", "m", "h", "v"};
+    private static final String[] prerequisites = { "id", "owner_id", "owner", "status", "uxtime", "address", "descr", "lat", "lon", "type", "med", "m", "h", "v" };
 
     private int                      id;
     private int                      ownerId;
@@ -71,7 +71,7 @@ public class Accident {
             description = json.getString("descr");
             lat = json.getDouble("lat");
             lon = json.getDouble("lon");
-            self = ownerId == Preferences.getUserId();
+            self = ownerId == Preferences.getInstance().getUserId();
             parseMessages(json.getJSONArray("m"));
             parseVolunteers(json.getJSONArray("v"));
             parseHistory(json.getJSONArray("h"));
@@ -200,9 +200,9 @@ public class Accident {
 
     public boolean isInvisible() {
         boolean hidden         = status == HIDDEN && !Auth.getInstance().getRole().isModerator();
-        boolean distanceFilter = getDistanceFromUser() > Preferences.getVisibleDistance() * 1000;
-        boolean typeFilter     = Preferences.isHidden(getType());
-        boolean timeFilter     = time.getTime() + (long) Preferences.getHoursAgo() * 60 * 60 * 1000 < (new Date()).getTime();
+        boolean distanceFilter = getDistanceFromUser() > Preferences.getInstance().getVisibleDistance() * 1000;
+        boolean typeFilter     = Preferences.getInstance().isHidden(getType());
+        boolean timeFilter     = time.getTime() + (long) Preferences.getInstance().getHoursAgo() * 60 * 60 * 1000 < (new Date()).getTime();
         return hidden || distanceFilter || typeFilter || timeFilter;
     }
 

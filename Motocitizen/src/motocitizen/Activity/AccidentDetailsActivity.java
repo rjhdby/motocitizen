@@ -81,7 +81,7 @@ public class AccidentDetailsActivity extends AppCompatActivity {
 
         //NewAccidentReceived.removeNotification(accidentID);
 
-        String userName = Preferences.getLogin();
+        String userName = Preferences.getInstance().getLogin();
 
         detailVolunteersFragment = DetailVolunteersFragment.newInstance(accidentID, userName);
         detailMessagesFragment = DetailMessagesFragment.newInstance(accidentID, userName);
@@ -311,9 +311,9 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         public boolean onLongClick(View v) {
             PopupWindow popupWindow;
             popupWindow = (new AccidentListPopup(getApplicationContext(), currentPoint.getId())).getPopupWindow(getApplicationContext());
-            int viewLocation[] = new int[2];
+            int viewLocation[] = new int[ 2 ];
             v.getLocationOnScreen(viewLocation);
-            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
+            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[ 0 ], viewLocation[ 1 ]);
             return true;
         }
     }

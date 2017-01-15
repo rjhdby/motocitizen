@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -117,26 +116,20 @@ public class MyGoogleMapManager implements MyMapManager {
         map.setMyLocationEnabled(true);
         map.getUiSettings().setMyLocationButtonEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
-        map.setOnMarkerClickListener(new OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                String id = marker.getId();
-                if (selected.equals(id) && accidents.containsKey(id)) {
-                    toDetails(context, accidents.get(selected));
-                } else {
-                    marker.showInfoWindow();
-                    selected = id;
-                }
-                return true;
+        map.setOnMarkerClickListener(marker -> {
+            String id = marker.getId();
+            if (selected.equals(id) && accidents.containsKey(id)) {
+                toDetails(context, accidents.get(selected));
+            } else {
+                marker.showInfoWindow();
+                selected = id;
             }
+            return true;
         });
-        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-            @Override
-            public void onMapLongClick(LatLng latLng) {
-                String uri    = "geo:" + latLng.latitude + "," + latLng.longitude;
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                context.startActivity(intent);
-            }
+        map.setOnMapLongClickListener(latLng -> {
+            String uri    = "geo:" + latLng.latitude + "," + latLng.longitude;
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+            context.startActivity(intent);
         });
     }
 

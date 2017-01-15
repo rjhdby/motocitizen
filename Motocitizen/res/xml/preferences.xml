@@ -49,11 +49,13 @@
             android:dialogTitle="@string/settings_distance"
             android:key="mc.distance.show"
             android:numeric="integer"
+            android:maxLength="5"
             android:summary="@string/settings_distance"
             android:tag="mc.distance.show"
             android:title="@string/settings_distance"/>
         <EditTextPreference
             android:defaultValue="20"
+            android:maxLength="5"
             android:dialogTitle="@string/settings_distance_alarm"
             android:key="mc.distance.alarm"
             android:numeric="integer"
@@ -64,6 +66,7 @@
             android:defaultValue="24"
             android:dialogTitle="@string/settings_hours_ago"
             android:key="hours.ago"
+            android:maxLength="3"
             android:numeric="integer"
             android:summary=""
             android:tag="hours.ago"
@@ -74,6 +77,7 @@
             android:key="notifications.max"
             android:numeric="integer"
             android:summary=""
+            android:maxLength="2"
             android:tag="notifications.max"
             android:title="@string/settings_max_notifications"/>
         <Preference

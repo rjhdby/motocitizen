@@ -9,8 +9,6 @@ import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 
 class CustomTrustManager {
@@ -19,16 +17,12 @@ class CustomTrustManager {
     @SuppressLint("TrulyRandom")
     public static void allowAllSSL() {
 
-        javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-            public boolean verify(String hostname, SSLSession session) {
-                return true;
-            }
-        });
+        javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
 
         javax.net.ssl.SSLContext sslContext;
 
         if (trustManagers == null) {
-            trustManagers = new javax.net.ssl.TrustManager[]{new _FakeX509TrustManager()};
+            trustManagers = new javax.net.ssl.TrustManager[]{ new _FakeX509TrustManager() };
         }
 
         try {

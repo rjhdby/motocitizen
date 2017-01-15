@@ -28,16 +28,16 @@ public class Auth {
 
     }
 
-    public static void init(){
+    public static void init() {
         initialAuth();
     }
 
 
     private static void initialAuth() {
-        if (Preferences.isAnonim()) return;
-        if (Preferences.getLogin().equals("")) return;
+        if (Preferences.getInstance().isAnonim()) return;
+        if (Preferences.getInstance().getLogin().equals("")) return;
         try {
-            getInstance().auth(Preferences.getLogin(), Preferences.getPassword());
+            getInstance().auth(Preferences.getInstance().getLogin(), Preferences.getInstance().getPassword());
         } catch (Error e) {
             Log.d("AUTH ERROR", e.getLocalizedMessage());
         }
@@ -81,13 +81,13 @@ public class Auth {
             name = result.getString("name");
             role = Role.parse(result.getString("role"));
             id = Integer.parseInt(result.getString("id"));
-            Preferences.setUserId(id);
-            Preferences.setUserName(name);
-            Preferences.setUserRole(role.getCode());
+            Preferences.getInstance().setUserId(id);
+            Preferences.getInstance().setUserName(name);
+            Preferences.getInstance().setUserRole(role.getCode());
             if (name.length() > 0) {
-                Preferences.setLogin(login);
-                Preferences.setPassword(password);
-                Preferences.setAnonim(false);
+                Preferences.getInstance().setLogin(login);
+                Preferences.getInstance().setPassword(password);
+                Preferences.getInstance().setAnonim(false);
                 isAuthorized = true;
             }
         } catch (JSONException e) {
@@ -105,7 +105,7 @@ public class Auth {
     }
 
     public String makePassHash() {
-        return makePassHash(Preferences.getPassword());
+        return makePassHash(Preferences.getInstance().getPassword());
     }
 
     public boolean isAuthorized() {

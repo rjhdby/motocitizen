@@ -17,7 +17,6 @@ import org.json.JSONObject;
 
 import motocitizen.Activity.AccidentDetailsActivity;
 import motocitizen.accident.Volunteer;
-import motocitizen.user.Auth;
 import motocitizen.content.Content;
 import motocitizen.content.VolunteerStatus;
 import motocitizen.draw.VolunteerRow;
@@ -26,6 +25,7 @@ import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.AccidentsRequest;
 import motocitizen.network.requests.CancelOnWayRequest;
 import motocitizen.network.requests.OnWayRequest;
+import motocitizen.user.Auth;
 import motocitizen.utils.Preferences;
 
 public class DetailVolunteersFragment extends AccidentDetailsFragments {
@@ -97,9 +97,9 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         motocitizen.accident.Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
         int                           id       = accident.getId();
         boolean                       active   = accident.isActive() && Auth.getInstance().isAuthorized();
-        onwayButton.setVisibility(id != Preferences.getOnWay() && id != Content.getInstance().getInplaceId() && active ? View.VISIBLE : View.GONE);
-        onwayCancelButton.setVisibility(id == Preferences.getOnWay() && id != Content.getInstance().getInplaceId() && active ? View.VISIBLE : View.GONE);
-        onwayDisabledButton.setVisibility(id == Content.getInstance().getInplaceId() && active ? View.VISIBLE : View.GONE);
+        onwayButton.setVisibility(id != Preferences.getInstance().getOnWay() && id != Content.getInstance().getInPlaceId() && active ? View.VISIBLE : View.GONE);
+        onwayCancelButton.setVisibility(id == Preferences.getInstance().getOnWay() && id != Content.getInstance().getInPlaceId() && active ? View.VISIBLE : View.GONE);
+        onwayDisabledButton.setVisibility(id == Content.getInstance().getInPlaceId() && active ? View.VISIBLE : View.GONE);
     }
 
     private void showDialog(int type) {
@@ -121,7 +121,9 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
                 break;
 
             case DIALOG_CANCEL_ONWAY_CONFIRM:
-                DialogFragment cancelOnwayConfirm = ConfirmDialog.newInstance(act.getString(R.string.title_dialog_cancel_onway_confirm), act.getString(android.R.string.yes), act.getString(android.R.string.no));
+                DialogFragment cancelOnwayConfirm = ConfirmDialog.newInstance(act.getString(R.string.title_dialog_cancel_onway_confirm),
+                                                                              act.getString(android.R.string.yes),
+                                                                              act.getString(android.R.string.no));
                 cancelOnwayConfirm.setTargetFragment(this, type);
                 cancelOnwayConfirm.show(getFragmentManager().beginTransaction(), "dialog");
                 break;
@@ -159,7 +161,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
 
     private void sendOnway() {
         //AccidentsGeneral.setOnWay(accidentID);
-        Preferences.setOnWay(accidentID);
+        Preferences.getInstance().setOnWay(accidentID);
         new OnWayRequest(new OnWayCallback(), accidentID);
     }
 
@@ -192,7 +194,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     }
 
     private void sendCancelOnway() {
-        Preferences.setOnWay(0);
+        Preferences.getInstance().setOnWay(0);
         new CancelOnWayRequest(new OnWayCallback(), accidentID);
     }
 

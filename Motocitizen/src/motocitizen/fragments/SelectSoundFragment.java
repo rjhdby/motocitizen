@@ -29,8 +29,8 @@ public class SelectSoundFragment extends Fragment {
 
     {
         currentId = 0;
-        currentUri = Preferences.getAlarmSoundUri();
-        currentTitle = Preferences.getAlarmSoundTitle();
+        currentUri = Preferences.getInstance().getAlarmSoundUri();
+        currentTitle = Preferences.getInstance().getAlarmSoundTitle();
     }
 
     @Override
@@ -68,7 +68,7 @@ public class SelectSoundFragment extends Fragment {
     }
 
     private void drawList() {
-        for(int i=0;i<notifications.size();i++){
+        for (int i = 0; i < notifications.size(); i++) {
             inflateRow(ringtoneList, notifications.keyAt(i));
         }
     }
@@ -115,9 +115,9 @@ public class SelectSoundFragment extends Fragment {
         @Override
         public void onClick(View v) {
             if (currentTitle.equals("default system")) {
-                Preferences.setDefaultSoundAlarm();
-            } else Preferences.setSoundAlarm(currentTitle, currentUri);
-            Preferences.initAlarmSoundUri(getActivity());
+                Preferences.getInstance().setDefaultSoundAlarm();
+            } else Preferences.getInstance().setSoundAlarm(currentTitle, currentUri);
+            Preferences.getInstance().initAlarmSoundUri(getActivity());
             finish();
         }
     }

@@ -1,6 +1,5 @@
 package motocitizen.Activity;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -61,9 +60,9 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
 
     private void fillCtrls() {
 
-        login.setText(Preferences.getLogin());
-        password.setText(Preferences.getPassword());
-        anonim.setChecked(Preferences.isAnonim());
+        login.setText(Preferences.getInstance().getLogin());
+        password.setText(Preferences.getInstance().getPassword());
+        anonim.setChecked(Preferences.getInstance().isAnonim());
         View     accListYesterdayLine = findViewById(R.id.accListYesterdayLine);
         TextView roleView             = (TextView) findViewById(R.id.role);
 
@@ -93,40 +92,31 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
     protected void onResume() {
         super.onResume();
         final Activity local = this;
-        loginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Анонимный вход
-                Preferences.setAnonim(anonim.isChecked());
-                if (anonim.isChecked()) {
-                    ((TextView) findViewById(R.id.auth_error_helper)).setText("");
-                    local.startActivity(new Intent(local, MainScreenActivity.class));
-                    return;
-                }
-                if (!MyApp.isOnline(getApplicationContext())) {
-                    ShowToast.message(getBaseContext(), getBaseContext().getString(R.string.auth_not_available));
-                    return;
-                }
-                if (Auth.getInstance().auth(login.getText().toString(), password.getText().toString())) {
-                    local.startActivity(new Intent(local, MainScreenActivity.class));
-                } else {
-                    TextView authErrorHelper = (TextView) findViewById(R.id.auth_error_helper);
-                    authErrorHelper.setText(R.string.auth_password_error);
-                }
+        loginBtn.setOnClickListener(v -> {
+            // Анонимный вход
+            Preferences.getInstance().setAnonim(anonim.isChecked());
+            if (anonim.isChecked()) {
+                ((TextView) findViewById(R.id.auth_error_helper)).setText("");
+                local.startActivity(new Intent(local, MainScreenActivity.class));
+                return;
             }
-
-
+            if (!MyApp.isOnline(getApplicationContext())) {
+                ShowToast.message(getBaseContext(), getBaseContext().getString(R.string.auth_not_available));
+                return;
+            }
+            if (Auth.getInstance().auth(login.getText().toString(), password.getText().toString())) {
+                local.startActivity(new Intent(local, MainScreenActivity.class));
+            } else {
+                TextView authErrorHelper = (TextView) findViewById(R.id.auth_error_helper);
+                authErrorHelper.setText(R.string.auth_password_error);
+            }
         });
-        logoutBtn.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("CommitPrefEdits")
-            @Override
-            public void onClick(View v) {
-                //TODO Добавить запрос подтверждения на выход.
-                Preferences.resetAuth();
-                Preferences.setAnonim(true);
-                MyApp.logoff();
-                fillCtrls();
-            }
+        logoutBtn.setOnClickListener(v -> {
+            //TODO Добавить запрос подтверждения на выход.
+            Preferences.getInstance().resetAuth();
+            Preferences.getInstance().setAnonim(true);
+            MyApp.logoff();
+            fillCtrls();
         });
         login.addTextChangedListener(new TextWatcher() {
 
@@ -152,20 +142,12 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
                 enableLoginBtn();
             }
         });
-        anonim.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CheckBox checkBox = (CheckBox) view;
-                login.setEnabled(!checkBox.isChecked());
-                password.setEnabled(!checkBox.isChecked());
-                enableLoginBtn();
-            }
+        anonim.setOnClickListener(view -> {
+            CheckBox checkBox = (CheckBox) view;
+            login.setEnabled(!checkBox.isChecked());
+            password.setEnabled(!checkBox.isChecked());
+            enableLoginBtn();
         });
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        cancelBtn.setOnClickListener(v -> finish());
     }
 }

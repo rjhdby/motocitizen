@@ -44,7 +44,7 @@ public class NewAccidentReceived extends IntentService {
         if (!accident.isNoError()) return;
         Content.getInstance().put(accident.getId(), accident);
 
-        if (accident.isInvisible() || Preferences.getDoNotDisturb()) return;
+        if (accident.isInvisible() || Preferences.getInstance().getDoNotDisturb()) return;
 
         Intent notificationIntent = new Intent(this, MainScreenActivity.class);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -72,11 +72,11 @@ public class NewAccidentReceived extends IntentService {
                .setContentTitle(title)
                .setContentText(accident.getAddress());
 
-        if (Preferences.getAlarmSoundTitle().equals("default system")) {
-            builder.setDefaults(Preferences.getVibration() ? Notification.DEFAULT_ALL : Notification.DEFAULT_SOUND);
+        if (Preferences.getInstance().getAlarmSoundTitle().equals("default system")) {
+            builder.setDefaults(Preferences.getInstance().getVibration() ? Notification.DEFAULT_ALL : Notification.DEFAULT_SOUND);
         } else {
             setSound(builder);
-            if (Preferences.getVibration()) builder.setVibrate(new long[]{1000, 1000, 1000});
+            if (Preferences.getInstance().getVibration()) builder.setVibrate(new long[]{ 1000, 1000, 1000 });
         }
         Notification notification = getNotification(builder);
 
@@ -85,7 +85,7 @@ public class NewAccidentReceived extends IntentService {
 
         notificationManager.notify(idHash, notification);
         tray.push(idHash);
-        while (tray.size() > Preferences.getMaxNotifications()) {
+        while (tray.size() > Preferences.getInstance().getMaxNotifications()) {
             int remove = tray.pollLast();
             notificationManager.cancel(remove);
         }
@@ -94,9 +94,9 @@ public class NewAccidentReceived extends IntentService {
     @SuppressWarnings("deprecation")
     private void setSound(Notification.Builder builder) {
         if (Build.VERSION.SDK_INT < 21) {
-            builder.setSound(Preferences.getAlarmSoundUri(), AudioManager.STREAM_NOTIFICATION);
+            builder.setSound(Preferences.getInstance().getAlarmSoundUri(), AudioManager.STREAM_NOTIFICATION);
         } else {
-            builder.setSound(Preferences.getAlarmSoundUri(), (new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_NOTIFICATION)).build());
+            builder.setSound(Preferences.getInstance().getAlarmSoundUri(), (new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_NOTIFICATION)).build());
         }
     }
 

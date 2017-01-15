@@ -25,7 +25,7 @@ public class Message {
             owner = json.getString("owner");
             text = json.getString("text");
             time = new Date(json.getLong("uxtime") * 1000);
-            unread = ownerId != Preferences.getUserId();
+            unread = ownerId != Preferences.getInstance().getUserId();
 
         } catch (Exception e) {
             noError = false;

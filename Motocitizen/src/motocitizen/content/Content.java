@@ -7,35 +7,31 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
-import java.util.List;
 
 import motocitizen.accident.Accident;
-import motocitizen.database.Favorites;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.AccidentsRequest;
 import motocitizen.utils.SortedHashMap;
 
 public class Content extends SortedHashMap<Accident> {
-    private int           inPlace;
-    public  List<Integer> favorites;
-
-    {
-        inPlace = 0;
-    }
+    private int inPlace = 0;
 
     private Content() {
-        //favorites = Favorites.getFavorites();
     }
 
     private static class Holder {
-        private static final Content instance = new Content();
+        private static Content instance;
+    }
+
+    public static void init() {
+        Holder.instance = new Content();
     }
 
     public static Content getInstance() {
         return Holder.instance;
     }
 
-    public int getInplaceId() {
+    public int getInPlaceId() {
         return inPlace;
     }
 
@@ -51,7 +47,7 @@ public class Content extends SortedHashMap<Accident> {
     }
 
     public void requestUpdate() {
-        new AccidentsRequest(new AccidentsRequestCallback(), true);
+        new AccidentsRequest(result -> {if (!result.has("error")) parseJSON(result);}, true);
     }
 
     public void parseJSON(JSONObject json) {
@@ -76,12 +72,5 @@ public class Content extends SortedHashMap<Accident> {
 
     public void setLeave(int currentInplace) {
         //TODO SetLeave
-    }
-
-    private class AccidentsRequestCallback implements AsyncTaskCompleteListener {
-
-        public void onTaskComplete(JSONObject result) {
-            if (!result.has("error")) parseJSON(result);
-        }
     }
 }

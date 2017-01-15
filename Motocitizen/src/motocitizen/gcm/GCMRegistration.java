@@ -8,12 +8,10 @@ import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
 import java.io.IOException;
 
-import motocitizen.MyApp;
 import motocitizen.network.requests.GCMRegistrationRequest;
 import motocitizen.utils.Preferences;
 
@@ -24,16 +22,16 @@ public class GCMRegistration {
     private static final int    RESOLUTION_REQUEST = 9000;
     /* end constants */
 
-//    private GoogleCloudMessaging gcm;
-private InstanceID gcm;
-    private String               regid;
+    //    private GoogleCloudMessaging gcm;
+    private InstanceID gcm;
+    private String     regid;
 
     public GCMRegistration(Context context) {
         if (!checkPlayServices(context)) return;
 //        gcm = GoogleCloudMessaging.getInstance(context);
-        gcm= InstanceID.getInstance(context);
+        gcm = InstanceID.getInstance(context);
 //        regid = getRegistrationId();
-        regid = Preferences.getGCMRegistrationCode();
+        regid = Preferences.getInstance().getGCMRegistrationCode();
         if (regid.isEmpty()) {
             registerInBackground(context);
         } else {
@@ -88,8 +86,8 @@ private InstanceID gcm;
                 try {
                     if (gcm == null) {
 //                        gcm = GoogleCloudMessaging.getInstance(context);
-                        gcm= InstanceID.getInstance(context);
-                    }regid=gcm.getToken(SENDER_ID, "GCM");
+                        gcm = InstanceID.getInstance(context);
+                    } regid = gcm.getToken(SENDER_ID, "GCM");
 //                    regid = gcm.register(SENDER_ID);
                     msg = "Device registered, registration ID=" + regid;
                     storeRegistrationId(regid);
@@ -112,7 +110,7 @@ private InstanceID gcm;
 //        int appVersion = getAppVersion();
 //        Log.i(TAG, "Saving regId on app version " + appVersion);
 //        Preferences.setAppVersion(appVersion);
-        Preferences.setGCMRegistrationCode(regId);
+        Preferences.getInstance().setGCMRegistrationCode(regId);
         new GCMRegistrationRequest(regId);
     }
 }

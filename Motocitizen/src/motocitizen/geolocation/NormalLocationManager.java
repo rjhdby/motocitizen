@@ -17,9 +17,9 @@ import java.util.Date;
 import java.util.List;
 
 import motocitizen.Activity.MainScreenActivity;
-import motocitizen.MyApp;
 import motocitizen.accident.Accident;
 import motocitizen.content.Content;
+import motocitizen.geocoder.MyGeoCoder;
 import motocitizen.network.requests.InplaceRequest;
 import motocitizen.network.requests.LeaveRequest;
 import motocitizen.utils.Preferences;
@@ -51,7 +51,12 @@ class NormalLocationManager implements SecuredLocationManagerInterface {
 
     private void setup() {
         if (connectionCallback == null) connectionCallback = new MyConnectionCallback();
-        if (locationListener == null) locationListener = new MyLocationListener();
+        if (locationListener == null) locationListener = location -> {
+            current = location;
+            Preferences.getInstance().saveLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
+            requestAddress();
+            checkInPlace(location);
+        };
         if (locationRequest == null)
             locationRequest = getProvider(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
@@ -89,7 +94,7 @@ class NormalLocationManager implements SecuredLocationManagerInterface {
         }
         if (current == null) {
             current = new Location(LocationManager.NETWORK_PROVIDER);
-            LatLng latlng = Preferences.getSavedLatLng();
+            LatLng latlng = Preferences.getInstance().getSavedLatLng();
             current.setLatitude(latlng.latitude);
             current.setLongitude(latlng.longitude);
             current.setAccuracy(DEFAULT_ACCURACY);
@@ -129,9 +134,9 @@ class NormalLocationManager implements SecuredLocationManagerInterface {
     }
 
     private void checkInPlace(Location location) {
-        String login = Preferences.getLogin();
+        String login = Preferences.getInstance().getLogin();
         if (login.equals("")) return;
-        int currentInplace = Content.getInstance().getInplaceId();
+        int currentInplace = Content.getInstance().getInPlaceId();
         if (currentInplace != 0) {
             if (isInPlace(location, currentInplace)) return;
             Content.getInstance().setLeave(currentInplace);
@@ -160,7 +165,7 @@ class NormalLocationManager implements SecuredLocationManagerInterface {
         StringBuilder res = new StringBuilder();
         try {
             List<Address> list;
-            list = MyApp.getGeoCoder().getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            list = MyGeoCoder.getInstance().getFromLocation(location.getLatitude(), location.getLongitude(), 1);
             if (list == null || list.size() == 0)
                 return location.getLatitude() + " " + location.getLongitude();
 
@@ -186,16 +191,6 @@ class NormalLocationManager implements SecuredLocationManagerInterface {
             e.printStackTrace();
         }
         return res.toString();
-    }
-
-    private class MyLocationListener implements com.google.android.gms.location.LocationListener {
-        @Override
-        public void onLocationChanged(Location location) {
-            current = location;
-            Preferences.saveLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
-            requestAddress();
-            checkInPlace(location);
-        }
     }
 
     private class MyConnectionCallback implements GoogleApiClient.ConnectionCallbacks {

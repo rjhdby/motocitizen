@@ -11,7 +11,6 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.TextView;
 
-import motocitizen.MyApp;
 import motocitizen.main.R;
 import motocitizen.utils.ChangeLog;
 import motocitizen.utils.Preferences;
@@ -25,7 +24,7 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
-        ((TextView) this.findViewById(R.id.about_code_version)).setText(getString(R.string.code_version_prefix) + ": " + Preferences.getAppVersion());
+        ((TextView) this.findViewById(R.id.about_code_version)).setText(getString(R.string.code_version_prefix) + ": " + Preferences.getInstance().getAppVersion());
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);

@@ -10,18 +10,11 @@ import android.preference.PreferenceManager;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.util.Arrays;
-
-import motocitizen.MyApp;
 import motocitizen.content.Type;
-import motocitizen.main.R;
 
 @SuppressLint("CommitPrefEdits")
 public class Preferences {
-    private static       boolean newVersion                = false;
+    private              boolean newVersion                = false;
     /* constants */
     private final static float   DEFAULT_LATITUDE          = 55.752295f;
     private final static float   DEFAULT_LONGITUDE         = 37.622735f;
@@ -35,38 +28,36 @@ public class Preferences {
     private final static boolean DEFAULT_SHOW_TYPE         = true;
     /* end constants */
 
-    public final static  String showAcc;
-    public final static  String showBreak;
-    public final static  String showSteal;
-    public final static  String showOther;
-    public final static  String distanceShow;
-    public final static  String distanceAlarm;
-    public final static  String mapProvider;
-    public final static  String hoursAgo;
-    public final static  String maxNotifications;
-    public final static  String useVibration;
-    private final static String doNotDisturb;
-    private final static String userId;
-    private final static String userName;
-    private final static String userRole;
-    private final static String onWay;
-    private final static String soundTitle;
-    private final static String soundURI;
-    private final static String login;
-    private final static String password;
-    private final static String anonim;
-    private final static String GCMRegistrationCode;
-    private final static String appVersion;
-    private final static String GCMappVersion;
-    private final static String savedLng;
-    private final static String savedLat;
-    private final static String notificationList;
+    private final String showAcc;
+    private final String showBreak;
+    private final String showSteal;
+    private final String showOther;
+    private final String distanceShow;
+    private final String distanceAlarm;
+    private final String mapProvider;
+    private final String hoursAgo;
+    private final String maxNotifications;
+    private final String useVibration;
 
-    private final static String[] mapProviders;
+    private final String doNotDisturb;
+    private final String userId;
+    private final String userName;
+    private final String userRole;
+    private final String onWay;
+    private final String soundTitle;
+    private final String soundURI;
+    private final String login;
+    private final String password;
+    private final String anonim;
+    private final String GCMRegistrationCode;
+    private final String appVersion;
+    private final String GcmAppVersion;
+    private final String savedLng;
+    private final String savedLat;
 
-    private static SharedPreferences preferences;
+    private SharedPreferences preferences;
 
-    static {
+    {
         showAcc = "mc.show.acc";
         showBreak = "mc.show.break";
         showSteal = "mc.show.steal";
@@ -89,15 +80,29 @@ public class Preferences {
         anonim = "mc.anonim";
         GCMRegistrationCode = "mc.gcm.id";
         appVersion = "mc.app.version";
-        GCMappVersion = "gcm.app.version";
+        GcmAppVersion = "gcm.app.version";
         savedLng = "savedlng";
         savedLat = "savedlat";
-        notificationList = "notificationList";
-
-        mapProviders = new String[]{"google", "osm", "yandex"};
     }
 
-    public Preferences(Context context) {
+    private static class Holder {
+        private static Preferences instance;
+    }
+
+    public static void init(Context context) {
+        Holder.instance = new Preferences(context);
+    }
+
+    public static Preferences getInstance() {
+        return Holder.instance;
+    }
+
+    public static Preferences getInstance(Context context) {
+        Preferences.init(context);
+        return getInstance();
+    }
+
+    private Preferences(Context context) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
         initAlarmSoundUri(context);
         try {
@@ -111,37 +116,37 @@ public class Preferences {
         }
     }
 
-    public static void putBoolean(String name, boolean value) {
+    public void putBoolean(String name, boolean value) {
         preferences.edit().putBoolean(name, value).commit();
     }
 
-    public static int getOnWay() {
+    public int getOnWay() {
         return preferences.getInt(onWay, 0);
     }
 
-    public static void setOnWay(int id) {
+    public void setOnWay(int id) {
         preferences.edit().putInt(onWay, id).commit();
     }
 
-    public static LatLng getSavedLatLng() {
+    public LatLng getSavedLatLng() {
         double lat = (double) preferences.getFloat(savedLat, DEFAULT_LATITUDE);
         double lng = (double) preferences.getFloat(savedLng, DEFAULT_LONGITUDE);
         return new LatLng(lat, lng);
     }
 
-    public static boolean getDoNotDisturb() {
+    public boolean getDoNotDisturb() {
         return preferences.getBoolean(doNotDisturb, DEFAULT_DO_NOT_DISTURB);
     }
 
-    public static void setDoNotDisturb(boolean value) {
+    public void setDoNotDisturb(boolean value) {
         preferences.edit().putBoolean(doNotDisturb, value).commit();
     }
 
-    public static void saveLatLng(LatLng latlng) {
+    public void saveLatLng(LatLng latlng) {
         preferences.edit().putFloat(savedLat, (float) latlng.latitude).putFloat(savedLng, (float) latlng.longitude).commit();
     }
 
-    public static int getVisibleDistance() {
+    public int getVisibleDistance() {
         int distance;
         try {
             distance = preferences.getInt(distanceShow, DEFAULT_SHOW_DISTANCE);
@@ -152,14 +157,14 @@ public class Preferences {
         return distance;
     }
 
-    public static void setVisibleDistance(int distance) {
+    public void setVisibleDistance(int distance) {
         if (distance > Const.EQUATOR) {
             distance = Const.EQUATOR;
         }
         preferences.edit().putString(distanceShow, String.valueOf(distance)).commit();
     }
 
-    public static int getAlarmDistance() {
+    public int getAlarmDistance() {
         int distance;
         try {
             distance = preferences.getInt(distanceAlarm, DEFAULT_ALARM_DISTANCE);
@@ -170,87 +175,86 @@ public class Preferences {
         return distance;
     }
 
-    public static void setAlarmDistance(int distance) {
+    public void setAlarmDistance(int distance) {
         if (distance > Const.EQUATOR) {
             distance = Const.EQUATOR;
         }
         preferences.edit().putString(distanceAlarm, String.valueOf(distance)).commit();
     }
 
-    public static String getAlarmSoundTitle() {
+    public String getAlarmSoundTitle() {
         return preferences.getString(soundTitle, "default system");
     }
 
-    private static Uri alarmSoundUri;
+    private Uri alarmSoundUri;
 
-    public static void initAlarmSoundUri(Context context) {
+    public void initAlarmSoundUri(Context context) {
         String uriString = preferences.getString(soundURI, "default");
         if (uriString.equals("default")) {
             alarmSoundUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION);
         } else alarmSoundUri = Uri.parse(uriString);
     }
 
-    public static Uri getAlarmSoundUri() {
+    public Uri getAlarmSoundUri() {
 
         return alarmSoundUri;
     }
 
-    public static String getLogin() {
+    public String getLogin() {
         return preferences.getString(login, "");
     }
 
-    public static void setLogin(String value) {
+    public void setLogin(String value) {
         preferences.edit().putString(login, value).commit();
     }
 
-    public static String getPassword() {
+    public String getPassword() {
         return preferences.getString(password, "");
     }
 
-    public static void setPassword(String value) {
+    public void setPassword(String value) {
         preferences.edit().putString(password, value).commit();
     }
 
-    public static boolean isAnonim() {
+    public boolean isAnonim() {
         return preferences.getBoolean(anonim, DEFAULT_IS_ANONYMOUS);
     }
 
-    public static void setAnonim(boolean value) {
+    public void setAnonim(boolean value) {
         preferences.edit().putBoolean(anonim, value).commit();
     }
 
-    public static String getGCMRegistrationCode() {
-        if (getAppVersion() != preferences.getInt(GCMappVersion, -1)) return "";
+    public String getGCMRegistrationCode() {
+        if (getAppVersion() != preferences.getInt(GcmAppVersion, -1)) return "";
         return preferences.getString(GCMRegistrationCode, "");
     }
 
-    public static void setGCMRegistrationCode(String code) {
-        preferences.edit().putInt(GCMappVersion, getAppVersion());
+    public void setGCMRegistrationCode(String code) {
+        preferences.edit().putInt(GcmAppVersion, getAppVersion());
         preferences.edit().putString(GCMRegistrationCode, code).commit();
     }
 
-    //TODO ????? ??????????? ??????????
-    public static int getAppVersion() {
+    public int getAppVersion() {
         return preferences.getInt(appVersion, 0);
     }
 
-    public static void setAppVersion(int code) {
+    public void setAppVersion(int code) {
         preferences.edit().putInt(appVersion, code).commit();
     }
 
-    public static void setSoundAlarm(String title, Uri uri) {
+    public void setSoundAlarm(String title, Uri uri) {
         preferences.edit().putString(soundTitle, title).putString(soundURI, uri.toString()).commit();
     }
 
-    public static void setDefaultSoundAlarm() {
+    public void setDefaultSoundAlarm() {
         preferences.edit().putString(soundTitle, "default system").putString(soundURI, "default").commit();
     }
 
-    public static void resetAuth() {
+    public void resetAuth() {
         preferences.edit().remove(login).remove(password).commit();
     }
 
-    public static boolean isHidden(Type type) {
+    public boolean isHidden(Type type) {
         switch (type) {
             case BREAK:
                 return hideBreaks();
@@ -267,79 +271,79 @@ public class Preferences {
         }
     }
 
-    public static boolean hideBreaks() {
+    public boolean hideBreaks() {
         return !preferences.getBoolean(showBreak, DEFAULT_SHOW_TYPE);
     }
 
-    public static boolean hideAccidents() {
+    public boolean hideAccidents() {
         return !preferences.getBoolean(showAcc, DEFAULT_SHOW_TYPE);
     }
 
-    public static boolean hideSteals() {
+    public boolean hideSteals() {
         return !preferences.getBoolean(showSteal, DEFAULT_SHOW_TYPE);
     }
 
-    public static boolean hideOthers() {
+    public boolean hideOthers() {
         return !preferences.getBoolean(showOther, DEFAULT_SHOW_TYPE);
     }
 
-    public static int getMaxNotifications() {
+    public int getMaxNotifications() {
         return Integer.parseInt(preferences.getString(maxNotifications, String.valueOf(DEFAULT_MAX_NOTIFICATIONS)));
     }
 
-    //TODO Переделать на хранение в локальной БД
-    public static JSONArray getNotificationList() {
-        JSONArray json;
-        try {
-            json = new JSONArray(preferences.getString(notificationList, "[]"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-            json = new JSONArray();
+    public String getPreferenceName(String preference) {
+        switch (preference) {
+            case "hoursAgo": return hoursAgo;
+            case "showAcc": return showAcc;
+            case "showBreak": return showBreak;
+            case "showSteal": return showSteal;
+            case "showOther": return showOther;
+            case "distanceShow": return distanceShow;
+            case "distanceAlarm": return distanceAlarm;
+            case "mapProvider": return mapProvider;
+            case "maxNotifications": return maxNotifications;
+            case "useVibration": return useVibration;
+            default: return "unknown";
         }
-        return json;
     }
 
-    public static void setNotificationList(JSONArray json) {
-        preferences.edit().putString(notificationList, json.toString()).commit();
-    }
-
-    public static int getHoursAgo() {
+    public int getHoursAgo() {
         return Integer.parseInt(preferences.getString(hoursAgo, String.valueOf(DEFAULT_MAX_AGE)));
     }
 
-    public static boolean getVibration() {
+    public boolean getVibration() {
         return preferences.getBoolean(useVibration, DEFAULT_VIBRATION);
     }
 
-    public static String getUserName() {
+    public String getUserName() {
         return preferences.getString(userName, "");
     }
 
-    public static void setUserName(String name) {
+    public void setUserName(String name) {
         preferences.edit().putString(userName, name).commit();
     }
 
-    public static int getUserId() {
+    public int getUserId() {
         return preferences.getInt(userId, 0);
     }
 
-    public static void setUserId(int id) {
+    public void setUserId(int id) {
         preferences.edit().putInt(userId, id).commit();
     }
 
-    public static void setUserRole(String role) {
+    public void setUserRole(String role) {
         preferences.edit().putString(userRole, role).commit();
     }
 
-    public static boolean isNewVersion() {
+    public boolean isNewVersion() {
         return newVersion;
     }
 
-    public static void setNewVersion() {
-        Preferences.newVersion = true;
+    public void setNewVersion() {
+        newVersion = true;
     }
 
-    public static void resetNewVersion() {
-        Preferences.newVersion = false;
+    public void resetNewVersion() {
+        newVersion = false;
     }
 }

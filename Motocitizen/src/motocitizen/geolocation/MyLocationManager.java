@@ -17,7 +17,7 @@ public class MyLocationManager {
     }
 
     private static class Holder {
-        private static SecuredLocationManagerInterface instance = new FakeLocationManager();
+        private static SecuredLocationManagerInterface instance;
     }
 
     public static void init(Context context) {

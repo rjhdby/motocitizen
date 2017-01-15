@@ -7,8 +7,6 @@ package motocitizen.utils;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
@@ -19,7 +17,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import motocitizen.MyApp;
 import motocitizen.main.R;
 
 public class ChangeLog {
@@ -50,13 +47,13 @@ public class ChangeLog {
     }
 
     public static String getLog(Context context, boolean full) {
-        String lastVersion = String.valueOf(Preferences.getAppVersion());
+        String lastVersion = String.valueOf(Preferences.getInstance().getAppVersion());
         sb = new StringBuffer();
         try {
-            InputStream ins = context.getResources().openRawResource(R.raw.changelog);
-            BufferedReader br = new BufferedReader(new InputStreamReader(ins));
+            InputStream    ins = context.getResources().openRawResource(R.raw.changelog);
+            BufferedReader br  = new BufferedReader(new InputStreamReader(ins));
 
-            String line;
+            String  line;
             boolean advanceToEOVS = false;
             while ((line = br.readLine()) != null) {
                 line = line.trim();
@@ -139,6 +136,8 @@ public class ChangeLog {
     }
 
     private enum ListMode {
-        NONE, ORDERED, UNORDERED,
+        NONE,
+        ORDERED,
+        UNORDERED,
     }
 }

@@ -13,7 +13,7 @@ public class LeaveRequest extends HTTPClient {
     @SuppressWarnings("unchecked")
     public LeaveRequest(int id) {
         post = new HashMap<>();
-        post.put("login", Preferences.getLogin());
+        post.put("login", Preferences.getInstance().getLogin());
         post.put("id", String.valueOf(id));
         post.put("m", Methods.LEAVE.toCode());
         execute(post);

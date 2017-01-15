@@ -46,7 +46,8 @@ public class MainScreenFragment extends Fragment implements MyFragmentInterface 
     private static MyMapManager map;
 
     private enum Screen {
-        LIST, MAP
+        LIST,
+        MAP
     }
 
     private static Screen currentScreen = Screen.LIST;
@@ -241,8 +242,8 @@ public class MainScreenFragment extends Fragment implements MyFragmentInterface 
                 getAccidents();
                 return true;
             case R.id.do_not_disturb:
-                item.setIcon(Preferences.getDoNotDisturb() ? R.drawable.ic_lock_ringer_on_alpha : R.drawable.ic_lock_ringer_off_alpha);
-                Preferences.setDoNotDisturb(!Preferences.getDoNotDisturb());
+                item.setIcon(Preferences.getInstance().getDoNotDisturb() ? R.drawable.ic_lock_ringer_on_alpha : R.drawable.ic_lock_ringer_off_alpha);
+                Preferences.getInstance().setDoNotDisturb(!Preferences.getInstance().getDoNotDisturb());
                 return true;
         }
         return false;

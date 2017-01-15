@@ -38,7 +38,6 @@ import motocitizen.content.Medicine;
 import motocitizen.content.Type;
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
-import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.CreateAccidentRequest;
 import motocitizen.user.Auth;
 import motocitizen.utils.Const;
@@ -91,8 +90,8 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             accident.put("id", 0);
             accident.put("lat", initialLocation.getLatitude());
             accident.put("lon", initialLocation.getLongitude());
-            accident.put("owner_id", Preferences.getUserId());
-            accident.put("owner", Preferences.getUserName());
+            accident.put("owner_id", Preferences.getInstance().getUserId());
+            accident.put("owner", Preferences.getInstance().getUserName());
             accident.put("status", AccidentStatus.ACTIVE.toCode());
             accident.put("uxtime", String.valueOf(System.currentTimeMillis() / 1000L));
             accident.put("address", "");
@@ -182,29 +181,29 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         String text = accident.getType().toString();
         text += accident.getMedicine() == Medicine.UNKNOWN ? "" : ". " + accident.getMedicine().toString();
         ((TextView) findViewById(R.id.create_what)).setText(text);
-        ((TextView) findViewById(R.id.create_who)).setText(Preferences.getLogin());
+        ((TextView) findViewById(R.id.create_who)).setText(Preferences.getInstance().getLogin());
         ((TextView) findViewById(R.id.create_where)).setText(accident.getAddress());
         ((TextView) findViewById(R.id.create_when)).setText(Const.DATE_FORMAT.format(accident.getTime()));
     }
 
     private void setupListener() {
-        Integer[] ids = {R.id.BREAK,
-                         R.id.STEAL,
-                         R.id.OTHER,
-                         R.id.ACCIDENT,
-                         R.id.MOTO_AUTO,
-                         R.id.SOLO,
-                         R.id.MOTO_MOTO,
-                         R.id.MOTO_MAN,
-                         R.id.PEOPLE_OK,
-                         R.id.PEOPLE_LIGHT,
-                         R.id.PEOPLE_HEAVY,
-                         R.id.PEOPLE_LETHAL,
-                         R.id.PEOPLE_UNKNOWN,
-                         R.id.ADDRESS,
-                         R.id.CREATE,
-                         R.id.CANCEL,
-                         R.id.BACK};
+        Integer[] ids = { R.id.BREAK,
+                          R.id.STEAL,
+                          R.id.OTHER,
+                          R.id.ACCIDENT,
+                          R.id.MOTO_AUTO,
+                          R.id.SOLO,
+                          R.id.MOTO_MOTO,
+                          R.id.MOTO_MAN,
+                          R.id.PEOPLE_OK,
+                          R.id.PEOPLE_LIGHT,
+                          R.id.PEOPLE_HEAVY,
+                          R.id.PEOPLE_LETHAL,
+                          R.id.PEOPLE_UNKNOWN,
+                          R.id.ADDRESS,
+                          R.id.CREATE,
+                          R.id.CANCEL,
+                          R.id.BACK };
         for (int id : ids) findViewById(id).setOnClickListener(this);
     }
 
@@ -217,7 +216,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     }
 
     private void hideAll() {
-        Integer[] ids = {TYPE, MAP, MEDICINE, DESCRIPTION, ACCIDENT};
+        Integer[] ids = { TYPE, MAP, MEDICINE, DESCRIPTION, ACCIDENT };
         for (int id : ids) findViewById(id).setVisibility(View.INVISIBLE);
     }
 
@@ -307,7 +306,13 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
 
     private void confirm() {
         disableConfirm();
-        CreateAccidentRequest request = new CreateAccidentRequest(new CreateAccidentCallback());
+        CreateAccidentRequest request = new CreateAccidentRequest(result -> {
+            if (!result.has("error")) {
+                finish();
+            }
+            ShowToast.message(getBaseContext(), result.optString("error", "Неизвестная ошибка"));
+            enableConfirm();
+        });
         request.setType(accident.getType());
         request.setMed(accident.getMedicine());
         request.setAddress(accident.getAddress());
@@ -356,30 +361,13 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             case KeyEvent.KEYCODE_BACK:
                 backButton();
                 return true;
+            default: return super.onKeyUp(keycode, e);
         }
-        return super.onKeyUp(keycode, e);
     }
 
     private void enableConfirm() {
         confirmLock = false;
         setConfirm(true);
-    }
-
-    private class CreateAccidentCallback implements AsyncTaskCompleteListener {
-        @Override
-        public void onTaskComplete(JSONObject result) {
-            if (result.has("error")) {
-                try {
-                    ShowToast.message(getBaseContext(), result.getString("error"));
-                } catch (JSONException e) {
-                    ShowToast.message(getBaseContext(), "Неизвестная ошибка" + result.toString());
-                    e.printStackTrace();
-                }
-            } else {
-                finish();
-            }
-            enableConfirm();
-        }
     }
 
     private class FinalTextWatcher implements TextWatcher {

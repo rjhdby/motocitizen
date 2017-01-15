@@ -8,7 +8,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import motocitizen.utils.Preferences;
 
-public class FakeLocationManager implements SecuredLocationManagerInterface {
+class FakeLocationManager implements SecuredLocationManagerInterface {
     private static final int DEFAULT_ACCURACY = 1000;
 
     @Override
@@ -29,7 +29,7 @@ public class FakeLocationManager implements SecuredLocationManagerInterface {
     @Override
     public Location getLocation() {
         Location current = new Location(LocationManager.NETWORK_PROVIDER);
-        LatLng   latlng  = Preferences.getSavedLatLng();
+        LatLng   latlng  = Preferences.getInstance().getSavedLatLng();
         current.setLatitude(latlng.latitude);
         current.setLongitude(latlng.longitude);
         current.setAccuracy(DEFAULT_ACCURACY);

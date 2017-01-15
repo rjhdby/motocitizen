@@ -19,7 +19,7 @@ public class AuthRequest extends HTTPClient {
 
         post = new HashMap<>();
         post.put("calledMethod", Methods.AUTH.toCode());
-        post.put("versionName", String.valueOf(Preferences.getAppVersion()));
+        post.put("versionName", String.valueOf(Preferences.getInstance().getAppVersion()));
     }
 
     public void setLogin(String login) {

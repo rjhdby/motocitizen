@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
+import motocitizen.geocoder.MyGeoCoder;
 import motocitizen.user.Auth;
 import motocitizen.content.Content;
 import motocitizen.database.DbOpenHelper;
@@ -18,15 +19,14 @@ public class MyApp extends MultiDexApplication {
     public static final int LOCATION_PERMISSION = 1;
     public static final int NETWORK_PERMISSION  = 2;
 
-    public static  Geocoder geocoder;
-
     @Override
     public void onCreate() {
         super.onCreate();
-        new Preferences(this);
-        Preferences.setDoNotDisturb(false);
-        geocoder = new Geocoder(this);
-        Content.getInstance();
+        //TODO move to init activity
+        Preferences.init(this);
+        Preferences.getInstance().setDoNotDisturb(false);
+        MyGeoCoder.init(this);
+        Content.init();
         DbOpenHelper.init(this);
         MyLocationManager.init(this);
         Auth.init();
@@ -40,10 +40,6 @@ public class MyApp extends MultiDexApplication {
 
     public static void logoff() {
         Auth.getInstance().logoff();
-    }
-
-    public static Geocoder getGeoCoder() {
-        return geocoder;
     }
 
     public static boolean isOnline(Context context) {

@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,9 +33,10 @@ public class MainScreenActivity extends AppCompatActivity {
     }
 
     private void initSecuredComponents() {
-        MyApp.geocoder = new Geocoder(this);
-        new GCMRegistration(this);
-        new GCMBroadcastReceiver();
+//        MyApp.geocoder = new Geocoder(this);
+//        MyGeoCoder.init(this);
+        new GCMRegistration(this); //TODO move to init activity
+        new GCMBroadcastReceiver(); //TODO move to init activity
     }
 
     @Override
@@ -44,10 +44,10 @@ public class MainScreenActivity extends AppCompatActivity {
         super.onResume();
         MyLocationManager.getInstance().wakeup(this);
 
-        if (Preferences.isNewVersion()) {
+        if (Preferences.getInstance().isNewVersion()) {
             AlertDialog changeLogDlg = ChangeLog.getDialog(this);
             changeLogDlg.show();
-            Preferences.resetNewVersion();
+            Preferences.getInstance().resetNewVersion();
         }
         PackageManager pm = this.getPackageManager();
         if (!pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
