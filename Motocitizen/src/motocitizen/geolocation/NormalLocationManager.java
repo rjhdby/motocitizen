@@ -19,7 +19,7 @@ import java.util.List;
 import motocitizen.Activity.MainScreenActivity;
 import motocitizen.accident.Accident;
 import motocitizen.content.Content;
-import motocitizen.geocoder.MyGeoCoder;
+import motocitizen.geocoder.MyGeocoder;
 import motocitizen.network.requests.InplaceRequest;
 import motocitizen.network.requests.LeaveRequest;
 import motocitizen.utils.Preferences;
@@ -165,7 +165,7 @@ class NormalLocationManager implements SecuredLocationManagerInterface {
         StringBuilder res = new StringBuilder();
         try {
             List<Address> list;
-            list = MyGeoCoder.getInstance().getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            list = MyGeocoder.getInstance().getFromLocation(location.getLatitude(), location.getLongitude(), 1);
             if (list == null || list.size() == 0)
                 return location.getLatitude() + " " + location.getLongitude();
 

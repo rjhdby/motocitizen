@@ -1,13 +1,12 @@
 package motocitizen;
 
 import android.content.Context;
-import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
-import motocitizen.geocoder.MyGeoCoder;
+import motocitizen.geocoder.MyGeocoder;
 import motocitizen.user.Auth;
 import motocitizen.content.Content;
 import motocitizen.database.DbOpenHelper;
@@ -25,7 +24,7 @@ public class MyApp extends MultiDexApplication {
         //TODO move to init activity
         Preferences.init(this);
         Preferences.getInstance().setDoNotDisturb(false);
-        MyGeoCoder.init(this);
+        MyGeocoder.init(this);
         Content.init();
         DbOpenHelper.init(this);
         MyLocationManager.init(this);
