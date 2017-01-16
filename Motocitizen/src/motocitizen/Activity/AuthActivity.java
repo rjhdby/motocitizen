@@ -1,4 +1,4 @@
-package motocitizen.Activity;
+package motocitizen.activity;
 
 import android.app.Activity;
 import android.content.Intent;

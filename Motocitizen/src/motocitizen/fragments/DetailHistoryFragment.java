@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import motocitizen.Activity.AccidentDetailsActivity;
+import motocitizen.activity.AccidentDetailsActivity;
 import motocitizen.draw.HistoryRow;
 import motocitizen.main.R;
 

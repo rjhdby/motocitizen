@@ -116,6 +116,6 @@ public class Auth {
         name = "";
         role = Role.RO;
         id = 0;
-        this.isAuthorized = false;
+        isAuthorized = false;
     }
 }

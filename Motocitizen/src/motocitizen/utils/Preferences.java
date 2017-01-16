@@ -91,6 +91,7 @@ public class Preferences {
 
     public static void init(Context context) {
         Holder.instance = new Preferences(context);
+        Holder.instance.setDoNotDisturb(false);
     }
 
     public static Preferences getInstance() {
@@ -293,17 +294,28 @@ public class Preferences {
 
     public String getPreferenceName(String preference) {
         switch (preference) {
-            case "hoursAgo": return hoursAgo;
-            case "showAcc": return showAcc;
-            case "showBreak": return showBreak;
-            case "showSteal": return showSteal;
-            case "showOther": return showOther;
-            case "distanceShow": return distanceShow;
-            case "distanceAlarm": return distanceAlarm;
-            case "mapProvider": return mapProvider;
-            case "maxNotifications": return maxNotifications;
-            case "useVibration": return useVibration;
-            default: return "unknown";
+            case "hoursAgo":
+                return hoursAgo;
+            case "showAcc":
+                return showAcc;
+            case "showBreak":
+                return showBreak;
+            case "showSteal":
+                return showSteal;
+            case "showOther":
+                return showOther;
+            case "distanceShow":
+                return distanceShow;
+            case "distanceAlarm":
+                return distanceAlarm;
+            case "mapProvider":
+                return mapProvider;
+            case "maxNotifications":
+                return maxNotifications;
+            case "useVibration":
+                return useVibration;
+            default:
+                return "unknown";
         }
     }
 

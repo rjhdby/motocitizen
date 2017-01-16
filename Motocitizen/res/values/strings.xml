@@ -108,4 +108,5 @@
     <string name="copy_coordinates">Скопировать координаты</string>
     <string name="coordinates_copied">координаты скопированы в буфер обмена</string>
     <string name="time_interval_short">%1$dч %2$dм</string>
+    <string name="title_activity_startup">StartupActivity</string>
 </resources>

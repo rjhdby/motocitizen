@@ -1,66 +1,26 @@
 <LinearLayout
     android:id="@+id/main_frame_applications"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".SupportMapFragmentActivity"
-    xmlns:tools="http://schemas.android.com/tools">
-    <!--
-        <LinearLayout
-            android:id="@+id/status_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/status_gradient"
-            android:orientation="horizontal"
-            android:paddingBottom="0dp"
-            android:paddingLeft="0dp"
-            android:paddingRight="0dp"
-            android:paddingTop="0dp" >
+    tools:context=".SupportMapFragmentActivity">
 
-            <TextView
-                android:id="@+id/statusBarText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:layout_marginStart="2dp"
-                android:layout_weight="0.64"
-                android:ems="10"
-                android:freezesText="true"
-                android:gravity="center_vertical"
-                android:inputType="none"
-                android:lines="2"
-                android:maxLines="2"
-                android:minLines="2"
-                android:textColor="#fff" />
-
-            <ImageButton
-                android:id="@+id/statusBarButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:contentDescription="@string/statusBarButton"
-                android:cropToPadding="false"
-                android:gravity="end"
-                android:minHeight="1dp"
-                android:minWidth="1dp"
-                android:src="@drawable/gear" />
-        </LinearLayout>
-    -->
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#f000">
+        android:background="#f000"
+        android:orientation="vertical">
     </LinearLayout>
 
     <ProgressBar
+        android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
-        android:visibility="invisible"
-        android:indeterminate="true"/>
+        android:indeterminate="true"
+        android:visibility="invisible"/>
 
     <FrameLayout
         android:id="@+id/tab_content"
@@ -71,11 +31,11 @@
         <include
             layout="@layout/acc_list"/>
 
-        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:id="@+id/google_map"
+        <fragment android:id="@+id/google_map"
                   android:name="com.google.android.gms.maps.SupportMapFragment"
+                  xmlns:android="http://schemas.android.com/apk/res/android"
                   android:layout_width="match_parent"
-                  android:layout_height="match_parent" />
+                  android:layout_height="match_parent"/>
     </FrameLayout>
 
     <LinearLayout
@@ -96,52 +56,53 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginTop="12dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="8dp"
+                android:layout_marginTop="12dp"
+                android:layout_weight="1"
                 android:background="@null"
                 android:contentDescription="@string/dial_button"
-                android:src="@drawable/dial"
-                android:layout_weight="1"/>
+                android:src="@drawable/dial"/>
 
             <ImageButton
                 android:id="@+id/add_point_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:layout_marginBottom="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="12dp"
-                android:layout_marginBottom="8dp"
+                android:layout_weight="1"
                 android:background="@null"
                 android:contentDescription="@string/activity_main_add_point_button"
-                android:src="@drawable/create"
-                android:layout_weight="1"/>
+                android:src="@drawable/create"/>
 
             <ImageButton
                 android:id="@+id/list_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|right"
+                android:layout_marginBottom="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="12dp"
-                android:layout_marginBottom="8dp"
+                android:layout_weight="1"
                 android:background="@null"
                 android:contentDescription="@string/activity_main_add_point_button"
-                android:src="@drawable/ic_view_headline_white_48dp"
-                android:layout_weight="1"/>
+                android:src="@drawable/ic_view_headline_white_48dp"/>
+
             <ImageButton
                 android:id="@+id/map_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="1"
+                android:layout_marginBottom="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="12dp"
-                android:layout_marginBottom="8dp"
+                android:layout_weight="1"
+                android:alpha="0.3"
                 android:background="@null"
                 android:contentDescription="@string/activity_main_add_point_button"
-                android:src="@drawable/ic_map_white_48dp"
-                android:alpha="0.3"/>
+                android:src="@drawable/ic_map_white_48dp"/>
 
         </LinearLayout>
 

@@ -57,7 +57,7 @@
             android:value="AIzaSyDAAUQJJB1qY_IpGJBUwfmDdIbeL9LkRP4" />
 
         <activity
-            android:name="motocitizen.Activity.MainScreenActivity"
+            android:name="motocitizen.activity.MainScreenActivity"
             android:label="@string/app_name"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"

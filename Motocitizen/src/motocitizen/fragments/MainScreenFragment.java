@@ -17,10 +17,10 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
-import motocitizen.Activity.AboutActivity;
-import motocitizen.Activity.CreateAccActivity;
-import motocitizen.Activity.MyFragmentInterface;
-import motocitizen.Activity.SettingsActivity;
+import motocitizen.activity.AboutActivity;
+import motocitizen.activity.CreateAccActivity;
+import motocitizen.activity.MyFragmentInterface;
+import motocitizen.activity.SettingsActivity;
 import motocitizen.MyApp;
 import motocitizen.content.Content;
 import motocitizen.draw.Rows;
@@ -225,16 +225,16 @@ public class MainScreenFragment extends Fragment implements MyFragmentInterface 
                 return true;
             case R.id.small_menu_settings:
                 Intent intentSettings = new Intent(getActivity(), SettingsActivity.class);
-                this.startActivity(intentSettings);
+                startActivity(intentSettings);
                 return true;
             case R.id.small_menu_about:
                 Intent intentAbout = new Intent(getActivity(), AboutActivity.class);
-                this.startActivity(intentAbout);
+                startActivity(intentAbout);
                 return true;
             case R.id.small_menu_exit:
                 Intent intent = new Intent(Intent.ACTION_MAIN);
                 intent.addCategory(Intent.CATEGORY_HOME);
-                this.startActivity(intent);
+                startActivity(intent);
                 int pid = android.os.Process.myPid();
                 android.os.Process.killProcess(pid);
                 return true;

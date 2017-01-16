@@ -19,19 +19,6 @@ public class MyApp extends MultiDexApplication {
     public static final int NETWORK_PERMISSION  = 2;
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-        //TODO move to init activity
-        Preferences.init(this);
-        Preferences.getInstance().setDoNotDisturb(false);
-        MyGeocoder.init(this);
-        Content.init();
-        DbOpenHelper.init(this);
-        MyLocationManager.init(this);
-        Auth.init();
-    }
-
-    @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);

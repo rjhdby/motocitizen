@@ -1,4 +1,4 @@
-package motocitizen.Activity;
+package motocitizen.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
-import motocitizen.MyApp;
 import motocitizen.fragments.SettingsFragment;
 import motocitizen.main.R;
 

@@ -1,4 +1,4 @@
-package motocitizen.Activity;
+package motocitizen.activity;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -13,8 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import motocitizen.MyApp;
 import motocitizen.fragments.MainScreenFragment;
-import motocitizen.gcm.GCMBroadcastReceiver;
-import motocitizen.gcm.GCMRegistration;
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.utils.ChangeLog;
@@ -35,8 +33,8 @@ public class MainScreenActivity extends AppCompatActivity {
     private void initSecuredComponents() {
 //        MyApp.geocoder = new Geocoder(this);
 //        MyGeoCoder.init(this);
-        new GCMRegistration(this); //TODO move to init activity
-        new GCMBroadcastReceiver(); //TODO move to init activity
+//        new GCMRegistration(this); //TODO move to init activity
+//        new GCMBroadcastReceiver(); //TODO move to init activity
     }
 
     @Override

@@ -5,7 +5,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 
-import motocitizen.Activity.AuthActivity;
+import motocitizen.activity.AuthActivity;
 import motocitizen.main.R;
 import motocitizen.user.Auth;
 import motocitizen.utils.Const;
