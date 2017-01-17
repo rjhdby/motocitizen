@@ -12,7 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import motocitizen.activity.AccidentDetailsActivity;
+import motocitizen.activity_old.AccidentDetailsActivity;
 import motocitizen.accident.Accident;
 import motocitizen.content.Medicine;
 import motocitizen.main.R;

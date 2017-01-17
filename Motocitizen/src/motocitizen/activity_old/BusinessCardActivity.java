@@ -1,4 +1,4 @@
-package motocitizen.activity;
+package motocitizen.activity_old;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

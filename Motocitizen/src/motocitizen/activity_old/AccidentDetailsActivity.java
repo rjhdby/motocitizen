@@ -1,4 +1,4 @@
-package motocitizen.activity;
+package motocitizen.activity_old;
 
 import android.content.Intent;
 import android.net.Uri;

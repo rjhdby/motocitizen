@@ -17,10 +17,10 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
-import motocitizen.activity.AboutActivity;
-import motocitizen.activity.CreateAccActivity;
-import motocitizen.activity.MyFragmentInterface;
-import motocitizen.activity.SettingsActivity;
+import motocitizen.activity_old.AboutActivity;
+import motocitizen.activity_old.CreateAccActivity;
+import motocitizen.activity_old.MyFragmentInterface;
+import motocitizen.activity_old.SettingsActivity;
 import motocitizen.MyApp;
 import motocitizen.content.Content;
 import motocitizen.draw.Rows;

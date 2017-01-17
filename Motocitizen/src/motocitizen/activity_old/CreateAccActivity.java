@@ -1,4 +1,4 @@
-package motocitizen.activity;
+package motocitizen.activity_old;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
