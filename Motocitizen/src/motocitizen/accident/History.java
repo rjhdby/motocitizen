@@ -5,7 +5,6 @@ import org.json.JSONObject;
 import java.util.Date;
 
 import motocitizen.content.HistoryAction;
-import motocitizen.utils.Preferences;
 
 public class History {
     private static final String[] prerequisites = {"id", "id_user", "owner", "action", "uxtime"};

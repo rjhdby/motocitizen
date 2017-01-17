@@ -5,10 +5,9 @@ import org.json.JSONObject;
 import java.util.Date;
 
 import motocitizen.content.VolunteerStatus;
-import motocitizen.utils.Preferences;
 
 public class Volunteer {
-    private static final String[] prerequisites = {"id", "name", "status", "uxtime"};
+    private static final String[] prerequisites = { "id", "name", "status", "uxtime" };
 
     private int             id;
     private boolean         noError;
