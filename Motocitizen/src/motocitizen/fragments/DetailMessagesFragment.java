@@ -193,10 +193,10 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
                 imageRoot.mkdir();
             }
 
-            String fileName = (int) Math.random() * 10000 + ".jpg";
+            String fileName = (int) (Math.random() * 10000) + ".jpg";
             File   newFile  = new File(fileName);
             while (newFile.isFile()) {
-                fileName = (int) Math.random() * 10000 + ".jpg";
+                fileName = (int) (Math.random() * 10000) + ".jpg";
                 newFile = new File(fileName);
             }
             try {
