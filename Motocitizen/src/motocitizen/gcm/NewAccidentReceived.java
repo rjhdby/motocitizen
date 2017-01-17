@@ -15,7 +15,7 @@ import android.os.Bundle;
 
 import java.util.LinkedList;
 
-import motocitizen.activity_old.MainScreenActivity;
+import motocitizen.activity.MainScreenActivity;
 import motocitizen.accident.Accident;
 import motocitizen.content.Content;
 import motocitizen.content.Medicine;

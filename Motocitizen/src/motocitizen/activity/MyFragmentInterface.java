@@ -1,4 +1,4 @@
-package motocitizen.activity_old;
+package motocitizen.activity;
 
 public interface MyFragmentInterface {
     void setPermissions();

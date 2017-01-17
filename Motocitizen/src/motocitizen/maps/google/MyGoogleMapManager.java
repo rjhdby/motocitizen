@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import motocitizen.activity_old.AccidentDetailsActivity;
+import motocitizen.activity.AccidentDetailsActivity;
 import motocitizen.accident.Accident;
 import motocitizen.content.Content;
 import motocitizen.content.Medicine;

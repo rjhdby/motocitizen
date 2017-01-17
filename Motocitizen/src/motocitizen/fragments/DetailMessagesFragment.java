@@ -21,7 +21,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 
-import motocitizen.activity_old.AccidentDetailsActivity;
+import motocitizen.activity.AccidentDetailsActivity;
 import motocitizen.accident.Accident;
 import motocitizen.accident.Message;
 import motocitizen.content.Content;
