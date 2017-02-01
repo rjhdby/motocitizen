@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import motocitizen.MyApp;
 import motocitizen.main.R;
+import motocitizen.router.Router;
 import motocitizen.user.Auth;
 import motocitizen.utils.Preferences;
 import motocitizen.utils.ShowToast;
@@ -41,7 +42,7 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
         try {
             Auth.init();
             if (Auth.getInstance().isAuthorized()) {
-                startActivity(new Intent(this, MainScreenActivity.class));
+                Router.goTo(this, Router.Target.MAIN);
             }
         } catch (Error e) {
             ShowToast.message(this, e.getLocalizedMessage());
@@ -97,7 +98,7 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
             Preferences.getInstance().setAnonim(anonim.isChecked());
             if (anonim.isChecked()) {
                 ((TextView) findViewById(R.id.auth_error_helper)).setText("");
-                local.startActivity(new Intent(local, MainScreenActivity.class));
+                Router.goTo(local, Router.Target.MAIN);
                 return;
             }
             if (!MyApp.isOnline(getApplicationContext())) {
@@ -105,7 +106,7 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
                 return;
             }
             if (Auth.getInstance().auth(login.getText().toString(), password.getText().toString())) {
-                local.startActivity(new Intent(local, MainScreenActivity.class));
+                Router.goTo(local, Router.Target.MAIN);
             } else {
                 TextView authErrorHelper = (TextView) findViewById(R.id.auth_error_helper);
                 authErrorHelper.setText(R.string.auth_password_error);

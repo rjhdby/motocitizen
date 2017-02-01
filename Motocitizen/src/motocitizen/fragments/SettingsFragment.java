@@ -7,6 +7,7 @@ import android.preference.PreferenceFragment;
 
 import motocitizen.activity.AuthActivity;
 import motocitizen.main.R;
+import motocitizen.router.Router;
 import motocitizen.user.Auth;
 import motocitizen.utils.Const;
 import motocitizen.utils.Preferences;
@@ -93,7 +94,7 @@ public class SettingsFragment extends PreferenceFragment {
             return true;
         });
         buttonAuth.setOnPreferenceClickListener(stub -> {
-            getActivity().startActivity(new Intent(getActivity(), AuthActivity.class));
+            Router.goTo(getActivity(), Router.Target.AUTH);
             return true;
         });
         showAcc.setOnPreferenceChangeListener(visibleListener);

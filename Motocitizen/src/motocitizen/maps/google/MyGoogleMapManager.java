@@ -1,5 +1,6 @@
 package motocitizen.maps.google;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -19,7 +20,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import motocitizen.activity.AccidentDetailsActivity;
 import motocitizen.accident.Accident;
 import motocitizen.content.Content;
 import motocitizen.content.Medicine;
@@ -27,6 +27,7 @@ import motocitizen.content.Type;
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.maps.MyMapManager;
+import motocitizen.router.Router;
 import motocitizen.utils.DelayedAction;
 import motocitizen.utils.MyUtils;
 
@@ -134,11 +135,9 @@ public class MyGoogleMapManager implements MyMapManager {
     }
 
     private void toDetails(Context context, int id) {
-        Intent intent = new Intent(context, AccidentDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt("accidentID", id);
-        intent.putExtras(bundle);
-        context.startActivity(intent);
+        Router.goTo((Activity) context, Router.Target.DETAILS, bundle);
     }
 
     public void zoom(int zoom) {

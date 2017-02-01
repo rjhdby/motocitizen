@@ -1,5 +1,6 @@
 package motocitizen.draw;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import motocitizen.activity.AccidentDetailsActivity;
 import motocitizen.accident.Accident;
 import motocitizen.content.Medicine;
 import motocitizen.main.R;
+import motocitizen.router.Router;
 import motocitizen.utils.MyUtils;
 import motocitizen.utils.popups.AccidentListPopup;
 
@@ -79,11 +81,9 @@ public class Rows {
     }
 
     private static void toDetails(Context context, int id) {
-        Intent intent = new Intent(context, AccidentDetailsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt("accidentID", id);
-        intent.putExtras(bundle);
-        context.startActivity(intent);
+        Router.goTo((Activity) context, Router.Target.DETAILS, bundle);
     }
 
 }

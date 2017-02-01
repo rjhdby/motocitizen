@@ -29,6 +29,7 @@ import motocitizen.fragments.DetailVolunteersFragment;
 import motocitizen.main.R;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.AccidentChangeStateRequest;
+import motocitizen.router.Router;
 import motocitizen.user.Auth;
 import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
@@ -198,7 +199,7 @@ public class AccidentDetailsActivity extends AppCompatActivity {
                 sendIntent.setAction(Intent.ACTION_SEND);
                 sendIntent.putExtra(Intent.EXTRA_TEXT, AccidentListPopup.getAccidentTextToCopy(currentPoint));
                 sendIntent.setType("text/plain");
-                this.startActivity(sendIntent);
+                startActivity(sendIntent);
                 return true;
             case R.id.action_hide_info:
             case R.id.menu_hide_info:
@@ -295,11 +296,11 @@ public class AccidentDetailsActivity extends AppCompatActivity {
     };
 
     public void jumpToMap() {
-        Intent intent = new Intent(this, MainScreenActivity.class);
-        intent.putExtra("toMap", currentPoint.getId());
-        intent.putExtra("fromDetails", true);
-        this.startActivity(intent);
-        finish();
+        Bundle bundle = new Bundle();
+        bundle.putInt("toMap", currentPoint.getId());
+        bundle.putBoolean("fromDetails", true);
+        Router.goTo(this, Router.Target.MAIN,bundle);
+//        finish();
     }
 
     public Accident getCurrentPoint() {

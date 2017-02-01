@@ -1,6 +1,5 @@
 package motocitizen.activity;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -12,6 +11,7 @@ import android.webkit.WebView;
 import android.widget.TextView;
 
 import motocitizen.main.R;
+import motocitizen.router.Router;
 import motocitizen.utils.ChangeLog;
 import motocitizen.utils.Preferences;
 
@@ -46,11 +46,6 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        int id = view.getId();
-        switch (id) {
-            case R.id.businessCardButton:
-                this.startActivity(new Intent(this, BusinessCardActivity.class));
-                break;
-        }
+        if (view.getId() == R.id.businessCardButton) Router.goTo(this, Router.Target.BUSINESS_CARD);
     }
 }

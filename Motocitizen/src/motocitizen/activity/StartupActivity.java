@@ -1,6 +1,5 @@
 package motocitizen.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -15,6 +14,7 @@ import motocitizen.gcm.GCMRegistration;
 import motocitizen.geocoder.MyGeocoder;
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
+import motocitizen.router.Router;
 import motocitizen.user.Auth;
 import motocitizen.utils.Preferences;
 
@@ -59,8 +59,7 @@ public class StartupActivity extends AppCompatActivity {
             }, "Инициализация оповещений", "Готово");
 
             //todo route to auth
-
-            startActivity(new Intent(getBaseContext(), Auth.getInstance().isAuthorized() ? MainScreenActivity.class : AuthActivity.class));
+            Router.goTo(this, Auth.getInstance().isAuthorized() ? Router.Target.MAIN : Router.Target.AUTH);
         }).start();
     }
 

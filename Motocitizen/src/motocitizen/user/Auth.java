@@ -32,7 +32,6 @@ public class Auth {
         initialAuth();
     }
 
-
     private static void initialAuth() {
         if (Preferences.getInstance().isAnonim()) return;
         if (Preferences.getInstance().getLogin().equals("")) return;
