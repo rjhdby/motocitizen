@@ -1,14 +1,12 @@
 package motocitizen.fragments;
 
-import android.content.Intent;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 
-import motocitizen.activity.AuthActivity;
 import motocitizen.main.R;
 import motocitizen.router.Router;
-import motocitizen.user.Auth;
+import motocitizen.user.User;
 import motocitizen.utils.Const;
 import motocitizen.utils.Preferences;
 import motocitizen.utils.ShowToast;
@@ -58,7 +56,7 @@ public class SettingsFragment extends PreferenceFragment {
         Preference notificationSoundPreference = findPreference(getResources().getString(R.string.notification_sound));
         Preference authPreference              = findPreference(getResources().getString(R.string.settings_auth_button));
 
-        authPreference.setSummary(login.length() > 0 ? Auth.getInstance().getRole().getName() + ": " + login : Auth.getInstance().getRole().getName());
+        authPreference.setSummary(login.length() > 0 ? User.getInstance().getRole().getName() + ": " + login : User.getInstance().getRole().getName());
         maxNotifications.setSummary(String.valueOf(Preferences.getInstance().getMaxNotifications()));
         hoursAgo.setSummary(String.valueOf(Preferences.getInstance().getHoursAgo()));
         notificationSoundPreference.setSummary(Preferences.getInstance().getAlarmSoundTitle());

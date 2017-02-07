@@ -30,7 +30,7 @@ import motocitizen.main.R;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.AccidentChangeStateRequest;
 import motocitizen.router.Router;
-import motocitizen.user.Auth;
+import motocitizen.user.User;
 import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
 import motocitizen.utils.Preferences;
@@ -160,8 +160,8 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         currentPoint = Content.getInstance().get(accidentID);
         MenuItem finish = mMenu.findItem(R.id.menu_acc_finish);
         MenuItem hide   = mMenu.findItem(R.id.menu_acc_hide);
-        finish.setVisible(Auth.getInstance().getRole().isModerator());
-        hide.setVisible(Auth.getInstance().getRole().isModerator());
+        finish.setVisible(User.getInstance().getRole().isModerator());
+        hide.setVisible(User.getInstance().getRole().isModerator());
         finish.setTitle(R.string.finish);
         hide.setTitle(R.string.hide);
         switch (currentPoint.getStatus()) {

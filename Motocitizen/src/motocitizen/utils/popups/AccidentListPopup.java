@@ -6,7 +6,7 @@ import android.widget.PopupWindow;
 import motocitizen.accident.Accident;
 import motocitizen.content.Content;
 import motocitizen.content.Medicine;
-import motocitizen.user.Auth;
+import motocitizen.user.User;
 import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
 import motocitizen.utils.Preferences;
@@ -27,10 +27,10 @@ public class AccidentListPopup extends PopupWindowGeneral {
             content.addView(phoneButtonRow(context, phone), layoutParams);
             content.addView(smsButtonRow(context, phone), layoutParams);
         }
-        if (Auth.getInstance().getRole().isModerator() || Preferences.getInstance().getLogin().equals(point.getOwner()))
+        if (User.getInstance().getRole().isModerator() || Preferences.getInstance().getLogin().equals(point.getOwner()))
             content.addView(finishButtonRow(point));
 
-        if (Auth.getInstance().getRole().isModerator()) {
+        if (User.getInstance().getRole().isModerator()) {
             content.addView(hideButtonRow(point));
             content.addView(banButtonRow(context, point.getId()), layoutParams);
         }

@@ -1,7 +1,6 @@
 package motocitizen.activity;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -17,7 +16,7 @@ import android.widget.TextView;
 import motocitizen.MyApp;
 import motocitizen.main.R;
 import motocitizen.router.Router;
-import motocitizen.user.Auth;
+import motocitizen.user.User;
 import motocitizen.utils.Preferences;
 import motocitizen.utils.ShowToast;
 
@@ -40,8 +39,8 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            Auth.init();
-            if (Auth.getInstance().isAuthorized()) {
+            User.init();
+            if (User.getInstance().isAuthorized()) {
                 Router.goTo(this, Router.Target.MAIN);
             }
         } catch (Error e) {
@@ -67,7 +66,7 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
         View     accListYesterdayLine = findViewById(R.id.accListYesterdayLine);
         TextView roleView             = (TextView) findViewById(R.id.role);
 
-        boolean isAuthorized = Auth.getInstance().isAuthorized();
+        boolean isAuthorized = User.getInstance().isAuthorized();
         loginBtn.setEnabled(!isAuthorized);
         logoutBtn.setEnabled(isAuthorized);
         anonim.setEnabled(!isAuthorized);
@@ -78,7 +77,7 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
         //Авторизованы?
         if (isAuthorized) {
             String format = getString(R.string.auth_role);
-            roleView.setText(String.format(format, Auth.getInstance().getRole().getName()));
+            roleView.setText(String.format(format, User.getInstance().getRole().getName()));
         } else {
             enableLoginBtn();
         }
@@ -105,7 +104,7 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
                 ShowToast.message(getBaseContext(), getBaseContext().getString(R.string.auth_not_available));
                 return;
             }
-            if (Auth.getInstance().auth(login.getText().toString(), password.getText().toString())) {
+            if (auth()) {
                 Router.goTo(local, Router.Target.MAIN);
             } else {
                 TextView authErrorHelper = (TextView) findViewById(R.id.auth_error_helper);
@@ -150,5 +149,14 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
             enableLoginBtn();
         });
         cancelBtn.setOnClickListener(v -> finish());
+    }
+
+    private boolean auth() {
+        try {
+            return User.getInstance().auth(login.getText().toString(), password.getText().toString());
+        } catch (Error error) {
+            error.printStackTrace();
+            return false;
+        }
     }
 }

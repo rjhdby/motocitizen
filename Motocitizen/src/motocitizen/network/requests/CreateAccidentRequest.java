@@ -6,26 +6,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
-import java.util.HashMap;
 
 import motocitizen.content.Medicine;
 import motocitizen.content.Type;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
-import motocitizen.user.Auth;
+import motocitizen.user.User;
 import motocitizen.utils.Const;
 import motocitizen.utils.Preferences;
 
 public class CreateAccidentRequest extends HTTPClient {
     public CreateAccidentRequest(AsyncTaskCompleteListener listener) {
         this.listener = listener;
-        post = new HashMap<>();
         post.put("status", "acc_status_act");
         post.put("calledMethod", Methods.CREATE.toCode());
-        post.put("owner_id", String.valueOf(Auth.getInstance().getId()));
+        post.put("owner_id", String.valueOf(User.getInstance().getId()));
         post.put("login", Preferences.getInstance().getLogin());
-        post.put("passhash", Auth.getInstance().makePassHash());
+        post.put("passhash", User.getInstance().makePassHash());
     }
 
     @SuppressWarnings("unchecked")
@@ -64,13 +62,9 @@ public class CreateAccidentRequest extends HTTPClient {
 
     @Override
     public boolean error(JSONObject response) {
-        if (!response.has("result")) return true;
         try {
-            JSONObject result = response.getJSONObject("result");
-            if (result.has("ID")) return false;
-        } catch (JSONException e) {
-            return true;
-        }
+            if (response.getJSONObject("result").has("ID")) return false;
+        } catch (JSONException | NullPointerException ignored) {}
         return true;
     }
 
@@ -89,9 +83,7 @@ public class CreateAccidentRequest extends HTTPClient {
                 case "PROBABLY SPAM":
                     return "Нельзя создавать события так часто";
             }
-        } catch (JSONException ignored) {
-
-        }
+        } catch (JSONException ignored) {}
         return "Неизвестная ошибка " + response.toString();
     }
 }

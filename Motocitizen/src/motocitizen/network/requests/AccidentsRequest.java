@@ -5,8 +5,6 @@ import android.location.Location;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.HTTPClient;
@@ -20,13 +18,11 @@ public class AccidentsRequest extends HTTPClient {
     public AccidentsRequest(AsyncTaskCompleteListener listener, boolean silent) {
         this.silent = silent;
         this.listener = listener;
-        post = new HashMap<>();
         Location location = MyLocationManager.getInstance().getLocation();
         String   user     = Preferences.getInstance().getLogin();
         if (!user.equals("")) {
             post.put("user", user);
         }
-        //post.put("distance", String.valueOf(Preferences.getVisibleDistance()));
         post.put("lat", String.valueOf(location.getLatitude()));
         post.put("lon", String.valueOf(location.getLongitude()));
         post.put("age", String.valueOf(Preferences.getInstance().getHoursAgo()));
@@ -41,14 +37,10 @@ public class AccidentsRequest extends HTTPClient {
     @Override
     public boolean error(JSONObject response) {
         if (silent) return false;
-        if (!response.has("list")) return true;
         try {
-            JSONObject error = response.getJSONArray("list").getJSONObject(0);
-            if (error.has("error")) return true;
-        } catch (JSONException e) {
-            return true;
-        }
-        return false;
+            if (!response.getJSONArray("list").getJSONObject(0).has("error")) return false;
+        } catch (JSONException | NullPointerException ignored) {}
+        return true;
     }
 
     @Override

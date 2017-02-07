@@ -3,13 +3,11 @@ package motocitizen.network.requests;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-
 import motocitizen.content.Content;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
-import motocitizen.user.Auth;
+import motocitizen.user.User;
 import motocitizen.utils.Preferences;
 
 public class BanRequest extends HTTPClient {
@@ -17,9 +15,8 @@ public class BanRequest extends HTTPClient {
     public BanRequest(AsyncTaskCompleteListener listener, int id) {
         this.listener = listener;
         int user_id = Content.getInstance().get(id).getOwnerId();
-        post = new HashMap<>();
         post.put("login", Preferences.getInstance().getLogin());
-        post.put("passhash", Auth.getInstance().makePassHash());
+        post.put("passhash", User.getInstance().makePassHash());
         post.put("id", String.valueOf(id));
         post.put("user_id", String.valueOf(user_id));
         post.put("calledMethod", Methods.BAN.toCode());
@@ -28,13 +25,9 @@ public class BanRequest extends HTTPClient {
 
     @Override
     public boolean error(JSONObject response) {
-        if (!response.has("result")) return true;
         try {
-            String result = response.getString("ban");
-            if (result.equals("OK")) return false;
-        } catch (JSONException e) {
-            return true;
-        }
+            if (response.getString("result").equals("OK")) return false;
+        } catch (JSONException | NullPointerException ignored) {}
         return true;
     }
 
@@ -54,9 +47,7 @@ public class BanRequest extends HTTPClient {
                 case "NO RIGHTS":
                     return "Недостаточно прав";
             }
-        } catch (JSONException ignored) {
-
-        }
+        } catch (JSONException ignored) {}
         return "Неизвестная ошибка " + response.toString();
     }
 }

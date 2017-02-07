@@ -17,18 +17,18 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
+import motocitizen.MyApp;
 import motocitizen.activity.AboutActivity;
 import motocitizen.activity.CreateAccActivity;
 import motocitizen.activity.MyFragmentInterface;
 import motocitizen.activity.SettingsActivity;
-import motocitizen.MyApp;
 import motocitizen.content.Content;
 import motocitizen.draw.Rows;
 import motocitizen.main.R;
 import motocitizen.maps.MyMapManager;
 import motocitizen.maps.google.MyGoogleMapManager;
 import motocitizen.network.AsyncTaskCompleteListener;
-import motocitizen.user.Auth;
+import motocitizen.user.User;
 import motocitizen.utils.BounceScrollView;
 import motocitizen.utils.Const;
 import motocitizen.utils.OverScrollListenerInterface;
@@ -51,8 +51,6 @@ public class MainScreenFragment extends Fragment implements MyFragmentInterface 
     }
 
     private static Screen currentScreen = Screen.LIST;
-
-    protected boolean fromDetails;
 
     static {
         inTransaction = false;
@@ -88,7 +86,7 @@ public class MainScreenFragment extends Fragment implements MyFragmentInterface 
 
         bindButtons();
 
-        map = new MyGoogleMapManager(getActivity());
+        if (map == null) map = new MyGoogleMapManager(getActivity());
 
         setPermissions();
 
@@ -124,7 +122,7 @@ public class MainScreenFragment extends Fragment implements MyFragmentInterface 
 
     @Override
     public void setPermissions() {
-        createAccButton.setVisibility(Auth.getInstance().getRole().isStandard() ? View.VISIBLE : View.INVISIBLE);
+        createAccButton.setVisibility(User.getInstance().getRole().isStandard() ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override

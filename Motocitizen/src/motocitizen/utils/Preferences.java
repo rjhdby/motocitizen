@@ -28,62 +28,33 @@ public class Preferences {
     private final static boolean DEFAULT_SHOW_TYPE         = true;
     /* end constants */
 
-    private final String showAcc;
-    private final String showBreak;
-    private final String showSteal;
-    private final String showOther;
-    private final String distanceShow;
-    private final String distanceAlarm;
-    private final String mapProvider;
-    private final String hoursAgo;
-    private final String maxNotifications;
-    private final String useVibration;
-
-    private final String doNotDisturb;
-    private final String userId;
-    private final String userName;
-    private final String userRole;
-    private final String onWay;
-    private final String soundTitle;
-    private final String soundURI;
-    private final String login;
-    private final String password;
-    private final String anonim;
-    private final String GCMRegistrationCode;
-    private final String appVersion;
-    private final String GcmAppVersion;
-    private final String savedLng;
-    private final String savedLat;
-
     private SharedPreferences preferences;
 
-    {
-        showAcc = "mc.show.acc";
-        showBreak = "mc.show.break";
-        showSteal = "mc.show.steal";
-        showOther = "mc.show.other";
-        distanceShow = "mc.distance.show";
-        distanceAlarm = "mc.distance.alarm";
-        mapProvider = "mc.map.provider";
-        doNotDisturb = "do.not.disturb";
-        hoursAgo = "hours.ago";
-        maxNotifications = "notifications.max";
-        useVibration = "use.vibration";
-        userId = "userId";
-        userName = "userName";
-        userRole = "userRole";
-        onWay = "mc.onway";
-        soundTitle = "mc.notification.sound.title";
-        soundURI = "mc.notification.sound";
-        login = "mc.login";
-        password = "mc.password";
-        anonim = "mc.anonim";
-        GCMRegistrationCode = "mc.gcm.id";
-        appVersion = "mc.app.version";
-        GcmAppVersion = "gcm.app.version";
-        savedLng = "savedlng";
-        savedLat = "savedlat";
-    }
+    private final String showAcc             = "mc.show.acc";
+    private final String showBreak           = "mc.show.break";
+    private final String showSteal           = "mc.show.steal";
+    private final String showOther           = "mc.show.other";
+    private final String distanceShow        = "mc.distance.show";
+    private final String distanceAlarm       = "mc.distance.alarm";
+    private final String mapProvider         = "mc.map.provider";
+    private final String doNotDisturb        = "do.not.disturb";
+    private final String hoursAgo            = "hours.ago";
+    private final String maxNotifications    = "notifications.max";
+    private final String useVibration        = "use.vibration";
+    private final String userId              = "userId";
+    private final String userName            = "userName";
+    private final String userRole            = "userRole";
+    private final String onWay               = "mc.onway";
+    private final String soundTitle          = "mc.notification.sound.title";
+    private final String soundURI            = "mc.notification.sound";
+    private final String login               = "mc.login";
+    private final String password            = "mc.password";
+    private final String anonim              = "mc.anonim";
+    private final String GCMRegistrationCode = "mc.gcm.id";
+    private final String appVersion          = "mc.app.version";
+    private final String GcmAppVersion       = "gcm.app.version";
+    private final String savedLng            = "savedlng";
+    private final String savedLat            = "savedlat";
 
     private static class Holder {
         private static Preferences instance;
@@ -96,11 +67,6 @@ public class Preferences {
 
     public static Preferences getInstance() {
         return Holder.instance;
-    }
-
-    public static Preferences getInstance(Context context) {
-        Preferences.init(context);
-        return getInstance();
     }
 
     private Preferences(Context context) {

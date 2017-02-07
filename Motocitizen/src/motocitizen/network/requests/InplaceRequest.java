@@ -3,31 +3,24 @@ package motocitizen.network.requests;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-
 import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
 import motocitizen.utils.Preferences;
 
-public class InplaceRequest extends HTTPClient {
+public class InPlaceRequest extends HTTPClient {
     @SuppressWarnings("unchecked")
-    public InplaceRequest(int id) {
-        post = new HashMap<>();
+    public InPlaceRequest(int id) {
         post.put("login", Preferences.getInstance().getLogin());
         post.put("id", String.valueOf(id));
-        post.put("m", Methods.INPLACE.toCode());
+        post.put("m", Methods.IN_PLACE.toCode());
         execute(post);
     }
 
     @Override
     public boolean error(JSONObject response) {
-        if (!response.has("result")) return true;
         try {
-            String result = response.getString("result");
-            if (result.equals("OK")) return false;
-        } catch (JSONException e) {
-            return true;
-        }
+            if (response.getString("result").equals("OK")) return false;
+        } catch (JSONException | NullPointerException ignored) {}
         return true;
     }
 

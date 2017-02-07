@@ -3,21 +3,18 @@ package motocitizen.network.requests;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
-import motocitizen.user.Auth;
+import motocitizen.user.User;
 import motocitizen.utils.Preferences;
 
 public class SendMessageRequest extends HTTPClient {
     @SuppressWarnings("unchecked")
     public SendMessageRequest(AsyncTaskCompleteListener listener, int id, String text) {
         this.listener = listener;
-        post = new HashMap<>();
         post.put("login", Preferences.getInstance().getLogin());
-        post.put("passhash", Auth.getInstance().makePassHash());
+        post.put("passhash", User.getInstance().makePassHash());
         post.put("id", String.valueOf(id));
         post.put("text", text);
         post.put("calledMethod", Methods.MESSAGE.toCode());
@@ -26,13 +23,9 @@ public class SendMessageRequest extends HTTPClient {
 
     @Override
     public boolean error(JSONObject response) {
-        if (!response.has("result")) return true;
         try {
-            String result = response.getString("result");
-            if (result.equals("OK")) return false;
-        } catch (JSONException e) {
-            return true;
-        }
+            if (response.getString("result").equals("OK")) return false;
+        } catch (JSONException | NullPointerException ignored) {}
         return true;
     }
 

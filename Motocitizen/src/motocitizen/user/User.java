@@ -11,22 +11,13 @@ import java.security.NoSuchAlgorithmException;
 import motocitizen.network.requests.AuthRequest;
 import motocitizen.utils.Preferences;
 
-public class Auth {
-    private Role    role;
-    private String  name;
-    private int     id;
-    private boolean isAuthorized;
+public class User {
+    private Role    role         = Role.RO;
+    private String  name         = "";
+    private int     id           = 0;
+    private boolean isAuthorized = false;
 
-    {
-        role = Role.RO;
-        name = "";
-        id = 0;
-        isAuthorized = false;
-    }
-
-    private Auth() {
-
-    }
+    private User() {}
 
     public static void init() {
         initialAuth();
@@ -43,10 +34,10 @@ public class Auth {
     }
 
     private static class Holder {
-        private final static Auth instance = new Auth();
+        private final static User instance = new User();
     }
 
-    public static Auth getInstance() {
+    public static User getInstance() {
         return Holder.instance;
     }
 

@@ -30,7 +30,7 @@ import motocitizen.draw.MessageRow;
 import motocitizen.main.R;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.SendMessageRequest;
-import motocitizen.user.Auth;
+import motocitizen.user.User;
 import motocitizen.utils.ShowToast;
 import motocitizen.utils.popups.MessagesPopup;
 
@@ -104,7 +104,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
     }
 
     private void setupAccess() {
-        newMessageArea.setVisibility(Auth.getInstance().getRole().isStandard() ? View.VISIBLE : View.INVISIBLE);
+        newMessageArea.setVisibility(User.getInstance().getRole().isStandard() ? View.VISIBLE : View.INVISIBLE);
     }
 
     private class SendMessageCallback implements AsyncTaskCompleteListener {

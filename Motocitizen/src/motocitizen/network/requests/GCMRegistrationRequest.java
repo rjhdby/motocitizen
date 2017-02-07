@@ -3,36 +3,28 @@ package motocitizen.network.requests;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-
 import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
-import motocitizen.user.Auth;
+import motocitizen.user.User;
 import motocitizen.utils.Preferences;
 
 public class GCMRegistrationRequest extends HTTPClient {
     @SuppressWarnings("unchecked")
     public GCMRegistrationRequest(String regId) {
-        post = new HashMap<>();
-        //String imei = ((TelephonyManager) MyApp.getAppContext().getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
-        post.put("owner_id", String.valueOf(Auth.getInstance().getId()));
+        post.put("owner_id", String.valueOf(User.getInstance().getId()));
         post.put("gcm_key", regId);
         post.put("login", Preferences.getInstance().getLogin());
         //post.put("imei", imei);
-        post.put("passhash", Auth.getInstance().makePassHash());
+        post.put("passhash", User.getInstance().makePassHash());
         post.put("calledMethod", Methods.REGISTER_GCM.toCode());
         execute(post);
     }
 
     @Override
     public boolean error(JSONObject response) {
-        if (!response.has("result")) return true;
         try {
-            String result = response.getString("result");
-            if (result.equals("OK")) return false;
-        } catch (JSONException e) {
-            return true;
-        }
+            if (response.getString("result").equals("OK")) return false;
+        } catch (JSONException | NullPointerException ignored) {}
         return true;
     }
 

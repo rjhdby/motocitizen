@@ -17,7 +17,7 @@ import motocitizen.content.Medicine;
 import motocitizen.content.Type;
 import motocitizen.database.StoreMessages;
 import motocitizen.geolocation.MyLocationManager;
-import motocitizen.user.Auth;
+import motocitizen.user.User;
 import motocitizen.utils.Preferences;
 import motocitizen.utils.SortedHashMap;
 
@@ -199,7 +199,7 @@ public class Accident {
     }
 
     public boolean isInvisible() {
-        boolean hidden         = status == HIDDEN && !Auth.getInstance().getRole().isModerator();
+        boolean hidden         = status == HIDDEN && !User.getInstance().getRole().isModerator();
         boolean distanceFilter = getDistanceFromUser() > Preferences.getInstance().getVisibleDistance() * 1000;
         boolean typeFilter     = Preferences.getInstance().isHidden(getType());
         boolean timeFilter     = time.getTime() + (long) Preferences.getInstance().getHoursAgo() * 60 * 60 * 1000 < (new Date()).getTime();

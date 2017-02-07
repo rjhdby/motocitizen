@@ -6,12 +6,7 @@ import android.net.NetworkInfo;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
-import motocitizen.geocoder.MyGeocoder;
-import motocitizen.user.Auth;
-import motocitizen.content.Content;
-import motocitizen.database.DbOpenHelper;
-import motocitizen.geolocation.MyLocationManager;
-import motocitizen.utils.Preferences;
+import motocitizen.user.User;
 
 public class MyApp extends MultiDexApplication {
 
@@ -25,7 +20,7 @@ public class MyApp extends MultiDexApplication {
     }
 
     public static void logoff() {
-        Auth.getInstance().logoff();
+        User.getInstance().logoff();
     }
 
     public static boolean isOnline(Context context) {

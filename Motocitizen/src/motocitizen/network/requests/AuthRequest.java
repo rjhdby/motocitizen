@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
-import motocitizen.user.Auth;
+import motocitizen.user.User;
 import motocitizen.utils.Preferences;
 
 public class AuthRequest extends HTTPClient {
@@ -17,7 +17,6 @@ public class AuthRequest extends HTTPClient {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        post = new HashMap<>();
         post.put("calledMethod", Methods.AUTH.toCode());
         post.put("versionName", String.valueOf(Preferences.getInstance().getAppVersion()));
     }
@@ -27,7 +26,7 @@ public class AuthRequest extends HTTPClient {
     }
 
     public void setPassword(String password) {
-        post.put("passwordHash", Auth.makePassHash(password));
+        post.put("passwordHash", User.makePassHash(password));
     }
 
     public JSONObject execute() {

@@ -30,13 +30,6 @@ public class MainScreenActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, new MainScreenFragment()).commit();
     }
 
-    private void initSecuredComponents() {
-//        MyApp.geocoder = new Geocoder(this);
-//        MyGeoCoder.init(this);
-//        new GCMRegistration(this); //TODO move to init activity
-//        new GCMBroadcastReceiver(); //TODO move to init activity
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -91,8 +84,6 @@ public class MainScreenActivity extends AppCompatActivity {
                     MyLocationManager.getInstance();
                 MyLocationManager.permissionRequested = false;
                 break;
-            default:
-                initSecuredComponents();
         }
     }
 }

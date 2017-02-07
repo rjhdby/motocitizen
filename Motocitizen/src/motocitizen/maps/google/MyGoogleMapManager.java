@@ -54,11 +54,13 @@ public class MyGoogleMapManager implements MyMapManager {
             map = googleMap;
             delayedAction.makeAction();
             init(context);
-            placeUser();
+//            placeUser();
+            placeAccidents(context);
         }
     }
 
-    public MyGoogleMapManager(FragmentActivity activity) {
+    public MyGoogleMapManager (FragmentActivity activity) {
+
         jumpToPoint(MyLocationManager.getInstance().getLocation());
         selected = "";
         android.support.v4.app.FragmentManager     fragmentManager     = activity.getSupportFragmentManager();
@@ -67,35 +69,14 @@ public class MyGoogleMapManager implements MyMapManager {
         fragmentTransaction.add(R.id.google_map, mapFragment, "MAP").commit();
 
         mapFragment.getMapAsync(new OnMapCreated(activity));
-
     }
 
-    public void placeUser() {
-        if (user != null) {
-            user.remove();
-        }
-
+    public void placeAccidents(Context context){
+        if(map==null)return;
+        map.clear();
         Location location = MyLocationManager.getInstance().getLocation();
         user = map.addMarker(new MarkerOptions().position(MyUtils.LocationToLatLng(location)).title(Type.USER.toString()).icon(Type.USER.getIcon()));
-        //TODO Отобразить сообщение?
-    }
 
-    public void animateToPoint(Location location) {
-        if (map == null) delayedAction = new DelayedAnimateToLocation(location);
-        else
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(location), DEFAULT_ZOOM));
-    }
-
-    public void jumpToPoint(Location location) {
-        if (map == null) delayedAction = new DelayedJumpToLocation(location);
-        else
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(location), DEFAULT_ZOOM));
-    }
-
-    public void placeAccidents(Context context) {
-        if (map == null) return;
-        init(context);
-        accidents.clear();
         for (int id : Content.getInstance().keySet()) {
             Accident point = Content.getInstance().get(id);
             if (point.isInvisible()) continue;
@@ -111,6 +92,50 @@ public class MyGoogleMapManager implements MyMapManager {
             accidents.put(marker.getId(), id);
         }
     }
+
+    public void placeUser() {
+//        if (user != null) {
+//            user.remove();
+//        }
+////        map.clear();
+//        Location location = MyLocationManager.getInstance().getLocation();
+//        user = map.addMarker(new MarkerOptions().position(MyUtils.LocationToLatLng(location)).title(Type.USER.toString()).icon(Type.USER.getIcon()));
+//
+//
+//        //TODO Отобразить сообщение?
+    }
+
+    public void animateToPoint(Location location) {
+        if (map == null) delayedAction = new DelayedAnimateToLocation(location);
+        else
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(location), DEFAULT_ZOOM));
+    }
+
+    public void jumpToPoint(Location location) {
+        if (map == null) delayedAction = new DelayedJumpToLocation(location);
+        else
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(location), DEFAULT_ZOOM));
+    }
+
+//    public void placeAccidents(Context context) {
+//        if (map == null) return;
+////        init(context);
+//        accidents.clear();
+//        for (int id : Content.getInstance().keySet()) {
+//            Accident point = Content.getInstance().get(id);
+//            if (point.isInvisible()) continue;
+//            String title = point.getType().toString();
+//            title += point.getMedicine() != Medicine.UNKNOWN ? ", " + point.getMedicine().toString() : "";
+//            title += ", " + MyUtils.getIntervalFromNowInText(context, point.getTime()) + " назад";
+//
+//            int age = (int) (((new Date()).getTime() - point.getTime().getTime()) / 3600000);
+//
+//            float alpha = age < 2 ? 1.0f : age < 6 ? 0.5f : 0.2f;
+//
+//            Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(point.getLat(), point.getLon())).title(title).icon(point.getType().getIcon()).alpha(alpha));
+//            accidents.put(marker.getId(), id);
+//        }
+//    }
 
     private void init(final Context context) {
         map.clear();

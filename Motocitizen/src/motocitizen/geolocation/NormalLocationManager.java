@@ -19,8 +19,8 @@ import java.util.List;
 import motocitizen.activity.MainScreenActivity;
 import motocitizen.accident.Accident;
 import motocitizen.content.Content;
-import motocitizen.geocoder.MyGeocoder;
-import motocitizen.network.requests.InplaceRequest;
+import motocitizen.geocoder.MyGeoCoder;
+import motocitizen.network.requests.InPlaceRequest;
 import motocitizen.network.requests.LeaveRequest;
 import motocitizen.utils.Preferences;
 
@@ -146,7 +146,7 @@ class NormalLocationManager implements SecuredLocationManagerInterface {
             if (accId == currentInplace) continue;
             if (isArrived(location, accId)) {
                 Content.getInstance().setInPlace(accId);
-                new InplaceRequest(accId);
+                new InPlaceRequest(accId);
             }
         }
     }
@@ -165,7 +165,7 @@ class NormalLocationManager implements SecuredLocationManagerInterface {
         StringBuilder res = new StringBuilder();
         try {
             List<Address> list;
-            list = MyGeocoder.getInstance().getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            list = MyGeoCoder.getInstance().getFromLocation(location.getLatitude(), location.getLongitude(), 1);
             if (list == null || list.size() == 0)
                 return location.getLatitude() + " " + location.getLongitude();
 

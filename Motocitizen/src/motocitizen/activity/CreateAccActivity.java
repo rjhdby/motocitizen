@@ -39,7 +39,7 @@ import motocitizen.content.Type;
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.network.requests.CreateAccidentRequest;
-import motocitizen.user.Auth;
+import motocitizen.user.User;
 import motocitizen.utils.Const;
 import motocitizen.utils.MyUtils;
 import motocitizen.utils.Preferences;
@@ -122,7 +122,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             enableMyLocation();
             map.getUiSettings().setMyLocationButtonEnabled(true);
             map.getUiSettings().setZoomControlsEnabled(true);
-            if (!Auth.getInstance().getRole().isModerator()) {
+            if (!User.getInstance().getRole().isModerator()) {
                 CircleOptions circleOptions = new CircleOptions().center(MyUtils.LocationToLatLng(initialLocation)).radius(RADIUS).fillColor(0x20FF0000);
                 map.addCircle(circleOptions);
                 map.setOnCameraMoveCanceledListener(new GoogleMap.OnCameraMoveCanceledListener() {

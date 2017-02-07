@@ -3,11 +3,7 @@ package motocitizen.geocoder;
 import android.content.Context;
 import android.location.Geocoder;
 
-/**
- * Created by rjhdby on 14.01.17.
- */
-
-public class MyGeocoder {
+public class MyGeoCoder {
 
     private static class Holder {
         private static Geocoder instance;
@@ -21,6 +17,6 @@ public class MyGeocoder {
         Holder.instance = new Geocoder(context);
     }
 
-    private MyGeocoder() {
+    private MyGeoCoder() {
     }
 }
