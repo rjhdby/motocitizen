@@ -58,14 +58,14 @@ public class NewAccidentReceived extends IntentService {
 
         String title;
         if (accident.getMedicine() == Medicine.UNKNOWN)
-            title = String.format("%s(%s)", accident.getType().toString(), accident.getDistanceString());
+            title = String.format("%s(%s)", accident.getType().string(), accident.getDistanceString());
         else
-            title = String.format("%s, %s(%s)", accident.getType().toString(), accident.getMedicine().toString(), accident.getDistanceString());
+            title = String.format("%s, %s(%s)", accident.getType().string(), accident.getMedicine().string(), accident.getDistanceString());
 
         Notification.Builder builder = new Notification.Builder(this);
         builder.setContentIntent(contentIntent)
-               .setSmallIcon(R.drawable.logo)
-               .setLargeIcon(BitmapFactory.decodeResource(res, R.drawable.logo))
+               .setSmallIcon(R.mipmap.ic_launcher)
+               .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.ic_launcher))
                .setTicker(accident.getAddress())
                .setWhen(System.currentTimeMillis())
                .setAutoCancel(true)

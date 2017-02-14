@@ -38,7 +38,7 @@ public class History {
     }
 
     public String getActionString() {
-        return action.toString();
+        return action.string();
     }
 
     public int getId() {

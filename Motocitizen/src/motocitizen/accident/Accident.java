@@ -199,7 +199,7 @@ public class Accident {
     }
 
     public boolean isInvisible() {
-        boolean hidden         = status == HIDDEN && !User.getInstance().getRole().isModerator();
+        boolean hidden         = status == HIDDEN && !User.getInstance().isModerator();
         boolean distanceFilter = getDistanceFromUser() > Preferences.getInstance().getVisibleDistance() * 1000;
         boolean typeFilter     = Preferences.getInstance().isHidden(getType());
         boolean timeFilter     = time.getTime() + (long) Preferences.getInstance().getHoursAgo() * 60 * 60 * 1000 < (new Date()).getTime();

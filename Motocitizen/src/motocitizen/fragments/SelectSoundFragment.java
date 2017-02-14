@@ -17,7 +17,6 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import motocitizen.main.R;
-import motocitizen.utils.Const;
 import motocitizen.utils.Preferences;
 
 public class SelectSoundFragment extends Fragment {
@@ -94,7 +93,8 @@ public class SelectSoundFragment extends Fragment {
         public void onClick(View v) {
             int tag = (Integer) v.getTag();
             if (currentId != 0) {
-                ringtoneList.findViewWithTag(currentId).setBackgroundColor(Const.getDefaultBGColor(getActivity()));
+                //noinspection ResourceAsColor
+                ringtoneList.findViewWithTag(currentId).setBackgroundColor(android.R.attr.colorBackground);
             }
             currentId = tag;
             v.setBackgroundColor(Color.GRAY);

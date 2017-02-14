@@ -20,12 +20,11 @@ public enum VolunteerStatus {
         return VolunteerStatus.ON_WAY;
     }
 
-    public String toCode() {
+    public String code() {
         return this.code;
     }
 
-    @Override
-    public String toString() {
+    public String string() {
         return this.text;
     }
 }

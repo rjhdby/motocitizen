@@ -11,15 +11,15 @@ import motocitizen.user.User;
 import motocitizen.utils.Preferences;
 
 public class BanRequest extends HTTPClient {
-    @SuppressWarnings("unchecked")
     public BanRequest(AsyncTaskCompleteListener listener, int id) {
         this.listener = listener;
         int user_id = Content.getInstance().get(id).getOwnerId();
         post.put("login", Preferences.getInstance().getLogin());
-        post.put("passhash", User.getInstance().makePassHash());
+        post.put("passhash", User.getInstance().getPassHash());
         post.put("id", String.valueOf(id));
         post.put("user_id", String.valueOf(user_id));
         post.put("calledMethod", Methods.BAN.toCode());
+        //noinspection unchecked
         execute(post);
     }
 
@@ -35,8 +35,7 @@ public class BanRequest extends HTTPClient {
     public String getError(JSONObject response) {
         if (!response.has("result")) return "Ошибка соединения " + response.toString();
         try {
-            String result = response.getString("ban");
-            switch (result) {
+            switch (response.getString("ban")) {
                 case "OK":
                     return "Статус изменен";
                 case "ERROR PREREQUISITES":

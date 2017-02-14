@@ -2,9 +2,10 @@ package motocitizen.router;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
-import java.util.Stack;
+import com.google.android.gms.maps.model.LatLng;
 
 import motocitizen.activity.AboutActivity;
 import motocitizen.activity.AccidentDetailsActivity;
@@ -15,13 +16,6 @@ import motocitizen.activity.MainScreenActivity;
 import motocitizen.activity.SettingsActivity;
 import motocitizen.activity.StartupActivity;
 
-import static motocitizen.router.Router.Target.BUSINESS_CARD;
-import static motocitizen.router.Router.Target.DETAILS;
-import static motocitizen.router.Router.Target.MAIN;
-
-/**
- * Created by rjhdby on 31.01.2017.
- */
 
 public class Router {
     public enum Target {
@@ -34,7 +28,7 @@ public class Router {
         SETTINGS(SettingsActivity.class),
         STARTUP(StartupActivity.class);
 
-        private Class activity;
+        private final Class activity;
 
         Target(Class activity) {
             this.activity = activity;
@@ -43,43 +37,50 @@ public class Router {
         public Class getActivity() {
             return activity;
         }
-
-        public static Target getInstance(Class activity) {
-            for (Target target : values()) {
-                if (target.activity.equals(activity)) return target;
-            }
-            return MAIN;
-        }
     }
-
-    private static Stack<Target> history = new Stack<>();
 
     public static void goTo(Activity activity, Target target) {
         goTo(activity, target, new Bundle());
     }
 
     public static void goTo(Activity activity, Target target, Bundle bundle) {
-        updateHistory(activity, target);
         Intent intent = new Intent(activity, target.getActivity());
         intent.putExtras(bundle);
         activity.startActivity(intent);
     }
 
-    public static void back(Activity activity) {
-        if (history.isEmpty()) {
-            activity.moveTaskToBack(true);
-            return;
-        }
-        goTo(activity, history.pop());
+    public static void dial(Activity activity, String phone) {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:+" + phone));
+        activity.startActivity(intent);
     }
 
-    private static void updateHistory(Activity activity, Target target) {
-        Target source = Target.getInstance(activity.getClass());
-        if (target == BUSINESS_CARD || source == MAIN) {
-            history.push(target);
-        }
-        if (target != MAIN && source == DETAILS) {
-            history.push(target);
-        }
+    public static void sms(Activity activity, String phone) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("sms:" + phone));
+        activity.startActivity(intent);
+    }
+
+    public static void share(Activity activity, String text) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, text);
+        sendIntent.setType("text/plain");
+        activity.startActivity(sendIntent);
+    }
+
+    //TODO EXTERMINATUS!!!!
+    public static void exit(Activity activity) {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        activity.startActivity(intent);
+        int pid = android.os.Process.myPid();
+        android.os.Process.killProcess(pid);
+    }
+
+    public static void toExternalMap(Activity activity, LatLng latLng) {
+        String uri    = "geo:" + latLng.latitude + "," + latLng.longitude;
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        activity.startActivity(intent);
     }
 }

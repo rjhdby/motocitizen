@@ -2,11 +2,8 @@ package motocitizen.maps;
 
 import android.content.Context;
 import android.location.Location;
-import android.view.ViewGroup;
 
 public interface MyMapManager {
-
-    void placeUser();
 
     void animateToPoint(Location location);
 
@@ -15,5 +12,7 @@ public interface MyMapManager {
     void zoom(int zoom);
 
     void placeAccidents(Context context);
+
+    void enableLocation();
 }
 

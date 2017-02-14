@@ -1,7 +1,15 @@
 package motocitizen.activity;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.EmptyPermissionListener;
 
 import motocitizen.content.Content;
 import motocitizen.database.DbOpenHelper;
@@ -30,14 +38,39 @@ public class StartupActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+
         Preferences.init(this);
         DbOpenHelper.init(this);
-        MyLocationManager.init(this);
         MyGeoCoder.init(this);
         User.init();
         Content.init();
         new GCMRegistration(this);
         new GCMBroadcastReceiver();
+        Dexter.withActivity(this)
+              .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+              .withListener(new EmptyPermissionListener() {
+                  @Override
+                  public void onPermissionGranted(PermissionGrantedResponse response) {
+                      MyLocationManager.init(true);
+                      ahead();
+                  }
+
+                  @Override
+                  public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                      super.onPermissionRationaleShouldBeShown(permission, token);
+                      token.continuePermissionRequest();
+                  }
+
+                  @Override
+                  public void onPermissionDenied(PermissionDeniedResponse response) {
+                      super.onPermissionDenied(response);
+                      MyLocationManager.init(false);
+                      ahead();
+                  }
+              }).check();
+    }
+
+    private void ahead() {
         Router.goTo(this, User.getInstance().isAuthorized() ? Router.Target.MAIN : Router.Target.AUTH);
     }
 }

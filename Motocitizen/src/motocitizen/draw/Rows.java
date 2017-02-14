@@ -2,7 +2,6 @@ package motocitizen.draw;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.Gravity;
@@ -13,7 +12,6 @@ import android.widget.FrameLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import motocitizen.activity.AccidentDetailsActivity;
 import motocitizen.accident.Accident;
 import motocitizen.content.Medicine;
 import motocitizen.main.R;
@@ -44,9 +42,9 @@ public class Rows {
                 accRow.setBackgroundResource(accident.isOwner() ? ACCIDENT_ROW_OWN_HIDDEN : ACCIDENT_ROW_HIDDEN);
         }
         StringBuilder generalText = new StringBuilder();
-        generalText.append(accident.getType().toString());
+        generalText.append(accident.getType().string());
         if (accident.getMedicine() != Medicine.UNKNOWN) {
-            generalText.append(", ").append(accident.getMedicine().toString());
+            generalText.append(", ").append(accident.getMedicine().string());
         }
         generalText.append("(").append(accident.getDistanceString()).append(")\n").append(accident.getAddress()).append("\n").append(accident.getDescription());
         String msgText = "<b>" + String.valueOf(accident.getMessages().size()) + "</b>";

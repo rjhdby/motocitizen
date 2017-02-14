@@ -15,7 +15,6 @@ import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 
 
 abstract public class HTTPClient extends AsyncTask<Map<String, String>, Integer, JSONObject> {
@@ -24,34 +23,52 @@ abstract public class HTTPClient extends AsyncTask<Map<String, String>, Integer,
 
     private   ProgressDialog            dialog;
     protected AsyncTaskCompleteListener listener;
-    protected Map<String, String> post = new HashMap<>();
+    protected Map<String, String> post     = new HashMap<>();
+    protected JSONObject          response = new JSONObject();
+//    protected JSONObject          error    = new JSONObject();
+
+    private Map<String, String> fake = new HashMap<>(1);
 
     @SafeVarargs
     @Override
     protected final JSONObject doInBackground(Map<String, String>... params) {
-        return request(params[ 0 ]);
+//        return request(params[ 0 ]);
+        return request();
+    }
+
+    private JSONObject request() {
+        return request(post);
     }
 
     protected JSONObject request(Map<String, String> post) {
-        Request request = new Request.Builder().post(makePost(post)).url(url).build();
+        Request request = new Request.Builder()
+                .post(makePost(post))
+                .url(url)
+                .build();
         try {
-            Response response = client.newCall(request).execute();
-            String   text     = response.body().string();
-            Log.d("HTTP RESPONSE", text);
-            return new JSONObject(text);
+            String text = client.newCall(request)
+                                .execute()
+                                .body()
+                                .string();
+            Log.w("HTTP RESPONSE", text);
+            response = new JSONObject(text);
         } catch (IOException | JSONException e) {
             e.printStackTrace();
-            Map<String, String> fake = new HashMap<>();
             fake.put("error", "unknown");
-            return new JSONObject(fake);
+            response = new JSONObject(fake);
         }
+        return response;
     }
 
     private static RequestBody makePost(Map<String, String> post) {
+        StringBuilder debug = new StringBuilder();
+        debug.append(url).append("?");
         FormBody.Builder body = new FormBody.Builder();
         for (String key : post.keySet()) {
             body.add(key, post.get(key));
+            debug.append(key).append("=").append(post.get(key)).append("&");
         }
+        Log.w("HTTP REQUEST", debug.toString());
         return body.build();
     }
 
@@ -62,19 +79,14 @@ abstract public class HTTPClient extends AsyncTask<Map<String, String>, Integer,
 
     @Override
     protected void onPostExecute(JSONObject result) {
-        if (error(result) && !result.has("error")) {
-            Map<String, String> content = new HashMap<>(1);
-            content.put("error", getError(result));
-            result = new JSONObject(content);
-        }
-        if (listener != null) {
-            try {
-                listener.onTaskComplete(result);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
         dismiss();
+        if (listener == null) return;
+
+        if (error(result) && !result.has("error")) {
+            fake.put("error", getError(result));
+            result = new JSONObject(fake);
+        }
+        listener.onTaskComplete(result);
     }
 
     protected abstract boolean error(JSONObject response);

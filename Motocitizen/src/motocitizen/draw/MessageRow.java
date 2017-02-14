@@ -9,7 +9,7 @@ import android.widget.TextView;
 import motocitizen.accident.Message;
 import motocitizen.user.User;
 import motocitizen.main.R;
-import motocitizen.utils.Const;
+import motocitizen.utils.DateUtils;
 
 public class MessageRow extends FrameLayout {
 
@@ -48,7 +48,7 @@ public class MessageRow extends FrameLayout {
             messageText.append("\n");
         }
         messageText.append(message.getText());
-        String timeText = Const.TIME_FORMAT.format(message.getTime());
+        String timeText = DateUtils.getTime(message.getTime());
 
         ((TextView) this.findViewById(R.id.time)).setText(timeText);
         messageText.append(" \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0");

@@ -22,12 +22,11 @@ public enum AccidentStatus {
         return AccidentStatus.ACTIVE;
     }
 
-    public String toCode() {
+    public String code() {
         return this.code;
     }
 
-    @Override
-    public String toString() {
+    public String string() {
         return this.text;
     }
 }

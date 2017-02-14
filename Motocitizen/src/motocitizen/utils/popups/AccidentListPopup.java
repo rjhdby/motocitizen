@@ -7,7 +7,7 @@ import motocitizen.accident.Accident;
 import motocitizen.content.Content;
 import motocitizen.content.Medicine;
 import motocitizen.user.User;
-import motocitizen.utils.Const;
+import motocitizen.utils.DateUtils;
 import motocitizen.utils.MyUtils;
 import motocitizen.utils.Preferences;
 
@@ -27,10 +27,10 @@ public class AccidentListPopup extends PopupWindowGeneral {
             content.addView(phoneButtonRow(context, phone), layoutParams);
             content.addView(smsButtonRow(context, phone), layoutParams);
         }
-        if (User.getInstance().getRole().isModerator() || Preferences.getInstance().getLogin().equals(point.getOwner()))
+        if (User.getInstance().isModerator() || Preferences.getInstance().getLogin().equals(point.getOwner()))
             content.addView(finishButtonRow(point));
 
-        if (User.getInstance().getRole().isModerator()) {
+        if (User.getInstance().isModerator()) {
             content.addView(hideButtonRow(point));
             content.addView(banButtonRow(context, point.getId()), layoutParams);
         }
@@ -43,11 +43,11 @@ public class AccidentListPopup extends PopupWindowGeneral {
 
     public static String getAccidentTextToCopy(Accident accident) {
         StringBuilder res = new StringBuilder();
-        res.append(Const.DATE_FORMAT.format(accident.getTime())).append(" ");
+        res.append(DateUtils.getDateTime(accident.getTime())).append(" ");
         res.append(accident.getOwner()).append(": ");
-        res.append(accident.getType().toString()).append(". ");
+        res.append(accident.getType().string()).append(". ");
         if (accident.getMedicine() != Medicine.UNKNOWN) {
-            res.append(accident.getMedicine().toString()).append(". ");
+            res.append(accident.getMedicine().string()).append(". ");
         }
         res.append(accident.getAddress()).append(". ");
         res.append(accident.getDescription()).append(".");

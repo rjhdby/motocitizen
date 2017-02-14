@@ -1,11 +1,10 @@
 package motocitizen.utils.popups;
 
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -22,8 +21,9 @@ import motocitizen.content.AccidentStatus;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentChangeStateRequest;
 import motocitizen.network.requests.BanRequest;
+import motocitizen.router.Router;
 import motocitizen.utils.MyUtils;
-import motocitizen.utils.ShowToast;
+import motocitizen.utils.ToastUtils;
 
 abstract class PopupWindowGeneral {
 
@@ -47,11 +47,7 @@ abstract class PopupWindowGeneral {
         Button   b  = new Button(content.getContext());
         b.setText(R.string.share);
         b.setOnClickListener(v -> {
-            Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_TEXT, textToShare);
-            sendIntent.setType("text/plain");
-            context.startActivity(sendIntent);
+            Router.share((Activity) context, textToShare);
             popupWindow.dismiss();
         });
         tr.addView(b, layoutParams);
@@ -79,9 +75,7 @@ abstract class PopupWindowGeneral {
         dial.setText(context.getString(R.string.popup_dial, phone));
         dial.setOnClickListener(v -> {
             popupWindow.dismiss();
-            Intent intent = new Intent(Intent.ACTION_DIAL);
-            intent.setData(Uri.parse("tel:" + phone));
-            context.startActivity(intent);
+            Router.dial((Activity) context, phone);
         });
         TableRow tr = new TableRow(content.getContext());
         tr.addView(dial, layoutParams);
@@ -93,9 +87,7 @@ abstract class PopupWindowGeneral {
         dial.setText(context.getString(R.string.popup_sms, phone));
         dial.setOnClickListener(v -> {
             popupWindow.dismiss();
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse("sms:" + phone));
-            context.startActivity(intent);
+            Router.sms((Activity) context, phone);
         });
         TableRow tr = new TableRow(content.getContext());
         tr.addView(dial, layoutParams);
@@ -108,7 +100,7 @@ abstract class PopupWindowGeneral {
 
         finish.setOnClickListener(v -> {
             popupWindow.dismiss();
-            new AccidentChangeStateRequest(null, point.getId(), point.isEnded() ? AccidentStatus.ACTIVE.toCode() : AccidentStatus.ENDED.toCode());
+            new AccidentChangeStateRequest(null, point.getId(), point.isEnded() ? AccidentStatus.ACTIVE.code() : AccidentStatus.ENDED.code());
         });
         TableRow tr = new TableRow(content.getContext());
         tr.addView(finish, layoutParams);
@@ -121,7 +113,7 @@ abstract class PopupWindowGeneral {
 
         finish.setOnClickListener(v -> {
             popupWindow.dismiss();
-            new AccidentChangeStateRequest(null, point.getId(), point.isHidden() ? AccidentStatus.ACTIVE.toCode() : AccidentStatus.HIDDEN.toCode());
+            new AccidentChangeStateRequest(null, point.getId(), point.isHidden() ? AccidentStatus.ACTIVE.code() : AccidentStatus.HIDDEN.code());
         });
         TableRow tr = new TableRow(content.getContext());
         tr.addView(finish, layoutParams);
@@ -140,7 +132,7 @@ abstract class PopupWindowGeneral {
             myClip = ClipData.newPlainText("text", text);
             myClipboard.setPrimaryClip(myClip);
             popupWindow.dismiss();
-            ShowToast.message(context, context.getString(R.string.coordinates_copied));
+            ToastUtils.show(context, context.getString(R.string.coordinates_copied));
         });
         TableRow tr = new TableRow(content.getContext());
         tr.addView(coordinates, layoutParams);
@@ -155,13 +147,13 @@ abstract class PopupWindowGeneral {
             new BanRequest(result -> {
                 if (result.has("error")) {
                     try {
-                        ShowToast.message(context, result.getString("error"));
+                        ToastUtils.show(context, result.getString("error"));
                     } catch (JSONException e) {
-                        ShowToast.message(context, "Неизвестная ошибка");
+                        ToastUtils.show(context, "Неизвестная ошибка");
                         e.printStackTrace();
                     }
                 } else {
-                    ShowToast.message(context, "Пользователь забанен");
+                    ToastUtils.show(context, "Пользователь забанен");
                 }
             }, id);
             popupWindow.dismiss();

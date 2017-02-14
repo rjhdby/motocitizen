@@ -1,10 +1,8 @@
 package motocitizen.fragments;
 
-import android.content.Intent;
-import android.net.Uri;
+import android.Manifest;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,49 +13,42 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.single.EmptyPermissionListener;
+
 import org.json.JSONObject;
 
 import motocitizen.MyApp;
-import motocitizen.activity.AboutActivity;
-import motocitizen.activity.CreateAccActivity;
 import motocitizen.activity.MyFragmentInterface;
-import motocitizen.activity.SettingsActivity;
 import motocitizen.content.Content;
 import motocitizen.draw.Rows;
 import motocitizen.main.R;
 import motocitizen.maps.MyMapManager;
 import motocitizen.maps.google.MyGoogleMapManager;
 import motocitizen.network.AsyncTaskCompleteListener;
+import motocitizen.router.Router;
 import motocitizen.user.User;
 import motocitizen.utils.BounceScrollView;
 import motocitizen.utils.Const;
-import motocitizen.utils.OverScrollListenerInterface;
 import motocitizen.utils.Preferences;
 
 public class MainScreenFragment extends Fragment implements MyFragmentInterface {
-    private        ViewGroup    mapContainer;
-    private        ImageButton  createAccButton;
-    private        ImageButton  toAccListButton;
-    private        ImageButton  toMapButton;
-    private        View         accListView;
-    private static ProgressBar  progressBar;
-    public static  boolean      inTransaction;
-    private static MenuItem     refreshItem;
-    private static MyMapManager map;
+    private static final byte LIST = 0;
+    private static final byte MAP  = 1;
 
-    private enum Screen {
-        LIST,
-        MAP
-    }
+    private ViewGroup   mapContainer;
+    private ImageButton createAccButton;
+    private ImageButton toAccListButton;
+    private ImageButton toMapButton;
+    private View        accListView;
+    private ProgressBar progressBar;
+    private ViewGroup   listContent;
 
-    private static Screen currentScreen = Screen.LIST;
-
-    static {
-        inTransaction = false;
-    }
-
-    public MainScreenFragment() {
-    }
+    private MenuItem     refreshItem;
+    private MyMapManager map;
+    private boolean inTransaction = false;
+    private byte    currentScreen = LIST;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -66,71 +57,52 @@ public class MainScreenFragment extends Fragment implements MyFragmentInterface 
         return inflater.inflate(R.layout.main_screen_fragment, container, false);
     }
 
-    private void bindButtons() {
-        mapContainer = (ViewGroup) getActivity().findViewById(R.id.google_map);
-        createAccButton = (ImageButton) getActivity().findViewById(R.id.add_point_button);
-        toAccListButton = (ImageButton) getActivity().findViewById(R.id.list_button);
-        toMapButton = (ImageButton) getActivity().findViewById(R.id.map_button);
-        getActivity().findViewById(R.id.dial_button).setOnClickListener(new DialOnClickListener());
-        createAccButton.setOnClickListener(new CreateOnClickListener());
-        toAccListButton.setOnClickListener(new TabsOnClickListener());
-        toMapButton.setOnClickListener(new TabsOnClickListener());
-    }
-
     @Override
     public void onResume() {
         super.onResume();
-        accListView = getActivity().findViewById(R.id.acc_list);
-        progressBar = (ProgressBar) getActivity().findViewById(R.id.progressBar);
-        ((BounceScrollView) getActivity().findViewById(R.id.accListRefresh)).setOverScrollListener(new OnOverScrollUpdateListener());
 
-        bindButtons();
+        if (accListView == null) accListView = getActivity().findViewById(R.id.acc_list);
+        if (progressBar == null) progressBar = (ProgressBar) getActivity().findViewById(R.id.progressBar);
+        if (mapContainer == null) mapContainer = (ViewGroup) getActivity().findViewById(R.id.google_map);
+        if (createAccButton == null) createAccButton = (ImageButton) getActivity().findViewById(R.id.add_point_button);
+        if (toAccListButton == null) toAccListButton = (ImageButton) getActivity().findViewById(R.id.list_button);
+        if (toMapButton == null) toMapButton = (ImageButton) getActivity().findViewById(R.id.map_button);
+
+        createAccButton.setOnClickListener(v -> Router.goTo(getActivity(), Router.Target.CREATE));
+        toAccListButton.setOnClickListener(v -> setScreen(LIST));
+        toMapButton.setOnClickListener(v -> setScreen(MAP));
+        getActivity().findViewById(R.id.dial_button).setOnClickListener(v -> Router.dial(getActivity(), Const.PHONE));
+        ((BounceScrollView) getActivity().findViewById(R.id.accListRefresh)).setOverScrollListener(this::getAccidents);
+        listContent = (ViewGroup) getActivity().findViewById(R.id.accListContent);
+
 
         if (map == null) map = new MyGoogleMapManager(getActivity());
 
+        Dexter.withActivity(getActivity())
+              .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+              .withListener(new EmptyPermissionListener() {
+                  @Override
+                  public void onPermissionGranted(PermissionGrantedResponse response) {
+                      map.enableLocation();
+                  }
+              }).check();
+
         setPermissions();
 
-        switch (currentScreen) {
-            case LIST:
-                goToAccList();
-                break;
-            case MAP:
-                goToMap();
-                break;
-        }
+        setScreen(currentScreen);
 
         redraw();
         getAccidents();
     }
 
-    private class DialOnClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(Intent.ACTION_DIAL);
-            //TODO Сделать забор телефона из преференсов
-            intent.setData(Uri.parse("tel:+" + Const.PHONE));
-            getActivity().startActivity(intent);
-        }
-    }
-
-    private class CreateOnClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            startActivity(new Intent(getActivity(), CreateAccActivity.class));
-        }
-    }
-
     @Override
     public void setPermissions() {
-        createAccButton.setVisibility(User.getInstance().getRole().isStandard() ? View.VISIBLE : View.INVISIBLE);
+        createAccButton.setVisibility(User.getInstance().isStandard() ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
     public void redraw() {
-        ViewGroup view = (ViewGroup) getActivity().findViewById(R.id.accListContent);
-
-        if (view == null) return;
-        view.removeAllViews();
+        listContent.removeAllViews();
 
         //TODO YesterdayRow ???
         //TODO Нет событий
@@ -138,42 +110,13 @@ public class MainScreenFragment extends Fragment implements MyFragmentInterface 
         Content points = Content.getInstance();
         for (int id : points.reverseSortedKeySet()) {
             if (points.get(id).isInvisible()) continue;
-            view.addView(Rows.getAccidentRow(getActivity(), view, points.get(id)));
+            listContent.addView(Rows.getAccidentRow(getActivity(), listContent, points.get(id)));
         }
         map.placeAccidents(getActivity());
     }
 
-//    private void setUpRightFragment(Intent intent) {
-//
-//        switch (currentScreen) {
-//            case LIST:
-//                goToAccList();
-//                break;
-//            case MAP:
-//                goToMap();
-//                break;
-//        }
-//
-//        String id    = intent.getStringExtra("id");
-//        int    toMap = intent.getIntExtra("toMap", 0);
-//
-//        if (toMap != 0) {
-//            map.zoom(16);
-//            map.animateToPoint(Content.getInstance().get(toMap).getLocation());
-//            fromDetails = intent.getBooleanExtra("fromDetails", false);
-//            goToMap(toMap);
-//        } else if (id != null) {
-//            intent.removeExtra("id");
-//
-//            NewAccidentReceived.removeFromTray(Content.getInstance().get(Integer.parseInt(id)).getLocation().hashCode());
-//            MyApp.toDetails(Integer.parseInt(id));
-//            //NewAccidentReceived.clearAll();
-//        } else {
-//            goToAccList();
-//        }
-//    }
-
     private void getAccidents() {
+        if (inTransaction) return;
         if (MyApp.isOnline(getContext())) {
             startRefreshAnimation();
             Content.getInstance().requestUpdate(new AccidentsRequestCallback());
@@ -182,18 +125,18 @@ public class MainScreenFragment extends Fragment implements MyFragmentInterface 
         }
     }
 
-    private static void setRefreshAnimation(boolean status) {
+    private void setRefreshAnimation(boolean status) {
         progressBar.setVisibility(status ? View.VISIBLE : View.INVISIBLE);
         inTransaction = status;
         //TODO костыль
         if (refreshItem != null) refreshItem.setVisible(!status);
     }
 
-    public static void stopRefreshAnimation() {
+    private void stopRefreshAnimation() {
         setRefreshAnimation(false);
     }
 
-    public static void startRefreshAnimation() {
+    private void startRefreshAnimation() {
         setRefreshAnimation(true);
     }
 
@@ -222,19 +165,13 @@ public class MainScreenFragment extends Fragment implements MyFragmentInterface 
                 getAccidents();
                 return true;
             case R.id.small_menu_settings:
-                Intent intentSettings = new Intent(getActivity(), SettingsActivity.class);
-                startActivity(intentSettings);
+                Router.goTo(getActivity(), Router.Target.SETTINGS);
                 return true;
             case R.id.small_menu_about:
-                Intent intentAbout = new Intent(getActivity(), AboutActivity.class);
-                startActivity(intentAbout);
+                Router.goTo(getActivity(), Router.Target.ABOUT);
                 return true;
             case R.id.small_menu_exit:
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.addCategory(Intent.CATEGORY_HOME);
-                startActivity(intent);
-                int pid = android.os.Process.myPid();
-                android.os.Process.killProcess(pid);
+                Router.exit(getActivity());
                 return true;
             case R.id.action_refresh:
                 getAccidents();
@@ -247,54 +184,16 @@ public class MainScreenFragment extends Fragment implements MyFragmentInterface 
         return false;
     }
 
-    private class OnOverScrollUpdateListener implements OverScrollListenerInterface {
-
-        @Override
-        public void onOverScroll() {
-            if (inTransaction) return;
-            if (MyApp.isOnline(getActivity())) {
-                startRefreshAnimation();
-                Content.getInstance().requestUpdate(new AccidentsRequestCallback());
-            } else {
-                Toast.makeText(getActivity(), getActivity().getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
-            }
-        }
+    private void setScreen(byte target) {
+        currentScreen = target;
+        toAccListButton.setAlpha(target == LIST ? 1f : 0.3f);
+        toMapButton.setAlpha(target == MAP ? 1f : 0.3f);
+        accListView.animate().translationX(target == LIST ? 0 : -Const.getWidth(getActivity()) * 2);
+        mapContainer.animate().translationX(target == MAP ? 0 : Const.getWidth(getActivity()) * 2);
     }
 
-    private void goToAccList() {
-        Log.d("SCREEN TO LIST", String.valueOf(Const.getWidth(getActivity()) * 2));
-        accListView.animate().translationX(0);
-        mapContainer.animate().translationX(Const.getWidth(getActivity()) * 2);
-        toMapButton.setAlpha(0.3f);
-        toAccListButton.setAlpha(1f);
-        currentScreen = Screen.LIST;
-    }
-
-    private void goToMap(int id) {
+    public void toMap(int id) {
+        setScreen(MAP);
         map.jumpToPoint(Content.getInstance().get(id).getLocation());
-        goToMap();
-    }
-
-    private void goToMap() {
-        accListView.animate().translationX(-Const.getWidth(getActivity()) * 2);
-        Log.d("SCREEN TO ACC", String.valueOf(-Const.getWidth(getActivity()) * 2));
-        mapContainer.animate().translationX(0);
-        toMapButton.setAlpha(1f);
-        toAccListButton.setAlpha(0.3f);
-        currentScreen = Screen.MAP;
-    }
-
-    private class TabsOnClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case (R.id.list_button):
-                    goToAccList();
-                    break;
-                case (R.id.map_button):
-                    goToMap();
-                    break;
-            }
-        }
     }
 }

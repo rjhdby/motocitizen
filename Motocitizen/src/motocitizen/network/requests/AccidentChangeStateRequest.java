@@ -3,8 +3,6 @@ package motocitizen.network.requests;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
@@ -16,10 +14,11 @@ public class AccidentChangeStateRequest extends HTTPClient {
     public AccidentChangeStateRequest(AsyncTaskCompleteListener listener, int id, String state) {
         this.listener = listener;
         post.put("login", Preferences.getInstance().getLogin());
-        post.put("passhash", User.getInstance().makePassHash());
+        post.put("passhash", User.getInstance().getPassHash());
         post.put("state", state);
         post.put("id", String.valueOf(id));
         post.put("m", Methods.CHANGE_STATE.toCode());
+        //noinspection unchecked
         execute(post);
     }
 
@@ -35,8 +34,7 @@ public class AccidentChangeStateRequest extends HTTPClient {
     public String getError(JSONObject response) {
         if (!response.has("result")) return "Ошибка соединения " + response.toString();
         try {
-            String result = response.getString("result");
-            switch (result) {
+            switch (response.getString("result")) {
                 case "OK":
                     return "Статус изменен успешно";
                 case "ERROR":
@@ -45,9 +43,7 @@ public class AccidentChangeStateRequest extends HTTPClient {
                 case "READONLY":
                     return "Недостаточно прав";
             }
-        } catch (JSONException ignored) {
-
-        }
+        } catch (JSONException ignored) {}
         return "Неизвестная ошибка " + response.toString();
     }
 }

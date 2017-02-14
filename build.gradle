@@ -15,7 +15,6 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 
-
 android {
     compileSdkVersion 25
     buildToolsVersion '25.0.2'
@@ -27,8 +26,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -67,10 +66,11 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'Motocitizen/libs')
-    compile 'com.android.support:appcompat-v7:25.1.0'
+//    compile fileTree(include: ['*.jar'], dir: 'Motocitizen/libs')
+    compile 'com.android.support:appcompat-v7:25.1.1'
     compile 'com.google.android.gms:play-services:10.0.1'
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support:design:25.1.0'
+    compile 'com.android.support:design:25.1.1'
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
+    compile 'com.karumi:dexter:3.0.2'
 }

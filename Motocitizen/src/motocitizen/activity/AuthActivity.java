@@ -18,7 +18,7 @@ import motocitizen.main.R;
 import motocitizen.router.Router;
 import motocitizen.user.User;
 import motocitizen.utils.Preferences;
-import motocitizen.utils.ShowToast;
+import motocitizen.utils.ToastUtils;
 
 public class AuthActivity extends AppCompatActivity/* implements View.OnClickListener*/ {
 
@@ -44,7 +44,7 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
                 Router.goTo(this, Router.Target.MAIN);
             }
         } catch (Error e) {
-            ShowToast.message(this, e.getLocalizedMessage());
+            ToastUtils.show(this, e.getLocalizedMessage());
         }
         setContentView(R.layout.auth);
         login = (EditText) findViewById(R.id.auth_login);
@@ -77,7 +77,7 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
         //Авторизованы?
         if (isAuthorized) {
             String format = getString(R.string.auth_role);
-            roleView.setText(String.format(format, User.getInstance().getRole().getName()));
+            roleView.setText(String.format(format, User.getInstance().getRoleName()));
         } else {
             enableLoginBtn();
         }
@@ -101,7 +101,7 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
                 return;
             }
             if (!MyApp.isOnline(getApplicationContext())) {
-                ShowToast.message(getBaseContext(), getBaseContext().getString(R.string.auth_not_available));
+                ToastUtils.show(getBaseContext(), getBaseContext().getString(R.string.auth_not_available));
                 return;
             }
             if (auth()) {

@@ -2,9 +2,7 @@ package motocitizen.maps.google;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
@@ -16,8 +14,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import motocitizen.accident.Accident;
@@ -39,10 +39,10 @@ public class MyGoogleMapManager implements MyMapManager {
     private String    selected;
     private Map<String, Integer> accidents = new HashMap<>();
 
-    private DelayedAction delayedAction;
+    private List<DelayedAction> delayedAction = new ArrayList<>();
 
     private class OnMapCreated implements OnMapReadyCallback {
-        private Context context;
+        private final Context context;
 
         OnMapCreated(Context context) {
             super();
@@ -52,14 +52,16 @@ public class MyGoogleMapManager implements MyMapManager {
         @Override
         public void onMapReady(GoogleMap googleMap) {
             map = googleMap;
-            delayedAction.makeAction();
             init(context);
-//            placeUser();
             placeAccidents(context);
+            for (DelayedAction current : delayedAction) {
+                current.makeAction();
+            }
+            delayedAction.clear();
         }
     }
 
-    public MyGoogleMapManager (FragmentActivity activity) {
+    public MyGoogleMapManager(FragmentActivity activity) {
 
         jumpToPoint(MyLocationManager.getInstance().getLocation());
         selected = "";
@@ -71,17 +73,18 @@ public class MyGoogleMapManager implements MyMapManager {
         mapFragment.getMapAsync(new OnMapCreated(activity));
     }
 
-    public void placeAccidents(Context context){
-        if(map==null)return;
+    public void placeAccidents(Context context) {
+        if (map == null) return;
         map.clear();
+        if (user != null) user.remove();
         Location location = MyLocationManager.getInstance().getLocation();
-        user = map.addMarker(new MarkerOptions().position(MyUtils.LocationToLatLng(location)).title(Type.USER.toString()).icon(Type.USER.getIcon()));
+        user = map.addMarker(new MarkerOptions().position(MyUtils.LocationToLatLng(location)).title(Type.USER.string()).icon(Type.USER.getIcon()));
 
         for (int id : Content.getInstance().keySet()) {
             Accident point = Content.getInstance().get(id);
             if (point.isInvisible()) continue;
-            String title = point.getType().toString();
-            title += point.getMedicine() != Medicine.UNKNOWN ? ", " + point.getMedicine().toString() : "";
+            String title = point.getType().string();
+            title += point.getMedicine() != Medicine.UNKNOWN ? ", " + point.getMedicine().string() : "";
             title += ", " + MyUtils.getIntervalFromNowInText(context, point.getTime()) + " назад";
 
             int age = (int) (((new Date()).getTime() - point.getTime().getTime()) / 3600000);
@@ -93,53 +96,20 @@ public class MyGoogleMapManager implements MyMapManager {
         }
     }
 
-    public void placeUser() {
-//        if (user != null) {
-//            user.remove();
-//        }
-////        map.clear();
-//        Location location = MyLocationManager.getInstance().getLocation();
-//        user = map.addMarker(new MarkerOptions().position(MyUtils.LocationToLatLng(location)).title(Type.USER.toString()).icon(Type.USER.getIcon()));
-//
-//
-//        //TODO Отобразить сообщение?
-    }
-
     public void animateToPoint(Location location) {
-        if (map == null) delayedAction = new DelayedAnimateToLocation(location);
+        if (map == null) delayedAction.add(new DelayedAnimateToLocation(location));
         else
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(location), DEFAULT_ZOOM));
     }
 
     public void jumpToPoint(Location location) {
-        if (map == null) delayedAction = new DelayedJumpToLocation(location);
+        if (map == null) delayedAction.add(new DelayedJumpToLocation(location));
         else
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(location), DEFAULT_ZOOM));
     }
 
-//    public void placeAccidents(Context context) {
-//        if (map == null) return;
-////        init(context);
-//        accidents.clear();
-//        for (int id : Content.getInstance().keySet()) {
-//            Accident point = Content.getInstance().get(id);
-//            if (point.isInvisible()) continue;
-//            String title = point.getType().toString();
-//            title += point.getMedicine() != Medicine.UNKNOWN ? ", " + point.getMedicine().toString() : "";
-//            title += ", " + MyUtils.getIntervalFromNowInText(context, point.getTime()) + " назад";
-//
-//            int age = (int) (((new Date()).getTime() - point.getTime().getTime()) / 3600000);
-//
-//            float alpha = age < 2 ? 1.0f : age < 6 ? 0.5f : 0.2f;
-//
-//            Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(point.getLat(), point.getLon())).title(title).icon(point.getType().getIcon()).alpha(alpha));
-//            accidents.put(marker.getId(), id);
-//        }
-//    }
-
     private void init(final Context context) {
         map.clear();
-        map.setMyLocationEnabled(true);
         map.getUiSettings().setMyLocationButtonEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
         map.setOnMarkerClickListener(marker -> {
@@ -152,11 +122,12 @@ public class MyGoogleMapManager implements MyMapManager {
             }
             return true;
         });
-        map.setOnMapLongClickListener(latLng -> {
-            String uri    = "geo:" + latLng.latitude + "," + latLng.longitude;
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-            context.startActivity(intent);
-        });
+        map.setOnMapLongClickListener(latLng -> Router.toExternalMap((Activity) context, latLng));
+    }
+
+    public void enableLocation() {
+        if (map == null) delayedAction.add(() -> map.setMyLocationEnabled(true));
+        else map.setMyLocationEnabled(true);
     }
 
     private void toDetails(Context context, int id) {
@@ -172,7 +143,7 @@ public class MyGoogleMapManager implements MyMapManager {
 
 
     private class DelayedAnimateToLocation implements DelayedAction {
-        Location location;
+        final Location location;
 
         DelayedAnimateToLocation(Location location) {
             this.location = location;
@@ -185,7 +156,7 @@ public class MyGoogleMapManager implements MyMapManager {
     }
 
     private class DelayedJumpToLocation implements DelayedAction {
-        Location location;
+        final Location location;
 
         DelayedJumpToLocation(Location location) {
             this.location = location;

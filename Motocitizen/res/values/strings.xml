@@ -37,7 +37,6 @@
     <string name="reported">Сообщил</string>
     <string name="activity_create_people_header">Что с людьми?</string>
     <string name="details">Краткое описание</string>
-    <string name="accListYesterdayLine">Вчера</string>
     <string name="settings_steal">Угоны</string>
     <string name="settings_other">Прочее</string>
     <string name="copy">Копировать</string>
@@ -47,7 +46,6 @@
     <string name="hide">Скрыть</string>
     <string name="notif_system">default system</string>
     <string name="notification_sound">Выбрать звук уведомления</string>
-    <string name="tab_accidents">События</string>
     <string name="tab_map">Карта</string>
     <string name="activity_main_add_point_button">Создать событие</string>
     <string name="dial_button">Звонок оператору</string>
@@ -74,7 +72,6 @@
     <string name="tab_messages">Сообщения</string>
     <string name="tab_log">История</string>
     <string name="share">Поделиться</string>
-    <string name="unknown_code_version">Не определено</string>
     <string name="code_version_prefix">Текущая версия</string>
     <string name="do_not_disturb">Не беспокоить</string>
     <string name="no_one_accident_visible">Никакие события показаны не будут</string>
@@ -108,5 +105,4 @@
     <string name="copy_coordinates">Скопировать координаты</string>
     <string name="coordinates_copied">координаты скопированы в буфер обмена</string>
     <string name="time_interval_short">%1$dч %2$dм</string>
-    <string name="title_activity_startup">StartupActivity</string>
 </resources>

@@ -19,6 +19,8 @@ import java.util.regex.Pattern;
 import motocitizen.main.R;
 
 public class MyUtils {
+
+
     public static LatLng LocationToLatLng(Location location) {
         return new LatLng(location.getLatitude(), location.getLongitude());
     }
@@ -49,8 +51,8 @@ public class MyUtils {
         return context.getResources().getString(R.string.time_interval_short, minutes / 60, minutes % 60);
     }
 
-    public static String getStringTime(Date date, boolean full) {
-        return full ? Const.FULL_TIME_FORMAT.format(date) : Const.TIME_FORMAT.format(date);
+    public static String getStringTime(Date date) {
+        return true ? DateUtils.getDateTime(date) : DateUtils.getTime(date);
     }
 
     public static int newId() {

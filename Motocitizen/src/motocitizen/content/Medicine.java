@@ -22,12 +22,9 @@ public enum Medicine {
         return Medicine.UNKNOWN;
     }
 
-    public String toCode() {
+    public String code() {
         return this.code;
     }
 
-    @Override
-    public String toString() {
-        return this.text;
-    }
+    public String string() {return text;}
 }

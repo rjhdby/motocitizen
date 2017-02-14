@@ -28,12 +28,11 @@ public enum HistoryAction {
         return HistoryAction.OTHER;
     }
 
-    @Override
-    public String toString() {
+    public String string() {
         return this.text;
     }
 
-    public String toCode() {
+    public String code() {
         return this.code;
     }
 }

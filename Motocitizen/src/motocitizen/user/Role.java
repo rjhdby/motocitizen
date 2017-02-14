@@ -1,6 +1,6 @@
 package motocitizen.user;
 
-public enum Role {
+enum Role {
     RO("readonly", "только чтение"),
     BANNED("banned", "забанен"),
     STANDARD("standart", "пользователь"),
@@ -16,27 +16,18 @@ public enum Role {
         this.text = text;
     }
 
-    public static Role parse(String role) {
+    static Role parse(String role) {
         for (Role a : Role.values()) {
             if (a.code.equals(role)) return a;
         }
         return RO;
     }
 
-    public boolean isStandard() {
-        return this.compareTo(STANDARD) >= 0;
-    }
+    boolean isStandard()  {return this.compareTo(STANDARD) >= 0;}
 
-    public boolean isModerator() {
-        return this.compareTo(MODERATOR) >= 0;
-    }
+    boolean isModerator() {return this.compareTo(MODERATOR) >= 0;}
 
-    public String getName() {
-        return this.text;
-    }
+    String getName()      {return this.text;}
 
-    public String getCode() {
-        return code;
-    }
-
+    String getCode()      {return code;}
 }

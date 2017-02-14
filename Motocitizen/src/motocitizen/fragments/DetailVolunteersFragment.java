@@ -143,14 +143,14 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
                 if (resultCode == Activity.RESULT_OK) {
                     sendOnway();
                 } else if (resultCode == Activity.RESULT_CANCELED) {
-                    // After Cancel code.
+                    // todo After Cancel code.
                 }
                 break;
             case DIALOG_CANCEL_ONWAY_CONFIRM:
                 if (resultCode == Activity.RESULT_OK) {
                     sendCancelOnway();
                 } else if (resultCode == Activity.RESULT_CANCELED) {
-                    // After Cancel code.
+                    // todo After Cancel code.
                 }
                 break;
             case DIALOG_ACC_NOT_ACTUAL:

@@ -5,32 +5,25 @@ import android.os.StrictMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-
 import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
 import motocitizen.user.User;
 import motocitizen.utils.Preferences;
 
 public class AuthRequest extends HTTPClient {
-    public AuthRequest() {
+
+    public AuthRequest(String login, String password) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
         post.put("calledMethod", Methods.AUTH.toCode());
         post.put("versionName", String.valueOf(Preferences.getInstance().getAppVersion()));
-    }
-
-    public void setLogin(String login) {
         post.put("login", login);
-    }
-
-    public void setPassword(String password) {
-        post.put("passwordHash", User.makePassHash(password));
+        post.put("passwordHash", User.getInstance().getPassHash(password));
     }
 
     public JSONObject execute() {
-        return super.request(post);
+        return request(post);
     }
 
     @Override
@@ -42,15 +35,8 @@ public class AuthRequest extends HTTPClient {
     public String getError(JSONObject response) {
         if (!response.has("id")) return "Ошибка соединения " + response.toString();
         try {
-            String result = response.getString("id");
-            if (result.equals("0")) {
-                return "Ошибка авторизации";
-            } else {
-                return "Успешная авторизация";
-            }
-        } catch (JSONException ignored) {
-
-        }
+            return response.getString("id").equals("0") ? "Ошибка авторизации" : "Успешная авторизация";
+        } catch (JSONException ignored) {}
         return "Неизвестная ошибка " + response.toString();
     }
 }

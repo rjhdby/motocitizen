@@ -10,14 +10,14 @@ import motocitizen.user.User;
 import motocitizen.utils.Preferences;
 
 public class SendMessageRequest extends HTTPClient {
-    @SuppressWarnings("unchecked")
     public SendMessageRequest(AsyncTaskCompleteListener listener, int id, String text) {
         this.listener = listener;
         post.put("login", Preferences.getInstance().getLogin());
-        post.put("passhash", User.getInstance().makePassHash());
+        post.put("passhash", User.getInstance().getPassHash());
         post.put("id", String.valueOf(id));
         post.put("text", text);
         post.put("calledMethod", Methods.MESSAGE.toCode());
+        //noinspection unchecked
         execute(post);
     }
 
@@ -33,8 +33,7 @@ public class SendMessageRequest extends HTTPClient {
     public String getError(JSONObject response) {
         if (!response.has("result")) return "Ошибка соединения " + response.toString();
         try {
-            String result = response.getString("result");
-            switch (result) {
+            switch (response.getString("result")) {
                 case "OK":
                     return "Сообщение отправлено";
                 case "ERROR":
@@ -42,9 +41,7 @@ public class SendMessageRequest extends HTTPClient {
                 case "READONLY":
                     return "Недостаточно прав";
             }
-        } catch (JSONException ignored) {
-
-        }
+        } catch (JSONException ignored) {}
         return "Неизвестная ошибка " + response.toString();
     }
 }

@@ -8,11 +8,11 @@ import motocitizen.network.Methods;
 import motocitizen.utils.Preferences;
 
 public class LeaveRequest extends HTTPClient {
-    @SuppressWarnings("unchecked")
     public LeaveRequest(int id) {
         post.put("login", Preferences.getInstance().getLogin());
         post.put("id", String.valueOf(id));
         post.put("m", Methods.LEAVE.toCode());
+        //noinspection unchecked
         execute(post);
     }
 
@@ -28,16 +28,8 @@ public class LeaveRequest extends HTTPClient {
     public String getError(JSONObject response) {
         if (!response.has("result")) return "Ошибка соединения " + response.toString();
         try {
-            String result = response.getString("result");
-            switch (result) {
-                case "OK":
-                    return "Статус изменен";
-                case "ERROR PREREQUISITES":
-                    return "Неизвестная ошибка" + response.toString();
-            }
-        } catch (JSONException ignored) {
-
-        }
+            if (response.getString("result").equals("OK")) return "Статус изменен";
+        } catch (JSONException ignored) {}
         return "Неизвестная ошибка " + response.toString();
     }
 }

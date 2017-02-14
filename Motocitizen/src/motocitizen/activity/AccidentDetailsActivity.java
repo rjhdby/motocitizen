@@ -1,7 +1,5 @@
 package motocitizen.activity;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -31,10 +29,10 @@ import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.AccidentChangeStateRequest;
 import motocitizen.router.Router;
 import motocitizen.user.User;
-import motocitizen.utils.Const;
+import motocitizen.utils.DateUtils;
 import motocitizen.utils.MyUtils;
 import motocitizen.utils.Preferences;
-import motocitizen.utils.ShowToast;
+import motocitizen.utils.ToastUtils;
 import motocitizen.utils.popups.AccidentListPopup;
 
 import static motocitizen.content.AccidentStatus.ACTIVE;
@@ -115,15 +113,15 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         //TODO Разобраться с nullPointerException и убрать костыль
         if (currentPoint == null || actionBar == null) return;
-        actionBar.setTitle(currentPoint.getType().toString() + ". " + currentPoint.getDistanceString());
+        actionBar.setTitle(currentPoint.getType().string() + ". " + currentPoint.getDistanceString());
 
         statusView.setVisibility(currentPoint.getStatus() == ACTIVE ? View.GONE : View.VISIBLE);
         medicineView.setVisibility(currentPoint.getMedicine() == Medicine.UNKNOWN ? View.GONE : View.VISIBLE);
 
-        ((TextView) findViewById(R.id.acc_details_general_type)).setText(currentPoint.getType().toString());
-        medicineView.setText("(" + currentPoint.getMedicine().toString() + ")");
-        statusView.setText(currentPoint.getStatus().toString());
-        ((TextView) findViewById(R.id.acc_details_general_time)).setText(Const.TIME_FORMAT.format(currentPoint.getTime()));
+        ((TextView) findViewById(R.id.acc_details_general_type)).setText(currentPoint.getType().string());
+        medicineView.setText("(" + currentPoint.getMedicine().string() + ")");
+        statusView.setText(currentPoint.getStatus().string());
+        ((TextView) findViewById(R.id.acc_details_general_time)).setText(DateUtils.getTime(currentPoint.getTime()));
         ((TextView) findViewById(R.id.acc_details_general_owner)).setText(currentPoint.getOwner());
         ((TextView) findViewById(R.id.acc_details_general_address)).setText(currentPoint.getAddress());
         ((TextView) findViewById(R.id.acc_details_general_distance)).setText(currentPoint.getDistanceString());
@@ -160,8 +158,8 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         currentPoint = Content.getInstance().get(accidentID);
         MenuItem finish = mMenu.findItem(R.id.menu_acc_finish);
         MenuItem hide   = mMenu.findItem(R.id.menu_acc_hide);
-        finish.setVisible(User.getInstance().getRole().isModerator());
-        hide.setVisible(User.getInstance().getRole().isModerator());
+        finish.setVisible(User.getInstance().isModerator());
+        hide.setVisible(User.getInstance().isModerator());
         finish.setTitle(R.string.finish);
         hide.setTitle(R.string.hide);
         switch (currentPoint.getStatus()) {
@@ -195,11 +193,8 @@ public class AccidentDetailsActivity extends AppCompatActivity {
                 jumpToMap();
                 return true;
             case R.id.action_share:
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, AccidentListPopup.getAccidentTextToCopy(currentPoint));
-                sendIntent.setType("text/plain");
-                startActivity(sendIntent);
+                //todo pornography
+                Router.share(this, AccidentListPopup.getAccidentTextToCopy(currentPoint));
                 return true;
             case R.id.action_hide_info:
             case R.id.menu_hide_info:
@@ -215,23 +210,17 @@ public class AccidentDetailsActivity extends AppCompatActivity {
                 return true;
         }
         if (item.getItemId() >= SMS_MENU_MIN_ID && item.getItemId() < SMS_MENU_MAX_ID) {
-            Intent intent    = new Intent(Intent.ACTION_VIEW);
             String smsPrefix = getString(R.string.send_sms);
             String number    = (String) item.getTitle();
-            //if (number.indexOf(smsPrefix) != -1)
             if (number.contains(smsPrefix))
                 number = number.substring(smsPrefix.length(), number.length());
-            intent.setData(Uri.parse("sms:" + number));
-            startActivity(intent);
+            Router.sms(this, number);
         } else if (item.getItemId() >= CALL_MENU_MIN_ID && item.getItemId() < CALL_MENU_MAX_ID) {
-            Intent intent     = new Intent(Intent.ACTION_DIAL);
             String callPrefix = getString(R.string.make_call);
             String number     = (String) item.getTitle();
-            //if (number.indexOf(callPrefix) != -1)
             if (number.contains(callPrefix))
                 number = number.substring(callPrefix.length(), number.length());
-            intent.setData(Uri.parse("tel:" + number));
-            startActivity(intent);
+            Router.dial(this, number);
         }
         return false;
     }
@@ -240,11 +229,11 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         if (Content.getInstance().get(accidentID).getStatus() == ENDED) {
             //TODO Суперкостыль
             accNewState = ACTIVE;
-            new AccidentChangeStateRequest(new AccidentChangeCallback(), accidentID, ACTIVE.toCode());
+            new AccidentChangeStateRequest(new AccidentChangeCallback(), accidentID, ACTIVE.code());
         } else {
             //TODO Суперкостыль
             accNewState = ENDED;
-            new AccidentChangeStateRequest(new AccidentChangeCallback(), accidentID, ENDED.toCode());
+            new AccidentChangeStateRequest(new AccidentChangeCallback(), accidentID, ENDED.code());
         }
     }
 
@@ -252,11 +241,11 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         if (Content.getInstance().get(accidentID).getStatus() == ENDED) {
             //TODO Суперкостыль
             accNewState = ACTIVE;
-            new AccidentChangeStateRequest(new AccidentChangeCallback(), accidentID, ACTIVE.toCode());
+            new AccidentChangeStateRequest(new AccidentChangeCallback(), accidentID, ACTIVE.code());
         } else {
             //TODO Суперкостыль
             accNewState = ENDED;
-            new AccidentChangeStateRequest(new AccidentChangeCallback(), accidentID, HIDDEN.toCode());
+            new AccidentChangeStateRequest(new AccidentChangeCallback(), accidentID, HIDDEN.code());
         }
     }
 
@@ -272,7 +261,7 @@ public class AccidentDetailsActivity extends AppCompatActivity {
                     e.printStackTrace();
                     error = "Неизвестная ошибка";
                 }
-                ShowToast.message(getBaseContext(), error);
+                ToastUtils.show(getBaseContext(), error);
             } else {
                 //TODO Суперкостыль
                 currentPoint.setStatus(accNewState);
@@ -298,8 +287,8 @@ public class AccidentDetailsActivity extends AppCompatActivity {
     public void jumpToMap() {
         Bundle bundle = new Bundle();
         bundle.putInt("toMap", currentPoint.getId());
-        bundle.putBoolean("fromDetails", true);
-        Router.goTo(this, Router.Target.MAIN,bundle);
+//        bundle.putBoolean("fromDetails", true);
+        Router.goTo(this, Router.Target.MAIN, bundle);
 //        finish();
     }
 

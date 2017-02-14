@@ -1,11 +1,9 @@
 package motocitizen.activity;
 
 import android.Manifest;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
@@ -24,6 +22,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.single.EmptyPermissionListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,10 +41,10 @@ import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.network.requests.CreateAccidentRequest;
 import motocitizen.user.User;
-import motocitizen.utils.Const;
+import motocitizen.utils.DateUtils;
 import motocitizen.utils.MyUtils;
 import motocitizen.utils.Preferences;
-import motocitizen.utils.ShowToast;
+import motocitizen.utils.ToastUtils;
 
 public class CreateAccActivity extends FragmentActivity implements View.OnClickListener {
     /* constants */
@@ -92,12 +93,12 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             accident.put("lon", initialLocation.getLongitude());
             accident.put("owner_id", Preferences.getInstance().getUserId());
             accident.put("owner", Preferences.getInstance().getUserName());
-            accident.put("status", AccidentStatus.ACTIVE.toCode());
+            accident.put("status", AccidentStatus.ACTIVE.code());
             accident.put("uxtime", String.valueOf(System.currentTimeMillis() / 1000L));
             accident.put("address", "");
             accident.put("descr", "");
-            accident.put("type", Type.OTHER.toCode());
-            accident.put("med", Medicine.UNKNOWN.toCode());
+            accident.put("type", Type.OTHER.code());
+            accident.put("med", Medicine.UNKNOWN.code());
             accident.put("m", new JSONArray("[]"));
             accident.put("h", new JSONArray("[]"));
             accident.put("v", new JSONArray("[]"));
@@ -108,9 +109,14 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     }
 
     private void enableMyLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-            || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-            map.setMyLocationEnabled(true);
+        Dexter.withActivity(this)
+              .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+              .withListener(new EmptyPermissionListener() {
+                  @Override
+                  public void onPermissionGranted(PermissionGrantedResponse response) {
+                      map.setMyLocationEnabled(true);
+                  }
+              }).check();
     }
 
     private class OnMapCreated implements OnMapReadyCallback {
@@ -118,30 +124,27 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         @Override
         public void onMapReady(GoogleMap googleMap) {
             map = googleMap;
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(accident.getLocation()), 16));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(accident.getLocation()), 16));
             enableMyLocation();
             map.getUiSettings().setMyLocationButtonEnabled(true);
             map.getUiSettings().setZoomControlsEnabled(true);
-            if (!User.getInstance().getRole().isModerator()) {
+            if (!User.getInstance().isModerator()) {
                 CircleOptions circleOptions = new CircleOptions().center(MyUtils.LocationToLatLng(initialLocation)).radius(RADIUS).fillColor(0x20FF0000);
                 map.addCircle(circleOptions);
-                map.setOnCameraMoveCanceledListener(new GoogleMap.OnCameraMoveCanceledListener() {
-                    @Override
-                    public void onCameraMoveCanceled() {
-                        Button mcCreateFineAddressConfirm = (Button) findViewById(R.id.ADDRESS);
-                        mcCreateFineAddressConfirm.setEnabled(false);
-                        if (initialLocation == null) return;
-                        double distance = MyUtils.LatLngToLocation(map.getCameraPosition().target).distanceTo(initialLocation);
-                        mcCreateFineAddressConfirm.setEnabled(distance < RADIUS);
-                    }
+                map.setOnCameraMoveCanceledListener(() -> {
+                    Button mcCreateFineAddressConfirm = (Button) findViewById(R.id.ADDRESS);
+                    mcCreateFineAddressConfirm.setEnabled(false);
+                    if (initialLocation == null) return;
+                    double distance = MyUtils.LatLngToLocation(map.getCameraPosition().target).distanceTo(initialLocation);
+                    mcCreateFineAddressConfirm.setEnabled(distance < RADIUS);
                 });
             }
             map.clear();
             for (int id : Content.getInstance().keySet()) {
                 motocitizen.accident.Accident point = Content.getInstance().get(id);
                 if (point.isInvisible()) continue;
-                String title = point.getType().toString();
-                title += point.getMedicine() == Medicine.NO ? "" : ", " + point.getMedicine().toString();
+                String title = point.getType().string();
+                title += point.getMedicine() == Medicine.NO ? "" : ", " + point.getMedicine().string();
                 title += ", " + MyUtils.getIntervalFromNowInText(getApplicationContext(), point.getTime()) + " назад";
 
                 float alpha;
@@ -166,7 +169,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     }
 
     private void setComplete() {
-        this.complete = accident.isAccident() || accident.getDescription().length() > 6;
+        complete = accident.isAccident() || accident.getDescription().length() > 6;
         setConfirm(isComplete());
     }
 
@@ -178,12 +181,12 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     }
 
     private void refreshDescription() {
-        String text = accident.getType().toString();
-        text += accident.getMedicine() == Medicine.UNKNOWN ? "" : ". " + accident.getMedicine().toString();
+        String text = accident.getType().string();
+        text += accident.getMedicine() == Medicine.UNKNOWN ? "" : ". " + accident.getMedicine().string();
         ((TextView) findViewById(R.id.create_what)).setText(text);
         ((TextView) findViewById(R.id.create_who)).setText(Preferences.getInstance().getLogin());
         ((TextView) findViewById(R.id.create_where)).setText(accident.getAddress());
-        ((TextView) findViewById(R.id.create_when)).setText(Const.DATE_FORMAT.format(accident.getTime()));
+        ((TextView) findViewById(R.id.create_when)).setText(DateUtils.getDateTime(accident.getTime()));
     }
 
     private void setupListener() {
@@ -309,9 +312,10 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         CreateAccidentRequest request = new CreateAccidentRequest(result -> {
             if (!result.has("error")) {
                 finish();
+            } else {
+                ToastUtils.show(getBaseContext(), result.optString("error", "Неизвестная ошибка"));
+                enableConfirm();
             }
-            ShowToast.message(getBaseContext(), result.optString("error", "Неизвестная ошибка"));
-            enableConfirm();
         });
         request.setType(accident.getType());
         request.setMed(accident.getMedicine());
@@ -320,6 +324,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         request.setDescription(accident.getDescription());
         request.setCreated(accident.getTime());
         if (((CheckBox) findViewById(R.id.forStat)).isChecked()) request.setForStat();
+        //noinspection unchecked
         request.execute();
     }
 

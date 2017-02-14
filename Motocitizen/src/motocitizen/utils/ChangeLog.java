@@ -6,9 +6,7 @@ package motocitizen.utils;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.webkit.WebView;
 
@@ -20,56 +18,35 @@ import java.io.InputStreamReader;
 import motocitizen.main.R;
 
 public class ChangeLog {
-    /* constants */
-    private static final String EOCL = "END_OF_CHANGE_LOG";
-    /* end constants */
+    private static final byte LIST_NONE      = 0;
+    private static final byte LIST_ORDERED   = 1;
+    private static final byte LIST_UNORDERED = 2;
 
-    private static StringBuffer sb;
-    private static ListMode     currentListMode;
-
-    static {
-        sb = null;
-        currentListMode = ListMode.NONE;
-    }
+    private static StringBuffer sb              = new StringBuffer();
+    private static byte         currentListMode = LIST_NONE;
 
     public static AlertDialog getDialog(Context context) {
         WebView wv = new WebView(context);
 
         wv.setBackgroundColor(Color.BLACK);
-        wv.loadDataWithBaseURL(null, getLog(context, true), "text/html", "UTF-8", null);
-        Log.d("LOG", wv.toString());
+        wv.loadDataWithBaseURL(null, getLog(context), "text/html", "UTF-8", null);
         AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, android.R.style.Theme_Dialog));
-        builder.setTitle("Что нового").setView(wv).setCancelable(false).setPositiveButton("ОК", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
+        builder.setTitle("Что нового").setView(wv).setCancelable(false).setPositiveButton("ОК", (dialog, which) -> {});
         return builder.create();
     }
 
-    public static String getLog(Context context, boolean full) {
-        String lastVersion = String.valueOf(Preferences.getInstance().getAppVersion());
-        sb = new StringBuffer();
+    public static String getLog(Context context) {
         try {
             InputStream    ins = context.getResources().openRawResource(R.raw.changelog);
             BufferedReader br  = new BufferedReader(new InputStreamReader(ins));
 
-            String  line;
-            boolean advanceToEOVS = false;
+            String line;
             while ((line = br.readLine()) != null) {
                 line = line.trim();
                 char marker = line.length() > 0 ? line.charAt(0) : 0;
                 if (marker == '$') {
                     closeList();
-                    String version = line.substring(1).trim();
-                    // stop output?
-                    if (!full) {
-                        if (lastVersion.equals(version)) {
-                            advanceToEOVS = true;
-                        } else if (version.equals(EOCL)) {
-                            advanceToEOVS = false;
-                        }
-                    }
-                } else if (!advanceToEOVS) {
+                } else {
                     switch (marker) {
                         case '%':
                             // line contains version title
@@ -88,12 +65,12 @@ public class ChangeLog {
                             break;
                         case '#':
                             // line contains numbered list item
-                            openList(ListMode.ORDERED);
+                            openList(LIST_ORDERED);
                             sb.append("<li>").append(line.substring(1).trim()).append("</li>\n");
                             break;
                         case '*':
                             // line contains bullet list item
-                            openList(ListMode.UNORDERED);
+                            openList(LIST_UNORDERED);
                             sb.append("<li>").append(line.substring(1).trim()).append("</li>\n");
                             break;
                         default:
@@ -111,12 +88,12 @@ public class ChangeLog {
         return sb.toString();
     }
 
-    private static void openList(ListMode listMode) {
+    private static void openList(byte listMode) {
         if (currentListMode != listMode) {
             closeList();
-            if (listMode == ListMode.ORDERED) {
+            if (listMode == LIST_ORDERED) {
                 sb.append("<div class='list'><ol>\n");
-            } else if (listMode == ListMode.UNORDERED) {
+            } else if (listMode == LIST_UNORDERED) {
                 sb.append("<div class='list'><ul>\n");
             }
         }
@@ -125,19 +102,13 @@ public class ChangeLog {
 
     private static void closeList() {
         switch (currentListMode) {
-            case ORDERED:
+            case LIST_ORDERED:
                 sb.append("</ol></div>\n");
                 break;
-            case UNORDERED:
+            case LIST_UNORDERED:
                 sb.append("</ul></div>\n");
                 break;
         }
-        currentListMode = ListMode.NONE;
-    }
-
-    private enum ListMode {
-        NONE,
-        ORDERED,
-        UNORDERED,
+        currentListMode = LIST_NONE;
     }
 }

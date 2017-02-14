@@ -26,7 +26,7 @@ public class HistoryRow extends LinearLayout {
         }
         ownerView.setText(history.getOwner());
         ((TextView) this.findViewById(R.id.text)).setText(history.getActionString());
-        ((TextView) this.findViewById(R.id.date)).setText(MyUtils.getStringTime(history.getTime(), true));
+        ((TextView) this.findViewById(R.id.date)).setText(MyUtils.getStringTime(history.getTime()));
     }
 
     public HistoryRow(Context context) {

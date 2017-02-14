@@ -14,7 +14,6 @@ import motocitizen.utils.Preferences;
 public class AccidentsRequest extends HTTPClient {
     private boolean silent;
 
-    @SuppressWarnings("unchecked")
     public AccidentsRequest(AsyncTaskCompleteListener listener, boolean silent) {
         this.silent = silent;
         this.listener = listener;
@@ -27,6 +26,7 @@ public class AccidentsRequest extends HTTPClient {
         post.put("lon", String.valueOf(location.getLongitude()));
         post.put("age", String.valueOf(Preferences.getInstance().getHoursAgo()));
         post.put("m", Methods.GET_LIST.toCode());
+        //noinspection unchecked
         execute(post);
     }
 
@@ -48,17 +48,8 @@ public class AccidentsRequest extends HTTPClient {
         if (!response.has("list")) return "Ошибка соединения " + response.toString();
         try {
             JSONObject json = response.getJSONArray("list").getJSONObject(0);
-            if (json.has("error")) {
-                String error = json.getString("error");
-                if (error.equals("no_new")) {
-                    return "Нет новых сообщений";
-                }
-            } else {
-                return "Список обновлен";
-            }
-        } catch (JSONException ignored) {
-
-        }
+            return json.has("error") && json.getString("error").equals("no_new") ? "Нет новых сообщений" : "Список обновлен";
+        } catch (JSONException ignored) {}
         return "Неизвестная ошибка " + response.toString();
     }
 }

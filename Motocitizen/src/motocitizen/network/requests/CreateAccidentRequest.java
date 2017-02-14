@@ -13,7 +13,7 @@ import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
 import motocitizen.user.User;
-import motocitizen.utils.Const;
+import motocitizen.utils.DateUtils;
 import motocitizen.utils.Preferences;
 
 public class CreateAccidentRequest extends HTTPClient {
@@ -23,12 +23,7 @@ public class CreateAccidentRequest extends HTTPClient {
         post.put("calledMethod", Methods.CREATE.toCode());
         post.put("owner_id", String.valueOf(User.getInstance().getId()));
         post.put("login", Preferences.getInstance().getLogin());
-        post.put("passhash", User.getInstance().makePassHash());
-    }
-
-    @SuppressWarnings("unchecked")
-    public void execute() {
-        super.execute(post);
+        post.put("passhash", User.getInstance().getPassHash());
     }
 
     public void setLocation(Location location) {
@@ -41,7 +36,7 @@ public class CreateAccidentRequest extends HTTPClient {
     }
 
     public void setType(Type type) {
-        post.put("type", type.toCode());
+        post.put("type", type.code());
     }
 
     public void setAddress(String address) {
@@ -53,11 +48,11 @@ public class CreateAccidentRequest extends HTTPClient {
     }
 
     public void setCreated(Date created) {
-        post.put("created", Const.DATE_FORMAT.format(created));
+        post.put("created", DateUtils.getDbFormat(created));
     }
 
     public void setMed(Medicine medicine) {
-        post.put("med", medicine.toCode());
+        post.put("med", medicine.code());
     }
 
     @Override

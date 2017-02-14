@@ -9,7 +9,7 @@ import motocitizen.router.Router;
 import motocitizen.user.User;
 import motocitizen.utils.Const;
 import motocitizen.utils.Preferences;
-import motocitizen.utils.ShowToast;
+import motocitizen.utils.ToastUtils;
 
 public class SettingsFragment extends PreferenceFragment {
     private Preference     notificationDistPreference;
@@ -24,7 +24,7 @@ public class SettingsFragment extends PreferenceFragment {
                 && Preferences.getInstance().hideBreaks()
                 && Preferences.getInstance().hideOthers()
                 && Preferences.getInstance().hideSteals()) {
-                ShowToast.message(getActivity(), getString(R.string.no_one_accident_visible));
+                ToastUtils.show(getActivity(), getString(R.string.no_one_accident_visible));
             }
             update();
             return false;
@@ -56,7 +56,7 @@ public class SettingsFragment extends PreferenceFragment {
         Preference notificationSoundPreference = findPreference(getResources().getString(R.string.notification_sound));
         Preference authPreference              = findPreference(getResources().getString(R.string.settings_auth_button));
 
-        authPreference.setSummary(login.length() > 0 ? User.getInstance().getRole().getName() + ": " + login : User.getInstance().getRole().getName());
+        authPreference.setSummary(login.length() > 0 ? User.getInstance().getRoleName() + ": " + login : User.getInstance().getRoleName());
         maxNotifications.setSummary(String.valueOf(Preferences.getInstance().getMaxNotifications()));
         hoursAgo.setSummary(String.valueOf(Preferences.getInstance().getHoursAgo()));
         notificationSoundPreference.setSummary(Preferences.getInstance().getAlarmSoundTitle());

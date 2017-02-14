@@ -20,14 +20,16 @@ import motocitizen.utils.Preferences;
 
 public class MainScreenActivity extends AppCompatActivity {
 
-    private static ActionBar actionBar;
+    private static ActionBar          actionBar;
+    private        MainScreenFragment mainFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_screen_activity);
         actionBar = getSupportActionBar();
-        getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, new MainScreenFragment()).commit();
+        mainFragment = new MainScreenFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, mainFragment).commit();
     }
 
     @Override
@@ -55,6 +57,10 @@ public class MainScreenActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        if (intent.hasExtra("toMap")) {
+            mainFragment.toMap(intent.getExtras().getInt("toMap", 0));
+            intent.removeExtra("toMap");
+        }
         setIntent(intent);
     }
 
