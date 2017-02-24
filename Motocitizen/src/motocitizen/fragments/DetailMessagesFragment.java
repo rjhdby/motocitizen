@@ -35,6 +35,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
     private EditText  mcNewMessageText;
     private View      newMessageArea;
     private ViewGroup messagesTable;
+    private boolean transaction = false;
 
     public DetailMessagesFragment() {
     }
@@ -110,6 +111,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
             } else {
                 Content.getInstance().requestUpdate(new UpdateAccidentsCallback());
             }
+            transaction = false;
             newMessageButton.setEnabled(true);
         }
     }
@@ -131,6 +133,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (transaction) return;
             String temp = s.toString().replaceAll("\\s", "");
             if (temp.length() == 0) {
                 newMessageButton.setEnabled(false);
@@ -147,9 +150,11 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
     private class SendMessageClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
+            if (transaction) return;
+            transaction = true;
             String text = mcNewMessageText.getText().toString();
-            new SendMessageRequest(new SendMessageCallback(), accidentID, text);
             newMessageButton.setEnabled(false);
+            new SendMessageRequest(new SendMessageCallback(), accidentID, text);
         }
     }
 

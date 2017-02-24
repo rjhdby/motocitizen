@@ -125,6 +125,7 @@ public class MyGoogleMapManager implements MyMapManager {
         map.setOnMapLongClickListener(latLng -> Router.toExternalMap((Activity) context, latLng));
     }
 
+    @SuppressWarnings({"MissingPermission"})
     public void enableLocation() {
         if (map == null) delayedAction.add(() -> map.setMyLocationEnabled(true));
         else map.setMyLocationEnabled(true);

@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="motocitizen.main"
+<manifest xmlns:tools="http://schemas.android.com/tools"
+          package="motocitizen.main"
           xmlns:android="http://schemas.android.com/apk/res/android"
-          android:versionCode="984"
-          android:versionName="0.9.84">
+          android:versionCode="987"
+          android:versionName="0.9.87">
 
     <uses-sdk
-        android:minSdkVersion="16"
+        android:minSdkVersion="15"
         android:targetSdkVersion="25"/>
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.BATTERY_STATS"/>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <!--<uses-permission android:name="android.permission.BATTERY_STATS"/>-->
+    <!--<uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>-->
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <!--<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>-->
+    <!--<uses-permission android:name="android.permission.READ_PHONE_STATE"/>-->
+    <!--<uses-permission android:name="android.permission.CALL_PHONE"/>-->
     <!--<uses-permission android:name="android.permission.GET_ACCOUNTS"/>-->
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
@@ -80,7 +81,8 @@
             android:parentActivityName="motocitizen.activity.MainScreenActivity"
             android:screenOrientation="portrait"
             android:noHistory="true"
-            android:theme="@style/Theme.AppCompat">
+            android:theme="@style/Theme.AppCompat"
+            tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="motocitizen.activity.MainScreenActivity"/>
@@ -96,7 +98,8 @@
             android:label="@string/title_activity_create_acc"
             android:parentActivityName="motocitizen.activity.MainScreenActivity"
             android:noHistory="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="motocitizen.activity.MainScreenActivity"/>
@@ -106,7 +109,8 @@
             android:parentActivityName="motocitizen.activity.MainScreenActivity"
             android:screenOrientation="portrait"
             android:noHistory="true"
-            android:theme="@style/Theme.AppCompat">
+            android:theme="@style/Theme.AppCompat"
+            tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="motocitizen.activity.MainScreenActivity"/>
@@ -115,7 +119,8 @@
             android:name="motocitizen.activity.SettingsActivity"
             android:parentActivityName="motocitizen.activity.MainScreenActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat">
+            android:theme="@style/Theme.AppCompat"
+            tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="motocitizen.activity.MainScreenActivity"/>
@@ -125,7 +130,8 @@
             android:label="@string/title_activity_business_card"
             android:noHistory="true"
             android:parentActivityName="motocitizen.activity.AboutActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="motocitizen.activity.AboutActivity"/>

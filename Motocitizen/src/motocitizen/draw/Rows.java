@@ -58,8 +58,9 @@ public class Rows {
                 ((TextView) accRow.findViewById(R.id.accident_row_content)).setTextColor(0x30FFFFFF);
         }
 
-        ((TextView) accRow.findViewById(R.id.accident_row_content)).setText(generalText + " \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0");
+        ((TextView) accRow.findViewById(R.id.accident_row_content)).setText(context.getResources().getString(R.string.accident_row_content, generalText));
         ((TextView) accRow.findViewById(R.id.accident_row_time)).setText(MyUtils.getIntervalFromNowInText(context, accident.getTime()));
+        //noinspection deprecation
         ((TextView) accRow.findViewById(R.id.accident_row_unread)).setText(Html.fromHtml(msgText));
 
         int rowId = MyUtils.newId();

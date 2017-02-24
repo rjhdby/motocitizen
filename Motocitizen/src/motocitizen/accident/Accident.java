@@ -29,23 +29,23 @@ public class Accident {
     private static final String[] prerequisites = { "id", "owner_id", "owner", "status", "uxtime", "address", "descr", "lat", "lon", "type", "med", "m", "h", "v" };
 
     private int                      id;
-    private int                      ownerId;
-    private double                   lat;
-    private double                   lon;
-    private boolean                  self;
-    private boolean                  noError;
-    private boolean                  favorite;
-    private Integer                  rowId;
-    private String                   owner;
-    private String                   address;
-    private String                   description;
-    private Date                     time;
-    private SortedHashMap<Message>   messages;
-    private SortedHashMap<Volunteer> volunteers;
-    private SortedHashMap<History>   history;
-    private AccidentStatus           status;
-    private Type                     type;
-    private Medicine                 medicine;
+    private       int                      ownerId;
+    private       double                   lat;
+    private       double                   lon;
+    private       boolean                  self;
+    private       boolean                  noError;
+//    private boolean                  favorite;
+//    private Integer                  rowId;
+    private       String                   owner;
+    private       String                   address;
+    private       String                   description;
+    private       Date                     time;
+    private final SortedHashMap<Message>   messages;
+    private final SortedHashMap<Volunteer> volunteers;
+    private final SortedHashMap<History>   history;
+    private       AccidentStatus           status;
+    private       Type                     type;
+    private       Medicine                 medicine;
 
     {
         messages = new SortedHashMap<>();
@@ -258,9 +258,9 @@ public class Accident {
         return !noError;
     }
 
-    public void setRowId(Integer rowId) {
-        this.rowId = rowId;
-    }
+//    public void setRowId(Integer rowId) {
+//        this.rowId = rowId;
+//    }
 
     public SortedHashMap<Message> getMessages() {
         return messages;
@@ -288,7 +288,7 @@ public class Accident {
     }
 
     public boolean isAccident() {
-        return getType() == Type.MOTO_AUTO || getType() == Type.MOTO_MOTO || getType() == Type.MOTO_MAN;
+        return getType() == Type.MOTO_AUTO || getType() == Type.MOTO_MOTO || getType() == Type.MOTO_MAN || getType() == Type.SOLO;
     }
 
 }

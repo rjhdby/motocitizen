@@ -52,7 +52,7 @@ public class MyUtils {
     }
 
     public static String getStringTime(Date date) {
-        return true ? DateUtils.getDateTime(date) : DateUtils.getTime(date);
+        return DateUtils.getDateTime(date);
     }
 
     public static int newId() {

@@ -48,7 +48,7 @@ import motocitizen.utils.ToastUtils;
 
 public class CreateAccActivity extends FragmentActivity implements View.OnClickListener {
     /* constants */
-    private static final int RADIUS      = 1000;
+    private static final int RADIUS      = 2000;
     private static final int TYPE        = R.id.create_type_frame;
     private static final int DESCRIPTION = R.id.create_final_frame;
     private static final int ACCIDENT    = R.id.create_acc_frame;
@@ -107,7 +107,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         }
         return new Accident(accident);
     }
-
+    @SuppressWarnings({"MissingPermission"})
     private void enableMyLocation() {
         Dexter.withActivity(this)
               .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)

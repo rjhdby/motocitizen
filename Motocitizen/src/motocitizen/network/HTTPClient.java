@@ -23,11 +23,11 @@ abstract public class HTTPClient extends AsyncTask<Map<String, String>, Integer,
 
     private   ProgressDialog            dialog;
     protected AsyncTaskCompleteListener listener;
-    protected Map<String, String> post     = new HashMap<>();
-    protected JSONObject          response = new JSONObject();
+    protected final Map<String, String> post     = new HashMap<>();
+    protected       JSONObject          response = new JSONObject();
 //    protected JSONObject          error    = new JSONObject();
 
-    private Map<String, String> fake = new HashMap<>(1);
+    private final Map<String, String> fake = new HashMap<>(1);
 
     @SafeVarargs
     @Override

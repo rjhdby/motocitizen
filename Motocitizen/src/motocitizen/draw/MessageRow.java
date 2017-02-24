@@ -1,5 +1,6 @@
 package motocitizen.draw;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import motocitizen.user.User;
 import motocitizen.main.R;
 import motocitizen.utils.DateUtils;
 
+@SuppressLint("ViewConstructor")
 public class MessageRow extends FrameLayout {
 
     public MessageRow(Context context, final Message message, int last, int next) {

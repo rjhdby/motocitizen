@@ -32,6 +32,7 @@
         android:indeterminate="false"/>
 
     <ImageView
+        android:contentDescription=""
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@mipmap/ic_launcher"

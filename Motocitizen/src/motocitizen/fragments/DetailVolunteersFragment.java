@@ -1,5 +1,6 @@
 package motocitizen.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
@@ -102,6 +103,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         onwayDisabledButton.setVisibility(id == Content.getInstance().getInPlaceId() && active ? View.VISIBLE : View.GONE);
     }
 
+    @SuppressLint("CommitTransaction")
     private void showDialog(int type) {
         mStackLevel++;
         FragmentTransaction ft   = getActivity().getFragmentManager().beginTransaction();

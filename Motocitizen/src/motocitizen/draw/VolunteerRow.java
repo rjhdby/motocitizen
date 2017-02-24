@@ -1,5 +1,6 @@
 package motocitizen.draw;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.widget.TableRow;
@@ -9,6 +10,7 @@ import motocitizen.accident.Volunteer;
 import motocitizen.main.R;
 import motocitizen.utils.DateUtils;
 
+@SuppressLint("ViewConstructor")
 public class VolunteerRow extends TableRow {
     public VolunteerRow(Context context, Volunteer volunteer) {
         super(context);

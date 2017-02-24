@@ -87,7 +87,7 @@ class NormalLocationManager implements SecuredLocationManagerInterface {
         if (current != null && current.getTime() - (new Date()).getTime() < 30000) return current;
         return getLocation();
     }
-
+    @SuppressWarnings({"MissingPermission"})
     public Location getLocation() {
         if (googleApiClient != null) {
             current = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
@@ -101,7 +101,7 @@ class NormalLocationManager implements SecuredLocationManagerInterface {
         }
         return current;
     }
-
+    @SuppressWarnings({"MissingPermission"})
     private void runLocationService(Context context, int accuracy) {
         setup();
         locationRequest = getProvider(accuracy);
@@ -192,7 +192,7 @@ class NormalLocationManager implements SecuredLocationManagerInterface {
         }
         return res.toString();
     }
-
+    @SuppressWarnings({"MissingPermission"})
     private class MyConnectionCallback implements GoogleApiClient.ConnectionCallbacks {
         @Override
         public void onConnected(Bundle connectionHint) {
