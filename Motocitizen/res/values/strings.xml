@@ -10,7 +10,7 @@
     <string name="small_menu_settings">Настройки</string>
     <string name="small_menu_exit">Выйти</string>
     <string name="settings_auth_button">Авторизация</string>
-    <string name="activity_auth_header">Для авторизации необходимо ввести логин и пароль такие же как и для захода на <a href="http://motodtp.info/">motodtp.info</a>. <a href="http://forum.moto.msk.ru/index.php?app=core&amp;module=global&amp;section=register">Регистрация</a>.</string>
+    <string name="activity_auth_header">Для авторизации необходимо ввести логин и пароль такие же как и для захода на <a href="http://motodtp.info/">motodtp.info</a>. <a href="http://motodtp.info/index.php?app=core&amp;module=global&amp;section=register">Регистрация</a>.</string>
     <string name="activity_auth_login">Логин</string>
     <string name="activity_auth_password">Пароль</string>
     <string name="activity_auth_anonim_label">Анонимно</string>
