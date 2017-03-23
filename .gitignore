@@ -1,4 +1,9 @@
-.idea
+/bin/
+/gen/
+/.settings/
+/build/
+/.gradle/
+/.idea/
 #Ignore thumbnails created by Windows
 Thumbs.db
 #Ignore files built by Visual Studio
@@ -20,7 +25,6 @@ Thumbs.db
 *.ilk
 *.log
 [Bb]in
-[Dd]ebug*/
 *.lib
 *.sbr
 obj/
@@ -30,11 +34,16 @@ _ReSharper*/
 .vs/
 #Nuget packages folder
 packages/
-build
-.gradle
 local.properties
-gradle/wrapper/gradle-wrapper.jar
-gradle/wrapper/gradle-wrapper.properties
 gradlew
 gradlew.bat
 motocitizen.iml
+.DS_Store
+res/.DS_Store
+res/drawable-hdpi/.DS_Store
+res/drawable-xhdpi/.DS_Store
+res/mipmap-xxxhdpi/.DS_Store
+google-services.json
+gradle/
+motocitizen-release.apk
+projectFilesBackup/
