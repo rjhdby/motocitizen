@@ -10,6 +10,6 @@ public class TokenReceiver extends FirebaseInstanceIdService {
     @Override
     public void onTokenRefresh() {
 //        super.onTokenRefresh();
-        Log.d("TOKEN", FirebaseInstanceId.getInstance().getToken());
+        Log.e("TOKEN", FirebaseInstanceId.getInstance().getToken());
     }
 }

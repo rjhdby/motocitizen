@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -40,8 +41,8 @@ public class StartupActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if(FirebaseInstanceId.getInstance().getToken()==null)Log.d("TOKEN","TOKEN NULL");
-        Log.d("TOKEN", FirebaseInstanceId.getInstance().getToken()+"TOKEN");
+        Log.e("TOKEN", FirebaseInstanceId.getInstance().getToken());
+
         Preferences.init(this);
         DbOpenHelper.init(this);
         MyGeoCoder.init(this);
@@ -49,6 +50,7 @@ public class StartupActivity extends AppCompatActivity {
         Content.init();
         new GCMRegistration(this);
         new GCMBroadcastReceiver();
+        FirebaseMessaging.getInstance().subscribeToTopic("accidents");
         Dexter.withActivity(this)
               .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
               .withListener(new EmptyPermissionListener() {

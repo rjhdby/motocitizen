@@ -10,9 +10,7 @@ import java.util.Map;
 public class NotificationListener extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-//        super.onMessageReceived(remoteMessage);
-        String from = remoteMessage.getFrom();
-        Map    data = remoteMessage.getData();
-        Log.d("NOTIFICATION", from);
+        Map data = remoteMessage.getData();
+        Log.e("NOTIFICATION", data.get("d").toString());
     }
 }
