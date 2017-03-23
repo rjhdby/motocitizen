@@ -119,7 +119,12 @@ public class MainScreenFragment extends Fragment implements MyFragmentInterface 
         if (inTransaction) return;
         if (MyApp.isOnline(getContext())) {
             startRefreshAnimation();
-            Content.getInstance().requestUpdate(new AccidentsRequestCallback());
+            Content.getInstance().requestUpdate(result -> {
+                if (!result.has("error")) Content.getInstance().parseJSON(result);
+                if (!isVisible()) return;
+                stopRefreshAnimation();
+                redraw();
+            });
         } else {
             Toast.makeText(getActivity(), getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
         }
@@ -138,16 +143,6 @@ public class MainScreenFragment extends Fragment implements MyFragmentInterface 
 
     private void startRefreshAnimation() {
         setRefreshAnimation(true);
-    }
-
-    private class AccidentsRequestCallback implements AsyncTaskCompleteListener {
-
-        public void onTaskComplete(JSONObject result) {
-            if (!result.has("error")) Content.getInstance().parseJSON(result);
-            if (!isVisible()) return;
-            stopRefreshAnimation();
-            redraw();
-        }
     }
 
     @Override

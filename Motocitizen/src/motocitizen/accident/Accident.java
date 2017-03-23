@@ -28,14 +28,12 @@ import static motocitizen.content.AccidentStatus.HIDDEN;
 public class Accident {
     private static final String[] prerequisites = { "id", "owner_id", "owner", "status", "uxtime", "address", "descr", "lat", "lon", "type", "med", "m", "h", "v" };
 
-    private int                      id;
+    private       int                      id;
     private       int                      ownerId;
     private       double                   lat;
     private       double                   lon;
     private       boolean                  self;
     private       boolean                  noError;
-//    private boolean                  favorite;
-//    private Integer                  rowId;
     private       String                   owner;
     private       String                   address;
     private       String                   description;

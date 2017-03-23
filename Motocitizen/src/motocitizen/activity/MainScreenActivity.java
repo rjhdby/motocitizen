@@ -61,6 +61,9 @@ public class MainScreenActivity extends AppCompatActivity {
             mainFragment.toMap(intent.getExtras().getInt("toMap", 0));
             intent.removeExtra("toMap");
         }
+        if (intent.hasExtra("toDetails")) {
+            intent.removeExtra("toDetails");
+        }
         setIntent(intent);
     }
 
