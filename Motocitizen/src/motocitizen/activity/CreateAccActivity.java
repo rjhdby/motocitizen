@@ -1,6 +1,8 @@
 package motocitizen.activity;
 
 import android.Manifest;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -21,6 +24,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
@@ -30,7 +34,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import motocitizen.accident.Accident;
 import motocitizen.content.AccidentStatus;
@@ -63,6 +70,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     private GoogleMap map;
     private Button    confirmButton;
     private Location  initialLocation;
+    private EditText  searchEditText;
 
     {
         confirmLock = false;
@@ -79,6 +87,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         confirmButton = (Button) findViewById(R.id.CREATE);
         EditText createFinalText = (EditText) findViewById(R.id.create_final_text);
         createFinalText.addTextChangedListener(new FinalTextWatcher());
+        searchEditText = (EditText) findViewById(R.id.SearchEditText);
 
         setUpScreen(MAP);
         refreshDescription();
@@ -129,6 +138,11 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             map.getUiSettings().setMyLocationButtonEnabled(true);
             map.getUiSettings().setZoomControlsEnabled(true);
             if (!User.getInstance().isModerator()) {
+                //Прячем кнопки поиска адреса
+                searchEditText.setVisibility(View.GONE);
+                Button searchButton = (Button) findViewById(R.id.SEARCH);
+                searchButton.setVisibility(View.GONE);
+
                 CircleOptions circleOptions = new CircleOptions().center(MyUtils.LocationToLatLng(initialLocation)).radius(RADIUS).fillColor(0x20FF0000);
                 map.addCircle(circleOptions);
                 map.setOnCameraMoveCanceledListener(() -> {
@@ -206,7 +220,8 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                           R.id.ADDRESS,
                           R.id.CREATE,
                           R.id.CANCEL,
-                          R.id.BACK };
+                          R.id.BACK,
+                          R.id.SEARCH };
         for (int id : ids) findViewById(id).setOnClickListener(this);
     }
 
@@ -266,6 +281,21 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 break;
             case R.id.BACK:
                 backButton();
+                break;
+            case R.id.SEARCH:
+                String addressForSearch= searchEditText.getText().toString();
+                Geocoder geoCoder = new Geocoder(this, Locale.getDefault());
+                try {
+                    List<Address> addresses = geoCoder.getFromLocationName(addressForSearch, 1);
+                    if (addresses.size() > 0)
+                    {
+                        Double lat = (double) (addresses.get(0).getLatitude());
+                        Double lon = (double) (addresses.get(0).getLongitude());
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 16));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 break;
         }
         refreshDescription();
