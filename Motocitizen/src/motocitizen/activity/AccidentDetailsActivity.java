@@ -103,7 +103,15 @@ public class AccidentDetailsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        generalLayout.setOnLongClickListener(new DetailsLongClickListener());
+        generalLayout.setOnLongClickListener(v -> {
+            PopupWindow popupWindow;
+            popupWindow = (new AccidentListPopup(AccidentDetailsActivity.this, currentPoint.getId()))
+                    .getPopupWindow(AccidentDetailsActivity.this);
+            int viewLocation[] = new int[ 2 ];
+            v.getLocationOnScreen(viewLocation);
+            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[ 0 ], viewLocation[ 1 ]);
+            return true;
+        });
         update();
     }
 
@@ -226,27 +234,16 @@ public class AccidentDetailsActivity extends AppCompatActivity {
     }
 
     private void sendFinishRequest() {
-        if (Content.getInstance().get(accidentID).getStatus() == ENDED) {
-            //TODO Суперкостыль
-            accNewState = ACTIVE;
-            new AccidentChangeStateRequest(new AccidentChangeCallback(), accidentID, ACTIVE.code());
-        } else {
-            //TODO Суперкостыль
-            accNewState = ENDED;
-            new AccidentChangeStateRequest(new AccidentChangeCallback(), accidentID, ENDED.code());
-        }
+        //TODO Суперкостыль ???
+        accNewState = Content.getInstance().get(accidentID).getStatus() == ENDED ? ACTIVE : ENDED;
+        new AccidentChangeStateRequest(new AccidentChangeCallback(), accidentID, accNewState.code());
     }
 
     private void sendHideRequest() {
-        if (Content.getInstance().get(accidentID).getStatus() == ENDED) {
-            //TODO Суперкостыль
-            accNewState = ACTIVE;
-            new AccidentChangeStateRequest(new AccidentChangeCallback(), accidentID, ACTIVE.code());
-        } else {
-            //TODO Суперкостыль
-            accNewState = ENDED;
-            new AccidentChangeStateRequest(new AccidentChangeCallback(), accidentID, HIDDEN.code());
-        }
+        //TODO Суперкостыль ???
+        boolean s = Content.getInstance().get(accidentID).getStatus() == ENDED;
+        accNewState = s ? ACTIVE : ENDED;
+        new AccidentChangeStateRequest(new AccidentChangeCallback(), accidentID, s ? ACTIVE.code() : HIDDEN.code());
     }
 
     private class AccidentChangeCallback implements AsyncTaskCompleteListener {
@@ -296,15 +293,4 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         return currentPoint;
     }
 
-    private class DetailsLongClickListener implements View.OnLongClickListener {
-        @Override
-        public boolean onLongClick(View v) {
-            PopupWindow popupWindow;
-            popupWindow = (new AccidentListPopup(getApplicationContext(), currentPoint.getId())).getPopupWindow(getApplicationContext());
-            int viewLocation[] = new int[ 2 ];
-            v.getLocationOnScreen(viewLocation);
-            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[ 0 ], viewLocation[ 1 ]);
-            return true;
-        }
-    }
 }
