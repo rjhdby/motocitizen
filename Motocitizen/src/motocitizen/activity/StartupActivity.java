@@ -37,12 +37,14 @@ public class StartupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_startup);
     }
 
+
     //TODO проверка разрешений
     @Override
     public void onResume() {
         super.onResume();
-        Log.e("TOKEN", FirebaseInstanceId.getInstance().getToken());
-
+        if(FirebaseInstanceId.getInstance().getToken() != null) {
+            Log.e("TOKEN", FirebaseInstanceId.getInstance().getToken());
+        }
         Preferences.init(this);
         DbOpenHelper.init(this);
         MyGeoCoder.init(this);

@@ -3,7 +3,7 @@ package motocitizen.geocoder;
 import android.content.Context;
 import android.location.Geocoder;
 
-public class MyGeoCoder {
+ public class MyGeoCoder {
 
     private static class Holder {
         private static Geocoder instance;
