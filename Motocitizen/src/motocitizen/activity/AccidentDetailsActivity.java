@@ -258,7 +258,7 @@ public class AccidentDetailsActivity extends AppCompatActivity {
                     e.printStackTrace();
                     error = "Неизвестная ошибка";
                 }
-                ToastUtils.show(getBaseContext(), error);
+                ToastUtils.show(AccidentDetailsActivity.this, error);
             } else {
                 //TODO Суперкостыль
                 currentPoint.setStatus(accNewState);

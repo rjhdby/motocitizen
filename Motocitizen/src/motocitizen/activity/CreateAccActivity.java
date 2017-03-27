@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -24,7 +23,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
@@ -116,7 +114,8 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         }
         return new Accident(accident);
     }
-    @SuppressWarnings({"MissingPermission"})
+
+    @SuppressWarnings({ "MissingPermission" })
     private void enableMyLocation() {
         Dexter.withActivity(this)
               .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -159,7 +158,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 if (point.isInvisible()) continue;
                 String title = point.getType().string();
                 title += point.getMedicine() == Medicine.NO ? "" : ", " + point.getMedicine().string();
-                title += ", " + MyUtils.getIntervalFromNowInText(getApplicationContext(), point.getTime()) + " назад";
+                title += ", " + MyUtils.getIntervalFromNowInText(CreateAccActivity.this, point.getTime()) + " назад";
 
                 float alpha;
                 int   age = (int) (((new Date()).getTime() - point.getTime().getTime()) / 3600000);
@@ -283,17 +282,16 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 backButton();
                 break;
             case R.id.SEARCH:
-                String addressForSearch= searchEditText.getText().toString();
+                String addressForSearch = searchEditText.getText().toString();
                 Geocoder geoCoder = new Geocoder(this, Locale.getDefault());
                 try {
                     List<Address> addresses = geoCoder.getFromLocationName(addressForSearch, 1);
-                    if (addresses.size() > 0)
-                    {
-                        Double lat = (double) (addresses.get(0).getLatitude());
-                        Double lon = (double) (addresses.get(0).getLongitude());
+                    if (addresses.size() > 0) {
+                        Double lat = addresses.get(0).getLatitude();
+                        Double lon = addresses.get(0).getLongitude();
                         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 16));
                     } else {
-                        ToastUtils.show(getBaseContext(), getBaseContext().getString(R.string.nothing_is_found));
+                        ToastUtils.show(CreateAccActivity.this, CreateAccActivity.this.getString(R.string.nothing_is_found));
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -345,7 +343,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             if (!result.has("error")) {
                 finish();
             } else {
-                ToastUtils.show(getBaseContext(), result.optString("error", "Неизвестная ошибка"));
+                ToastUtils.show(CreateAccActivity.this, result.optString("error", "Неизвестная ошибка"));
                 enableConfirm();
             }
         });

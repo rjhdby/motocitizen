@@ -100,8 +100,8 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
                 Router.goTo(local, Router.Target.MAIN);
                 return;
             }
-            if (!MyApp.isOnline(getApplicationContext())) {
-                ToastUtils.show(getBaseContext(), getBaseContext().getString(R.string.auth_not_available));
+            if (!MyApp.isOnline(AuthActivity.this)) {
+                ToastUtils.show(AuthActivity.this, AuthActivity.this.getString(R.string.auth_not_available));
                 return;
             }
             if (auth()) {
