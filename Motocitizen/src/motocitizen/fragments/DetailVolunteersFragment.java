@@ -16,8 +16,8 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import motocitizen.activity.AccidentDetailsActivity;
 import motocitizen.accident.Volunteer;
+import motocitizen.activity.AccidentDetailsActivity;
 import motocitizen.content.Content;
 import motocitizen.content.VolunteerStatus;
 import motocitizen.draw.VolunteerRow;
@@ -66,9 +66,9 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
 
         onwayDisabledButton.setEnabled(false);
 
-        onwayButton.setOnClickListener(new OnWayButtonListener());
-        onwayCancelButton.setOnClickListener(new OnWayCancelButtonListener());
-        toMap.setOnClickListener(new ToMapButtonListener());
+        onwayButton.setOnClickListener(v -> showDialog(DIALOG_ONWAY_CONFIRM));
+        onwayCancelButton.setOnClickListener(v -> showDialog(DIALOG_CANCEL_ONWAY_CONFIRM));
+        toMap.setOnClickListener(v -> ((AccidentDetailsActivity) getActivity()).jumpToMap());
 
         update();
 
@@ -89,7 +89,6 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         for (int i : accident.getVolunteers().keySet()) {
             Volunteer current = accident.getVolunteer(i);
             if (current.getStatus() == VolunteerStatus.LEAVE) continue;
-            //vg_onway.addView(Rows.getVolunteerRow(vg_onway, current));
             vg_onway.addView(new VolunteerRow(getActivity(), current));
         }
     }
@@ -162,7 +161,6 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     }
 
     private void sendOnway() {
-        //AccidentsGeneral.setOnWay(accidentID);
         Preferences.getInstance().setOnWay(accidentID);
         new OnWayRequest(new OnWayCallback(), accidentID);
     }
@@ -198,26 +196,5 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     private void sendCancelOnway() {
         Preferences.getInstance().setOnWay(0);
         new CancelOnWayRequest(new OnWayCallback(), accidentID);
-    }
-
-    private class ToMapButtonListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            ((AccidentDetailsActivity) getActivity()).jumpToMap();
-        }
-    }
-
-    private class OnWayButtonListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            showDialog(DIALOG_ONWAY_CONFIRM);
-        }
-    }
-
-    private class OnWayCancelButtonListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            showDialog(DIALOG_CANCEL_ONWAY_CONFIRM);
-        }
     }
 }

@@ -53,6 +53,7 @@ public class MessageRow extends FrameLayout {
         String timeText = DateUtils.getTime(message.getTime());
 
         ((TextView) this.findViewById(R.id.time)).setText(timeText);
+        //todo dirty hack
         messageText.append(" \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0");
         messageView.setText(messageText);
     }

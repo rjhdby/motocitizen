@@ -16,8 +16,6 @@ import com.karumi.dexter.listener.single.EmptyPermissionListener;
 
 import motocitizen.content.Content;
 import motocitizen.database.DbOpenHelper;
-import motocitizen.gcm.GCMBroadcastReceiver;
-import motocitizen.gcm.GCMRegistration;
 import motocitizen.geocoder.MyGeoCoder;
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
@@ -42,7 +40,7 @@ public class StartupActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if(FirebaseInstanceId.getInstance().getToken() != null) {
+        if (FirebaseInstanceId.getInstance().getToken() != null) {
             Log.e("TOKEN", FirebaseInstanceId.getInstance().getToken());
         }
         Preferences.init(this);
@@ -50,8 +48,6 @@ public class StartupActivity extends AppCompatActivity {
         MyGeoCoder.init(this);
         User.init();
         Content.init();
-        new GCMRegistration(this);
-        new GCMBroadcastReceiver();
         FirebaseMessaging.getInstance().subscribeToTopic("accidents");
         Dexter.withActivity(this)
               .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)

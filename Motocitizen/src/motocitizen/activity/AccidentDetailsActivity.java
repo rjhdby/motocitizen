@@ -21,6 +21,7 @@ import motocitizen.accident.Accident;
 import motocitizen.content.AccidentStatus;
 import motocitizen.content.Content;
 import motocitizen.content.Medicine;
+import motocitizen.fragments.AccidentDetailsFragments;
 import motocitizen.fragments.DetailHistoryFragment;
 import motocitizen.fragments.DetailMessagesFragment;
 import motocitizen.fragments.DetailVolunteersFragment;
@@ -90,7 +91,16 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         * Описание группы закладок внутри деталей происшествия
         */
         RadioGroup mcDetTabsGroup = (RadioGroup) findViewById(R.id.details_tabs_group);
-        mcDetTabsGroup.setOnCheckedChangeListener(accDetTabsListener);
+        mcDetTabsGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            AccidentDetailsFragments fragment;
+            switch (group.getCheckedRadioButtonId()) {
+                case R.id.details_tab_messages: fragment = detailMessagesFragment; break;
+                case R.id.details_tab_history: fragment = detailHistoryFragment; break;
+                case R.id.details_tab_people: fragment = detailVolunteersFragment; break;
+                default: return;
+            }
+            getFragmentManager().beginTransaction().replace(R.id.details_tab_content, fragment).commit();
+        });
 
         generalLayout = findViewById(R.id.acc_details_general);
         statusView = (TextView) findViewById(R.id.acc_details_general_status);
@@ -267,26 +277,10 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         }
     }
 
-    private final RadioGroup.OnCheckedChangeListener accDetTabsListener = new RadioGroup.OnCheckedChangeListener() {
-        public void onCheckedChanged(RadioGroup group, int checkedId) {
-            int id = group.getCheckedRadioButtonId();
-
-            if (id == R.id.details_tab_messages) {
-                getFragmentManager().beginTransaction().replace(R.id.details_tab_content, detailMessagesFragment).commit();
-            } else if (id == R.id.details_tab_history) {
-                getFragmentManager().beginTransaction().replace(R.id.details_tab_content, detailHistoryFragment).commit();
-            } else if (id == R.id.details_tab_people) {
-                getFragmentManager().beginTransaction().replace(R.id.details_tab_content, detailVolunteersFragment).commit();
-            }
-        }
-    };
-
     public void jumpToMap() {
         Bundle bundle = new Bundle();
         bundle.putInt("toMap", currentPoint.getId());
-//        bundle.putBoolean("fromDetails", true);
         Router.goTo(this, Router.Target.MAIN, bundle);
-//        finish();
     }
 
     public Accident getCurrentPoint() {

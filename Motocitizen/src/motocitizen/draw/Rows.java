@@ -63,17 +63,15 @@ public class Rows {
         //noinspection deprecation
         ((TextView) accRow.findViewById(R.id.accident_row_unread)).setText(Html.fromHtml(msgText));
 
-        int rowId = MyUtils.newId();
-        //accident.setRowId(rowId);
-        accRow.setId(rowId);
+        accRow.setId(MyUtils.newId());
         accRow.setOnClickListener(v -> toDetails(context, accident.getId()));
 
         accRow.setOnLongClickListener(v -> {
-            PopupWindow popupWindow;
-            popupWindow = (new AccidentListPopup(context, accident.getId())).getPopupWindow(context);
             int viewLocation[] = new int[ 2 ];
             v.getLocationOnScreen(viewLocation);
-            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[ 0 ], viewLocation[ 1 ]);
+            (new AccidentListPopup(context, accident.getId()))
+                    .getPopupWindow(context)
+                    .showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[ 0 ], viewLocation[ 1 ]);
             return true;
         });
         return accRow;

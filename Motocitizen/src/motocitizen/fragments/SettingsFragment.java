@@ -71,14 +71,10 @@ public class SettingsFragment extends PreferenceFragment {
             return true;
         });
         maxNotifications.setOnPreferenceChangeListener((preference, newValue) -> {
-//            if (((String) newValue).startsWith("-")) newValue = "0";
             preference.setSummary((String) newValue);
             return true;
         });
         hoursAgo.setOnPreferenceChangeListener((preference, newValue) -> {
-            Integer value = Integer.parseInt((String) newValue);
-//            if (value > 24) newValue = "24";
-//            if (value < 1) newValue = "1";
             if (newValue.equals("0")) newValue = "1";
             preference.setSummary(newValue.toString());
             return true;

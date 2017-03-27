@@ -62,7 +62,12 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         newMessageButton.setEnabled(false);
 
         mcNewMessageText.addTextChangedListener(new NewMessageTextWatcher());
-        newMessageButton.setOnClickListener(new SendMessageClickListener());
+        newMessageButton.setOnClickListener(v -> {
+            if (transaction) return;
+            transaction = true;
+            newMessageButton.setEnabled(false);
+            new SendMessageRequest(new SendMessageCallback(), accidentID, mcNewMessageText.getText().toString());
+        });
         update();
 
         return viewMain;
@@ -147,17 +152,6 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         }
     }
 
-    private class SendMessageClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            if (transaction) return;
-            transaction = true;
-            String text = mcNewMessageText.getText().toString();
-            newMessageButton.setEnabled(false);
-            new SendMessageRequest(new SendMessageCallback(), accidentID, text);
-        }
-    }
-
     private class MessageRowLongClickListener implements View.OnLongClickListener {
         private final Message  message;
         private final Accident accident;
@@ -177,34 +171,4 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
             return true;
         }
     }
-
-//    private class TakePhotoClickListener implements View.OnClickListener {
-//
-//        @Override
-//        public void onClick(View view) {
-//            final String appDirectoryName = "motoDTP";
-//            final File   imageRoot        = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), appDirectoryName);
-//            if (!imageRoot.isDirectory()) {
-//                imageRoot.mkdir();
-//            }
-//
-//            String fileName = (int) (Math.random() * 10000) + ".jpg";
-//            File   newFile  = new File(fileName);
-//            while (newFile.isFile()) {
-//                fileName = (int) (Math.random() * 10000) + ".jpg";
-//                newFile = new File(fileName);
-//            }
-//            try {
-//                newFile.createNewFile();
-//            } catch (IOException e) {
-//            }
-//
-//            Uri outputFileUri = Uri.fromFile(newFile);
-//
-//            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-//
-//            startActivityForResult(cameraIntent, 0);
-//        }
-//    }
 }

@@ -25,7 +25,7 @@ public class SelectSoundFragment extends Fragment {
     private int                currentId;
     private Uri                currentUri;
     private String             currentTitle;
-
+//TODO rewrite using RecyclerLayout
     {
         currentId = 0;
         currentUri = Preferences.getInstance().getAlarmSoundUri();
@@ -48,8 +48,14 @@ public class SelectSoundFragment extends Fragment {
         Button selectSoundConfirmButton = (Button) getActivity().findViewById(R.id.select_sound_save_button);
         Button selectSoundCancelButton  = (Button) getActivity().findViewById(R.id.select_sound_cancel_button);
 
-        selectSoundConfirmButton.setOnClickListener(new ConfirmButtonListener());
-        selectSoundCancelButton.setOnClickListener(new CancelButtonListener());
+        selectSoundConfirmButton.setOnClickListener(v -> {
+            if (currentTitle.equals("default system")) {
+                Preferences.getInstance().setDefaultSoundAlarm();
+            } else Preferences.getInstance().setSoundAlarm(currentTitle, currentUri);
+            Preferences.getInstance().initAlarmSoundUri(getActivity());
+            finish();
+        });
+        selectSoundCancelButton.setOnClickListener(v -> finish());
 
         drawList();
     }
@@ -77,20 +83,7 @@ public class SelectSoundFragment extends Fragment {
 
         TableRow tr = (TableRow) li.inflate(R.layout.sound_row, viewGroup, false);
         tr.setTag(currentPosition);
-        tr.setOnClickListener(new SoundRowClickListener());
-
-        ((TextView) tr.findViewById(R.id.sound)).setText(notifications.get(currentPosition).getTitle());
-        viewGroup.addView(tr);
-    }
-
-    private void finish() {
-        getActivity().findViewById(R.id.select_sound_fragment).setVisibility(View.GONE);
-        getFragmentManager().beginTransaction().remove(this).replace(android.R.id.content, new SettingsFragment()).commit();
-    }
-
-    private class SoundRowClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
+        tr.setOnClickListener(v -> {
             int tag = (Integer) v.getTag();
             if (currentId != 0) {
                 //noinspection ResourceAsColor
@@ -101,25 +94,15 @@ public class SelectSoundFragment extends Fragment {
             notifications.get(tag).play();
             currentUri = notifications.get(tag).getUri();
             currentTitle = notifications.get(tag).getTitle();
-        }
+        });
+
+        ((TextView) tr.findViewById(R.id.sound)).setText(notifications.get(currentPosition).getTitle());
+        viewGroup.addView(tr);
     }
 
-    private class CancelButtonListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            finish();
-        }
-    }
-
-    private class ConfirmButtonListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            if (currentTitle.equals("default system")) {
-                Preferences.getInstance().setDefaultSoundAlarm();
-            } else Preferences.getInstance().setSoundAlarm(currentTitle, currentUri);
-            Preferences.getInstance().initAlarmSoundUri(getActivity());
-            finish();
-        }
+    private void finish() {
+        getActivity().findViewById(R.id.select_sound_fragment).setVisibility(View.GONE);
+        getFragmentManager().beginTransaction().remove(this).replace(android.R.id.content, new SettingsFragment()).commit();
     }
 
     private class Sound {

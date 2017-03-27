@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 public class ConfirmDialog extends DialogFragment {
@@ -27,23 +26,9 @@ public class ConfirmDialog extends DialogFragment {
         String positive = getArguments().getString("positive");
         String negative = getArguments().getString("negative");
         if (positive != null && !positive.isEmpty())
-            res.setPositiveButton(positive, new PositiveOnClickListener());
+            res.setPositiveButton(positive, (dialog, whichButton) -> getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent()));
         if (negative != null && !negative.isEmpty())
-            res.setNegativeButton(negative, new NegativeOnClickListener());
+            res.setNegativeButton(negative, (dialog, whichButton) -> getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, getActivity().getIntent()));
         return res.create();
-    }
-
-    private class PositiveOnClickListener implements DialogInterface.OnClickListener {
-        @Override
-        public void onClick(DialogInterface dialog, int whichButton) {
-            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent());
-        }
-    }
-
-    private class NegativeOnClickListener implements DialogInterface.OnClickListener {
-        @Override
-        public void onClick(DialogInterface dialog, int whichButton) {
-            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, getActivity().getIntent());
-        }
     }
 }
