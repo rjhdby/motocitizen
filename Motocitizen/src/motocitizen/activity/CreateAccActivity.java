@@ -2,7 +2,6 @@ package motocitizen.activity;
 
 import android.Manifest;
 import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -35,15 +35,16 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import motocitizen.accident.Accident;
 import motocitizen.content.AccidentStatus;
 import motocitizen.content.Content;
 import motocitizen.content.Medicine;
 import motocitizen.content.Type;
+import motocitizen.geocoder.MyGeoCoder;
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
+import motocitizen.network.GeocoderClient;
 import motocitizen.network.requests.CreateAccidentRequest;
 import motocitizen.user.User;
 import motocitizen.utils.DateUtils;
@@ -139,7 +140,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             if (!User.getInstance().isModerator()) {
                 //Прячем кнопки поиска адреса
                 searchEditText.setVisibility(View.GONE);
-                Button searchButton = (Button) findViewById(R.id.SEARCH);
+                ImageButton searchButton = (ImageButton) findViewById(R.id.SEARCH);
                 searchButton.setVisibility(View.GONE);
 
                 CircleOptions circleOptions = new CircleOptions().center(MyUtils.LocationToLatLng(initialLocation)).radius(RADIUS).fillColor(0x20FF0000);
@@ -283,18 +284,18 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 break;
             case R.id.SEARCH:
                 String addressForSearch = searchEditText.getText().toString();
-                Geocoder geoCoder = new Geocoder(this, Locale.getDefault());
                 try {
-                    List<Address> addresses = geoCoder.getFromLocationName(addressForSearch, 1);
+                    List<Address> addresses = MyGeoCoder.getInstance().getFromLocationName(addressForSearch, 1);
+                    LatLng        latLng;
                     if (addresses.size() > 0) {
-                        Double lat = addresses.get(0).getLatitude();
-                        Double lon = addresses.get(0).getLongitude();
-                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 16));
+                        latLng = new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude());
                     } else {
-                        ToastUtils.show(CreateAccActivity.this, CreateAccActivity.this.getString(R.string.nothing_is_found));
+                        latLng = GeocoderClient.latLngByAddress(addressForSearch);
                     }
-                } catch (IOException e) {
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
+                } catch (IOException | JSONException e) {
                     e.printStackTrace();
+                    ToastUtils.show(CreateAccActivity.this, CreateAccActivity.this.getString(R.string.nothing_is_found));
                 }
                 break;
         }

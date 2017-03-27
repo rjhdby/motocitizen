@@ -32,12 +32,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <!--<service android:name="motocitizen.notifications.TokenReceiver">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>-->
-            <!--</intent-filter>-->
-        <!--</service>-->
-        <service android:name="motocitizen.notifications.NotificationListener">
+        <service android:name="motocitizen.notifications.NotificationListener"
+                 android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>

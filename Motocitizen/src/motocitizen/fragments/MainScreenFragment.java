@@ -17,8 +17,6 @@ import com.karumi.dexter.Dexter;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.single.EmptyPermissionListener;
 
-import org.json.JSONObject;
-
 import motocitizen.MyApp;
 import motocitizen.activity.MyFragmentInterface;
 import motocitizen.content.Content;
@@ -26,7 +24,6 @@ import motocitizen.draw.Rows;
 import motocitizen.main.R;
 import motocitizen.maps.MyMapManager;
 import motocitizen.maps.google.MyGoogleMapManager;
-import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.router.Router;
 import motocitizen.user.User;
 import motocitizen.utils.BounceScrollView;

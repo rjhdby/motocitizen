@@ -19,4 +19,8 @@ public class MyGeoCoder {
 
     private MyGeoCoder() {
     }
+
+//    public static LatLng latLngByAddress(String) {
+//
+//    }
 }

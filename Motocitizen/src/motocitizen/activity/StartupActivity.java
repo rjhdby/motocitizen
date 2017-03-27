@@ -40,9 +40,6 @@ public class StartupActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if (FirebaseInstanceId.getInstance().getToken() != null) {
-            Log.e("TOKEN", FirebaseInstanceId.getInstance().getToken());
-        }
         Preferences.init(this);
         DbOpenHelper.init(this);
         MyGeoCoder.init(this);
