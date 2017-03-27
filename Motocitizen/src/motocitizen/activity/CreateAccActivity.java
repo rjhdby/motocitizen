@@ -292,6 +292,8 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                         Double lat = (double) (addresses.get(0).getLatitude());
                         Double lon = (double) (addresses.get(0).getLongitude());
                         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 16));
+                    } else {
+                        ToastUtils.show(getBaseContext(), getBaseContext().getString(R.string.nothing_is_found));
                     }
                 } catch (IOException e) {
                     e.printStackTrace();

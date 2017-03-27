@@ -63,6 +63,7 @@
     <string name="config_map_title">Провайдер</string>
     <string name="inet_not_available">Не могу отправить запрос, пожалуйста, проверьте доступность Internet.</string>
     <string name="auth_not_available">Авторизация не возможна, пожалуйста, проверьте доступность Internet.</string>
+    <string name="nothing_is_found">Ничего не найдено, попробуйте уточнить запрос</string>
     <string name="title_activity_create_acc">CreateAccActivity</string>
     <string name="request_send_message">Отправка сообщения.</string>
     <string name="settings_summary_off">Скрыты</string>
