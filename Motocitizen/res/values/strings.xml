@@ -55,7 +55,7 @@
     <string name="config_acc_type_category">Типы инцидентов</string>
     <string name="small_menu_about">О приложении</string>
     <string name="about_info">Мото ДТП инфо - программа взаимопомощи на дорогах</string>
-    <string name="about_authors">Авторы: rjhdby, Азимут.</string>
+    <string name="about_authors">Авторы: rjhdby, Азимут, prodigy007</string>
     <string name="config_other_category">Другое</string>
     <string name="activity_auth_logout_label">Завершить сеанс</string>
     <string name="activity_auth_login_label">Войти</string>
