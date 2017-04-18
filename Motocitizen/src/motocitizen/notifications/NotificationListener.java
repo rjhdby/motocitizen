@@ -93,10 +93,14 @@ public class NotificationListener extends FirebaseMessagingService {
 
     @SuppressWarnings("deprecation")
     private void setSound(Notification.Builder builder) {
-        if (Build.VERSION.SDK_INT < 21) {
-            builder.setSound(Preferences.getInstance().getAlarmSoundUri(), AudioManager.STREAM_NOTIFICATION);
-        } else {
-            builder.setSound(Preferences.getInstance().getAlarmSoundUri(), (new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_NOTIFICATION)).build());
+        try {
+            if (Build.VERSION.SDK_INT < 21) {
+                builder.setSound(Preferences.getInstance().getAlarmSoundUri(), AudioManager.STREAM_NOTIFICATION);
+            } else {
+                builder.setSound(Preferences.getInstance().getAlarmSoundUri(), (new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_NOTIFICATION)).build());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
