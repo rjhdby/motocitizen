@@ -1,15 +1,14 @@
 package motocitizen.notifications;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
-import android.media.AudioAttributes;
-import android.media.AudioManager;
-import android.os.Build;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.support.v4.app.NotificationManagerCompat;
+import android.support.v7.app.NotificationCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -25,7 +24,6 @@ import motocitizen.main.R;
 import motocitizen.utils.Preferences;
 
 public class NotificationListener extends FirebaseMessagingService {
-    private static NotificationManager notificationManager;
     private static LinkedList<Integer> tray = new LinkedList<>();
 
     @Override
@@ -53,32 +51,29 @@ public class NotificationListener extends FirebaseMessagingService {
             PendingIntent contentIntent = PendingIntent.getActivity(this, idHash, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
             Resources     res           = this.getResources();
 
-            String title;
-            if (accident.getMedicine() == Medicine.UNKNOWN)
-                title = String.format("%s(%s)", accident.getType().string(), accident.getDistanceString());
-            else
-                title = String.format("%s, %s(%s)", accident.getType().string(), accident.getMedicine().string(), accident.getDistanceString());
+            String damage = accident.getMedicine() == Medicine.UNKNOWN ? "" : ", " + accident.getMedicine().string();
+            String title  = String.format("%s%s(%s)", accident.getType().string(), damage, accident.getDistanceString());
+            Uri sound = Preferences.getInstance().getAlarmSoundTitle().equals("default system")
+                        ? RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+                        : Preferences.getInstance().getAlarmSoundUri();
+            long[] vibrate = Preferences.getInstance().getVibration()
+                             ? new long[]{ 1000, 1000, 1000 }
+                             : new long[ 0 ];
 
-            Notification.Builder builder = new Notification.Builder(this);
-            builder.setContentIntent(contentIntent)
-                   .setSmallIcon(R.mipmap.ic_launcher)
-                   .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.ic_launcher))
-                   .setTicker(accident.getAddress())
-                   .setWhen(System.currentTimeMillis())
-                   .setAutoCancel(true)
-                   .setContentTitle(title)
-                   .setContentText(accident.getAddress());
+            Notification notification = new NotificationCompat.Builder(this)
+                    .setContentIntent(contentIntent)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.ic_launcher))
+                    .setTicker(accident.getAddress())
+                    .setWhen(System.currentTimeMillis())
+                    .setAutoCancel(true)
+                    .setContentTitle(title)
+                    .setSound(sound)
+                    .setVibrate(vibrate)
+                    .setContentText(accident.getAddress())
+                    .build();
 
-            if (Preferences.getInstance().getAlarmSoundTitle().equals("default system")) {
-                builder.setDefaults(Preferences.getInstance().getVibration() ? Notification.DEFAULT_ALL : Notification.DEFAULT_SOUND);
-            } else {
-                setSound(builder);
-                if (Preferences.getInstance().getVibration()) builder.setVibrate(new long[]{ 1000, 1000, 1000 });
-            }
-            Notification notification = getNotification(builder);
-
-            if (notificationManager == null)
-                notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
             notificationManager.notify(idHash, notification);
             tray.push(idHash);
@@ -88,24 +83,6 @@ public class NotificationListener extends FirebaseMessagingService {
             }
         } catch (NumberFormatException e) {
             e.printStackTrace();
-        }
-    }
-
-    @SuppressWarnings("deprecation")
-    private void setSound(Notification.Builder builder) {
-        if (Build.VERSION.SDK_INT < 21) {
-            builder.setSound(Preferences.getInstance().getAlarmSoundUri(), AudioManager.STREAM_NOTIFICATION);
-        } else {
-            builder.setSound(Preferences.getInstance().getAlarmSoundUri(), (new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_NOTIFICATION)).build());
-        }
-    }
-
-    @SuppressWarnings("deprecation")
-    private Notification getNotification(Notification.Builder builder) {
-        if (Build.VERSION.SDK_INT < 16) {
-            return builder.getNotification();
-        } else {
-            return builder.build();
         }
     }
 }
