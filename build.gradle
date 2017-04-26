@@ -3,6 +3,7 @@ repositories {
     jcenter()
 }
 buildscript {
+    ext.kotlin_version = '1.1.2'
     repositories {
         mavenCentral()
         jcenter()
@@ -11,9 +12,11 @@ buildscript {
         classpath 'com.android.tools.build:gradle:2.3.0'
         classpath 'me.tatarka:gradle-retrolambda:3.2.3'
         classpath 'com.google.gms:google-services:3.0.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply plugin: 'me.tatarka.retrolambda'
 
 android {
@@ -79,5 +82,6 @@ dependencies {
 
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
     compile 'com.karumi:dexter:3.0.2'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 apply plugin: 'com.google.gms.google-services'

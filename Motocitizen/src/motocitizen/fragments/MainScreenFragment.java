@@ -18,9 +18,11 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.single.EmptyPermissionListener;
 
 import motocitizen.MyApp;
+import motocitizen.accident.Accident;
 import motocitizen.activity.MyFragmentInterface;
 import motocitizen.content.Content;
-import motocitizen.draw.Rows;
+import motocitizen.draw.accidentList.CommonRow;
+import motocitizen.draw.accidentList.OwnedRow;
 import motocitizen.main.R;
 import motocitizen.maps.MyMapManager;
 import motocitizen.maps.google.MyGoogleMapManager;
@@ -106,8 +108,12 @@ public class MainScreenFragment extends Fragment implements MyFragmentInterface 
 
         Content points = Content.getInstance();
         for (int id : points.reverseSortedKeySet()) {
-            if (points.get(id).isInvisible()) continue;
-            listContent.addView(Rows.getAccidentRow(getActivity(), listContent, points.get(id)));
+            Accident accident = points.get(id);
+            if (accident.isInvisible()) continue;
+            listContent.addView(
+                    accident.isOwner() ? new OwnedRow(getContext(), accident, listContent) : new CommonRow(getContext(), accident, listContent)
+//                    Rows.getAccidentRow(getActivity(), listContent, points.get(id))
+                               );
         }
         map.placeAccidents(getActivity());
     }

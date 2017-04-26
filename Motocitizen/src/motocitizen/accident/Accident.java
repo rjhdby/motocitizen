@@ -1,8 +1,10 @@
 package motocitizen.accident;
 
+import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -16,6 +18,8 @@ import motocitizen.content.AccidentStatus;
 import motocitizen.content.Medicine;
 import motocitizen.content.Type;
 import motocitizen.database.StoreMessages;
+import motocitizen.draw.accidentList.CommonRow;
+import motocitizen.draw.accidentList.OwnedRow;
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.user.User;
 import motocitizen.utils.Preferences;
@@ -273,7 +277,7 @@ public class Accident {
     }
 
     public boolean isEnded() {
-        return status == ENDED;
+        return status.equals(ENDED);
     }
 
     public boolean isHidden() {
@@ -289,4 +293,8 @@ public class Accident {
         return getType() == Type.MOTO_AUTO || getType() == Type.MOTO_MOTO || getType() == Type.MOTO_MAN || getType() == Type.SOLO;
     }
 
+    public String title() {
+        String damage = medicine.equals(Medicine.UNKNOWN) ? "" : ", " + medicine;
+        return String.format("%s%s(%s)%n%s%n%s", type, damage, getDistanceString(), address, description);
+    }
 }

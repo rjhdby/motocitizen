@@ -43,4 +43,9 @@ public enum Type {
     public BitmapDescriptor getIcon() {
         return BitmapDescriptorFactory.fromResource(this.mapIcon);
     }
+
+    @Override
+    public String toString() {
+        return text;
+    }
 }

@@ -27,4 +27,9 @@ public enum Medicine {
     }
 
     public String string() {return text;}
+
+    @Override
+    public String toString() {
+        return text;
+    }
 }
