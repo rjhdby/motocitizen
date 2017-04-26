@@ -1,10 +1,8 @@
 package motocitizen.accident;
 
-import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -18,8 +16,6 @@ import motocitizen.content.AccidentStatus;
 import motocitizen.content.Medicine;
 import motocitizen.content.Type;
 import motocitizen.database.StoreMessages;
-import motocitizen.draw.accidentList.CommonRow;
-import motocitizen.draw.accidentList.OwnedRow;
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.user.User;
 import motocitizen.utils.Preferences;

@@ -20,7 +20,7 @@ import motocitizen.accident.Volunteer;
 import motocitizen.activity.AccidentDetailsActivity;
 import motocitizen.content.Content;
 import motocitizen.content.VolunteerStatus;
-import motocitizen.draw.VolunteerRow;
+import motocitizen.rows.details.VolunteerRow;
 import motocitizen.main.R;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.AccidentsRequest;

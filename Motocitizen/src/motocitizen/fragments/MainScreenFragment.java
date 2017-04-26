@@ -21,8 +21,8 @@ import motocitizen.MyApp;
 import motocitizen.accident.Accident;
 import motocitizen.activity.MyFragmentInterface;
 import motocitizen.content.Content;
-import motocitizen.draw.accidentList.CommonRow;
-import motocitizen.draw.accidentList.OwnedRow;
+import motocitizen.rows.accidentList.CommonRow;
+import motocitizen.rows.accidentList.OwnedRow;
 import motocitizen.main.R;
 import motocitizen.maps.MyMapManager;
 import motocitizen.maps.google.MyGoogleMapManager;
@@ -111,7 +111,7 @@ public class MainScreenFragment extends Fragment implements MyFragmentInterface 
             Accident accident = points.get(id);
             if (accident.isInvisible()) continue;
             listContent.addView(
-                    accident.isOwner() ? new OwnedRow(getContext(), accident, listContent) : new CommonRow(getContext(), accident, listContent)
+                    accident.isOwner() ? new OwnedRow(getContext(), accident) : new CommonRow(getContext(), accident)
 //                    Rows.getAccidentRow(getActivity(), listContent, points.get(id))
                                );
         }

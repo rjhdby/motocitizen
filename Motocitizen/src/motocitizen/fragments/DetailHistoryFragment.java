@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import motocitizen.activity.AccidentDetailsActivity;
-import motocitizen.draw.HistoryRow;
+import motocitizen.rows.details.HistoryRow;
 import motocitizen.main.R;
 
 public class DetailHistoryFragment extends AccidentDetailsFragments {

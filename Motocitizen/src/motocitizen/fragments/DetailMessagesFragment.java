@@ -19,7 +19,7 @@ import motocitizen.accident.Message;
 import motocitizen.activity.AccidentDetailsActivity;
 import motocitizen.content.Content;
 import motocitizen.database.StoreMessages;
-import motocitizen.draw.MessageRow;
+import motocitizen.rows.details.MessageRow;
 import motocitizen.main.R;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.SendMessageRequest;

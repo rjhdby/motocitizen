@@ -4,10 +4,11 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
+import motocitizen.user.User;
 import motocitizen.utils.Preferences;
 
 public class Message {
-    private static final String[] prerequisites = { "id", "id_user", "owner", "status", "text", "uxtime" };
+    private static final String[] prerequisites = {"id", "id_user", "owner", "status", "text", "uxtime"};
 
     private int     id;
     private int     ownerId;
@@ -70,5 +71,9 @@ public class Message {
 
     boolean isNoError() {
         return noError;
+    }
+
+    public boolean isOwner() {
+        return ownerId == User.getInstance().getId();
     }
 }
