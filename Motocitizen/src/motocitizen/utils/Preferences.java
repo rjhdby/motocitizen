@@ -10,7 +10,7 @@ import android.preference.PreferenceManager;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import motocitizen.content.Type;
+import motocitizen.dictionary.Type;
 
 @SuppressLint("CommitPrefEdits")
 public class Preferences {

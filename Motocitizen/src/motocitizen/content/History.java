@@ -1,10 +1,10 @@
-package motocitizen.accident;
+package motocitizen.content;
 
 import org.json.JSONObject;
 
 import java.util.Date;
 
-import motocitizen.content.HistoryAction;
+import motocitizen.dictionary.HistoryAction;
 
 public class History {
     private static final String[] prerequisites = {"id", "id_user", "owner", "action", "uxtime"};
@@ -61,7 +61,7 @@ public class History {
         return time;
     }
 
-    boolean isNoError() {
+    public boolean isNoError() {
         return noError;
     }
 }

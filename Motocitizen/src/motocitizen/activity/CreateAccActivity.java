@@ -26,7 +26,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.single.EmptyPermissionListener;
+import com.karumi.dexter.listener.single.BasePermissionListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,11 +36,11 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-import motocitizen.accident.Accident;
-import motocitizen.content.AccidentStatus;
-import motocitizen.content.Content;
-import motocitizen.content.Medicine;
-import motocitizen.content.Type;
+import motocitizen.content.accident.Accident;
+import motocitizen.dictionary.AccidentStatus;
+import motocitizen.dictionary.Content;
+import motocitizen.dictionary.Medicine;
+import motocitizen.dictionary.Type;
 import motocitizen.geocoder.MyGeoCoder;
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
@@ -120,7 +120,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     private void enableMyLocation() {
         Dexter.withActivity(this)
               .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-              .withListener(new EmptyPermissionListener() {
+              .withListener(new BasePermissionListener() {
                   @Override
                   public void onPermissionGranted(PermissionGrantedResponse response) {
                       map.setMyLocationEnabled(true);
@@ -155,7 +155,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             }
             map.clear();
             for (int id : Content.getInstance().keySet()) {
-                motocitizen.accident.Accident point = Content.getInstance().get(id);
+                Accident point = Content.getInstance().get(id);
                 if (point.isInvisible()) continue;
                 String title = point.getType().string();
                 title += point.getMedicine() == Medicine.NO ? "" : ", " + point.getMedicine().string();

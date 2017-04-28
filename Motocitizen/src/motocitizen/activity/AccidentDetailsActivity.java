@@ -17,10 +17,10 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-import motocitizen.accident.Accident;
-import motocitizen.content.AccidentStatus;
-import motocitizen.content.Content;
-import motocitizen.content.Medicine;
+import motocitizen.content.accident.Accident;
+import motocitizen.dictionary.AccidentStatus;
+import motocitizen.dictionary.Content;
+import motocitizen.dictionary.Medicine;
 import motocitizen.fragments.AccidentDetailsFragments;
 import motocitizen.fragments.DetailHistoryFragment;
 import motocitizen.fragments.DetailMessagesFragment;
@@ -36,9 +36,9 @@ import motocitizen.utils.Preferences;
 import motocitizen.utils.ToastUtils;
 import motocitizen.utils.popups.AccidentListPopup;
 
-import static motocitizen.content.AccidentStatus.ACTIVE;
-import static motocitizen.content.AccidentStatus.ENDED;
-import static motocitizen.content.AccidentStatus.HIDDEN;
+import static motocitizen.dictionary.AccidentStatus.ACTIVE;
+import static motocitizen.dictionary.AccidentStatus.ENDED;
+import static motocitizen.dictionary.AccidentStatus.HIDDEN;
 
 public class AccidentDetailsActivity extends AppCompatActivity {
 

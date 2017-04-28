@@ -1,4 +1,4 @@
-package motocitizen.content;
+package motocitizen.dictionary;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;

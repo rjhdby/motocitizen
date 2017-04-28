@@ -1,4 +1,4 @@
-package motocitizen.content;
+package motocitizen.dictionary;
 
 public enum HistoryAction {
     CREATE("create_mc_acc", "Создал"),

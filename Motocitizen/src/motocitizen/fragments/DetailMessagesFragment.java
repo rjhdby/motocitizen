@@ -14,10 +14,10 @@ import android.widget.PopupWindow;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import motocitizen.accident.Accident;
-import motocitizen.accident.Message;
+import motocitizen.content.accident.Accident;
+import motocitizen.content.Message;
 import motocitizen.activity.AccidentDetailsActivity;
-import motocitizen.content.Content;
+import motocitizen.dictionary.Content;
 import motocitizen.database.StoreMessages;
 import motocitizen.rows.details.MessageRow;
 import motocitizen.main.R;

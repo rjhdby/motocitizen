@@ -1,10 +1,10 @@
-package motocitizen.accident;
+package motocitizen.content;
 
 import org.json.JSONObject;
 
 import java.util.Date;
 
-import motocitizen.content.VolunteerStatus;
+import motocitizen.dictionary.VolunteerStatus;
 
 public class Volunteer {
     private static final String[] prerequisites = { "id", "name", "status", "uxtime" };
@@ -51,7 +51,7 @@ public class Volunteer {
         return time;
     }
 
-    boolean isNoError() {
+    public boolean isNoError() {
         return noError;
     }
 }

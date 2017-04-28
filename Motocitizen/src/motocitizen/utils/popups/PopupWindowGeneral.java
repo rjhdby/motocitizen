@@ -16,8 +16,8 @@ import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
 
-import motocitizen.accident.Accident;
-import motocitizen.content.AccidentStatus;
+import motocitizen.content.accident.Accident;
+import motocitizen.dictionary.AccidentStatus;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentChangeStateRequest;
 import motocitizen.network.requests.BanRequest;

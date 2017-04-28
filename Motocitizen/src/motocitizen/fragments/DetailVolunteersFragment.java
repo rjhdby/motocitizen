@@ -16,10 +16,11 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import motocitizen.accident.Volunteer;
+import motocitizen.content.Volunteer;
 import motocitizen.activity.AccidentDetailsActivity;
-import motocitizen.content.Content;
-import motocitizen.content.VolunteerStatus;
+import motocitizen.content.accident.Accident;
+import motocitizen.dictionary.Content;
+import motocitizen.dictionary.VolunteerStatus;
 import motocitizen.rows.details.VolunteerRow;
 import motocitizen.main.R;
 import motocitizen.network.AsyncTaskCompleteListener;
@@ -76,7 +77,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     }
 
     private void update() {
-        motocitizen.accident.Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
+        Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
 
         if (accident == null) {
             showDialog(DIALOG_ACC_NOT_ACTUAL);
@@ -94,9 +95,9 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     }
 
     private void setupAccess() {
-        motocitizen.accident.Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
-        int                           id       = accident.getId();
-        boolean                       active   = accident.isActive() && User.getInstance().isAuthorized();
+        Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
+        int      id       = accident.getId();
+        boolean  active   = accident.isActive() && User.getInstance().isAuthorized();
         onwayButton.setVisibility(id != Preferences.getInstance().getOnWay() && id != Content.getInstance().getInPlaceId() && active ? View.VISIBLE : View.GONE);
         onwayCancelButton.setVisibility(id == Preferences.getInstance().getOnWay() && id != Content.getInstance().getInPlaceId() && active ? View.VISIBLE : View.GONE);
         onwayDisabledButton.setVisibility(id == Content.getInstance().getInPlaceId() && active ? View.VISIBLE : View.GONE);

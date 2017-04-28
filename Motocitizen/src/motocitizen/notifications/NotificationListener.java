@@ -16,10 +16,10 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.LinkedList;
 import java.util.Map;
 
-import motocitizen.accident.Accident;
+import motocitizen.content.accident.Accident;
 import motocitizen.activity.AccidentDetailsActivity;
-import motocitizen.content.Content;
-import motocitizen.content.Medicine;
+import motocitizen.dictionary.Content;
+import motocitizen.dictionary.Medicine;
 import motocitizen.main.R;
 import motocitizen.utils.Preferences;
 

@@ -7,8 +7,8 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
-import motocitizen.content.Medicine;
-import motocitizen.content.Type;
+import motocitizen.dictionary.Medicine;
+import motocitizen.dictionary.Type;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;

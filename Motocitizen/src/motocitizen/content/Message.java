@@ -1,4 +1,4 @@
-package motocitizen.accident;
+package motocitizen.content;
 
 import org.json.JSONObject;
 
@@ -61,7 +61,7 @@ public class Message {
         return time;
     }
 
-    boolean isUnread() {
+    public boolean isUnread() {
         return unread;
     }
 
@@ -69,7 +69,7 @@ public class Message {
         this.unread = false;
     }
 
-    boolean isNoError() {
+    public boolean isNoError() {
         return noError;
     }
 

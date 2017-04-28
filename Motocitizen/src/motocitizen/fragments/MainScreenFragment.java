@@ -15,14 +15,12 @@ import android.widget.Toast;
 
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.single.EmptyPermissionListener;
+import com.karumi.dexter.listener.single.BasePermissionListener;
 
 import motocitizen.MyApp;
-import motocitizen.accident.Accident;
+import motocitizen.content.accident.Accident;
 import motocitizen.activity.MyFragmentInterface;
-import motocitizen.content.Content;
-import motocitizen.rows.accidentList.CommonRow;
-import motocitizen.rows.accidentList.OwnedRow;
+import motocitizen.dictionary.Content;
 import motocitizen.main.R;
 import motocitizen.maps.MyMapManager;
 import motocitizen.maps.google.MyGoogleMapManager;
@@ -79,7 +77,7 @@ public class MainScreenFragment extends Fragment implements MyFragmentInterface 
 
         Dexter.withActivity(getActivity())
               .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-              .withListener(new EmptyPermissionListener() {
+              .withListener(new BasePermissionListener() {
                   @Override
                   public void onPermissionGranted(PermissionGrantedResponse response) {
                       map.enableLocation();
@@ -110,10 +108,7 @@ public class MainScreenFragment extends Fragment implements MyFragmentInterface 
         for (int id : points.reverseSortedKeySet()) {
             Accident accident = points.get(id);
             if (accident.isInvisible()) continue;
-            listContent.addView(
-                    accident.isOwner() ? new OwnedRow(getContext(), accident) : new CommonRow(getContext(), accident)
-//                    Rows.getAccidentRow(getActivity(), listContent, points.get(id))
-                               );
+            listContent.addView(accident.makeListRow(getContext()));
         }
         map.placeAccidents(getActivity());
     }

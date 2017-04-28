@@ -1,4 +1,4 @@
-package motocitizen.content;
+package motocitizen.dictionary;
 
 public enum AccidentStatus {
     ACTIVE("acc_status_act", "Активный"),

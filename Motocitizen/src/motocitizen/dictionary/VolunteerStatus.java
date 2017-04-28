@@ -1,4 +1,4 @@
-package motocitizen.content;
+package motocitizen.dictionary;
 
 public enum VolunteerStatus {
     ON_WAY("onway", "Выехал"),

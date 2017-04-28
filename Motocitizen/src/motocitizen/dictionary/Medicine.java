@@ -1,4 +1,4 @@
-package motocitizen.content;
+package motocitizen.dictionary;
 
 public enum Medicine {
     UNKNOWN("mc_m_na", "неизвестно"),

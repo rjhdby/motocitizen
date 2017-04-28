@@ -3,7 +3,7 @@ package motocitizen.network.requests;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import motocitizen.content.Content;
+import motocitizen.dictionary.Content;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;

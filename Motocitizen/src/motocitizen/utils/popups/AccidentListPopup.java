@@ -3,9 +3,9 @@ package motocitizen.utils.popups;
 import android.content.Context;
 import android.widget.PopupWindow;
 
-import motocitizen.accident.Accident;
-import motocitizen.content.Content;
-import motocitizen.content.Medicine;
+import motocitizen.content.accident.Accident;
+import motocitizen.dictionary.Content;
+import motocitizen.dictionary.Medicine;
 import motocitizen.user.User;
 import motocitizen.utils.DateUtils;
 import motocitizen.utils.MyUtils;

@@ -8,7 +8,7 @@ import android.widget.FrameLayout
 import android.widget.FrameLayout.LayoutParams.MATCH_PARENT
 import android.widget.FrameLayout.LayoutParams.WRAP_CONTENT
 import android.widget.TextView
-import motocitizen.accident.Message
+import motocitizen.content.Message
 import motocitizen.main.R
 import motocitizen.utils.DateUtils
 

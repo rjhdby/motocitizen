@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
 
-import motocitizen.accident.History
+import motocitizen.content.History
 import motocitizen.user.User
 import motocitizen.main.R
 import motocitizen.utils.MyUtils

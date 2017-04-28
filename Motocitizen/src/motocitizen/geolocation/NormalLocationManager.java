@@ -16,9 +16,9 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-import motocitizen.accident.Accident;
+import motocitizen.content.accident.Accident;
 import motocitizen.activity.MainScreenActivity;
-import motocitizen.content.Content;
+import motocitizen.dictionary.Content;
 import motocitizen.geocoder.MyGeoCoder;
 import motocitizen.network.requests.InPlaceRequest;
 import motocitizen.network.requests.LeaveRequest;

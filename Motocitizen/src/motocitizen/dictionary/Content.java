@@ -1,4 +1,4 @@
-package motocitizen.content;
+package motocitizen.dictionary;
 
 import android.util.Log;
 
@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
-import motocitizen.accident.Accident;
+import motocitizen.content.accident.Accident;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.AccidentsRequest;
 import motocitizen.utils.SortedHashMap;

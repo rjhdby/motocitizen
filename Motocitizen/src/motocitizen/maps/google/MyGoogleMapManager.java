@@ -20,10 +20,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import motocitizen.accident.Accident;
-import motocitizen.content.Content;
-import motocitizen.content.Medicine;
-import motocitizen.content.Type;
+import motocitizen.content.accident.Accident;
+import motocitizen.dictionary.Content;
+import motocitizen.dictionary.Medicine;
+import motocitizen.dictionary.Type;
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.maps.MyMapManager;
