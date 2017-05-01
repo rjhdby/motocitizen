@@ -3,7 +3,7 @@ package motocitizen.utils.popups;
 import android.content.Context;
 import android.widget.PopupWindow;
 
-import motocitizen.content.Message;
+import motocitizen.content.message.Message;
 import motocitizen.dictionary.Content;
 import motocitizen.utils.MyUtils;
 

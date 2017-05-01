@@ -16,7 +16,7 @@ public class History {
     private Date          time;
     private HistoryAction action;
 
-    History(JSONObject json) {
+    public History(JSONObject json) {
         noError = checkPrerequisites(json);
         if (noError) try {
             id = json.getInt("id");

@@ -91,7 +91,7 @@ public class MyGoogleMapManager implements MyMapManager {
 
             float alpha = age < 2 ? 1.0f : age < 6 ? 0.5f : 0.2f;
 
-            Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(point.getLat(), point.getLon())).title(title).icon(point.getType().getIcon()).alpha(alpha));
+            Marker marker = map.addMarker(new MarkerOptions().position(point.getCoordinates()).title(title).icon(point.getType().getIcon()).alpha(alpha));
             accidents.put(marker.getId(), id);
         }
     }

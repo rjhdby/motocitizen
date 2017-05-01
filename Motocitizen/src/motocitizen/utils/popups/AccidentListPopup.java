@@ -27,7 +27,7 @@ public class AccidentListPopup extends PopupWindowGeneral {
             content.addView(phoneButtonRow(context, phone), layoutParams);
             content.addView(smsButtonRow(context, phone), layoutParams);
         }
-        if (User.getInstance().isModerator() || Preferences.getInstance().getLogin().equals(point.getOwner()))
+        if (User.getInstance().isModerator() || Preferences.getInstance().getLogin().equals(point.getOwner().getName()))
             content.addView(finishButtonRow(point));
 
         if (User.getInstance().isModerator()) {
@@ -44,7 +44,7 @@ public class AccidentListPopup extends PopupWindowGeneral {
     public static String getAccidentTextToCopy(Accident accident) {
         StringBuilder res = new StringBuilder();
         res.append(DateUtils.getDateTime(accident.getTime())).append(" ");
-        res.append(accident.getOwner()).append(": ");
+        res.append(accident.getOwner().getName()).append(": ");
         res.append(accident.getType().string()).append(". ");
         if (accident.getMedicine() != Medicine.UNKNOWN) {
             res.append(accident.getMedicine().string()).append(". ");

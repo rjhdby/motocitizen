@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
+import motocitizen.content.AccidentFactory;
 import motocitizen.content.accident.Accident;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.AccidentsRequest;
@@ -56,13 +57,13 @@ public class Content extends SortedHashMap<Accident> {
             JSONArray list = json.getJSONArray("list");
             Log.d("START PARSE POINTS", String.valueOf((new Date()).getTime()));
             for (int i = 0; i < list.length(); i++) {
-                Accident accident = new Accident(list.getJSONObject(i));
-                if (accident.isError()) continue;
-                if (containsKey(accident.getId())) {
-                    get(accident.getId()).update(list.getJSONObject(i));
-                } else {
+                try {
+                    Accident accident = AccidentFactory.Companion.make(list.getJSONObject(i));
                     put(accident.getId(), accident);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
             }
             Log.d("END PARSE POINTS", String.valueOf((new Date()).getTime()));
         } catch (JSONException e) {

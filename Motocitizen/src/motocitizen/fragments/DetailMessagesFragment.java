@@ -14,12 +14,11 @@ import android.widget.PopupWindow;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import motocitizen.content.accident.Accident;
-import motocitizen.content.Message;
 import motocitizen.activity.AccidentDetailsActivity;
-import motocitizen.dictionary.Content;
+import motocitizen.content.accident.Accident;
+import motocitizen.content.message.Message;
 import motocitizen.database.StoreMessages;
-import motocitizen.rows.details.MessageRow;
+import motocitizen.dictionary.Content;
 import motocitizen.main.R;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.SendMessageRequest;
@@ -48,7 +47,6 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         fragment.setArguments(args);
         return fragment;
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
@@ -81,14 +79,14 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
 
         Integer[] keys = accident.getMessages().sortedKeySet();
         if (keys.length > 0) {
-            updateUnreadMessages(accident.getId(), Math.max(keys[ 0 ], keys[ keys.length - 1 ]));
+            updateUnreadMessages(accident.getId(), Math.max(keys[0], keys[keys.length - 1]));
         }
         for (int i = 0; i < keys.length; i++) {
-            nextOwner = keys.length > i + 1 ? accident.getMessages().get(keys[ i + 1 ]).getOwnerId() : 0;
-            final Message message = accident.getMessages().get(keys[ i ]);
-            message.setRead();
-            View row = new MessageRow(getActivity(), message, lastOwner, nextOwner);
-            lastOwner = accident.getMessages().get(keys[ i ]).getOwnerId();
+            nextOwner = keys.length > i + 1 ? accident.getMessages().get(keys[i + 1]).getOwner().getId() : 0;
+            final Message message = accident.getMessages().get(keys[i]);
+            message.setRead(true);
+            View row = message.getRow(getActivity(), lastOwner, nextOwner);
+            lastOwner = accident.getMessages().get(keys[i]).getOwner().getId();
             row.setOnLongClickListener(new MessageRowLongClickListener(message, accident));
             messagesTable.addView(row);
         }
@@ -165,9 +163,9 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         public boolean onLongClick(View v) {
             PopupWindow popupWindow;
             popupWindow = (new MessagesPopup(getActivity(), message.getId(), accident.getId())).getPopupWindow(getActivity());
-            int viewLocation[] = new int[ 2 ];
+            int viewLocation[] = new int[2];
             v.getLocationOnScreen(viewLocation);
-            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[ 0 ], viewLocation[ 1 ]);
+            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
             return true;
         }
     }

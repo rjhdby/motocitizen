@@ -13,7 +13,7 @@ import motocitizen.utils.Preferences;
 public class BanRequest extends HTTPClient {
     public BanRequest(AsyncTaskCompleteListener listener, int id) {
         this.listener = listener;
-        int user_id = Content.getInstance().get(id).getOwnerId();
+        int user_id = Content.getInstance().get(id).getOwner().getId();
         post.put("login", Preferences.getInstance().getLogin());
         post.put("passhash", User.getInstance().getPassHash());
         post.put("id", String.valueOf(id));

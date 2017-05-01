@@ -4,9 +4,9 @@ import android.content.Context
 import motocitizen.content.accident.Accident
 import motocitizen.main.R
 
-class EndedCommonRow(context: Context, accident: Accident) : CommonRow(context, accident) {
+class OwneActivedRow(context: Context, accident: Accident) : OwnedRow(context, accident) {
     override val textColor: Int
-        get() = ENDED_COLOR
+        get() = ACTIVE_COLOR
     override val background: Int
-        get() = R.drawable.accident_row_ended
+        get() = R.drawable.owner_message_row
 }

@@ -85,6 +85,10 @@ public class User {
         isAuthorized = false;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public boolean isAuthorized() {return isAuthorized;}
 
     public boolean isModerator()  {return role.isModerator();}

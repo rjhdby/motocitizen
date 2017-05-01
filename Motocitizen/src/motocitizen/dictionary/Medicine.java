@@ -7,8 +7,8 @@ public enum Medicine {
     HEAVY("mc_m_h", "вроде жив"),
     LETHAL("mc_m_d", "летальный");
 
-    private final String code;
-    private final String text;
+    public final String code;
+    public final String text;
 
     Medicine(String code, String text) {
         this.text = text;

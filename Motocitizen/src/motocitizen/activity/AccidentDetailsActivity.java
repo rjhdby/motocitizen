@@ -17,6 +17,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import motocitizen.content.AccidentFactory;
 import motocitizen.content.accident.Accident;
 import motocitizen.dictionary.AccidentStatus;
 import motocitizen.dictionary.Content;
@@ -94,10 +95,17 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         mcDetTabsGroup.setOnCheckedChangeListener((group, checkedId) -> {
             AccidentDetailsFragments fragment;
             switch (group.getCheckedRadioButtonId()) {
-                case R.id.details_tab_messages: fragment = detailMessagesFragment; break;
-                case R.id.details_tab_history: fragment = detailHistoryFragment; break;
-                case R.id.details_tab_people: fragment = detailVolunteersFragment; break;
-                default: return;
+                case R.id.details_tab_messages:
+                    fragment = detailMessagesFragment;
+                    break;
+                case R.id.details_tab_history:
+                    fragment = detailHistoryFragment;
+                    break;
+                case R.id.details_tab_people:
+                    fragment = detailVolunteersFragment;
+                    break;
+                default:
+                    return;
             }
             getFragmentManager().beginTransaction().replace(R.id.details_tab_content, fragment).commit();
         });
@@ -117,9 +125,9 @@ public class AccidentDetailsActivity extends AppCompatActivity {
             PopupWindow popupWindow;
             popupWindow = (new AccidentListPopup(AccidentDetailsActivity.this, currentPoint.getId()))
                     .getPopupWindow(AccidentDetailsActivity.this);
-            int viewLocation[] = new int[ 2 ];
+            int viewLocation[] = new int[2];
             v.getLocationOnScreen(viewLocation);
-            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[ 0 ], viewLocation[ 1 ]);
+            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
             return true;
         });
         update();
@@ -140,7 +148,7 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         medicineView.setText("(" + currentPoint.getMedicine().string() + ")");
         statusView.setText(currentPoint.getStatus().string());
         ((TextView) findViewById(R.id.acc_details_general_time)).setText(DateUtils.getTime(currentPoint.getTime()));
-        ((TextView) findViewById(R.id.acc_details_general_owner)).setText(currentPoint.getOwner());
+        ((TextView) findViewById(R.id.acc_details_general_owner)).setText(currentPoint.getOwner().getName());
         ((TextView) findViewById(R.id.acc_details_general_address)).setText(currentPoint.getAddress());
         ((TextView) findViewById(R.id.acc_details_general_distance)).setText(currentPoint.getDistanceString());
         ((TextView) findViewById(R.id.acc_details_general_description)).setText(currentPoint.getDescription());
@@ -271,7 +279,7 @@ public class AccidentDetailsActivity extends AppCompatActivity {
                 ToastUtils.show(AccidentDetailsActivity.this, error);
             } else {
                 //TODO Суперкостыль
-                currentPoint.setStatus(accNewState);
+                currentPoint = AccidentFactory.Companion.refactor(currentPoint, accNewState);
                 update();
             }
         }

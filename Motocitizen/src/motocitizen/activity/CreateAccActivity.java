@@ -37,6 +37,7 @@ import java.util.Date;
 import java.util.List;
 
 import motocitizen.content.accident.Accident;
+import motocitizen.content.accident.OwnedActiveAccident;
 import motocitizen.dictionary.AccidentStatus;
 import motocitizen.dictionary.Content;
 import motocitizen.dictionary.Medicine;
@@ -46,6 +47,7 @@ import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.network.GeocoderClient;
 import motocitizen.network.requests.CreateAccidentRequest;
+import motocitizen.user.Owner;
 import motocitizen.user.User;
 import motocitizen.utils.DateUtils;
 import motocitizen.utils.MyUtils;
@@ -113,10 +115,10 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return new Accident(accident);
+        return new OwnedActiveAccident(0, Type.OTHER, Medicine.UNKNOWN, new Date(), "", new LatLng(initialLocation.getLatitude(), initialLocation.getLongitude()), new Owner(User.getInstance().getId(), User.getInstance().getName()));
     }
 
-    @SuppressWarnings({ "MissingPermission" })
+    @SuppressWarnings({"MissingPermission"})
     private void enableMyLocation() {
         Dexter.withActivity(this)
               .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -170,7 +172,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 } else {
                     alpha = 0.2f;
                 }
-                map.addMarker(new MarkerOptions().position(new LatLng(point.getLat(), point.getLon())).title(title).icon(point.getType().getIcon()).alpha(alpha));
+                map.addMarker(new MarkerOptions().position(point.getCoordinates()).title(title).icon(point.getType().getIcon()).alpha(alpha));
             }
         }
     }
@@ -204,24 +206,24 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     }
 
     private void setupListener() {
-        Integer[] ids = { R.id.BREAK,
-                          R.id.STEAL,
-                          R.id.OTHER,
-                          R.id.ACCIDENT,
-                          R.id.MOTO_AUTO,
-                          R.id.SOLO,
-                          R.id.MOTO_MOTO,
-                          R.id.MOTO_MAN,
-                          R.id.PEOPLE_OK,
-                          R.id.PEOPLE_LIGHT,
-                          R.id.PEOPLE_HEAVY,
-                          R.id.PEOPLE_LETHAL,
-                          R.id.PEOPLE_UNKNOWN,
-                          R.id.ADDRESS,
-                          R.id.CREATE,
-                          R.id.CANCEL,
-                          R.id.BACK,
-                          R.id.SEARCH };
+        Integer[] ids = {R.id.BREAK,
+                         R.id.STEAL,
+                         R.id.OTHER,
+                         R.id.ACCIDENT,
+                         R.id.MOTO_AUTO,
+                         R.id.SOLO,
+                         R.id.MOTO_MOTO,
+                         R.id.MOTO_MAN,
+                         R.id.PEOPLE_OK,
+                         R.id.PEOPLE_LIGHT,
+                         R.id.PEOPLE_HEAVY,
+                         R.id.PEOPLE_LETHAL,
+                         R.id.PEOPLE_UNKNOWN,
+                         R.id.ADDRESS,
+                         R.id.CREATE,
+                         R.id.CANCEL,
+                         R.id.BACK,
+                         R.id.SEARCH};
         for (int id : ids) findViewById(id).setOnClickListener(this);
     }
 
@@ -234,7 +236,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     }
 
     private void hideAll() {
-        Integer[] ids = { TYPE, MAP, MEDICINE, DESCRIPTION, ACCIDENT };
+        Integer[] ids = {TYPE, MAP, MEDICINE, DESCRIPTION, ACCIDENT};
         for (int id : ids) findViewById(id).setVisibility(View.INVISIBLE);
     }
 
@@ -397,7 +399,8 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             case KeyEvent.KEYCODE_BACK:
                 backButton();
                 return true;
-            default: return super.onKeyUp(keycode, e);
+            default:
+                return super.onKeyUp(keycode, e);
         }
     }
 
