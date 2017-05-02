@@ -2,8 +2,8 @@
 <manifest package="motocitizen.main"
           xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          android:versionCode="991"
-          android:versionName="0.9.91">
+          android:versionCode="992"
+          android:versionName="0.9.92">
 
     <uses-sdk
         android:minSdkVersion="15"
