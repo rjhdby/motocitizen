@@ -16,7 +16,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import motocitizen.content.Volunteer;
+import motocitizen.content.volunteer.Volunteer;
 import motocitizen.activity.AccidentDetailsActivity;
 import motocitizen.content.accident.Accident;
 import motocitizen.dictionary.Content;

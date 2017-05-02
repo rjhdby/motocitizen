@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout android:id="@+id/row"
-             xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:background="@drawable/message_row"
-             android:orientation="vertical"
-             style="@style/accident_row_outer">
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <TextView
         android:id="@+id/owner"
@@ -29,4 +23,4 @@
         android:gravity="right"
         android:text=""
         android:textColor="@color/dark_blue"/>
-</FrameLayout>
+</merge>

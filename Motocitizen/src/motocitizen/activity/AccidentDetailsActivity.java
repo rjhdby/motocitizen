@@ -17,7 +17,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-import motocitizen.content.AccidentFactory;
+import motocitizen.content.accident.AccidentFactory;
 import motocitizen.content.accident.Accident;
 import motocitizen.dictionary.AccidentStatus;
 import motocitizen.dictionary.Content;

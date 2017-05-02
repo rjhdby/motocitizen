@@ -2,6 +2,8 @@ package motocitizen.network.requests;
 
 import android.location.Location;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,9 +28,9 @@ public class CreateAccidentRequest extends HTTPClient {
         post.put("passhash", User.getInstance().getPassHash());
     }
 
-    public void setLocation(Location location) {
-        post.put("lat", String.valueOf(location.getLatitude()));
-        post.put("lon", String.valueOf(location.getLongitude()));
+    public void setLocation(LatLng location) {
+        post.put("lat", String.valueOf(location.latitude));
+        post.put("lon", String.valueOf(location.longitude));
     }
 
     public void setForStat() {

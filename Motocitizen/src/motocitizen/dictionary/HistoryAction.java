@@ -14,7 +14,7 @@ public enum HistoryAction {
     OTHER("other", "Прочее");
 
     private final String code;
-    private final String text;
+    public final String text;
 
     HistoryAction(String code, String text) {
         this.code = code;
@@ -26,13 +26,5 @@ public enum HistoryAction {
             if (a.code.equals(action)) return a;
         }
         return HistoryAction.OTHER;
-    }
-
-    public String string() {
-        return this.text;
-    }
-
-    public String code() {
-        return this.code;
     }
 }

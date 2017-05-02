@@ -6,10 +6,9 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
-
-import motocitizen.content.History
-import motocitizen.user.User
+import motocitizen.content.history.History
 import motocitizen.main.R
+import motocitizen.user.User
 import motocitizen.utils.MyUtils
 
 class HistoryRow : LinearLayout {
@@ -24,7 +23,7 @@ class HistoryRow : LinearLayout {
             ownerView.setBackgroundColor(Color.DKGRAY)
         }
         ownerView.text = history.owner
-        (this.findViewById(R.id.text) as TextView).text = history.actionString
+        (this.findViewById(R.id.text) as TextView).text = history.action.text
         (this.findViewById(R.id.date) as TextView).text = MyUtils.getStringTime(history.time)
     }
 

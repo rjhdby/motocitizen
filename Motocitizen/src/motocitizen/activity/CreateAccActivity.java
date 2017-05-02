@@ -28,17 +28,14 @@ import com.karumi.dexter.Dexter;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.single.BasePermissionListener;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+import motocitizen.content.accident.AccidentFactory;
 import motocitizen.content.accident.Accident;
-import motocitizen.content.accident.OwnedActiveAccident;
-import motocitizen.dictionary.AccidentStatus;
 import motocitizen.dictionary.Content;
 import motocitizen.dictionary.Medicine;
 import motocitizen.dictionary.Type;
@@ -47,7 +44,6 @@ import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.network.GeocoderClient;
 import motocitizen.network.requests.CreateAccidentRequest;
-import motocitizen.user.Owner;
 import motocitizen.user.User;
 import motocitizen.utils.DateUtils;
 import motocitizen.utils.MyUtils;
@@ -64,26 +60,21 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     private static final int MAP         = R.id.create_map;
     /* end of constants */
 
-    private int       currentScreen;
-    private boolean   confirmLock;
-    private boolean   complete;
-    private Accident  accident;
+
     private GoogleMap map;
     private Button    confirmButton;
     private Location  initialLocation;
     private EditText  searchEditText;
-
-    {
-        confirmLock = false;
-        currentScreen = MAP;
-    }
+    private boolean                         complete      = false;
+    private int                             currentScreen = MAP;
+    private boolean                         confirmLock   = false;
+    private AccidentFactory.AccidentBuilder ab            = new AccidentFactory.AccidentBuilder();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_point);
         initialLocation = MyLocationManager.getInstance().getLocation();
-        accident = createDefaultAccident();
         makeMap();
         confirmButton = (Button) findViewById(R.id.CREATE);
         EditText createFinalText = (EditText) findViewById(R.id.create_final_text);
@@ -95,30 +86,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         setupListener();
     }
 
-    private Accident createDefaultAccident() {
-        JSONObject accident = new JSONObject();
-        try {
-            accident.put("id", 0);
-            accident.put("lat", initialLocation.getLatitude());
-            accident.put("lon", initialLocation.getLongitude());
-            accident.put("owner_id", Preferences.getInstance().getUserId());
-            accident.put("owner", Preferences.getInstance().getUserName());
-            accident.put("status", AccidentStatus.ACTIVE.code());
-            accident.put("uxtime", String.valueOf(System.currentTimeMillis() / 1000L));
-            accident.put("address", "");
-            accident.put("descr", "");
-            accident.put("type", Type.OTHER.code());
-            accident.put("med", Medicine.UNKNOWN.code());
-            accident.put("m", new JSONArray("[]"));
-            accident.put("h", new JSONArray("[]"));
-            accident.put("v", new JSONArray("[]"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return new OwnedActiveAccident(0, Type.OTHER, Medicine.UNKNOWN, new Date(), "", new LatLng(initialLocation.getLatitude(), initialLocation.getLongitude()), new Owner(User.getInstance().getId(), User.getInstance().getName()));
-    }
-
-    @SuppressWarnings({"MissingPermission"})
+    @SuppressWarnings({ "MissingPermission" })
     private void enableMyLocation() {
         Dexter.withActivity(this)
               .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -135,7 +103,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         @Override
         public void onMapReady(GoogleMap googleMap) {
             map = googleMap;
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(accident.getLocation()), 16));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(ab.getCoordinates(), 16));
             enableMyLocation();
             map.getUiSettings().setMyLocationButtonEnabled(true);
             map.getUiSettings().setZoomControlsEnabled(true);
@@ -185,7 +153,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     }
 
     private void setComplete() {
-        complete = accident.isAccident() || accident.getDescription().length() > 6;
+        complete = ab.build().isAccident() || ab.getDescription().length() > 6;
         setConfirm(isComplete());
     }
 
@@ -197,33 +165,33 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     }
 
     private void refreshDescription() {
-        String text = accident.getType().string();
-        text += accident.getMedicine() == Medicine.UNKNOWN ? "" : ". " + accident.getMedicine().string();
+        String text = ab.getType().string();
+        text += ab.getMedicine() == Medicine.UNKNOWN ? "" : ". " + ab.getMedicine().string();
         ((TextView) findViewById(R.id.create_what)).setText(text);
         ((TextView) findViewById(R.id.create_who)).setText(Preferences.getInstance().getLogin());
-        ((TextView) findViewById(R.id.create_where)).setText(accident.getAddress());
-        ((TextView) findViewById(R.id.create_when)).setText(DateUtils.getDateTime(accident.getTime()));
+        ((TextView) findViewById(R.id.create_where)).setText(ab.getAddress());
+        ((TextView) findViewById(R.id.create_when)).setText(DateUtils.getDateTime(ab.getTime()));
     }
 
     private void setupListener() {
-        Integer[] ids = {R.id.BREAK,
-                         R.id.STEAL,
-                         R.id.OTHER,
-                         R.id.ACCIDENT,
-                         R.id.MOTO_AUTO,
-                         R.id.SOLO,
-                         R.id.MOTO_MOTO,
-                         R.id.MOTO_MAN,
-                         R.id.PEOPLE_OK,
-                         R.id.PEOPLE_LIGHT,
-                         R.id.PEOPLE_HEAVY,
-                         R.id.PEOPLE_LETHAL,
-                         R.id.PEOPLE_UNKNOWN,
-                         R.id.ADDRESS,
-                         R.id.CREATE,
-                         R.id.CANCEL,
-                         R.id.BACK,
-                         R.id.SEARCH};
+        Integer[] ids = { R.id.BREAK,
+                          R.id.STEAL,
+                          R.id.OTHER,
+                          R.id.ACCIDENT,
+                          R.id.MOTO_AUTO,
+                          R.id.SOLO,
+                          R.id.MOTO_MOTO,
+                          R.id.MOTO_MAN,
+                          R.id.PEOPLE_OK,
+                          R.id.PEOPLE_LIGHT,
+                          R.id.PEOPLE_HEAVY,
+                          R.id.PEOPLE_LETHAL,
+                          R.id.PEOPLE_UNKNOWN,
+                          R.id.ADDRESS,
+                          R.id.CREATE,
+                          R.id.CANCEL,
+                          R.id.BACK,
+                          R.id.SEARCH };
         for (int id : ids) findViewById(id).setOnClickListener(this);
     }
 
@@ -236,7 +204,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     }
 
     private void hideAll() {
-        Integer[] ids = {TYPE, MAP, MEDICINE, DESCRIPTION, ACCIDENT};
+        Integer[] ids = { TYPE, MAP, MEDICINE, DESCRIPTION, ACCIDENT };
         for (int id : ids) findViewById(id).setVisibility(View.INVISIBLE);
     }
 
@@ -247,14 +215,14 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             case R.id.BREAK:
             case R.id.STEAL:
             case R.id.OTHER:
-                accident.setType(getSelectedType(id));
+                ab.setType(getSelectedType(id));
                 setUpScreen(DESCRIPTION);
                 break;
             case R.id.MOTO_AUTO:
             case R.id.SOLO:
             case R.id.MOTO_MOTO:
             case R.id.MOTO_MAN:
-                accident.setType(getSelectedType(id));
+                ab.setType(getSelectedType(id));
                 setUpScreen(MEDICINE);
                 break;
             case R.id.ACCIDENT:
@@ -265,13 +233,13 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             case R.id.PEOPLE_HEAVY:
             case R.id.PEOPLE_LETHAL:
             case R.id.PEOPLE_UNKNOWN:
-                accident.setMedicine(getSelectedMedicine(id));
+                ab.setMedicine(getSelectedMedicine(id));
                 setUpScreen(DESCRIPTION);
                 setComplete();
                 break;
             case R.id.ADDRESS:
-                accident.setLatLng(map.getCameraPosition().target);
-                accident.setAddress(MyLocationManager.getInstance().getAddress(accident.getLocation()));
+                ab.setCoordinates(map.getCameraPosition().target);
+                ab.setAddress(MyLocationManager.getInstance().getAddress(ab.getCoordinates()));
                 setUpScreen(TYPE);
                 break;
             case R.id.CREATE:
@@ -350,12 +318,12 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 enableConfirm();
             }
         });
-        request.setType(accident.getType());
-        request.setMed(accident.getMedicine());
-        request.setAddress(accident.getAddress());
-        request.setLocation(accident.getLocation());
-        request.setDescription(accident.getDescription());
-        request.setCreated(accident.getTime());
+        request.setType(ab.getType());
+        request.setMed(ab.getMedicine());
+        request.setAddress(ab.getAddress());
+        request.setLocation(ab.getCoordinates());
+        request.setDescription(ab.getDescription());
+        request.setCreated(ab.getTime());
         if (((CheckBox) findViewById(R.id.forStat)).isChecked()) request.setForStat();
         //noinspection unchecked
         request.execute();
@@ -376,7 +344,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 setUpScreen(MAP);
                 break;
             case DESCRIPTION:
-                setUpScreen(accident.isAccident() ? MEDICINE : TYPE);
+                setUpScreen(ab.build().isAccident() ? MEDICINE : TYPE);
                 break;
         }
         setInComplete();
@@ -416,7 +384,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            accident.setDescription(s.toString());
+            ab.setDescription(s.toString());
             setComplete();
         }
 

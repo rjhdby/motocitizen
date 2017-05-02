@@ -3,6 +3,8 @@ package motocitizen.geolocation;
 import android.content.Context;
 import android.location.Location;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public interface SecuredLocationManagerInterface {
     void wakeup(Context context);
 
@@ -12,5 +14,5 @@ public interface SecuredLocationManagerInterface {
 
     Location getLocation();
 
-    String getAddress(Location location);
+    String getAddress(LatLng location);
 }

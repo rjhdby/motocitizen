@@ -4,8 +4,8 @@ import android.content.Context
 import android.location.Location
 import android.location.LocationManager
 import com.google.android.gms.maps.model.LatLng
-import motocitizen.content.History
-import motocitizen.content.Volunteer
+import motocitizen.content.history.History
+import motocitizen.content.volunteer.Volunteer
 import motocitizen.content.message.Message
 import motocitizen.dictionary.AccidentStatus
 import motocitizen.dictionary.AccidentStatus.HIDDEN

@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
-import motocitizen.content.AccidentFactory;
+import motocitizen.content.accident.AccidentFactory;
 import motocitizen.content.accident.Accident;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.AccidentsRequest;

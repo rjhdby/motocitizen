@@ -1,7 +1,5 @@
-package motocitizen.content
+package motocitizen.content.message
 
-import motocitizen.content.message.Message
-import motocitizen.content.message.OwnedMessage
 import motocitizen.user.Owner
 import org.json.JSONObject
 import java.util.*

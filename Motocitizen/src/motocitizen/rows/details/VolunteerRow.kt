@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.widget.TableRow
 import android.widget.TextView
 
-import motocitizen.content.Volunteer
+import motocitizen.content.volunteer.Volunteer
 import motocitizen.main.R
 import motocitizen.utils.DateUtils
 

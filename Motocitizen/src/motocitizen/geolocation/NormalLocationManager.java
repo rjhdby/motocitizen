@@ -22,6 +22,7 @@ import motocitizen.dictionary.Content;
 import motocitizen.geocoder.MyGeoCoder;
 import motocitizen.network.requests.InPlaceRequest;
 import motocitizen.network.requests.LeaveRequest;
+import motocitizen.utils.MyUtils;
 import motocitizen.utils.Preferences;
 
 class NormalLocationManager implements SecuredLocationManagerInterface {
@@ -130,7 +131,7 @@ class NormalLocationManager implements SecuredLocationManagerInterface {
     private void requestAddress() {
         Location location = getLocation();
         if (current == location) return;
-        MainScreenActivity.updateStatusBar(getAddress(location));
+        MainScreenActivity.updateStatusBar(getAddress(MyUtils.LocationToLatLng(location)));
     }
 
     private void checkInPlace(Location location) {
@@ -160,14 +161,14 @@ class NormalLocationManager implements SecuredLocationManagerInterface {
         return acc != null && location != null && (acc.getLocation().distanceTo(location) - location.getAccuracy() * 2 - 1000 < 0);
     }
 
-    public String getAddress(Location location) {
+    public String getAddress(LatLng location) {
         //TODO Разобраться. Выглядит страшно.
         StringBuilder res = new StringBuilder();
         try {
             List<Address> list;
-            list = MyGeoCoder.getInstance().getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            list = MyGeoCoder.getInstance().getFromLocation(location.latitude, location.longitude, 1);
             if (list == null || list.size() == 0)
-                return location.getLatitude() + " " + location.getLongitude();
+                return location.longitude + " " + location.longitude;
 
             Address address  = list.get(0);
             String  locality = address.getLocality();

@@ -37,7 +37,7 @@ class FakeLocationManager implements SecuredLocationManagerInterface {
     }
 
     @Override
-    public String getAddress(Location location) {
+    public String getAddress(LatLng location) {
         return "";
     }
 }
