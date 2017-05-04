@@ -59,9 +59,9 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
 
     private void fillCtrls() {
 
-        login.setText(Preferences.getInstance(this).getLogin());
-        password.setText(Preferences.getInstance(this).getPassword());
-        anonim.setChecked(Preferences.getInstance(this).isAnonim());
+        login.setText(Preferences.Companion.getInstance(this).getLogin());
+        password.setText(Preferences.Companion.getInstance(this).getPassword());
+        anonim.setChecked(Preferences.Companion.getInstance(this).getAnonim());
         View     accListYesterdayLine = findViewById(R.id.accListYesterdayLine);
         TextView roleView             = (TextView) findViewById(R.id.role);
 
@@ -93,7 +93,7 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
         final Activity local = this;
         loginBtn.setOnClickListener(v -> {
             // Анонимный вход
-            Preferences.getInstance(this).setAnonim(anonim.isChecked());
+            Preferences.Companion.getInstance(this).setAnonim(anonim.isChecked());
             if (anonim.isChecked()) {
                 ((TextView) findViewById(R.id.auth_error_helper)).setText("");
                 Router.goTo(local, Router.Target.MAIN);
@@ -112,8 +112,8 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
         });
         logoutBtn.setOnClickListener(v -> {
             //TODO Добавить запрос подтверждения на выход.
-            Preferences.getInstance(this).resetAuth();
-            Preferences.getInstance(this).setAnonim(true);
+            Preferences.Companion.getInstance(this).resetAuth();
+            Preferences.Companion.getInstance(this).setAnonim(true);
             MyApp.logoff();
             fillCtrls();
         });

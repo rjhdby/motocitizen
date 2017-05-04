@@ -82,7 +82,7 @@ public class AccidentDetailsActivity extends AppCompatActivity {
 
         //NewAccidentReceived.removeNotification(accidentID);
 
-        String userName = Preferences.getInstance(this).getLogin();
+        String userName = Preferences.Companion.getInstance(this).getLogin();
 
         detailVolunteersFragment = DetailVolunteersFragment.newInstance(accidentID, userName);
         detailMessagesFragment = DetailMessagesFragment.newInstance(accidentID, userName);

@@ -1,7 +1,6 @@
 package motocitizen.user;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -26,9 +25,9 @@ public class User {
     public static User getInstance(Context context) {
         if (Holder.instance == null) {
             Holder.instance = new User();
-            Holder.instance.preferences = Preferences.getInstance(context);
-            if (!Preferences.getInstance(context).isAnonim() && !Preferences.getInstance(context).getLogin().equals(""))
-                Holder.instance.auth(Preferences.getInstance(context).getLogin(), Preferences.getInstance(context).getPassword());
+            Holder.instance.preferences = Preferences.Companion.getInstance(context);
+            if (!Preferences.Companion.getInstance(context).getAnonim() && !Preferences.Companion.getInstance(context).getLogin().equals(""))
+                Holder.instance.auth(Preferences.Companion.getInstance(context).getLogin(), Preferences.Companion.getInstance(context).getPassword());
         }
         return Holder.instance;
     }
@@ -55,9 +54,6 @@ public class User {
 
             role = Role.parse(result.getString("role"));
             id = Integer.parseInt(result.getString("id"));
-            preferences.setUserId(id);
-            preferences.setUserName(name);
-            preferences.setUserRole(role.getCode());
             preferences.setLogin(login);
             preferences.setPassword(password);
             preferences.setAnonim(false);

@@ -52,7 +52,7 @@ class NormalLocationManager implements SecuredLocationManagerInterface {
         if (connectionCallback == null) connectionCallback = new MyConnectionCallback();
         if (locationListener == null) locationListener = location -> {
             current = location;
-            Preferences.getInstance(context).saveLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
+            Preferences.Companion.getInstance(context).setSavedLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
             requestAddress();
             checkInPlace(location);
         };

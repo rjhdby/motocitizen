@@ -81,7 +81,7 @@ public class MyGoogleMapManager implements MyMapManager {
 
         for (int id : Content.getInstance().keySet()) {
             Accident point = Content.getInstance().get(id);
-            if (point.isInvisible()) continue;
+            if (point.isInvisible(context)) continue;
             String title = point.getType().string();
             title += point.getMedicine() != Medicine.UNKNOWN ? ", " + point.getMedicine().string() : "";
             title += ", " + MyUtils.getIntervalFromNowInText(context, point.getTime()) + " назад";

@@ -126,7 +126,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             map.clear();
             for (int id : Content.getInstance().keySet()) {
                 Accident point = Content.getInstance().get(id);
-                if (point.isInvisible()) continue;
+                if (point.isInvisible(CreateAccActivity.this)) continue;
                 String title = point.getType().string();
                 title += point.getMedicine() == Medicine.NO ? "" : ", " + point.getMedicine().string();
                 title += ", " + MyUtils.getIntervalFromNowInText(CreateAccActivity.this, point.getTime()) + " назад";
@@ -168,7 +168,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         String text = ab.getType().string();
         text += ab.getMedicine() == Medicine.UNKNOWN ? "" : ". " + ab.getMedicine().string();
         ((TextView) findViewById(R.id.create_what)).setText(text);
-        ((TextView) findViewById(R.id.create_who)).setText(Preferences.getInstance(this).getLogin());
+        ((TextView) findViewById(R.id.create_who)).setText(Preferences.Companion.getInstance(this).getLogin());
         ((TextView) findViewById(R.id.create_where)).setText(ab.getAddress());
         ((TextView) findViewById(R.id.create_when)).setText(DateUtils.getDateTime(ab.getTime()));
     }

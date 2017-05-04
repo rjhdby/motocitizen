@@ -16,8 +16,8 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.LinkedList;
 import java.util.Map;
 
-import motocitizen.content.accident.Accident;
 import motocitizen.activity.AccidentDetailsActivity;
+import motocitizen.content.accident.Accident;
 import motocitizen.dictionary.Content;
 import motocitizen.dictionary.Medicine;
 import motocitizen.main.R;
@@ -39,10 +39,10 @@ public class NotificationListener extends FirebaseMessagingService {
 
     private void raiseNotification(Map data) {
         try {
-            int      id       = Integer.parseInt(data.get("id").toString());
-            Accident accident = Content.getInstance().get(id);
-            Preferences preferences = Preferences.getInstance(this);
-            if (accident == null || accident.isInvisible() || preferences.getDoNotDisturb()) return;
+            int         id          = Integer.parseInt(data.get("id").toString());
+            Accident    accident    = Content.getInstance().get(id);
+            Preferences preferences = Preferences.Companion.getInstance(this);
+            if (accident == null || accident.isInvisible(this) || preferences.getDoNotDisturb()) return;
             Intent notificationIntent = new Intent(this, AccidentDetailsActivity.class);
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -54,9 +54,9 @@ public class NotificationListener extends FirebaseMessagingService {
 
             String damage = accident.getMedicine() == Medicine.UNKNOWN ? "" : ", " + accident.getMedicine().string();
             String title  = String.format("%s%s(%s)", accident.getType().string(), damage, accident.getDistanceString());
-            Uri sound = preferences.getAlarmSoundTitle().equals("default system")
+            Uri sound = preferences.getSoundTitle().equals("default system")
                         ? RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-                        : preferences.getAlarmSoundUri();
+                        : preferences.getSound();
             long[] vibrate = preferences.getVibration()
                              ? new long[]{ 1000, 1000, 1000 }
                              : new long[ 0 ];

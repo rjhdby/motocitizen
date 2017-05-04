@@ -61,18 +61,13 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
             return counter
         }
 
-    val isInvisible: Boolean
-        get() {
-            try {
-                val hidden = status == HIDDEN && !User.dirtyRead().isModerator
-                val distanceFilter = distanceFromUser > Preferences.dirtyRead()!!.visibleDistance * 1000
-                val typeFilter = Preferences.dirtyRead()!!.isHidden(type)
-                val timeFilter = time.time + Preferences.dirtyRead()!!.hoursAgo.toLong() * 60 * 60 * 1000 < Date().time
-                return hidden || distanceFilter || typeFilter || timeFilter
-            } catch (e: NullPointerException) {
-                return true
-            }
-        }
+    fun isInvisible(context: Context): Boolean {
+        val hidden = status == HIDDEN && !User.dirtyRead().isModerator
+        val distanceFilter = distanceFromUser > Preferences.getInstance(context).visibleDistance * 1000
+        val typeFilter = Preferences.getInstance(context).isHidden(type)
+        val timeFilter = time.time + Preferences.getInstance(context).hoursAgo.toLong() * 60 * 60 * 1000 < Date().time
+        return hidden || distanceFilter || typeFilter || timeFilter
+    }
 
     fun getVolunteer(id: Int): Volunteer? {
         return volunteers[id]

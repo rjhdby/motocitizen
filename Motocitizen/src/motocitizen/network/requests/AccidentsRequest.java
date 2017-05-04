@@ -26,7 +26,7 @@ public class AccidentsRequest extends HTTPClient {
         post.put("lat", String.valueOf(location.getLatitude()));
         post.put("lon", String.valueOf(location.getLongitude()));
         //noinspection ConstantConditions
-        post.put("age", String.valueOf(Preferences.dirtyRead() == null ? 24 : Preferences.dirtyRead().getHoursAgo()));
+        post.put("age", String.valueOf(Preferences.Companion.dirtyRead() == null ? 24 : Preferences.Companion.dirtyRead().getHoursAgo()));
         post.put("m", Methods.GET_LIST.toCode());
         //noinspection unchecked
         execute(post);

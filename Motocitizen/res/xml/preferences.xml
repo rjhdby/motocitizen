@@ -48,16 +48,16 @@
             android:defaultValue="200"
             android:dialogTitle="@string/settings_distance"
             android:key="mc.distance.show"
-            android:numeric="integer"
             android:maxLength="5"
+            android:numeric="integer"
             android:summary="@string/settings_distance"
             android:tag="mc.distance.show"
             android:title="@string/settings_distance"/>
         <EditTextPreference
             android:defaultValue="20"
-            android:maxLength="5"
             android:dialogTitle="@string/settings_distance_alarm"
             android:key="mc.distance.alarm"
+            android:maxLength="5"
             android:numeric="integer"
             android:summary="@string/settings_distance_alarm"
             android:tag="mc.distance.alarm"
@@ -75,9 +75,9 @@
             android:defaultValue="3"
             android:dialogTitle="@string/settings_max_notifications"
             android:key="notifications.max"
+            android:maxLength="2"
             android:numeric="integer"
             android:summary=""
-            android:maxLength="2"
             android:tag="notifications.max"
             android:title="@string/settings_max_notifications"/>
         <Preference
@@ -95,18 +95,6 @@
             android:summaryOn="@string/settings_no_use_vibration"
             android:tag="use.vibration"
             android:title="@string/settings_use_vibration"/>
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:key="@string/map_provider_category"
-        android:title="@string/map_provider_category">
-        <ListPreference
-            android:defaultValue="google"
-            android:enabled="false"
-            android:entries="@array/mapProvider"
-            android:entryValues="@array/mapProviderValues"
-            android:key="mc.map.provider"
-            android:summary="%s"
-            android:title="@string/config_map_title"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:key="@string/config_other_category"

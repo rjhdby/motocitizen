@@ -32,10 +32,10 @@ public class MainScreenActivity extends AppCompatActivity {
         super.onResume();
         MyLocationManager.getInstance().wakeup(this);
 
-        if (Preferences.getInstance(this).isNewVersion()) {
+        if (Preferences.Companion.getInstance(this).getNewVersion()) {
             AlertDialog changeLogDlg = ChangeLog.getDialog(this);
             changeLogDlg.show();
-            Preferences.getInstance(this).resetNewVersion();
+            Preferences.Companion.getInstance(this).setNewVersion(false);
         }
         PackageManager pm = this.getPackageManager();
         if (!pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {

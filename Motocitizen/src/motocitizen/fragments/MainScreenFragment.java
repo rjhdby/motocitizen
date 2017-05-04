@@ -107,7 +107,7 @@ public class MainScreenFragment extends Fragment implements MyFragmentInterface 
         Content points = Content.getInstance();
         for (int id : points.reverseSortedKeySet()) {
             Accident accident = points.get(id);
-            if (accident.isInvisible()) continue;
+            if (accident.isInvisible(getActivity())) continue;
             listContent.addView(accident.makeListRow(getContext()));
         }
         map.placeAccidents(getActivity());
@@ -170,8 +170,8 @@ public class MainScreenFragment extends Fragment implements MyFragmentInterface 
                 getAccidents();
                 return true;
             case R.id.do_not_disturb:
-                item.setIcon(Preferences.getInstance(getActivity()).getDoNotDisturb() ? R.drawable.ic_lock_ringer_on_alpha : R.drawable.ic_lock_ringer_off_alpha);
-                Preferences.getInstance(getActivity()).setDoNotDisturb(!Preferences.getInstance(getActivity()).getDoNotDisturb());
+                item.setIcon(Preferences.Companion.getInstance(getActivity()).getDoNotDisturb() ? R.drawable.ic_lock_ringer_on_alpha : R.drawable.ic_lock_ringer_off_alpha);
+                Preferences.Companion.getInstance(getActivity()).setDoNotDisturb(!Preferences.Companion.getInstance(getActivity()).getDoNotDisturb());
                 return true;
         }
         return false;

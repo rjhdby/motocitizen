@@ -98,8 +98,8 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
         int      id       = accident.getId();
         boolean  active   = accident.isActive() && User.getInstance(getActivity()).isAuthorized();
-        onwayButton.setVisibility(id != Preferences.getInstance(getActivity()).getOnWay() && id != Content.getInstance().getInPlaceId() && active ? View.VISIBLE : View.GONE);
-        onwayCancelButton.setVisibility(id == Preferences.getInstance(getActivity()).getOnWay() && id != Content.getInstance().getInPlaceId() && active ? View.VISIBLE : View.GONE);
+        onwayButton.setVisibility(id != Preferences.Companion.getInstance(getActivity()).getOnWay() && id != Content.getInstance().getInPlaceId() && active ? View.VISIBLE : View.GONE);
+        onwayCancelButton.setVisibility(id == Preferences.Companion.getInstance(getActivity()).getOnWay() && id != Content.getInstance().getInPlaceId() && active ? View.VISIBLE : View.GONE);
         onwayDisabledButton.setVisibility(id == Content.getInstance().getInPlaceId() && active ? View.VISIBLE : View.GONE);
     }
 
@@ -162,7 +162,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     }
 
     private void sendOnway() {
-        Preferences.getInstance(getActivity()).setOnWay(accidentID);
+        Preferences.Companion.getInstance(getActivity()).setOnWay(accidentID);
         new OnWayRequest(new OnWayCallback(), accidentID);
     }
 
@@ -195,7 +195,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     }
 
     private void sendCancelOnway() {
-        Preferences.getInstance(getContext()).setOnWay(0);
+        Preferences.Companion.getInstance(getContext()).setOnWay(0);
         new CancelOnWayRequest(new OnWayCallback(), accidentID);
     }
 }

@@ -14,17 +14,16 @@ import motocitizen.utils.ToastUtils;
 public class SettingsFragment extends PreferenceFragment {
     private Preference     notificationDistPreference;
     private Preference     notificationAlarmPreference;
-    private ListPreference mapProviderPreference;
 
     private void update() {
-        Preferences preferences = Preferences.getInstance(getActivity());
+        Preferences preferences = Preferences.Companion.getInstance(getActivity());
         String login = preferences.getLogin();
         Preference.OnPreferenceChangeListener visibleListener = (preference, newValue) -> {
             preferences.putBoolean(preference.getKey(), (boolean) newValue);
-            if (preferences.hideAccidents()
-                && preferences.hideBreaks()
-                && preferences.hideOthers()
-                && preferences.hideSteals()) {
+            if (!preferences.getShowAcc()
+                && !preferences.getShowBreak()
+                && !preferences.getShowOther()
+                && !preferences.getShowSteal()) {
                 ToastUtils.show(getActivity(), getString(R.string.no_one_accident_visible));
             }
             update();
@@ -42,7 +41,6 @@ public class SettingsFragment extends PreferenceFragment {
             return false;
         };
 
-        mapProviderPreference = (ListPreference) getPreferenceScreen().findPreference(preferences.getPreferenceName("mapProvider"));
         notificationDistPreference = findPreference(preferences.getPreferenceName("distanceShow"));
         notificationAlarmPreference = findPreference(preferences.getPreferenceName("distanceAlarm"));
         Preference buttonAuth                  = findPreference(getResources().getString(R.string.settings_auth_button));
@@ -60,17 +58,13 @@ public class SettingsFragment extends PreferenceFragment {
         authPreference.setSummary(login.length() > 0 ? User.getInstance(getActivity()).getRoleName() + ": " + login : User.getInstance(getActivity()).getRoleName());
         maxNotifications.setSummary(String.valueOf(preferences.getMaxNotifications()));
         hoursAgo.setSummary(String.valueOf(preferences.getHoursAgo()));
-        notificationSoundPreference.setSummary(preferences.getAlarmSoundTitle());
+        notificationSoundPreference.setSummary(preferences.getSoundTitle());
         notificationDistPreference.setSummary(String.valueOf(preferences.getVisibleDistance()));
         notificationAlarmPreference.setSummary(String.valueOf(preferences.getAlarmDistance()));
 
         notificationDistPreference.setOnPreferenceChangeListener(distanceListener);
         notificationAlarmPreference.setOnPreferenceChangeListener(distanceListener);
-        mapProviderPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-            mapProviderPreference.setValue(newValue.toString());
-            preference.setSummary(mapProviderPreference.getEntry());
-            return true;
-        });
+
         maxNotifications.setOnPreferenceChangeListener((preference, newValue) -> {
             preference.setSummary((String) newValue);
             return true;
