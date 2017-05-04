@@ -8,14 +8,13 @@ import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
 import motocitizen.user.User;
-import motocitizen.utils.Preferences;
 
 public class BanRequest extends HTTPClient {
     public BanRequest(AsyncTaskCompleteListener listener, int id) {
         this.listener = listener;
         int user_id = Content.getInstance().get(id).getOwner().getId();
-        post.put("login", Preferences.getInstance().getLogin());
-        post.put("passhash", User.getInstance().getPassHash());
+        post.put("login", User.dirtyRead().getName());
+        post.put("passhash", User.dirtyRead().getPassHash());
         post.put("id", String.valueOf(id));
         post.put("user_id", String.valueOf(user_id));
         post.put("calledMethod", Methods.BAN.toCode());

@@ -1,17 +1,12 @@
 package motocitizen.activity;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
-import motocitizen.MyApp;
 import motocitizen.fragments.MainScreenFragment;
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
@@ -37,10 +32,10 @@ public class MainScreenActivity extends AppCompatActivity {
         super.onResume();
         MyLocationManager.getInstance().wakeup(this);
 
-        if (Preferences.getInstance().isNewVersion()) {
+        if (Preferences.getInstance(this).isNewVersion()) {
             AlertDialog changeLogDlg = ChangeLog.getDialog(this);
             changeLogDlg.show();
-            Preferences.getInstance().resetNewVersion();
+            Preferences.getInstance(this).resetNewVersion();
         }
         PackageManager pm = this.getPackageManager();
         if (!pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
@@ -80,19 +75,5 @@ public class MainScreenActivity extends AppCompatActivity {
 
         actionBar.setTitle(address);
         if (!subTitle.isEmpty()) actionBar.setSubtitle(subTitle);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults.length == 0) return;
-        switch (requestCode) {
-            case MyApp.LOCATION_PERMISSION:
-                if (this.checkSelfPermission(Manifest.permission_group.LOCATION) == PackageManager.PERMISSION_GRANTED)
-                    MyLocationManager.getInstance();
-                MyLocationManager.permissionRequested = false;
-                break;
-        }
     }
 }

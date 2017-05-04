@@ -41,7 +41,8 @@ public class NotificationListener extends FirebaseMessagingService {
         try {
             int      id       = Integer.parseInt(data.get("id").toString());
             Accident accident = Content.getInstance().get(id);
-            if (accident == null || accident.isInvisible() || Preferences.getInstance().getDoNotDisturb()) return;
+            Preferences preferences = Preferences.getInstance(this);
+            if (accident == null || accident.isInvisible() || preferences.getDoNotDisturb()) return;
             Intent notificationIntent = new Intent(this, AccidentDetailsActivity.class);
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -53,10 +54,10 @@ public class NotificationListener extends FirebaseMessagingService {
 
             String damage = accident.getMedicine() == Medicine.UNKNOWN ? "" : ", " + accident.getMedicine().string();
             String title  = String.format("%s%s(%s)", accident.getType().string(), damage, accident.getDistanceString());
-            Uri sound = Preferences.getInstance().getAlarmSoundTitle().equals("default system")
+            Uri sound = preferences.getAlarmSoundTitle().equals("default system")
                         ? RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-                        : Preferences.getInstance().getAlarmSoundUri();
-            long[] vibrate = Preferences.getInstance().getVibration()
+                        : preferences.getAlarmSoundUri();
+            long[] vibrate = preferences.getVibration()
                              ? new long[]{ 1000, 1000, 1000 }
                              : new long[ 0 ];
 
@@ -77,7 +78,7 @@ public class NotificationListener extends FirebaseMessagingService {
 
             notificationManager.notify(idHash, notification);
             tray.push(idHash);
-            while (tray.size() > Preferences.getInstance().getMaxNotifications()) {
+            while (tray.size() > preferences.getMaxNotifications()) {
                 int remove = tray.pollLast();
                 notificationManager.cancel(remove);
             }

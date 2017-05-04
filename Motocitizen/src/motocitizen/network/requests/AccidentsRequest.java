@@ -9,6 +9,7 @@ import motocitizen.geolocation.MyLocationManager;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
+import motocitizen.user.User;
 import motocitizen.utils.Preferences;
 
 public class AccidentsRequest extends HTTPClient {
@@ -17,14 +18,15 @@ public class AccidentsRequest extends HTTPClient {
     public AccidentsRequest(AsyncTaskCompleteListener listener, boolean silent) {
         this.silent = silent;
         this.listener = listener;
-        Location location = MyLocationManager.getInstance().getLocation();
-        String   user     = Preferences.getInstance().getLogin();
+        Location location = MyLocationManager.getLocation();
+        String   user     = User.dirtyRead().getName();
         if (!user.equals("")) {
             post.put("user", user);
         }
         post.put("lat", String.valueOf(location.getLatitude()));
         post.put("lon", String.valueOf(location.getLongitude()));
-        post.put("age", String.valueOf(Preferences.getInstance().getHoursAgo()));
+        //noinspection ConstantConditions
+        post.put("age", String.valueOf(Preferences.dirtyRead() == null ? 24 : Preferences.dirtyRead().getHoursAgo()));
         post.put("m", Methods.GET_LIST.toCode());
         //noinspection unchecked
         execute(post);

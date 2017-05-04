@@ -10,8 +10,6 @@ public interface SecuredLocationManagerInterface {
 
     void sleep(Context context);
 
-    Location getDirtyLocation();
-
     Location getLocation();
 
     String getAddress(LatLng location);

@@ -28,8 +28,8 @@ public class SelectSoundFragment extends Fragment {
 //TODO rewrite using RecyclerLayout
     {
         currentId = 0;
-        currentUri = Preferences.getInstance().getAlarmSoundUri();
-        currentTitle = Preferences.getInstance().getAlarmSoundTitle();
+        currentUri = Preferences.getInstance(getActivity()).getAlarmSoundUri();
+        currentTitle = Preferences.getInstance(getActivity()).getAlarmSoundTitle();
     }
 
     @Override
@@ -50,9 +50,9 @@ public class SelectSoundFragment extends Fragment {
 
         selectSoundConfirmButton.setOnClickListener(v -> {
             if (currentTitle.equals("default system")) {
-                Preferences.getInstance().setDefaultSoundAlarm();
-            } else Preferences.getInstance().setSoundAlarm(currentTitle, currentUri);
-            Preferences.getInstance().initAlarmSoundUri(getActivity());
+                Preferences.getInstance(getActivity()).setDefaultSoundAlarm();
+            } else Preferences.getInstance(getActivity()).setSoundAlarm(currentTitle, currentUri);
+            Preferences.getInstance(getActivity()).initAlarmSoundUri(getActivity());
             finish();
         });
         selectSoundCancelButton.setOnClickListener(v -> finish());

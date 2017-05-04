@@ -20,7 +20,7 @@ public class MyApp extends MultiDexApplication {
     }
 
     public static void logoff() {
-        User.getInstance().logoff();
+        User.dirtyRead().logoff();
     }
 
     public static boolean isOnline(Context context) {

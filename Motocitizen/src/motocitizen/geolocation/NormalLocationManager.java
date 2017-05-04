@@ -3,7 +3,6 @@ package motocitizen.geolocation;
 import android.content.Context;
 import android.location.Address;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -13,15 +12,15 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 
-import motocitizen.content.accident.Accident;
 import motocitizen.activity.MainScreenActivity;
+import motocitizen.content.accident.Accident;
 import motocitizen.dictionary.Content;
 import motocitizen.geocoder.MyGeoCoder;
 import motocitizen.network.requests.InPlaceRequest;
 import motocitizen.network.requests.LeaveRequest;
+import motocitizen.user.User;
 import motocitizen.utils.MyUtils;
 import motocitizen.utils.Preferences;
 
@@ -35,7 +34,7 @@ class NormalLocationManager implements SecuredLocationManagerInterface {
     private static final int HIGH_BEST         = 1000;
     private static final int HIGH_DISPLACEMENT = 10;
 
-    private static final int DEFAULT_ACCURACY     = 1000;
+
     private static final int ARRIVED_MAX_ACCURACY = 300;
     /* end constants */
 
@@ -46,15 +45,14 @@ class NormalLocationManager implements SecuredLocationManagerInterface {
     private GoogleApiClient.ConnectionCallbacks connectionCallback;
 
     NormalLocationManager() {
-        setup();
         current = getLocation();
     }
 
-    private void setup() {
+    private void setup(Context context) {
         if (connectionCallback == null) connectionCallback = new MyConnectionCallback();
         if (locationListener == null) locationListener = location -> {
             current = location;
-            Preferences.getInstance().saveLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
+            Preferences.getInstance(context).saveLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
             requestAddress();
             checkInPlace(location);
         };
@@ -84,27 +82,18 @@ class NormalLocationManager implements SecuredLocationManagerInterface {
         return lr;
     }
 
-    public Location getDirtyLocation() {
-        if (current != null && current.getTime() - (new Date()).getTime() < 30000) return current;
-        return getLocation();
-    }
-    @SuppressWarnings({"MissingPermission"})
+    @SuppressWarnings({ "MissingPermission" })
     public Location getLocation() {
         if (googleApiClient != null) {
             current = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         }
-        if (current == null) {
-            current = new Location(LocationManager.NETWORK_PROVIDER);
-            LatLng latlng = Preferences.getInstance().getSavedLatLng();
-            current.setLatitude(latlng.latitude);
-            current.setLongitude(latlng.longitude);
-            current.setAccuracy(DEFAULT_ACCURACY);
-        }
+
         return current;
     }
-    @SuppressWarnings({"MissingPermission"})
+
+    @SuppressWarnings({ "MissingPermission" })
     private void runLocationService(Context context, int accuracy) {
-        setup();
+        setup(context);
         locationRequest = getProvider(accuracy);
         if (googleApiClient == null) {
             googleApiClient = new GoogleApiClient.Builder(context).addConnectionCallbacks(connectionCallback).addApi(LocationServices.API).build();
@@ -135,7 +124,7 @@ class NormalLocationManager implements SecuredLocationManagerInterface {
     }
 
     private void checkInPlace(Location location) {
-        String login = Preferences.getInstance().getLogin();
+        String login = User.dirtyRead().getName();
         if (login.equals("")) return;
         int currentInplace = Content.getInstance().getInPlaceId();
         if (currentInplace != 0) {
@@ -193,7 +182,8 @@ class NormalLocationManager implements SecuredLocationManagerInterface {
         }
         return res.toString();
     }
-    @SuppressWarnings({"MissingPermission"})
+
+    @SuppressWarnings({ "MissingPermission" })
     private class MyConnectionCallback implements GoogleApiClient.ConnectionCallbacks {
         @Override
         public void onConnected(Bundle connectionHint) {

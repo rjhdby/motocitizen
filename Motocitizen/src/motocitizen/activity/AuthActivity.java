@@ -39,8 +39,7 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            User.init();
-            if (User.getInstance().isAuthorized()) {
+            if (User.getInstance(this).isAuthorized()) {
                 Router.goTo(this, Router.Target.MAIN);
             }
         } catch (Error e) {
@@ -60,13 +59,13 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
 
     private void fillCtrls() {
 
-        login.setText(Preferences.getInstance().getLogin());
-        password.setText(Preferences.getInstance().getPassword());
-        anonim.setChecked(Preferences.getInstance().isAnonim());
+        login.setText(Preferences.getInstance(this).getLogin());
+        password.setText(Preferences.getInstance(this).getPassword());
+        anonim.setChecked(Preferences.getInstance(this).isAnonim());
         View     accListYesterdayLine = findViewById(R.id.accListYesterdayLine);
         TextView roleView             = (TextView) findViewById(R.id.role);
 
-        boolean isAuthorized = User.getInstance().isAuthorized();
+        boolean isAuthorized = User.getInstance(this).isAuthorized();
         loginBtn.setEnabled(!isAuthorized);
         logoutBtn.setEnabled(isAuthorized);
         anonim.setEnabled(!isAuthorized);
@@ -77,7 +76,7 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
         //Авторизованы?
         if (isAuthorized) {
             String format = getString(R.string.auth_role);
-            roleView.setText(String.format(format, User.getInstance().getRoleName()));
+            roleView.setText(String.format(format, User.getInstance(this).getRoleName()));
         } else {
             enableLoginBtn();
         }
@@ -94,7 +93,7 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
         final Activity local = this;
         loginBtn.setOnClickListener(v -> {
             // Анонимный вход
-            Preferences.getInstance().setAnonim(anonim.isChecked());
+            Preferences.getInstance(this).setAnonim(anonim.isChecked());
             if (anonim.isChecked()) {
                 ((TextView) findViewById(R.id.auth_error_helper)).setText("");
                 Router.goTo(local, Router.Target.MAIN);
@@ -113,8 +112,8 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
         });
         logoutBtn.setOnClickListener(v -> {
             //TODO Добавить запрос подтверждения на выход.
-            Preferences.getInstance().resetAuth();
-            Preferences.getInstance().setAnonim(true);
+            Preferences.getInstance(this).resetAuth();
+            Preferences.getInstance(this).setAnonim(true);
             MyApp.logoff();
             fillCtrls();
         });
@@ -153,7 +152,7 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
 
     private boolean auth() {
         try {
-            return User.getInstance().auth(login.getText().toString(), password.getText().toString());
+            return User.getInstance(this).auth(login.getText().toString(), password.getText().toString());
         } catch (Error error) {
             error.printStackTrace();
             return false;

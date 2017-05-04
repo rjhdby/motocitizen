@@ -111,9 +111,9 @@ class AccidentFactory {
             private set
         var address = ""
             private set
-        var coordinates = LatLng(MyLocationManager.getInstance().location.latitude, MyLocationManager.getInstance().location.longitude)
+        var coordinates = LatLng(MyLocationManager.getLocation().latitude, MyLocationManager.getLocation().longitude)
             private set
-        var owner = Owner(User.getInstance().id, User.getInstance().name)
+        var owner = Owner(User.dirtyRead().id, User.dirtyRead().name)
             private set
         var description = ""
             private set

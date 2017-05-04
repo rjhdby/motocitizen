@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -16,8 +17,8 @@ import motocitizen.dictionary.Type;
 public class Preferences {
     private              boolean newVersion                = false;
     /* constants */
-    private final static float   DEFAULT_LATITUDE          = 55.752295f;
-    private final static float   DEFAULT_LONGITUDE         = 37.622735f;
+    public final static  float   DEFAULT_LATITUDE          = 55.752295f;
+    public final static  float   DEFAULT_LONGITUDE         = 37.622735f;
     private final static int     DEFAULT_SHOW_DISTANCE     = 200;
     private final static int     DEFAULT_ALARM_DISTANCE    = 20;
     private final static int     DEFAULT_MAX_NOTIFICATIONS = 3;
@@ -60,12 +61,16 @@ public class Preferences {
         private static Preferences instance;
     }
 
-    public static void init(Context context) {
-        Holder.instance = new Preferences(context);
-        Holder.instance.setDoNotDisturb(false);
+    public static Preferences getInstance(Context context) {
+        if (Holder.instance == null) {
+            Holder.instance = new Preferences(context);
+            Holder.instance.setDoNotDisturb(false);
+        }
+        return Holder.instance;
     }
 
-    public static Preferences getInstance() {
+    @Nullable
+    public static Preferences dirtyRead() {
         return Holder.instance;
     }
 

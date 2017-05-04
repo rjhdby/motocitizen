@@ -94,7 +94,7 @@ public class MainScreenFragment extends Fragment implements MyFragmentInterface 
 
     @Override
     public void setPermissions() {
-        createAccButton.setVisibility(User.getInstance().isStandard() ? View.VISIBLE : View.INVISIBLE);
+        createAccButton.setVisibility(User.getInstance(getActivity()).isStandard() ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
@@ -170,8 +170,8 @@ public class MainScreenFragment extends Fragment implements MyFragmentInterface 
                 getAccidents();
                 return true;
             case R.id.do_not_disturb:
-                item.setIcon(Preferences.getInstance().getDoNotDisturb() ? R.drawable.ic_lock_ringer_on_alpha : R.drawable.ic_lock_ringer_off_alpha);
-                Preferences.getInstance().setDoNotDisturb(!Preferences.getInstance().getDoNotDisturb());
+                item.setIcon(Preferences.getInstance(getActivity()).getDoNotDisturb() ? R.drawable.ic_lock_ringer_on_alpha : R.drawable.ic_lock_ringer_off_alpha);
+                Preferences.getInstance(getActivity()).setDoNotDisturb(!Preferences.getInstance(getActivity()).getDoNotDisturb());
                 return true;
         }
         return false;

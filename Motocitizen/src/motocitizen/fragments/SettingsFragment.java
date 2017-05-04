@@ -17,13 +17,14 @@ public class SettingsFragment extends PreferenceFragment {
     private ListPreference mapProviderPreference;
 
     private void update() {
-        String login = Preferences.getInstance().getLogin();
+        Preferences preferences = Preferences.getInstance(getActivity());
+        String login = preferences.getLogin();
         Preference.OnPreferenceChangeListener visibleListener = (preference, newValue) -> {
-            Preferences.getInstance().putBoolean(preference.getKey(), (boolean) newValue);
-            if (Preferences.getInstance().hideAccidents()
-                && Preferences.getInstance().hideBreaks()
-                && Preferences.getInstance().hideOthers()
-                && Preferences.getInstance().hideSteals()) {
+            preferences.putBoolean(preference.getKey(), (boolean) newValue);
+            if (preferences.hideAccidents()
+                && preferences.hideBreaks()
+                && preferences.hideOthers()
+                && preferences.hideSteals()) {
                 ToastUtils.show(getActivity(), getString(R.string.no_one_accident_visible));
             }
             update();
@@ -33,35 +34,35 @@ public class SettingsFragment extends PreferenceFragment {
             Integer value = Math.min(Const.EQUATOR, Integer.parseInt((String) newValue));
 
             if (preference.equals(notificationDistPreference)) {
-                Preferences.getInstance().setVisibleDistance(value);
+                preferences.setVisibleDistance(value);
             } else if (preference.equals(notificationAlarmPreference)) {
-                Preferences.getInstance().setAlarmDistance(value);
+                preferences.setAlarmDistance(value);
             }
             update();
             return false;
         };
 
-        mapProviderPreference = (ListPreference) getPreferenceScreen().findPreference(Preferences.getInstance().getPreferenceName("mapProvider"));
-        notificationDistPreference = findPreference(Preferences.getInstance().getPreferenceName("distanceShow"));
-        notificationAlarmPreference = findPreference(Preferences.getInstance().getPreferenceName("distanceAlarm"));
+        mapProviderPreference = (ListPreference) getPreferenceScreen().findPreference(preferences.getPreferenceName("mapProvider"));
+        notificationDistPreference = findPreference(preferences.getPreferenceName("distanceShow"));
+        notificationAlarmPreference = findPreference(preferences.getPreferenceName("distanceAlarm"));
         Preference buttonAuth                  = findPreference(getResources().getString(R.string.settings_auth_button));
         Preference buttonSound                 = findPreference(getResources().getString(R.string.notification_sound));
-        Preference showAcc                     = findPreference(Preferences.getInstance().getPreferenceName("showAcc"));
-        Preference showBreak                   = findPreference(Preferences.getInstance().getPreferenceName("showBreak"));
-        Preference showSteal                   = findPreference(Preferences.getInstance().getPreferenceName("showSteal"));
-        Preference showOther                   = findPreference(Preferences.getInstance().getPreferenceName("showOther"));
-        Preference hoursAgo                    = findPreference(Preferences.getInstance().getPreferenceName("hoursAgo"));
-        Preference maxNotifications            = findPreference(Preferences.getInstance().getPreferenceName("maxNotifications"));
-        Preference useVibration                = findPreference(Preferences.getInstance().getPreferenceName("useVibration"));
+        Preference showAcc                     = findPreference(preferences.getPreferenceName("showAcc"));
+        Preference showBreak                   = findPreference(preferences.getPreferenceName("showBreak"));
+        Preference showSteal                   = findPreference(preferences.getPreferenceName("showSteal"));
+        Preference showOther                   = findPreference(preferences.getPreferenceName("showOther"));
+        Preference hoursAgo                    = findPreference(preferences.getPreferenceName("hoursAgo"));
+        Preference maxNotifications            = findPreference(preferences.getPreferenceName("maxNotifications"));
+        Preference useVibration                = findPreference(preferences.getPreferenceName("useVibration"));
         Preference notificationSoundPreference = findPreference(getResources().getString(R.string.notification_sound));
         Preference authPreference              = findPreference(getResources().getString(R.string.settings_auth_button));
 
-        authPreference.setSummary(login.length() > 0 ? User.getInstance().getRoleName() + ": " + login : User.getInstance().getRoleName());
-        maxNotifications.setSummary(String.valueOf(Preferences.getInstance().getMaxNotifications()));
-        hoursAgo.setSummary(String.valueOf(Preferences.getInstance().getHoursAgo()));
-        notificationSoundPreference.setSummary(Preferences.getInstance().getAlarmSoundTitle());
-        notificationDistPreference.setSummary(String.valueOf(Preferences.getInstance().getVisibleDistance()));
-        notificationAlarmPreference.setSummary(String.valueOf(Preferences.getInstance().getAlarmDistance()));
+        authPreference.setSummary(login.length() > 0 ? User.getInstance(getActivity()).getRoleName() + ": " + login : User.getInstance(getActivity()).getRoleName());
+        maxNotifications.setSummary(String.valueOf(preferences.getMaxNotifications()));
+        hoursAgo.setSummary(String.valueOf(preferences.getHoursAgo()));
+        notificationSoundPreference.setSummary(preferences.getAlarmSoundTitle());
+        notificationDistPreference.setSummary(String.valueOf(preferences.getVisibleDistance()));
+        notificationAlarmPreference.setSummary(String.valueOf(preferences.getAlarmDistance()));
 
         notificationDistPreference.setOnPreferenceChangeListener(distanceListener);
         notificationAlarmPreference.setOnPreferenceChangeListener(distanceListener);
@@ -80,7 +81,7 @@ public class SettingsFragment extends PreferenceFragment {
             return true;
         });
         useVibration.setOnPreferenceChangeListener((preference, newValue) -> {
-            Preferences.getInstance().putBoolean(preference.getKey(), (boolean) newValue);
+            preferences.putBoolean(preference.getKey(), (boolean) newValue);
             return true;
         });
         buttonSound.setOnPreferenceClickListener(stub -> {

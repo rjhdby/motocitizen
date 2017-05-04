@@ -7,13 +7,12 @@ import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
 import motocitizen.user.User;
-import motocitizen.utils.Preferences;
 
 public class CancelOnWayRequest extends HTTPClient {
     public CancelOnWayRequest(AsyncTaskCompleteListener listener, int id) {
         this.listener = listener;
-        post.put("login", Preferences.getInstance().getLogin());
-        post.put("passhash", User.getInstance().getPassHash());
+        post.put("login", User.dirtyRead().getName());
+        post.put("passhash", User.dirtyRead().getPassHash());
         post.put("id", String.valueOf(id));
         post.put("calledMethod", Methods.CANCEL_ON_WAY.toCode());
         //noinspection unchecked

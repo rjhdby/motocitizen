@@ -1,5 +1,7 @@
 package motocitizen.user;
 
+import android.content.Context;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -17,18 +19,26 @@ public class User {
     private int     id           = 0;
     private boolean isAuthorized = false;
 
-    private User()                   {}
+    private Preferences preferences;
 
-    public static User getInstance() {return Holder.instance;}
+    private User() {}
 
-    public static void init() {
-        if (Preferences.getInstance().isAnonim()) return;
-        if (Preferences.getInstance().getLogin().equals("")) return;
-        getInstance().auth(Preferences.getInstance().getLogin(), Preferences.getInstance().getPassword());
+    public static User getInstance(Context context) {
+        if (Holder.instance == null) {
+            Holder.instance = new User();
+            Holder.instance.preferences = Preferences.getInstance(context);
+            if (!Preferences.getInstance(context).isAnonim() && !Preferences.getInstance(context).getLogin().equals(""))
+                Holder.instance.auth(Preferences.getInstance(context).getLogin(), Preferences.getInstance(context).getPassword());
+        }
+        return Holder.instance;
+    }
+
+    public static User dirtyRead() {
+        return Holder.instance == null ? new User() : Holder.instance;
     }
 
     private static class Holder {
-        private final static User instance = new User();
+        private static User instance;
     }
 
     public boolean auth(String login, String password) {
@@ -45,12 +55,12 @@ public class User {
 
             role = Role.parse(result.getString("role"));
             id = Integer.parseInt(result.getString("id"));
-            Preferences.getInstance().setUserId(id);
-            Preferences.getInstance().setUserName(name);
-            Preferences.getInstance().setUserRole(role.getCode());
-            Preferences.getInstance().setLogin(login);
-            Preferences.getInstance().setPassword(password);
-            Preferences.getInstance().setAnonim(false);
+            preferences.setUserId(id);
+            preferences.setUserName(name);
+            preferences.setUserRole(role.getCode());
+            preferences.setLogin(login);
+            preferences.setPassword(password);
+            preferences.setAnonim(false);
             isAuthorized = true;
         } catch (JSONException ignore) {}
         return isAuthorized;
@@ -59,7 +69,7 @@ public class User {
     public int getId() {return id;}
 
     public String getPassHash() {
-        return getPassHash(Preferences.getInstance().getPassword());
+        return getPassHash(preferences.getPassword());
     }
 
     public String getPassHash(String pass) {

@@ -12,8 +12,8 @@ import motocitizen.utils.Preferences;
 public class SendMessageRequest extends HTTPClient {
     public SendMessageRequest(AsyncTaskCompleteListener listener, int id, String text) {
         this.listener = listener;
-        post.put("login", Preferences.getInstance().getLogin());
-        post.put("passhash", User.getInstance().getPassHash());
+        post.put("login", User.dirtyRead().getName());
+        post.put("passhash", User.dirtyRead().getPassHash());
         post.put("id", String.valueOf(id));
         post.put("text", text);
         post.put("calledMethod", Methods.MESSAGE.toCode());

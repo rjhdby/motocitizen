@@ -1,7 +1,5 @@
 package motocitizen.network.requests;
 
-import android.location.Location;
-
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
@@ -16,16 +14,15 @@ import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
 import motocitizen.user.User;
 import motocitizen.utils.DateUtils;
-import motocitizen.utils.Preferences;
 
 public class CreateAccidentRequest extends HTTPClient {
     public CreateAccidentRequest(AsyncTaskCompleteListener listener) {
         this.listener = listener;
         post.put("status", "acc_status_act");
         post.put("calledMethod", Methods.CREATE.toCode());
-        post.put("owner_id", String.valueOf(User.getInstance().getId()));
-        post.put("login", Preferences.getInstance().getLogin());
-        post.put("passhash", User.getInstance().getPassHash());
+        post.put("owner_id", String.valueOf(User.dirtyRead().getId()));
+        post.put("login", User.dirtyRead().getName());
+        post.put("passhash", User.dirtyRead().getPassHash());
     }
 
     public void setLocation(LatLng location) {

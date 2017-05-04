@@ -5,8 +5,8 @@ import android.location.Location
 import android.location.LocationManager
 import com.google.android.gms.maps.model.LatLng
 import motocitizen.content.history.History
-import motocitizen.content.volunteer.Volunteer
 import motocitizen.content.message.Message
+import motocitizen.content.volunteer.Volunteer
 import motocitizen.dictionary.AccidentStatus
 import motocitizen.dictionary.AccidentStatus.HIDDEN
 import motocitizen.dictionary.Medicine
@@ -43,7 +43,7 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
 
     private val distanceFromUser: Double
         get() {
-            val userLocation = MyLocationManager.getInstance().dirtyLocation
+            val userLocation = MyLocationManager.getLocation()
             return location.distanceTo(userLocation).toDouble()
         }
 
@@ -63,11 +63,15 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
 
     val isInvisible: Boolean
         get() {
-            val hidden = status == HIDDEN && !User.getInstance().isModerator
-            val distanceFilter = distanceFromUser > Preferences.getInstance().visibleDistance * 1000
-            val typeFilter = Preferences.getInstance().isHidden(type)
-            val timeFilter = time.time + Preferences.getInstance().hoursAgo.toLong() * 60 * 60 * 1000 < Date().time
-            return hidden || distanceFilter || typeFilter || timeFilter
+            try {
+                val hidden = status == HIDDEN && !User.dirtyRead().isModerator
+                val distanceFilter = distanceFromUser > Preferences.dirtyRead()!!.visibleDistance * 1000
+                val typeFilter = Preferences.dirtyRead()!!.isHidden(type)
+                val timeFilter = time.time + Preferences.dirtyRead()!!.hoursAgo.toLong() * 60 * 60 * 1000 < Date().time
+                return hidden || distanceFilter || typeFilter || timeFilter
+            } catch (e: NullPointerException) {
+                return true
+            }
         }
 
     fun getVolunteer(id: Int): Volunteer? {

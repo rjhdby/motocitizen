@@ -5,11 +5,12 @@ import org.json.JSONObject;
 
 import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
+import motocitizen.user.User;
 import motocitizen.utils.Preferences;
 
 public class LeaveRequest extends HTTPClient {
     public LeaveRequest(int id) {
-        post.put("login", Preferences.getInstance().getLogin());
+        post.put("login", User.dirtyRead().getName());
         post.put("id", String.valueOf(id));
         post.put("m", Methods.LEAVE.toCode());
         //noinspection unchecked

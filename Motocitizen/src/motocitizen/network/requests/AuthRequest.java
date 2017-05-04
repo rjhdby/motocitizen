@@ -17,9 +17,9 @@ public class AuthRequest extends HTTPClient {
         StrictMode.setThreadPolicy(policy);
 
         post.put("calledMethod", Methods.AUTH.toCode());
-        post.put("versionName", String.valueOf(Preferences.getInstance().getAppVersion()));
+        post.put("versionName", String.valueOf(User.dirtyRead().getName()));
         post.put("login", login);
-        post.put("passwordHash", User.getInstance().getPassHash(password));
+        post.put("passwordHash", User.dirtyRead().getPassHash(password));
     }
 
     public JSONObject execute() {

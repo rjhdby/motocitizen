@@ -10,7 +10,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -63,7 +62,7 @@ public class MyGoogleMapManager implements MyMapManager {
 
     public MyGoogleMapManager(FragmentActivity activity) {
 
-        jumpToPoint(MyLocationManager.getInstance().getLocation());
+        jumpToPoint(MyLocationManager.getLocation());
         selected = "";
         android.support.v4.app.FragmentManager     fragmentManager     = activity.getSupportFragmentManager();
         final SupportMapFragment                   mapFragment         = new SupportMapFragment();
@@ -77,7 +76,7 @@ public class MyGoogleMapManager implements MyMapManager {
         if (map == null) return;
         map.clear();
         if (user != null) user.remove();
-        Location location = MyLocationManager.getInstance().getLocation();
+        Location location = MyLocationManager.getLocation();
         user = map.addMarker(new MarkerOptions().position(MyUtils.LocationToLatLng(location)).title(Type.USER.string()).icon(Type.USER.getIcon()));
 
         for (int id : Content.getInstance().keySet()) {
@@ -125,7 +124,7 @@ public class MyGoogleMapManager implements MyMapManager {
         map.setOnMapLongClickListener(latLng -> Router.toExternalMap((Activity) context, latLng));
     }
 
-    @SuppressWarnings({"MissingPermission"})
+    @SuppressWarnings({ "MissingPermission" })
     public void enableLocation() {
         if (map == null) delayedAction.add(() -> map.setMyLocationEnabled(true));
         else map.setMyLocationEnabled(true);

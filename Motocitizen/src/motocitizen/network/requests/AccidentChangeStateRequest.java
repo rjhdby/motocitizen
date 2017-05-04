@@ -7,14 +7,13 @@ import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
 import motocitizen.user.User;
-import motocitizen.utils.Preferences;
 
 public class AccidentChangeStateRequest extends HTTPClient {
 
     public AccidentChangeStateRequest(AsyncTaskCompleteListener listener, int id, String state) {
         this.listener = listener;
-        post.put("login", Preferences.getInstance().getLogin());
-        post.put("passhash", User.getInstance().getPassHash());
+        post.put("login", User.dirtyRead().getName());
+        post.put("passhash", User.dirtyRead().getPassHash());
         post.put("state", state);
         post.put("id", String.valueOf(id));
         post.put("m", Methods.CHANGE_STATE.toCode());

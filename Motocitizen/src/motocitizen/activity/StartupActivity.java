@@ -12,14 +12,12 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.BasePermissionListener;
 
-import motocitizen.dictionary.Content;
 import motocitizen.database.DbOpenHelper;
 import motocitizen.geocoder.MyGeoCoder;
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.router.Router;
 import motocitizen.user.User;
-import motocitizen.utils.Preferences;
 
 public class StartupActivity extends AppCompatActivity {
 
@@ -38,18 +36,15 @@ public class StartupActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        Preferences.init(this);
         DbOpenHelper.init(this);
         MyGeoCoder.init(this);
-        User.init();
-        Content.init();
         FirebaseMessaging.getInstance().subscribeToTopic("accidents");
         Dexter.withActivity(this)
               .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
               .withListener(new BasePermissionListener() {
                   @Override
                   public void onPermissionGranted(PermissionGrantedResponse response) {
-                      MyLocationManager.init(true);
+                      MyLocationManager.enableReal();
                       ahead();
                   }
 
@@ -62,13 +57,12 @@ public class StartupActivity extends AppCompatActivity {
                   @Override
                   public void onPermissionDenied(PermissionDeniedResponse response) {
                       super.onPermissionDenied(response);
-                      MyLocationManager.init(false);
                       ahead();
                   }
               }).check();
     }
 
     private void ahead() {
-        Router.goTo(this, User.getInstance().isAuthorized() ? Router.Target.MAIN : Router.Target.AUTH);
+        Router.goTo(this, User.getInstance(this).isAuthorized() ? Router.Target.MAIN : Router.Target.AUTH);
     }
 }

@@ -19,7 +19,7 @@ class HistoryRow : LinearLayout {
         LayoutInflater.from(context).inflate(R.layout.history_row, this, true)
 
         val ownerView = this.findViewById(R.id.owner) as TextView
-        if (history.ownerId == User.getInstance().id) {
+        if (history.ownerId == User.dirtyRead().id) {
             ownerView.setBackgroundColor(Color.DKGRAY)
         }
         ownerView.text = history.owner

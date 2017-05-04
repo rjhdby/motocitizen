@@ -8,8 +8,8 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
-import motocitizen.content.accident.AccidentFactory;
 import motocitizen.content.accident.Accident;
+import motocitizen.content.accident.AccidentFactory;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.AccidentsRequest;
 import motocitizen.utils.SortedHashMap;
@@ -24,11 +24,10 @@ public class Content extends SortedHashMap<Accident> {
         private static Content instance;
     }
 
-    public static void init() {
-        Holder.instance = new Content();
-    }
-
     public static Content getInstance() {
+        if (Holder.instance == null) {
+            Holder.instance = new Content();
+        }
         return Holder.instance;
     }
 

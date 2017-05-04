@@ -82,7 +82,7 @@ public class AccidentDetailsActivity extends AppCompatActivity {
 
         //NewAccidentReceived.removeNotification(accidentID);
 
-        String userName = Preferences.getInstance().getLogin();
+        String userName = Preferences.getInstance(this).getLogin();
 
         detailVolunteersFragment = DetailVolunteersFragment.newInstance(accidentID, userName);
         detailMessagesFragment = DetailMessagesFragment.newInstance(accidentID, userName);
@@ -184,8 +184,8 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         currentPoint = Content.getInstance().get(accidentID);
         MenuItem finish = mMenu.findItem(R.id.menu_acc_finish);
         MenuItem hide   = mMenu.findItem(R.id.menu_acc_hide);
-        finish.setVisible(User.getInstance().isModerator());
-        hide.setVisible(User.getInstance().isModerator());
+        finish.setVisible(User.getInstance(this).isModerator());
+        hide.setVisible(User.getInstance(this).isModerator());
         finish.setTitle(R.string.finish);
         hide.setTitle(R.string.hide);
         switch (currentPoint.getStatus()) {
