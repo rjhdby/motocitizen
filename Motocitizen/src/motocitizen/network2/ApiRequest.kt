@@ -1,31 +1,36 @@
 package motocitizen.network2
 
+import okhttp3.OkHttpClient
+import org.json.JSONObject
 
-abstract class ApiRequest(params: HashMap<String, String>, val callback: RequestResultCallback? = null) {
+
+abstract class ApiRequest(var params: HashMap<String, String>, val callback: RequestResultCallback? = null) {
     private val url = "http://motodtp.info/mobile/main_mc_acc_json.php"
-    val request = okhttp3.Request.Builder()
-            .post(makePost(params))
-            .url(url)
-            .build()!!
 
-    fun sync(): org.json.JSONObject {
-        val text = okhttp3.OkHttpClient().newCall(request)
+    fun sync(): JSONObject {
+        val text = OkHttpClient()
+                .newCall(buildRequest())
                 .execute()
                 .body()
                 .string()
         android.util.Log.w("HTTP RESPONSE", text)
-        var response = org.json.JSONObject()
+        var response = JSONObject()
         try {
-            response = org.json.JSONObject(text)
+            response = JSONObject(text)
         } catch (e: org.json.JSONException) {
             e.printStackTrace()
         }
         return response
     }
 
-    private fun async() {
+    private fun buildRequest() = okhttp3.Request.Builder()
+            .post(makePost(params))
+            .url(url)
+            .build()!!
+
+    protected fun async() {
         if (callback == null) return
-        okhttp3.OkHttpClient().newCall(request).enqueue(object : okhttp3.Callback {
+        okhttp3.OkHttpClient().newCall(buildRequest()).enqueue(object : okhttp3.Callback {
             override fun onFailure(call: okhttp3.Call, e: java.io.IOException) = e.printStackTrace()
 
             @Throws(java.io.IOException::class)

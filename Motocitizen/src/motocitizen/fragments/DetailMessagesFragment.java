@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,6 +23,7 @@ import motocitizen.dictionary.Content;
 import motocitizen.main.R;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.SendMessageRequest;
+import motocitizen.network2.ApiRequest.RequestResultCallback;
 import motocitizen.user.User;
 import motocitizen.utils.ToastUtils;
 import motocitizen.utils.popups.MessagesPopup;
@@ -115,20 +117,20 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
                     e.printStackTrace();
                 }
             } else {
-                Content.getInstance().requestUpdate(new UpdateAccidentsCallback());
+                Content.getInstance().requestUpdate(new RequestResultCallback() {
+                    @Override
+                    public void call(@NotNull JSONObject response) {
+                        mcNewMessageText.setText("");
+                        if (!result.has("error")) Content.getInstance().parseJSON(result);
+                        getActivity().runOnUiThread(() -> {
+                            ((AccidentDetailsActivity) getActivity()).update();
+                            update();
+                        });
+                    }
+                });
             }
             transaction = false;
             newMessageButton.setEnabled(true);
-        }
-    }
-
-    private class UpdateAccidentsCallback implements AsyncTaskCompleteListener {
-        @Override
-        public void onTaskComplete(JSONObject result) {
-            mcNewMessageText.setText("");
-            if (!result.has("error")) Content.getInstance().parseJSON(result);
-            ((AccidentDetailsActivity) getActivity()).update();
-            update();
         }
     }
 
@@ -166,9 +168,9 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         public boolean onLongClick(View v) {
             PopupWindow popupWindow;
             popupWindow = (new MessagesPopup(getActivity(), message.getId(), accident.getId())).getPopupWindow(getActivity());
-            int viewLocation[] = new int[ 2 ];
+            int viewLocation[] = new int[2];
             v.getLocationOnScreen(viewLocation);
-            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[ 0 ], viewLocation[ 1 ]);
+            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
             return true;
         }
     }

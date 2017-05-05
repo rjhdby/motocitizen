@@ -23,6 +23,7 @@ import motocitizen.content.accident.Accident;
 import motocitizen.dictionary.Content;
 import motocitizen.dictionary.Medicine;
 import motocitizen.main.R;
+import motocitizen.network2.ApiRequest;
 import motocitizen.utils.Preferences;
 
 public class NotificationListener extends FirebaseMessagingService {
@@ -32,7 +33,7 @@ public class NotificationListener extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Map data = remoteMessage.getData();
         Content.getInstance()
-               .requestUpdate(result -> {
+               .requestUpdate((ApiRequest.RequestResultCallback) result -> {
                    if (result.has("error")) return;
                    Content.getInstance().parseJSON(result);
                    raiseNotification(Integer.parseInt(data.get("id").toString()));

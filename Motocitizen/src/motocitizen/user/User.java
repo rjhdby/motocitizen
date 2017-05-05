@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import motocitizen.network.requests.AuthRequest;
+import motocitizen.network2.requests.AuthRequest;
 import motocitizen.utils.Preferences;
 
 public class User {
@@ -42,23 +42,24 @@ public class User {
 
     public boolean auth(String login, String password) {
         AuthRequest auth   = new AuthRequest(login, password);
-        JSONObject  result = auth.execute();
+        JSONObject  result = auth.sync();
         isAuthorized = false;
-        if (auth.error(result)) {
-            Log.d("AUTH ERROR", auth.getError(result));
+        if (!result.has("id")) {
+            Log.d("AUTH ERROR", result.toString());
             return false;
         }
         try {
             name = result.getString("name");
             if (name.length() == 0) return false;
-
             role = Role.Companion.parse(result.getString("role"));
             id = Integer.parseInt(result.getString("id"));
             preferences.setLogin(login);
             preferences.setPassword(password);
             preferences.setAnonim(false);
             isAuthorized = true;
-        } catch (JSONException ignore) {}
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return isAuthorized;
     }
 
@@ -97,9 +98,9 @@ public class User {
 
     public boolean isAuthorized() {return isAuthorized;}
 
-    public boolean isModerator()  {return role.isModerator();}
+    public boolean isModerator() {return role.isModerator();}
 
-    public boolean isStandard()   {return role.isStandard();}
+    public boolean isStandard() {return role.isStandard();}
 
-    public String getRoleName()   {return role.getText();}
+    public String getRoleName() {return role.getText();}
 }

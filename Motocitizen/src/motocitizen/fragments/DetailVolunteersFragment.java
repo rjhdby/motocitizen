@@ -16,17 +16,17 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import motocitizen.content.volunteer.Volunteer;
 import motocitizen.activity.AccidentDetailsActivity;
 import motocitizen.content.accident.Accident;
+import motocitizen.content.volunteer.Volunteer;
 import motocitizen.dictionary.Content;
 import motocitizen.dictionary.VolunteerStatus;
-import motocitizen.rows.details.VolunteerRow;
 import motocitizen.main.R;
 import motocitizen.network.AsyncTaskCompleteListener;
-import motocitizen.network.requests.AccidentsRequest;
 import motocitizen.network.requests.CancelOnWayRequest;
 import motocitizen.network.requests.OnWayRequest;
+import motocitizen.network2.requests.AccidentListRequest;
+import motocitizen.rows.details.VolunteerRow;
 import motocitizen.user.User;
 import motocitizen.utils.Preferences;
 
@@ -180,22 +180,19 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
                     message("Неизвестная ошибка " + result.toString());
                 }
             } else {
-                new AccidentsRequest(new UpdateAccidentsCallback());
+                new AccidentListRequest(result1 -> {
+                    Content.getInstance().requestUpdate();
+                    getActivity().runOnUiThread(() -> {
+                        ((AccidentDetailsActivity) getActivity()).update();
+                        update();
+                    });
+                });
             }
         }
     }
 
-    private class UpdateAccidentsCallback implements AsyncTaskCompleteListener {
-        @Override
-        public void onTaskComplete(JSONObject result) {
-            Content.getInstance().requestUpdate();
-            ((AccidentDetailsActivity) getActivity()).update();
-            update();
-        }
-    }
-
     private void sendCancelOnway() {
-        Preferences.Companion.getInstance(getContext()).setOnWay(0);
+        Preferences.Companion.getInstance(getActivity()).setOnWay(0);
         new CancelOnWayRequest(new OnWayCallback(), accidentID);
     }
 }

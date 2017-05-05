@@ -10,8 +10,8 @@ import java.util.TreeMap;
 
 import motocitizen.content.accident.Accident;
 import motocitizen.content.accident.AccidentFactory;
-import motocitizen.network.AsyncTaskCompleteListener;
-import motocitizen.network.requests.AccidentsRequest;
+import motocitizen.network2.ApiRequest;
+import motocitizen.network2.requests.AccidentListRequest;
 
 public class Content extends TreeMap<Integer, Accident> {
     private int inPlace = 0;
@@ -42,12 +42,12 @@ public class Content extends TreeMap<Integer, Accident> {
         inPlace = id;
     }
 
-    public void requestUpdate(AsyncTaskCompleteListener listener) {
-        new AccidentsRequest(listener, true);
+    public void requestUpdate(ApiRequest.RequestResultCallback listener) {
+        new AccidentListRequest(listener);
     }
 
     public void requestUpdate() {
-        new AccidentsRequest(result -> {if (!result.has("error")) parseJSON(result);}, true);
+        new AccidentListRequest(result -> {if (!result.has("error")) parseJSON(result);});
     }
 
     public void parseJSON(JSONObject json) {

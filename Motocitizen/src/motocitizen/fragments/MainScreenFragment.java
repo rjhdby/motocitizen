@@ -59,11 +59,16 @@ public class MainScreenFragment extends Fragment implements MyFragmentInterface 
         super.onResume();
 
         if (accListView == null) accListView = getActivity().findViewById(R.id.acc_list);
-        if (progressBar == null) progressBar = (ProgressBar) getActivity().findViewById(R.id.progressBar);
-        if (mapContainer == null) mapContainer = (ViewGroup) getActivity().findViewById(R.id.google_map);
-        if (createAccButton == null) createAccButton = (ImageButton) getActivity().findViewById(R.id.add_point_button);
-        if (toAccListButton == null) toAccListButton = (ImageButton) getActivity().findViewById(R.id.list_button);
-        if (toMapButton == null) toMapButton = (ImageButton) getActivity().findViewById(R.id.map_button);
+        if (progressBar == null)
+            progressBar = (ProgressBar) getActivity().findViewById(R.id.progressBar);
+        if (mapContainer == null)
+            mapContainer = (ViewGroup) getActivity().findViewById(R.id.google_map);
+        if (createAccButton == null)
+            createAccButton = (ImageButton) getActivity().findViewById(R.id.add_point_button);
+        if (toAccListButton == null)
+            toAccListButton = (ImageButton) getActivity().findViewById(R.id.list_button);
+        if (toMapButton == null)
+            toMapButton = (ImageButton) getActivity().findViewById(R.id.map_button);
 
         createAccButton.setOnClickListener(v -> Router.INSTANCE.goTo(getActivity(), Router.Target.CREATE));
         toAccListButton.setOnClickListener(v -> setScreen(LIST));
@@ -118,8 +123,10 @@ public class MainScreenFragment extends Fragment implements MyFragmentInterface 
             Content.getInstance().requestUpdate(result -> {
                 if (!result.has("error")) Content.getInstance().parseJSON(result);
                 if (!isVisible()) return;
-                stopRefreshAnimation();
-                redraw();
+                getActivity().runOnUiThread(() -> {
+                    stopRefreshAnimation();
+                    redraw();
+                });
             });
         } else {
             Toast.makeText(getActivity(), getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
