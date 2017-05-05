@@ -11,11 +11,11 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
-
 import motocitizen.content.accident.Accident
 import motocitizen.main.R
 import motocitizen.router.Router
-import motocitizen.utils.MyUtils
+import motocitizen.utils.getIntervalFromNowInText
+import motocitizen.utils.newId
 import motocitizen.utils.popups.AccidentListPopup
 
 abstract class Row protected constructor(context: Context, accident: Accident) : FrameLayout(context) {
@@ -47,11 +47,11 @@ abstract class Row protected constructor(context: Context, accident: Accident) :
 
     init {
         LayoutInflater.from(context).inflate(layout, this, true)
-        id = MyUtils.newId()
+        id = newId()
         setBackgroundResource(background)
         (findViewById(R.id.accident_row_content) as TextView).setTextColor(textColor)
         (findViewById(R.id.accident_row_content) as TextView).text = context.resources.getString(R.string.accident_row_content, accident.title())
-        (findViewById(R.id.accident_row_time) as TextView).text = MyUtils.getIntervalFromNowInText(context, accident.time)
+        (findViewById(R.id.accident_row_time) as TextView).text = getIntervalFromNowInText(context, accident.time)
         (findViewById(R.id.accident_row_unread) as TextView).text = messagesText(accident)
         setOnClickListener { _ ->
             val bundle = Bundle()

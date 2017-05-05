@@ -1,23 +1,23 @@
 package motocitizen.dictionary;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Date;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.TreeMap;
 
 import motocitizen.content.accident.Accident;
 import motocitizen.content.accident.AccidentFactory;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.AccidentsRequest;
-import motocitizen.utils.SortedHashMap;
 
-public class Content extends SortedHashMap<Accident> {
+public class Content extends TreeMap<Integer, Accident> {
     private int inPlace = 0;
 
-    private Content() {
+    private Content(Comparator<Integer> comparator) {
+        super(comparator);
     }
 
     private static class Holder {
@@ -26,7 +26,7 @@ public class Content extends SortedHashMap<Accident> {
 
     public static Content getInstance() {
         if (Holder.instance == null) {
-            Holder.instance = new Content();
+            Holder.instance = new Content(Collections.reverseOrder());
         }
         return Holder.instance;
     }
@@ -51,22 +51,19 @@ public class Content extends SortedHashMap<Accident> {
     }
 
     public void parseJSON(JSONObject json) {
-        if (!json.has("list")) return;
+        JSONArray list = new JSONArray();
         try {
-            JSONArray list = json.getJSONArray("list");
-            Log.d("START PARSE POINTS", String.valueOf((new Date()).getTime()));
-            for (int i = 0; i < list.length(); i++) {
-                try {
-                    Accident accident = AccidentFactory.Companion.make(list.getJSONObject(i));
-                    put(accident.getId(), accident);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-            Log.d("END PARSE POINTS", String.valueOf((new Date()).getTime()));
+            list = json.getJSONArray("list");
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+        for (int i = 0; i < list.length(); i++) {
+            try {
+                Accident accident = AccidentFactory.Companion.make(list.getJSONObject(i));
+                put(accident.getId(), accident);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

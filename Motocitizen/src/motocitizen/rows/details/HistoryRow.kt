@@ -9,7 +9,7 @@ import android.widget.TextView
 import motocitizen.content.history.History
 import motocitizen.main.R
 import motocitizen.user.User
-import motocitizen.utils.MyUtils
+import motocitizen.utils.getStringTime
 
 class HistoryRow : LinearLayout {
     constructor(context: Context, history: History) : super(context) {
@@ -24,7 +24,7 @@ class HistoryRow : LinearLayout {
         }
         ownerView.text = history.owner
         (this.findViewById(R.id.text) as TextView).text = history.action.text
-        (this.findViewById(R.id.date) as TextView).text = MyUtils.getStringTime(history.time)
+        (this.findViewById(R.id.date) as TextView).text = getStringTime(history.time)
     }
 
     constructor(context: Context) : super(context)

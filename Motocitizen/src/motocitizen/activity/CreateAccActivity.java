@@ -34,8 +34,8 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-import motocitizen.content.accident.AccidentFactory;
 import motocitizen.content.accident.Accident;
+import motocitizen.content.accident.AccidentFactory;
 import motocitizen.dictionary.Content;
 import motocitizen.dictionary.Medicine;
 import motocitizen.dictionary.Type;
@@ -46,7 +46,7 @@ import motocitizen.network.GeocoderClient;
 import motocitizen.network.requests.CreateAccidentRequest;
 import motocitizen.user.User;
 import motocitizen.utils.DateUtils;
-import motocitizen.utils.MyUtils;
+import motocitizen.utils.LocationUtils;
 import motocitizen.utils.Preferences;
 import motocitizen.utils.ToastUtils;
 
@@ -113,13 +113,13 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 ImageButton searchButton = (ImageButton) findViewById(R.id.SEARCH);
                 searchButton.setVisibility(View.GONE);
 
-                CircleOptions circleOptions = new CircleOptions().center(MyUtils.LocationToLatLng(initialLocation)).radius(RADIUS).fillColor(0x20FF0000);
+                CircleOptions circleOptions = new CircleOptions().center(LocationUtils.Location2LatLng(initialLocation)).radius(RADIUS).fillColor(0x20FF0000);
                 map.addCircle(circleOptions);
                 map.setOnCameraMoveCanceledListener(() -> {
                     Button mcCreateFineAddressConfirm = (Button) findViewById(R.id.ADDRESS);
                     mcCreateFineAddressConfirm.setEnabled(false);
                     if (initialLocation == null) return;
-                    double distance = MyUtils.LatLngToLocation(map.getCameraPosition().target).distanceTo(initialLocation);
+                    double distance = LocationUtils.distance(initialLocation, map.getCameraPosition().target);
                     mcCreateFineAddressConfirm.setEnabled(distance < RADIUS);
                 });
             }
@@ -129,7 +129,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 if (point.isInvisible(CreateAccActivity.this)) continue;
                 String title = point.getType().string();
                 title += point.getMedicine() == Medicine.NO ? "" : ", " + point.getMedicine().string();
-                title += ", " + MyUtils.getIntervalFromNowInText(CreateAccActivity.this, point.getTime()) + " назад";
+                title += ", " + DateUtils.getIntervalFromNowInText(CreateAccActivity.this, point.getTime()) + " назад";
 
                 float alpha;
                 int   age = (int) (((new Date()).getTime() - point.getTime().getTime()) / 3600000);

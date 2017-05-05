@@ -27,8 +27,9 @@ import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.maps.MyMapManager;
 import motocitizen.router.Router;
+import motocitizen.utils.DateUtils;
 import motocitizen.utils.DelayedAction;
-import motocitizen.utils.MyUtils;
+import motocitizen.utils.LocationUtils;
 
 public class MyGoogleMapManager implements MyMapManager {
     private static final int DEFAULT_ZOOM = 16;
@@ -77,14 +78,14 @@ public class MyGoogleMapManager implements MyMapManager {
         map.clear();
         if (user != null) user.remove();
         Location location = MyLocationManager.getLocation();
-        user = map.addMarker(new MarkerOptions().position(MyUtils.LocationToLatLng(location)).title(Type.USER.string()).icon(Type.USER.getIcon()));
+        user = map.addMarker(new MarkerOptions().position(LocationUtils.Location2LatLng(location)).title(Type.USER.string()).icon(Type.USER.getIcon()));
 
         for (int id : Content.getInstance().keySet()) {
             Accident point = Content.getInstance().get(id);
             if (point.isInvisible(context)) continue;
             String title = point.getType().string();
             title += point.getMedicine() != Medicine.UNKNOWN ? ", " + point.getMedicine().string() : "";
-            title += ", " + MyUtils.getIntervalFromNowInText(context, point.getTime()) + " назад";
+            title += ", " + DateUtils.getIntervalFromNowInText(context, point.getTime()) + " назад";
 
             int age = (int) (((new Date()).getTime() - point.getTime().getTime()) / 3600000);
 
@@ -98,13 +99,13 @@ public class MyGoogleMapManager implements MyMapManager {
     public void animateToPoint(Location location) {
         if (map == null) delayedAction.add(new DelayedAnimateToLocation(location));
         else
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(location), DEFAULT_ZOOM));
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(LocationUtils.Location2LatLng(location), DEFAULT_ZOOM));
     }
 
     public void jumpToPoint(Location location) {
         if (map == null) delayedAction.add(new DelayedJumpToLocation(location));
         else
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(MyUtils.LocationToLatLng(location), DEFAULT_ZOOM));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(LocationUtils.Location2LatLng(location), DEFAULT_ZOOM));
     }
 
     private void init(final Context context) {
@@ -121,7 +122,7 @@ public class MyGoogleMapManager implements MyMapManager {
             }
             return true;
         });
-        map.setOnMapLongClickListener(latLng -> Router.toExternalMap((Activity) context, latLng));
+        map.setOnMapLongClickListener(latLng -> Router.INSTANCE.toExternalMap((Activity) context, latLng));
     }
 
     @SuppressWarnings({ "MissingPermission" })
@@ -133,7 +134,7 @@ public class MyGoogleMapManager implements MyMapManager {
     private void toDetails(Context context, int id) {
         Bundle bundle = new Bundle();
         bundle.putInt("accidentID", id);
-        Router.goTo((Activity) context, Router.Target.DETAILS, bundle);
+        Router.INSTANCE.goTo((Activity) context, Router.Target.DETAILS, bundle);
     }
 
     public void zoom(int zoom) {

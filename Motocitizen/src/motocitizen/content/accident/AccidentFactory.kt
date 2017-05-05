@@ -12,7 +12,6 @@ import motocitizen.dictionary.Type
 import motocitizen.geolocation.MyLocationManager
 import motocitizen.user.Owner
 import motocitizen.user.User
-import motocitizen.utils.SortedHashMap
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -44,8 +43,8 @@ class AccidentFactory {
                     .build()
         }
 
-        private fun parseMessages(json: JSONArray, last: Int): SortedHashMap<Message> {
-            val messages = SortedHashMap<Message>()
+        private fun parseMessages(json: JSONArray, last: Int): TreeMap<Int, Message> {
+            val messages = TreeMap<Int, Message>()
 
             (0..json.length() - 1)
                     .map {
@@ -65,8 +64,8 @@ class AccidentFactory {
             return messages
         }
 
-        private fun parseVolunteers(json: JSONArray): SortedHashMap<Volunteer> {
-            val volunteers = SortedHashMap<Volunteer>()
+        private fun parseVolunteers(json: JSONArray): TreeMap<Int, Volunteer> {
+            val volunteers = TreeMap<Int, Volunteer>()
             (0..json.length() - 1)
                     .map {
                         try {
@@ -82,8 +81,8 @@ class AccidentFactory {
         }
 
         @Throws(JSONException::class)
-        private fun parseHistory(json: JSONArray): SortedHashMap<History> {
-            val history = SortedHashMap<History>()
+        private fun parseHistory(json: JSONArray): TreeMap<Int, History> {
+            val history = TreeMap<Int, History>()
             (0..json.length() - 1)
                     .map {
                         try {
@@ -117,11 +116,11 @@ class AccidentFactory {
             private set
         var description = ""
             private set
-        var messages = SortedHashMap<Message>()
+        var messages = TreeMap<Int, Message>()
             private set
-        var volunteers = SortedHashMap<Volunteer>()
+        var volunteers = TreeMap<Int, Volunteer>()
             private set
-        var history = SortedHashMap<History>()
+        var history = TreeMap<Int, History>()
             private set
 
         fun setId(id: Int): AccidentBuilder {
@@ -169,17 +168,17 @@ class AccidentFactory {
             return this
         }
 
-        fun attachMessages(messages: SortedHashMap<Message>): AccidentBuilder {
+        fun attachMessages(messages: TreeMap<Int, Message>): AccidentBuilder {
             this.messages = messages
             return this
         }
 
-        fun attachVolunteers(volunteers: SortedHashMap<Volunteer>): AccidentBuilder {
+        fun attachVolunteers(volunteers: TreeMap<Int, Volunteer>): AccidentBuilder {
             this.volunteers = volunteers
             return this
         }
 
-        fun attachHistory(history: SortedHashMap<History>): AccidentBuilder {
+        fun attachHistory(history: TreeMap<Int, History>): AccidentBuilder {
             this.history = history
             return this
         }

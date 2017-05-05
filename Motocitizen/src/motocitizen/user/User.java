@@ -52,7 +52,7 @@ public class User {
             name = result.getString("name");
             if (name.length() == 0) return false;
 
-            role = Role.parse(result.getString("role"));
+            role = Role.Companion.parse(result.getString("role"));
             id = Integer.parseInt(result.getString("id"));
             preferences.setLogin(login);
             preferences.setPassword(password);
@@ -101,5 +101,5 @@ public class User {
 
     public boolean isStandard()   {return role.isStandard();}
 
-    public String getRoleName()   {return role.getName();}
+    public String getRoleName()   {return role.getText();}
 }

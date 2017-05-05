@@ -17,8 +17,8 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-import motocitizen.content.accident.AccidentFactory;
 import motocitizen.content.accident.Accident;
+import motocitizen.content.accident.AccidentFactory;
 import motocitizen.dictionary.AccidentStatus;
 import motocitizen.dictionary.Content;
 import motocitizen.dictionary.Medicine;
@@ -32,9 +32,9 @@ import motocitizen.network.requests.AccidentChangeStateRequest;
 import motocitizen.router.Router;
 import motocitizen.user.User;
 import motocitizen.utils.DateUtils;
-import motocitizen.utils.MyUtils;
 import motocitizen.utils.Preferences;
 import motocitizen.utils.ToastUtils;
+import motocitizen.utils.Utils;
 import motocitizen.utils.popups.AccidentListPopup;
 
 import static motocitizen.dictionary.AccidentStatus.ACTIVE;
@@ -125,9 +125,9 @@ public class AccidentDetailsActivity extends AppCompatActivity {
             PopupWindow popupWindow;
             popupWindow = (new AccidentListPopup(AccidentDetailsActivity.this, currentPoint.getId()))
                     .getPopupWindow(AccidentDetailsActivity.this);
-            int viewLocation[] = new int[2];
+            int viewLocation[] = new int[ 2 ];
             v.getLocationOnScreen(viewLocation);
-            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
+            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[ 0 ], viewLocation[ 1 ]);
             return true;
         });
         update();
@@ -163,7 +163,7 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         mMenu = menu;
         //TODO Костыль
         if (currentPoint == null) return super.onCreateOptionsMenu(menu);
-        List<String> contactNumbers = MyUtils.getPhonesFromText(currentPoint.getDescription());
+        List<String> contactNumbers = Utils.getPhonesFromText(currentPoint.getDescription());
         if (contactNumbers.isEmpty()) return super.onCreateOptionsMenu(menu);
         if (contactNumbers.size() == 1) {
             mMenu.add(0, SMS_MENU_MIN_ID, 0, getString(R.string.send_sms) + contactNumbers.get(0));
@@ -220,7 +220,7 @@ public class AccidentDetailsActivity extends AppCompatActivity {
                 return true;
             case R.id.action_share:
                 //todo pornography
-                Router.share(this, AccidentListPopup.getAccidentTextToCopy(currentPoint));
+                Router.INSTANCE.share(this, AccidentListPopup.getAccidentTextToCopy(currentPoint));
                 return true;
             case R.id.action_hide_info:
             case R.id.menu_hide_info:
@@ -240,13 +240,13 @@ public class AccidentDetailsActivity extends AppCompatActivity {
             String number    = (String) item.getTitle();
             if (number.contains(smsPrefix))
                 number = number.substring(smsPrefix.length(), number.length());
-            Router.sms(this, number);
+            Router.INSTANCE.sms(this, number);
         } else if (item.getItemId() >= CALL_MENU_MIN_ID && item.getItemId() < CALL_MENU_MAX_ID) {
             String callPrefix = getString(R.string.make_call);
             String number     = (String) item.getTitle();
             if (number.contains(callPrefix))
                 number = number.substring(callPrefix.length(), number.length());
-            Router.dial(this, number);
+            Router.INSTANCE.dial(this, number);
         }
         return false;
     }
@@ -288,7 +288,7 @@ public class AccidentDetailsActivity extends AppCompatActivity {
     public void jumpToMap() {
         Bundle bundle = new Bundle();
         bundle.putInt("toMap", currentPoint.getId());
-        Router.goTo(this, Router.Target.MAIN, bundle);
+        Router.INSTANCE.goTo(this, Router.Target.MAIN, bundle);
     }
 
     public Accident getCurrentPoint() {

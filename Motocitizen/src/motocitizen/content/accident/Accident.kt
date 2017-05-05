@@ -16,7 +16,6 @@ import motocitizen.rows.accidentList.Row
 import motocitizen.user.Owner
 import motocitizen.user.User
 import motocitizen.utils.Preferences
-import motocitizen.utils.SortedHashMap
 import java.util.*
 
 abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val time: Date, var address: String, var coordinates: LatLng, val owner: Owner) {
@@ -27,9 +26,9 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
             field = value.replace("^\\s+", "").replace("\\s+$", "")
         }
 
-    var messages = SortedHashMap<Message>()
-    var volunteers = SortedHashMap<Volunteer>()
-    var history = SortedHashMap<History>()
+    var messages = TreeMap<Int, Message>()
+    var volunteers = TreeMap<Int, Volunteer>()
+    var history = TreeMap<Int, History>()
 
     val distanceString: String
         get() {
@@ -83,10 +82,6 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
 
     open fun isHidden(): Boolean {
         return false
-    }
-
-    fun setLatLng(latLng: LatLng) {
-        coordinates = latLng
     }
 
     val isAccident: Boolean

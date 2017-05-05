@@ -5,7 +5,8 @@ import android.widget.PopupWindow;
 
 import motocitizen.content.message.Message;
 import motocitizen.dictionary.Content;
-import motocitizen.utils.MyUtils;
+
+import static motocitizen.utils.Utils.getPhonesFromText;
 
 public class MessagesPopup extends PopupWindowGeneral {
     private final Message message;
@@ -17,7 +18,7 @@ public class MessagesPopup extends PopupWindowGeneral {
 
     public PopupWindow getPopupWindow(Context context) {
         content.addView(copyButtonRow(context, message.getOwner() + ": " + message.getText()), layoutParams);
-        for (String phone : MyUtils.getPhonesFromText(message.getText())) {
+        for (String phone : getPhonesFromText(message.getText())) {
             content.addView(phoneButtonRow(context, phone), layoutParams);
         }
         popupWindow.setContentView(content);

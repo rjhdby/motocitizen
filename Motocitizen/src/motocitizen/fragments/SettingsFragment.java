@@ -1,13 +1,12 @@
 package motocitizen.fragments;
 
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 
 import motocitizen.main.R;
 import motocitizen.router.Router;
 import motocitizen.user.User;
-import motocitizen.utils.Const;
+import motocitizen.utils.LocationUtils;
 import motocitizen.utils.Preferences;
 import motocitizen.utils.ToastUtils;
 
@@ -30,7 +29,7 @@ public class SettingsFragment extends PreferenceFragment {
             return false;
         };
         Preference.OnPreferenceChangeListener distanceListener = (preference, newValue) -> {
-            Integer value = Math.min(Const.EQUATOR, Integer.parseInt((String) newValue));
+            Integer value = Math.min(LocationUtils.getEQUATOR(), Integer.parseInt((String) newValue));
 
             if (preference.equals(notificationDistPreference)) {
                 preferences.setVisibleDistance(value);
@@ -83,7 +82,7 @@ public class SettingsFragment extends PreferenceFragment {
             return true;
         });
         buttonAuth.setOnPreferenceClickListener(stub -> {
-            Router.goTo(getActivity(), Router.Target.AUTH);
+            Router.INSTANCE.goTo(getActivity(), Router.Target.AUTH);
             return true;
         });
         showAcc.setOnPreferenceChangeListener(visibleListener);

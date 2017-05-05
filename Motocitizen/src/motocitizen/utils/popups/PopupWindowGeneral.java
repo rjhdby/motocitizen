@@ -22,7 +22,7 @@ import motocitizen.main.R;
 import motocitizen.network.requests.AccidentChangeStateRequest;
 import motocitizen.network.requests.BanRequest;
 import motocitizen.router.Router;
-import motocitizen.utils.MyUtils;
+import motocitizen.utils.LocationUtils;
 import motocitizen.utils.ToastUtils;
 
 abstract class PopupWindowGeneral {
@@ -47,7 +47,7 @@ abstract class PopupWindowGeneral {
         Button   b  = new Button(content.getContext());
         b.setText(R.string.share);
         b.setOnClickListener(v -> {
-            Router.share((Activity) context, textToShare);
+            Router.INSTANCE.share((Activity) context, textToShare);
             popupWindow.dismiss();
         });
         tr.addView(b, layoutParams);
@@ -75,7 +75,7 @@ abstract class PopupWindowGeneral {
         dial.setText(context.getString(R.string.popup_dial, phone));
         dial.setOnClickListener(v -> {
             popupWindow.dismiss();
-            Router.dial((Activity) context, phone);
+            Router.INSTANCE.dial((Activity) context, phone);
         });
         TableRow tr = new TableRow(content.getContext());
         tr.addView(dial, layoutParams);
@@ -87,7 +87,7 @@ abstract class PopupWindowGeneral {
         dial.setText(context.getString(R.string.popup_sms, phone));
         dial.setOnClickListener(v -> {
             popupWindow.dismiss();
-            Router.sms((Activity) context, phone);
+            Router.INSTANCE.sms((Activity) context, phone);
         });
         TableRow tr = new TableRow(content.getContext());
         tr.addView(dial, layoutParams);
@@ -124,7 +124,7 @@ abstract class PopupWindowGeneral {
         Button coordinates = new Button(content.getContext());
         coordinates.setText(R.string.copy_coordinates);
         coordinates.setOnClickListener(v -> {
-            LatLng           latlng = MyUtils.LocationToLatLng(point.getLocation());
+            LatLng           latlng = LocationUtils.Location2LatLng(point.getLocation());
             String           text   = String.valueOf(latlng.latitude) + "," + String.valueOf(latlng.longitude);
             ClipboardManager myClipboard;
             myClipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);

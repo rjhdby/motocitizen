@@ -63,6 +63,6 @@ public class StartupActivity extends AppCompatActivity {
     }
 
     private void ahead() {
-        Router.goTo(this, User.getInstance(this).isAuthorized() ? Router.Target.MAIN : Router.Target.AUTH);
+        Router.INSTANCE.goTo(this, User.getInstance(this).isAuthorized() ? Router.Target.MAIN : Router.Target.AUTH);
     }
 }

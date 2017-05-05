@@ -18,8 +18,8 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.single.BasePermissionListener;
 
 import motocitizen.MyApp;
-import motocitizen.content.accident.Accident;
 import motocitizen.activity.MyFragmentInterface;
+import motocitizen.content.accident.Accident;
 import motocitizen.dictionary.Content;
 import motocitizen.main.R;
 import motocitizen.maps.MyMapManager;
@@ -27,8 +27,8 @@ import motocitizen.maps.google.MyGoogleMapManager;
 import motocitizen.router.Router;
 import motocitizen.user.User;
 import motocitizen.utils.BounceScrollView;
-import motocitizen.utils.Const;
 import motocitizen.utils.Preferences;
+import motocitizen.utils.Utils;
 
 public class MainScreenFragment extends Fragment implements MyFragmentInterface {
     private static final byte LIST = 0;
@@ -65,10 +65,10 @@ public class MainScreenFragment extends Fragment implements MyFragmentInterface 
         if (toAccListButton == null) toAccListButton = (ImageButton) getActivity().findViewById(R.id.list_button);
         if (toMapButton == null) toMapButton = (ImageButton) getActivity().findViewById(R.id.map_button);
 
-        createAccButton.setOnClickListener(v -> Router.goTo(getActivity(), Router.Target.CREATE));
+        createAccButton.setOnClickListener(v -> Router.INSTANCE.goTo(getActivity(), Router.Target.CREATE));
         toAccListButton.setOnClickListener(v -> setScreen(LIST));
         toMapButton.setOnClickListener(v -> setScreen(MAP));
-        getActivity().findViewById(R.id.dial_button).setOnClickListener(v -> Router.dial(getActivity(), Const.PHONE));
+        getActivity().findViewById(R.id.dial_button).setOnClickListener(v -> Router.INSTANCE.dial(getActivity(), getString(R.string.phone)));
         ((BounceScrollView) getActivity().findViewById(R.id.accListRefresh)).setOverScrollListener(this::getAccidents);
         listContent = (ViewGroup) getActivity().findViewById(R.id.accListContent);
 
@@ -104,9 +104,7 @@ public class MainScreenFragment extends Fragment implements MyFragmentInterface 
         //TODO YesterdayRow ???
         //TODO Нет событий
 
-        Content points = Content.getInstance();
-        for (int id : points.reverseSortedKeySet()) {
-            Accident accident = points.get(id);
+        for (Accident accident : Content.getInstance().values()) {
             if (accident.isInvisible(getActivity())) continue;
             listContent.addView(accident.makeListRow(getContext()));
         }
@@ -158,13 +156,13 @@ public class MainScreenFragment extends Fragment implements MyFragmentInterface 
                 getAccidents();
                 return true;
             case R.id.small_menu_settings:
-                Router.goTo(getActivity(), Router.Target.SETTINGS);
+                Router.INSTANCE.goTo(getActivity(), Router.Target.SETTINGS);
                 return true;
             case R.id.small_menu_about:
-                Router.goTo(getActivity(), Router.Target.ABOUT);
+                Router.INSTANCE.goTo(getActivity(), Router.Target.ABOUT);
                 return true;
             case R.id.small_menu_exit:
-                Router.exit(getActivity());
+                Router.INSTANCE.exit(getActivity());
                 return true;
             case R.id.action_refresh:
                 getAccidents();
@@ -181,8 +179,8 @@ public class MainScreenFragment extends Fragment implements MyFragmentInterface 
         currentScreen = target;
         toAccListButton.setAlpha(target == LIST ? 1f : 0.3f);
         toMapButton.setAlpha(target == MAP ? 1f : 0.3f);
-        accListView.animate().translationX(target == LIST ? 0 : -Const.getWidth(getActivity()) * 2);
-        mapContainer.animate().translationX(target == MAP ? 0 : Const.getWidth(getActivity()) * 2);
+        accListView.animate().translationX(target == LIST ? 0 : -Utils.getWidth(getActivity()) * 2);
+        mapContainer.animate().translationX(target == MAP ? 0 : Utils.getWidth(getActivity()) * 2);
     }
 
     public void toMap(int id) {

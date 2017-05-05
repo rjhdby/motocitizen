@@ -73,24 +73,27 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
 
     private void update() {
         messagesTable.removeAllViews();
-        final Accident accident  = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
-        int            lastOwner = 1;
-        int            nextOwner;
+        final Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
 
-        Integer[] keys = accident.getMessages().sortedKeySet();
-        if (keys.length > 0) {
-            updateUnreadMessages(accident.getId(), Math.max(keys[0], keys[keys.length - 1]));
+        Integer preLast = 0;
+        Integer last    = 0;
+        for (Integer key : accident.getMessages().keySet()) {
+            if (last != 0) processMessage(accident, last, preLast, key);
+            preLast = last;
+            last = key;
         }
-        for (int i = 0; i < keys.length; i++) {
-            nextOwner = keys.length > i + 1 ? accident.getMessages().get(keys[i + 1]).getOwner().getId() : 0;
-            final Message message = accident.getMessages().get(keys[i]);
-            message.setRead(true);
-            View row = message.getRow(getActivity(), lastOwner, nextOwner);
-            lastOwner = accident.getMessages().get(keys[i]).getOwner().getId();
-            row.setOnLongClickListener(new MessageRowLongClickListener(message, accident));
-            messagesTable.addView(row);
+        if (accident.getMessages().size() > 0) {
+            updateUnreadMessages(accident.getId(), last);
+            processMessage(accident, last, preLast, 0);
         }
         setupAccess();
+    }
+
+    private void processMessage(Accident accident, Integer current, Integer last, Integer next) {
+        Message message = accident.getMessages().get(current);
+        View    row     = message.getRow(getActivity(), last, next);
+        row.setOnLongClickListener(new MessageRowLongClickListener(message, accident));
+        messagesTable.addView(row);
     }
 
     private void updateUnreadMessages(int accidentId, int messageId) {
@@ -163,9 +166,9 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         public boolean onLongClick(View v) {
             PopupWindow popupWindow;
             popupWindow = (new MessagesPopup(getActivity(), message.getId(), accident.getId())).getPopupWindow(getActivity());
-            int viewLocation[] = new int[2];
+            int viewLocation[] = new int[ 2 ];
             v.getLocationOnScreen(viewLocation);
-            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
+            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[ 0 ], viewLocation[ 1 ]);
             return true;
         }
     }

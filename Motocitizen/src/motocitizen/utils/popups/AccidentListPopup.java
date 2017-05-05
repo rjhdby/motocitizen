@@ -8,8 +8,8 @@ import motocitizen.dictionary.Content;
 import motocitizen.dictionary.Medicine;
 import motocitizen.user.User;
 import motocitizen.utils.DateUtils;
-import motocitizen.utils.MyUtils;
 import motocitizen.utils.Preferences;
+import motocitizen.utils.Utils;
 
 public class AccidentListPopup extends PopupWindowGeneral {
     private final Accident point;
@@ -23,7 +23,7 @@ public class AccidentListPopup extends PopupWindowGeneral {
 
     public PopupWindow getPopupWindow(Context context) {
         content.addView(copyButtonRow(context, accText));
-        for (String phone : MyUtils.getPhonesFromText(point.getDescription())) {
+        for (String phone : Utils.getPhonesFromText(point.getDescription())) {
             content.addView(phoneButtonRow(context, phone), layoutParams);
             content.addView(smsButtonRow(context, phone), layoutParams);
         }

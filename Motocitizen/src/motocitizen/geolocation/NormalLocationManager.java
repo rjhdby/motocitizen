@@ -21,7 +21,7 @@ import motocitizen.geocoder.MyGeoCoder;
 import motocitizen.network.requests.InPlaceRequest;
 import motocitizen.network.requests.LeaveRequest;
 import motocitizen.user.User;
-import motocitizen.utils.MyUtils;
+import motocitizen.utils.LocationUtils;
 import motocitizen.utils.Preferences;
 
 class NormalLocationManager implements SecuredLocationManagerInterface {
@@ -120,7 +120,7 @@ class NormalLocationManager implements SecuredLocationManagerInterface {
     private void requestAddress() {
         Location location = getLocation();
         if (current == location) return;
-        MainScreenActivity.updateStatusBar(getAddress(MyUtils.LocationToLatLng(location)));
+        MainScreenActivity.updateStatusBar(getAddress(LocationUtils.Location2LatLng(location)));
     }
 
     private void checkInPlace(Location location) {

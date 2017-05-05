@@ -40,7 +40,7 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
         super.onCreate(savedInstanceState);
         try {
             if (User.getInstance(this).isAuthorized()) {
-                Router.goTo(this, Router.Target.MAIN);
+                Router.INSTANCE.goTo(this, Router.Target.MAIN);
             }
         } catch (Error e) {
             ToastUtils.show(this, e.getLocalizedMessage());
@@ -96,7 +96,7 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
             Preferences.Companion.getInstance(this).setAnonim(anonim.isChecked());
             if (anonim.isChecked()) {
                 ((TextView) findViewById(R.id.auth_error_helper)).setText("");
-                Router.goTo(local, Router.Target.MAIN);
+                Router.INSTANCE.goTo(local, Router.Target.MAIN);
                 return;
             }
             if (!MyApp.isOnline(AuthActivity.this)) {
@@ -104,7 +104,7 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
                 return;
             }
             if (auth()) {
-                Router.goTo(local, Router.Target.MAIN);
+                Router.INSTANCE.goTo(local, Router.Target.MAIN);
             } else {
                 TextView authErrorHelper = (TextView) findViewById(R.id.auth_error_helper);
                 authErrorHelper.setText(R.string.auth_password_error);

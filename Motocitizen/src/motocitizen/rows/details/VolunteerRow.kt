@@ -5,10 +5,9 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.widget.TableRow
 import android.widget.TextView
-
 import motocitizen.content.volunteer.Volunteer
 import motocitizen.main.R
-import motocitizen.utils.DateUtils
+import motocitizen.utils.getTime
 
 @SuppressLint("ViewConstructor")
 open class VolunteerRow(context: Context, volunteer: Volunteer) : TableRow(context) {
@@ -16,6 +15,6 @@ open class VolunteerRow(context: Context, volunteer: Volunteer) : TableRow(conte
         LayoutInflater.from(context).inflate(R.layout.volunteer_row, this, true)
         (this.findViewById(R.id.volunteer) as TextView).text = volunteer.name
         (this.findViewById(R.id.action) as TextView).text = volunteer.status.string()
-        (this.findViewById(R.id.time) as TextView).text = DateUtils.getTime(volunteer.time)
+        (this.findViewById(R.id.time) as TextView).text = getTime(volunteer.time)
     }
 }

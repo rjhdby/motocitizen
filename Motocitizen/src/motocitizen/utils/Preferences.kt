@@ -36,7 +36,7 @@ class Preferences private constructor(context: Context) {
             }
         }
         set(value) {
-            preferences.edit().putString("mc.distance.show", (if (value > Const.EQUATOR) Const.EQUATOR else value).toString()).apply()
+            preferences.edit().putString("mc.distance.show", (if (value > EQUATOR) EQUATOR else value).toString()).apply()
         }
     var alarmDistance: Int
         get() {
@@ -47,7 +47,7 @@ class Preferences private constructor(context: Context) {
             }
         }
         set(value) {
-            preferences.edit().putString("mc.distance.alarm", (if (value > Const.EQUATOR) Const.EQUATOR else value).toString()).apply()
+            preferences.edit().putString("mc.distance.alarm", (if (value > EQUATOR) EQUATOR else value).toString()).apply()
         }
     var doNotDisturb
         get() = preferences.getBoolean("do.not.disturb", DEFAULT_DO_NOT_DISTURB)
@@ -131,27 +131,27 @@ class Preferences private constructor(context: Context) {
     }
 
     fun isHidden(type: Type): Boolean {
-        when (type) {
-            Type.BREAK                                               -> return !showBreak
-            Type.MOTO_AUTO, Type.MOTO_MOTO, Type.MOTO_MAN, Type.SOLO -> return !showAcc
-            Type.STEAL                                               -> return !showSteal
-            Type.OTHER                                               -> return !showOther
-            else                                                     -> return !showOther
+        return when (type) {
+            Type.BREAK                                               -> !showBreak
+            Type.MOTO_AUTO, Type.MOTO_MOTO, Type.MOTO_MAN, Type.SOLO -> !showAcc
+            Type.STEAL                                               -> !showSteal
+            Type.OTHER                                               -> !showOther
+            else                                                     -> false
         }
     }
 
     fun getPreferenceName(preference: String): String {
-        when (preference) {
-            "hoursAgo"         -> return "hours.ago"
-            "showAcc"          -> return "mc.show.acc"
-            "showBreak"        -> return "mc.show.break"
-            "showSteal"        -> return "mc.show.steal"
-            "showOther"        -> return "mc.show.other"
-            "distanceShow"     -> return "mc.distance.show"
-            "distanceAlarm"    -> return "mc.distance.alarm"
-            "maxNotifications" -> return "notifications.max"
-            "useVibration"     -> return "use.vibration"
-            else               -> return "unknown"
+        return when (preference) {
+            "hoursAgo"         -> "hours.ago"
+            "showAcc"          -> "mc.show.acc"
+            "showBreak"        -> "mc.show.break"
+            "showSteal"        -> "mc.show.steal"
+            "showOther"        -> "mc.show.other"
+            "distanceShow"     -> "mc.distance.show"
+            "distanceAlarm"    -> "mc.distance.alarm"
+            "maxNotifications" -> "notifications.max"
+            "useVibration"     -> "use.vibration"
+            else               -> "unknown"
         }
     }
 

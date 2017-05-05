@@ -46,6 +46,6 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.businessCardButton) Router.goTo(this, Router.Target.BUSINESS_CARD);
+        if (view.getId() == R.id.businessCardButton) Router.INSTANCE.goTo(this, Router.Target.BUSINESS_CARD);
     }
 }
