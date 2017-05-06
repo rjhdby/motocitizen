@@ -14,13 +14,11 @@ import android.widget.TableRow;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import org.json.JSONException;
-
 import motocitizen.content.accident.Accident;
 import motocitizen.dictionary.AccidentStatus;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentChangeStateRequest;
-import motocitizen.network.requests.BanRequest;
+import motocitizen.network2.requests.BanRequest;
 import motocitizen.router.Router;
 import motocitizen.utils.LocationUtils;
 import motocitizen.utils.ToastUtils;
@@ -144,22 +142,25 @@ abstract class PopupWindowGeneral {
         ban.setText("Забанить");
         //TODO разобраться с пирамидой зла
         ban.setOnClickListener(v -> {
-            new BanRequest(result -> {
-                if (result.has("error")) {
-                    try {
-                        ToastUtils.show(context, result.getString("error"));
-                    } catch (JSONException e) {
-                        ToastUtils.show(context, "Неизвестная ошибка");
-                        e.printStackTrace();
-                    }
-                } else {
-                    ToastUtils.show(context, "Пользователь забанен");
-                }
-            }, id);
+            new BanRequest(id, result -> ((Activity) context).runOnUiThread(() -> ToastUtils.show(context, result.has("error") ? "Ошибка связи с сервером" : "Пользователь забанен")));
             popupWindow.dismiss();
         });
         TableRow tr = new TableRow(content.getContext());
         tr.addView(ban, layoutParams);
         return tr;
+
+        /*
+                    switch (response.getString("ban")) {
+                case "OK":
+                    return "Статус изменен";
+                case "ERROR PREREQUISITES":
+                    return "Неизвестная ошибка " + response.toString();
+                case "NO USER":
+                    return "Пользователь не зарегистрирован";
+                case "AUTH ERROR":
+                case "NO RIGHTS":
+                    return "Недостаточно прав";
+            }
+         */
     }
 }

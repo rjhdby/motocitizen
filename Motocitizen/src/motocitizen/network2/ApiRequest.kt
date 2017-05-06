@@ -1,66 +1,55 @@
 package motocitizen.network2
 
-import okhttp3.OkHttpClient
+import motocitizen.main.BuildConfig
+import okhttp3.*
+import okhttp3.logging.HttpLoggingInterceptor
+import org.json.JSONException
 import org.json.JSONObject
+import java.io.IOException
 
-
-abstract class ApiRequest(var params: HashMap<String, String>, val callback: RequestResultCallback? = null) {
+abstract class ApiRequest(val callback: RequestResultCallback? = null) {
+    var params: HashMap<String, String> = HashMap()
     private val url = "http://motodtp.info/mobile/main_mc_acc_json.php"
+    private val error = JSONObject("{\"error\":\"server error\"}")
+    private val logLevel = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
+    private val client = OkHttpClient.Builder()
+            .addInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
+            .build()
 
-    fun sync(): JSONObject {
-        val text = OkHttpClient()
-                .newCall(buildRequest())
-                .execute()
-                .body()
-                .string()
-        android.util.Log.w("HTTP RESPONSE", text)
-        var response = JSONObject()
-        try {
-            response = JSONObject(text)
-        } catch (e: org.json.JSONException) {
-            e.printStackTrace()
-        }
-        return response
-    }
-
-    private fun buildRequest() = okhttp3.Request.Builder()
+    private fun buildRequest() = Request.Builder()
             .post(makePost(params))
             .url(url)
             .build()!!
 
-    protected fun async() {
-        if (callback == null) return
-        okhttp3.OkHttpClient().newCall(buildRequest()).enqueue(object : okhttp3.Callback {
-            override fun onFailure(call: okhttp3.Call, e: java.io.IOException) = e.printStackTrace()
+    protected fun call() {
+        client.newCall(buildRequest()).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                callback?.call(response("HTTP RESPONSE ERROR " + e.toString()))
+            }
 
             @Throws(java.io.IOException::class)
-            override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
-                val text = response.body().string()
-                android.util.Log.w("HTTP RESPONSE", text)
-                try {
-                    callback.call(org.json.JSONObject(text))
-                } catch (e: org.json.JSONException) {
-                    e.printStackTrace()
-                    callback.call(org.json.JSONObject())
-                }
-
+            override fun onResponse(call: Call, response: Response) {
+                callback?.call(response(response.body().string()))
             }
         })
     }
 
-    private fun makePost(post: Map<String, String>): okhttp3.RequestBody {
-        val debug = StringBuilder()
-        debug.append(url).append("?")
-        val body = okhttp3.FormBody.Builder()
-        for (key in post.keys) {
-            body.add(key, post[key])
-            debug.append(key).append("=").append(post[key]).append("&")
+    private fun response(string: String): JSONObject {
+        try {
+            return JSONObject(string)
+        } catch (e: JSONException) {
+            return error
         }
-        android.util.Log.w("HTTP REQUEST", debug.toString())
+    }
+
+    private fun makePost(post: Map<String, String>): RequestBody {
+        val body = FormBody.Builder()
+        post.forEach { (k, v) -> body.add(k, v) }
         return body.build()
     }
 
+    @FunctionalInterface
     interface RequestResultCallback {
-        fun call(response: org.json.JSONObject)
+        fun call(response: JSONObject)
     }
 }

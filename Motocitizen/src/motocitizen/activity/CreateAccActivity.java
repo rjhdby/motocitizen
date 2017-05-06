@@ -43,7 +43,7 @@ import motocitizen.geocoder.MyGeoCoder;
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.network.GeocoderClient;
-import motocitizen.network.requests.CreateAccidentRequest;
+import motocitizen.network2.requests.CreateAccidentRequest;
 import motocitizen.user.User;
 import motocitizen.utils.DateUtils;
 import motocitizen.utils.LocationUtils;
@@ -149,7 +149,6 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         FragmentManager    fragmentManager = this.getSupportFragmentManager();
         SupportMapFragment mapFragment     = (SupportMapFragment) fragmentManager.findFragmentById(R.id.create_map_container);
         mapFragment.getMapAsync(new OnMapCreated());
-
     }
 
     private void setComplete() {
@@ -308,25 +307,38 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         }
     }
 
+    //{"result":"ERROR PREREQUISITES"}
     private void confirm() {
         disableConfirm();
-        CreateAccidentRequest request = new CreateAccidentRequest(result -> {
-            if (!result.has("error")) {
-                finish();
-            } else {
-                ToastUtils.show(CreateAccActivity.this, result.optString("error", "Неизвестная ошибка"));
-                enableConfirm();
+        new CreateAccidentRequest(ab.build(), response -> {
+            try {
+                if (response.has("result") && response.getJSONObject("result").has("ID")) {
+                    finish();
+                    return;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        });
-        request.setType(ab.getType());
-        request.setMed(ab.getMedicine());
-        request.setAddress(ab.getAddress());
-        request.setLocation(ab.getCoordinates());
-        request.setDescription(ab.getDescription());
-        request.setCreated(ab.getTime());
-        if (((CheckBox) findViewById(R.id.forStat)).isChecked()) request.setForStat();
-        //noinspection unchecked
-        request.execute();
+            String message = response.optString("error", response.optString("result", ""));
+            switch (message) {
+                case "AUTH ERROR":
+                    message = "Вы не авторизованы";
+                    break;
+                case "NO RIGHTS":
+                case "READONLY":
+                    message = "Недостаточно прав";
+                    break;
+                case "PROBABLY SPAM":
+                    message = "Нельзя создавать события так часто";
+                    break;
+                case "": message = "Неизвестная ошибка";
+            }
+            final String error = message;
+            CreateAccActivity.this.runOnUiThread(() -> {
+                ToastUtils.show(CreateAccActivity.this, error);
+                enableConfirm();
+            });
+        }, ((CheckBox) findViewById(R.id.forStat)).isChecked());
     }
 
     private void backButton() {

@@ -18,6 +18,7 @@ import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.router.Router;
 import motocitizen.user.User;
+import motocitizen.utils.Preferences;
 
 public class StartupActivity extends AppCompatActivity {
 
@@ -63,6 +64,17 @@ public class StartupActivity extends AppCompatActivity {
     }
 
     private void ahead() {
-        Router.INSTANCE.goTo(this, User.getInstance(this).isAuthorized() ? Router.Target.MAIN : Router.Target.AUTH);
+        if (Preferences.Companion.getInstance(this).getAnonim()) {
+            Router.INSTANCE.goTo(this, Router.Target.MAIN);
+            return;
+        }
+        if (Preferences.Companion.getInstance(this).getLogin().equals("")) {
+            Router.INSTANCE.goTo(this, Router.Target.AUTH);
+            return;
+        }
+        User.getInstance(this).auth(
+                Preferences.Companion.getInstance(this).getLogin(),
+                Preferences.Companion.getInstance(this).getPassword(),
+                response -> Router.INSTANCE.goTo(this, User.getInstance(this).isAuthorized() ? Router.Target.MAIN : Router.Target.AUTH));
     }
 }

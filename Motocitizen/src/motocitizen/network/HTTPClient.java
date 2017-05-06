@@ -25,14 +25,12 @@ abstract public class HTTPClient extends AsyncTask<Map<String, String>, Integer,
     protected AsyncTaskCompleteListener listener;
     protected final Map<String, String> post     = new HashMap<>();
     protected       JSONObject          response = new JSONObject();
-//    protected JSONObject          error    = new JSONObject();
 
     private final Map<String, String> fake = new HashMap<>(1);
 
     @SafeVarargs
     @Override
     protected final JSONObject doInBackground(Map<String, String>... params) {
-//        return request(params[ 0 ]);
         return request();
     }
 

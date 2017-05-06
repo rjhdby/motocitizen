@@ -1,5 +1,7 @@
 package motocitizen.dictionary;
 
+import android.support.annotation.NonNull;
+
 public enum VolunteerStatus {
     ON_WAY("onway", "Выехал"),
     IN_PLACE("inplace", "На месте"),

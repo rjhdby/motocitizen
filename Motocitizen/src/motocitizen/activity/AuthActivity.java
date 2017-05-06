@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import motocitizen.MyApp;
 import motocitizen.main.R;
+import motocitizen.network2.ApiRequest;
 import motocitizen.router.Router;
 import motocitizen.user.User;
 import motocitizen.utils.Preferences;
@@ -103,12 +104,16 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
                 ToastUtils.show(AuthActivity.this, AuthActivity.this.getString(R.string.auth_not_available));
                 return;
             }
-            if (auth()) {
-                Router.INSTANCE.goTo(local, Router.Target.MAIN);
-            } else {
-                TextView authErrorHelper = (TextView) findViewById(R.id.auth_error_helper);
-                authErrorHelper.setText(R.string.auth_password_error);
-            }
+            auth(response -> {
+                if (User.getInstance(AuthActivity.this).isAuthorized()) {
+                    Router.INSTANCE.goTo(local, Router.Target.MAIN);
+                } else {
+                    AuthActivity.this.runOnUiThread(() -> {
+                        TextView authErrorHelper = (TextView) findViewById(R.id.auth_error_helper);
+                        authErrorHelper.setText(R.string.auth_password_error);
+                    });
+                }
+            });
         });
         logoutBtn.setOnClickListener(v -> {
             //TODO Добавить запрос подтверждения на выход.
@@ -150,12 +155,7 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
         cancelBtn.setOnClickListener(v -> finish());
     }
 
-    private boolean auth() {
-        try {
-            return User.getInstance(this).auth(login.getText().toString(), password.getText().toString());
-        } catch (Error error) {
-            error.printStackTrace();
-            return false;
-        }
+    private void auth(ApiRequest.RequestResultCallback callback) {
+        User.getInstance(this).auth(login.getText().toString(), password.getText().toString(), callback);
     }
 }

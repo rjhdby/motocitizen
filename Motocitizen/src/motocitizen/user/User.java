@@ -3,12 +3,14 @@ package motocitizen.user;
 import android.content.Context;
 import android.util.Log;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import motocitizen.network2.ApiRequest;
 import motocitizen.network2.requests.AuthRequest;
 import motocitizen.utils.Preferences;
 
@@ -26,8 +28,6 @@ public class User {
         if (Holder.instance == null) {
             Holder.instance = new User();
             Holder.instance.preferences = Preferences.Companion.getInstance(context);
-            if (!Preferences.Companion.getInstance(context).getAnonim() && !Preferences.Companion.getInstance(context).getLogin().equals(""))
-                Holder.instance.auth(Preferences.Companion.getInstance(context).getLogin(), Preferences.Companion.getInstance(context).getPassword());
         }
         return Holder.instance;
     }
@@ -40,27 +40,31 @@ public class User {
         private static User instance;
     }
 
-    public boolean auth(String login, String password) {
-        AuthRequest auth   = new AuthRequest(login, password);
-        JSONObject  result = auth.sync();
+    public void auth(String login, String password, ApiRequest.RequestResultCallback callback) {
+        preferences.setPassword(password);
+        new AuthRequest(login, getPassHash(password), response -> {
+            parseAuthResult(response);
+            callback.call(response);
+        });
+    }
+
+    private void parseAuthResult(JSONObject response) {
         isAuthorized = false;
-        if (!result.has("id")) {
-            Log.d("AUTH ERROR", result.toString());
-            return false;
+        if (!response.has("id")) {
+            Log.d("AUTH ERROR", response.toString());
+            return;
         }
         try {
-            name = result.getString("name");
-            if (name.length() == 0) return false;
-            role = Role.Companion.parse(result.getString("role"));
-            id = Integer.parseInt(result.getString("id"));
-            preferences.setLogin(login);
-            preferences.setPassword(password);
+            name = response.getString("name");
+            if (name.length() == 0) return;
+            role = Role.Companion.parse(response.getString("role"));
+            id = Integer.parseInt(response.getString("id"));
+            preferences.setLogin(name);
             preferences.setAnonim(false);
             isAuthorized = true;
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return isAuthorized;
     }
 
     public int getId() {return id;}
@@ -98,9 +102,9 @@ public class User {
 
     public boolean isAuthorized() {return isAuthorized;}
 
-    public boolean isModerator() {return role.isModerator();}
+    public boolean isModerator()  {return role.isModerator();}
 
-    public boolean isStandard() {return role.isStandard();}
+    public boolean isStandard()   {return role.isStandard();}
 
-    public String getRoleName() {return role.getText();}
+    public String getRoleName()   {return role.getText();}
 }

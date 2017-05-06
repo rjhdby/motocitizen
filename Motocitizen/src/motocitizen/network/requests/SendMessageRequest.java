@@ -7,7 +7,6 @@ import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.HTTPClient;
 import motocitizen.network.Methods;
 import motocitizen.user.User;
-import motocitizen.utils.Preferences;
 
 public class SendMessageRequest extends HTTPClient {
     public SendMessageRequest(AsyncTaskCompleteListener listener, int id, String text) {

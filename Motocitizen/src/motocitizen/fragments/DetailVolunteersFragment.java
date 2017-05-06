@@ -11,10 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.Toast;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import motocitizen.activity.AccidentDetailsActivity;
 import motocitizen.content.accident.Accident;
@@ -22,10 +18,9 @@ import motocitizen.content.volunteer.Volunteer;
 import motocitizen.dictionary.Content;
 import motocitizen.dictionary.VolunteerStatus;
 import motocitizen.main.R;
-import motocitizen.network.AsyncTaskCompleteListener;
-import motocitizen.network.requests.CancelOnWayRequest;
-import motocitizen.network.requests.OnWayRequest;
 import motocitizen.network2.requests.AccidentListRequest;
+import motocitizen.network2.requests.CancelOnWayRequest;
+import motocitizen.network2.requests.OnWayRequest;
 import motocitizen.rows.details.VolunteerRow;
 import motocitizen.user.User;
 import motocitizen.utils.Preferences;
@@ -143,14 +138,14 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         switch (requestCode) {
             case DIALOG_ONWAY_CONFIRM:
                 if (resultCode == Activity.RESULT_OK) {
-                    sendOnway();
+                    sendOnWay();
                 } else if (resultCode == Activity.RESULT_CANCELED) {
                     // todo After Cancel code.
                 }
                 break;
             case DIALOG_CANCEL_ONWAY_CONFIRM:
                 if (resultCode == Activity.RESULT_OK) {
-                    sendCancelOnway();
+                    sendCancelOnWay();
                 } else if (resultCode == Activity.RESULT_CANCELED) {
                     // todo After Cancel code.
                 }
@@ -161,38 +156,25 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         }
     }
 
-    private void sendOnway() {
+    private void sendOnWay() {
         Preferences.Companion.getInstance(getActivity()).setOnWay(accidentID);
-        new OnWayRequest(new OnWayCallback(), accidentID);
+        new OnWayRequest(accidentID, response -> new AccidentListRequest(result -> {
+            Content.getInstance().requestUpdate();
+            getActivity().runOnUiThread(() -> {
+                ((AccidentDetailsActivity) getActivity()).update();
+                update();
+            });
+        }));
     }
 
-    private void message(String text) {
-        Toast.makeText(getActivity(), text, Toast.LENGTH_LONG).show();
-    }
-
-    private class OnWayCallback implements AsyncTaskCompleteListener {
-        @Override
-        public void onTaskComplete(JSONObject result) {
-            if (result.has("error")) {
-                try {
-                    message(result.getString("error"));
-                } catch (JSONException e) {
-                    message("Неизвестная ошибка " + result.toString());
-                }
-            } else {
-                new AccidentListRequest(result1 -> {
-                    Content.getInstance().requestUpdate();
-                    getActivity().runOnUiThread(() -> {
-                        ((AccidentDetailsActivity) getActivity()).update();
-                        update();
-                    });
-                });
-            }
-        }
-    }
-
-    private void sendCancelOnway() {
+    private void sendCancelOnWay() {
         Preferences.Companion.getInstance(getActivity()).setOnWay(0);
-        new CancelOnWayRequest(new OnWayCallback(), accidentID);
+        new CancelOnWayRequest(accidentID, response -> new AccidentListRequest(result -> {
+            Content.getInstance().requestUpdate();
+            getActivity().runOnUiThread(() -> {
+                ((AccidentDetailsActivity) getActivity()).update();
+                update();
+            });
+        }));
     }
 }
