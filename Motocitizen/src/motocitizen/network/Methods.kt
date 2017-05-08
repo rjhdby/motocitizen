@@ -1,6 +1,6 @@
-package motocitizen.network;
+package motocitizen.network
 
-public enum Methods {
+enum class Methods constructor(val code: String) {
     AUTH("auth"),
     GET_LIST("list"),
     BAN("ban"),
@@ -12,14 +12,4 @@ public enum Methods {
     CREATE("createAcc"),
     REGISTER_GCM("registerGCM"),
     CHANGE_STATE("changeState");
-
-    private final String code;
-
-    Methods(String code) {
-        this.code = code;
-    }
-
-    public String toCode() {
-        return this.code;
-    }
 }

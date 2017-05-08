@@ -9,7 +9,7 @@ class BanRequest(id: Int, callback: RequestResultCallback) : RequestWithAuth(cal
         val user = Content.getInstance()[id]!!.owner.id
         params.put("id", id.toString())
         params.put("user_id", user.toString())
-        params.put("calledMethod", Methods.BAN.toCode())
+        params.put("calledMethod", Methods.BAN.code)
         call()
     }
 }

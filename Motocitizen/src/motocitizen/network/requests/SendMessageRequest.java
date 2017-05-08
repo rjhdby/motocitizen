@@ -15,7 +15,7 @@ public class SendMessageRequest extends HTTPClient {
         post.put("passhash", User.dirtyRead().getPassHash());
         post.put("id", String.valueOf(id));
         post.put("text", text);
-        post.put("calledMethod", Methods.MESSAGE.toCode());
+        post.put("calledMethod", Methods.MESSAGE.getCode());
         //noinspection unchecked
         execute(post);
     }

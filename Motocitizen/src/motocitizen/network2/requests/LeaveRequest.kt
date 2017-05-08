@@ -8,7 +8,7 @@ class LeaveRequest(id: Int) : ApiRequest() {
     init {
         params.put("login", User.dirtyRead().name)
         params.put("id", id.toString())
-        params.put("m", Methods.LEAVE.toCode())
+        params.put("m", Methods.LEAVE.code)
         call()
     }
 }

@@ -8,7 +8,7 @@ import motocitizen.utils.getDbFormat
 
 class CreateAccidentRequest(accident: Accident, callback: RequestResultCallback, forStat: Boolean = false) : RequestWithAuth(callback) {
     init {
-        params.put("calledMethod", Methods.CREATE.toCode())
+        params.put("calledMethod", Methods.CREATE.code)
         params.put("owner_id", User.dirtyRead().id.toString())
         params.put("type", accident.type.code())
         params.put("address", accident.address)

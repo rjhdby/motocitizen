@@ -120,9 +120,9 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
                 Content.getInstance().requestUpdate(new RequestResultCallback() {
                     @Override
                     public void call(@NotNull JSONObject response) {
-                        mcNewMessageText.setText("");
-                        if (!result.has("error")) Content.getInstance().parseJSON(result);
                         getActivity().runOnUiThread(() -> {
+                            mcNewMessageText.setText("");
+                            if (!result.has("error")) Content.getInstance().parseJSON(result);
                             ((AccidentDetailsActivity) getActivity()).update();
                             update();
                         });

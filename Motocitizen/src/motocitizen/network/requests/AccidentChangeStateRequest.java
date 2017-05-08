@@ -16,7 +16,7 @@ public class AccidentChangeStateRequest extends HTTPClient {
         post.put("passhash", User.dirtyRead().getPassHash());
         post.put("state", state);
         post.put("id", String.valueOf(id));
-        post.put("m", Methods.CHANGE_STATE.toCode());
+        post.put("m", Methods.CHANGE_STATE.getCode());
         //noinspection unchecked
         execute(post);
     }
