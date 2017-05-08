@@ -117,7 +117,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
             } else {
                 Content.getInstance().requestUpdate(response -> getActivity().runOnUiThread(() -> {
                     mcNewMessageText.setText("");
-                    if (!result.has("error")) Content.getInstance().parseJSON(result);
+                    if (!response.has("error")) Content.getInstance().parseJSON(response);
                     ((AccidentDetailsActivity) getActivity()).update();
                     update();
                 }));
