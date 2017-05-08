@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,7 +22,6 @@ import motocitizen.dictionary.Content;
 import motocitizen.main.R;
 import motocitizen.network.AsyncTaskCompleteListener;
 import motocitizen.network.requests.SendMessageRequest;
-import motocitizen.network2.ApiRequest.RequestResultCallback;
 import motocitizen.user.User;
 import motocitizen.utils.ToastUtils;
 import motocitizen.utils.popups.MessagesPopup;
@@ -117,17 +115,12 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
                     e.printStackTrace();
                 }
             } else {
-                Content.getInstance().requestUpdate(new RequestResultCallback() {
-                    @Override
-                    public void call(@NotNull JSONObject response) {
-                        getActivity().runOnUiThread(() -> {
-                            mcNewMessageText.setText("");
-                            if (!result.has("error")) Content.getInstance().parseJSON(result);
-                            ((AccidentDetailsActivity) getActivity()).update();
-                            update();
-                        });
-                    }
-                });
+                Content.getInstance().requestUpdate(response -> getActivity().runOnUiThread(() -> {
+                    mcNewMessageText.setText("");
+                    if (!result.has("error")) Content.getInstance().parseJSON(result);
+                    ((AccidentDetailsActivity) getActivity()).update();
+                    update();
+                }));
             }
             transaction = false;
             newMessageButton.setEnabled(true);
