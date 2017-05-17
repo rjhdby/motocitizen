@@ -67,6 +67,32 @@ public class Content extends TreeMap<Integer, Accident> {
         }
     }
 
+    /**
+     * Получаем json о всех событиях, но обновляем экран, только с открытым событием
+     *
+     * @param json
+     * @param ID
+     */
+    public void parseJSON(JSONObject json, int ID) {
+        JSONArray list = new JSONArray();
+        try {
+            list = json.getJSONArray("list");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        for (int i = 0; i < list.length(); i++) {
+            try {
+                JSONObject ooObject = list.getJSONObject(i);
+                if (ooObject.getInt("id") == ID) {
+                    Accident accident = AccidentFactory.Companion.make(list.getJSONObject(i));
+                    put(accident.getId(), accident);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void setLeave(int currentInplace) {
         //TODO SetLeave
     }

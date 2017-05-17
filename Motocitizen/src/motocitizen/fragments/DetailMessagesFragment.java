@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
+import android.widget.ScrollView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,11 +31,10 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
 
     private ImageButton newMessageButton;
 
-
+    private ScrollView activityDetailsMessagesScroll;
     private EditText  mcNewMessageText;
     private View      newMessageArea;
     private ViewGroup messagesTable;
-    private boolean transaction = false;
 
     public DetailMessagesFragment() {
     }
@@ -57,20 +57,25 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         messagesTable = (ViewGroup) viewMain.findViewById(R.id.details_messages_table);
         newMessageArea = viewMain.findViewById(R.id.new_message_area);
 
-        newMessageButton.setEnabled(false);
+        activityDetailsMessagesScroll = (ScrollView)  viewMain.findViewById(R.id.activity__details_messages_scroll);
 
-        mcNewMessageText.addTextChangedListener(new NewMessageTextWatcher());
+        //mcNewMessageText.addTextChangedListener(new NewMessageTextWatcher());
         newMessageButton.setOnClickListener(v -> {
-            if (transaction) return;
-            transaction = true;
-            newMessageButton.setEnabled(false);
-            new SendMessageRequest(new SendMessageCallback(), accidentID, mcNewMessageText.getText().toString());
+            String temp = mcNewMessageText.getText().toString().replaceAll("\\s", "");
+            if (temp.length()> 0) {
+                new SendMessageRequest(new SendMessageCallback(), accidentID, mcNewMessageText.getText().toString());
+                mcNewMessageText.setText("");
+
+            }
         });
         update();
 
         return viewMain;
     }
 
+    /**
+     * Обновление сообщений в списке
+     */
     private void update() {
         messagesTable.removeAllViews();
         final Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
@@ -116,35 +121,19 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
                 }
             } else {
                 Content.getInstance().requestUpdate(response -> getActivity().runOnUiThread(() -> {
-                    mcNewMessageText.setText("");
-                    if (!response.has("error")) Content.getInstance().parseJSON(response);
+                    if (!response.has("error")) {
+                        Content.getInstance().parseJSON(response, accidentID);
+                    }
                     ((AccidentDetailsActivity) getActivity()).update();
                     update();
+                    activityDetailsMessagesScroll.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            activityDetailsMessagesScroll.fullScroll(ScrollView.FOCUS_DOWN);
+                        }
+                    });
                 }));
             }
-            transaction = false;
-            newMessageButton.setEnabled(true);
-        }
-    }
-
-    private class NewMessageTextWatcher implements TextWatcher {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (transaction) return;
-            String temp = s.toString().replaceAll("\\s", "");
-            if (temp.length() == 0) {
-                newMessageButton.setEnabled(false);
-            } else {
-                newMessageButton.setEnabled(true);
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
         }
     }
 
