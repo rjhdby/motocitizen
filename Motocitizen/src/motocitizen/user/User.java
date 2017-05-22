@@ -3,15 +3,14 @@ package motocitizen.user;
 import android.content.Context;
 import android.util.Log;
 
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import motocitizen.network2.ApiRequest;
-import motocitizen.network2.requests.AuthRequest;
+import motocitizen.network.ApiRequest;
+import motocitizen.network.requests.AuthRequest;
 import motocitizen.utils.Preferences;
 
 public class User {

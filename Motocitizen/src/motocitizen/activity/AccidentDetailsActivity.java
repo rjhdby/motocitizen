@@ -1,6 +1,7 @@
 package motocitizen.activity;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
@@ -27,7 +28,7 @@ import motocitizen.fragments.DetailHistoryFragment;
 import motocitizen.fragments.DetailMessagesFragment;
 import motocitizen.fragments.DetailVolunteersFragment;
 import motocitizen.main.R;
-import motocitizen.network.AsyncTaskCompleteListener;
+import motocitizen.network.ApiRequest;
 import motocitizen.network.requests.AccidentChangeStateRequest;
 import motocitizen.router.Router;
 import motocitizen.user.User;
@@ -254,19 +255,19 @@ public class AccidentDetailsActivity extends AppCompatActivity {
     private void sendFinishRequest() {
         //TODO Суперкостыль ???
         accNewState = Content.getInstance().get(accidentID).getStatus() == ENDED ? ACTIVE : ENDED;
-        new AccidentChangeStateRequest(new AccidentChangeCallback(), accidentID, accNewState.code());
+        new AccidentChangeStateRequest(accNewState.code(), accidentID, new AccidentChangeCallback());
     }
 
     private void sendHideRequest() {
         //TODO Суперкостыль ???
         boolean s = Content.getInstance().get(accidentID).getStatus() == ENDED;
         accNewState = s ? ACTIVE : ENDED;
-        new AccidentChangeStateRequest(new AccidentChangeCallback(), accidentID, s ? ACTIVE.code() : HIDDEN.code());
+        new AccidentChangeStateRequest(s ? ACTIVE.code() : HIDDEN.code(), accidentID, new AccidentChangeCallback());
     }
 
-    private class AccidentChangeCallback implements AsyncTaskCompleteListener {
+    private class AccidentChangeCallback implements ApiRequest.RequestResultCallback {
         @Override
-        public void onTaskComplete(JSONObject result) {
+        public void call(@NonNull JSONObject result) {
 
             if (result.has("error")) {
                 String error;

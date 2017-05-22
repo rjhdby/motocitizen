@@ -1,4 +1,4 @@
-package motocitizen.network2
+package motocitizen.network
 
 import motocitizen.main.BuildConfig
 import okhttp3.*
@@ -7,9 +7,9 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 
-abstract class ApiRequest(val callback: RequestResultCallback? = null) {
+abstract class CoreRequest(val callback: RequestResultCallback? = null) {
     var params: HashMap<String, String> = HashMap()
-    private val url = "http://motodtp.info/mobile/main_mc_acc_json.php"
+    abstract val url: String
     private val error = JSONObject("{\"error\":\"server error\"}")
     private val logLevel = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
     private val client = OkHttpClient.Builder()

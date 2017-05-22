@@ -18,7 +18,7 @@ import motocitizen.content.accident.Accident;
 import motocitizen.dictionary.AccidentStatus;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentChangeStateRequest;
-import motocitizen.network2.requests.BanRequest;
+import motocitizen.network.requests.BanRequest;
 import motocitizen.router.Router;
 import motocitizen.utils.LocationUtils;
 import motocitizen.utils.ToastUtils;
@@ -98,7 +98,7 @@ abstract class PopupWindowGeneral {
 
         finish.setOnClickListener(v -> {
             popupWindow.dismiss();
-            new AccidentChangeStateRequest(null, point.getId(), point.isEnded() ? AccidentStatus.ACTIVE.code() : AccidentStatus.ENDED.code());
+            new AccidentChangeStateRequest(point.isEnded() ? AccidentStatus.ACTIVE.code() : AccidentStatus.ENDED.code(), point.getId(), null);
         });
         TableRow tr = new TableRow(content.getContext());
         tr.addView(finish, layoutParams);
@@ -111,7 +111,7 @@ abstract class PopupWindowGeneral {
 
         finish.setOnClickListener(v -> {
             popupWindow.dismiss();
-            new AccidentChangeStateRequest(null, point.getId(), point.isHidden() ? AccidentStatus.ACTIVE.code() : AccidentStatus.HIDDEN.code());
+            new AccidentChangeStateRequest(point.isHidden() ? AccidentStatus.ACTIVE.code() : AccidentStatus.HIDDEN.code(), point.getId(), null);
         });
         TableRow tr = new TableRow(content.getContext());
         tr.addView(finish, layoutParams);

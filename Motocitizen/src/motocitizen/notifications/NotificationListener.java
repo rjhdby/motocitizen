@@ -15,15 +15,13 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Queue;
-import java.util.Stack;
 
 import motocitizen.activity.AccidentDetailsActivity;
 import motocitizen.content.accident.Accident;
 import motocitizen.dictionary.Content;
 import motocitizen.dictionary.Medicine;
 import motocitizen.main.R;
-import motocitizen.network2.ApiRequest;
+import motocitizen.network.ApiRequest;
 import motocitizen.utils.Preferences;
 
 public class NotificationListener extends FirebaseMessagingService {

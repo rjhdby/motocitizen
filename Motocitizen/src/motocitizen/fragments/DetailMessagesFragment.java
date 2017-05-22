@@ -1,8 +1,6 @@
 package motocitizen.fragments;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.ScrollView;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,7 +20,7 @@ import motocitizen.content.message.Message;
 import motocitizen.database.StoreMessages;
 import motocitizen.dictionary.Content;
 import motocitizen.main.R;
-import motocitizen.network.AsyncTaskCompleteListener;
+import motocitizen.network.ApiRequest;
 import motocitizen.network.requests.SendMessageRequest;
 import motocitizen.user.User;
 import motocitizen.utils.ToastUtils;
@@ -32,9 +31,9 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
     private ImageButton newMessageButton;
 
     private ScrollView activityDetailsMessagesScroll;
-    private EditText  mcNewMessageText;
-    private View      newMessageArea;
-    private ViewGroup messagesTable;
+    private EditText   mcNewMessageText;
+    private View       newMessageArea;
+    private ViewGroup  messagesTable;
 
     public DetailMessagesFragment() {
     }
@@ -57,13 +56,13 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         messagesTable = (ViewGroup) viewMain.findViewById(R.id.details_messages_table);
         newMessageArea = viewMain.findViewById(R.id.new_message_area);
 
-        activityDetailsMessagesScroll = (ScrollView)  viewMain.findViewById(R.id.activity__details_messages_scroll);
+        activityDetailsMessagesScroll = (ScrollView) viewMain.findViewById(R.id.activity__details_messages_scroll);
 
         //mcNewMessageText.addTextChangedListener(new NewMessageTextWatcher());
         newMessageButton.setOnClickListener(v -> {
             String temp = mcNewMessageText.getText().toString().replaceAll("\\s", "");
-            if (temp.length()> 0) {
-                new SendMessageRequest(new SendMessageCallback(), accidentID, mcNewMessageText.getText().toString());
+            if (temp.length() > 0) {
+                new SendMessageRequest(mcNewMessageText.getText().toString(), accidentID, new SendMessageCallback());
                 mcNewMessageText.setText("");
 
             }
@@ -109,31 +108,27 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         newMessageArea.setVisibility(User.getInstance(getActivity()).isStandard() ? View.VISIBLE : View.INVISIBLE);
     }
 
-    private class SendMessageCallback implements AsyncTaskCompleteListener {
+    private class SendMessageCallback implements ApiRequest.RequestResultCallback {
         @Override
-        public void onTaskComplete(JSONObject result) {
+        public void call(@NotNull JSONObject result) {
             if (result.has("error")) {
-                try {
-                    ToastUtils.show(getActivity(), result.getString("error"));
-                } catch (JSONException e) {
-                    ToastUtils.show(getActivity(), "Неизвестная ошибка" + result.toString());
-                    e.printStackTrace();
-                }
-            } else {
-                Content.getInstance().requestUpdate(response -> getActivity().runOnUiThread(() -> {
-                    if (!response.has("error")) {
-                        Content.getInstance().parseJSON(response, accidentID);
+                getActivity().runOnUiThread(() -> {
+                    try {
+                        ToastUtils.show(getActivity(), result.getString("error"));
+                    } catch (JSONException e) {
+                        ToastUtils.show(getActivity(), "Неизвестная ошибка" + result.toString());
+                        e.printStackTrace();
                     }
-                    ((AccidentDetailsActivity) getActivity()).update();
-                    update();
-                    activityDetailsMessagesScroll.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            activityDetailsMessagesScroll.fullScroll(ScrollView.FOCUS_DOWN);
-                        }
-                    });
-                }));
+                });
             }
+            Content.getInstance().requestUpdate(response -> getActivity().runOnUiThread(() -> {
+                if (!response.has("error")) {
+                    Content.getInstance().parseJSON(response, accidentID);
+                }
+                ((AccidentDetailsActivity) getActivity()).update();
+                update();
+                activityDetailsMessagesScroll.post(() -> activityDetailsMessagesScroll.fullScroll(ScrollView.FOCUS_DOWN));
+            }));
         }
     }
 
@@ -150,9 +145,9 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         public boolean onLongClick(View v) {
             PopupWindow popupWindow;
             popupWindow = (new MessagesPopup(getActivity(), message.getId(), accident.getId())).getPopupWindow(getActivity());
-            int viewLocation[] = new int[2];
+            int viewLocation[] = new int[ 2 ];
             v.getLocationOnScreen(viewLocation);
-            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
+            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[ 0 ], viewLocation[ 1 ]);
             return true;
         }
     }

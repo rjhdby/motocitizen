@@ -38,7 +38,7 @@ fun newId(): Int {
 }
 
 fun getWidth(context: Context): Int {
-    val displaymetrics = DisplayMetrics()
-    (context as Activity).windowManager.defaultDisplay.getMetrics(displaymetrics)
-    return displaymetrics.widthPixels
+    val displayMetrics = DisplayMetrics()
+    (context as Activity).windowManager.defaultDisplay.getMetrics(displayMetrics)
+    return displayMetrics.widthPixels
 }

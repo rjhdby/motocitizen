@@ -1,7 +1,6 @@
 package motocitizen.activity;
 
 import android.Manifest;
-import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,7 +21,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CircleOptions;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
@@ -30,20 +28,17 @@ import com.karumi.dexter.listener.single.BasePermissionListener;
 
 import org.json.JSONException;
 
-import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 
+import kotlin.Unit;
 import motocitizen.content.accident.Accident;
 import motocitizen.content.accident.AccidentFactory;
 import motocitizen.dictionary.Content;
 import motocitizen.dictionary.Medicine;
 import motocitizen.dictionary.Type;
-import motocitizen.geocoder.MyGeoCoder;
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
-import motocitizen.network.GeocoderClient;
-import motocitizen.network2.requests.CreateAccidentRequest;
+import motocitizen.network.requests.CreateAccidentRequest;
 import motocitizen.user.User;
 import motocitizen.utils.DateUtils;
 import motocitizen.utils.LocationUtils;
@@ -252,20 +247,34 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 backButton();
                 break;
             case R.id.SEARCH:
-                String addressForSearch = searchEditText.getText().toString();
-                try {
-                    List<Address> addresses = MyGeoCoder.getInstance().getFromLocationName(addressForSearch, 1);
-                    LatLng        latLng;
-                    if (addresses.size() > 0) {
-                        latLng = new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude());
+                LocationUtils.LatLngByAddress(searchEditText.getText().toString(), latLng -> {
+                    if (latLng == null) {
+                        ToastUtils.show(CreateAccActivity.this, CreateAccActivity.this.getString(R.string.nothing_is_found));
                     } else {
-                        latLng = GeocoderClient.latLngByAddress(addressForSearch);
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
                     }
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
-                } catch (IOException | JSONException e) {
-                    e.printStackTrace();
-                    ToastUtils.show(CreateAccActivity.this, CreateAccActivity.this.getString(R.string.nothing_is_found));
-                }
+                    return Unit.INSTANCE;
+                });
+//                try {
+//                    List<Address> addresses = MyGeoCoder.getInstance().getFromLocationName(addressForSearch, 1);
+//                    if (addresses.size() > 0) {
+//                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude()), 16));
+//                    } else {
+//                        new GeoCoderRequest(addressForSearch, response -> {
+//                            try {
+//                                JSONObject location = response.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location");
+//                                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getDouble("lat"), location.getDouble("lng")), 16));
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//
+//                            }
+//
+//                        });
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    ToastUtils.show(CreateAccActivity.this, CreateAccActivity.this.getString(R.string.nothing_is_found));
+//                }
                 break;
         }
         refreshDescription();

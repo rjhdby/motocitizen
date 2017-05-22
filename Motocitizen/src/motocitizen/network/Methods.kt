@@ -10,6 +10,5 @@ enum class Methods constructor(val code: String) {
     LEAVE("leave"),
     MESSAGE("message"),
     CREATE("createAcc"),
-    REGISTER_GCM("registerGCM"),
     CHANGE_STATE("changeState");
 }

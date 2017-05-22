@@ -1,14 +1,14 @@
-package motocitizen.network2.requests
+package motocitizen.network.requests
 
 import motocitizen.network.Methods
-import motocitizen.network2.ApiRequest
+import motocitizen.network.ApiRequest
 import motocitizen.user.User
 
-class LeaveRequest(id: Int) : ApiRequest() {
+class InPlaceRequest(id: Int) : ApiRequest() {
     init {
         params.put("login", User.dirtyRead().name)
         params.put("id", id.toString())
-        params.put("m", Methods.LEAVE.code)
+        params.put("m", Methods.IN_PLACE.code)
         call()
     }
 }

@@ -10,8 +10,8 @@ import java.util.TreeMap;
 
 import motocitizen.content.accident.Accident;
 import motocitizen.content.accident.AccidentFactory;
-import motocitizen.network2.ApiRequest;
-import motocitizen.network2.requests.AccidentListRequest;
+import motocitizen.network.ApiRequest;
+import motocitizen.network.requests.AccidentListRequest;
 
 public class Content extends TreeMap<Integer, Accident> {
     private int inPlace = 0;

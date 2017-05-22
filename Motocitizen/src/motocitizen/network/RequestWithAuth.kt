@@ -1,4 +1,4 @@
-package motocitizen.network2
+package motocitizen.network
 
 import motocitizen.user.User
 

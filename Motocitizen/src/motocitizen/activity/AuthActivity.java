@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import motocitizen.MyApp;
 import motocitizen.main.R;
-import motocitizen.network2.ApiRequest;
+import motocitizen.network.ApiRequest;
 import motocitizen.router.Router;
 import motocitizen.user.User;
 import motocitizen.utils.Preferences;

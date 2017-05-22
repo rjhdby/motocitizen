@@ -5,6 +5,12 @@ package motocitizen.utils
 import android.location.Location
 import android.location.LocationManager
 import com.google.android.gms.maps.model.LatLng
+import motocitizen.geocoder.MyGeoCoder
+import motocitizen.network.CoreRequest.RequestResultCallback
+import motocitizen.network.requests.GeoCoderRequest
+import org.json.JSONException
+import org.json.JSONObject
+import java.io.IOException
 
 public val EQUATOR = 20038
 
@@ -21,4 +27,26 @@ fun LatLng2Location(latLng: LatLng): Location {
 
 fun Location2LatLng(location: Location): LatLng {
     return LatLng(location.latitude, location.longitude)
+}
+
+fun LatLngByAddress(address: String, callback: (LatLng?) -> Unit) {
+    try {
+        val addresses = MyGeoCoder.getInstance().getFromLocationName(address, 1)
+        if (addresses.size > 0) {
+            callback(LatLng(addresses[0].latitude, addresses[0].longitude))
+            return
+        }
+    } catch (e: IOException) {
+    }
+    GeoCoderRequest(address, callback = object : RequestResultCallback {
+        override fun call(response: JSONObject) {
+            try {
+                val location = response.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location")
+                callback(LatLng(location.getDouble("lat"), location.getDouble("lng")))
+            } catch (e: JSONException) {
+                callback(null)
+            }
+
+        }
+    })
 }

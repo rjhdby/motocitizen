@@ -1,8 +1,8 @@
-package motocitizen.network2.requests
+package motocitizen.network.requests
 
 import motocitizen.content.accident.Accident
 import motocitizen.network.Methods
-import motocitizen.network2.RequestWithAuth
+import motocitizen.network.RequestWithAuth
 import motocitizen.user.User
 import motocitizen.utils.getDbFormat
 

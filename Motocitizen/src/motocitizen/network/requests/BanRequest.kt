@@ -1,8 +1,8 @@
-package motocitizen.network2.requests
+package motocitizen.network.requests
 
 import motocitizen.dictionary.Content
 import motocitizen.network.Methods
-import motocitizen.network2.RequestWithAuth
+import motocitizen.network.RequestWithAuth
 
 class BanRequest(id: Int, callback: RequestResultCallback) : RequestWithAuth(callback) {
     init {

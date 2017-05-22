@@ -10,9 +10,6 @@ import motocitizen.user.User;
 
 public class MyApp extends MultiDexApplication {
 
-    public static final int LOCATION_PERMISSION = 1;
-    public static final int NETWORK_PERMISSION  = 2;
-
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);

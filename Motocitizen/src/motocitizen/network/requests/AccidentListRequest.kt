@@ -1,7 +1,7 @@
-package motocitizen.network2.requests
+package motocitizen.network.requests
 
 import motocitizen.network.Methods
-import motocitizen.network2.ApiRequest
+import motocitizen.network.ApiRequest
 import motocitizen.user.User
 import motocitizen.utils.Preferences
 
