@@ -96,14 +96,14 @@ public class MyGoogleMapManager implements MyMapManager {
         }
     }
 
-    public void animateToPoint(Location location) {
-        if (map == null) delayedAction.add(new DelayedAnimateToLocation(location));
+    public void animateToPoint(final Location location) {
+        if (map == null) delayedAction.add(() -> animateToPoint(location));
         else
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(LocationUtils.Location2LatLng(location), DEFAULT_ZOOM));
     }
 
-    public void jumpToPoint(Location location) {
-        if (map == null) delayedAction.add(new DelayedJumpToLocation(location));
+    public void jumpToPoint(final Location location) {
+        if (map == null) delayedAction.add(() -> jumpToPoint(location));
         else
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(LocationUtils.Location2LatLng(location), DEFAULT_ZOOM));
     }
@@ -140,32 +140,5 @@ public class MyGoogleMapManager implements MyMapManager {
     public void zoom(int zoom) {
         if (map == null) return;
         map.animateCamera(CameraUpdateFactory.zoomTo(zoom));
-    }
-
-
-    private class DelayedAnimateToLocation implements DelayedAction {
-        final Location location;
-
-        DelayedAnimateToLocation(Location location) {
-            this.location = location;
-        }
-
-        @Override
-        public void makeAction() {
-            animateToPoint(location);
-        }
-    }
-
-    private class DelayedJumpToLocation implements DelayedAction {
-        final Location location;
-
-        DelayedJumpToLocation(Location location) {
-            this.location = location;
-        }
-
-        @Override
-        public void makeAction() {
-            jumpToPoint(location);
-        }
     }
 }
