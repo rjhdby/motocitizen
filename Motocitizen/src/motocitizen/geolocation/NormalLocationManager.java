@@ -24,7 +24,7 @@ import motocitizen.user.User;
 import motocitizen.utils.LocationUtils;
 import motocitizen.utils.Preferences;
 
-class NormalLocationManager implements SecuredLocationManagerInterface {
+public class NormalLocationManager implements SecuredLocationManagerInterface {
     /* constants */
     private static final int LOW_INTERVAL     = 60000;
     private static final int LOW_BEST         = 30000;
@@ -43,6 +43,8 @@ class NormalLocationManager implements SecuredLocationManagerInterface {
     private LocationRequest                     locationRequest;
     private LocationListener                    locationListener;
     private GoogleApiClient.ConnectionCallbacks connectionCallback;
+
+    public static boolean showDialogExact = false;
 
     NormalLocationManager() {
         current = getLocation();
@@ -156,8 +158,10 @@ class NormalLocationManager implements SecuredLocationManagerInterface {
         try {
             List<Address> list;
             list = MyGeoCoder.getInstance().getFromLocation(location.latitude, location.longitude, 1);
-            if (list == null || list.size() == 0)
+            if (list == null || list.size() == 0) {
+                showDialogExact = true;
                 return location.longitude + " " + location.longitude;
+            }
 
             Address address  = list.get(0);
             String  locality = address.getLocality();

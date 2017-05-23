@@ -1,6 +1,8 @@
 package motocitizen.activity;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -37,6 +39,7 @@ import motocitizen.dictionary.Content;
 import motocitizen.dictionary.Medicine;
 import motocitizen.dictionary.Type;
 import motocitizen.geolocation.MyLocationManager;
+import motocitizen.geolocation.NormalLocationManager;
 import motocitizen.main.R;
 import motocitizen.network.requests.CreateAccidentRequest;
 import motocitizen.user.User;
@@ -202,6 +205,30 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         for (int id : ids) findViewById(id).setVisibility(View.INVISIBLE);
     }
 
+    /**
+     * Показ диалога для ввода адреса, когда он не был определён по координатам
+     */
+    public void showRatingDialog() {
+        final AlertDialog.Builder addressDialog = new AlertDialog.Builder(this);
+        addressDialog.setTitle(R.string.addressDialog);
+        View linearlayout = getLayoutInflater().inflate(R.layout.dialog, null);
+        addressDialog.setView(linearlayout);
+        EditText addressEditText = (EditText) linearlayout.findViewById(R.id.address_edit_Text);
+        addressDialog.setPositiveButton("Готово",
+                (dialog, which) -> {
+                    String temp = addressEditText.getText().toString().replaceAll("\\s", "");
+                    if (temp.length() > 0) {
+                        ab.setAddress(addressEditText.getText().toString());
+                        refreshDescription();
+                    }
+                })
+                .setNegativeButton("Отмена", (dialog, id) -> {
+                    dialog.cancel();
+                });
+        addressDialog.create();
+        addressDialog.show();
+    }
+
     @Override
     public void onClick(View v) {
         int id = v.getId();
@@ -235,6 +262,9 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 ab.setCoordinates(map.getCameraPosition().target);
                 ab.setAddress(MyLocationManager.getInstance().getAddress(ab.getCoordinates()));
                 setUpScreen(TYPE);
+                if (NormalLocationManager.showDialogExact) {
+                    showRatingDialog();
+                }
                 break;
             case R.id.CREATE:
                 confirm();

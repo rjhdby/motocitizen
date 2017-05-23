@@ -109,4 +109,5 @@
     <string name="accident_row_content">%1$s \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0"</string>
     <string name="search_address_hint">адрес</string>
     <string name="phone">78007751734</string>
+    <string name="addressDialog">Адрес по координатам не найден, желаете ввести его ?</string>
 </resources>
