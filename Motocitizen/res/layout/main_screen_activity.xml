@@ -1,12 +1,116 @@
-<FrameLayout xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    android:id="@+id/main_frame_applications"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main_frame"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="0dp"
-    android:paddingLeft="0dp"
-    android:paddingRight="0dp"
-    android:paddingTop="0dp"
-    tools:context="motocitizen.activity.MainScreenActivity" >
+    android:orientation="vertical"
+    tools:context="com.google.android.gms.maps.SupportMapFragment">
 
-</FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#f000"
+        android:orientation="vertical">
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="invisible"/>
+
+    <FrameLayout
+        android:id="@+id/tab_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2">
+
+        <include
+            layout="@layout/acc_list"/>
+
+        <fragment android:id="@+id/google_map"
+                  android:name="com.google.android.gms.maps.SupportMapFragment"
+                  xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"/>
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/footer_main"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-4dp"
+        android:background="@drawable/bottom_area"
+        android:gravity="bottom"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageButton
+                android:id="@+id/dial_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="12dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:contentDescription="@string/dial_button"
+                android:src="@drawable/dial"/>
+
+            <ImageButton
+                android:id="@+id/add_point_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="12dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:contentDescription="@string/activity_main_add_point_button"
+                android:src="@drawable/create"/>
+
+            <ImageButton
+                android:id="@+id/list_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|right"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="12dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:contentDescription="@string/activity_main_add_point_button"
+                android:src="@drawable/ic_view_headline_white_48dp"/>
+
+            <ImageButton
+                android:id="@+id/map_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="12dp"
+                android:layout_weight="1"
+                android:alpha="0.3"
+                android:background="@null"
+                android:contentDescription="@string/activity_main_add_point_button"
+                android:src="@drawable/ic_map_white_48dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/footer_menu_anchor"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:orientation="vertical">
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
