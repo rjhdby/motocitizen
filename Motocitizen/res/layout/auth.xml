@@ -127,4 +127,27 @@
                 android:text="@string/activity_auth_login_label" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:weightSum="1.5" >
+
+        <Button
+            android:id="@+id/vk"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="Вход через ВК" />
+
+        <Button
+            android:id="@+id/vk333"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="Получить инфу о себе" />
+
+    </LinearLayout>
 </LinearLayout>

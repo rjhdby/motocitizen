@@ -110,4 +110,5 @@
     <string name="search_address_hint">адрес</string>
     <string name="phone">78007751734</string>
     <string name="addressDialog">Адрес по координатам не найден, желаете ввести его ?</string>
+    <integer name="com_vk_sdk_AppId">6050662</integer>
 </resources>

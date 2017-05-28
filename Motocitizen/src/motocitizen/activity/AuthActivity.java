@@ -1,6 +1,7 @@
 package motocitizen.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -12,6 +13,21 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.vk.sdk.VKAccessToken;
+import com.vk.sdk.VKCallback;
+import com.vk.sdk.VKScope;
+import com.vk.sdk.VKSdk;
+import com.vk.sdk.api.VKApi;
+import com.vk.sdk.api.VKError;
+import com.vk.sdk.api.VKParameters;
+import com.vk.sdk.api.VKRequest;
+import com.vk.sdk.api.VKResponse;
+import com.vk.sdk.util.VKUtil;
+
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 import motocitizen.MyApp;
 import motocitizen.main.R;
@@ -26,6 +42,7 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
     private Button logoutBtn;
     private Button loginBtn;
     private Button cancelBtn;
+    private Button loginVK;
 
     private EditText login;
     private EditText password;
@@ -37,7 +54,29 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (!VKSdk.onActivityResult(requestCode, resultCode, data, new VKCallback<VKAccessToken>() {
+            @Override
+            public void onResult(VKAccessToken res) {
+                Toast.makeText(getApplicationContext(), "dfdfd",Toast.LENGTH_LONG);
+// Пользователь успешно авторизовался
+            }
+            @Override
+            public void onError(VKError error) {
+                Toast.makeText(getApplicationContext(), "dfdfd",Toast.LENGTH_LONG);
+
+// Произошла ошибка авторизации (например, пользователь запретил авторизацию)
+            }
+        })) {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         try {
             if (User.getInstance(this).isAuthorized()) {
@@ -53,6 +92,44 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
         cancelBtn = (Button) findViewById(R.id.cancel_button);
         logoutBtn = (Button) findViewById(R.id.logout_button);
         loginBtn = (Button) findViewById(R.id.login_button);
+
+        loginVK = (Button) findViewById(R.id.vk);
+        loginVK.setOnClickListener(v -> {
+            String[] fingerprints = VKUtil.getCertificateFingerprint(this, this.getPackageName());
+
+            VKSdk.login(AuthActivity.this, VKScope.PAGES);
+        });
+
+        Button vk333 = (Button) findViewById(R.id.vk333);
+        vk333.setOnClickListener(v -> {
+            VKApi.users().get().executeWithListener(new VKRequest.VKRequestListener() {
+                @Override
+                public void onComplete(VKResponse response) {
+                    super.onComplete(response);
+                }
+
+                @Override
+                public void attemptFailed(VKRequest request, int attemptNumber, int totalAttempts) {
+                    super.attemptFailed(request, attemptNumber, totalAttempts);
+                }
+
+                @Override
+                public void onError(VKError error) {
+                    super.onError(error);
+                }
+
+                @Override
+                public void onProgress(VKRequest.VKProgressType progressType, long bytesLoaded, long bytesTotal) {
+                    super.onProgress(progressType, bytesLoaded, bytesTotal);
+                }
+            });
+
+           // VKRequest request = VKApi.users().get();
+            //  WeakReference<VKResponse>  fgfgfg = request.response;
+
+        });
+
+
         TextView accListYesterdayLine = (TextView) findViewById(R.id.accListYesterdayLine);
         accListYesterdayLine.setMovementMethod(LinkMovementMethod.getInstance());
         fillCtrls();
@@ -158,4 +235,21 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
     private void auth(ApiRequest.RequestResultCallback callback) {
         User.getInstance(this).auth(login.getText().toString(), password.getText().toString(), callback);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

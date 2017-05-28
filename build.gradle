@@ -74,6 +74,7 @@ android {
 }
 
 dependencies {
+    compile project(':vksdk_library') //Зависимость от ВК API
     compile "com.google.android.gms:play-services-location:$google_services"
     compile "com.google.android.gms:play-services-maps:$google_services"
     compile "com.google.firebase:firebase-core:$google_services"
