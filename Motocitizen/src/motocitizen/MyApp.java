@@ -1,6 +1,7 @@
 package motocitizen;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.multidex.MultiDex;
@@ -11,6 +12,7 @@ import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKAccessTokenTracker;
 import com.vk.sdk.VKSdk;
 
+import motocitizen.activity.AuthActivity;
 import motocitizen.user.User;
 
 public class MyApp extends MultiDexApplication {
@@ -41,16 +43,18 @@ public class MyApp extends MultiDexApplication {
         VKSdk.initialize(this);
     }
 
-
-
+    /**
+     * AccessToken invalidated. Слушатель токена
+     */
     VKAccessTokenTracker vkAccessTokenTracker = new VKAccessTokenTracker() {
         @Override
         public void onVKAccessTokenChanged(VKAccessToken oldToken, VKAccessToken newToken) {
             if (newToken == null) {
-                Toast.makeText(getApplicationContext(), "dfdfd",Toast.LENGTH_LONG);
-// VKAccessToken is invalid
+                Toast.makeText(getApplicationContext(), "Авторизация слетела, авторизируйтесь снова", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getApplicationContext(), AuthActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
             }
         }
     };
-
 }

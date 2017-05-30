@@ -75,7 +75,6 @@
         <activity
             android:name="motocitizen.activity.AuthActivity"
             android:label="AuthActivity"
-            android:noHistory="true"
             android:screenOrientation="portrait">
         </activity>
         <activity

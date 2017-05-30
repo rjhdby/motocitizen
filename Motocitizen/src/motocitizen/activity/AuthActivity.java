@@ -37,7 +37,7 @@ import motocitizen.user.User;
 import motocitizen.utils.Preferences;
 import motocitizen.utils.ToastUtils;
 
-public class AuthActivity extends AppCompatActivity/* implements View.OnClickListener*/ {
+public class AuthActivity extends AppCompatActivity {
 
     private Button logoutBtn;
     private Button loginBtn;
@@ -58,21 +58,16 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
         if (!VKSdk.onActivityResult(requestCode, resultCode, data, new VKCallback<VKAccessToken>() {
             @Override
             public void onResult(VKAccessToken res) {
-                Toast.makeText(getApplicationContext(), "dfdfd",Toast.LENGTH_LONG);
-// Пользователь успешно авторизовался
+                Toast.makeText(getApplicationContext(), "Пользователь успешно авторизовался",Toast.LENGTH_LONG).show();
             }
             @Override
             public void onError(VKError error) {
-                Toast.makeText(getApplicationContext(), "dfdfd",Toast.LENGTH_LONG);
-
-// Произошла ошибка авторизации (например, пользователь запретил авторизацию)
+                Toast.makeText(getApplicationContext(), "Произошла ошибка авторизации (например, пользователь запретил авторизацию)",Toast.LENGTH_LONG).show();
             }
         })) {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +80,32 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
         } catch (Error e) {
             ToastUtils.show(this, e.getLocalizedMessage());
         }
+
+        VKSdk.wakeUpSession(this, new VKCallback<VKSdk.LoginState>() {
+            @Override
+            public void onResult(VKSdk.LoginState res) {
+                    switch (res) {
+                        case LoggedOut:
+                            //showLogin();
+                            break;
+                        case LoggedIn:
+                            Router.INSTANCE.goTo(AuthActivity.this, Router.Target.MAIN);
+                            //showLogout();
+                            break;
+                        case Pending:
+                            break;
+                        case Unknown:
+                            break;
+                    }
+            }
+
+            @Override
+            public void onError(VKError error) {
+
+            }
+        });
+
+
         setContentView(R.layout.auth);
         login = (EditText) findViewById(R.id.auth_login);
         password = (EditText) findViewById(R.id.auth_password);
@@ -95,8 +116,6 @@ public class AuthActivity extends AppCompatActivity/* implements View.OnClickLis
 
         loginVK = (Button) findViewById(R.id.vk);
         loginVK.setOnClickListener(v -> {
-            String[] fingerprints = VKUtil.getCertificateFingerprint(this, this.getPackageName());
-
             VKSdk.login(AuthActivity.this, VKScope.PAGES);
         });
 
