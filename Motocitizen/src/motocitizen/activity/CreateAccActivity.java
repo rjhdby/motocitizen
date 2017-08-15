@@ -2,7 +2,6 @@ package motocitizen.activity;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,7 +33,7 @@ import java.util.Date;
 
 import kotlin.Unit;
 import motocitizen.content.accident.Accident;
-import motocitizen.content.accident.AccidentFactory;
+import motocitizen.content.accident.AccidentBuilder;
 import motocitizen.dictionary.Content;
 import motocitizen.dictionary.Medicine;
 import motocitizen.dictionary.Type;
@@ -63,10 +62,10 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     private Button    confirmButton;
     private Location  initialLocation;
     private EditText  searchEditText;
-    private boolean                         complete      = false;
-    private int                             currentScreen = MAP;
-    private boolean                         confirmLock   = false;
-    private AccidentFactory.AccidentBuilder ab            = new AccidentFactory.AccidentBuilder();
+    private boolean         complete      = false;
+    private int             currentScreen = MAP;
+    private boolean         confirmLock   = false;
+    private AccidentBuilder ab            = new AccidentBuilder();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -215,16 +214,16 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         addressDialog.setView(linearlayout);
         EditText addressEditText = (EditText) linearlayout.findViewById(R.id.address_edit_Text);
         addressDialog.setPositiveButton("Готово",
-                (dialog, which) -> {
-                    String temp = addressEditText.getText().toString().replaceAll("\\s", "");
-                    if (temp.length() > 0) {
-                        ab.setAddress(addressEditText.getText().toString());
-                        refreshDescription();
-                    }
-                })
-                .setNegativeButton("Отмена", (dialog, id) -> {
-                    dialog.cancel();
-                });
+                                        (dialog, which) -> {
+                                            String temp = addressEditText.getText().toString().replaceAll("\\s", "");
+                                            if (temp.length() > 0) {
+                                                ab.setAddress(addressEditText.getText().toString());
+                                                refreshDescription();
+                                            }
+                                        })
+                     .setNegativeButton("Отмена", (dialog, id) -> {
+                         dialog.cancel();
+                     });
         addressDialog.create();
         addressDialog.show();
     }

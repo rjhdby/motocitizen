@@ -280,7 +280,7 @@ public class AccidentDetailsActivity extends AppCompatActivity {
                 ToastUtils.show(AccidentDetailsActivity.this, error);
             } else {
                 //TODO Суперкостыль
-                currentPoint = AccidentFactory.Companion.refactor(currentPoint, accNewState);
+                currentPoint = AccidentFactory.INSTANCE.refactor(currentPoint, accNewState);
                 update();
             }
         }

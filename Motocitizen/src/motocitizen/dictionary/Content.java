@@ -59,7 +59,7 @@ public class Content extends TreeMap<Integer, Accident> {
         }
         for (int i = 0; i < list.length(); i++) {
             try {
-                Accident accident = AccidentFactory.Companion.make(list.getJSONObject(i));
+                Accident accident = AccidentFactory.INSTANCE.make(list.getJSONObject(i));
                 put(accident.getId(), accident);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -84,7 +84,7 @@ public class Content extends TreeMap<Integer, Accident> {
             try {
                 JSONObject ooObject = list.getJSONObject(i);
                 if (ooObject.getInt("id") == ID) {
-                    Accident accident = AccidentFactory.Companion.make(list.getJSONObject(i));
+                    Accident accident = AccidentFactory.INSTANCE.make(list.getJSONObject(i));
                     put(accident.getId(), accident);
                 }
             } catch (Exception e) {
