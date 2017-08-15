@@ -1,11 +1,23 @@
 package motocitizen.dictionary;
 
 public enum Medicine {
-    UNKNOWN("mc_m_na", "неизвестно"),
-    NO("mc_m_wo", "жив, цел, орёл!"),
-    LIGHT("mc_m_l", "вроде цел"),
-    HEAVY("mc_m_h", "вроде жив"),
-    LETHAL("mc_m_d", "летальный");
+    /*
+    WHEN "mc_m_d" THEN "d"
+                        WHEN "mc_m_h" THEN "h"
+                        WHEN "mc_m_l" THEN "l"
+                        WHEN "mc_m_wo" THEN "wo"
+                        ELSE "na"
+     */
+    UNKNOWN("na", "неизвестно"),
+    NO("wo", "жив, цел, орёл!"),
+    LIGHT("l", "вроде цел"),
+    HEAVY("h", "вроде жив"),
+    LETHAL("d", "летальный");
+//    UNKNOWN("mc_m_na", "неизвестно"),
+//    NO("mc_m_wo", "жив, цел, орёл!"),
+//    LIGHT("mc_m_l", "вроде цел"),
+//    HEAVY("mc_m_h", "вроде жив"),
+//    LETHAL("mc_m_d", "летальный");
 
     public final String code;
     public final String text;

@@ -9,7 +9,6 @@ import motocitizen.database.StoreMessages
 import motocitizen.dictionary.AccidentStatus
 import motocitizen.dictionary.Medicine
 import motocitizen.dictionary.Type
-import motocitizen.user.Owner
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -25,11 +24,28 @@ object AccidentFactory {
                 .setTime(Date(json.getLong("uxtime") * 1000))
                 .setAddress(json.getString("address"))
                 .setCoordinates(LatLng(json.getDouble("lat"), json.getDouble("lon")))
-                .setOwner(Owner(json.getInt("owner_id"), json.getString("owner")))
+//                .setOwner(Owner(json.getInt("owner_id"), json.getString("owner")))
                 .attachMessages(parseMessages(json.getJSONArray("m"), StoreMessages.getLast(json.getInt("id"))))
                 .attachVolunteers(parseVolunteers(json.getJSONArray("v")))
                 .attachHistory(parseHistory(json.getJSONArray("h")))
                 .setDescription(json.getString("descr"))
+                .build()
+    }
+
+    fun makeNew(json: JSONObject): Accident {
+        return AccidentBuilder()
+                .setId(json.getInt("id"))
+                .setStatus(AccidentStatus.parse(json.getString("s")))
+                .setType(Type.parse(json.getString("t")))
+                .setMedicine(Medicine.parse(json.getString("m")))
+                .setTime(Date(json.getLong("ut") * 1000))
+                .setAddress(json.getString("a"))
+                .setCoordinates(LatLng(json.getDouble("y"), json.getDouble("x")))
+                .setOwner(json.getInt("o"))
+                //.attachMessages(parseMessages(json.getJSONArray("m"), StoreMessages.getLast(json.getInt("id"))))//todo
+                //.attachVolunteers(parseVolunteers(json.getJSONArray("v")))//todo
+                //.attachHistory(parseHistory(json.getJSONArray("h")))//todo
+                .setDescription(json.getString("d"))
                 .build()
     }
 
@@ -43,15 +59,14 @@ object AccidentFactory {
     private fun parseMessages(json: JSONArray, last: Int): TreeMap<Int, Message> {
         val messages = TreeMap<Int, Message>()
 
-        (0..json.length() - 1)
-                .map {
+        (0 until json.length())
+                .mapNotNull {
                     try {
                         MessageFactory.make(json.getJSONObject(it))
                     } catch (e: Exception) {
                         null
                     }
                 }
-                .filterNotNull()
                 .filter { !messages.containsKey(it.id) }
                 .forEach {
                     if (it.id <= last) it.read = true
@@ -63,8 +78,8 @@ object AccidentFactory {
 
     private fun parseVolunteers(json: JSONArray): TreeMap<Int, Volunteer> {
         val volunteers = TreeMap<Int, Volunteer>()
-        (0..json.length() - 1)
-                .map {
+        (0 until json.length())
+                .mapNotNull {
                     try {
                         Volunteer(json.getJSONObject(it))
                     } catch (e: Exception) {
@@ -72,7 +87,6 @@ object AccidentFactory {
                         null
                     }
                 }
-                .filterNotNull()
                 .forEach { volunteers.put(it.id, it) }
         return volunteers
     }
@@ -80,15 +94,14 @@ object AccidentFactory {
     @Throws(JSONException::class)
     private fun parseHistory(json: JSONArray): TreeMap<Int, History> {
         val history = TreeMap<Int, History>()
-        (0..json.length() - 1)
-                .map {
+        (0 until json.length())
+                .mapNotNull {
                     try {
                         History(json.getJSONObject(it))
                     } catch (e: Exception) {
                         null
                     }
                 }
-                .filterNotNull()
                 .forEach { history.put(it.id, it) }
         return history
     }

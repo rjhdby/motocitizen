@@ -8,6 +8,7 @@ import android.widget.FrameLayout
 import android.widget.FrameLayout.LayoutParams.MATCH_PARENT
 import android.widget.FrameLayout.LayoutParams.WRAP_CONTENT
 import android.widget.TextView
+import motocitizen.content.NewContent
 import motocitizen.content.message.Message
 import motocitizen.main.R
 import motocitizen.utils.getTime
@@ -22,27 +23,27 @@ open class MessageRow(context: Context, val message: Message, val last: Int, val
     init {
         LayoutInflater.from(context).inflate(if (message.isOwner) R.layout.owner_message_row else R.layout.message_row, this, true)
         setBackgroundResource(background())
-        if (last == message.owner.id) {
+        if (last == message.owner) {
             val lp = LayoutParams(MATCH_PARENT, WRAP_CONTENT)
             lp.topMargin = 0
             layoutParams = lp
         }
 
         val ownerView = findViewById(R.id.owner) as TextView
-        ownerView.text = message.owner.name
-        if (message.owner.id == last) ownerView.visibility = View.INVISIBLE
+        ownerView.text = NewContent.volunteers[message.owner]!!.name
+        if (message.owner == last) ownerView.visibility = View.INVISIBLE
 
         (findViewById(R.id.time) as TextView).text = getTime(message.time)
         //todo dirty hack
-        (findViewById(R.id.text) as TextView).text = String.format("%s%s \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0", if (message.owner.id == last) "" else "\n", message.text)
+        (findViewById(R.id.text) as TextView).text = String.format("%s%s \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0", if (message.owner == last) "" else "\n", message.text)
     }
 
     internal fun background(): Int {
         return when {
-            next == last && message.owner.id == next -> MIDDLE
-            message.owner.id == next                 -> FIRST
-            message.owner.id == last                 -> LAST
-            else                                     -> SOLO
+            next == last && message.owner == next -> MIDDLE
+            message.owner == next                 -> FIRST
+            message.owner == last                 -> LAST
+            else                                  -> SOLO
         }
     }
 }

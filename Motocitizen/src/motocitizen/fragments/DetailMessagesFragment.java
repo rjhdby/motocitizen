@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import motocitizen.activity.AccidentDetailsActivity;
+import motocitizen.content.NewContent;
 import motocitizen.content.accident.Accident;
 import motocitizen.content.message.Message;
 import motocitizen.database.StoreMessages;
@@ -121,9 +122,11 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
                     }
                 });
             }
-            Content.getInstance().requestUpdate(response -> getActivity().runOnUiThread(() -> {
+            NewContent.INSTANCE.requestUpdate(response -> getActivity().runOnUiThread(() -> {
+//            Content.getInstance().requestUpdate(response -> getActivity().runOnUiThread(() -> {
                 if (!response.has("error")) {
-                    Content.getInstance().parseJSON(response, accidentID);
+                    NewContent.INSTANCE.parseJSON(response, accidentID);
+//                    Content.getInstance().parseJSON(response, accidentID);
                 }
                 ((AccidentDetailsActivity) getActivity()).update();
                 update();

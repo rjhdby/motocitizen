@@ -13,12 +13,12 @@ import motocitizen.dictionary.Medicine
 import motocitizen.dictionary.Type
 import motocitizen.geolocation.MyLocationManager
 import motocitizen.rows.accidentList.Row
-import motocitizen.user.Owner
 import motocitizen.user.User
 import motocitizen.utils.Preferences
 import java.util.*
 
-abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val time: Date, var address: String, var coordinates: LatLng, val owner: Owner) {
+abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val time: Date, var address: String, var coordinates: LatLng, val owner: Int) {
+    //abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val time: Date, var address: String, var coordinates: LatLng, val owner: Owner) {
     abstract val status: AccidentStatus
 
     var description: String = ""
@@ -33,10 +33,10 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
     val distanceString: String
         get() {
             val distance = distanceFromUser
-            if (distance > 1000) {
-                return (Math.round(distance / 10) / 100).toString() + "км"
+            return if (distance > 1000) {
+                (Math.round(distance / 10) / 100).toString() + "км"
             } else {
-                return Math.round(distance).toString() + "м"
+                Math.round(distance).toString() + "м"
             }
         }
 

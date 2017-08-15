@@ -18,6 +18,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import motocitizen.content.NewContent;
 import motocitizen.content.accident.Accident;
 import motocitizen.content.accident.AccidentFactory;
 import motocitizen.dictionary.AccidentStatus;
@@ -79,7 +80,8 @@ public class AccidentDetailsActivity extends AppCompatActivity {
 
         Bundle b = getIntent().getExtras();
         accidentID = b.getInt("accidentID");
-        currentPoint = Content.getInstance().get(accidentID);
+        currentPoint = NewContent.INSTANCE.getAccidents().get(accidentID);
+//        currentPoint = Content.getInstance().get(accidentID);
 
         //NewAccidentReceived.removeNotification(accidentID);
 
@@ -135,7 +137,8 @@ public class AccidentDetailsActivity extends AppCompatActivity {
     }
 
     public void update() {
-        currentPoint = Content.getInstance().get(accidentID);
+        currentPoint = NewContent.INSTANCE.getAccidents().get(accidentID);
+//        currentPoint = Content.getInstance().get(accidentID);
 
         ActionBar actionBar = getSupportActionBar();
         //TODO Разобраться с nullPointerException и убрать костыль
@@ -149,7 +152,7 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         medicineView.setText("(" + currentPoint.getMedicine().string() + ")");
         statusView.setText(currentPoint.getStatus().string());
         ((TextView) findViewById(R.id.acc_details_general_time)).setText(DateUtils.getTime(currentPoint.getTime()));
-        ((TextView) findViewById(R.id.acc_details_general_owner)).setText(currentPoint.getOwner().getName());
+        ((TextView) findViewById(R.id.acc_details_general_owner)).setText(NewContent.INSTANCE.getVolunteers().get(currentPoint.getOwner()).getName());
         ((TextView) findViewById(R.id.acc_details_general_address)).setText(currentPoint.getAddress());
         ((TextView) findViewById(R.id.acc_details_general_distance)).setText(currentPoint.getDistanceString());
         ((TextView) findViewById(R.id.acc_details_general_description)).setText(currentPoint.getDescription());
@@ -182,7 +185,8 @@ public class AccidentDetailsActivity extends AppCompatActivity {
 
     private void menuReconstruction() {
         if (mMenu == null) return;
-        currentPoint = Content.getInstance().get(accidentID);
+        currentPoint = NewContent.INSTANCE.getAccidents().get(accidentID);
+//        currentPoint = Content.getInstance().get(accidentID);
         MenuItem finish = mMenu.findItem(R.id.menu_acc_finish);
         MenuItem hide   = mMenu.findItem(R.id.menu_acc_hide);
         finish.setVisible(User.getInstance(this).isModerator());
@@ -254,13 +258,15 @@ public class AccidentDetailsActivity extends AppCompatActivity {
 
     private void sendFinishRequest() {
         //TODO Суперкостыль ???
-        accNewState = Content.getInstance().get(accidentID).getStatus() == ENDED ? ACTIVE : ENDED;
+        accNewState = NewContent.INSTANCE.getAccidents().get(accidentID).getStatus() == ENDED ? ACTIVE : ENDED;
+//        accNewState = Content.getInstance().get(accidentID).getStatus() == ENDED ? ACTIVE : ENDED;
         new AccidentChangeStateRequest(accNewState.code(), accidentID, new AccidentChangeCallback());
     }
 
     private void sendHideRequest() {
         //TODO Суперкостыль ???
-        boolean s = Content.getInstance().get(accidentID).getStatus() == ENDED;
+        boolean s = NewContent.INSTANCE.getAccidents().get(accidentID).getStatus() == ENDED;
+//        boolean s = Content.getInstance().get(accidentID).getStatus() == ENDED;
         accNewState = s ? ACTIVE : ENDED;
         new AccidentChangeStateRequest(s ? ACTIVE.code() : HIDDEN.code(), accidentID, new AccidentChangeCallback());
     }

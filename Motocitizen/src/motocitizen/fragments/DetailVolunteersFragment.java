@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import motocitizen.activity.AccidentDetailsActivity;
+import motocitizen.content.NewContent;
 import motocitizen.content.accident.Accident;
 import motocitizen.content.volunteer.Volunteer;
 import motocitizen.dictionary.Content;
@@ -84,7 +85,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         vg_onway.removeAllViews();
         for (int i : accident.getVolunteers().keySet()) {
             Volunteer current = accident.getVolunteer(i);
-            if (current.getStatus() == VolunteerStatus.LEAVE) continue;
+            if (current.getStatus() == VolunteerStatus.LEAVE) continue;//// TODO: 15.08.17
             vg_onway.addView(new VolunteerRow(getActivity(), current));
         }
     }
@@ -93,9 +94,12 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
         int      id       = accident.getId();
         boolean  active   = accident.isActive() && User.getInstance(getActivity()).isAuthorized();
-        onwayButton.setVisibility(id != Preferences.Companion.getInstance(getActivity()).getOnWay() && id != Content.getInstance().getInPlaceId() && active ? View.VISIBLE : View.GONE);
-        onwayCancelButton.setVisibility(id == Preferences.Companion.getInstance(getActivity()).getOnWay() && id != Content.getInstance().getInPlaceId() && active ? View.VISIBLE : View.GONE);
-        onwayDisabledButton.setVisibility(id == Content.getInstance().getInPlaceId() && active ? View.VISIBLE : View.GONE);
+        onwayButton.setVisibility(id != Preferences.Companion.getInstance(getActivity()).getOnWay() && id != NewContent.INSTANCE.getInPlace() && active ? View.VISIBLE : View.GONE);
+//        onwayButton.setVisibility(id != Preferences.Companion.getInstance(getActivity()).getOnWay() && id != Content.getInstance().getInPlaceId() && active ? View.VISIBLE : View.GONE);
+        onwayCancelButton.setVisibility(id == Preferences.Companion.getInstance(getActivity()).getOnWay() && id != NewContent.INSTANCE.getInPlace() && active ? View.VISIBLE : View.GONE);
+//        onwayCancelButton.setVisibility(id == Preferences.Companion.getInstance(getActivity()).getOnWay() && id != Content.getInstance().getInPlaceId() && active ? View.VISIBLE : View.GONE);
+        onwayDisabledButton.setVisibility(id == NewContent.INSTANCE.getInPlace() && active ? View.VISIBLE : View.GONE);
+//        onwayDisabledButton.setVisibility(id == Content.getInstance().getInPlaceId() && active ? View.VISIBLE : View.GONE);
     }
 
     @SuppressLint("CommitTransaction")
@@ -159,7 +163,8 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     private void sendOnWay() {
         Preferences.Companion.getInstance(getActivity()).setOnWay(accidentID);
         new OnWayRequest(accidentID, response -> new AccidentListRequest(result -> {
-            Content.getInstance().requestUpdate();
+            NewContent.INSTANCE.requestUpdate();
+//            Content.getInstance().requestUpdate();
             getActivity().runOnUiThread(() -> {
                 ((AccidentDetailsActivity) getActivity()).update();
                 update();
@@ -170,7 +175,8 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     private void sendCancelOnWay() {
         Preferences.Companion.getInstance(getActivity()).setOnWay(0);
         new CancelOnWayRequest(accidentID, response -> new AccidentListRequest(result -> {
-            Content.getInstance().requestUpdate();
+            NewContent.INSTANCE.requestUpdate();
+//            Content.getInstance().requestUpdate();
             getActivity().runOnUiThread(() -> {
                 ((AccidentDetailsActivity) getActivity()).update();
                 update();

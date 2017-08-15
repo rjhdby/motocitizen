@@ -20,6 +20,7 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.single.BasePermissionListener;
 
 import motocitizen.MyApp;
+import motocitizen.content.NewContent;
 import motocitizen.content.accident.Accident;
 import motocitizen.dictionary.Content;
 import motocitizen.geolocation.MyLocationManager;
@@ -155,7 +156,8 @@ public class MainScreenActivity extends AppCompatActivity implements MyFragmentI
         //TODO YesterdayRow ???
         //TODO Нет событий
 
-        for (Accident accident : Content.getInstance().values()) {
+        for (Accident accident : NewContent.INSTANCE.getAccidents().values()) {
+//        for (Accident accident : Content.getInstance().values()) {
             if (accident.isInvisible(this)) continue;
             listContent.addView(accident.makeListRow(this));
         }
@@ -166,8 +168,10 @@ public class MainScreenActivity extends AppCompatActivity implements MyFragmentI
         if (inTransaction) return;
         if (MyApp.isOnline(this)) {
             startRefreshAnimation();
-            Content.getInstance().requestUpdate(result -> {
-                if (!result.has("error")) Content.getInstance().parseJSON(result);
+            NewContent.INSTANCE.requestUpdate(result -> {
+//            Content.getInstance().requestUpdate(result -> {
+                if (!result.has("error")) NewContent.INSTANCE.parseJSON(result);
+//                if (!result.has("error")) Content.getInstance().parseJSON(result);
                 this.runOnUiThread(() -> {
                     stopRefreshAnimation();
                     redraw();
@@ -239,6 +243,7 @@ public class MainScreenActivity extends AppCompatActivity implements MyFragmentI
 
     public void toMap(int id) {
         setScreen(MAP);
-        map.jumpToPoint(Content.getInstance().get(id).getLocation());
+        map.jumpToPoint(NewContent.INSTANCE.getAccidents().get(id).getLocation());
+//        map.jumpToPoint(Content.getInstance().get(id).getLocation());
     }
 }

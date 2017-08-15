@@ -8,7 +8,6 @@ import motocitizen.dictionary.AccidentStatus
 import motocitizen.dictionary.Medicine
 import motocitizen.dictionary.Type
 import motocitizen.geolocation.MyLocationManager
-import motocitizen.user.Owner
 import motocitizen.user.User
 import java.util.*
 
@@ -27,7 +26,8 @@ class AccidentBuilder {
         private set
     var coordinates = LatLng(MyLocationManager.getLocation().latitude, MyLocationManager.getLocation().longitude)
         private set
-    var owner = Owner(User.dirtyRead().id, User.dirtyRead().name)
+    var owner = User.dirtyRead().id
+//    var owner = Owner(User.dirtyRead().id, User.dirtyRead().name)
         private set
     var description = ""
         private set
@@ -73,7 +73,8 @@ class AccidentBuilder {
         return this
     }
 
-    fun setOwner(owner: Owner): AccidentBuilder {
+    fun setOwner(owner: Int): AccidentBuilder {
+//    fun setOwner(owner: Owner): AccidentBuilder {
         this.owner = owner
         return this
     }
@@ -115,13 +116,13 @@ class AccidentBuilder {
 
     fun build(): Accident {
         val accident = when {
-            status == AccidentStatus.ACTIVE && owner.isUser -> OwnedActiveAccident(id, type, medicine, time, address, coordinates, owner)
-            status == AccidentStatus.ENDED && owner.isUser  -> OwnedEndedAccident(id, type, medicine, time, address, coordinates, owner)
-            status == AccidentStatus.HIDDEN && owner.isUser -> OwnedHiddenAccident(id, type, medicine, time, address, coordinates, owner)
-            status == AccidentStatus.ACTIVE                 -> ActiveAccident(id, type, medicine, time, address, coordinates, owner)
-            status == AccidentStatus.ENDED                  -> EndedAccident(id, type, medicine, time, address, coordinates, owner)
-            status == AccidentStatus.HIDDEN                 -> HiddenAccident(id, type, medicine, time, address, coordinates, owner)
-            else                                            -> throw Exception("Wrong data from server")
+            status == AccidentStatus.ACTIVE && owner == User.dirtyRead().id -> OwnedActiveAccident(id, type, medicine, time, address, coordinates, owner)
+            status == AccidentStatus.ENDED && owner == User.dirtyRead().id  -> OwnedEndedAccident(id, type, medicine, time, address, coordinates, owner)
+            status == AccidentStatus.HIDDEN && owner == User.dirtyRead().id -> OwnedHiddenAccident(id, type, medicine, time, address, coordinates, owner)
+            status == AccidentStatus.ACTIVE                                 -> ActiveAccident(id, type, medicine, time, address, coordinates, owner)
+            status == AccidentStatus.ENDED                                  -> EndedAccident(id, type, medicine, time, address, coordinates, owner)
+            status == AccidentStatus.HIDDEN                                 -> HiddenAccident(id, type, medicine, time, address, coordinates, owner)
+            else                                                            -> throw Exception("Wrong data from server")
         }
         accident.description = description
         accident.messages = messages

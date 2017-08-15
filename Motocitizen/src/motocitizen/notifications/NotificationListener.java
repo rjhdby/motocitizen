@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import motocitizen.activity.AccidentDetailsActivity;
+import motocitizen.content.NewContent;
 import motocitizen.content.accident.Accident;
 import motocitizen.dictionary.Content;
 import motocitizen.dictionary.Medicine;
@@ -30,16 +31,19 @@ public class NotificationListener extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Map data = remoteMessage.getData();
-        Content.getInstance()
+        NewContent.INSTANCE
+//        Content.getInstance()
                .requestUpdate((ApiRequest.RequestResultCallback) result -> {
                    if (result.has("error")) return;
-                   Content.getInstance().parseJSON(result);
+                   NewContent.INSTANCE.parseJSON(result);
+//                   Content.getInstance().parseJSON(result);
                    raiseNotification(Integer.parseInt(data.get("id").toString()));
                });
     }
 
     private void raiseNotification(Integer id) {
-        Accident    accident    = Content.getInstance().get(id);
+        Accident    accident    = NewContent.INSTANCE.getAccidents().get(id);
+//        Accident    accident    = Content.getInstance().get(id);
         Preferences preferences = Preferences.Companion.getInstance(this);
         if (accident == null || accident.isInvisible(this) || preferences.getDoNotDisturb()) return;
         Intent notificationIntent = new Intent(this, AccidentDetailsActivity.class);

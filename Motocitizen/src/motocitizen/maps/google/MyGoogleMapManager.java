@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import motocitizen.content.NewContent;
 import motocitizen.content.accident.Accident;
 import motocitizen.dictionary.Content;
 import motocitizen.dictionary.Medicine;
@@ -80,8 +81,10 @@ public class MyGoogleMapManager implements MyMapManager {
         Location location = MyLocationManager.getLocation();
         user = map.addMarker(new MarkerOptions().position(LocationUtils.Location2LatLng(location)).title(Type.USER.string()).icon(Type.USER.getIcon()));
 
-        for (int id : Content.getInstance().keySet()) {
-            Accident point = Content.getInstance().get(id);
+        for (int id : NewContent.INSTANCE.getAccidents().keySet()) {
+//        for (int id : Content.getInstance().keySet()) {
+            Accident point = NewContent.INSTANCE.getAccidents().get(id);
+//            Accident point = Content.getInstance().get(id);
             if (point.isInvisible(context)) continue;
             String title = point.getType().string();
             title += point.getMedicine() != Medicine.UNKNOWN ? ", " + point.getMedicine().string() : "";

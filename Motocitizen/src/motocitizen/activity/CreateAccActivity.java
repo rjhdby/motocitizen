@@ -32,6 +32,7 @@ import org.json.JSONException;
 import java.util.Date;
 
 import kotlin.Unit;
+import motocitizen.content.NewContent;
 import motocitizen.content.accident.Accident;
 import motocitizen.content.accident.AccidentBuilder;
 import motocitizen.dictionary.Content;
@@ -121,8 +122,9 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 });
             }
             map.clear();
-            for (int id : Content.getInstance().keySet()) {
-                Accident point = Content.getInstance().get(id);
+            for (int id : NewContent.INSTANCE.getAccidents().keySet()) {
+//            for (int id : Content.getInstance().keySet()) {
+                Accident point = NewContent.INSTANCE.getAccidents().get(id);
                 if (point.isInvisible(CreateAccActivity.this)) continue;
                 String title = point.getType().string();
                 title += point.getMedicine() == Medicine.NO ? "" : ", " + point.getMedicine().string();
