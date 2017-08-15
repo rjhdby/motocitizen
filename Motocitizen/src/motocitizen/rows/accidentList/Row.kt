@@ -17,7 +17,7 @@ import motocitizen.router.Router
 import motocitizen.utils.getIntervalFromNowInText
 import motocitizen.utils.newId
 import motocitizen.utils.popups.AccidentListPopup
-
+//todo refactor
 abstract class Row protected constructor(context: Context, accident: Accident) : FrameLayout(context) {
     val ACTIVE_COLOR = 0x70FFFFFF
     val ENDED_COLOR = 0x70FFFFFF

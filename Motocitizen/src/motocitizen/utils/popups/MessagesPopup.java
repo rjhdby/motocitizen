@@ -3,9 +3,8 @@ package motocitizen.utils.popups;
 import android.content.Context;
 import android.widget.PopupWindow;
 
-import motocitizen.content.NewContent;
+import motocitizen.content.Content;
 import motocitizen.content.message.Message;
-import motocitizen.dictionary.Content;
 
 import static motocitizen.utils.Utils.getPhonesFromText;
 
@@ -14,8 +13,8 @@ public class MessagesPopup extends PopupWindowGeneral {
 
     public MessagesPopup(Context context, int id, int accId) {
         super(context);
-        message = NewContent.INSTANCE.getAccidents().get(accId).getMessages().get(id);
-//        message = Content.getInstance().get(accId).getMessages().get(id);
+        message = Content.INSTANCE.getAccidents().get(accId).getMessages().get(id);
+//        message = ContentLegacy.getInstance().get(accId).getMessages().get(id);
     }
 
     public PopupWindow getPopupWindow(Context context) {

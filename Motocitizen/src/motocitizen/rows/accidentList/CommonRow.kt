@@ -9,6 +9,5 @@ abstract class CommonRow(context: Context, accident: Accident) : Row(context, ac
         mLayoutParams.setMargins(4, 2, 16, 2)
     }
 
-    override val layout: Int
-        get() = R.layout.accident_row
+    override val layout: Int = R.layout.accident_row
 }

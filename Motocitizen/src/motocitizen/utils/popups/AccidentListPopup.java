@@ -3,7 +3,7 @@ package motocitizen.utils.popups;
 import android.content.Context;
 import android.widget.PopupWindow;
 
-import motocitizen.content.NewContent;
+import motocitizen.content.Content;
 import motocitizen.content.accident.Accident;
 import motocitizen.dictionary.Medicine;
 import motocitizen.user.User;
@@ -17,8 +17,8 @@ public class AccidentListPopup extends PopupWindowGeneral {
 
     public AccidentListPopup(Context context, int id) {
         super(context);
-        point = NewContent.INSTANCE.getAccidents().get(id);
-//        point = Content.getInstance().get(id);
+        point = Content.INSTANCE.getAccidents().get(id);
+//        point = ContentLegacy.getInstance().get(id);
         accText = getAccidentTextToCopy(point);
     }
 
@@ -28,7 +28,7 @@ public class AccidentListPopup extends PopupWindowGeneral {
             content.addView(phoneButtonRow(context, phone), layoutParams);
             content.addView(smsButtonRow(context, phone), layoutParams);
         }
-        if (User.getInstance(context).isModerator() || Preferences.Companion.getInstance(context).getLogin().equals(NewContent.INSTANCE.getVolunteers().get(point.getOwner()).getName()))
+        if (User.getInstance(context).isModerator() || Preferences.Companion.getInstance(context).getLogin().equals(Content.INSTANCE.getVolunteers().get(point.getOwner()).getName()))
             content.addView(finishButtonRow(point));
 
         if (User.getInstance(context).isModerator()) {
@@ -45,10 +45,10 @@ public class AccidentListPopup extends PopupWindowGeneral {
     public static String getAccidentTextToCopy(Accident accident) {
         StringBuilder res = new StringBuilder();
         res.append(DateUtils.getDateTime(accident.getTime())).append(" ");
-        res.append(NewContent.INSTANCE.getVolunteers().get(accident.getOwner()).getName()).append(": ");
-        res.append(accident.getType().string()).append(". ");
+        res.append(Content.INSTANCE.getVolunteers().get(accident.getOwner()).getName()).append(": ");
+        res.append(accident.getType().getText()).append(". ");
         if (accident.getMedicine() != Medicine.UNKNOWN) {
-            res.append(accident.getMedicine().string()).append(". ");
+            res.append(accident.getMedicine().getText()).append(". ");
         }
         res.append(accident.getAddress()).append(". ");
         res.append(accident.getDescription()).append(".");

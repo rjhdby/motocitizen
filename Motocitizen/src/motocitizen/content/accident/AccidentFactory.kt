@@ -24,7 +24,7 @@ object AccidentFactory {
                 .setTime(Date(json.getLong("uxtime") * 1000))
                 .setAddress(json.getString("address"))
                 .setCoordinates(LatLng(json.getDouble("lat"), json.getDouble("lon")))
-//                .setOwner(Owner(json.getInt("owner_id"), json.getString("owner")))
+//                .setOwner(OwnerLegacy(json.getInt("owner_id"), json.getString("owner")))
                 .attachMessages(parseMessages(json.getJSONArray("m"), StoreMessages.getLast(json.getInt("id"))))
                 .attachVolunteers(parseVolunteers(json.getJSONArray("v")))
                 .attachHistory(parseHistory(json.getJSONArray("h")))

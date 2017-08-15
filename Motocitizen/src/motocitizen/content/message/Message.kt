@@ -6,7 +6,7 @@ import motocitizen.user.User
 import java.util.*
 
 open class Message(val id: Int, val text: String, val time: Date, val owner: Int) {
-    //open class Message(val id: Int, val text: String, val time: Date, val owner: Owner) {
+    //open class Message(val id: Int, val text: String, val time: Date, val owner: OwnerLegacy) {
     open fun getRow(context: Context, last: Int, next: Int): MessageRow = MessageRow(context, this, last, next)
 
     var read = owner == User.dirtyRead().id

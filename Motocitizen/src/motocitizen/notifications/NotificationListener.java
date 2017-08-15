@@ -17,9 +17,8 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import motocitizen.activity.AccidentDetailsActivity;
-import motocitizen.content.NewContent;
+import motocitizen.content.Content;
 import motocitizen.content.accident.Accident;
-import motocitizen.dictionary.Content;
 import motocitizen.dictionary.Medicine;
 import motocitizen.main.R;
 import motocitizen.network.ApiRequest;
@@ -31,19 +30,19 @@ public class NotificationListener extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Map data = remoteMessage.getData();
-        NewContent.INSTANCE
-//        Content.getInstance()
-               .requestUpdate((ApiRequest.RequestResultCallback) result -> {
-                   if (result.has("error")) return;
-                   NewContent.INSTANCE.parseJSON(result);
-//                   Content.getInstance().parseJSON(result);
-                   raiseNotification(Integer.parseInt(data.get("id").toString()));
-               });
+        Content.INSTANCE
+//        ContentLegacy.getInstance()
+.requestUpdate(result -> {
+    if (result.has("error")) return;
+    Content.INSTANCE.parseJSON(result);
+//                   ContentLegacy.getInstance().parseJSON(result);
+    raiseNotification(Integer.parseInt(data.get("id").toString()));
+});
     }
 
     private void raiseNotification(Integer id) {
-        Accident    accident    = NewContent.INSTANCE.getAccidents().get(id);
-//        Accident    accident    = Content.getInstance().get(id);
+        Accident accident = Content.INSTANCE.getAccidents().get(id);
+//        Accident    accident    = ContentLegacy.getInstance().get(id);
         Preferences preferences = Preferences.Companion.getInstance(this);
         if (accident == null || accident.isInvisible(this) || preferences.getDoNotDisturb()) return;
         Intent notificationIntent = new Intent(this, AccidentDetailsActivity.class);
@@ -55,8 +54,8 @@ public class NotificationListener extends FirebaseMessagingService {
         PendingIntent contentIntent = PendingIntent.getActivity(this, idHash, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
         Resources     res           = this.getResources();
 
-        String damage = accident.getMedicine() == Medicine.UNKNOWN ? "" : ", " + accident.getMedicine().string();
-        String title  = String.format("%s%s(%s)", accident.getType().string(), damage, accident.getDistanceString());
+        String damage = accident.getMedicine() == Medicine.UNKNOWN ? "" : ", " + accident.getMedicine().getText();
+        String title  = String.format("%s%s(%s)", accident.getType().getText(), damage, accident.getDistanceString());
         Uri sound = preferences.getSoundTitle().equals("default system")
                     ? RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
                     : preferences.getSound();

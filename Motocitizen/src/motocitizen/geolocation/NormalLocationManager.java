@@ -15,9 +15,8 @@ import java.io.IOException;
 import java.util.List;
 
 import motocitizen.activity.MainScreenActivity;
-import motocitizen.content.NewContent;
+import motocitizen.content.Content;
 import motocitizen.content.accident.Accident;
-import motocitizen.dictionary.Content;
 import motocitizen.geocoder.MyGeoCoder;
 import motocitizen.network.requests.InPlaceRequest;
 import motocitizen.network.requests.LeaveRequest;
@@ -129,33 +128,33 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
     private void checkInPlace(Location location) {
         String login = User.dirtyRead().getName();
         if (login.equals("")) return;
-        int currentInplace = NewContent.INSTANCE.getInPlace();
-//        int currentInplace = Content.getInstance().getInPlaceId();
+        int currentInplace = Content.INSTANCE.getInPlace();
+//        int currentInplace = ContentLegacy.getInstance().getInPlaceId();
         if (currentInplace != 0) {
             if (isInPlace(location, currentInplace)) return;
-            NewContent.INSTANCE.setLeave(currentInplace);
-//            Content.getInstance().setLeave(currentInplace);
+            Content.INSTANCE.setLeave(currentInplace);
+//            ContentLegacy.getInstance().setLeave(currentInplace);
             new LeaveRequest(currentInplace);
         }
-        for (int accId : NewContent.INSTANCE.getAccidents().keySet()) {
-//        for (int accId : Content.getInstance().keySet()) {
+        for (int accId : Content.INSTANCE.getAccidents().keySet()) {
+//        for (int accId : ContentLegacy.getInstance().keySet()) {
             if (accId == currentInplace) continue;
             if (isArrived(location, accId)) {
-                NewContent.INSTANCE.setInPlace(accId);
-//                Content.getInstance().setInPlace(accId);
+                Content.INSTANCE.setInPlace(accId);
+//                ContentLegacy.getInstance().setInPlace(accId);
                 new InPlaceRequest(accId);
             }
         }
     }
 
     private boolean isArrived(Location location, int accId) {
-        return NewContent.INSTANCE.getAccidents().get(accId).getLocation().distanceTo(location) < Math.max(ARRIVED_MAX_ACCURACY, location.getAccuracy());
-//        return Content.getInstance().get(accId).getLocation().distanceTo(location) < Math.max(ARRIVED_MAX_ACCURACY, location.getAccuracy());
+        return Content.INSTANCE.getAccidents().get(accId).getLocation().distanceTo(location) < Math.max(ARRIVED_MAX_ACCURACY, location.getAccuracy());
+//        return ContentLegacy.getInstance().get(accId).getLocation().distanceTo(location) < Math.max(ARRIVED_MAX_ACCURACY, location.getAccuracy());
     }
 
     private boolean isInPlace(Location location, int accId) {
-        Accident acc = NewContent.INSTANCE.getAccidents().get(accId);
-//        Accident acc = Content.getInstance().get(accId);
+        Accident acc = Content.INSTANCE.getAccidents().get(accId);
+//        Accident acc = ContentLegacy.getInstance().get(accId);
         return acc != null && location != null && (acc.getLocation().distanceTo(location) - location.getAccuracy() * 2 - 1000 < 0);
     }
 

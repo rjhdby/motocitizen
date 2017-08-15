@@ -1,6 +1,6 @@
-package motocitizen.dictionary;
+package motocitizen.dictionary
 
-public enum HistoryAction {
+enum class HistoryAction constructor(private val code: String, val text: String) {
     CREATE("create_mc_acc", "Создал"),
     OPEN("acc_status_act", "Отмена отбоя"),
     CLOSE("acc_status_end", "Отбой"),
@@ -13,18 +13,10 @@ public enum HistoryAction {
     LEAVE("leave", "Уехал"),
     OTHER("other", "Прочее");
 
-    private final String code;
-    public final String text;
-
-    HistoryAction(String code, String text) {
-        this.code = code;
-        this.text = text;
-    }
-
-    public static HistoryAction parse(String action) {
-        for (HistoryAction a : HistoryAction.values()) {
-            if (a.code.equals(action)) return a;
+    companion object {
+        fun parse(action: String): HistoryAction {
+            return HistoryAction.values().firstOrNull { it.code == action }
+                   ?: HistoryAction.OTHER
         }
-        return HistoryAction.OTHER;
     }
 }

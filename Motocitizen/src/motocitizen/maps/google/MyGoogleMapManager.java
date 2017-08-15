@@ -19,9 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import motocitizen.content.NewContent;
+import motocitizen.content.Content;
 import motocitizen.content.accident.Accident;
-import motocitizen.dictionary.Content;
 import motocitizen.dictionary.Medicine;
 import motocitizen.dictionary.Type;
 import motocitizen.geolocation.MyLocationManager;
@@ -79,15 +78,15 @@ public class MyGoogleMapManager implements MyMapManager {
         map.clear();
         if (user != null) user.remove();
         Location location = MyLocationManager.getLocation();
-        user = map.addMarker(new MarkerOptions().position(LocationUtils.Location2LatLng(location)).title(Type.USER.string()).icon(Type.USER.getIcon()));
+        user = map.addMarker(new MarkerOptions().position(LocationUtils.Location2LatLng(location)).title(Type.USER.getText()).icon(Type.USER.getIcon()));
 
-        for (int id : NewContent.INSTANCE.getAccidents().keySet()) {
-//        for (int id : Content.getInstance().keySet()) {
-            Accident point = NewContent.INSTANCE.getAccidents().get(id);
-//            Accident point = Content.getInstance().get(id);
+        for (int id : Content.INSTANCE.getAccidents().keySet()) {
+//        for (int id : ContentLegacy.getInstance().keySet()) {
+            Accident point = Content.INSTANCE.getAccidents().get(id);
+//            Accident point = ContentLegacy.getInstance().get(id);
             if (point.isInvisible(context)) continue;
-            String title = point.getType().string();
-            title += point.getMedicine() != Medicine.UNKNOWN ? ", " + point.getMedicine().string() : "";
+            String title = point.getType().getText();
+            title += point.getMedicine() != Medicine.UNKNOWN ? ", " + point.getMedicine().getText() : "";
             title += ", " + DateUtils.getIntervalFromNowInText(context, point.getTime()) + " назад";
 
             int age = (int) (((new Date()).getTime() - point.getTime().getTime()) / 3600000);

@@ -12,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import motocitizen.network.ApiRequest;
 import motocitizen.network.requests.AuthRequest;
 import motocitizen.utils.Preferences;
-
+//todo object
 public class User {
     private Role    role         = Role.RO;
     private String  name         = "";

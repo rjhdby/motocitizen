@@ -9,7 +9,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
 
-object NewContent {
+object Content {
     var inPlace: Int = 0
     val accidents: TreeMap<Int, Accident> = TreeMap()
     val volunteers: TreeMap<Int, Volunteer> = TreeMap()

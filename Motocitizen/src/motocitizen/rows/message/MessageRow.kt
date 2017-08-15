@@ -8,11 +8,11 @@ import android.widget.FrameLayout
 import android.widget.FrameLayout.LayoutParams.MATCH_PARENT
 import android.widget.FrameLayout.LayoutParams.WRAP_CONTENT
 import android.widget.TextView
-import motocitizen.content.NewContent
+import motocitizen.content.Content
 import motocitizen.content.message.Message
 import motocitizen.main.R
 import motocitizen.utils.getTime
-
+//todo refactor
 @SuppressLint("ViewConstructor")
 open class MessageRow(context: Context, val message: Message, val last: Int, val next: Int) : FrameLayout(context) {
     open val SOLO = R.drawable.message_row
@@ -30,7 +30,7 @@ open class MessageRow(context: Context, val message: Message, val last: Int, val
         }
 
         val ownerView = findViewById(R.id.owner) as TextView
-        ownerView.text = NewContent.volunteers[message.owner]!!.name
+        ownerView.text = Content.volunteers[message.owner]!!.name
         if (message.owner == last) ownerView.visibility = View.INVISIBLE
 
         (findViewById(R.id.time) as TextView).text = getTime(message.time)

@@ -13,20 +13,20 @@ import motocitizen.content.accident.AccidentFactory;
 import motocitizen.network.ApiRequest;
 import motocitizen.network.requests.AccidentListRequest;
 
-public class Content extends TreeMap<Integer, Accident> {
+public class ContentLegacy extends TreeMap<Integer, Accident> {
     private int inPlace = 0;
 
-    private Content(Comparator<Integer> comparator) {
+    private ContentLegacy(Comparator<Integer> comparator) {
         super(comparator);
     }
 
     private static class Holder {
-        private static Content instance;
+        private static ContentLegacy instance;
     }
 
-    public static Content getInstance() {
+    public static ContentLegacy getInstance() {
         if (Holder.instance == null) {
-            Holder.instance = new Content(Collections.reverseOrder());
+            Holder.instance = new ContentLegacy(Collections.reverseOrder());
         }
         return Holder.instance;
     }

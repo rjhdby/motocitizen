@@ -20,9 +20,8 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.single.BasePermissionListener;
 
 import motocitizen.MyApp;
-import motocitizen.content.NewContent;
+import motocitizen.content.Content;
 import motocitizen.content.accident.Accident;
-import motocitizen.dictionary.Content;
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.maps.MyMapManager;
@@ -38,19 +37,19 @@ public class MainScreenActivity extends AppCompatActivity implements MyFragmentI
     private static final byte LIST = 0;
     private static final byte MAP  = 1;
 
-    private ViewGroup mapContainer;
+    private ViewGroup   mapContainer;
     private ImageButton createAccButton;
     private ImageButton toAccListButton;
     private ImageButton toMapButton;
-    private View accListView;
+    private View        accListView;
     private ProgressBar progressBar;
     private ViewGroup   listContent;
 
-    private MenuItem refreshItem;
+    private MenuItem     refreshItem;
     private MyMapManager map;
     private boolean inTransaction = false;
     private byte    currentScreen = LIST;
-    private static ActionBar          actionBar;
+    private static ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,13 +94,13 @@ public class MainScreenActivity extends AppCompatActivity implements MyFragmentI
 
         if (map == null) map = new MyGoogleMapManager(this);
         Dexter.withActivity(this)
-                .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                .withListener(new BasePermissionListener() {
-                    @Override
-                    public void onPermissionGranted(PermissionGrantedResponse response) {
-                        map.enableLocation();
-                    }
-                }).check();
+              .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+              .withListener(new BasePermissionListener() {
+                  @Override
+                  public void onPermissionGranted(PermissionGrantedResponse response) {
+                      map.enableLocation();
+                  }
+              }).check();
 
         setPermissions();
         setScreen(currentScreen);
@@ -156,8 +155,8 @@ public class MainScreenActivity extends AppCompatActivity implements MyFragmentI
         //TODO YesterdayRow ???
         //TODO Нет событий
 
-        for (Accident accident : NewContent.INSTANCE.getAccidents().values()) {
-//        for (Accident accident : Content.getInstance().values()) {
+        for (Accident accident : Content.INSTANCE.getAccidents().values()) {
+//        for (Accident accident : ContentLegacy.getInstance().values()) {
             if (accident.isInvisible(this)) continue;
             listContent.addView(accident.makeListRow(this));
         }
@@ -168,10 +167,10 @@ public class MainScreenActivity extends AppCompatActivity implements MyFragmentI
         if (inTransaction) return;
         if (MyApp.isOnline(this)) {
             startRefreshAnimation();
-            NewContent.INSTANCE.requestUpdate(result -> {
-//            Content.getInstance().requestUpdate(result -> {
-                if (!result.has("error")) NewContent.INSTANCE.parseJSON(result);
-//                if (!result.has("error")) Content.getInstance().parseJSON(result);
+            Content.INSTANCE.requestUpdate(result -> {
+//            ContentLegacy.getInstance().requestUpdate(result -> {
+                if (!result.has("error")) Content.INSTANCE.parseJSON(result);
+//                if (!result.has("error")) ContentLegacy.getInstance().parseJSON(result);
                 this.runOnUiThread(() -> {
                     stopRefreshAnimation();
                     redraw();
@@ -243,7 +242,7 @@ public class MainScreenActivity extends AppCompatActivity implements MyFragmentI
 
     public void toMap(int id) {
         setScreen(MAP);
-        map.jumpToPoint(NewContent.INSTANCE.getAccidents().get(id).getLocation());
-//        map.jumpToPoint(Content.getInstance().get(id).getLocation());
+        map.jumpToPoint(Content.INSTANCE.getAccidents().get(id).getLocation());
+//        map.jumpToPoint(ContentLegacy.getInstance().get(id).getLocation());
     }
 }

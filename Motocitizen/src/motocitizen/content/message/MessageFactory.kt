@@ -9,7 +9,7 @@ class MessageFactory {
         fun make(json: JSONObject): Message {
             val id = json.getInt("id")
             val owner = json.getInt("id_user")
-//            val owner = Owner(json.getInt("id_user"), json.getString("owner"))
+//            val owner = OwnerLegacy(json.getInt("id_user"), json.getString("owner"))
             val text = json.getString("text")
             val time = Date(json.getLong("uxtime") * 1000)
 

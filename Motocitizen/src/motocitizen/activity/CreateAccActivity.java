@@ -32,10 +32,9 @@ import org.json.JSONException;
 import java.util.Date;
 
 import kotlin.Unit;
-import motocitizen.content.NewContent;
+import motocitizen.content.Content;
 import motocitizen.content.accident.Accident;
 import motocitizen.content.accident.AccidentBuilder;
-import motocitizen.dictionary.Content;
 import motocitizen.dictionary.Medicine;
 import motocitizen.dictionary.Type;
 import motocitizen.geolocation.MyLocationManager;
@@ -122,12 +121,12 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 });
             }
             map.clear();
-            for (int id : NewContent.INSTANCE.getAccidents().keySet()) {
-//            for (int id : Content.getInstance().keySet()) {
-                Accident point = NewContent.INSTANCE.getAccidents().get(id);
+            for (int id : Content.INSTANCE.getAccidents().keySet()) {
+//            for (int id : ContentLegacy.getInstance().keySet()) {
+                Accident point = Content.INSTANCE.getAccidents().get(id);
                 if (point.isInvisible(CreateAccActivity.this)) continue;
-                String title = point.getType().string();
-                title += point.getMedicine() == Medicine.NO ? "" : ", " + point.getMedicine().string();
+                String title = point.getType().getText();
+                title += point.getMedicine() == Medicine.NO ? "" : ", " + point.getMedicine().getText();
                 title += ", " + DateUtils.getIntervalFromNowInText(CreateAccActivity.this, point.getTime()) + " назад";
 
                 float alpha;
@@ -163,8 +162,8 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     }
 
     private void refreshDescription() {
-        String text = ab.getType().string();
-        text += ab.getMedicine() == Medicine.UNKNOWN ? "" : ". " + ab.getMedicine().string();
+        String text = ab.getType().getText();
+        text += ab.getMedicine() == Medicine.UNKNOWN ? "" : ". " + ab.getMedicine().getText();
         ((TextView) findViewById(R.id.create_what)).setText(text);
         ((TextView) findViewById(R.id.create_who)).setText(Preferences.Companion.getInstance(this).getLogin());
         ((TextView) findViewById(R.id.create_where)).setText(ab.getAddress());

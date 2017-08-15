@@ -98,7 +98,7 @@ abstract class PopupWindowGeneral {
 
         finish.setOnClickListener(v -> {
             popupWindow.dismiss();
-            new AccidentChangeStateRequest(point.isEnded() ? AccidentStatus.ACTIVE.code() : AccidentStatus.ENDED.code(), point.getId(), null);
+            new AccidentChangeStateRequest(point.isEnded() ? AccidentStatus.ACTIVE.getCode() : AccidentStatus.ENDED.getCode(), point.getId(), null);
         });
         TableRow tr = new TableRow(content.getContext());
         tr.addView(finish, layoutParams);
@@ -111,7 +111,7 @@ abstract class PopupWindowGeneral {
 
         finish.setOnClickListener(v -> {
             popupWindow.dismiss();
-            new AccidentChangeStateRequest(point.isHidden() ? AccidentStatus.ACTIVE.code() : AccidentStatus.HIDDEN.code(), point.getId(), null);
+            new AccidentChangeStateRequest(point.isHidden() ? AccidentStatus.ACTIVE.getCode() : AccidentStatus.HIDDEN.getCode(), point.getId(), null);
         });
         TableRow tr = new TableRow(content.getContext());
         tr.addView(finish, layoutParams);

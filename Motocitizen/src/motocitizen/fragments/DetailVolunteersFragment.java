@@ -13,10 +13,9 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import motocitizen.activity.AccidentDetailsActivity;
-import motocitizen.content.NewContent;
+import motocitizen.content.Content;
 import motocitizen.content.accident.Accident;
 import motocitizen.content.volunteer.Volunteer;
-import motocitizen.dictionary.Content;
 import motocitizen.dictionary.VolunteerStatus;
 import motocitizen.main.R;
 import motocitizen.network.requests.AccidentListRequest;
@@ -94,12 +93,12 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
         int      id       = accident.getId();
         boolean  active   = accident.isActive() && User.getInstance(getActivity()).isAuthorized();
-        onwayButton.setVisibility(id != Preferences.Companion.getInstance(getActivity()).getOnWay() && id != NewContent.INSTANCE.getInPlace() && active ? View.VISIBLE : View.GONE);
-//        onwayButton.setVisibility(id != Preferences.Companion.getInstance(getActivity()).getOnWay() && id != Content.getInstance().getInPlaceId() && active ? View.VISIBLE : View.GONE);
-        onwayCancelButton.setVisibility(id == Preferences.Companion.getInstance(getActivity()).getOnWay() && id != NewContent.INSTANCE.getInPlace() && active ? View.VISIBLE : View.GONE);
-//        onwayCancelButton.setVisibility(id == Preferences.Companion.getInstance(getActivity()).getOnWay() && id != Content.getInstance().getInPlaceId() && active ? View.VISIBLE : View.GONE);
-        onwayDisabledButton.setVisibility(id == NewContent.INSTANCE.getInPlace() && active ? View.VISIBLE : View.GONE);
-//        onwayDisabledButton.setVisibility(id == Content.getInstance().getInPlaceId() && active ? View.VISIBLE : View.GONE);
+        onwayButton.setVisibility(id != Preferences.Companion.getInstance(getActivity()).getOnWay() && id != Content.INSTANCE.getInPlace() && active ? View.VISIBLE : View.GONE);
+//        onwayButton.setVisibility(id != Preferences.Companion.getInstance(getActivity()).getOnWay() && id != ContentLegacy.getInstance().getInPlaceId() && active ? View.VISIBLE : View.GONE);
+        onwayCancelButton.setVisibility(id == Preferences.Companion.getInstance(getActivity()).getOnWay() && id != Content.INSTANCE.getInPlace() && active ? View.VISIBLE : View.GONE);
+//        onwayCancelButton.setVisibility(id == Preferences.Companion.getInstance(getActivity()).getOnWay() && id != ContentLegacy.getInstance().getInPlaceId() && active ? View.VISIBLE : View.GONE);
+        onwayDisabledButton.setVisibility(id == Content.INSTANCE.getInPlace() && active ? View.VISIBLE : View.GONE);
+//        onwayDisabledButton.setVisibility(id == ContentLegacy.getInstance().getInPlaceId() && active ? View.VISIBLE : View.GONE);
     }
 
     @SuppressLint("CommitTransaction")
@@ -163,8 +162,8 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     private void sendOnWay() {
         Preferences.Companion.getInstance(getActivity()).setOnWay(accidentID);
         new OnWayRequest(accidentID, response -> new AccidentListRequest(result -> {
-            NewContent.INSTANCE.requestUpdate();
-//            Content.getInstance().requestUpdate();
+            Content.INSTANCE.requestUpdate();
+//            ContentLegacy.getInstance().requestUpdate();
             getActivity().runOnUiThread(() -> {
                 ((AccidentDetailsActivity) getActivity()).update();
                 update();
@@ -175,8 +174,8 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     private void sendCancelOnWay() {
         Preferences.Companion.getInstance(getActivity()).setOnWay(0);
         new CancelOnWayRequest(accidentID, response -> new AccidentListRequest(result -> {
-            NewContent.INSTANCE.requestUpdate();
-//            Content.getInstance().requestUpdate();
+            Content.INSTANCE.requestUpdate();
+//            ContentLegacy.getInstance().requestUpdate();
             getActivity().runOnUiThread(() -> {
                 ((AccidentDetailsActivity) getActivity()).update();
                 update();

@@ -14,7 +14,7 @@ open class VolunteerRow(context: Context, volunteer: Volunteer) : TableRow(conte
     init {
         LayoutInflater.from(context).inflate(R.layout.volunteer_row, this, true)
         (this.findViewById(R.id.volunteer) as TextView).text = volunteer.name
-        (this.findViewById(R.id.action) as TextView).text = volunteer.status.string()
+        (this.findViewById(R.id.action) as TextView).text = volunteer.status.text
         (this.findViewById(R.id.time) as TextView).text = getTime(volunteer.time)
     }
 }

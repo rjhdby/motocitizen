@@ -10,7 +10,7 @@ import android.preference.PreferenceManager
 import com.google.android.gms.maps.model.LatLng
 
 import motocitizen.dictionary.Type
-
+//todo object
 class Preferences private constructor(context: Context) {
     var newVersion = false
     private val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
@@ -29,10 +29,10 @@ class Preferences private constructor(context: Context) {
         set(value) = preferences.edit().putBoolean("mc.show.other", value).apply()
     var visibleDistance: Int
         get() {
-            try {
-                return preferences.getInt("mc.distance.show", DEFAULT_SHOW_DISTANCE)
+            return try {
+                preferences.getInt("mc.distance.show", DEFAULT_SHOW_DISTANCE)
             } catch (e: Exception) {
-                return Integer.parseInt(preferences.getString("mc.distance.show", DEFAULT_SHOW_DISTANCE.toString()))
+                Integer.parseInt(preferences.getString("mc.distance.show", DEFAULT_SHOW_DISTANCE.toString()))
             }
         }
         set(value) {
@@ -130,29 +130,25 @@ class Preferences private constructor(context: Context) {
         preferences.edit().remove(login).remove(password).apply()
     }
 
-    fun isHidden(type: Type): Boolean {
-        return when (type) {
-            Type.BREAK                                               -> !showBreak
-            Type.MOTO_AUTO, Type.MOTO_MOTO, Type.MOTO_MAN, Type.SOLO -> !showAcc
-            Type.STEAL                                               -> !showSteal
-            Type.OTHER                                               -> !showOther
-            else                                                     -> false
-        }
+    fun isHidden(type: Type): Boolean = when (type) {
+        Type.BREAK                                               -> !showBreak
+        Type.MOTO_AUTO, Type.MOTO_MOTO, Type.MOTO_MAN, Type.SOLO -> !showAcc
+        Type.STEAL                                               -> !showSteal
+        Type.OTHER                                               -> !showOther
+        else                                                     -> false
     }
 
-    fun getPreferenceName(preference: String): String {
-        return when (preference) {
-            "hoursAgo"         -> "hours.ago"
-            "showAcc"          -> "mc.show.acc"
-            "showBreak"        -> "mc.show.break"
-            "showSteal"        -> "mc.show.steal"
-            "showOther"        -> "mc.show.other"
-            "distanceShow"     -> "mc.distance.show"
-            "distanceAlarm"    -> "mc.distance.alarm"
-            "maxNotifications" -> "notifications.max"
-            "useVibration"     -> "use.vibration"
-            else               -> "unknown"
-        }
+    fun getPreferenceName(preference: String): String = when (preference) {
+        "hoursAgo"         -> "hours.ago"
+        "showAcc"          -> "mc.show.acc"
+        "showBreak"        -> "mc.show.break"
+        "showSteal"        -> "mc.show.steal"
+        "showOther"        -> "mc.show.other"
+        "distanceShow"     -> "mc.distance.show"
+        "distanceAlarm"    -> "mc.distance.alarm"
+        "maxNotifications" -> "notifications.max"
+        "useVibration"     -> "use.vibration"
+        else               -> "unknown"
     }
 
     companion object {
@@ -175,9 +171,7 @@ class Preferences private constructor(context: Context) {
             return Holder.instance as Preferences
         }
 
-        fun dirtyRead(): Preferences? {
-            return Holder.instance
-        }
+        fun dirtyRead(): Preferences? = Holder.instance
 
     }
 

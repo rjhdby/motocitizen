@@ -9,6 +9,5 @@ abstract class OwnedRow(context: Context, accident: Accident) : Row(context, acc
         mLayoutParams.setMargins(4, 2, 16, 2)
     }
 
-    override val layout: Int
-        get() = R.layout.accident_row_i_was_here
+    override val layout: Int = R.layout.accident_row_i_was_here
 }

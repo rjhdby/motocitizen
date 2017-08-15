@@ -18,7 +18,7 @@ import motocitizen.utils.Preferences
 import java.util.*
 
 abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val time: Date, var address: String, var coordinates: LatLng, val owner: Int) {
-    //abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val time: Date, var address: String, var coordinates: LatLng, val owner: Owner) {
+    //abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val time: Date, var address: String, var coordinates: LatLng, val owner: OwnerLegacy) {
     abstract val status: AccidentStatus
 
     var description: String = ""
@@ -68,21 +68,13 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
         return hidden || distanceFilter || typeFilter || timeFilter
     }
 
-    fun getVolunteer(id: Int): Volunteer? {
-        return volunteers[id]
-    }
+    fun getVolunteer(id: Int): Volunteer? = volunteers[id]
 
-    open fun isActive(): Boolean {
-        return false
-    }
+    open fun isActive(): Boolean = false
 
-    open fun isEnded(): Boolean {
-        return false
-    }
+    open fun isEnded(): Boolean = false
 
-    open fun isHidden(): Boolean {
-        return false
-    }
+    open fun isHidden(): Boolean = false
 
     val isAccident: Boolean
         get() = type == Type.MOTO_AUTO || type == Type.MOTO_MOTO || type == Type.MOTO_MAN || type == Type.SOLO
