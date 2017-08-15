@@ -64,7 +64,7 @@ public class MainScreenActivity extends AppCompatActivity implements MyFragmentI
         MyLocationManager.getInstance().wakeup(this);
 
         if (Preferences.Companion.getInstance(this).getNewVersion()) {
-            AlertDialog changeLogDlg = ChangeLog.getDialog(this);
+            AlertDialog changeLogDlg = ChangeLog.INSTANCE.getDialog(this);
             changeLogDlg.show();
             Preferences.Companion.getInstance(this).setNewVersion(false);
         }

@@ -30,7 +30,7 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
         WebView wv = (WebView) findViewById(R.id.change_log);
         wv.setBackgroundColor(Color.rgb(48, 48, 48));
-        wv.loadDataWithBaseURL(null, ChangeLog.getLog(this), "text/html", "UTF-8", null);
+        wv.loadDataWithBaseURL(null, ChangeLog.INSTANCE.getLog(this), "text/html", "UTF-8", null);
 
         findViewById(R.id.businessCardButton).setOnClickListener(this);
 
