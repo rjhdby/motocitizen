@@ -21,13 +21,8 @@ import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKApi;
 import com.vk.sdk.api.VKError;
-import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
-import com.vk.sdk.util.VKUtil;
-
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 
 import motocitizen.MyApp;
 import motocitizen.main.R;
@@ -46,11 +41,11 @@ public class AuthActivity extends AppCompatActivity {
 
     private EditText login;
     private EditText password;
-    private CheckBox anonim;
+    private CheckBox anonymous;
 
     private void enableLoginBtn() {
         Boolean logPasReady = login.getText().toString().length() > 0 && password.getText().toString().length() > 0;
-        loginBtn.setEnabled(anonim.isChecked() || logPasReady);
+        loginBtn.setEnabled(anonymous.isChecked() || logPasReady);
     }
 
     @Override
@@ -109,15 +104,13 @@ public class AuthActivity extends AppCompatActivity {
         setContentView(R.layout.auth);
         login = (EditText) findViewById(R.id.auth_login);
         password = (EditText) findViewById(R.id.auth_password);
-        anonim = (CheckBox) findViewById(R.id.auth_anonim);
+        anonymous = (CheckBox) findViewById(R.id.auth_anonim);
         cancelBtn = (Button) findViewById(R.id.cancel_button);
         logoutBtn = (Button) findViewById(R.id.logout_button);
         loginBtn = (Button) findViewById(R.id.login_button);
 
         loginVK = (Button) findViewById(R.id.vk);
-        loginVK.setOnClickListener(v -> {
-            VKSdk.login(AuthActivity.this, VKScope.PAGES);
-        });
+        loginVK.setOnClickListener(v -> VKSdk.login(AuthActivity.this, VKScope.PAGES));
 
         Button vk333 = (Button) findViewById(R.id.vk333);
         vk333.setOnClickListener(v -> {
@@ -158,18 +151,18 @@ public class AuthActivity extends AppCompatActivity {
 
         login.setText(Preferences.Companion.getInstance(this).getLogin());
         password.setText(Preferences.Companion.getInstance(this).getPassword());
-        anonim.setChecked(Preferences.Companion.getInstance(this).getAnonim());
+        anonymous.setChecked(Preferences.Companion.getInstance(this).getAnonim());
         View     accListYesterdayLine = findViewById(R.id.accListYesterdayLine);
         TextView roleView             = (TextView) findViewById(R.id.role);
 
         boolean isAuthorized = User.getInstance(this).isAuthorized();
         loginBtn.setEnabled(!isAuthorized);
         logoutBtn.setEnabled(isAuthorized);
-        anonim.setEnabled(!isAuthorized);
+        anonymous.setEnabled(!isAuthorized);
         accListYesterdayLine.setVisibility(isAuthorized ? View.GONE : View.VISIBLE);
         roleView.setVisibility(isAuthorized ? View.VISIBLE : View.GONE);
-        login.setEnabled(!isAuthorized && !anonim.isChecked());
-        password.setEnabled(!isAuthorized && !anonim.isChecked());
+        login.setEnabled(!isAuthorized && !anonymous.isChecked());
+        password.setEnabled(!isAuthorized && !anonymous.isChecked());
         //Авторизованы?
         if (isAuthorized) {
             String format = getString(R.string.auth_role);
@@ -190,8 +183,8 @@ public class AuthActivity extends AppCompatActivity {
         final Activity local = this;
         loginBtn.setOnClickListener(v -> {
             // Анонимный вход
-            Preferences.Companion.getInstance(this).setAnonim(anonim.isChecked());
-            if (anonim.isChecked()) {
+            Preferences.Companion.getInstance(this).setAnonim(anonymous.isChecked());
+            if (anonymous.isChecked()) {
                 ((TextView) findViewById(R.id.auth_error_helper)).setText("");
                 Router.INSTANCE.goTo(local, Router.Target.MAIN);
                 return;
@@ -242,7 +235,7 @@ public class AuthActivity extends AppCompatActivity {
                 enableLoginBtn();
             }
         });
-        anonim.setOnClickListener(view -> {
+        anonymous.setOnClickListener(view -> {
             CheckBox checkBox = (CheckBox) view;
             login.setEnabled(!checkBox.isChecked());
             password.setEnabled(!checkBox.isChecked());
@@ -254,21 +247,4 @@ public class AuthActivity extends AppCompatActivity {
     private void auth(ApiRequest.RequestResultCallback callback) {
         User.getInstance(this).auth(login.getText().toString(), password.getText().toString(), callback);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
