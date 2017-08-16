@@ -22,6 +22,7 @@ import motocitizen.database.StoreMessages;
 import motocitizen.main.R;
 import motocitizen.network.ApiRequest;
 import motocitizen.network.requests.SendMessageRequest;
+import motocitizen.rows.RowFactory;
 import motocitizen.user.User;
 import motocitizen.utils.ToastUtils;
 import motocitizen.utils.popups.MessagesPopup;
@@ -95,7 +96,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
 
     private void processMessage(Accident accident, Integer current, Integer last, Integer next) {
         Message message = accident.getMessages().get(current);
-        View    row     = message.getRow(getActivity(), last, next);
+        View    row     = RowFactory.INSTANCE.make(getActivity(), message, last, next);
         row.setOnLongClickListener(new MessageRowLongClickListener(message, accident));
         messagesTable.addView(row);
     }

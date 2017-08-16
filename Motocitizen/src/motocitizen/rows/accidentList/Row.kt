@@ -18,7 +18,7 @@ import motocitizen.utils.getIntervalFromNowInText
 import motocitizen.utils.newId
 import motocitizen.utils.popups.AccidentListPopup
 //todo refactor
-abstract class Row protected constructor(context: Context, accident: Accident) : FrameLayout(context) {
+abstract class Row protected constructor(context: Context, val accident: Accident) : FrameLayout(context) {
     val ACTIVE_COLOR = 0x70FFFFFF
     val ENDED_COLOR = 0x70FFFFFF
     val HIDDEN_COLOR = 0x30FFFFFF
@@ -29,13 +29,13 @@ abstract class Row protected constructor(context: Context, accident: Accident) :
 
     abstract fun changeMargins()
 
-    protected fun messagesText(accident: Accident): Spanned {
+    private fun messagesText(accident: Accident): Spanned {
         val read = if (accident.unreadMessagesCount > 0) String.format("<font color=#C62828><b>(%s)</b></font>", accident.unreadMessagesCount) else ""
         val text = String.format("<b>%s</b>%s", accident.messages.size, read)
-        if (Build.VERSION.SDK_INT >= 24) {
-            return Html.fromHtml(text, android.text.Html.TO_HTML_PARAGRAPH_LINES_CONSECUTIVE)
+        return if (Build.VERSION.SDK_INT >= 24) {
+            Html.fromHtml(text, android.text.Html.TO_HTML_PARAGRAPH_LINES_CONSECUTIVE)
         } else {
-            return Html.fromHtml(text)
+            Html.fromHtml(text)
         }
     }
 
@@ -45,7 +45,7 @@ abstract class Row protected constructor(context: Context, accident: Accident) :
         layoutParams = mLayoutParams
     }
 
-    init {
+    fun bind(){
         LayoutInflater.from(context).inflate(layout, this, true)
         id = newId()
         setBackgroundResource(background)

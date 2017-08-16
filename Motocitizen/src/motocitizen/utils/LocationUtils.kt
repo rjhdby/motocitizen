@@ -12,11 +12,9 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 
-public val EQUATOR = 20038
+val EQUATOR = 20038
 
-fun distance(l1: Location, l2: LatLng): Float {
-    return l1.distanceTo(LatLng2Location(l2))
-}
+fun distance(l1: Location, l2: LatLng): Float = l1.distanceTo(LatLng2Location(l2))
 
 fun LatLng2Location(latLng: LatLng): Location {
     val location = Location(LocationManager.GPS_PROVIDER)
@@ -25,9 +23,7 @@ fun LatLng2Location(latLng: LatLng): Location {
     return location
 }
 
-fun Location2LatLng(location: Location): LatLng {
-    return LatLng(location.latitude, location.longitude)
-}
+fun Location2LatLng(location: Location): LatLng = LatLng(location.latitude, location.longitude)
 
 fun LatLngByAddress(address: String, callback: (LatLng?) -> Unit) {
     try {

@@ -8,17 +8,16 @@ import motocitizen.content.history.History
 import motocitizen.content.message.Message
 import motocitizen.content.volunteer.Volunteer
 import motocitizen.dictionary.AccidentStatus
+import motocitizen.dictionary.AccidentStatus.ACTIVE
 import motocitizen.dictionary.AccidentStatus.HIDDEN
 import motocitizen.dictionary.Medicine
 import motocitizen.dictionary.Type
 import motocitizen.geolocation.MyLocationManager
-import motocitizen.rows.accidentList.Row
 import motocitizen.user.User
 import motocitizen.utils.Preferences
 import java.util.*
 
 abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val time: Date, var address: String, var coordinates: LatLng, val owner: Int) {
-    //abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val time: Date, var address: String, var coordinates: LatLng, val owner: OwnerLegacy) {
     abstract val status: AccidentStatus
 
     var description: String = ""
@@ -70,11 +69,11 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
 
     fun getVolunteer(id: Int): Volunteer? = volunteers[id]
 
-    open fun isActive(): Boolean = false
+    fun isActive(): Boolean = status === ACTIVE
 
-    open fun isEnded(): Boolean = false
+    fun isEnded(): Boolean = status !== ACTIVE
 
-    open fun isHidden(): Boolean = false
+    fun isHidden(): Boolean = status === HIDDEN
 
     val isAccident: Boolean
         get() = type == Type.MOTO_AUTO || type == Type.MOTO_MOTO || type == Type.MOTO_MAN || type == Type.SOLO
@@ -83,6 +82,4 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
         val damage = if (medicine == Medicine.UNKNOWN) "" else ", " + medicine.text
         return String.format("%s%s(%s)%n%s%n%s", type, damage, distanceString, address, description)
     }
-
-    abstract fun makeListRow(context: Context): Row
 }

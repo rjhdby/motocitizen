@@ -7,21 +7,13 @@ import motocitizen.main.R
 import java.text.SimpleDateFormat
 import java.util.*
 
-fun getTime(date: Date): String {
-    return SimpleDateFormat("HH:mm", Locale.getDefault()).format(date)
-}
+fun getTime(date: Date): String = SimpleDateFormat("HH:mm", Locale.getDefault()).format(date)
 
-fun getDateTime(date: Date): String {
-    return SimpleDateFormat("dd.MM.yy HH:mm", Locale.getDefault()).format(date)
-}
+fun getDateTime(date: Date): String = SimpleDateFormat("dd.MM.yy HH:mm", Locale.getDefault()).format(date)
 
-fun getDbFormat(date: Date): String {
-    return SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(date)
-}
+fun getDbFormat(date: Date): String = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(date)
 
-fun getStringTime(date: Date): String {
-    return getDateTime(date)
-}
+fun getStringTime(date: Date): String = getDateTime(date)
 
 fun getIntervalFromNowInText(context: Context, date: Date): String {
     val minutes = ((Date().time - date.time) / 60000).toInt()

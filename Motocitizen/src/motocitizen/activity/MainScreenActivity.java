@@ -27,6 +27,7 @@ import motocitizen.main.R;
 import motocitizen.maps.MyMapManager;
 import motocitizen.maps.google.MyGoogleMapManager;
 import motocitizen.router.Router;
+import motocitizen.rows.RowFactory;
 import motocitizen.user.User;
 import motocitizen.utils.BounceScrollView;
 import motocitizen.utils.ChangeLog;
@@ -155,10 +156,9 @@ public class MainScreenActivity extends AppCompatActivity implements MyFragmentI
         //TODO YesterdayRow ???
         //TODO Нет событий
 
-        for (Accident accident : Content.INSTANCE.getAccidents().values()) {
-//        for (Accident accident : ContentLegacy.getInstance().values()) {
+        for (Accident accident : Content.INSTANCE.getListReversed()) {
             if (accident.isInvisible(this)) continue;
-            listContent.addView(accident.makeListRow(this));
+            listContent.addView(RowFactory.INSTANCE.make(this, accident));
         }
         map.placeAccidents(this);
     }
@@ -243,6 +243,5 @@ public class MainScreenActivity extends AppCompatActivity implements MyFragmentI
     public void toMap(int id) {
         setScreen(MAP);
         map.jumpToPoint(Content.INSTANCE.getAccidents().get(id).getLocation());
-//        map.jumpToPoint(ContentLegacy.getInstance().get(id).getLocation());
     }
 }

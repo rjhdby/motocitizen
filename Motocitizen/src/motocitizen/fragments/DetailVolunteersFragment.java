@@ -21,7 +21,7 @@ import motocitizen.main.R;
 import motocitizen.network.requests.AccidentListRequest;
 import motocitizen.network.requests.CancelOnWayRequest;
 import motocitizen.network.requests.OnWayRequest;
-import motocitizen.rows.details.VolunteerRow;
+import motocitizen.rows.RowFactory;
 import motocitizen.user.User;
 import motocitizen.utils.Preferences;
 
@@ -85,7 +85,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         for (int i : accident.getVolunteers().keySet()) {
             Volunteer current = accident.getVolunteer(i);
             if (current.getStatus() == VolunteerStatus.LEAVE) continue;//// TODO: 15.08.17
-            vg_onway.addView(new VolunteerRow(getActivity(), current));
+            vg_onway.addView(RowFactory.INSTANCE.make(getActivity(), current));
         }
     }
 

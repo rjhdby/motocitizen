@@ -12,6 +12,7 @@ import java.util.*
 object Content {
     var inPlace: Int = 0
     val accidents: TreeMap<Int, Accident> = TreeMap()
+
     val volunteers: TreeMap<Int, Volunteer> = TreeMap()
 
     fun requestUpdate(listener: CoreRequest.RequestResultCallback) {
@@ -41,9 +42,11 @@ object Content {
         }
     }
 
-    fun parseJSON(result: JSONObject, id: Int) = parseJSON(result)
+    fun parseJSON(result: JSONObject, id: Int) = parseJSON(result) //todo make private
 
     fun setLeave(currentInplace: Int) {
         //TODO SetLeave
     }
+
+    fun getListReversed() = accidents.values.sortedByDescending { it.id }
 }

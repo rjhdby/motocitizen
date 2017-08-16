@@ -1,6 +1,5 @@
 package motocitizen.content.message
 
-import motocitizen.user.User
 import org.json.JSONObject
 import java.util.*
 
@@ -9,14 +8,10 @@ class MessageFactory {
         fun make(json: JSONObject): Message {
             val id = json.getInt("id")
             val owner = json.getInt("id_user")
-//            val owner = OwnerLegacy(json.getInt("id_user"), json.getString("owner"))
             val text = json.getString("text")
             val time = Date(json.getLong("uxtime") * 1000)
 
-            return when (owner) {
-                User.dirtyRead().id -> OwnedMessage(id, text, time)
-                else                -> Message(id, text, time, owner)
-            }
+            return Message(id, text, time, owner)
         }
     }
 }
