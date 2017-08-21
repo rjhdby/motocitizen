@@ -168,9 +168,7 @@ public class MainScreenActivity extends AppCompatActivity implements MyFragmentI
         if (MyApp.isOnline(this)) {
             startRefreshAnimation();
             Content.INSTANCE.requestUpdate(result -> {
-//            ContentLegacy.getInstance().requestUpdate(result -> {
                 if (!result.has("error")) Content.INSTANCE.parseJSON(result);
-//                if (!result.has("error")) ContentLegacy.getInstance().parseJSON(result);
                 this.runOnUiThread(() -> {
                     stopRefreshAnimation();
                     redraw();

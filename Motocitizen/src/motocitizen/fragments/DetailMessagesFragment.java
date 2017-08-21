@@ -123,10 +123,8 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
                 });
             }
             Content.INSTANCE.requestUpdate(response -> getActivity().runOnUiThread(() -> {
-//            ContentLegacy.getInstance().requestUpdate(response -> getActivity().runOnUiThread(() -> {
                 if (!response.has("error")) {
                     Content.INSTANCE.parseJSON(response, accidentID);
-//                    ContentLegacy.getInstance().parseJSON(response, accidentID);
                 }
                 ((AccidentDetailsActivity) getActivity()).update();
                 update();

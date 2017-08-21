@@ -129,19 +129,15 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
         String login = User.dirtyRead().getName();
         if (login.equals("")) return;
         int currentInplace = Content.INSTANCE.getInPlace();
-//        int currentInplace = ContentLegacy.getInstance().getInPlaceId();
         if (currentInplace != 0) {
             if (isInPlace(location, currentInplace)) return;
             Content.INSTANCE.setLeave(currentInplace);
-//            ContentLegacy.getInstance().setLeave(currentInplace);
             new LeaveRequest(currentInplace);
         }
         for (int accId : Content.INSTANCE.getAccidents().keySet()) {
-//        for (int accId : ContentLegacy.getInstance().keySet()) {
             if (accId == currentInplace) continue;
             if (isArrived(location, accId)) {
                 Content.INSTANCE.setInPlace(accId);
-//                ContentLegacy.getInstance().setInPlace(accId);
                 new InPlaceRequest(accId);
             }
         }
@@ -149,12 +145,10 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
 
     private boolean isArrived(Location location, int accId) {
         return Content.INSTANCE.getAccidents().get(accId).getLocation().distanceTo(location) < Math.max(ARRIVED_MAX_ACCURACY, location.getAccuracy());
-//        return ContentLegacy.getInstance().get(accId).getLocation().distanceTo(location) < Math.max(ARRIVED_MAX_ACCURACY, location.getAccuracy());
     }
 
     private boolean isInPlace(Location location, int accId) {
         Accident acc = Content.INSTANCE.getAccidents().get(accId);
-//        Accident acc = ContentLegacy.getInstance().get(accId);
         return acc != null && location != null && (acc.getLocation().distanceTo(location) - location.getAccuracy() * 2 - 1000 < 0);
     }
 

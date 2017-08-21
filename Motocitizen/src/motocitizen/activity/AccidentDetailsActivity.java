@@ -85,9 +85,6 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         Bundle b = getIntent().getExtras();
         accidentID = b.getInt("accidentID");
         currentPoint = Content.INSTANCE.getAccidents().get(accidentID);
-//        currentPoint = ContentLegacy.getInstance().get(accidentID);
-
-        //NewAccidentReceived.removeNotification(accidentID);
 
         String userName = Preferences.Companion.getInstance(this).getLogin();
 
@@ -163,7 +160,6 @@ public class AccidentDetailsActivity extends AppCompatActivity {
 
     public void update() {
         currentPoint = Content.INSTANCE.getAccidents().get(accidentID);
-//        currentPoint = ContentLegacy.getInstance().get(accidentID);
 
         ActionBar actionBar = getSupportActionBar();
         //TODO Разобраться с nullPointerException и убрать костыль
@@ -211,7 +207,6 @@ public class AccidentDetailsActivity extends AppCompatActivity {
     private void menuReconstruction() {
         if (mMenu == null) return;
         currentPoint = Content.INSTANCE.getAccidents().get(accidentID);
-//        currentPoint = ContentLegacy.getInstance().get(accidentID);
         MenuItem finish = mMenu.findItem(R.id.menu_acc_finish);
         MenuItem hide   = mMenu.findItem(R.id.menu_acc_hide);
         finish.setVisible(User.getInstance(this).isModerator());
@@ -284,14 +279,12 @@ public class AccidentDetailsActivity extends AppCompatActivity {
     private void sendFinishRequest() {
         //TODO Суперкостыль ???
         accNewState = Content.INSTANCE.getAccidents().get(accidentID).getStatus() == ENDED ? ACTIVE : ENDED;
-//        accNewState = ContentLegacy.getInstance().get(accidentID).getStatus() == ENDED ? ACTIVE : ENDED;
         new AccidentChangeStateRequest(accNewState.getCode(), accidentID, new AccidentChangeCallback());
     }
 
     private void sendHideRequest() {
         //TODO Суперкостыль ???
         boolean s = Content.INSTANCE.getAccidents().get(accidentID).getStatus() == ENDED;
-//        boolean s = ContentLegacy.getInstance().get(accidentID).getStatus() == ENDED;
         accNewState = s ? ACTIVE : ENDED;
         new AccidentChangeStateRequest(s ? ACTIVE.getCode() : HIDDEN.getCode(), accidentID, new AccidentChangeCallback());
     }

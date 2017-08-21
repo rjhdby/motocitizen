@@ -14,7 +14,6 @@ public class MessagesPopup extends PopupWindowGeneral {
     public MessagesPopup(Context context, int id, int accId) {
         super(context);
         message = Content.INSTANCE.getAccidents().get(accId).getMessages().get(id);
-//        message = ContentLegacy.getInstance().get(accId).getMessages().get(id);
     }
 
     public PopupWindow getPopupWindow(Context context) {

@@ -18,7 +18,6 @@ public class AccidentListPopup extends PopupWindowGeneral {
     public AccidentListPopup(Context context, int id) {
         super(context);
         point = Content.INSTANCE.getAccidents().get(id);
-//        point = ContentLegacy.getInstance().get(id);
         accText = getAccidentTextToCopy(point);
     }
 

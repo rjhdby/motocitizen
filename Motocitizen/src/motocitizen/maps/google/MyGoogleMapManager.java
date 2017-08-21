@@ -81,9 +81,7 @@ public class MyGoogleMapManager implements MyMapManager {
         user = map.addMarker(new MarkerOptions().position(LocationUtils.Location2LatLng(location)).title(Type.USER.getText()).icon(Type.USER.getIcon()));
 
         for (int id : Content.INSTANCE.getAccidents().keySet()) {
-//        for (int id : ContentLegacy.getInstance().keySet()) {
             Accident point = Content.INSTANCE.getAccidents().get(id);
-//            Accident point = ContentLegacy.getInstance().get(id);
             if (point.isInvisible(context)) continue;
             String title = point.getType().getText();
             title += point.getMedicine() != Medicine.UNKNOWN ? ", " + point.getMedicine().getText() : "";
