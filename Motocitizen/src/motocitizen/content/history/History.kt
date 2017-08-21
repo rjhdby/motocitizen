@@ -7,9 +7,7 @@ import java.util.*
 
 class History @Throws(JSONException::class)
 constructor(json: JSONObject) {
-    val id = json.getInt("id")
-    val ownerId = json.getInt("id_user")
-    val owner = json.getString("owner")
-    val time = Date(json.getLong("uxtime") * 1000)
-    val action = HistoryAction.parse(json.getString("action"))
+    val ownerId = json.getInt("o")
+    val time = Date(json.getLong("ut") * 1000)
+    val action = HistoryAction.parse(json.getString("a"))
 }

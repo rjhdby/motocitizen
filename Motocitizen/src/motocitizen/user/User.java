@@ -63,24 +63,6 @@ public class User {
             Log.d("AUTH ERROR", response.toString());
         }
     }
-//    private void parseAuthResult(JSONObject response) {
-//        isAuthorized = false;
-//        if (!response.has("id")) {
-//            Log.d("AUTH ERROR", response.toString());
-//            return;
-//        }
-//        try {
-//            name = response.getString("name");
-//            if (name.length() == 0) return;
-//            role = Role.Companion.parse(response.getString("role"));
-//            id = Integer.parseInt(response.getString("id"));
-//            preferences.setLogin(name);
-//            preferences.setAnonim(false);
-//            isAuthorized = true;
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     public int getId() {return id;}
 
@@ -88,7 +70,7 @@ public class User {
         return getPassHash(preferences.getPassword());
     }
 
-    public String getPassHash(String pass) {
+    private String getPassHash(String pass) {
         StringBuilder sb = new StringBuilder();
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
@@ -102,7 +84,6 @@ public class User {
         }
         return sb.toString();
     }
-
 
     public void logoff() {
         name = "";

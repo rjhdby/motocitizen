@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 
 import motocitizen.activity.AccidentDetailsActivity;
 import motocitizen.content.accident.Accident;
+import motocitizen.content.history.History;
 import motocitizen.main.R;
 import motocitizen.rows.RowFactory;
 
@@ -41,8 +42,8 @@ public class DetailHistoryFragment extends AccidentDetailsFragments {
         Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
 
         logContent.removeAllViews();
-        for (int i : accident.getHistory().keySet()) {
-            logContent.addView(RowFactory.INSTANCE.make(getActivity(), accident.getHistory().get(i)));
+        for (History h : accident.getHistory()) {
+            logContent.addView(RowFactory.INSTANCE.make(getActivity(), h));
         }
     }
 }

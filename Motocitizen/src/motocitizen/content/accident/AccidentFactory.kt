@@ -25,9 +25,9 @@ object AccidentFactory {
                 .setAddress(json.getString("address"))
                 .setCoordinates(LatLng(json.getDouble("lat"), json.getDouble("lon")))
 //                .setOwner(OwnerLegacy(json.getInt("owner_id"), json.getString("owner")))
-                .attachMessages(parseMessages(json.getJSONArray("m"), StoreMessages.getLast(json.getInt("id"))))
-                .attachVolunteers(parseVolunteers(json.getJSONArray("v")))
-                .attachHistory(parseHistory(json.getJSONArray("h")))
+//                .attachMessages(parseMessages(json.getJSONArray("m"), StoreMessages.getLast(json.getInt("id"))))
+//                .attachVolunteers(parseVolunteers(json.getJSONArray("v")))
+//                .attachHistory(parseHistory(json.getJSONArray("h")))
                 .setDescription(json.getString("descr"))
                 .build()
     }
@@ -56,53 +56,53 @@ object AccidentFactory {
                 .build()
     }
 
-    private fun parseMessages(json: JSONArray, last: Int): TreeMap<Int, Message> {
-        val messages = TreeMap<Int, Message>()
-
-        (0 until json.length())
-                .mapNotNull {
-                    try {
-                        MessageFactory.make(json.getJSONObject(it))
-                    } catch (e: Exception) {
-                        null
-                    }
-                }
-                .filter { !messages.containsKey(it.id) }
-                .forEach {
-                    if (it.id <= last) it.read = true
-                    messages.put(it.id, it)
-                }
-
-        return messages
-    }
-
-    private fun parseVolunteers(json: JSONArray): TreeMap<Int, Volunteer> {
-        val volunteers = TreeMap<Int, Volunteer>()
-        (0 until json.length())
-                .mapNotNull {
-                    try {
-                        Volunteer(json.getJSONObject(it))
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        null
-                    }
-                }
-                .forEach { volunteers.put(it.id, it) }
-        return volunteers
-    }
-
-    @Throws(JSONException::class)
-    private fun parseHistory(json: JSONArray): TreeMap<Int, History> {
-        val history = TreeMap<Int, History>()
-        (0 until json.length())
-                .mapNotNull {
-                    try {
-                        History(json.getJSONObject(it))
-                    } catch (e: Exception) {
-                        null
-                    }
-                }
-                .forEach { history.put(it.id, it) }
-        return history
-    }
+//    private fun parseMessages(json: JSONArray, last: Int): TreeMap<Int, Message> {
+//        val messages = TreeMap<Int, Message>()
+//
+//        (0 until json.length())
+//                .mapNotNull {
+//                    try {
+//                        MessageFactory.make(json.getJSONObject(it))
+//                    } catch (e: Exception) {
+//                        null
+//                    }
+//                }
+//                .filter { !messages.containsKey(it.id) }
+//                .forEach {
+//                    if (it.id <= last) it.read = true
+//                    messages.put(it.id, it)
+//                }
+//
+//        return messages
+//    }
+//
+//    private fun parseVolunteers(json: JSONArray): TreeMap<Int, Volunteer> {
+//        val volunteers = TreeMap<Int, Volunteer>()
+//        (0 until json.length())
+//                .mapNotNull {
+//                    try {
+//                        Volunteer(json.getJSONObject(it))
+//                    } catch (e: Exception) {
+//                        e.printStackTrace()
+//                        null
+//                    }
+//                }
+//                .forEach { volunteers.put(it.id, it) }
+//        return volunteers
+//    }
+//
+//    @Throws(JSONException::class)
+//    private fun parseHistory(json: JSONArray): TreeMap<Int, History> {
+//        val history = TreeMap<Int, History>()
+//        (0 until json.length())
+//                .mapNotNull {
+//                    try {
+//                        History(json.getJSONObject(it))
+//                    } catch (e: Exception) {
+//                        null
+//                    }
+//                }
+//                .forEach { history.put(it.id, it) }
+//        return history
+//    }
 }

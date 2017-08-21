@@ -4,9 +4,11 @@ import android.content.Context
 import android.location.Location
 import android.location.LocationManager
 import com.google.android.gms.maps.model.LatLng
+import motocitizen.content.Content
 import motocitizen.content.history.History
 import motocitizen.content.message.Message
 import motocitizen.content.volunteer.Volunteer
+import motocitizen.content.volunteer.VolunteerAction
 import motocitizen.dictionary.AccidentStatus
 import motocitizen.dictionary.AccidentStatus.ACTIVE
 import motocitizen.dictionary.AccidentStatus.HIDDEN
@@ -16,6 +18,7 @@ import motocitizen.geolocation.MyLocationManager
 import motocitizen.user.User
 import motocitizen.utils.Preferences
 import java.util.*
+import kotlin.collections.ArrayList
 
 abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val time: Date, var address: String, var coordinates: LatLng, val owner: Int) {
     abstract val status: AccidentStatus
@@ -26,24 +29,18 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
         }
 
     var messages = TreeMap<Int, Message>()
-    var volunteers = TreeMap<Int, Volunteer>()
-    var history = TreeMap<Int, History>()
+    val volunteers = ArrayList<VolunteerAction>()
+    var history = ArrayList<History>()
 
     val distanceString: String
-        get() {
-            val distance = distanceFromUser
-            return if (distance > 1000) {
-                (Math.round(distance / 10) / 100).toString() + "км"
-            } else {
-                Math.round(distance).toString() + "м"
-            }
+        get() = if (distanceFromUser > 1000) {
+            (Math.round(distanceFromUser / 10) / 100).toString() + "км"
+        } else {
+            Math.round(distanceFromUser).toString() + "м"
         }
 
     private val distanceFromUser: Double
-        get() {
-            val userLocation = MyLocationManager.getLocation()
-            return location.distanceTo(userLocation).toDouble()
-        }
+        get() = location.distanceTo(MyLocationManager.getLocation()).toDouble()
 
     val location: Location
         get() {
@@ -54,10 +51,7 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
         }
 
     val unreadMessagesCount: Int
-        get() {
-            val counter = messages.keys.count { !messages[it]!!.read }
-            return counter
-        }
+        get() = messages.keys.count { !messages[it]!!.read }
 
     fun isInvisible(context: Context): Boolean {
         val hidden = status == HIDDEN && !User.dirtyRead().isModerator
@@ -67,7 +61,7 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
         return hidden || distanceFilter || typeFilter || timeFilter
     }
 
-    fun getVolunteer(id: Int): Volunteer? = volunteers[id]
+    fun getVolunteer(id: Int): Volunteer? = Content.volunteers[id]
 
     fun isActive(): Boolean = status === ACTIVE
 
@@ -80,6 +74,6 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
 
     fun title(): String {
         val damage = if (medicine == Medicine.UNKNOWN) "" else ", " + medicine.text
-        return String.format("%s%s(%s)%n%s%n%s", type, damage, distanceString, address, description)
+        return String.format("%s%s(%s)%n%s%n%s", type.text, damage, distanceString, address, description)
     }
 }

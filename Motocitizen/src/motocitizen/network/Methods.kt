@@ -1,9 +1,10 @@
 package motocitizen.network
 
 enum class Methods constructor(val code: String) {
-    AUTH("auth"),
-    GET_LIST("getList"),
+    AUTH("auth"),//new
+    LIST("getList"),//new
     BAN("ban"),
+    DETAILS("getDetails"),//new
     ON_WAY("onway"),
     CANCEL_ON_WAY("cancelOnWay"),
     IN_PLACE("inplace"),

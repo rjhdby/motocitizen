@@ -13,6 +13,7 @@ import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,6 +22,9 @@ import java.util.List;
 import motocitizen.content.Content;
 import motocitizen.content.accident.Accident;
 import motocitizen.content.accident.AccidentFactory;
+import motocitizen.content.history.History;
+import motocitizen.content.message.Message;
+import motocitizen.content.volunteer.VolunteerAction;
 import motocitizen.dictionary.AccidentStatus;
 import motocitizen.dictionary.Medicine;
 import motocitizen.fragments.AccidentDetailsFragments;
@@ -30,6 +34,7 @@ import motocitizen.fragments.DetailVolunteersFragment;
 import motocitizen.main.R;
 import motocitizen.network.ApiRequest;
 import motocitizen.network.requests.AccidentChangeStateRequest;
+import motocitizen.network.requests.DetailsRequest;
 import motocitizen.router.Router;
 import motocitizen.user.User;
 import motocitizen.utils.DateUtils;
@@ -115,8 +120,29 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         generalLayout = findViewById(R.id.acc_details_general);
         statusView = (TextView) findViewById(R.id.acc_details_general_status);
         medicineView = (TextView) findViewById(R.id.acc_details_medicine);
+        new DetailsRequest(currentPoint.getId(), (json) -> {
+            try {
+                Content.INSTANCE.addVolunteers(json.getJSONObject("r").getJSONObject("u"));
+                JSONArray volunteers = json.getJSONObject("r").getJSONArray("v");
+                JSONArray messages   = json.getJSONObject("r").getJSONArray("m");
+                JSONArray history    = json.getJSONObject("r").getJSONArray("h");
+                for (int i = 0; i < volunteers.length(); i++) {
+                    currentPoint.getVolunteers().add(new VolunteerAction(volunteers.getJSONObject(i)));
+                }
+                for (int i = 0; i < messages.length(); i++) {
+                    Message m = new Message(messages.getJSONObject(i));
+                    currentPoint.getMessages().put(m.getId(), m);
+                }
+                for (int i = 0; i < history.length(); i++) {
+                    currentPoint.getHistory().add(new History(history.getJSONObject(i)));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } finally {
+                getFragmentManager().beginTransaction().replace(R.id.details_tab_content, detailVolunteersFragment).commit();
+            }
+        });
 
-        getFragmentManager().beginTransaction().replace(R.id.details_tab_content, detailVolunteersFragment).commit();
         menuReconstruction();
     }
 

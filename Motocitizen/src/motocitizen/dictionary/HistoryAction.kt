@@ -1,17 +1,17 @@
 package motocitizen.dictionary
 
 enum class HistoryAction constructor(private val code: String, val text: String) {
-    CREATE("create_mc_acc", "Создал"),
-    OPEN("acc_status_act", "Отмена отбоя"),
-    CLOSE("acc_status_end", "Отбой"),
-    HIDE("acc_status_hide", "Скрыл"),
-    BAN("ban", "Бан"),
-    CANCEL("cancel", "Отменил выезд"),
-    FINISH("finish_mc_acc", "Прочее"),
-    IN_PLACE("inplace", "Приехал"),
-    ON_WAY("onway", "Выехал"),
-    LEAVE("leave", "Уехал"),
-    OTHER("other", "Прочее");
+    CREATE("c", "Создал"),
+    OPEN("a", "Отмена отбоя"),
+    CLOSE("e", "Отбой"),
+    HIDE("h", "Скрыл"),
+    BAN("b", "Бан"),
+    CANCEL("cl", "Отменил выезд"),
+    FINISH("f", "Прочее"),
+    IN_PLACE("i", "Приехал"),
+    ON_WAY("o", "Выехал"),
+    LEAVE("l", "Уехал"),
+    OTHER("na", "Прочее");
 
     companion object {
         fun parse(action: String): HistoryAction {

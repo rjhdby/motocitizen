@@ -29,10 +29,7 @@ object Content {
 
     fun parseJSON(result: JSONObject) { //todo make private
         try {
-            val volunteersList = result.getJSONObject("r").getJSONObject("u")
-            volunteersList.keys()
-                    .forEach { volunteers.put(it.toInt(), Volunteer(it.toInt(), volunteersList.getString(it))) }
-
+            addVolunteers(result.getJSONObject("r").getJSONObject("u"))
             val list = result.getJSONObject("r").getJSONArray("l")
             (0 until list.length())
                     .map { AccidentFactory.makeNew(list.getJSONObject(it)) }
@@ -40,6 +37,11 @@ object Content {
         } catch (e: JSONException) {
             e.printStackTrace()
         }
+    }
+
+    fun addVolunteers(volunteersList: JSONObject) {
+        volunteersList.keys()
+                .forEach { volunteers.put(it.toInt(), Volunteer(it.toInt(), volunteersList.getString(it))) }
     }
 
     fun parseJSON(result: JSONObject, id: Int) = parseJSON(result) //todo make private

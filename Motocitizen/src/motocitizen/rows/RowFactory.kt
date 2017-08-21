@@ -5,6 +5,7 @@ import motocitizen.content.accident.Accident
 import motocitizen.content.history.History
 import motocitizen.content.message.Message
 import motocitizen.content.volunteer.Volunteer
+import motocitizen.content.volunteer.VolunteerAction
 import motocitizen.dictionary.AccidentStatus
 import motocitizen.rows.accidentList.*
 import motocitizen.rows.details.HistoryRow
@@ -31,5 +32,5 @@ object RowFactory {
 
     fun make(context: Context, message: Message, last: Int, next: Int): MessageRow = if (message.isOwner) OwnMessageRow(context, message, last, next) else MessageRow(context, message, last, next)
     fun make(context: Context, history: History): HistoryRow = HistoryRow(context, history)
-    fun make(context: Context, volunteer: Volunteer): VolunteerRow = VolunteerRow(context, volunteer)
+    fun make(context: Context, volunteer: VolunteerAction): VolunteerRow = VolunteerRow(context, volunteer)
 }

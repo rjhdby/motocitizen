@@ -109,8 +109,8 @@ class AccidentBuilder {
         owner = accident.owner
         description = accident.description
         messages = accident.messages
-        volunteers = accident.volunteers
-        history = accident.history
+//        volunteers = accident.volunteers //todo
+//        history = accident.history
         return this
     }
 
@@ -126,8 +126,8 @@ class AccidentBuilder {
         }
         accident.description = description
         accident.messages = messages
-        accident.volunteers = volunteers
-        accident.history = history
+//        accident.volunteers = volunteers //todo
+//        accident.history = history
         return accident
     }
 }
