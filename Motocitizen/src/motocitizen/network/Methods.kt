@@ -9,7 +9,7 @@ enum class Methods constructor(val code: String) {
     CANCEL_ON_WAY("cancelOnWay"),
     IN_PLACE("inplace"),
     LEAVE("leave"),
-    MESSAGE("message"),
+    MESSAGE("newMessage"), //new
     CREATE("createAcc"),
     CHANGE_STATE("changeState");
 }

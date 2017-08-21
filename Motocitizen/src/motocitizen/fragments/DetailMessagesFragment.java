@@ -68,7 +68,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
 
             }
         });
-        update();
+        update();//todo exterminatus
 
         return viewMain;
     }
