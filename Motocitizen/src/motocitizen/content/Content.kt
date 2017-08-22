@@ -32,7 +32,7 @@ object Content {
             addVolunteers(result.getJSONObject("r").getJSONObject("u"))
             val list = result.getJSONObject("r").getJSONArray("l")
             (0 until list.length())
-                    .map { AccidentFactory.makeNew(list.getJSONObject(it)) }
+                    .map { AccidentFactory.make(list.getJSONObject(it)) }
                     .forEach { accidents.put(it.id, it) }
         } catch (e: JSONException) {
             e.printStackTrace()

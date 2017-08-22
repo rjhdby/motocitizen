@@ -3,13 +3,14 @@ package motocitizen.content.accident
 import com.google.android.gms.maps.model.LatLng
 import motocitizen.content.history.History
 import motocitizen.content.message.Message
-import motocitizen.content.volunteer.Volunteer
+import motocitizen.content.volunteer.VolunteerAction
 import motocitizen.dictionary.AccidentStatus
 import motocitizen.dictionary.Medicine
 import motocitizen.dictionary.Type
 import motocitizen.geolocation.MyLocationManager
 import motocitizen.user.User
 import java.util.*
+import kotlin.collections.ArrayList
 
 class AccidentBuilder {
     var id = 0
@@ -33,9 +34,9 @@ class AccidentBuilder {
         private set
     var messages = TreeMap<Int, Message>()
         private set
-    var volunteers = TreeMap<Int, Volunteer>()
+    var volunteers = ArrayList<VolunteerAction>()
         private set
-    var history = TreeMap<Int, History>()
+    var history = ArrayList<History>()
         private set
 
     fun setId(id: Int): AccidentBuilder {
@@ -89,12 +90,12 @@ class AccidentBuilder {
         return this
     }
 
-    fun attachVolunteers(volunteers: TreeMap<Int, Volunteer>): AccidentBuilder {
+    fun attachVolunteers(volunteers: ArrayList<VolunteerAction>): AccidentBuilder {
         this.volunteers = volunteers
         return this
     }
 
-    fun attachHistory(history: TreeMap<Int, History>): AccidentBuilder {
+    fun attachHistory(history: ArrayList<History>): AccidentBuilder {
         this.history = history
         return this
     }
@@ -109,8 +110,8 @@ class AccidentBuilder {
         owner = accident.owner
         description = accident.description
         messages = accident.messages
-//        volunteers = accident.volunteers //todo
-//        history = accident.history
+        volunteers = accident.volunteers //todo
+        history = accident.history
         return this
     }
 

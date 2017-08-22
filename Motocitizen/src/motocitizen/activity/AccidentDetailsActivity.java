@@ -33,8 +33,10 @@ import motocitizen.fragments.DetailMessagesFragment;
 import motocitizen.fragments.DetailVolunteersFragment;
 import motocitizen.main.R;
 import motocitizen.network.ApiRequest;
-import motocitizen.network.requests.AccidentChangeStateRequest;
+import motocitizen.network.requests.ActivateAccident;
 import motocitizen.network.requests.DetailsRequest;
+import motocitizen.network.requests.EndAccident;
+import motocitizen.network.requests.HideAccident;
 import motocitizen.router.Router;
 import motocitizen.user.User;
 import motocitizen.utils.DateUtils;
@@ -45,7 +47,6 @@ import motocitizen.utils.popups.AccidentListPopup;
 
 import static motocitizen.dictionary.AccidentStatus.ACTIVE;
 import static motocitizen.dictionary.AccidentStatus.ENDED;
-import static motocitizen.dictionary.AccidentStatus.HIDDEN;
 
 public class AccidentDetailsActivity extends AppCompatActivity {
 
@@ -277,16 +278,31 @@ public class AccidentDetailsActivity extends AppCompatActivity {
     }
 
     private void sendFinishRequest() {
-        //TODO Суперкостыль ???
-        accNewState = Content.INSTANCE.getAccidents().get(accidentID).getStatus() == ENDED ? ACTIVE : ENDED;
-        new AccidentChangeStateRequest(accNewState.getCode(), accidentID, new AccidentChangeCallback());
+        //TODO Суперкостыль !!!
+        if (Content.INSTANCE.getAccidents().get(accidentID).getStatus() == ENDED) {
+            new ActivateAccident(accidentID, new AccidentChangeCallback());
+        } else {
+            new EndAccident(accidentID, new AccidentChangeCallback());
+        }
+//
+//        accNewState = Content.INSTANCE.getAccidents().get(accidentID).getStatus() == ENDED ? ACTIVE : ENDED;
+//
+//        new AccidentChangeStateRequest(accNewState.getCode(), accidentID, new AccidentChangeCallback());
     }
 
     private void sendHideRequest() {
-        //TODO Суперкостыль ???
-        boolean s = Content.INSTANCE.getAccidents().get(accidentID).getStatus() == ENDED;
-        accNewState = s ? ACTIVE : ENDED;
-        new AccidentChangeStateRequest(s ? ACTIVE.getCode() : HIDDEN.getCode(), accidentID, new AccidentChangeCallback());
+        //TODO какая то хуета
+        if (Content.INSTANCE.getAccidents().get(accidentID).getStatus() == ENDED) {
+            new ActivateAccident(accidentID, new AccidentChangeCallback());
+            accNewState = ACTIVE;
+        } else {
+            new HideAccident(accidentID, new AccidentChangeCallback());
+            accNewState = ENDED;
+        }
+
+//        boolean s = Content.INSTANCE.getAccidents().get(accidentID).getStatus() == ENDED;
+//        accNewState = s ? ACTIVE : ENDED;
+//        new AccidentChangeStateRequest(s ? ACTIVE.getCode() : HIDDEN.getCode(), accidentID, new AccidentChangeCallback());
     }
 
     private class AccidentChangeCallback implements ApiRequest.RequestResultCallback {

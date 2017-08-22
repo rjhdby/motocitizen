@@ -15,10 +15,11 @@ import android.widget.TableRow;
 import com.google.android.gms.maps.model.LatLng;
 
 import motocitizen.content.accident.Accident;
-import motocitizen.dictionary.AccidentStatus;
 import motocitizen.main.R;
-import motocitizen.network.requests.AccidentChangeStateRequest;
+import motocitizen.network.requests.ActivateAccident;
 import motocitizen.network.requests.BanRequest;
+import motocitizen.network.requests.EndAccident;
+import motocitizen.network.requests.HideAccident;
 import motocitizen.router.Router;
 import motocitizen.utils.LocationUtils;
 import motocitizen.utils.ToastUtils;
@@ -98,7 +99,12 @@ abstract class PopupWindowGeneral {
 
         finish.setOnClickListener(v -> {
             popupWindow.dismiss();
-            new AccidentChangeStateRequest(point.isEnded() ? AccidentStatus.ACTIVE.getCode() : AccidentStatus.ENDED.getCode(), point.getId(), null);
+            if (point.isEnded()) {
+                new ActivateAccident(point.getId(), null);
+            } else {
+                new EndAccident(point.getId(), null);
+            }
+//            new AccidentChangeStateRequest(point.isEnded() ? AccidentStatus.ACTIVE.getCode() : AccidentStatus.ENDED.getCode(), point.getId(), null);
         });
         TableRow tr = new TableRow(content.getContext());
         tr.addView(finish, layoutParams);
@@ -111,7 +117,12 @@ abstract class PopupWindowGeneral {
 
         finish.setOnClickListener(v -> {
             popupWindow.dismiss();
-            new AccidentChangeStateRequest(point.isHidden() ? AccidentStatus.ACTIVE.getCode() : AccidentStatus.HIDDEN.getCode(), point.getId(), null);
+            if (point.isHidden()) {
+                new ActivateAccident(point.getId(), null);
+            } else {
+                new HideAccident(point.getId(), null);
+            }
+//            new AccidentChangeStateRequest(point.isHidden() ? AccidentStatus.ACTIVE.getCode() : AccidentStatus.HIDDEN.getCode(), point.getId(), null);
         });
         TableRow tr = new TableRow(content.getContext());
         tr.addView(finish, layoutParams);

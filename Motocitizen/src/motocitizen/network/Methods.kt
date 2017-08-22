@@ -5,11 +5,15 @@ enum class Methods constructor(val code: String) {
     LIST("getList"),//new
     BAN("ban"),
     DETAILS("getDetails"),//new
-    ON_WAY("onway"),
-    CANCEL_ON_WAY("cancelOnWay"),
-    IN_PLACE("inplace"),
-    LEAVE("leave"),
+    ON_WAY("onway"),//new
+    CANCEL_ON_WAY("cancel"),//new
+    IN_PLACE("inPlace"),//new
+    LEAVE("leave"),//new
     MESSAGE("newMessage"), //new
     CREATE("createAcc"),
-    CHANGE_STATE("changeState");
+    ACTIVATE_ACCIDENT("activateAccident"),//new
+    END_ACCIDENT("endAccident"),//new
+    HIDE_ACCIDENT("hideAccident");//new
+//    ,
+//    CHANGE_STATE("changeState");
 }

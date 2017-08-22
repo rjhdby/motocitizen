@@ -1,12 +1,10 @@
 package motocitizen.network.requests
 
 import motocitizen.network.Methods
-import motocitizen.network.ApiRequest
-import motocitizen.user.User
+import motocitizen.network.NewApiRequestWithAuth
 
-class LeaveRequest(id: Int) : ApiRequest() {
+class LeaveRequest(id: Int, callback: RequestResultCallback) : NewApiRequestWithAuth(callback) {
     init {
-        params.put("login", User.dirtyRead().name)
         params.put("id", id.toString())
         params.put("m", Methods.LEAVE.code)
         call()

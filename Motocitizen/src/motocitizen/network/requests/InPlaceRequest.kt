@@ -1,12 +1,10 @@
 package motocitizen.network.requests
 
 import motocitizen.network.Methods
-import motocitizen.network.ApiRequest
-import motocitizen.user.User
+import motocitizen.network.NewApiRequestWithAuth
 
-class InPlaceRequest(id: Int) : ApiRequest() {
+class InPlaceRequest(id: Int, callback: RequestResultCallback) : NewApiRequestWithAuth(callback) {
     init {
-        params.put("login", User.dirtyRead().name)
         params.put("id", id.toString())
         params.put("m", Methods.IN_PLACE.code)
         call()
