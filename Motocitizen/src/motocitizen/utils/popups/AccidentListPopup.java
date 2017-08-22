@@ -32,7 +32,7 @@ public class AccidentListPopup extends PopupWindowGeneral {
 
         if (User.getInstance(context).isModerator()) {
             content.addView(hideButtonRow(point));
-            content.addView(banButtonRow(context, point.getId()), layoutParams);
+            content.addView(banButtonRow(context, point.getOwner()), layoutParams);
         }
 
         content.addView(shareMessage(context, accText));

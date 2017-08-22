@@ -1,19 +1,17 @@
 package motocitizen.network
 
 enum class Methods constructor(val code: String) {
-    AUTH("auth"),//new
-    LIST("getList"),//new
+    AUTH("auth"),
+    LIST("getList"),
     BAN("ban"),
-    DETAILS("getDetails"),//new
-    ON_WAY("onway"),//new
-    CANCEL_ON_WAY("cancel"),//new
-    IN_PLACE("inPlace"),//new
-    LEAVE("leave"),//new
-    MESSAGE("newMessage"), //new
-    CREATE("createAcc"),
-    ACTIVATE_ACCIDENT("activateAccident"),//new
-    END_ACCIDENT("endAccident"),//new
-    HIDE_ACCIDENT("hideAccident");//new
-//    ,
-//    CHANGE_STATE("changeState");
+    DETAILS("getDetails"),
+    ON_WAY("onway"),
+    CANCEL_ON_WAY("cancel"),
+    IN_PLACE("inPlace"),
+    LEAVE("leave"),
+    MESSAGE("newMessage"),
+    CREATE("createAcc"), //old api
+    ACTIVATE_ACCIDENT("activateAccident"),
+    END_ACCIDENT("endAccident"),
+    HIDE_ACCIDENT("hideAccident");
 }

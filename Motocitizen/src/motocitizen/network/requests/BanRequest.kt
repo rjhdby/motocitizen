@@ -1,15 +1,12 @@
 package motocitizen.network.requests
 
-import motocitizen.content.Content
 import motocitizen.network.Methods
-import motocitizen.network.RequestWithAuth
+import motocitizen.network.NewApiRequestWithAuth
 
-class BanRequest(id: Int, callback: RequestResultCallback) : RequestWithAuth(callback) {
+class BanRequest(id: Int, callback: RequestResultCallback) : NewApiRequestWithAuth(callback) {
     init {
-        val user = Content.accidents[id]!!.owner
+        params.put("m", Methods.BAN.code)
         params.put("id", id.toString())
-        params.put("user_id", user.toString())
-        params.put("calledMethod", Methods.BAN.code)
         call()
     }
 }
