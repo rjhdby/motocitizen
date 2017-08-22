@@ -10,7 +10,7 @@ import java.io.IOException
 abstract class CoreRequest(val callback: RequestResultCallback? = null) {
     var params: HashMap<String, String> = HashMap()
     abstract val url: String
-    private val error = JSONObject("{\"error\":\"server error\"}")
+    private val error = JSONObject("""{"e":{"c":0,"t":"server error"}}""")
     private val logLevel = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
     private val client = OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
@@ -35,10 +35,10 @@ abstract class CoreRequest(val callback: RequestResultCallback? = null) {
     }
 
     private fun response(string: String): JSONObject {
-        try {
-            return JSONObject(string)
+        return try {
+            JSONObject(string)
         } catch (e: JSONException) {
-            return error
+            error
         }
     }
 

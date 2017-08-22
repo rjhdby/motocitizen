@@ -29,8 +29,6 @@ import motocitizen.utils.popups.MessagesPopup;
 
 public class DetailMessagesFragment extends AccidentDetailsFragments {
 
-    private ImageButton newMessageButton;
-
     private ScrollView activityDetailsMessagesScroll;
     private EditText   mcNewMessageText;
     private View       newMessageArea;
@@ -39,11 +37,10 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
     public DetailMessagesFragment() {
     }
 
-    public static DetailMessagesFragment newInstance(int accID, String userName) {
+    public static DetailMessagesFragment newInstance(int accID) {
         DetailMessagesFragment fragment = new DetailMessagesFragment();
         Bundle                 args     = new Bundle();
         args.putInt(ACCIDENT_ID, accID);
-        args.putString(USER_NAME, userName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,7 +49,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View viewMain = inflater.inflate(R.layout.fragment_detail_messages, container, false);
 
-        newMessageButton = (ImageButton) viewMain.findViewById(R.id.new_message_send);
+        ImageButton newMessageButton = (ImageButton) viewMain.findViewById(R.id.new_message_send);
         mcNewMessageText = (EditText) viewMain.findViewById(R.id.new_message_text);
         messagesTable = (ViewGroup) viewMain.findViewById(R.id.details_messages_table);
         newMessageArea = viewMain.findViewById(R.id.new_message_area);
@@ -112,24 +109,24 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
     private class SendMessageCallback implements ApiRequest.RequestResultCallback {
         @Override
         public void call(@NotNull JSONObject result) {
-            if (result.has("error")) {
-                getActivity().runOnUiThread(() -> {
-                    try {
-                        ToastUtils.show(getActivity(), result.getString("error"));
-                    } catch (JSONException e) {
-                        ToastUtils.show(getActivity(), "Неизвестная ошибка" + result.toString());
-                        e.printStackTrace();
-                    }
-                });
-            }
-            Content.INSTANCE.requestUpdate(response -> getActivity().runOnUiThread(() -> {
-                if (!response.has("error")) {
-                    Content.INSTANCE.parseJSON(response, accidentID);
+            try {
+                if (result.getJSONObject("e").has("c")) {
+                    String text = result.getJSONObject("e").getString("t");
+                    getActivity().runOnUiThread(() -> ToastUtils.show(getActivity(), text));
                 }
-                ((AccidentDetailsActivity) getActivity()).update();
-                update();
-                activityDetailsMessagesScroll.post(() -> activityDetailsMessagesScroll.fullScroll(ScrollView.FOCUS_DOWN));
-            }));
+            } catch (JSONException e) {
+                ToastUtils.show(getActivity(), "Неизвестная ошибка" + result.toString());
+                e.printStackTrace();
+            }
+
+            Content.INSTANCE
+                    .getAccidents()
+                    .get(accidentID)
+                    .requestDetails(response -> getActivity().runOnUiThread(() -> {
+                        ((AccidentDetailsActivity) getActivity()).update();
+                        update();
+                        activityDetailsMessagesScroll.post(() -> activityDetailsMessagesScroll.fullScroll(ScrollView.FOCUS_DOWN));
+                    }));
         }
     }
 

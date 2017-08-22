@@ -7,7 +7,6 @@ import com.google.android.gms.maps.model.LatLng
 import motocitizen.content.Content
 import motocitizen.content.history.History
 import motocitizen.content.message.Message
-import motocitizen.content.volunteer.Volunteer
 import motocitizen.content.volunteer.VolunteerAction
 import motocitizen.dictionary.AccidentStatus
 import motocitizen.dictionary.AccidentStatus.ACTIVE
@@ -15,8 +14,12 @@ import motocitizen.dictionary.AccidentStatus.HIDDEN
 import motocitizen.dictionary.Medicine
 import motocitizen.dictionary.Type
 import motocitizen.geolocation.MyLocationManager
+import motocitizen.network.CoreRequest
+import motocitizen.network.requests.DetailsRequest
 import motocitizen.user.User
 import motocitizen.utils.Preferences
+import org.json.JSONException
+import org.json.JSONObject
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -25,7 +28,7 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
 
     var description: String = ""
         set(value) {
-            field = value.replace("^\\s+", "").replace("\\s+$", "")
+            field = value.trim()
         }
 
     var messages = TreeMap<Int, Message>()
@@ -61,8 +64,6 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
         return hidden || distanceFilter || typeFilter || timeFilter
     }
 
-    fun getVolunteer(id: Int): Volunteer? = Content.volunteers[id]
-
     fun isActive(): Boolean = status === ACTIVE
 
     fun isEnded(): Boolean = status !== ACTIVE
@@ -75,5 +76,27 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
     fun title(): String {
         val damage = if (medicine == Medicine.UNKNOWN) "" else ", " + medicine.text
         return String.format("%s%s(%s)%n%s%n%s", type.text, damage, distanceString, address, description)
+    }
+
+    fun requestDetails(callback: CoreRequest.RequestResultCallback) {
+        DetailsRequest(id, object : CoreRequest.RequestResultCallback {
+            override fun call(response: JSONObject) {
+                try {
+                    Content.addVolunteers(response.getJSONObject("r").getJSONObject("u"))
+                    val volunteersJSON = response.getJSONObject("r").getJSONArray("v")
+                    val messagesJSON = response.getJSONObject("r").getJSONArray("m")
+                    val historyJSON = response.getJSONObject("r").getJSONArray("h")
+                    (0 until volunteersJSON.length()).mapTo(volunteers) { VolunteerAction(volunteersJSON.getJSONObject(it)) }
+                    (0 until messagesJSON.length())
+                            .map { Message(messagesJSON.getJSONObject(it)) }
+                            .forEach { messages.put(it.id, it) }
+                    for (i in 0 until historyJSON.length()) history.add(History(historyJSON.getJSONObject(i)))
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                } finally {
+                    callback.call(response)
+                }
+            }
+        })
     }
 }

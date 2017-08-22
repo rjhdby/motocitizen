@@ -132,13 +132,13 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
         if (currentInplace != 0) {
             if (isInPlace(location, currentInplace)) return;
             Content.INSTANCE.setLeave(currentInplace);
-            new LeaveRequest(currentInplace);
+            new LeaveRequest(currentInplace, null);
         }
         for (int accId : Content.INSTANCE.getAccidents().keySet()) {
             if (accId == currentInplace) continue;
             if (isArrived(location, accId)) {
                 Content.INSTANCE.setInPlace(accId);
-                new InPlaceRequest(accId);
+                new InPlaceRequest(accId, null);
             }
         }
     }

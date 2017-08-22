@@ -37,11 +37,10 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     private View        onwayContent;
 
     // TODO: Rename and change types and number of parameters
-    public static DetailVolunteersFragment newInstance(int accID, String userName) {
+    public static DetailVolunteersFragment newInstance(int accID) {
         DetailVolunteersFragment fragment = new DetailVolunteersFragment();
         Bundle                   args     = new Bundle();
         args.putInt(ACCIDENT_ID, accID);
-        args.putString(USER_NAME, userName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -70,6 +69,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
 
         return viewMain;
     }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

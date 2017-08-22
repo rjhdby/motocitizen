@@ -16,11 +16,10 @@ public class DetailHistoryFragment extends AccidentDetailsFragments {
 
     private LinearLayout logContent;
 
-    public static DetailHistoryFragment newInstance(int accID, String userName) {
+    public static DetailHistoryFragment newInstance(int accID) {
         DetailHistoryFragment fragment = new DetailHistoryFragment();
         Bundle                args     = new Bundle();
         args.putInt(ACCIDENT_ID, accID);
-        args.putString(USER_NAME, userName);
         fragment.setArguments(args);
         return fragment;
     }

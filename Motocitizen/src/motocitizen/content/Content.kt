@@ -5,6 +5,7 @@ import motocitizen.content.accident.AccidentFactory
 import motocitizen.content.volunteer.Volunteer
 import motocitizen.network.CoreRequest
 import motocitizen.network.requests.AccidentListRequest
+import motocitizen.network.requests.AccidentRequest
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
@@ -15,19 +16,29 @@ object Content {
 
     val volunteers: TreeMap<Int, Volunteer> = TreeMap()
 
-    fun requestUpdate(listener: CoreRequest.RequestResultCallback) {
-        AccidentListRequest(listener)
-    }
-
-    fun requestUpdate() {
+    fun requestUpdate(callback: CoreRequest.RequestResultCallback?) {
         AccidentListRequest(object : CoreRequest.RequestResultCallback {
             override fun call(response: JSONObject) {
-                if (!response.has("error")) parseJSON(response)
+                parseJSON(response)
+                callback?.call(response)
             }
         })
     }
 
-    fun parseJSON(result: JSONObject) { //todo make private
+    fun requestUpdate() {
+        requestUpdate(null)
+    }
+
+    fun requestAccident(id: Int, callback: CoreRequest.RequestResultCallback?) {
+        AccidentRequest(id, object : CoreRequest.RequestResultCallback {
+            override fun call(response: JSONObject) {
+                parseJSON(response)
+                callback?.call(response)
+            }
+        })
+    }
+
+    private fun parseJSON(result: JSONObject) {
         try {
             addVolunteers(result.getJSONObject("r").getJSONObject("u"))
             val list = result.getJSONObject("r").getJSONArray("l")
@@ -43,8 +54,6 @@ object Content {
         volunteersList.keys()
                 .forEach { volunteers.put(it.toInt(), Volunteer(it.toInt(), volunteersList.getString(it))) }
     }
-
-    fun parseJSON(result: JSONObject, id: Int) = parseJSON(result) //todo make private
 
     fun setLeave(currentInplace: Int) {
         //TODO SetLeave
