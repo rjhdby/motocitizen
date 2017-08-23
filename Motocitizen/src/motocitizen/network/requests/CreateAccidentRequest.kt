@@ -2,12 +2,9 @@ package motocitizen.network.requests
 
 import motocitizen.content.accident.Accident
 import motocitizen.network.Methods
-import motocitizen.network.NewApiRequestWithAuth
-import motocitizen.network.RequestWithAuth
-import motocitizen.user.User
-import motocitizen.utils.getDbFormat
+import motocitizen.network.ApiRequestWithAuth
 
-class CreateAccidentRequest(accident: Accident, callback: RequestResultCallback, forStat: Boolean = false) : NewApiRequestWithAuth(callback) {
+class CreateAccidentRequest(accident: Accident, callback: RequestResultCallback, forStat: Boolean = false) : ApiRequestWithAuth(callback) {
     init {
         params.put("m", Methods.CREATE.code)
         params.put("t", accident.type.code)

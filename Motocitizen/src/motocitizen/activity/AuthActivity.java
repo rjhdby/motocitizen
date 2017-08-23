@@ -26,7 +26,7 @@ import com.vk.sdk.api.VKResponse;
 
 import motocitizen.MyApp;
 import motocitizen.main.R;
-import motocitizen.network.ApiRequest;
+import motocitizen.network.CoreRequest;
 import motocitizen.router.Router;
 import motocitizen.user.User;
 import motocitizen.utils.Preferences;
@@ -53,11 +53,12 @@ public class AuthActivity extends AppCompatActivity {
         if (!VKSdk.onActivityResult(requestCode, resultCode, data, new VKCallback<VKAccessToken>() {
             @Override
             public void onResult(VKAccessToken res) {
-                Toast.makeText(getApplicationContext(), "Пользователь успешно авторизовался",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Пользователь успешно авторизовался", Toast.LENGTH_LONG).show();
             }
+
             @Override
             public void onError(VKError error) {
-                Toast.makeText(getApplicationContext(), "Произошла ошибка авторизации (например, пользователь запретил авторизацию)",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Произошла ошибка авторизации (например, пользователь запретил авторизацию)", Toast.LENGTH_LONG).show();
             }
         })) {
             super.onActivityResult(requestCode, resultCode, data);
@@ -79,19 +80,19 @@ public class AuthActivity extends AppCompatActivity {
         VKSdk.wakeUpSession(this, new VKCallback<VKSdk.LoginState>() {
             @Override
             public void onResult(VKSdk.LoginState res) {
-                    switch (res) {
-                        case LoggedOut:
-                            //showLogin();
-                            break;
-                        case LoggedIn:
-                            Router.INSTANCE.goTo(AuthActivity.this, Router.Target.MAIN);
-                            //showLogout();
-                            break;
-                        case Pending:
-                            break;
-                        case Unknown:
-                            break;
-                    }
+                switch (res) {
+                    case LoggedOut:
+                        //showLogin();
+                        break;
+                    case LoggedIn:
+                        Router.INSTANCE.goTo(AuthActivity.this, Router.Target.MAIN);
+                        //showLogout();
+                        break;
+                    case Pending:
+                        break;
+                    case Unknown:
+                        break;
+                }
             }
 
             @Override
@@ -136,7 +137,7 @@ public class AuthActivity extends AppCompatActivity {
                 }
             });
 
-           // VKRequest request = VKApi.users().get();
+            // VKRequest request = VKApi.users().get();
             //  WeakReference<VKResponse>  fgfgfg = request.response;
 
         });
@@ -244,7 +245,7 @@ public class AuthActivity extends AppCompatActivity {
         cancelBtn.setOnClickListener(v -> finish());
     }
 
-    private void auth(ApiRequest.RequestResultCallback callback) {
+    private void auth(CoreRequest.RequestResultCallback callback) {
         User.getInstance(this).auth(login.getText().toString(), password.getText().toString(), callback);
     }
 }

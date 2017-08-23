@@ -28,7 +28,7 @@ import motocitizen.fragments.DetailHistoryFragment;
 import motocitizen.fragments.DetailMessagesFragment;
 import motocitizen.fragments.DetailVolunteersFragment;
 import motocitizen.main.R;
-import motocitizen.network.ApiRequest;
+import motocitizen.network.CoreRequest;
 import motocitizen.network.requests.ActivateAccident;
 import motocitizen.network.requests.EndAccident;
 import motocitizen.network.requests.HideAccident;
@@ -276,7 +276,7 @@ public class AccidentDetailsActivity extends AppCompatActivity {
 //        new AccidentChangeStateRequest(s ? ACTIVE.getCode() : HIDDEN.getCode(), accidentID, new AccidentChangeCallback());
     }
 
-    private class AccidentChangeCallback implements ApiRequest.RequestResultCallback {
+    private class AccidentChangeCallback implements CoreRequest.RequestResultCallback {
         @Override
         public void call(@NonNull JSONObject result) {
 

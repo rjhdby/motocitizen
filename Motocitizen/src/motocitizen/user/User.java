@@ -9,9 +9,10 @@ import org.json.JSONObject;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import motocitizen.network.ApiRequest;
+import motocitizen.network.CoreRequest;
 import motocitizen.network.requests.AuthRequest;
 import motocitizen.utils.Preferences;
+
 //todo object
 public class User {
     private Role    role         = Role.RO;
@@ -39,7 +40,7 @@ public class User {
         private static User instance;
     }
 
-    public void auth(String login, String password, ApiRequest.RequestResultCallback callback) {
+    public void auth(String login, String password, CoreRequest.RequestResultCallback callback) {
         preferences.setPassword(password);
         new AuthRequest(login, getPassHash(password), response -> {
             parseAuthResult(response, login);

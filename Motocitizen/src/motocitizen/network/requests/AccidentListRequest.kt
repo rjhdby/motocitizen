@@ -1,11 +1,11 @@
 package motocitizen.network.requests
 
 import motocitizen.network.Methods
-import motocitizen.network.NewApiRequest
+import motocitizen.network.ApiRequest
 import motocitizen.user.User
 import motocitizen.utils.Preferences
 
-class AccidentListRequest(callback: RequestResultCallback) : NewApiRequest(callback) {
+class AccidentListRequest(callback: RequestResultCallback) : ApiRequest(callback) {
     init {
         if (User.dirtyRead().name != "") {
             params.put("u", User.dirtyRead().name)

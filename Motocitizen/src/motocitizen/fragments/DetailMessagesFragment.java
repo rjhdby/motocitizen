@@ -20,7 +20,7 @@ import motocitizen.content.accident.Accident;
 import motocitizen.content.message.Message;
 import motocitizen.database.StoreMessages;
 import motocitizen.main.R;
-import motocitizen.network.ApiRequest;
+import motocitizen.network.CoreRequest;
 import motocitizen.network.requests.SendMessageRequest;
 import motocitizen.rows.RowFactory;
 import motocitizen.user.User;
@@ -106,7 +106,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         newMessageArea.setVisibility(User.getInstance(getActivity()).isStandard() ? View.VISIBLE : View.INVISIBLE);
     }
 
-    private class SendMessageCallback implements ApiRequest.RequestResultCallback {
+    private class SendMessageCallback implements CoreRequest.RequestResultCallback {
         @Override
         public void call(@NotNull JSONObject result) {
             try {
