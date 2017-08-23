@@ -28,7 +28,7 @@ abstract class Row protected constructor(context: Context, val accident: Acciden
     val mLayoutParams: LinearLayout.LayoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
 
     abstract fun changeMargins()
-
+//todo messages
     private fun messagesText(accident: Accident): Spanned {
         val read = if (accident.unreadMessagesCount > 0) String.format("<font color=#C62828><b>(%s)</b></font>", accident.unreadMessagesCount) else ""
         val text = String.format("<b>%s</b>%s", accident.messages.size, read)

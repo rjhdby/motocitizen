@@ -10,7 +10,7 @@ enum class Methods constructor(val code: String) {
     IN_PLACE("inPlace"),
     LEAVE("leave"),
     MESSAGE("newMessage"),
-    CREATE("createAcc"), //old api
+    CREATE("createAccident"),
     ACTIVATE_ACCIDENT("activateAccident"),
     END_ACCIDENT("endAccident"),
     HIDE_ACCIDENT("hideAccident");

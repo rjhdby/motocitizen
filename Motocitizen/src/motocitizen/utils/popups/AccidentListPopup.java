@@ -10,6 +10,7 @@ import motocitizen.user.User;
 import motocitizen.utils.DateUtils;
 import motocitizen.utils.Preferences;
 import motocitizen.utils.Utils;
+//todo renew after hide/end/activate
 
 public class AccidentListPopup extends PopupWindowGeneral {
     private final Accident point;

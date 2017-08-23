@@ -28,7 +28,6 @@ class AccidentBuilder {
     var coordinates = LatLng(MyLocationManager.getLocation().latitude, MyLocationManager.getLocation().longitude)
         private set
     var owner = User.dirtyRead().id
-//    var owner = OwnerLegacy(User.dirtyRead().id, User.dirtyRead().name)
         private set
     var description = ""
         private set
@@ -75,7 +74,6 @@ class AccidentBuilder {
     }
 
     fun setOwner(owner: Int): AccidentBuilder {
-//    fun setOwner(owner: OwnerLegacy): AccidentBuilder {
         this.owner = owner
         return this
     }
@@ -110,7 +108,7 @@ class AccidentBuilder {
         owner = accident.owner
         description = accident.description
         messages = accident.messages
-        volunteers = accident.volunteers //todo
+        volunteers = accident.volunteers
         history = accident.history
         return this
     }

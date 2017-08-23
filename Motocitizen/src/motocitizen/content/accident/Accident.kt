@@ -70,11 +70,10 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
 
     fun isHidden(): Boolean = status === HIDDEN
 
-    val isAccident: Boolean
-        get() = type == Type.MOTO_AUTO || type == Type.MOTO_MOTO || type == Type.MOTO_MAN || type == Type.SOLO
+    fun isAccident(): Boolean = type == Type.MOTO_AUTO || type == Type.MOTO_MOTO || type == Type.MOTO_MAN || type == Type.SOLO
 
     fun title(): String {
-        val damage = if (medicine == Medicine.UNKNOWN) "" else ", " + medicine.text
+        val damage = if (medicine == Medicine.UNKNOWN || !isAccident()) "" else ", " + medicine.text
         return String.format("%s%s(%s)%n%s%n%s", type.text, damage, distanceString, address, description)
     }
 
