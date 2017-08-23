@@ -16,7 +16,7 @@ public class BusinessCardActivityFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View viewMain = inflater.inflate(R.layout.fragment_business_card, container, false);
+        View      viewMain         = inflater.inflate(R.layout.fragment_business_card, container, false);
         ImageView imageViewQrForum = (ImageView) viewMain.findViewById(R.id.imageViewQrForum);
         imageViewQrForum.setImageResource(R.drawable.qr_forum);
         return viewMain;

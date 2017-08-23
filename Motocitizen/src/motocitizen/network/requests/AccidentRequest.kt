@@ -1,7 +1,7 @@
 package motocitizen.network.requests
 
-import motocitizen.network.Methods
 import motocitizen.network.ApiRequest
+import motocitizen.network.Methods
 
 class AccidentRequest(id: Int, callback: RequestResultCallback) : ApiRequest(callback) {
     init {

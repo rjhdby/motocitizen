@@ -17,6 +17,7 @@ import motocitizen.router.Router
 import motocitizen.utils.getIntervalFromNowInText
 import motocitizen.utils.newId
 import motocitizen.utils.popups.AccidentListPopup
+
 //todo refactor
 abstract class Row protected constructor(context: Context, val accident: Accident) : FrameLayout(context) {
     val ACTIVE_COLOR = 0x70FFFFFF
@@ -28,7 +29,7 @@ abstract class Row protected constructor(context: Context, val accident: Acciden
     val mLayoutParams: LinearLayout.LayoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
 
     abstract fun changeMargins()
-//todo messages
+    //todo messages
     private fun messagesText(accident: Accident): Spanned {
         val read = if (accident.unreadMessagesCount > 0) String.format("<font color=#C62828><b>(%s)</b></font>", accident.unreadMessagesCount) else ""
         val text = String.format("<b>%s</b>%s", accident.messages.size, read)
@@ -45,7 +46,7 @@ abstract class Row protected constructor(context: Context, val accident: Acciden
         layoutParams = mLayoutParams
     }
 
-    fun bind(){
+    fun bind() {
         LayoutInflater.from(context).inflate(layout, this, true)
         id = newId()
         setBackgroundResource(background)

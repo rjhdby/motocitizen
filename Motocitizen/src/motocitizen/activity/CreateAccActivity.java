@@ -104,7 +104,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             enableMyLocation();
             map.getUiSettings().setMyLocationButtonEnabled(true);
             map.getUiSettings().setZoomControlsEnabled(true);
-            if (!User.getInstance().isModerator()) {
+            if (!User.INSTANCE.isModerator()) {
                 //Прячем кнопки поиска адреса
                 searchEditText.setVisibility(View.GONE);
                 ImageButton searchButton = (ImageButton) findViewById(R.id.SEARCH);
@@ -369,7 +369,8 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 case "PROBABLY SPAM":
                     message = "Нельзя создавать события так часто";
                     break;
-                case "": message = "Неизвестная ошибка";
+                case "":
+                    message = "Неизвестная ошибка";
             }
             final String error = message;
             CreateAccActivity.this.runOnUiThread(() -> {

@@ -72,9 +72,9 @@ public class StartupActivity extends AppCompatActivity {
             Router.INSTANCE.goTo(this, Router.Target.AUTH);
             return;
         }
-        User.getInstance().auth(
+        User.INSTANCE.auth(
                 Preferences.INSTANCE.getLogin(),
                 Preferences.INSTANCE.getPassword(),
-                response -> Router.INSTANCE.goTo(this, User.getInstance().isAuthorized() ? Router.Target.MAIN : Router.Target.AUTH));
+                response -> Router.INSTANCE.goTo(this, User.INSTANCE.isAuthorized() ? Router.Target.MAIN : Router.Target.AUTH));
     }
 }

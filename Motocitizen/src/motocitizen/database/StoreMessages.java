@@ -9,7 +9,7 @@ public class StoreMessages {
     public static int getLast(int accidentId) {
         int            result;
         SQLiteDatabase db     = DbOpenHelper.getInstance().getReadableDatabase();
-        Cursor         cursor = db.rawQuery("SELECT msg_id FROM messages WHERE acc_id=?", new String[]{String.valueOf(accidentId)});
+        Cursor         cursor = db.rawQuery("SELECT msg_id FROM messages WHERE acc_id=?", new String[]{ String.valueOf(accidentId) });
         if (cursor.getCount() == 0) result = 0;
         else {
             cursor.moveToFirst();
@@ -24,7 +24,7 @@ public class StoreMessages {
         SQLiteDatabase db            = DbOpenHelper.getInstance().getWritableDatabase();
         ContentValues  contentValues = new ContentValues();
         contentValues.put("msg_id", messageId);
-        int affected = db.update("messages", contentValues, "acc_id=?", new String[]{String.valueOf(accidentId)});
+        int affected = db.update("messages", contentValues, "acc_id=?", new String[]{ String.valueOf(accidentId) });
         if (affected == 0) {
             contentValues.put("acc_id", accidentId);
             db.insert("messages", null, contentValues);

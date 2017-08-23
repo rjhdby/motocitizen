@@ -1,8 +1,8 @@
 package motocitizen.network.requests
 
 import motocitizen.content.accident.Accident
-import motocitizen.network.Methods
 import motocitizen.network.ApiRequestWithAuth
+import motocitizen.network.Methods
 
 class CreateAccidentRequest(accident: Accident, callback: RequestResultCallback, forStat: Boolean = false) : ApiRequestWithAuth(callback) {
     init {

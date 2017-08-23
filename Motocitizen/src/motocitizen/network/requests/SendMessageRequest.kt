@@ -1,7 +1,7 @@
 package motocitizen.network.requests
 
-import motocitizen.network.Methods
 import motocitizen.network.ApiRequestWithAuth
+import motocitizen.network.Methods
 
 class SendMessageRequest(text: String, accidentId: Int, callback: RequestResultCallback) : ApiRequestWithAuth(callback) {
     init {

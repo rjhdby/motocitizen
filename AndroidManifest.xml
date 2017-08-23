@@ -32,18 +32,20 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <service android:name="motocitizen.notifications.NotificationListener"
-                 android:exported="false">
+        <service
+            android:name="motocitizen.notifications.NotificationListener"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@mipmap/ic_launcher" />
+            android:resource="@mipmap/ic_launcher"/>
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/red" />
+            android:resource="@color/red"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDfQZrnHvn-fNCYmFQSMBa-1ClE0ZCWUQ4"/>
@@ -80,60 +82,63 @@
         <activity
             android:name="motocitizen.activity.CreateAccActivity"
             android:label="@string/title_activity_create_acc"
-          android:parentActivityName="motocitizen.activity.MainScreenActivity"
-          android:screenOrientation="portrait"
-          tools:ignore="UnusedAttribute">
-           <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="motocitizen.activity.MainScreenActivity"/>
+            android:parentActivityName="motocitizen.activity.MainScreenActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="UnusedAttribute">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="motocitizen.activity.MainScreenActivity"/>
             <!--   android:noHistory="true"  -->
-      </activity>
-      <activity
-          android:name="motocitizen.activity.AccidentDetailsActivity"
-          android:noHistory="true"
-          android:parentActivityName="motocitizen.activity.MainScreenActivity"
-          android:screenOrientation="portrait"
-          android:theme="@style/Theme.AppCompat"
-          tools:ignore="UnusedAttribute">
-          <meta-data
-              android:name="android.support.PARENT_ACTIVITY"
-              android:value="motocitizen.activity.MainScreenActivity"/>
-      </activity>
-      <activity
-          android:name="motocitizen.activity.SettingsActivity"
-          android:parentActivityName="motocitizen.activity.MainScreenActivity"
-          android:screenOrientation="portrait"
-          android:theme="@style/Theme.AppCompat"
-          tools:ignore="UnusedAttribute">
-          <meta-data
-              android:name="android.support.PARENT_ACTIVITY"
-              android:value="motocitizen.activity.MainScreenActivity"/>
-      </activity>
-      <activity
-          android:name="motocitizen.activity.BusinessCardActivity"
-          android:label="@string/title_activity_business_card"
-          android:noHistory="true"
-          android:parentActivityName="motocitizen.activity.AboutActivity"
-          android:screenOrientation="portrait"
-          tools:ignore="UnusedAttribute">
-          <meta-data
-              android:name="android.support.PARENT_ACTIVITY"
-              android:value="motocitizen.activity.AboutActivity"/>
-      </activity>
-      <activity
-          android:name="motocitizen.activity.StartupActivity"
-          android:label="@string/app_name"
-          android:launchMode="singleTask"
-          android:noHistory="true"
-          android:theme="@style/Theme.AppCompat.NoActionBar">
-          <intent-filter>
-              <action android:name="android.intent.action.MAIN"/>
-              <category android:name="android.intent.category.LAUNCHER"/>
-          </intent-filter>
-      </activity>
+        </activity>
+        <activity
+            android:name="motocitizen.activity.AccidentDetailsActivity"
+            android:noHistory="true"
+            android:parentActivityName="motocitizen.activity.MainScreenActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat"
+            tools:ignore="UnusedAttribute">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="motocitizen.activity.MainScreenActivity"/>
+        </activity>
+        <activity
+            android:name="motocitizen.activity.SettingsActivity"
+            android:parentActivityName="motocitizen.activity.MainScreenActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat"
+            tools:ignore="UnusedAttribute">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="motocitizen.activity.MainScreenActivity"/>
+        </activity>
+        <activity
+            android:name="motocitizen.activity.BusinessCardActivity"
+            android:label="@string/title_activity_business_card"
+            android:noHistory="true"
+            android:parentActivityName="motocitizen.activity.AboutActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="UnusedAttribute">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="motocitizen.activity.AboutActivity"/>
+        </activity>
+        <activity
+            android:name="motocitizen.activity.StartupActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
 
-        <activity android:name="com.vk.sdk.VKServiceActivity" android:label="ServiceActivity" android:theme="@style/VK.Transparent" />
+        <activity
+            android:name="com.vk.sdk.VKServiceActivity"
+            android:label="ServiceActivity"
+            android:theme="@style/VK.Transparent"/>
 
 
-  </application>
+    </application>
 </manifest>

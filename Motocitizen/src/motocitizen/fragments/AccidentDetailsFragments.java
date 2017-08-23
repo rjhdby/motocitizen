@@ -2,6 +2,7 @@ package motocitizen.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
+
 //todo wtf!?
 public class AccidentDetailsFragments extends Fragment {
 

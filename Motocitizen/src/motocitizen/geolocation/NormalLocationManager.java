@@ -126,7 +126,7 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
     }
 
     private void checkInPlace(Location location) {
-        String login = User.dirtyRead().getName();
+        String login = User.INSTANCE.getName();
         if (login.equals("")) return;
         int currentInplace = Content.INSTANCE.getInPlace();
         if (currentInplace != 0) {

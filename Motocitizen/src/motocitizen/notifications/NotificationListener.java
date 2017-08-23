@@ -28,8 +28,8 @@ public class NotificationListener extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        Map data = remoteMessage.getData();
-        Integer id = Integer.parseInt(data.get("id").toString());
+        Map     data = remoteMessage.getData();
+        Integer id   = Integer.parseInt(data.get("id").toString());
         Content.INSTANCE.requestAccident(id, result -> raiseNotification(id));
     }
 

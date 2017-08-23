@@ -146,7 +146,7 @@ public class MainScreenActivity extends AppCompatActivity implements MyFragmentI
 
     @Override
     public void setPermissions() {
-        createAccButton.setVisibility(User.getInstance().isStandard() ? View.VISIBLE : View.INVISIBLE);
+        createAccButton.setVisibility(User.INSTANCE.isStandard() ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override

@@ -9,7 +9,7 @@ import com.google.android.gms.maps.model.LatLng;
 import motocitizen.utils.Preferences;
 
 public class MyLocationManager {
-    private static final int     DEFAULT_ACCURACY = 1000;
+    private static final int DEFAULT_ACCURACY = 1000;
     private SecuredLocationManagerInterface manager;
 
     private MyLocationManager() {

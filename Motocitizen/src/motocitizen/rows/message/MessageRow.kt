@@ -12,6 +12,7 @@ import motocitizen.content.Content
 import motocitizen.content.message.Message
 import motocitizen.main.R
 import motocitizen.utils.getTime
+
 //todo refactor
 @SuppressLint("ViewConstructor")
 open class MessageRow(context: Context, val message: Message, val last: Int, val next: Int) : FrameLayout(context) {

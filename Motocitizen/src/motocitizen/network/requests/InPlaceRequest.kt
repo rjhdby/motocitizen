@@ -1,7 +1,7 @@
 package motocitizen.network.requests
 
-import motocitizen.network.Methods
 import motocitizen.network.ApiRequestWithAuth
+import motocitizen.network.Methods
 
 class InPlaceRequest(id: Int, callback: RequestResultCallback? = null) : ApiRequestWithAuth(callback) {
     init {

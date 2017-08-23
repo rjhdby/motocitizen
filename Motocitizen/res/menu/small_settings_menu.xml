@@ -7,7 +7,7 @@
         yourapp:showAsAction="ifRoom"
         android:title=""
         android:visible="true"
-        android:icon="@android:drawable/ic_menu_rotate" />
+        android:icon="@android:drawable/ic_menu_rotate"/>
     <item
         android:id="@+id/do_not_disturb"
         yourapp:showAsAction="ifRoom"

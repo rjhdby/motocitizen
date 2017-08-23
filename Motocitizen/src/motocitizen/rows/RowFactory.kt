@@ -4,7 +4,6 @@ import android.content.Context
 import motocitizen.content.accident.Accident
 import motocitizen.content.history.History
 import motocitizen.content.message.Message
-import motocitizen.content.volunteer.Volunteer
 import motocitizen.content.volunteer.VolunteerAction
 import motocitizen.dictionary.AccidentStatus
 import motocitizen.rows.accidentList.*
@@ -16,7 +15,7 @@ import motocitizen.user.User
 
 object RowFactory {
     fun make(context: Context, accident: Accident): Row {
-        val userId = User.dirtyRead().id
+        val userId = User.id
         val row = when {
             accident.status == AccidentStatus.ACTIVE && accident.owner == userId -> OwnedActiveRow(context, accident)
             accident.status == AccidentStatus.ACTIVE                             -> ActiveRow(context, accident)

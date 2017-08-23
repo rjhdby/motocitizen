@@ -56,7 +56,7 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
         get() = messages.keys.count { !messages[it]!!.read }
 
     fun isInvisible(): Boolean {
-        val hidden = status == HIDDEN && !User.dirtyRead().isModerator
+        val hidden = status == HIDDEN && !User.isModerator
         val distanceFilter = distanceFromUser > Preferences.visibleDistance * 1000
         val typeFilter = Preferences.isHidden(type)
         val timeFilter = time.time + Preferences.hoursAgo.toLong() * 60 * 60 * 1000 < Date().time

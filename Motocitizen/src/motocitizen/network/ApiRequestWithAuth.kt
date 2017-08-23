@@ -2,7 +2,7 @@ package motocitizen.network
 
 import motocitizen.user.User
 
-abstract class ApiRequestWithAuth(callback: RequestResultCallback? = null, login: String = User.dirtyRead().name, passHash: String = User.dirtyRead().passHash) : ApiRequest(callback) {
+abstract class ApiRequestWithAuth(callback: RequestResultCallback? = null, login: String = User.name, passHash: String = User.passHash) : ApiRequest(callback) {
     init {
         params.put("l", login)
         params.put("p", passHash)

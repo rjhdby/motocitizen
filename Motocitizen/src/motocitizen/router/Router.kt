@@ -19,7 +19,8 @@ object Router {
         STARTUP(StartupActivity::class.java)
     }
 
-    @JvmOverloads fun goTo(activity: Activity, target: Target, bundle: Bundle = Bundle()) {
+    @JvmOverloads
+    fun goTo(activity: Activity, target: Target, bundle: Bundle = Bundle()) {
         val intent = Intent(activity, target.activity)
         intent.putExtras(bundle)
         activity.startActivity(intent)

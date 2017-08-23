@@ -11,12 +11,12 @@ import motocitizen.utils.Preferences;
 import motocitizen.utils.ToastUtils;
 
 public class SettingsFragment extends PreferenceFragment {
-    private Preference     notificationDistPreference;
-    private Preference     notificationAlarmPreference;
+    private Preference notificationDistPreference;
+    private Preference notificationAlarmPreference;
 
     private void update() {
         Preferences preferences = Preferences.INSTANCE;
-        String login = preferences.getLogin();
+        String      login       = preferences.getLogin();
         Preference.OnPreferenceChangeListener visibleListener = (preference, newValue) -> {
             preferences.putBoolean(preference.getKey(), (boolean) newValue);
             if (!preferences.getShowAcc()
@@ -54,7 +54,7 @@ public class SettingsFragment extends PreferenceFragment {
         Preference notificationSoundPreference = findPreference(getResources().getString(R.string.notification_sound));
         Preference authPreference              = findPreference(getResources().getString(R.string.settings_auth_button));
 
-        authPreference.setSummary(login.length() > 0 ? User.getInstance().getRoleName() + ": " + login : User.getInstance().getRoleName());
+        authPreference.setSummary(login.length() > 0 ? User.INSTANCE.getRoleName() + ": " + login : User.INSTANCE.getRoleName());
         maxNotifications.setSummary(String.valueOf(preferences.getMaxNotifications()));
         hoursAgo.setSummary(String.valueOf(preferences.getHoursAgo()));
         notificationSoundPreference.setSummary(preferences.getSoundTitle());

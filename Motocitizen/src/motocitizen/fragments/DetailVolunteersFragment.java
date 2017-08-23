@@ -95,7 +95,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     private void setupAccess() {
         Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
         int      id       = accident.getId();
-        boolean  active   = accident.isActive() && User.getInstance().isAuthorized();
+        boolean  active   = accident.isActive() && User.INSTANCE.isAuthorized();
         onwayButton.setVisibility(id != Preferences.INSTANCE.getOnWay() && id != Content.INSTANCE.getInPlace() && active ? View.VISIBLE : View.GONE);
         onwayCancelButton.setVisibility(id == Preferences.INSTANCE.getOnWay() && id != Content.INSTANCE.getInPlace() && active ? View.VISIBLE : View.GONE);
         onwayDisabledButton.setVisibility(id == Content.INSTANCE.getInPlace() && active ? View.VISIBLE : View.GONE);

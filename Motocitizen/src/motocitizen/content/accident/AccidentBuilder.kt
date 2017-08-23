@@ -27,7 +27,7 @@ class AccidentBuilder {
         private set
     var coordinates = LatLng(MyLocationManager.getLocation().latitude, MyLocationManager.getLocation().longitude)
         private set
-    var owner = User.dirtyRead().id
+    var owner = User.id
         private set
     var description = ""
         private set
@@ -115,13 +115,13 @@ class AccidentBuilder {
 
     fun build(): Accident {
         val accident = when {
-            status == AccidentStatus.ACTIVE && owner == User.dirtyRead().id -> OwnedActiveAccident(id, type, medicine, time, address, coordinates, owner)
-            status == AccidentStatus.ENDED && owner == User.dirtyRead().id  -> OwnedEndedAccident(id, type, medicine, time, address, coordinates, owner)
-            status == AccidentStatus.HIDDEN && owner == User.dirtyRead().id -> OwnedHiddenAccident(id, type, medicine, time, address, coordinates, owner)
-            status == AccidentStatus.ACTIVE                                 -> ActiveAccident(id, type, medicine, time, address, coordinates, owner)
-            status == AccidentStatus.ENDED                                  -> EndedAccident(id, type, medicine, time, address, coordinates, owner)
-            status == AccidentStatus.HIDDEN                                 -> HiddenAccident(id, type, medicine, time, address, coordinates, owner)
-            else                                                            -> throw Exception("Wrong data from server")
+            status == AccidentStatus.ACTIVE && owner == User.id -> OwnedActiveAccident(id, type, medicine, time, address, coordinates, owner)
+            status == AccidentStatus.ENDED && owner == User.id  -> OwnedEndedAccident(id, type, medicine, time, address, coordinates, owner)
+            status == AccidentStatus.HIDDEN && owner == User.id -> OwnedHiddenAccident(id, type, medicine, time, address, coordinates, owner)
+            status == AccidentStatus.ACTIVE                     -> ActiveAccident(id, type, medicine, time, address, coordinates, owner)
+            status == AccidentStatus.ENDED                      -> EndedAccident(id, type, medicine, time, address, coordinates, owner)
+            status == AccidentStatus.HIDDEN                     -> HiddenAccident(id, type, medicine, time, address, coordinates, owner)
+            else                                                -> throw Exception("Wrong data from server")
         }
         accident.description = description
         accident.messages = messages

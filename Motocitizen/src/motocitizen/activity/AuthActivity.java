@@ -70,7 +70,7 @@ public class AuthActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         try {
-            if (User.getInstance().isAuthorized()) {
+            if (User.INSTANCE.isAuthorized()) {
                 Router.INSTANCE.goTo(this, Router.Target.MAIN);
             }
         } catch (Error e) {
@@ -156,7 +156,7 @@ public class AuthActivity extends AppCompatActivity {
         View     accListYesterdayLine = findViewById(R.id.accListYesterdayLine);
         TextView roleView             = (TextView) findViewById(R.id.role);
 
-        boolean isAuthorized = User.getInstance().isAuthorized();
+        boolean isAuthorized = User.INSTANCE.isAuthorized();
         loginBtn.setEnabled(!isAuthorized);
         logoutBtn.setEnabled(isAuthorized);
         anonymous.setEnabled(!isAuthorized);
@@ -167,7 +167,7 @@ public class AuthActivity extends AppCompatActivity {
         //Авторизованы?
         if (isAuthorized) {
             String format = getString(R.string.auth_role);
-            roleView.setText(String.format(format, User.getInstance().getRoleName()));
+            roleView.setText(String.format(format, User.INSTANCE.getRoleName()));
         } else {
             enableLoginBtn();
         }
@@ -195,7 +195,7 @@ public class AuthActivity extends AppCompatActivity {
                 return;
             }
             auth(response -> {
-                if (User.getInstance().isAuthorized()) {
+                if (User.INSTANCE.isAuthorized()) {
                     Router.INSTANCE.goTo(local, Router.Target.MAIN);
                 } else {
                     AuthActivity.this.runOnUiThread(() -> {
@@ -246,6 +246,6 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     private void auth(CoreRequest.RequestResultCallback callback) {
-        User.getInstance().auth(login.getText().toString(), password.getText().toString(), callback);
+        User.INSTANCE.auth(login.getText().toString(), password.getText().toString(), callback);
     }
 }
