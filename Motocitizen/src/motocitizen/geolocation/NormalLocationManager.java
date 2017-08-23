@@ -50,11 +50,11 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
         current = getLocation();
     }
 
-    private void setup(Context context) {
+    private void setup() {
         if (connectionCallback == null) connectionCallback = new MyConnectionCallback();
         if (locationListener == null) locationListener = location -> {
             current = location;
-            Preferences.Companion.getInstance(context).setSavedLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
+            Preferences.INSTANCE.setSavedLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
             requestAddress();
             checkInPlace(location);
         };
@@ -95,7 +95,7 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
 
     @SuppressWarnings({ "MissingPermission" })
     private void runLocationService(Context context, int accuracy) {
-        setup(context);
+        setup();
         locationRequest = getProvider(accuracy);
         if (googleApiClient == null) {
             googleApiClient = new GoogleApiClient.Builder(context).addConnectionCallbacks(connectionCallback).addApi(LocationServices.API).build();

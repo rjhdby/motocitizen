@@ -14,6 +14,7 @@ import com.vk.sdk.VKSdk;
 
 import motocitizen.activity.AuthActivity;
 import motocitizen.user.User;
+import motocitizen.utils.Preferences;
 
 public class MyApp extends MultiDexApplication {
 
@@ -23,8 +24,6 @@ public class MyApp extends MultiDexApplication {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
-
-
 
     public static void logoff() {
         User.dirtyRead().logoff();
@@ -39,6 +38,7 @@ public class MyApp extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        Preferences.INSTANCE.initialize(this);
         vkAccessTokenTracker.startTracking();
         VKSdk.initialize(this);
     }

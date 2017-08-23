@@ -104,7 +104,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             enableMyLocation();
             map.getUiSettings().setMyLocationButtonEnabled(true);
             map.getUiSettings().setZoomControlsEnabled(true);
-            if (!User.getInstance(CreateAccActivity.this).isModerator()) {
+            if (!User.getInstance().isModerator()) {
                 //Прячем кнопки поиска адреса
                 searchEditText.setVisibility(View.GONE);
                 ImageButton searchButton = (ImageButton) findViewById(R.id.SEARCH);
@@ -123,7 +123,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             map.clear();
             for (int id : Content.INSTANCE.getAccidents().keySet()) {
                 Accident point = Content.INSTANCE.getAccidents().get(id);
-                if (point.isInvisible(CreateAccActivity.this)) continue;
+                if (point.isInvisible()) continue;
                 String title = point.getType().getText();
                 title += point.getMedicine() == Medicine.NO ? "" : ", " + point.getMedicine().getText();
                 title += ", " + DateUtils.getIntervalFromNowInText(CreateAccActivity.this, point.getTime()) + " назад";
@@ -164,7 +164,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         String text = ab.getType().getText();
         text += ab.getMedicine() == Medicine.UNKNOWN ? "" : ". " + ab.getMedicine().getText();
         ((TextView) findViewById(R.id.create_what)).setText(text);
-        ((TextView) findViewById(R.id.create_who)).setText(Preferences.Companion.getInstance(this).getLogin());
+        ((TextView) findViewById(R.id.create_who)).setText(Preferences.INSTANCE.getLogin());
         ((TextView) findViewById(R.id.create_where)).setText(ab.getAddress());
         ((TextView) findViewById(R.id.create_when)).setText(DateUtils.getDateTime(ab.getTime()));
     }

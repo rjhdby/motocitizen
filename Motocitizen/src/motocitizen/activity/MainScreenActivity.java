@@ -64,10 +64,10 @@ public class MainScreenActivity extends AppCompatActivity implements MyFragmentI
         super.onResume();
         MyLocationManager.getInstance().wakeup(this);
 
-        if (Preferences.Companion.getInstance(this).getNewVersion()) {
+        if (Preferences.INSTANCE.getNewVersion()) {
             AlertDialog changeLogDlg = ChangeLog.INSTANCE.getDialog(this);
             changeLogDlg.show();
-            Preferences.Companion.getInstance(this).setNewVersion(false);
+            Preferences.INSTANCE.setNewVersion(false);
         }
         PackageManager pm = this.getPackageManager();
         if (!pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
@@ -146,7 +146,7 @@ public class MainScreenActivity extends AppCompatActivity implements MyFragmentI
 
     @Override
     public void setPermissions() {
-        createAccButton.setVisibility(User.getInstance(this).isStandard() ? View.VISIBLE : View.INVISIBLE);
+        createAccButton.setVisibility(User.getInstance().isStandard() ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
@@ -157,7 +157,7 @@ public class MainScreenActivity extends AppCompatActivity implements MyFragmentI
         //TODO Нет событий
 
         for (Accident accident : Content.INSTANCE.getListReversed()) {
-            if (accident.isInvisible(this)) continue;
+            if (accident.isInvisible()) continue;
             listContent.addView(RowFactory.INSTANCE.make(this, accident));
         }
         map.placeAccidents(this);
@@ -222,8 +222,8 @@ public class MainScreenActivity extends AppCompatActivity implements MyFragmentI
                 getAccidents();
                 return true;
             case R.id.do_not_disturb:
-                item.setIcon(Preferences.Companion.getInstance(this).getDoNotDisturb() ? R.drawable.ic_lock_ringer_on_alpha : R.drawable.ic_lock_ringer_off_alpha);
-                Preferences.Companion.getInstance(this).setDoNotDisturb(!Preferences.Companion.getInstance(this).getDoNotDisturb());
+                item.setIcon(Preferences.INSTANCE.getDoNotDisturb() ? R.drawable.ic_lock_ringer_on_alpha : R.drawable.ic_lock_ringer_off_alpha);
+                Preferences.INSTANCE.setDoNotDisturb(!Preferences.INSTANCE.getDoNotDisturb());
                 return true;
         }
         return false;

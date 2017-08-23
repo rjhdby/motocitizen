@@ -35,8 +35,8 @@ public class NotificationListener extends FirebaseMessagingService {
 
     private void raiseNotification(Integer id) {
         Accident    accident    = Content.INSTANCE.getAccidents().get(id);
-        Preferences preferences = Preferences.Companion.getInstance(this);
-        if (accident == null || accident.isInvisible(this) || preferences.getDoNotDisturb()) return;
+        Preferences preferences = Preferences.INSTANCE;
+        if (accident == null || accident.isInvisible() || preferences.getDoNotDisturb()) return;
         Intent notificationIntent = new Intent(this, AccidentDetailsActivity.class);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

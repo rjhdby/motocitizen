@@ -64,17 +64,17 @@ public class StartupActivity extends AppCompatActivity {
     }
 
     private void ahead() {
-        if (Preferences.Companion.getInstance(this).getAnonim()) {
+        if (Preferences.INSTANCE.getAnonim()) {
             Router.INSTANCE.goTo(this, Router.Target.MAIN);
             return;
         }
-        if (Preferences.Companion.getInstance(this).getLogin().equals("")) {
+        if (Preferences.INSTANCE.getLogin().equals("")) {
             Router.INSTANCE.goTo(this, Router.Target.AUTH);
             return;
         }
-        User.getInstance(this).auth(
-                Preferences.Companion.getInstance(this).getLogin(),
-                Preferences.Companion.getInstance(this).getPassword(),
-                response -> Router.INSTANCE.goTo(this, User.getInstance(this).isAuthorized() ? Router.Target.MAIN : Router.Target.AUTH));
+        User.getInstance().auth(
+                Preferences.INSTANCE.getLogin(),
+                Preferences.INSTANCE.getPassword(),
+                response -> Router.INSTANCE.goTo(this, User.getInstance().isAuthorized() ? Router.Target.MAIN : Router.Target.AUTH));
     }
 }

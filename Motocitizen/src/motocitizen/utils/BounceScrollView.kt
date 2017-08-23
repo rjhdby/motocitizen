@@ -52,4 +52,9 @@ class BounceScrollView : ScrollView {
     companion object {
         private val MAX_Y_OVER_SCROLL_DISTANCE = 40
     }
+
+    @FunctionalInterface
+    interface OverScrollListenerInterface {
+        fun onOverScroll()
+    }
 }

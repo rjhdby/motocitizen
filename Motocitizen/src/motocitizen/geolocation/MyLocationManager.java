@@ -33,8 +33,8 @@ public class MyLocationManager {
     }
 
     private Location getLast() {
-        Preferences preferences = Preferences.Companion.dirtyRead();
-        LatLng      latLng      = preferences == null ? new LatLng(Preferences.Companion.getDEFAULT_LATITUDE(), Preferences.Companion.getDEFAULT_LONGITUDE()) : preferences.getSavedLatLng();
+        Preferences preferences = Preferences.INSTANCE;
+        LatLng      latLng      = preferences == null ? new LatLng(Preferences.INSTANCE.getDEFAULT_LATITUDE(), Preferences.INSTANCE.getDEFAULT_LONGITUDE()) : preferences.getSavedLatLng();
         Location    current     = new Location(LocationManager.NETWORK_PROVIDER);
         current.setLatitude(latLng.latitude);
         current.setLongitude(latLng.longitude);

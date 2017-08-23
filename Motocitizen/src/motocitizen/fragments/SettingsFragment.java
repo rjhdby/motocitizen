@@ -15,7 +15,7 @@ public class SettingsFragment extends PreferenceFragment {
     private Preference     notificationAlarmPreference;
 
     private void update() {
-        Preferences preferences = Preferences.Companion.getInstance(getActivity());
+        Preferences preferences = Preferences.INSTANCE;
         String login = preferences.getLogin();
         Preference.OnPreferenceChangeListener visibleListener = (preference, newValue) -> {
             preferences.putBoolean(preference.getKey(), (boolean) newValue);
@@ -54,7 +54,7 @@ public class SettingsFragment extends PreferenceFragment {
         Preference notificationSoundPreference = findPreference(getResources().getString(R.string.notification_sound));
         Preference authPreference              = findPreference(getResources().getString(R.string.settings_auth_button));
 
-        authPreference.setSummary(login.length() > 0 ? User.getInstance(getActivity()).getRoleName() + ": " + login : User.getInstance(getActivity()).getRoleName());
+        authPreference.setSummary(login.length() > 0 ? User.getInstance().getRoleName() + ": " + login : User.getInstance().getRoleName());
         maxNotifications.setSummary(String.valueOf(preferences.getMaxNotifications()));
         hoursAgo.setSummary(String.valueOf(preferences.getHoursAgo()));
         notificationSoundPreference.setSummary(preferences.getSoundTitle());

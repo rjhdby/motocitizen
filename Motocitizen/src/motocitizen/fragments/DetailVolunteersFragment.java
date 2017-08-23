@@ -95,9 +95,9 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     private void setupAccess() {
         Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
         int      id       = accident.getId();
-        boolean  active   = accident.isActive() && User.getInstance(getActivity()).isAuthorized();
-        onwayButton.setVisibility(id != Preferences.Companion.getInstance(getActivity()).getOnWay() && id != Content.INSTANCE.getInPlace() && active ? View.VISIBLE : View.GONE);
-        onwayCancelButton.setVisibility(id == Preferences.Companion.getInstance(getActivity()).getOnWay() && id != Content.INSTANCE.getInPlace() && active ? View.VISIBLE : View.GONE);
+        boolean  active   = accident.isActive() && User.getInstance().isAuthorized();
+        onwayButton.setVisibility(id != Preferences.INSTANCE.getOnWay() && id != Content.INSTANCE.getInPlace() && active ? View.VISIBLE : View.GONE);
+        onwayCancelButton.setVisibility(id == Preferences.INSTANCE.getOnWay() && id != Content.INSTANCE.getInPlace() && active ? View.VISIBLE : View.GONE);
         onwayDisabledButton.setVisibility(id == Content.INSTANCE.getInPlace() && active ? View.VISIBLE : View.GONE);
     }
 
@@ -160,7 +160,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     }
 
     private void sendOnWay() {
-        Preferences.Companion.getInstance(getActivity()).setOnWay(accidentID);
+        Preferences.INSTANCE.setOnWay(accidentID);
         new OnWayRequest(accidentID, response -> new AccidentListRequest(result -> {
             Content.INSTANCE.requestUpdate();
             getActivity().runOnUiThread(() -> {
@@ -171,7 +171,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
     }
 
     private void sendCancelOnWay() {
-        Preferences.Companion.getInstance(getActivity()).setOnWay(0);
+        Preferences.INSTANCE.setOnWay(0);
         new CancelOnWayRequest(accidentID, response -> new AccidentListRequest(result -> {
             Content.INSTANCE.requestUpdate();
             getActivity().runOnUiThread(() -> {

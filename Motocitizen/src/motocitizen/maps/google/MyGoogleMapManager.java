@@ -28,7 +28,6 @@ import motocitizen.main.R;
 import motocitizen.maps.MyMapManager;
 import motocitizen.router.Router;
 import motocitizen.utils.DateUtils;
-import motocitizen.utils.DelayedAction;
 import motocitizen.utils.LocationUtils;
 
 public class MyGoogleMapManager implements MyMapManager {
@@ -82,7 +81,7 @@ public class MyGoogleMapManager implements MyMapManager {
 
         for (int id : Content.INSTANCE.getAccidents().keySet()) {
             Accident point = Content.INSTANCE.getAccidents().get(id);
-            if (point.isInvisible(context)) continue;
+            if (point.isInvisible()) continue;
             String title = point.getType().getText();
             title += point.getMedicine() != Medicine.UNKNOWN ? ", " + point.getMedicine().getText() : "";
             title += ", " + DateUtils.getIntervalFromNowInText(context, point.getTime()) + " назад";
@@ -140,5 +139,10 @@ public class MyGoogleMapManager implements MyMapManager {
     public void zoom(int zoom) {
         if (map == null) return;
         map.animateCamera(CameraUpdateFactory.zoomTo(zoom));
+    }
+
+    @FunctionalInterface
+    interface DelayedAction {
+        void makeAction();
     }
 }

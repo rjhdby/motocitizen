@@ -1,6 +1,5 @@
 package motocitizen.content.accident
 
-import android.content.Context
 import android.location.Location
 import android.location.LocationManager
 import com.google.android.gms.maps.model.LatLng
@@ -56,11 +55,11 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
     val unreadMessagesCount: Int
         get() = messages.keys.count { !messages[it]!!.read }
 
-    fun isInvisible(context: Context): Boolean {
+    fun isInvisible(): Boolean {
         val hidden = status == HIDDEN && !User.dirtyRead().isModerator
-        val distanceFilter = distanceFromUser > Preferences.getInstance(context).visibleDistance * 1000
-        val typeFilter = Preferences.getInstance(context).isHidden(type)
-        val timeFilter = time.time + Preferences.getInstance(context).hoursAgo.toLong() * 60 * 60 * 1000 < Date().time
+        val distanceFilter = distanceFromUser > Preferences.visibleDistance * 1000
+        val typeFilter = Preferences.isHidden(type)
+        val timeFilter = time.time + Preferences.hoursAgo.toLong() * 60 * 60 * 1000 < Date().time
         return hidden || distanceFilter || typeFilter || timeFilter
     }
 

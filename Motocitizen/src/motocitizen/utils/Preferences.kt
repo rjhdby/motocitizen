@@ -10,10 +10,35 @@ import android.preference.PreferenceManager
 import com.google.android.gms.maps.model.LatLng
 
 import motocitizen.dictionary.Type
-//todo object
-class Preferences private constructor(context: Context) {
+
+object Preferences {
+    fun initialize(context: Context) {
+        preferences = PreferenceManager.getDefaultSharedPreferences(context)
+        initSound(context)
+        try {
+            val version = context.packageManager.getPackageInfo(context.packageName, 0).versionCode
+            if (version != appVersion) {
+                newVersion = true
+                appVersion = version
+            }
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+        }
+    }
+
+    val DEFAULT_LATITUDE = 55.752295f
+    val DEFAULT_LONGITUDE = 37.622735f
+    private val DEFAULT_SHOW_DISTANCE = 200
+    private val DEFAULT_ALARM_DISTANCE = 20
+    private val DEFAULT_MAX_NOTIFICATIONS = 3
+    private val DEFAULT_MAX_AGE = 24
+    private val DEFAULT_VIBRATION = true
+    private val DEFAULT_DO_NOT_DISTURB = false
+    private val DEFAULT_IS_ANONYMOUS = false
+    private val DEFAULT_SHOW_TYPE = true
+
     var newVersion = false
-    private val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+    lateinit private var preferences: SharedPreferences
 
     var showAcc
         get() = preferences.getBoolean("mc.show.acc", DEFAULT_SHOW_TYPE)
@@ -40,10 +65,10 @@ class Preferences private constructor(context: Context) {
         }
     var alarmDistance: Int
         get() {
-            try {
-                return preferences.getInt("mc.distance.alarm", DEFAULT_ALARM_DISTANCE)
+            return try {
+                preferences.getInt("mc.distance.alarm", DEFAULT_ALARM_DISTANCE)
             } catch (e: Exception) {
-                return Integer.parseInt(preferences.getString("mc.distance.alarm", DEFAULT_ALARM_DISTANCE.toString()))
+                Integer.parseInt(preferences.getString("mc.distance.alarm", DEFAULT_ALARM_DISTANCE.toString()))
             }
         }
         set(value) {
@@ -91,19 +116,6 @@ class Preferences private constructor(context: Context) {
     val GCMRegistrationCode = "mc.gcm.id"
     val GcmAppVersion = "gcm.app.version"
 
-    init {
-        initSound(context)
-        try {
-            val version = context.packageManager.getPackageInfo(context.packageName, 0).versionCode
-            if (version != appVersion) {
-                newVersion = true
-                appVersion = version
-            }
-        } catch (e: PackageManager.NameNotFoundException) {
-            e.printStackTrace()
-        }
-    }
-
     fun setSound(title: String, uri: Uri) {
         soundTitle = title
         soundURI = uri.toString()
@@ -149,33 +161,5 @@ class Preferences private constructor(context: Context) {
         "maxNotifications" -> "notifications.max"
         "useVibration"     -> "use.vibration"
         else               -> "unknown"
-    }
-
-    companion object {
-        val DEFAULT_LATITUDE = 55.752295f
-        val DEFAULT_LONGITUDE = 37.622735f
-        private val DEFAULT_SHOW_DISTANCE = 200
-        private val DEFAULT_ALARM_DISTANCE = 20
-        private val DEFAULT_MAX_NOTIFICATIONS = 3
-        private val DEFAULT_MAX_AGE = 24
-        private val DEFAULT_VIBRATION = true
-        private val DEFAULT_DO_NOT_DISTURB = false
-        private val DEFAULT_IS_ANONYMOUS = false
-        private val DEFAULT_SHOW_TYPE = true
-
-        fun getInstance(context: Context): Preferences {
-            if (Holder.instance == null) {
-                Holder.instance = Preferences(context)
-                (Holder.instance as Preferences).doNotDisturb = false
-            }
-            return Holder.instance as Preferences
-        }
-
-        fun dirtyRead(): Preferences? = Holder.instance
-
-    }
-
-    private object Holder {
-        var instance: Preferences? = null
     }
 }

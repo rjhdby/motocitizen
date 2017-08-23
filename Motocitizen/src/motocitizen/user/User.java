@@ -1,6 +1,5 @@
 package motocitizen.user;
 
-import android.content.Context;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -13,6 +12,17 @@ import motocitizen.network.CoreRequest;
 import motocitizen.network.requests.AuthRequest;
 import motocitizen.utils.Preferences;
 
+/*
+fun auth(login: String, password: String, callback: CoreRequest.RequestResultCallback) {
+        preferences!!.password = password
+        AuthRequest(login, getPassHash(password), object : CoreRequest.RequestResultCallback {
+            override fun call(response: JSONObject) {
+                parseAuthResult(response, login)
+                callback.call(response)
+            }
+        })
+    }
+ */
 //todo object
 public class User {
     private Role    role         = Role.RO;
@@ -24,10 +34,10 @@ public class User {
 
     private User() {}
 
-    public static User getInstance(Context context) {
+    public static User getInstance() {
         if (Holder.instance == null) {
             Holder.instance = new User();
-            Holder.instance.preferences = Preferences.Companion.getInstance(context);
+            Holder.instance.preferences = Preferences.INSTANCE;
         }
         return Holder.instance;
     }

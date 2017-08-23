@@ -181,8 +181,8 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         currentPoint = Content.INSTANCE.getAccidents().get(accidentID);
         MenuItem finish = mMenu.findItem(R.id.menu_acc_finish);
         MenuItem hide   = mMenu.findItem(R.id.menu_acc_hide);
-        finish.setVisible(User.getInstance(this).isModerator());
-        hide.setVisible(User.getInstance(this).isModerator());
+        finish.setVisible(User.getInstance().isModerator());
+        hide.setVisible(User.getInstance().isModerator());
         finish.setTitle(R.string.finish);
         hide.setTitle(R.string.hide);
         switch (currentPoint.getStatus()) {

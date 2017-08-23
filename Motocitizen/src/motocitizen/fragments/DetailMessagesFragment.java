@@ -103,7 +103,7 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
     }
 
     private void setupAccess() {
-        newMessageArea.setVisibility(User.getInstance(getActivity()).isStandard() ? View.VISIBLE : View.INVISIBLE);
+        newMessageArea.setVisibility(User.getInstance().isStandard() ? View.VISIBLE : View.INVISIBLE);
     }
 
     private class SendMessageCallback implements CoreRequest.RequestResultCallback {

@@ -70,7 +70,7 @@ public class AuthActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         try {
-            if (User.getInstance(this).isAuthorized()) {
+            if (User.getInstance().isAuthorized()) {
                 Router.INSTANCE.goTo(this, Router.Target.MAIN);
             }
         } catch (Error e) {
@@ -150,13 +150,13 @@ public class AuthActivity extends AppCompatActivity {
 
     private void fillCtrls() {
 
-        login.setText(Preferences.Companion.getInstance(this).getLogin());
-        password.setText(Preferences.Companion.getInstance(this).getPassword());
-        anonymous.setChecked(Preferences.Companion.getInstance(this).getAnonim());
+        login.setText(Preferences.INSTANCE.getLogin());
+        password.setText(Preferences.INSTANCE.getPassword());
+        anonymous.setChecked(Preferences.INSTANCE.getAnonim());
         View     accListYesterdayLine = findViewById(R.id.accListYesterdayLine);
         TextView roleView             = (TextView) findViewById(R.id.role);
 
-        boolean isAuthorized = User.getInstance(this).isAuthorized();
+        boolean isAuthorized = User.getInstance().isAuthorized();
         loginBtn.setEnabled(!isAuthorized);
         logoutBtn.setEnabled(isAuthorized);
         anonymous.setEnabled(!isAuthorized);
@@ -167,7 +167,7 @@ public class AuthActivity extends AppCompatActivity {
         //Авторизованы?
         if (isAuthorized) {
             String format = getString(R.string.auth_role);
-            roleView.setText(String.format(format, User.getInstance(this).getRoleName()));
+            roleView.setText(String.format(format, User.getInstance().getRoleName()));
         } else {
             enableLoginBtn();
         }
@@ -184,7 +184,7 @@ public class AuthActivity extends AppCompatActivity {
         final Activity local = this;
         loginBtn.setOnClickListener(v -> {
             // Анонимный вход
-            Preferences.Companion.getInstance(this).setAnonim(anonymous.isChecked());
+            Preferences.INSTANCE.setAnonim(anonymous.isChecked());
             if (anonymous.isChecked()) {
                 ((TextView) findViewById(R.id.auth_error_helper)).setText("");
                 Router.INSTANCE.goTo(local, Router.Target.MAIN);
@@ -195,7 +195,7 @@ public class AuthActivity extends AppCompatActivity {
                 return;
             }
             auth(response -> {
-                if (User.getInstance(AuthActivity.this).isAuthorized()) {
+                if (User.getInstance().isAuthorized()) {
                     Router.INSTANCE.goTo(local, Router.Target.MAIN);
                 } else {
                     AuthActivity.this.runOnUiThread(() -> {
@@ -207,8 +207,8 @@ public class AuthActivity extends AppCompatActivity {
         });
         logoutBtn.setOnClickListener(v -> {
             //TODO Добавить запрос подтверждения на выход.
-            Preferences.Companion.getInstance(this).resetAuth();
-            Preferences.Companion.getInstance(this).setAnonim(true);
+            Preferences.INSTANCE.resetAuth();
+            Preferences.INSTANCE.setAnonim(true);
             MyApp.logoff();
             fillCtrls();
         });
@@ -246,6 +246,6 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     private void auth(CoreRequest.RequestResultCallback callback) {
-        User.getInstance(this).auth(login.getText().toString(), password.getText().toString(), callback);
+        User.getInstance().auth(login.getText().toString(), password.getText().toString(), callback);
     }
 }
