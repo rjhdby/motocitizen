@@ -24,7 +24,7 @@ abstract class Row protected constructor(context: Context, val accident: Acciden
     val ENDED_COLOR = 0x70FFFFFF
     val HIDDEN_COLOR = 0x30FFFFFF
     abstract val background: Int
-    abstract val layout: Int
+    abstract val LAYOUT: Int
     abstract val textColor: Int
     abstract val margins: Array<Int>
 
@@ -53,7 +53,7 @@ abstract class Row protected constructor(context: Context, val accident: Acciden
         val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         lp.setMargins(margins[0], margins[1], margins[2], margins[3])
         layoutParams = lp
-        LayoutInflater.from(context).inflate(layout, this, true)
+        LayoutInflater.from(context).inflate(LAYOUT, this, true)
         setBackgroundResource(background)
         bindValues()
         setUpListeners()
