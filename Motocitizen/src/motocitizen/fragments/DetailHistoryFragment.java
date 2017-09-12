@@ -10,7 +10,8 @@ import motocitizen.activity.AccidentDetailsActivity;
 import motocitizen.content.accident.Accident;
 import motocitizen.content.history.History;
 import motocitizen.main.R;
-import motocitizen.rows.RowFactory;
+import motocitizen.rows.accident.AccidentRowFactory;
+import motocitizen.rows.history.HistoryRowFactory;
 
 public class DetailHistoryFragment extends AccidentDetailsFragments {
 
@@ -42,7 +43,7 @@ public class DetailHistoryFragment extends AccidentDetailsFragments {
 
         logContent.removeAllViews();
         for (History h : accident.getHistory()) {
-            logContent.addView(RowFactory.INSTANCE.make(getActivity(), h));
+            logContent.addView(HistoryRowFactory.INSTANCE.make(getActivity(), h));
         }
     }
 }

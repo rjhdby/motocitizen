@@ -1,4 +1,4 @@
-package motocitizen.rows.accidentList
+package motocitizen.rows.accident
 
 import android.content.Context
 import motocitizen.content.accident.Accident

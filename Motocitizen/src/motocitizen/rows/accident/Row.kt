@@ -1,4 +1,4 @@
-package motocitizen.rows.accidentList
+package motocitizen.rows.accident
 
 import android.app.Activity
 import android.content.Context
@@ -26,13 +26,15 @@ abstract class Row protected constructor(context: Context, val accident: Acciden
     abstract val background: Int
     abstract val layout: Int
     abstract val textColor: Int
-    val mLayoutParams: LinearLayout.LayoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+    abstract val margins: Array<Int>
 
-    abstract fun changeMargins()
+    init {
+        id = newId()
+    }
+
     //todo messages
     private fun messagesText(accident: Accident): Spanned {
-        val read = if (accident.unreadMessagesCount > 0) String.format("<font color=#C62828><b>(%s)</b></font>", accident.unreadMessagesCount) else ""
-        val text = String.format("<b>%s</b>%s", accident.messages.size, read)
+        val text = formatMessagesText(accident)
         return if (Build.VERSION.SDK_INT >= 24) {
             Html.fromHtml(text, android.text.Html.TO_HTML_PARAGRAPH_LINES_CONSECUTIVE)
         } else {
@@ -40,20 +42,31 @@ abstract class Row protected constructor(context: Context, val accident: Acciden
         }
     }
 
+    private fun formatMessagesText(accident: Accident): String =
+            if (accident.unreadMessagesCount > 0)
+                String.format("<b>%s</b><font color=#C62828><b>(%s)</b></font>", accident.messages.size, accident.unreadMessagesCount)
+            else
+                String.format("<b>%s</b>", accident.messages.size)
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        changeMargins()
-        layoutParams = mLayoutParams
+        val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        lp.setMargins(margins[0], margins[1], margins[2], margins[3])
+        layoutParams = lp
+        LayoutInflater.from(context).inflate(layout, this, true)
+        setBackgroundResource(background)
+        bindValues()
+        setUpListeners()
     }
 
-    fun bind() {
-        LayoutInflater.from(context).inflate(layout, this, true)
-        id = newId()
-        setBackgroundResource(background)
+    private fun bindValues() {
         (findViewById(R.id.accident_row_content) as TextView).setTextColor(textColor)
         (findViewById(R.id.accident_row_content) as TextView).text = context.resources.getString(R.string.accident_row_content, accident.title())
         (findViewById(R.id.accident_row_time) as TextView).text = getIntervalFromNowInText(context, accident.time)
         (findViewById(R.id.accident_row_unread) as TextView).text = messagesText(accident)
+    }
+
+    private fun setUpListeners() {
         setOnClickListener { _ ->
             val bundle = Bundle()
             bundle.putInt("accidentID", accident.id)

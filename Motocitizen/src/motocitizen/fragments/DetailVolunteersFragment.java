@@ -21,7 +21,8 @@ import motocitizen.main.R;
 import motocitizen.network.requests.AccidentListRequest;
 import motocitizen.network.requests.CancelOnWayRequest;
 import motocitizen.network.requests.OnWayRequest;
-import motocitizen.rows.RowFactory;
+import motocitizen.rows.accident.AccidentRowFactory;
+import motocitizen.rows.volunteer.VolunteerRowFactory;
 import motocitizen.user.User;
 import motocitizen.utils.Preferences;
 
@@ -88,7 +89,7 @@ public class DetailVolunteersFragment extends AccidentDetailsFragments {
         ViewGroup vg_onway = (ViewGroup) onwayContent;
         vg_onway.removeAllViews();
         for (VolunteerAction v : accident.getVolunteers()) {
-            vg_onway.addView(RowFactory.INSTANCE.make(getActivity(), v));
+            vg_onway.addView(VolunteerRowFactory.INSTANCE.make(getActivity(), v));
         }
     }
 

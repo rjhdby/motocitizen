@@ -1,4 +1,4 @@
-package motocitizen.rows.details
+package motocitizen.rows.history
 
 import android.content.Context
 import android.graphics.Color

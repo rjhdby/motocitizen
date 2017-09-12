@@ -27,7 +27,7 @@ import motocitizen.main.R;
 import motocitizen.maps.MyMapManager;
 import motocitizen.maps.google.MyGoogleMapManager;
 import motocitizen.router.Router;
-import motocitizen.rows.RowFactory;
+import motocitizen.rows.accident.AccidentRowFactory;
 import motocitizen.user.User;
 import motocitizen.utils.BounceScrollView;
 import motocitizen.utils.ChangeLog;
@@ -158,7 +158,7 @@ public class MainScreenActivity extends AppCompatActivity implements MyFragmentI
 
         for (Accident accident : Content.INSTANCE.getListReversed()) {
             if (accident.isInvisible()) continue;
-            listContent.addView(RowFactory.INSTANCE.make(this, accident));
+            listContent.addView(AccidentRowFactory.INSTANCE.make(this, accident));
         }
         map.placeAccidents(this);
     }

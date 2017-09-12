@@ -1,4 +1,4 @@
-package motocitizen.rows.details
+package motocitizen.rows.volunteer
 
 import android.annotation.SuppressLint
 import android.content.Context
