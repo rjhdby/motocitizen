@@ -217,7 +217,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                                         (dialog, which) -> {
                                             String temp = addressEditText.getText().toString().replaceAll("\\s", "");
                                             if (temp.length() > 0) {
-                                                ab.setAddress(addressEditText.getText().toString());
+                                                ab.address(addressEditText.getText().toString());
                                                 refreshDescription();
                                             }
                                         })
@@ -235,14 +235,14 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             case R.id.BREAK:
             case R.id.STEAL:
             case R.id.OTHER:
-                ab.setType(getSelectedType(id));
+                ab.type(getSelectedType(id));
                 setUpScreen(DESCRIPTION);
                 break;
             case R.id.MOTO_AUTO:
             case R.id.SOLO:
             case R.id.MOTO_MOTO:
             case R.id.MOTO_MAN:
-                ab.setType(getSelectedType(id));
+                ab.type(getSelectedType(id));
                 setUpScreen(MEDICINE);
                 break;
             case R.id.ACCIDENT:
@@ -253,13 +253,13 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
             case R.id.PEOPLE_HEAVY:
             case R.id.PEOPLE_LETHAL:
             case R.id.PEOPLE_UNKNOWN:
-                ab.setMedicine(getSelectedMedicine(id));
+                ab.medicine(getSelectedMedicine(id));
                 setUpScreen(DESCRIPTION);
                 setComplete();
                 break;
             case R.id.ADDRESS:
-                ab.setCoordinates(map.getCameraPosition().target);
-                ab.setAddress(MyLocationManager.getInstance().getAddress(ab.getCoordinates()));
+                ab.coordinates(map.getCameraPosition().target);
+                ab.address(MyLocationManager.getInstance().getAddress(ab.getCoordinates()));
                 setUpScreen(TYPE);
                 if (NormalLocationManager.showDialogExact) {
                     showRatingDialog();
@@ -435,7 +435,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            ab.setDescription(s.toString());
+            ab.description(s.toString());
             setComplete();
         }
 

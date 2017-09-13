@@ -38,50 +38,23 @@ class AccidentBuilder {
     var history = ArrayList<History>()
         private set
 
-    fun setId(id: Int): AccidentBuilder {
-        this.id = id
-        return this
-    }
+    fun id(id: Int): AccidentBuilder = apply { this.id = id }
 
-    fun setStatus(status: AccidentStatus): AccidentBuilder {
-        this.status = status
-        return this
-    }
+    fun status(status: AccidentStatus): AccidentBuilder = apply { this.status = status }
 
-    fun setType(type: Type): AccidentBuilder {
-        this.type = type
-        return this
-    }
+    fun type(type: Type): AccidentBuilder = apply { this.type = type }
 
-    fun setMedicine(medicine: Medicine): AccidentBuilder {
-        this.medicine = medicine
-        return this
-    }
+    fun medicine(medicine: Medicine): AccidentBuilder = apply { this.medicine = medicine }
 
-    fun setTime(time: Date): AccidentBuilder {
-        this.time = time
-        return this
-    }
+    fun time(time: Date): AccidentBuilder = apply { this.time = time }
 
-    fun setAddress(address: String): AccidentBuilder {
-        this.address = address
-        return this
-    }
+    fun address(address: String): AccidentBuilder = apply { this.address = address }
 
-    fun setCoordinates(coordinates: LatLng): AccidentBuilder {
-        this.coordinates = coordinates
-        return this
-    }
+    fun coordinates(coordinates: LatLng): AccidentBuilder = apply { this.coordinates = coordinates }
 
-    fun setOwner(owner: Int): AccidentBuilder {
-        this.owner = owner
-        return this
-    }
+    fun owner(owner: Int): AccidentBuilder = apply { this.owner = owner }
 
-    fun setDescription(description: String): AccidentBuilder {
-        this.description = description
-        return this
-    }
+    fun description(description: String): AccidentBuilder = apply { this.description = description }
 
     fun from(accident: Accident): AccidentBuilder {
         id = accident.id
@@ -110,8 +83,6 @@ class AccidentBuilder {
         }
         accident.description = description
         accident.messages = messages
-//        accident.volunteers = volunteers //todo
-//        accident.history = history
         return accident
     }
 }

@@ -1,5 +1,6 @@
 package motocitizen.activity;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
@@ -23,7 +24,6 @@ import motocitizen.content.accident.Accident;
 import motocitizen.content.accident.AccidentFactory;
 import motocitizen.dictionary.AccidentStatus;
 import motocitizen.dictionary.Medicine;
-import motocitizen.fragments.AccidentDetailsFragments;
 import motocitizen.fragments.DetailHistoryFragment;
 import motocitizen.fragments.DetailMessagesFragment;
 import motocitizen.fragments.DetailVolunteersFragment;
@@ -43,19 +43,31 @@ import static motocitizen.dictionary.AccidentStatus.ACTIVE;
 import static motocitizen.dictionary.AccidentStatus.ENDED;
 
 public class AccidentDetailsActivity extends AppCompatActivity {
+    public static final String ACCIDENT_ID_KEY = "id";
 
-    /* constants */
     private static final int SMS_MENU_MIN_ID  = 100;
     private static final int SMS_MENU_MAX_ID  = 200;
     private static final int CALL_MENU_MIN_ID = 400;
     private static final int CALL_MENU_MAX_ID = 500;
-    /* end constants */
 
-    /*
-    Инцидент с которым работаем
-     */
-    private int      accidentID;
-    private Accident currentPoint;
+    private static final int MENU                     = R.menu.menu_accident_details;
+    private static final int ROOT_LAYOUT              = R.layout.activity_accident_details;
+    private static final int GENERAL_INFORMATION_VIEW = R.id.acc_details_general;
+    private static final int STATUS_VIEW              = R.id.acc_details_general_status;
+    private static final int MEDICINE_VIEW            = R.id.acc_details_medicine;
+    private static final int TYPE_VIEW                = R.id.acc_details_general_type;
+    private static final int TIME_VIEW                = R.id.acc_details_general_time;
+    private static final int OWNER_VIEW               = R.id.acc_details_general_owner;
+    private static final int ADDRESS_VIEW             = R.id.acc_details_general_address;
+    private static final int DISTANCE_VIEW            = R.id.acc_details_general_distance;
+    private static final int DESCRIPTION_VIEW         = R.id.acc_details_general_description;
+    private static final int FRAGMENT_ROOT_VIEW       = R.id.details_tab_content;
+    private static final int TABS_GROUP               = R.id.details_tabs_group;
+    private static final int MESSAGE_TAB              = R.id.details_tab_messages;
+    private static final int HISTORY_TAB              = R.id.details_tab_history;
+    private static final int VOLUNTEER_TAB            = R.id.details_tab_people;
+
+    private Accident accident;
 
     private AccidentStatus accNewState;
 
@@ -63,56 +75,63 @@ public class AccidentDetailsActivity extends AppCompatActivity {
     private DetailMessagesFragment   detailMessagesFragment;
     private DetailHistoryFragment    detailHistoryFragment;
 
-    private TextView statusView;
-    private TextView medicineView;
-    private View     generalLayout;
+    private TextView   statusView;
+    private TextView   medicineView;
+    private View       generalLayout;
+    private RadioGroup tabs;
 
     private Menu mMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_accident_details);
+        accident = Content.INSTANCE.getAccidents().get(getIntent().getExtras().getInt("accidentID"));
+
+        setContentView(ROOT_LAYOUT);
+
+        detailVolunteersFragment = new DetailVolunteersFragment(accident);
+        detailMessagesFragment = new DetailMessagesFragment(accident);
+        detailHistoryFragment = new DetailHistoryFragment(accident);
+
+        tabs = (RadioGroup) findViewById(TABS_GROUP);
+        tabs.setVisibility(View.INVISIBLE);
+
+        Content.INSTANCE.requestDetailsForAccident(accident, response -> this.runOnUiThread(this::setupFragments));
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
 
-        Bundle b = getIntent().getExtras();
-        accidentID = b.getInt("accidentID");
-        currentPoint = Content.INSTANCE.getAccidents().get(accidentID);
+        generalLayout = findViewById(GENERAL_INFORMATION_VIEW);
+        statusView = (TextView) findViewById(STATUS_VIEW);
+        medicineView = (TextView) findViewById(MEDICINE_VIEW);
 
-        detailVolunteersFragment = DetailVolunteersFragment.newInstance(accidentID);
-        detailMessagesFragment = DetailMessagesFragment.newInstance(accidentID);
-        detailHistoryFragment = DetailHistoryFragment.newInstance(accidentID);
+        menuReconstruction();
+    }
 
+    private void setupFragments() {
         /*
         * Описание группы закладок внутри деталей происшествия
         */
-        RadioGroup mcDetTabsGroup = (RadioGroup) findViewById(R.id.details_tabs_group);
-        mcDetTabsGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            AccidentDetailsFragments fragment;
+        tabs.setVisibility(View.VISIBLE);
+        tabs.setOnCheckedChangeListener((group, checkedId) -> {
+            Fragment fragment;
             switch (group.getCheckedRadioButtonId()) {
-                case R.id.details_tab_messages:
+                case MESSAGE_TAB:
                     fragment = detailMessagesFragment;
                     break;
-                case R.id.details_tab_history:
+                case HISTORY_TAB:
                     fragment = detailHistoryFragment;
                     break;
-                case R.id.details_tab_people:
+                case VOLUNTEER_TAB:
                     fragment = detailVolunteersFragment;
                     break;
                 default:
                     return;
             }
-            getFragmentManager().beginTransaction().replace(R.id.details_tab_content, fragment).commit();
+            getFragmentManager().beginTransaction().replace(FRAGMENT_ROOT_VIEW, fragment).commit();
         });
 
-        generalLayout = findViewById(R.id.acc_details_general);
-        statusView = (TextView) findViewById(R.id.acc_details_general_status);
-        medicineView = (TextView) findViewById(R.id.acc_details_medicine);
-        currentPoint.requestDetails(response -> getFragmentManager().beginTransaction().replace(R.id.details_tab_content, detailVolunteersFragment).commit());
-
-        menuReconstruction();
+        getFragmentManager().beginTransaction().replace(FRAGMENT_ROOT_VIEW, detailVolunteersFragment).commit();
     }
 
     @Override
@@ -120,7 +139,7 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         super.onResume();
         generalLayout.setOnLongClickListener(v -> {
             PopupWindow popupWindow;
-            popupWindow = (new AccidentListPopup(AccidentDetailsActivity.this, currentPoint.getId()))
+            popupWindow = (new AccidentListPopup(AccidentDetailsActivity.this, accident.getId()))
                     .getPopupWindow(AccidentDetailsActivity.this);
             int viewLocation[] = new int[ 2 ];
             v.getLocationOnScreen(viewLocation);
@@ -131,24 +150,24 @@ public class AccidentDetailsActivity extends AppCompatActivity {
     }
 
     public void update() {
-        currentPoint = Content.INSTANCE.getAccidents().get(accidentID);
+        accident = Content.INSTANCE.getAccidents().get(accident.getId());
 
         ActionBar actionBar = getSupportActionBar();
         //TODO Разобраться с nullPointerException и убрать костыль
-        if (currentPoint == null || actionBar == null) return;
-        actionBar.setTitle(currentPoint.getType().getText() + ". " + currentPoint.getDistanceString());
+        if (accident == null || actionBar == null) return;
+        actionBar.setTitle(accident.getType().getText() + ". " + accident.getDistanceString());
 
-        statusView.setVisibility(currentPoint.getStatus() == ACTIVE ? View.GONE : View.VISIBLE);
-        medicineView.setVisibility(currentPoint.getMedicine() == Medicine.UNKNOWN ? View.GONE : View.VISIBLE);
+        statusView.setVisibility(accident.getStatus() == ACTIVE ? View.GONE : View.VISIBLE);
+        medicineView.setVisibility(accident.getMedicine() == Medicine.UNKNOWN ? View.GONE : View.VISIBLE);
 
-        ((TextView) findViewById(R.id.acc_details_general_type)).setText(currentPoint.getType().getText());
-        medicineView.setText("(" + currentPoint.getMedicine().getText() + ")");
-        statusView.setText(currentPoint.getStatus().getText());
-        ((TextView) findViewById(R.id.acc_details_general_time)).setText(DateUtils.getTime(currentPoint.getTime()));
-        ((TextView) findViewById(R.id.acc_details_general_owner)).setText(Content.INSTANCE.getVolunteers().get(currentPoint.getOwner()).getName());
-        ((TextView) findViewById(R.id.acc_details_general_address)).setText(currentPoint.getAddress());
-        ((TextView) findViewById(R.id.acc_details_general_distance)).setText(currentPoint.getDistanceString());
-        ((TextView) findViewById(R.id.acc_details_general_description)).setText(currentPoint.getDescription());
+        ((TextView) findViewById(TYPE_VIEW)).setText(accident.getType().getText());
+        medicineView.setText("(" + accident.getMedicine().getText() + ")");
+        statusView.setText(accident.getStatus().getText());
+        ((TextView) findViewById(TIME_VIEW)).setText(DateUtils.getTime(accident.getTime()));
+        ((TextView) findViewById(OWNER_VIEW)).setText(Content.INSTANCE.getVolunteers().get(accident.getOwner()).getName());
+        ((TextView) findViewById(ADDRESS_VIEW)).setText(accident.getAddress());
+        ((TextView) findViewById(DISTANCE_VIEW)).setText(accident.getDistanceString());
+        ((TextView) findViewById(DESCRIPTION_VIEW)).setText(accident.getDescription());
 
         menuReconstruction();
     }
@@ -156,11 +175,11 @@ public class AccidentDetailsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_accident_details, menu);
+        getMenuInflater().inflate(MENU, menu);
         mMenu = menu;
         //TODO Костыль
-        if (currentPoint == null) return super.onCreateOptionsMenu(menu);
-        List<String> contactNumbers = Utils.getPhonesFromText(currentPoint.getDescription());
+        if (accident == null) return super.onCreateOptionsMenu(menu);
+        List<String> contactNumbers = Utils.getPhonesFromText(accident.getDescription());
         if (contactNumbers.isEmpty()) return super.onCreateOptionsMenu(menu);
         if (contactNumbers.size() == 1) {
             mMenu.add(0, SMS_MENU_MIN_ID, 0, getString(R.string.send_sms) + contactNumbers.get(0));
@@ -178,14 +197,14 @@ public class AccidentDetailsActivity extends AppCompatActivity {
 
     private void menuReconstruction() {
         if (mMenu == null) return;
-        currentPoint = Content.INSTANCE.getAccidents().get(accidentID);
+        accident = Content.INSTANCE.getAccidents().get(accident.getId());
         MenuItem finish = mMenu.findItem(R.id.menu_acc_finish);
         MenuItem hide   = mMenu.findItem(R.id.menu_acc_hide);
         finish.setVisible(User.INSTANCE.isModerator());
         hide.setVisible(User.INSTANCE.isModerator());
         finish.setTitle(R.string.finish);
         hide.setTitle(R.string.hide);
-        switch (currentPoint.getStatus()) {
+        switch (accident.getStatus()) {
             case ENDED:
                 finish.setTitle(R.string.unfinish);
                 break;
@@ -217,7 +236,7 @@ public class AccidentDetailsActivity extends AppCompatActivity {
                 return true;
             case R.id.action_share:
                 //todo pornography
-                Router.INSTANCE.share(this, AccidentListPopup.getAccidentTextToCopy(currentPoint));
+                Router.INSTANCE.share(this, AccidentListPopup.getAccidentTextToCopy(accident));
                 return true;
             case R.id.action_hide_info:
             case R.id.menu_hide_info:
@@ -250,48 +269,32 @@ public class AccidentDetailsActivity extends AppCompatActivity {
 
     private void sendFinishRequest() {
         //TODO Суперкостыль !!!
-        if (Content.INSTANCE.getAccidents().get(accidentID).getStatus() == ENDED) {
-            new ActivateAccident(accidentID, new AccidentChangeCallback());
+        if (Content.INSTANCE.getAccidents().get(accident.getId()).getStatus() == ENDED) {
+            new ActivateAccident(accident.getId(), new AccidentChangeCallback());
         } else {
-            new EndAccident(accidentID, new AccidentChangeCallback());
+            new EndAccident(accident.getId(), new AccidentChangeCallback());
         }
-//
-//        accNewState = Content.INSTANCE.getAccidents().get(accidentID).getStatus() == ENDED ? ACTIVE : ENDED;
-//
-//        new AccidentChangeStateRequest(accNewState.getCode(), accidentID, new AccidentChangeCallback());
     }
 
     private void sendHideRequest() {
         //TODO какая то хуета
-        if (Content.INSTANCE.getAccidents().get(accidentID).getStatus() == ENDED) {
-            new ActivateAccident(accidentID, new AccidentChangeCallback());
+        if (Content.INSTANCE.getAccidents().get(accident.getId()).getStatus() == ENDED) {
+            new ActivateAccident(accident.getId(), new AccidentChangeCallback());
             accNewState = ACTIVE;
         } else {
-            new HideAccident(accidentID, new AccidentChangeCallback());
+            new HideAccident(accident.getId(), new AccidentChangeCallback());
             accNewState = ENDED;
         }
-
-//        boolean s = Content.INSTANCE.getAccidents().get(accidentID).getStatus() == ENDED;
-//        accNewState = s ? ACTIVE : ENDED;
-//        new AccidentChangeStateRequest(s ? ACTIVE.getCode() : HIDDEN.getCode(), accidentID, new AccidentChangeCallback());
     }
 
     private class AccidentChangeCallback implements CoreRequest.RequestResultCallback {
         @Override
         public void call(@NonNull JSONObject result) {
-
             if (result.has("error")) {
-                String error;
-                try {
-                    error = result.getString("error");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    error = "Неизвестная ошибка";
-                }
-                ToastUtils.show(AccidentDetailsActivity.this, error);
+                //todo
             } else {
                 //TODO Суперкостыль
-                currentPoint = AccidentFactory.INSTANCE.refactor(currentPoint, accNewState);
+                accident = AccidentFactory.INSTANCE.refactor(accident, accNewState);
                 update();
             }
         }
@@ -299,12 +302,7 @@ public class AccidentDetailsActivity extends AppCompatActivity {
 
     public void jumpToMap() {
         Bundle bundle = new Bundle();
-        bundle.putInt("toMap", currentPoint.getId());
+        bundle.putInt("toMap", accident.getId());
         Router.INSTANCE.goTo(this, Router.Target.MAIN, bundle);
     }
-
-    public Accident getCurrentPoint() {
-        return currentPoint;
-    }
-
 }

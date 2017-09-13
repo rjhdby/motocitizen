@@ -131,7 +131,7 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
         int currentInplace = Content.INSTANCE.getInPlace();
         if (currentInplace != 0) {
             if (isInPlace(location, currentInplace)) return;
-            Content.INSTANCE.setLeave(currentInplace);
+//            Content.INSTANCE.setLeave(currentInplace); //todo
             new LeaveRequest(currentInplace, null);
         }
         for (int accId : Content.INSTANCE.getAccidents().keySet()) {
@@ -149,7 +149,7 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
 
     private boolean isInPlace(Location location, int accId) {
         Accident acc = Content.INSTANCE.getAccidents().get(accId);
-        return acc != null && location != null && (acc.getLocation().distanceTo(location) - location.getAccuracy() * 2 - 1000 < 0);
+        return acc != null && location != null && (acc.getLocation().distanceTo(location) - location.getAccuracy() < 100);
     }
 
     public String getAddress(LatLng location) {

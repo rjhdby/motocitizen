@@ -78,27 +78,4 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
         val damage = if (medicine == Medicine.UNKNOWN || !isAccident()) "" else ", " + medicine.text
         return String.format("%s%s(%s)%n%s%n%s", type.text, damage, distanceString, address, description)
     }
-
-    fun requestDetails(callback: CoreRequest.RequestResultCallback) {
-        DetailsRequest(id, object : CoreRequest.RequestResultCallback {
-            override fun call(response: JSONObject) {
-                try {
-                    Content.addVolunteers(response.getJSONObject("r").getJSONObject("u"))
-                    val volunteersJSON = response.getJSONObject("r").getJSONArray("v")
-                    val messagesJSON = response.getJSONObject("r").getJSONArray("m")
-                    val historyJSON = response.getJSONObject("r").getJSONArray("h")
-                    (0 until volunteersJSON.length()).mapTo(volunteers) { VolunteerAction(volunteersJSON.getJSONObject(it)) }
-                    (0 until messagesJSON.length())
-                            .map { Message(messagesJSON.getJSONObject(it)) }
-                            .forEach { messages.add(it) }
-                    messages.sortBy { it.id }
-                    for (i in 0 until historyJSON.length()) history.add(History(historyJSON.getJSONObject(i)))
-                } catch (e: JSONException) {
-                    e.printStackTrace()
-                } finally {
-                    callback.call(response)
-                }
-            }
-        })
-    }
 }
