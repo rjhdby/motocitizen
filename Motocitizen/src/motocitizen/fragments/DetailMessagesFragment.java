@@ -14,6 +14,9 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import motocitizen.activity.AccidentDetailsActivity;
 import motocitizen.content.Content;
 import motocitizen.content.accident.Accident;
@@ -22,7 +25,6 @@ import motocitizen.database.StoreMessages;
 import motocitizen.main.R;
 import motocitizen.network.CoreRequest;
 import motocitizen.network.requests.SendMessageRequest;
-import motocitizen.rows.accident.AccidentRowFactory;
 import motocitizen.rows.message.MessageRowFactory;
 import motocitizen.user.User;
 import motocitizen.utils.ToastUtils;
@@ -57,7 +59,6 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
 
         activityDetailsMessagesScroll = (ScrollView) viewMain.findViewById(R.id.activity__details_messages_scroll);
 
-        //mcNewMessageText.addTextChangedListener(new NewMessageTextWatcher());
         newMessageButton.setOnClickListener(v -> {
             String temp = mcNewMessageText.getText().toString().replaceAll("\\s", "");
             if (temp.length() > 0) {
@@ -78,25 +79,42 @@ public class DetailMessagesFragment extends AccidentDetailsFragments {
         messagesTable.removeAllViews();
         final Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
 
-        Integer preLast = 0;
-        Integer last    = 0;
-        for (Integer key : accident.getMessages().keySet()) {
-            if (last != 0) processMessage(accident, last, preLast, key);
-            preLast = last;
-            last = key;
+
+//todo какой то лютый пиздец
+        if (accident.getMessages().size() == 0) return;
+
+        Integer       last  = 0;
+        List<Message> group = new ArrayList<>();
+        for (Message message : accident.getMessages()) {
+            if (last != message.getOwner() && last != 0) {
+                addMessageRows(group);
+                group.clear();
+            }
+            group.add(message);
+            last = message.getOwner();
         }
-        if (accident.getMessages().size() > 0) {
-            updateUnreadMessages(accident.getId(), last);
-            processMessage(accident, last, preLast, 0);
-        }
+        addMessageRows(group);
+
+        updateUnreadMessages(accident.getId(), last);
         setupAccess();
     }
 
-    private void processMessage(Accident accident, Integer current, Integer last, Integer next) {
-        Message message = accident.getMessages().get(current);
-        View    row     = MessageRowFactory.INSTANCE.make(getActivity(), message, last, next);
-        row.setOnLongClickListener(new MessageRowLongClickListener(message, accident));
-        messagesTable.addView(row);
+    private void addMessageRows(List<Message> list) {
+        if (list.size() == 1) {
+            drawRow(MessageRowFactory.INSTANCE.makeOne(getActivity(), list.get(0)), list.get(0));
+        } else {
+            drawRow(MessageRowFactory.INSTANCE.makeFirst(getActivity(), list.get(0)), list.get(0));
+            for (int i = 1; i < list.size() - 1; i++) {
+                drawRow(MessageRowFactory.INSTANCE.makeMiddle(getActivity(), list.get(i)), list.get(i));
+            }
+            drawRow(MessageRowFactory.INSTANCE.makeLast(getActivity(), list.get(list.size() - 1)), list.get(list.size() - 1));
+        }
+    }
+
+    private void drawRow(View view, Message message) {
+        final Accident accident = ((AccidentDetailsActivity) getActivity()).getCurrentPoint();
+        view.setOnLongClickListener(new MessageRowLongClickListener(message, accident));
+        messagesTable.addView(view);
     }
 
     private void updateUnreadMessages(int accidentId, int messageId) {

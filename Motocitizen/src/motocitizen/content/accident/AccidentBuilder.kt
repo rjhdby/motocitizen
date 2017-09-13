@@ -31,7 +31,7 @@ class AccidentBuilder {
         private set
     var description = ""
         private set
-    var messages = TreeMap<Int, Message>()
+    var messages = ArrayList<Message>()
         private set
     var volunteers = ArrayList<VolunteerAction>()
         private set
@@ -80,21 +80,6 @@ class AccidentBuilder {
 
     fun setDescription(description: String): AccidentBuilder {
         this.description = description
-        return this
-    }
-
-    fun attachMessages(messages: TreeMap<Int, Message>): AccidentBuilder {
-        this.messages = messages
-        return this
-    }
-
-    fun attachVolunteers(volunteers: ArrayList<VolunteerAction>): AccidentBuilder {
-        this.volunteers = volunteers
-        return this
-    }
-
-    fun attachHistory(history: ArrayList<History>): AccidentBuilder {
-        this.history = history
         return this
     }
 

@@ -30,7 +30,7 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
             field = value.trim()
         }
 
-    var messages = TreeMap<Int, Message>()
+    var messages = ArrayList<Message>()
     val volunteers = ArrayList<VolunteerAction>()
     var history = ArrayList<History>()
 
@@ -53,7 +53,7 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
         }
 
     val unreadMessagesCount: Int
-        get() = messages.keys.count { !messages[it]!!.read }
+        get() = messages.count { it.read }
 
     fun isInvisible(): Boolean {
         val hidden = status == HIDDEN && !User.isModerator
@@ -90,7 +90,8 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
                     (0 until volunteersJSON.length()).mapTo(volunteers) { VolunteerAction(volunteersJSON.getJSONObject(it)) }
                     (0 until messagesJSON.length())
                             .map { Message(messagesJSON.getJSONObject(it)) }
-                            .forEach { messages.put(it.id, it) }
+                            .forEach { messages.add(it) }
+                    messages.sortBy { it.id }
                     for (i in 0 until historyJSON.length()) history.add(History(historyJSON.getJSONObject(i)))
                 } catch (e: JSONException) {
                     e.printStackTrace()
