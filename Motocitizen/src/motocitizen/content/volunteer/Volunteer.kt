@@ -3,7 +3,9 @@ package motocitizen.content.volunteer
 import org.json.JSONException
 import org.json.JSONObject
 
-class Volunteer(val id: Int, val name: String) {
-    @Throws(JSONException::class)
-    constructor(json: JSONObject) : this(json.getInt("id"), json.getString("name"))
+class Volunteer
+@Throws(JSONException::class)
+constructor(json: JSONObject) {
+    val id = json.getInt("id")
+    val name: String = json.getString("name")
 }
