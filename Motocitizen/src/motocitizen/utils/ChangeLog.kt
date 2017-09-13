@@ -38,11 +38,9 @@ object ChangeLog {
             val ins = context.resources.openRawResource(R.raw.changelog)
             val br = BufferedReader(InputStreamReader(ins))
 
-            var line: String
             while (true) {
-                line = br.readLine()
-                if (line == null) break
-                line = line.trim { it <= ' ' }
+                var line: String? = br.readLine() ?: break
+                line = line!!.trim { it <= ' ' }
                 val marker = if (line.isNotEmpty()) line[0] else '\u0000'
                 if (marker == '$') {
                     closeList()

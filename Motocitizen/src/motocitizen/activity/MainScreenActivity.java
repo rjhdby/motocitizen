@@ -19,6 +19,9 @@ import com.karumi.dexter.Dexter;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.single.BasePermissionListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import motocitizen.MyApp;
 import motocitizen.content.Content;
 import motocitizen.content.accident.Accident;
@@ -28,13 +31,14 @@ import motocitizen.maps.MyMapManager;
 import motocitizen.maps.google.MyGoogleMapManager;
 import motocitizen.router.Router;
 import motocitizen.rows.accident.AccidentRowFactory;
+import motocitizen.rows.accident.Row;
 import motocitizen.user.User;
 import motocitizen.utils.BounceScrollView;
 import motocitizen.utils.ChangeLog;
 import motocitizen.utils.Preferences;
 import motocitizen.utils.Utils;
 
-public class MainScreenActivity extends AppCompatActivity implements MyFragmentInterface {
+public class MainScreenActivity extends AppCompatActivity {
     private static final byte LIST = 0;
     private static final byte MAP  = 1;
 
@@ -144,21 +148,20 @@ public class MainScreenActivity extends AppCompatActivity implements MyFragmentI
         if (!subTitle.isEmpty()) actionBar.setSubtitle(subTitle);
     }
 
-    @Override
     public void setPermissions() {
         createAccButton.setVisibility(User.INSTANCE.isStandard() ? View.VISIBLE : View.INVISIBLE);
     }
 
-    @Override
     public void redraw() {
-        listContent.removeAllViews();
-
-        //TODO YesterdayRow ???
-        //TODO Нет событий
-
+        List<Row> newList = new ArrayList();
         for (Accident accident : Content.INSTANCE.getListReversed()) {
             if (accident.isInvisible()) continue;
-            listContent.addView(AccidentRowFactory.INSTANCE.make(this, accident));
+            newList.add(AccidentRowFactory.INSTANCE.make(this, accident));
+        }
+        listContent.removeAllViews();
+
+        for (Row row : newList) {
+            listContent.addView(row);
         }
         map.placeAccidents(this);
     }
@@ -167,12 +170,10 @@ public class MainScreenActivity extends AppCompatActivity implements MyFragmentI
         if (inTransaction) return;
         if (MyApp.isOnline(this)) {
             startRefreshAnimation();
-            Content.INSTANCE.requestUpdate(result -> {
-                this.runOnUiThread(() -> {
-                    stopRefreshAnimation();
-                    redraw();
-                });
-            });
+            Content.INSTANCE.requestUpdate(result -> this.runOnUiThread(() -> {
+                stopRefreshAnimation();
+                redraw();
+            }));
         } else {
             Toast.makeText(this, getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
         }

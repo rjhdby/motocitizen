@@ -8,11 +8,14 @@ import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import android.widget.Toast;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKAccessTokenTracker;
 import com.vk.sdk.VKSdk;
 
 import motocitizen.activity.AuthActivity;
+import motocitizen.database.DbOpenHelper;
+import motocitizen.geocoder.MyGeoCoder;
 import motocitizen.user.User;
 import motocitizen.utils.Preferences;
 
@@ -39,6 +42,9 @@ public class MyApp extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         Preferences.INSTANCE.initialize(this);
+        DbOpenHelper.init(this);
+        MyGeoCoder.init(this);
+        FirebaseMessaging.getInstance().subscribeToTopic("accidents");
         vkAccessTokenTracker.startTracking();
         VKSdk.initialize(this);
     }

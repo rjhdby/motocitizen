@@ -2,7 +2,6 @@ package motocitizen.fragments
 
 import android.app.Activity
 import android.app.Fragment
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -57,13 +56,8 @@ class DetailVolunteersFragment() : Fragment() {
         confirmButton.setOnClickListener { _ -> showOnWayDialog() }
         cancelButton.setOnClickListener { _ -> showCancelDialog() }
         toMapButton.setOnClickListener { _ -> (activity as AccidentDetailsActivity).jumpToMap() }
-
-        return rootView
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
         update()
+        return rootView
     }
 
     private fun update() {
