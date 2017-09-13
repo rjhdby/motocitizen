@@ -14,7 +14,7 @@ import com.vk.sdk.VKAccessTokenTracker;
 import com.vk.sdk.VKSdk;
 
 import motocitizen.activity.AuthActivity;
-import motocitizen.database.DbOpenHelper;
+import motocitizen.database.Database;
 import motocitizen.geocoder.MyGeoCoder;
 import motocitizen.user.User;
 import motocitizen.utils.Preferences;
@@ -42,7 +42,7 @@ public class MyApp extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         Preferences.INSTANCE.initialize(this);
-        DbOpenHelper.init(this);
+        Database.INSTANCE.initialize(this);
         MyGeoCoder.init(this);
         FirebaseMessaging.getInstance().subscribeToTopic("accidents");
         vkAccessTokenTracker.startTracking();

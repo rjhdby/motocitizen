@@ -4,7 +4,6 @@ import android.Manifest
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 
-import com.google.firebase.messaging.FirebaseMessaging
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
@@ -12,8 +11,6 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.BasePermissionListener
 
-import motocitizen.database.DbOpenHelper
-import motocitizen.geocoder.MyGeoCoder
 import motocitizen.geolocation.MyLocationManager
 import motocitizen.main.R
 import motocitizen.network.CoreRequest
