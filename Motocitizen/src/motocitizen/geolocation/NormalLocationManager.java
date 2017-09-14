@@ -14,27 +14,19 @@ import com.google.android.gms.maps.model.LatLng;
 import java.io.IOException;
 import java.util.List;
 
-import motocitizen.ui.activity.MainScreenActivity;
+import kotlin.Unit;
 import motocitizen.content.Content;
 import motocitizen.content.accident.Accident;
-import motocitizen.geocoder.MyGeoCoder;
 import motocitizen.datasources.network.requests.InPlaceRequest;
 import motocitizen.datasources.network.requests.LeaveRequest;
+import motocitizen.geocoder.MyGeoCoder;
+import motocitizen.ui.activity.MainScreenActivity;
 import motocitizen.user.User;
 import motocitizen.utils.LocationUtils;
 import motocitizen.utils.Preferences;
 
 public class NormalLocationManager implements SecuredLocationManagerInterface {
     /* constants */
-    private static final int LOW_INTERVAL     = 60000;
-    private static final int LOW_BEST         = 30000;
-    private static final int LOW_DISPLACEMENT = 200;
-
-    private static final int HIGH_INTERVAL     = 5000;
-    private static final int HIGH_BEST         = 1000;
-    private static final int HIGH_DISPLACEMENT = 10;
-
-
     private static final int ARRIVED_MAX_ACCURACY = 300;
     /* end constants */
 
@@ -63,28 +55,17 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
     }
 
     private LocationRequest getProvider(int accuracy) {
-        int interval, bestInterval, displacement;
         switch (accuracy) {
             case LocationRequest.PRIORITY_HIGH_ACCURACY:
-                interval = HIGH_INTERVAL;
-                bestInterval = HIGH_BEST;
-                displacement = HIGH_DISPLACEMENT;
-                break;
+                return LocationRequestFactory.INSTANCE.accurate();
             case LocationRequest.PRIORITY_LOW_POWER:
             default:
-                interval = LOW_INTERVAL;
-                bestInterval = LOW_BEST;
-                displacement = LOW_DISPLACEMENT;
+                return LocationRequestFactory.INSTANCE.coarse();
         }
-        LocationRequest lr = new LocationRequest();
-        lr.setInterval(interval);
-        lr.setFastestInterval(bestInterval);
-        lr.setSmallestDisplacement(displacement);
-        lr.setPriority(accuracy);
-        return lr;
     }
 
-    @SuppressWarnings({ "MissingPermission" })
+
+    @SuppressWarnings({"MissingPermission"})
     public Location getLocation() {
         if (googleApiClient != null) {
             current = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
@@ -93,7 +74,7 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
         return current;
     }
 
-    @SuppressWarnings({ "MissingPermission" })
+    @SuppressWarnings({"MissingPermission"})
     private void runLocationService(Context context, int accuracy) {
         setup();
         locationRequest = getProvider(accuracy);
@@ -132,13 +113,13 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
         if (currentInplace != 0) {
             if (isInPlace(location, currentInplace)) return;
 //            Content.INSTANCE.setLeave(currentInplace); //todo
-            new LeaveRequest(currentInplace, null);
+            new LeaveRequest(currentInplace, (result) -> Unit.INSTANCE);
         }
         for (int accId : Content.INSTANCE.getAccidents().keySet()) {
             if (accId == currentInplace) continue;
             if (isArrived(location, accId)) {
                 Content.INSTANCE.setInPlace(accId);
-                new InPlaceRequest(accId, null);
+                new InPlaceRequest(accId, (result) -> Unit.INSTANCE);
             }
         }
     }
@@ -153,41 +134,50 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
     }
 
     public String getAddress(LatLng location) {
-        //TODO Разобраться. Выглядит страшно.
-        StringBuilder res = new StringBuilder();
         try {
-            List<Address> list;
-            list = MyGeoCoder.getInstance().getFromLocation(location.latitude, location.longitude, 1);
+            List<Address> list = findAddressByLocation(location);
             if (list == null || list.size() == 0) {
                 showDialogExact = true;
                 return location.longitude + " " + location.longitude;
             }
 
-            Address address  = list.get(0);
-            String  locality = address.getLocality();
-            if (locality == null) locality = address.getAdminArea();
-            if (locality == null && address.getMaxAddressLineIndex() > 0)
-                locality = address.getAddressLine(0);
-
-            String thoroughfare = null != address.getThoroughfare() ? address.getThoroughfare() : address.getSubAdminArea();
-
-            String featureName = address.getFeatureName();
-
-            if (locality != null) res.append(locality);
-            if (thoroughfare != null) {
-                if (res.length() > 0) res.append(" ");
-                res.append(thoroughfare);
-            }
-            if (featureName != null) if (res.length() > 0) res.append(" ");
-            res.append(featureName);
+            return buildAddressString(list.get(0));
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return res.toString();
+        return "";
     }
 
-    @SuppressWarnings({ "MissingPermission" })
+    private String buildAddressString(Address address) {
+        return (new StringBuilder())
+                .append(extractLocality(address))
+                .append(" ")
+                .append(extractThoroughfare(address))
+                .append(" ")
+                .append(address.getFeatureName() != null ? address.getFeatureName() : "")
+                .toString()
+                .trim();
+    }
+
+    private List<Address> findAddressByLocation(LatLng location) throws IOException {
+        return MyGeoCoder.getInstance().getFromLocation(location.latitude, location.longitude, 1);
+    }
+
+    private String extractLocality(Address address) {
+        if (address.getLocality() != null) return address.getLocality();
+        if (address.getAdminArea() != null) return address.getAdminArea();
+        if (address.getMaxAddressLineIndex() > 0) return address.getAddressLine(0);
+        return "";
+    }
+
+    private String extractThoroughfare(Address address) {
+        if (address.getThoroughfare() != null) return address.getThoroughfare();
+        if (address.getSubAdminArea() != null) return address.getSubAdminArea();
+        return "";
+    }
+
+    @SuppressWarnings({"MissingPermission"})
     private class MyConnectionCallback implements GoogleApiClient.ConnectionCallbacks {
         @Override
         public void onConnected(Bundle connectionHint) {
