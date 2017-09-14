@@ -21,11 +21,9 @@ object User {
 
     fun auth(login: String, password: String, callback: CoreRequest.RequestResultCallback) {
         Preferences.password = password
-        AuthRequest(login, getPassHash(password), object : CoreRequest.RequestResultCallback {
-            override fun call(response: JSONObject) {
-                parseAuthResult(response, login)
-                callback.call(response)
-            }
+        AuthRequest(login, getPassHash(password), { response ->
+            parseAuthResult(response, login)
+            callback.call(response)
         })
     }
 

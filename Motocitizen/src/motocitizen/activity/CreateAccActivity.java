@@ -348,36 +348,39 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     //{"result":"ERROR PREREQUISITES"}
     private void confirm() {
         disableConfirm();
-        new CreateAccidentRequest(ab.build(), response -> {
-            try {
-                if (response.has("result") && response.getJSONObject("result").has("ID")) {
-                    finish();
-                    return;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            String message = response.optString("error", response.optString("result", ""));
-            switch (message) {
-                case "AUTH ERROR":
-                    message = "Вы не авторизованы";
-                    break;
-                case "NO RIGHTS":
-                case "READONLY":
-                    message = "Недостаточно прав";
-                    break;
-                case "PROBABLY SPAM":
-                    message = "Нельзя создавать события так часто";
-                    break;
-                case "":
-                    message = "Неизвестная ошибка";
-            }
-            final String error = message;
-            CreateAccActivity.this.runOnUiThread(() -> {
-                ToastUtils.show(CreateAccActivity.this, error);
-                enableConfirm();
-            });
-        }, ((CheckBox) findViewById(R.id.forStat)).isChecked());
+        new CreateAccidentRequest(ab.build(),
+                                  response -> {
+                                      try {
+                                          if (response.has("result") && response.getJSONObject("result").has("ID")) {
+                                              finish();
+                                              return Unit.INSTANCE;
+                                          }
+                                      } catch (JSONException e) {
+                                          e.printStackTrace();
+                                      }
+                                      String message = response.optString("error", response.optString("result", ""));
+                                      switch (message) {
+                                          case "AUTH ERROR":
+                                              message = "Вы не авторизованы";
+                                              break;
+                                          case "NO RIGHTS":
+                                          case "READONLY":
+                                              message = "Недостаточно прав";
+                                              break;
+                                          case "PROBABLY SPAM":
+                                              message = "Нельзя создавать события так часто";
+                                              break;
+                                          case "":
+                                              message = "Неизвестная ошибка";
+                                      }
+                                      final String error = message;
+                                      CreateAccActivity.this.runOnUiThread(() -> {
+                                          ToastUtils.show(CreateAccActivity.this, error);
+                                          enableConfirm();
+                                      });
+                                      return Unit.INSTANCE;
+                                  },
+                                  ((CheckBox) findViewById(R.id.forStat)).isChecked());
     }
 
     private void backButton() {

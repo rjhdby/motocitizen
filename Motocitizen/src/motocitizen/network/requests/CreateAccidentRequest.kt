@@ -3,8 +3,9 @@ package motocitizen.network.requests
 import motocitizen.content.accident.Accident
 import motocitizen.network.ApiRequestWithAuth
 import motocitizen.network.Methods
+import org.json.JSONObject
 
-class CreateAccidentRequest(accident: Accident, callback: RequestResultCallback, forStat: Boolean = false) : ApiRequestWithAuth(callback) {
+class CreateAccidentRequest(accident: Accident, callback: (JSONObject) -> Unit, forStat: Boolean = false) : ApiRequestWithAuth(callback) {
     init {
         params.put("m", Methods.CREATE.code)
         params.put("t", accident.type.code)

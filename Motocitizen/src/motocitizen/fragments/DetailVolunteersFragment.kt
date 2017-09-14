@@ -12,13 +12,11 @@ import motocitizen.activity.AccidentDetailsActivity
 import motocitizen.content.Content
 import motocitizen.content.accident.Accident
 import motocitizen.main.R
-import motocitizen.network.CoreRequest
 import motocitizen.network.requests.CancelOnWayRequest
 import motocitizen.network.requests.OnWayRequest
 import motocitizen.rows.volunteer.VolunteerRowFactory
 import motocitizen.user.User
 import motocitizen.utils.Preferences
-import org.json.JSONObject
 
 class DetailVolunteersFragment() : Fragment() {
     private val ROOT_LAYOUT = R.layout.fragment_detail_volunteers
@@ -97,20 +95,12 @@ class DetailVolunteersFragment() : Fragment() {
 
     private fun sendOnWay() {
         Preferences.onWay = accident.id
-        OnWayRequest(accident.id, object : CoreRequest.RequestResultCallback {
-            override fun call(response: JSONObject) {
-                //todo
-            }
-        })
+        OnWayRequest(accident.id, { _ -> })//todo
     }
 
     private fun sendCancelOnWay() {
         Preferences.onWay = 0
-        CancelOnWayRequest(accident.id, object : CoreRequest.RequestResultCallback {
-            override fun call(response: JSONObject) {
-                //todo
-            }
-        })
+        CancelOnWayRequest(accident.id, { _ -> }) //todo
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

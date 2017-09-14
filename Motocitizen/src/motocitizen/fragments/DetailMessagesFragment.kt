@@ -15,7 +15,6 @@ import motocitizen.content.accident.Accident
 import motocitizen.content.message.Message
 import motocitizen.database.StoreMessages
 import motocitizen.main.R
-import motocitizen.network.CoreRequest
 import motocitizen.network.requests.SendMessageRequest
 import motocitizen.rows.message.MessageRowFactory
 import motocitizen.user.User
@@ -68,7 +67,7 @@ class DetailMessagesFragment() : Fragment() {
         rootView.findViewById(SEND_BUTTON).setOnClickListener { _ ->
             val text = inputField.text.toString().replace("\\s".toRegex(), "")
             if (text.isNotEmpty()) {
-                SendMessageRequest(inputField.text.toString(), accident.id, SendMessageCallback())
+                SendMessageRequest(inputField.text.toString(), accident.id, { result -> sendMessageCallback(result) })
                 inputField.setText("")
             }
         }
@@ -116,28 +115,24 @@ class DetailMessagesFragment() : Fragment() {
         StoreMessages.setLast(accidentId, messageId)
     }
 
-    private inner class SendMessageCallback : CoreRequest.RequestResultCallback {
-        override fun call(response: JSONObject) {
-            try {
-                if (response.getJSONObject("e").has("c")) {
-                    val text = response.getJSONObject("e").getString("t")
-                    activity.runOnUiThread { show(activity, text) }
-                }
-            } catch (e: JSONException) {
-                show(activity, "Неизвестная ошибка" + response.toString())
-                e.printStackTrace()
+    private fun sendMessageCallback(response: JSONObject) {
+        try {
+            if (response.getJSONObject("e").has("c")) {
+                val text = response.getJSONObject("e").getString("t")
+                activity.runOnUiThread { show(activity, text) }
             }
-
-            Content.requestDetailsForAccident(accident, object : CoreRequest.RequestResultCallback {
-                override fun call(response: JSONObject) {
-                    activity.runOnUiThread {
-                        (activity as AccidentDetailsActivity).update()
-                        update()
-                        scrollView.post { scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
-                    }
-                }
-            })
+        } catch (e: JSONException) {
+            show(activity, "Неизвестная ошибка" + response.toString())
+            e.printStackTrace()
         }
+
+        Content.requestDetailsForAccident(accident, {
+            activity.runOnUiThread {
+                (activity as AccidentDetailsActivity).update()
+                update()
+                scrollView.post { scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
+            }
+        })
     }
 
     private inner class MessageRowLongClickListener internal constructor(private val message: Message) : View.OnLongClickListener {

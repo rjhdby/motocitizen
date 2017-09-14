@@ -14,6 +14,7 @@ import android.widget.TableRow;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import kotlin.Unit;
 import motocitizen.content.accident.Accident;
 import motocitizen.main.R;
 import motocitizen.network.requests.ActivateAccident;
@@ -153,25 +154,15 @@ abstract class PopupWindowGeneral {
         ban.setText("Забанить");
         //TODO разобраться с пирамидой зла
         ban.setOnClickListener(v -> {
-            new BanRequest(id, result -> ((Activity) context).runOnUiThread(() -> ToastUtils.show(context, result.has("error") ? "Ошибка связи с сервером" : "Пользователь забанен")));
+            new BanRequest(id, result -> {
+                ((Activity) context).runOnUiThread(
+                        () -> ToastUtils.show(context, result.has("error") ? "Ошибка связи с сервером" : "Пользователь забанен"));
+                return Unit.INSTANCE;
+            });
             popupWindow.dismiss();
         });
         TableRow tr = new TableRow(content.getContext());
         tr.addView(ban, layoutParams);
         return tr;
-
-        /*
-                    switch (response.getString("ban")) {
-                case "OK":
-                    return "Статус изменен";
-                case "ERROR PREREQUISITES":
-                    return "Неизвестная ошибка " + response.toString();
-                case "NO USER":
-                    return "Пользователь не зарегистрирован";
-                case "AUTH ERROR":
-                case "NO RIGHTS":
-                    return "Недостаточно прав";
-            }
-         */
     }
 }

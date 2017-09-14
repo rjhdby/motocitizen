@@ -22,6 +22,7 @@ import com.karumi.dexter.listener.single.BasePermissionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import kotlin.Unit;
 import motocitizen.MyApp;
 import motocitizen.content.Content;
 import motocitizen.content.accident.Accident;
@@ -170,10 +171,13 @@ public class MainScreenActivity extends AppCompatActivity {
         if (inTransaction) return;
         if (MyApp.isOnline(this)) {
             startRefreshAnimation();
-            Content.INSTANCE.requestUpdate(result -> this.runOnUiThread(() -> {
-                stopRefreshAnimation();
-                redraw();
-            }));
+            Content.INSTANCE.requestUpdate(result -> {
+                this.runOnUiThread(() -> {
+                    stopRefreshAnimation();
+                    redraw();
+                });
+                return Unit.INSTANCE;
+            });
         } else {
             Toast.makeText(this, getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
         }

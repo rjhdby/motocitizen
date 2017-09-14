@@ -16,6 +16,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.LinkedList;
 import java.util.Map;
 
+import kotlin.Unit;
 import motocitizen.activity.AccidentDetailsActivity;
 import motocitizen.content.Content;
 import motocitizen.content.accident.Accident;
@@ -30,7 +31,7 @@ public class NotificationListener extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Map     data = remoteMessage.getData();
         Integer id   = Integer.parseInt(data.get("id").toString());
-        Content.INSTANCE.requestAccident(id, result -> raiseNotification(id));
+        Content.INSTANCE.requestAccident(id, result -> {raiseNotification(id); return Unit.INSTANCE;});
     }
 
     private void raiseNotification(Integer id) {

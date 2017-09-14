@@ -7,7 +7,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 
-abstract class CoreRequest(val callback: RequestResultCallback? = null) {
+abstract class CoreRequest(val callback: (JSONObject) -> Unit) {
     var params: HashMap<String, String> = HashMap()
     abstract val url: String
     private val error = JSONObject("""{"e":{"c":0,"t":"server error"}}""")
@@ -24,12 +24,12 @@ abstract class CoreRequest(val callback: RequestResultCallback? = null) {
     protected fun call() {
         client.newCall(buildRequest()).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                callback?.call(response("HTTP RESPONSE ERROR " + e.toString()))
+                callback(response("HTTP RESPONSE ERROR " + e.toString()))
             }
 
             @Throws(java.io.IOException::class)
             override fun onResponse(call: Call, response: Response) {
-                callback?.call(response(response.body().string()))
+                callback(response(response.body().string()))
             }
         })
     }

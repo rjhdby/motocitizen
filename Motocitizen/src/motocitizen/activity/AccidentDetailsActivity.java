@@ -2,7 +2,6 @@ package motocitizen.activity;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
@@ -14,11 +13,11 @@ import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
 
+import kotlin.Unit;
 import motocitizen.content.Content;
 import motocitizen.content.accident.Accident;
 import motocitizen.content.accident.AccidentFactory;
@@ -28,14 +27,12 @@ import motocitizen.fragments.DetailHistoryFragment;
 import motocitizen.fragments.DetailMessagesFragment;
 import motocitizen.fragments.DetailVolunteersFragment;
 import motocitizen.main.R;
-import motocitizen.network.CoreRequest;
 import motocitizen.network.requests.ActivateAccident;
 import motocitizen.network.requests.EndAccident;
 import motocitizen.network.requests.HideAccident;
 import motocitizen.router.Router;
 import motocitizen.user.User;
 import motocitizen.utils.DateUtils;
-import motocitizen.utils.ToastUtils;
 import motocitizen.utils.Utils;
 import motocitizen.utils.popups.AccidentListPopup;
 
@@ -96,7 +93,10 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         tabs = (RadioGroup) findViewById(TABS_GROUP);
         tabs.setVisibility(View.INVISIBLE);
 
-        Content.INSTANCE.requestDetailsForAccident(accident, response -> this.runOnUiThread(this::setupFragments));
+        Content.INSTANCE.requestDetailsForAccident(accident, response -> {
+            this.runOnUiThread(this::setupFragments);
+            return Unit.INSTANCE;
+        });
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
@@ -270,34 +270,32 @@ public class AccidentDetailsActivity extends AppCompatActivity {
     private void sendFinishRequest() {
         //TODO Суперкостыль !!!
         if (Content.INSTANCE.getAccidents().get(accident.getId()).getStatus() == ENDED) {
-            new ActivateAccident(accident.getId(), new AccidentChangeCallback());
+            new ActivateAccident(accident.getId(), this::accidentChangeCallback);
         } else {
-            new EndAccident(accident.getId(), new AccidentChangeCallback());
+            new EndAccident(accident.getId(), this::accidentChangeCallback);
         }
     }
 
     private void sendHideRequest() {
         //TODO какая то хуета
         if (Content.INSTANCE.getAccidents().get(accident.getId()).getStatus() == ENDED) {
-            new ActivateAccident(accident.getId(), new AccidentChangeCallback());
+            new ActivateAccident(accident.getId(), this::accidentChangeCallback);
             accNewState = ACTIVE;
         } else {
-            new HideAccident(accident.getId(), new AccidentChangeCallback());
+            new HideAccident(accident.getId(), this::accidentChangeCallback);
             accNewState = ENDED;
         }
     }
 
-    private class AccidentChangeCallback implements CoreRequest.RequestResultCallback {
-        @Override
-        public void call(@NonNull JSONObject result) {
-            if (result.has("error")) {
-                //todo
-            } else {
-                //TODO Суперкостыль
-                accident = AccidentFactory.INSTANCE.refactor(accident, accNewState);
-                update();
-            }
+    private Unit accidentChangeCallback(JSONObject result) {
+        if (result.has("error")) {
+            //todo
+        } else {
+            //TODO Суперкостыль
+            accident = AccidentFactory.INSTANCE.refactor(accident, accNewState);
+            update();
         }
+        return Unit.INSTANCE;
     }
 
     public void jumpToMap() {
