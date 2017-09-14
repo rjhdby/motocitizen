@@ -37,6 +37,8 @@ class AccidentBuilder {
         private set
     var history = ArrayList<History>()
         private set
+    var messagesCount = 0
+        private set
 
     fun id(id: Int): AccidentBuilder = apply { this.id = id }
 
@@ -56,6 +58,8 @@ class AccidentBuilder {
 
     fun description(description: String): AccidentBuilder = apply { this.description = description }
 
+    fun messagesCount(count: Int): AccidentBuilder = apply { this.messagesCount = count }
+
     fun from(accident: Accident): AccidentBuilder {
         id = accident.id
         type = accident.type
@@ -68,6 +72,7 @@ class AccidentBuilder {
         messages = accident.messages
         volunteers = accident.volunteers
         history = accident.history
+        messagesCount = accident.messagesCount
         return this
     }
 
@@ -82,7 +87,10 @@ class AccidentBuilder {
             else                                                -> throw Exception("Wrong data from server")
         }
         accident.description = description
-        accident.messages = messages
+        accident.messages.addAll(messages)
+        accident.volunteers.addAll(volunteers)
+        accident.history.addAll(history)
+        accident.messagesCount = messagesCount
         return accident
     }
 }

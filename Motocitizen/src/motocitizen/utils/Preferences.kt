@@ -89,7 +89,7 @@ object Preferences {
     var soundTitle: String
         get() = preferences.getString("mc.notification.sound.title", "default system")
         set(value) = preferences.edit().putString("mc.notification.sound.title", value).apply()
-    var soundURI
+    var soundURI: String
         get() = preferences.getString("mc.notification.sound", "")
         set(uri) = preferences.edit().putString("mc.notification.sound", uri).apply()
     var sound: Uri? = null
@@ -97,13 +97,13 @@ object Preferences {
     var vibration: Boolean
         get() = preferences.getBoolean("use.vibration", DEFAULT_VIBRATION)
         set(value) = preferences.edit().putBoolean("use.vibration", value).apply()
-    var login
+    var login:String
         get() = preferences.getString("mc.login", "")
         set(value) = preferences.edit().putString("mc.login", value).apply()
-    var password
+    var password:String
         get() = preferences.getString("mc.password", "")
         set(value) = preferences.edit().putString("mc.password", value).apply()
-    var anonim
+    var anonymous
         get() = preferences.getBoolean("mc.anonim", DEFAULT_IS_ANONYMOUS)
         set(value) = preferences.edit().putBoolean("mc.anonim", value).apply()
     var appVersion
@@ -122,10 +122,10 @@ object Preferences {
     }
 
     fun initSound(context: Context) {
-        if (soundURI == "default") {
-            sound = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION)
+        sound = if (soundURI == "default") {
+            RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION)
         } else
-            sound = Uri.parse(soundURI)
+            Uri.parse(soundURI)
     }
 
     fun putBoolean(name: String, value: Boolean) {

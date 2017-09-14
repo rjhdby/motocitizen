@@ -17,21 +17,20 @@ import com.google.android.gms.maps.model.LatLng;
 import kotlin.Unit;
 import motocitizen.content.accident.Accident;
 import motocitizen.main.R;
-import motocitizen.network.requests.ActivateAccident;
-import motocitizen.network.requests.BanRequest;
-import motocitizen.network.requests.EndAccident;
-import motocitizen.network.requests.HideAccident;
+import motocitizen.datasources.network.requests.ActivateAccident;
+import motocitizen.datasources.network.requests.BanRequest;
+import motocitizen.datasources.network.requests.EndAccident;
+import motocitizen.datasources.network.requests.HideAccident;
 import motocitizen.router.Router;
 import motocitizen.utils.LocationUtils;
 import motocitizen.utils.ToastUtils;
 
-abstract class PopupWindowGeneral {
+abstract public class PopupWindowGeneral {
+    final protected TableRow.LayoutParams layoutParams;
+    final protected TableLayout           content;
+    final protected PopupWindow           popupWindow;
 
-    final TableRow.LayoutParams layoutParams;
-    final TableLayout           content;
-    final PopupWindow           popupWindow;
-
-    PopupWindowGeneral(Context context) {
+    protected PopupWindowGeneral(Context context) {
         layoutParams = new TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         content = new TableLayout(context);
         content.setOrientation(LinearLayout.HORIZONTAL);
@@ -134,7 +133,7 @@ abstract class PopupWindowGeneral {
         Button coordinates = new Button(content.getContext());
         coordinates.setText(R.string.copy_coordinates);
         coordinates.setOnClickListener(v -> {
-            LatLng           latlng = LocationUtils.Location2LatLng(point.getLocation());
+            LatLng           latlng = LocationUtils.Location2LatLng(point.location());
             String           text   = String.valueOf(latlng.latitude) + "," + String.valueOf(latlng.longitude);
             ClipboardManager myClipboard;
             myClipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);

@@ -1,8 +1,7 @@
 package motocitizen.user
 
 import android.util.Log
-import motocitizen.network.CoreRequest
-import motocitizen.network.requests.AuthRequest
+import motocitizen.datasources.network.requests.AuthRequest
 import motocitizen.utils.Preferences
 import org.json.JSONException
 import org.json.JSONObject
@@ -19,11 +18,11 @@ object User {
     var isAuthorized = false
         private set
 
-    fun auth(login: String, password: String, callback: CoreRequest.RequestResultCallback) {
+    fun auth(login: String, password: String, callback: (JSONObject) -> Unit) {
         Preferences.password = password
         AuthRequest(login, getPassHash(password), { response ->
             parseAuthResult(response, login)
-            callback.call(response)
+            callback(response)
         })
     }
 
@@ -35,7 +34,7 @@ object User {
             name = login
             role = Role.parse(result.getInt("r"))
             Preferences.login = name
-            Preferences.anonim = false
+            Preferences.anonymous = false
             isAuthorized = true
         } catch (e: JSONException) {
             e.printStackTrace()
@@ -44,8 +43,7 @@ object User {
 
     }
 
-    val passHash: String
-        get() = getPassHash(Preferences.password)
+    fun getPassHash(): String = getPassHash(Preferences.password)
 
     private fun getPassHash(pass: String): String {
         val sb = StringBuilder()

@@ -13,8 +13,8 @@ import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKAccessTokenTracker;
 import com.vk.sdk.VKSdk;
 
-import motocitizen.activity.AuthActivity;
-import motocitizen.database.Database;
+import motocitizen.ui.activity.AuthActivity;
+import motocitizen.datasources.database.Database;
 import motocitizen.geocoder.MyGeoCoder;
 import motocitizen.user.User;
 import motocitizen.utils.Preferences;

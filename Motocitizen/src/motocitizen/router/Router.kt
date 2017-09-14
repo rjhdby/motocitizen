@@ -5,7 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import com.google.android.gms.maps.model.LatLng
-import motocitizen.activity.*
+import motocitizen.ui.activity.*
 
 object Router {
     enum class Target constructor(val activity: Class<*>) {

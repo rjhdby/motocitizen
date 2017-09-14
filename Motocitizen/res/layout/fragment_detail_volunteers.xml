@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:visibility="visible"
-    tools:context="motocitizen.fragments.DetailVolunteersFragment">
+    tools:context="motocitizen.ui.fragments.DetailVolunteersFragment">
 
     <ScrollView
         android:layout_width="match_parent"

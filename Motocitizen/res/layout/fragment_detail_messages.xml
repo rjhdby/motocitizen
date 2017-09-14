@@ -5,7 +5,7 @@
               android:layout_height="match_parent"
               android:orientation="vertical"
               android:weightSum="1"
-              tools:context="motocitizen.fragments.DetailMessagesFragment">
+              tools:context="motocitizen.ui.fragments.DetailMessagesFragment">
 
     <ScrollView
         android:id="@+id/activity__details_messages_scroll"

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:layout_weight="1"
     android:orientation="vertical"
-    tools:context="motocitizen.activity.AccidentDetailsActivity">
+    tools:context="motocitizen.ui.activity.AccidentDetailsActivity">
 
     <LinearLayout
         android:id="@+id/acc_details_general"

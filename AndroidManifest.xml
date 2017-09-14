@@ -51,7 +51,7 @@
             android:value="AIzaSyDfQZrnHvn-fNCYmFQSMBa-1ClE0ZCWUQ4"/>
 
         <activity
-            android:name="motocitizen.activity.MainScreenActivity"
+            android:name="motocitizen.ui.activity.MainScreenActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/CustomActivityTheme"
@@ -63,67 +63,67 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="motocitizen.activity.AboutActivity"
+            android:name="motocitizen.ui.activity.AboutActivity"
             android:label="@string/title_activity_about"
             android:noHistory="true"
-            android:parentActivityName="motocitizen.activity.MainScreenActivity"
+            android:parentActivityName="motocitizen.ui.activity.MainScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat"
             tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="motocitizen.activity.MainScreenActivity"/>
+                android:value="motocitizen.ui.activity.MainScreenActivity"/>
         </activity>
         <activity
-            android:name="motocitizen.activity.AuthActivity"
+            android:name="motocitizen.ui.activity.AuthActivity"
             android:label="AuthActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="motocitizen.activity.CreateAccActivity"
+            android:name="motocitizen.ui.activity.CreateAccActivity"
             android:label="@string/title_activity_create_acc"
-            android:parentActivityName="motocitizen.activity.MainScreenActivity"
+            android:parentActivityName="motocitizen.ui.activity.MainScreenActivity"
             android:screenOrientation="portrait"
             tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="motocitizen.activity.MainScreenActivity"/>
+                android:value="motocitizen.ui.activity.MainScreenActivity"/>
             <!--   android:noHistory="true"  -->
         </activity>
         <activity
-            android:name="motocitizen.activity.AccidentDetailsActivity"
+            android:name="motocitizen.ui.activity.AccidentDetailsActivity"
             android:noHistory="true"
-            android:parentActivityName="motocitizen.activity.MainScreenActivity"
+            android:parentActivityName="motocitizen.ui.activity.MainScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat"
             tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="motocitizen.activity.MainScreenActivity"/>
+                android:value="motocitizen.ui.activity.MainScreenActivity"/>
         </activity>
         <activity
-            android:name="motocitizen.activity.SettingsActivity"
-            android:parentActivityName="motocitizen.activity.MainScreenActivity"
+            android:name="motocitizen.ui.activity.SettingsActivity"
+            android:parentActivityName="motocitizen.ui.activity.MainScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat"
             tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="motocitizen.activity.MainScreenActivity"/>
+                android:value="motocitizen.ui.activity.MainScreenActivity"/>
         </activity>
         <activity
-            android:name="motocitizen.activity.BusinessCardActivity"
+            android:name="motocitizen.ui.activity.BusinessCardActivity"
             android:label="@string/title_activity_business_card"
             android:noHistory="true"
-            android:parentActivityName="motocitizen.activity.AboutActivity"
+            android:parentActivityName="motocitizen.ui.activity.AboutActivity"
             android:screenOrientation="portrait"
             tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="motocitizen.activity.AboutActivity"/>
+                android:value="motocitizen.ui.activity.AboutActivity"/>
         </activity>
         <activity
-            android:name="motocitizen.activity.StartupActivity"
+            android:name="motocitizen.ui.activity.StartupActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:noHistory="true"

@@ -11,7 +11,6 @@ constructor(json: JSONObject) {
     val text: String = json.getString("t")
     val id = json.getInt("id")
     val time = Date(json.getLong("ut") * 1000)
-    var read = owner == User.id //todo exterminatus
     val isOwner: Boolean
         get() = owner == User.id
 }

@@ -19,6 +19,7 @@ object AccidentFactory {
                 .coordinates(LatLng(json.getDouble("y"), json.getDouble("x")))
                 .owner(json.getInt("o"))
                 .description(json.getString("d"))
+                .messagesCount(json.getInt("mc"))
                 .build()
     }
 

@@ -14,12 +14,12 @@ import com.google.android.gms.maps.model.LatLng;
 import java.io.IOException;
 import java.util.List;
 
-import motocitizen.activity.MainScreenActivity;
+import motocitizen.ui.activity.MainScreenActivity;
 import motocitizen.content.Content;
 import motocitizen.content.accident.Accident;
 import motocitizen.geocoder.MyGeoCoder;
-import motocitizen.network.requests.InPlaceRequest;
-import motocitizen.network.requests.LeaveRequest;
+import motocitizen.datasources.network.requests.InPlaceRequest;
+import motocitizen.datasources.network.requests.LeaveRequest;
 import motocitizen.user.User;
 import motocitizen.utils.LocationUtils;
 import motocitizen.utils.Preferences;
@@ -144,12 +144,12 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
     }
 
     private boolean isArrived(Location location, int accId) {
-        return Content.INSTANCE.getAccidents().get(accId).getLocation().distanceTo(location) < Math.max(ARRIVED_MAX_ACCURACY, location.getAccuracy());
+        return Content.INSTANCE.getAccidents().get(accId).location().distanceTo(location) < Math.max(ARRIVED_MAX_ACCURACY, location.getAccuracy());
     }
 
     private boolean isInPlace(Location location, int accId) {
         Accident acc = Content.INSTANCE.getAccidents().get(accId);
-        return acc != null && location != null && (acc.getLocation().distanceTo(location) - location.getAccuracy() < 100);
+        return acc != null && location != null && (acc.location().distanceTo(location) - location.getAccuracy() < 100);
     }
 
     public String getAddress(LatLng location) {

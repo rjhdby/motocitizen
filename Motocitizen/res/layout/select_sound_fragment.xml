@@ -5,7 +5,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              tools:context="motocitizen.fragments.SelectSoundFragment">
+              tools:context="motocitizen.ui.fragments.SelectSoundFragment">
 
     <ScrollView
         android:layout_width="match_parent"
