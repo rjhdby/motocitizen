@@ -16,13 +16,13 @@ import motocitizen.datasources.database.StoreMessages
 import motocitizen.datasources.network.requests.SendMessageRequest
 import motocitizen.main.R
 import motocitizen.ui.activity.AccidentDetailsActivity
+import motocitizen.ui.activity.AccidentDetailsActivity.ACCIDENT_ID_KEY
 import motocitizen.ui.rows.message.MessageRowFactory
 import motocitizen.user.User
 import motocitizen.utils.popups.MessagesPopup
 import motocitizen.utils.show
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.*
 
 class DetailMessagesFragment() : Fragment() {
     private val ROOT_LAYOUT = R.layout.fragment_detail_messages
@@ -79,11 +79,12 @@ class DetailMessagesFragment() : Fragment() {
     private fun update() {
         messagesView.removeAllViews()
 
-        if (accident.messages.isEmpty()) return
+        val messages = Content.messagesForAccident(accident)
+        if (messages.isEmpty()) return
 
         var last = 0
         val group = ArrayList<Message>()
-        accident.messages.forEach { message ->
+        messages.forEach { message ->
             if (last != message.owner && last != 0) {
                 addMessageRows(group)
                 group.clear()
@@ -112,7 +113,7 @@ class DetailMessagesFragment() : Fragment() {
     }
 
     private fun updateUnreadMessages() {
-        if (accident.messages.isEmpty()) return
+        if (Content.messagesForAccident(accident).isEmpty()) return
         StoreMessages.setLast(accident.id, accident.messagesCount())
     }
 
@@ -139,7 +140,7 @@ class DetailMessagesFragment() : Fragment() {
     private inner class MessageRowLongClickListener internal constructor(private val message: Message) : View.OnLongClickListener {
 
         override fun onLongClick(view: View): Boolean {
-            val popupWindow: PopupWindow = MessagesPopup(activity, message.id, accident.id).getPopupWindow(activity)
+            val popupWindow: PopupWindow = MessagesPopup(activity, message.id).getPopupWindow(activity)
             val viewLocation = IntArray(2)
             view.getLocationOnScreen(viewLocation)
             popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1])
@@ -148,13 +149,13 @@ class DetailMessagesFragment() : Fragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(AccidentDetailsActivity.ACCIDENT_ID_KEY, accident.id)
+        outState.putInt(ACCIDENT_ID_KEY, accident.id)
         super.onSaveInstanceState(outState)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (savedInstanceState == null) return
-        accident = Content.accidents[savedInstanceState.getInt(AccidentDetailsActivity.ACCIDENT_ID_KEY)]!!
+        accident = Content.accident(savedInstanceState.getInt(ACCIDENT_ID_KEY))
     }
 }

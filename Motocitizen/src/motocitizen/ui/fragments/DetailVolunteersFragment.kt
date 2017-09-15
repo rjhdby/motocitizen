@@ -14,6 +14,7 @@ import motocitizen.content.accident.Accident
 import motocitizen.main.R
 import motocitizen.datasources.network.requests.CancelOnWayRequest
 import motocitizen.datasources.network.requests.OnWayRequest
+import motocitizen.ui.activity.AccidentDetailsActivity.*
 import motocitizen.ui.rows.volunteer.VolunteerRowFactory
 import motocitizen.user.User
 import motocitizen.utils.Preferences
@@ -104,13 +105,13 @@ class DetailVolunteersFragment() : Fragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(AccidentDetailsActivity.ACCIDENT_ID_KEY, accident.id)
+        outState.putInt(ACCIDENT_ID_KEY, accident.id)
         super.onSaveInstanceState(outState)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (savedInstanceState == null) return
-        accident = Content.accidents[savedInstanceState.getInt(AccidentDetailsActivity.ACCIDENT_ID_KEY)]!!
+        accident = Content.accident(savedInstanceState.getInt(ACCIDENT_ID_KEY))
     }
 }

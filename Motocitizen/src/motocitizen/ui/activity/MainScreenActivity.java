@@ -155,8 +155,7 @@ public class MainScreenActivity extends AppCompatActivity {
 
     public void redraw() {
         List<Row> newList = new ArrayList();
-        for (Accident accident : Content.INSTANCE.getListReversed()) {
-            if (accident.isInvisible()) continue;
+        for (Accident accident : Content.INSTANCE.getVisibleReversed()) {
             newList.add(AccidentRowFactory.INSTANCE.make(this, accident));
         }
         listContent.removeAllViews();
@@ -244,6 +243,6 @@ public class MainScreenActivity extends AppCompatActivity {
 
     public void toMap(int id) {
         setScreen(MAP);
-        map.jumpToPoint(Content.INSTANCE.getAccidents().get(id).location());
+        map.jumpToPoint(Content.INSTANCE.accident(id).location());
     }
 }

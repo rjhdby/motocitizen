@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import kotlin.Unit;
+import motocitizen.content.AccidentsController;
 import motocitizen.content.Content;
 import motocitizen.content.accident.Accident;
 import motocitizen.dictionary.Medicine;
@@ -36,23 +37,22 @@ public class NotificationListener extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Map     data = remoteMessage.getData();
         Integer id   = Integer.parseInt(data.get("id").toString());
-        Content.INSTANCE.requestAccident(id, result -> {raiseNotification(id); return Unit.INSTANCE;});
+        Content.INSTANCE.requestSingleAccident(id, result -> {raiseNotification(id); return Unit.INSTANCE;});
     }
 
     private void raiseNotification(Integer id) {
-        accident = Content.INSTANCE.getAccidents().get(id);
+        accident = Content.INSTANCE.accident(id);
         notificationManager = NotificationManagerCompat.from(this);
         if (doNotShow()) return;
 
         idHash = accident.location().hashCode();
 
         notificationManager.notify(idHash, makeNotification());
-
         manageTray();
     }
 
     private boolean doNotShow() {
-        return accident == null || accident.isInvisible() || preferences.getDoNotDisturb();
+        return accident == null || !accident.isVisible() || preferences.getDoNotDisturb();
     }
 
     private Intent makeIntent() {

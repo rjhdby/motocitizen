@@ -3,8 +3,8 @@ package motocitizen.content.accident
 import android.location.Location
 import android.location.LocationManager
 import com.google.android.gms.maps.model.LatLng
+import motocitizen.content.Content
 import motocitizen.content.history.History
-import motocitizen.content.message.Message
 import motocitizen.content.volunteer.VolunteerAction
 import motocitizen.dictionary.AccidentStatus
 import motocitizen.dictionary.AccidentStatus.ACTIVE
@@ -20,7 +20,7 @@ import kotlin.collections.ArrayList
 abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val time: Date, var address: String, var coordinates: LatLng, val owner: Int) {
     private val MS_IN_HOUR = 3_600_000
     abstract val status: AccidentStatus
-    val messages = ArrayList<Message>()
+    //val messages = ArrayList<Int>()
     val volunteers = ArrayList<VolunteerAction>()
     val history = ArrayList<History>()
     var messagesCount = 0
@@ -28,6 +28,8 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
         set(value) {
             field = value.trim()
         }
+
+    fun ownerName() = Content.volunteer(owner).name
 
     fun distanceString(): String = if (metersFromUser() > 1000) {
         kiloMetersFromUser().toString() + "км"
@@ -45,15 +47,17 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
         return location
     }
 
-    fun messagesCount(): Int = if (messages.isEmpty()) messagesCount else messages.count()
+    fun messagesCount(): Int = messagesCount
 
     fun isInvisible(): Boolean {
         val hidden = status == HIDDEN && !User.isModerator
-        val distanceFilter = kiloMetersFromUser() > Preferences.visibleDistance
+        val distanceFilter = metersFromUser() > Preferences.visibleDistance * 1000
         val typeFilter = Preferences.isHidden(type)
         val timeFilter = time.time + Preferences.hoursAgo.toLong() * MS_IN_HOUR < Date().time
         return hidden || distanceFilter || typeFilter || timeFilter
     }
+
+    fun isVisible(): Boolean = !isInvisible()
 
     fun isActive(): Boolean = status === ACTIVE
 

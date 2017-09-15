@@ -59,7 +59,7 @@ abstract class MessageRow(context: Context, val message: Message, val type: Type
 
     private fun setUpOwnerField() {
         val ownerView = findViewById(R.id.owner) as TextView
-        ownerView.text = Content.volunteers[message.owner]!!.name
+        ownerView.text = message.ownerName()
         if (type == Type.MIDDLE || type == Type.LAST) ownerView.visibility = View.INVISIBLE
     }
 }

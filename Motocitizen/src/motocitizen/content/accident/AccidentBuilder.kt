@@ -31,8 +31,8 @@ class AccidentBuilder {
         private set
     var description = ""
         private set
-    var messages = ArrayList<Message>()
-        private set
+//    var messages = ArrayList<Message>()
+//        private set
     var volunteers = ArrayList<VolunteerAction>()
         private set
     var history = ArrayList<History>()
@@ -69,7 +69,7 @@ class AccidentBuilder {
         coordinates = accident.coordinates
         owner = accident.owner
         description = accident.description
-        messages = accident.messages
+//        messages = accident.messages
         volunteers = accident.volunteers
         history = accident.history
         messagesCount = accident.messagesCount
@@ -87,7 +87,7 @@ class AccidentBuilder {
             else                                                -> throw Exception("Wrong data from server")
         }
         accident.description = description
-        accident.messages.addAll(messages)
+//        accident.messages.addAll(messages)
         accident.volunteers.addAll(volunteers)
         accident.history.addAll(history)
         accident.messagesCount = messagesCount

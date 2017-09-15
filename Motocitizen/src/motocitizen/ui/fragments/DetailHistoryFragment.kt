@@ -6,10 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import motocitizen.ui.activity.AccidentDetailsActivity
 import motocitizen.content.Content
 import motocitizen.content.accident.Accident
 import motocitizen.main.R
+import motocitizen.ui.activity.AccidentDetailsActivity
+import motocitizen.ui.activity.AccidentDetailsActivity.*
 import motocitizen.ui.rows.history.HistoryRowFactory
 
 
@@ -37,7 +38,7 @@ class DetailHistoryFragment() : Fragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(AccidentDetailsActivity.ACCIDENT_ID_KEY, accident.id)
+        outState.putInt(ACCIDENT_ID_KEY, accident.id)
         super.onSaveInstanceState(outState)
 
     }
@@ -45,6 +46,6 @@ class DetailHistoryFragment() : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (savedInstanceState == null) return
-        accident = Content.accidents[savedInstanceState.getInt(AccidentDetailsActivity.ACCIDENT_ID_KEY)]!!
+        accident = Content.accident(savedInstanceState.getInt(ACCIDENT_ID_KEY))
     }
 }

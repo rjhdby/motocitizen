@@ -21,16 +21,16 @@ import kotlin.Unit;
 import motocitizen.content.Content;
 import motocitizen.content.accident.Accident;
 import motocitizen.content.accident.AccidentFactory;
-import motocitizen.dictionary.AccidentStatus;
-import motocitizen.dictionary.Medicine;
-import motocitizen.ui.fragments.DetailHistoryFragment;
-import motocitizen.ui.fragments.DetailMessagesFragment;
-import motocitizen.ui.fragments.DetailVolunteersFragment;
-import motocitizen.main.R;
 import motocitizen.datasources.network.requests.ActivateAccident;
 import motocitizen.datasources.network.requests.EndAccident;
 import motocitizen.datasources.network.requests.HideAccident;
+import motocitizen.dictionary.AccidentStatus;
+import motocitizen.dictionary.Medicine;
+import motocitizen.main.R;
 import motocitizen.router.Router;
+import motocitizen.ui.fragments.DetailHistoryFragment;
+import motocitizen.ui.fragments.DetailMessagesFragment;
+import motocitizen.ui.fragments.DetailVolunteersFragment;
 import motocitizen.user.User;
 import motocitizen.utils.DateUtils;
 import motocitizen.utils.Utils;
@@ -82,7 +82,7 @@ public class AccidentDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        accident = Content.INSTANCE.getAccidents().get(getIntent().getExtras().getInt("accidentID"));
+        accident = Content.INSTANCE.accident(getIntent().getExtras().getInt(ACCIDENT_ID_KEY));
 
         setContentView(ROOT_LAYOUT);
 
@@ -150,8 +150,6 @@ public class AccidentDetailsActivity extends AppCompatActivity {
     }
 
     public void update() {
-        accident = Content.INSTANCE.getAccidents().get(accident.getId());
-
         ActionBar actionBar = getSupportActionBar();
         //TODO Разобраться с nullPointerException и убрать костыль
         if (accident == null || actionBar == null) return;
@@ -164,7 +162,7 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         medicineView.setText("(" + accident.getMedicine().getText() + ")");
         statusView.setText(accident.getStatus().getText());
         ((TextView) findViewById(TIME_VIEW)).setText(DateUtils.getTime(accident.getTime()));
-        ((TextView) findViewById(OWNER_VIEW)).setText(Content.INSTANCE.getVolunteers().get(accident.getOwner()).getName());
+        ((TextView) findViewById(OWNER_VIEW)).setText(accident.ownerName());
         ((TextView) findViewById(ADDRESS_VIEW)).setText(accident.getAddress());
         ((TextView) findViewById(DISTANCE_VIEW)).setText(accident.distanceString());
         ((TextView) findViewById(DESCRIPTION_VIEW)).setText(accident.getDescription());
@@ -197,7 +195,6 @@ public class AccidentDetailsActivity extends AppCompatActivity {
 
     private void menuReconstruction() {
         if (mMenu == null) return;
-        accident = Content.INSTANCE.getAccidents().get(accident.getId());
         MenuItem finish = mMenu.findItem(R.id.menu_acc_finish);
         MenuItem hide   = mMenu.findItem(R.id.menu_acc_hide);
         finish.setVisible(User.INSTANCE.isModerator());
@@ -269,7 +266,7 @@ public class AccidentDetailsActivity extends AppCompatActivity {
 
     private void sendFinishRequest() {
         //TODO Суперкостыль !!!
-        if (Content.INSTANCE.getAccidents().get(accident.getId()).getStatus() == ENDED) {
+        if (accident.getStatus() == ENDED) {
             new ActivateAccident(accident.getId(), this::accidentChangeCallback);
         } else {
             new EndAccident(accident.getId(), this::accidentChangeCallback);
@@ -278,7 +275,7 @@ public class AccidentDetailsActivity extends AppCompatActivity {
 
     private void sendHideRequest() {
         //TODO какая то хуета
-        if (Content.INSTANCE.getAccidents().get(accident.getId()).getStatus() == ENDED) {
+        if (accident.getStatus() == ENDED) {
             new ActivateAccident(accident.getId(), this::accidentChangeCallback);
             accNewState = ACTIVE;
         } else {

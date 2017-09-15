@@ -65,7 +65,7 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
     }
 
 
-    @SuppressWarnings({"MissingPermission"})
+    @SuppressWarnings({ "MissingPermission" })
     public Location getLocation() {
         if (googleApiClient != null) {
             current = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
@@ -74,7 +74,7 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
         return current;
     }
 
-    @SuppressWarnings({"MissingPermission"})
+    @SuppressWarnings({ "MissingPermission" })
     private void runLocationService(Context context, int accuracy) {
         setup();
         locationRequest = getProvider(accuracy);
@@ -109,28 +109,29 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
     private void checkInPlace(Location location) {
         String login = User.INSTANCE.getName();
         if (login.equals("")) return;
-        int currentInplace = Content.INSTANCE.getInPlace();
-        if (currentInplace != 0) {
-            if (isInPlace(location, currentInplace)) return;
-//            Content.INSTANCE.setLeave(currentInplace); //todo
-            new LeaveRequest(currentInplace, (result) -> Unit.INSTANCE);
+        int currentInPlace = Content.INSTANCE.getInPlace();
+        if (currentInPlace != 0) {
+            if (isInPlace(location, currentInPlace)) return;
+//            Content.INSTANCE.setLeave(currentInPlace); //todo
+            new LeaveRequest(currentInPlace, (result) -> Unit.INSTANCE);
         }
-        for (int accId : Content.INSTANCE.getAccidents().keySet()) {
-            if (accId == currentInplace) continue;
-            if (isArrived(location, accId)) {
-                Content.INSTANCE.setInPlace(accId);
-                new InPlaceRequest(accId, (result) -> Unit.INSTANCE);
+        //todo refactor
+        for (int id : Content.INSTANCE.getIds()) {
+            if (id == currentInPlace) continue;
+            if (isArrived(location, id)) {
+                Content.INSTANCE.setInPlace(id);
+                new InPlaceRequest(id, (result) -> Unit.INSTANCE);
             }
         }
     }
 
     private boolean isArrived(Location location, int accId) {
-        return Content.INSTANCE.getAccidents().get(accId).location().distanceTo(location) < Math.max(ARRIVED_MAX_ACCURACY, location.getAccuracy());
+        return Content.INSTANCE.accident(accId).location().distanceTo(location) < Math.max(ARRIVED_MAX_ACCURACY, location.getAccuracy());
     }
 
     private boolean isInPlace(Location location, int accId) {
-        Accident acc = Content.INSTANCE.getAccidents().get(accId);
-        return acc != null && location != null && (acc.location().distanceTo(location) - location.getAccuracy() < 100);
+        Accident acc = Content.INSTANCE.accident(accId);
+        return location != null && (acc.location().distanceTo(location) - location.getAccuracy() < 100);
     }
 
     public String getAddress(LatLng location) {
@@ -177,7 +178,7 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
         return "";
     }
 
-    @SuppressWarnings({"MissingPermission"})
+    @SuppressWarnings({ "MissingPermission" })
     private class MyConnectionCallback implements GoogleApiClient.ConnectionCallbacks {
         @Override
         public void onConnected(Bundle connectionHint) {

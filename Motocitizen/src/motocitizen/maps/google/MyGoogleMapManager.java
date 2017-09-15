@@ -79,20 +79,33 @@ public class MyGoogleMapManager implements MyMapManager {
         Location location = MyLocationManager.getLocation();
         user = map.addMarker(new MarkerOptions().position(LocationUtils.Location2LatLng(location)).title(Type.USER.getText()).icon(Type.USER.getIcon()));
 
-        for (int id : Content.INSTANCE.getAccidents().keySet()) {
-            Accident point = Content.INSTANCE.getAccidents().get(id);
-            if (point.isInvisible()) continue;
-            String title = point.getType().getText();
-            title += point.getMedicine() != Medicine.UNKNOWN ? ", " + point.getMedicine().getText() : "";
-            title += ", " + DateUtils.getIntervalFromNowInText(context, point.getTime()) + " назад";
+        for(Accident accident:Content.INSTANCE.getVisible()){
+            String title = accident.getType().getText();
+            title += accident.getMedicine() != Medicine.UNKNOWN ? ", " + accident.getMedicine().getText() : "";
+            title += ", " + DateUtils.getIntervalFromNowInText(context, accident.getTime()) + " назад";
 
-            int age = (int) (((new Date()).getTime() - point.getTime().getTime()) / 3600000);
+            int age = (int) (((new Date()).getTime() - accident.getTime().getTime()) / 3600000);
 
             float alpha = age < 2 ? 1.0f : age < 6 ? 0.5f : 0.2f;
 
-            Marker marker = map.addMarker(new MarkerOptions().position(point.getCoordinates()).title(title).icon(point.getType().getIcon()).alpha(alpha));
-            accidents.put(marker.getId(), id);
+            Marker marker = map.addMarker(new MarkerOptions().position(accident.getCoordinates()).title(title).icon(accident.getType().getIcon()).alpha(alpha));
+            accidents.put(marker.getId(), accident.getId());
         }
+
+//        for (int id : Content.INSTANCE.getAccidents().keySet()) {
+//            Accident point = Content.INSTANCE.getAccidents().get(id);
+//            if (point.isInvisible()) continue;
+//            String title = point.getType().getText();
+//            title += point.getMedicine() != Medicine.UNKNOWN ? ", " + point.getMedicine().getText() : "";
+//            title += ", " + DateUtils.getIntervalFromNowInText(context, point.getTime()) + " назад";
+//
+//            int age = (int) (((new Date()).getTime() - point.getTime().getTime()) / 3600000);
+//
+//            float alpha = age < 2 ? 1.0f : age < 6 ? 0.5f : 0.2f;
+//
+//            Marker marker = map.addMarker(new MarkerOptions().position(point.getCoordinates()).title(title).icon(point.getType().getIcon()).alpha(alpha));
+//            accidents.put(marker.getId(), id);
+//        }
     }
 
     public void animateToPoint(final Location location) {

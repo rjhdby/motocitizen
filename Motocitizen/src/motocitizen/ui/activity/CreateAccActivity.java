@@ -35,12 +35,12 @@ import kotlin.Unit;
 import motocitizen.content.Content;
 import motocitizen.content.accident.Accident;
 import motocitizen.content.accident.AccidentBuilder;
+import motocitizen.datasources.network.requests.CreateAccidentRequest;
 import motocitizen.dictionary.Medicine;
 import motocitizen.dictionary.Type;
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.geolocation.NormalLocationManager;
 import motocitizen.main.R;
-import motocitizen.datasources.network.requests.CreateAccidentRequest;
 import motocitizen.user.User;
 import motocitizen.utils.DateUtils;
 import motocitizen.utils.LocationUtils;
@@ -121,9 +121,8 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 });
             }
             map.clear();
-            for (int id : Content.INSTANCE.getAccidents().keySet()) {
-                Accident point = Content.INSTANCE.getAccidents().get(id);
-                if (point.isInvisible()) continue;
+            //todo refactor
+            for (Accident point : Content.INSTANCE.getVisible()) {
                 String title = point.getType().getText();
                 title += point.getMedicine() == Medicine.NO ? "" : ", " + point.getMedicine().getText();
                 title += ", " + DateUtils.getIntervalFromNowInText(CreateAccActivity.this, point.getTime()) + " назад";
@@ -284,26 +283,6 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                     }
                     return Unit.INSTANCE;
                 });
-//                try {
-//                    List<Address> addresses = MyGeoCoder.getInstance().getFromLocationName(addressForSearch, 1);
-//                    if (addresses.size() > 0) {
-//                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude()), 16));
-//                    } else {
-//                        new GeoCoderRequest(addressForSearch, response -> {
-//                            try {
-//                                JSONObject location = response.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location");
-//                                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getDouble("lat"), location.getDouble("lng")), 16));
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//
-//                            }
-//
-//                        });
-//                    }
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                    ToastUtils.show(CreateAccActivity.this, CreateAccActivity.this.getString(R.string.nothing_is_found));
-//                }
                 break;
         }
         refreshDescription();

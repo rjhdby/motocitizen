@@ -15,6 +15,7 @@ import motocitizen.content.accident.Accident
 import motocitizen.datasources.database.StoreMessages
 import motocitizen.main.R
 import motocitizen.router.Router
+import motocitizen.ui.activity.AccidentDetailsActivity
 import motocitizen.utils.getIntervalFromNowInText
 import motocitizen.utils.newId
 import motocitizen.utils.popups.AccidentListPopup
@@ -73,7 +74,7 @@ abstract class Row protected constructor(context: Context, val accident: Acciden
     private fun setUpListeners() {
         setOnClickListener { _ ->
             val bundle = Bundle()
-            bundle.putInt("accidentID", accident.id)
+            bundle.putInt(AccidentDetailsActivity.ACCIDENT_ID_KEY, accident.id)
             Router.goTo(context as Activity, Router.Target.DETAILS, bundle)
         }
         setOnLongClickListener { v ->
