@@ -1,7 +1,6 @@
 package motocitizen.geolocation;
 
 import android.content.Context;
-import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
 
@@ -11,15 +10,11 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.io.IOException;
-import java.util.List;
-
 import kotlin.Unit;
 import motocitizen.content.Content;
 import motocitizen.content.accident.Accident;
 import motocitizen.datasources.network.requests.InPlaceRequest;
 import motocitizen.datasources.network.requests.LeaveRequest;
-import motocitizen.geocoder.MyGeoCoder;
 import motocitizen.ui.activity.MainScreenActivity;
 import motocitizen.user.User;
 import motocitizen.utils.LocationUtils;
@@ -35,8 +30,6 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
     private LocationRequest                     locationRequest;
     private LocationListener                    locationListener;
     private GoogleApiClient.ConnectionCallbacks connectionCallback;
-
-    public static boolean showDialogExact = false;
 
     NormalLocationManager() {
         current = getLocation();
@@ -64,8 +57,7 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
         }
     }
 
-
-    @SuppressWarnings({ "MissingPermission" })
+    @SuppressWarnings({"MissingPermission"})
     public Location getLocation() {
         if (googleApiClient != null) {
             current = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
@@ -74,7 +66,16 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
         return current;
     }
 
-    @SuppressWarnings({ "MissingPermission" })
+    @Override
+    public String getAddress(LatLng location) {
+        return AddressResolver.INSTANCE.getAddress(location);
+    }
+
+    public String getCurrentAddress() {
+        return getAddress(LocationUtils.Location2LatLng(current));
+    }
+
+    @SuppressWarnings({"MissingPermission"})
     private void runLocationService(Context context, int accuracy) {
         setup();
         locationRequest = getProvider(accuracy);
@@ -100,10 +101,11 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
         runLocationService(context, LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
+    //todo exterminatus
     private void requestAddress() {
         Location location = getLocation();
         if (current == location) return;
-        MainScreenActivity.updateStatusBar(getAddress(LocationUtils.Location2LatLng(location)));
+        MainScreenActivity.updateStatusBar(getCurrentAddress());
     }
 
     private void checkInPlace(Location location) {
@@ -134,51 +136,8 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
         return location != null && (acc.location().distanceTo(location) - location.getAccuracy() < 100);
     }
 
-    public String getAddress(LatLng location) {
-        try {
-            List<Address> list = findAddressByLocation(location);
-            if (list == null || list.size() == 0) {
-                showDialogExact = true;
-                return location.longitude + " " + location.longitude;
-            }
 
-            return buildAddressString(list.get(0));
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-
-    private String buildAddressString(Address address) {
-        return (new StringBuilder())
-                .append(extractLocality(address))
-                .append(" ")
-                .append(extractThoroughfare(address))
-                .append(" ")
-                .append(address.getFeatureName() != null ? address.getFeatureName() : "")
-                .toString()
-                .trim();
-    }
-
-    private List<Address> findAddressByLocation(LatLng location) throws IOException {
-        return MyGeoCoder.getInstance().getFromLocation(location.latitude, location.longitude, 1);
-    }
-
-    private String extractLocality(Address address) {
-        if (address.getLocality() != null) return address.getLocality();
-        if (address.getAdminArea() != null) return address.getAdminArea();
-        if (address.getMaxAddressLineIndex() > 0) return address.getAddressLine(0);
-        return "";
-    }
-
-    private String extractThoroughfare(Address address) {
-        if (address.getThoroughfare() != null) return address.getThoroughfare();
-        if (address.getSubAdminArea() != null) return address.getSubAdminArea();
-        return "";
-    }
-
-    @SuppressWarnings({ "MissingPermission" })
+    @SuppressWarnings({"MissingPermission"})
     private class MyConnectionCallback implements GoogleApiClient.ConnectionCallbacks {
         @Override
         public void onConnected(Bundle connectionHint) {

@@ -39,7 +39,6 @@ import motocitizen.datasources.network.requests.CreateAccidentRequest;
 import motocitizen.dictionary.Medicine;
 import motocitizen.dictionary.Type;
 import motocitizen.geolocation.MyLocationManager;
-import motocitizen.geolocation.NormalLocationManager;
 import motocitizen.main.R;
 import motocitizen.user.User;
 import motocitizen.utils.DateUtils;
@@ -83,7 +82,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         setupListener();
     }
 
-    @SuppressWarnings({ "MissingPermission" })
+    @SuppressWarnings({"MissingPermission"})
     private void enableMyLocation() {
         Dexter.withActivity(this)
               .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -169,24 +168,24 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     }
 
     private void setupListener() {
-        Integer[] ids = { R.id.BREAK,
-                          R.id.STEAL,
-                          R.id.OTHER,
-                          R.id.ACCIDENT,
-                          R.id.MOTO_AUTO,
-                          R.id.SOLO,
-                          R.id.MOTO_MOTO,
-                          R.id.MOTO_MAN,
-                          R.id.PEOPLE_OK,
-                          R.id.PEOPLE_LIGHT,
-                          R.id.PEOPLE_HEAVY,
-                          R.id.PEOPLE_LETHAL,
-                          R.id.PEOPLE_UNKNOWN,
-                          R.id.ADDRESS,
-                          R.id.CREATE,
-                          R.id.CANCEL,
-                          R.id.BACK,
-                          R.id.SEARCH };
+        Integer[] ids = {R.id.BREAK,
+                         R.id.STEAL,
+                         R.id.OTHER,
+                         R.id.ACCIDENT,
+                         R.id.MOTO_AUTO,
+                         R.id.SOLO,
+                         R.id.MOTO_MOTO,
+                         R.id.MOTO_MAN,
+                         R.id.PEOPLE_OK,
+                         R.id.PEOPLE_LIGHT,
+                         R.id.PEOPLE_HEAVY,
+                         R.id.PEOPLE_LETHAL,
+                         R.id.PEOPLE_UNKNOWN,
+                         R.id.ADDRESS,
+                         R.id.CREATE,
+                         R.id.CANCEL,
+                         R.id.BACK,
+                         R.id.SEARCH};
         for (int id : ids) findViewById(id).setOnClickListener(this);
     }
 
@@ -199,7 +198,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
     }
 
     private void hideAll() {
-        Integer[] ids = { TYPE, MAP, MEDICINE, DESCRIPTION, ACCIDENT };
+        Integer[] ids = {TYPE, MAP, MEDICINE, DESCRIPTION, ACCIDENT};
         for (int id : ids) findViewById(id).setVisibility(View.INVISIBLE);
     }
 
@@ -260,7 +259,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 ab.coordinates(map.getCameraPosition().target);
                 ab.address(MyLocationManager.getInstance().getAddress(ab.getCoordinates()));
                 setUpScreen(TYPE);
-                if (NormalLocationManager.showDialogExact) {
+                if (ab.getAddress().equals("")) {
                     showRatingDialog();
                 }
                 break;
