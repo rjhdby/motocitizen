@@ -45,7 +45,7 @@ public class NotificationListener extends FirebaseMessagingService {
         notificationManager = NotificationManagerCompat.from(this);
         if (doNotShow()) return;
 
-        idHash = accident.location().hashCode();
+        idHash = accident.getCoordinates().hashCode();
 
         notificationManager.notify(idHash, makeNotification());
         manageTray();

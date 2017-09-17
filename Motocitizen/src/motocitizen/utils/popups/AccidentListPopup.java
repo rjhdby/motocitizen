@@ -44,7 +44,7 @@ public class AccidentListPopup extends PopupWindowGeneral {
 
     public static String getAccidentTextToCopy(Accident accident) {
         StringBuilder res = new StringBuilder();
-        res.append(DateUtils.getDateTime(accident.getTime())).append(" ");
+        res.append(DateUtils.dateTimeString(accident.getTime())).append(" ");
         res.append(accident.ownerName()).append(": ");
         res.append(accident.getType().getText()).append(". ");
         if (accident.getMedicine() != Medicine.UNKNOWN) {

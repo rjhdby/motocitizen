@@ -52,6 +52,7 @@ object Preferences {
     var showOther
         get() = preferences.getBoolean("mc.show.other", DEFAULT_SHOW_TYPE)
         set(value) = preferences.edit().putBoolean("mc.show.other", value).apply()
+    //todo разобраться
     var visibleDistance: Int
         get() {
             return try {
@@ -97,10 +98,10 @@ object Preferences {
     var vibration: Boolean
         get() = preferences.getBoolean("use.vibration", DEFAULT_VIBRATION)
         set(value) = preferences.edit().putBoolean("use.vibration", value).apply()
-    var login:String
+    var login: String
         get() = preferences.getString("mc.login", "")
         set(value) = preferences.edit().putString("mc.login", value).apply()
-    var password:String
+    var password: String
         get() = preferences.getString("mc.password", "")
         set(value) = preferences.edit().putString("mc.password", value).apply()
     var anonymous
@@ -128,6 +129,7 @@ object Preferences {
             Uri.parse(soundURI)
     }
 
+    //todo избавиться
     fun putBoolean(name: String, value: Boolean) {
         preferences.edit().putBoolean(name, value).apply()
     }
@@ -142,12 +144,12 @@ object Preferences {
         preferences.edit().remove(login).remove(password).apply()
     }
 
-    fun isHidden(type: Type): Boolean = when (type) {
-        Type.BREAK                                               -> !showBreak
-        Type.MOTO_AUTO, Type.MOTO_MOTO, Type.MOTO_MAN, Type.SOLO -> !showAcc
-        Type.STEAL                                               -> !showSteal
-        Type.OTHER                                               -> !showOther
-        else                                                     -> false
+    fun isEnabled(type: Type): Boolean = when (type) {
+        Type.BREAK                                               -> showBreak
+        Type.MOTO_AUTO, Type.MOTO_MOTO, Type.MOTO_MAN, Type.SOLO -> showAcc
+        Type.STEAL                                               -> showSteal
+        Type.OTHER                                               -> showOther
+        else                                                     -> true
     }
 
     fun getPreferenceName(preference: String): String = when (preference) {

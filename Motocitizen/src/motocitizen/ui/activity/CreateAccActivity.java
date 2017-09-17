@@ -109,13 +109,13 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 ImageButton searchButton = (ImageButton) findViewById(R.id.SEARCH);
                 searchButton.setVisibility(View.GONE);
 
-                CircleOptions circleOptions = new CircleOptions().center(LocationUtils.Location2LatLng(initialLocation)).radius(RADIUS).fillColor(0x20FF0000);
+                CircleOptions circleOptions = new CircleOptions().center(LocationUtils.toLatLng(initialLocation)).radius(RADIUS).fillColor(0x20FF0000);
                 map.addCircle(circleOptions);
                 map.setOnCameraMoveCanceledListener(() -> {
                     Button mcCreateFineAddressConfirm = (Button) findViewById(R.id.ADDRESS);
                     mcCreateFineAddressConfirm.setEnabled(false);
                     if (initialLocation == null) return;
-                    double distance = LocationUtils.distance(initialLocation, map.getCameraPosition().target);
+                    double distance = LocationUtils.distanceTo(map.getCameraPosition().target, initialLocation);
                     mcCreateFineAddressConfirm.setEnabled(distance < RADIUS);
                 });
             }
@@ -164,7 +164,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
         ((TextView) findViewById(R.id.create_what)).setText(text);
         ((TextView) findViewById(R.id.create_who)).setText(Preferences.INSTANCE.getLogin());
         ((TextView) findViewById(R.id.create_where)).setText(ab.getAddress());
-        ((TextView) findViewById(R.id.create_when)).setText(DateUtils.getDateTime(ab.getTime()));
+        ((TextView) findViewById(R.id.create_when)).setText(DateUtils.dateTimeString(ab.getTime()));
     }
 
     private void setupListener() {
@@ -274,7 +274,7 @@ public class CreateAccActivity extends FragmentActivity implements View.OnClickL
                 backButton();
                 break;
             case R.id.SEARCH:
-                LocationUtils.LatLngByAddress(searchEditText.getText().toString(), latLng -> {
+                LocationUtils.fromAddress(searchEditText.getText().toString(), latLng -> {
                     if (latLng == null) {
                         ToastUtils.show(CreateAccActivity.this, CreateAccActivity.this.getString(R.string.nothing_is_found));
                     } else {

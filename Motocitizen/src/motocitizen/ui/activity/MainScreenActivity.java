@@ -243,6 +243,6 @@ public class MainScreenActivity extends AppCompatActivity {
 
     public void toMap(int id) {
         setScreen(MAP);
-        map.jumpToPoint(Content.INSTANCE.accident(id).location());
+        map.jumpToPoint(Content.INSTANCE.accident(id).getCoordinates());
     }
 }

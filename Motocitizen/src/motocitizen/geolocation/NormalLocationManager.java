@@ -72,7 +72,7 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
     }
 
     public String getCurrentAddress() {
-        return getAddress(LocationUtils.Location2LatLng(current));
+        return getAddress(LocationUtils.toLatLng(current));
     }
 
     @SuppressWarnings({"MissingPermission"})
@@ -128,14 +128,14 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
     }
 
     private boolean isArrived(Location location, int accId) {
-        return Content.INSTANCE.accident(accId).location().distanceTo(location) < Math.max(ARRIVED_MAX_ACCURACY, location.getAccuracy());
+        Accident acc = Content.INSTANCE.accident(accId);
+        return LocationUtils.distanceTo(acc.getCoordinates(), location) < Math.max(ARRIVED_MAX_ACCURACY, location.getAccuracy());
     }
 
     private boolean isInPlace(Location location, int accId) {
         Accident acc = Content.INSTANCE.accident(accId);
-        return location != null && (acc.location().distanceTo(location) - location.getAccuracy() < 100);
+        return location != null && (LocationUtils.distanceTo(acc.getCoordinates(), location) - location.getAccuracy() < 100);
     }
-
 
     @SuppressWarnings({"MissingPermission"})
     private class MyConnectionCallback implements GoogleApiClient.ConnectionCallbacks {

@@ -6,10 +6,9 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
-import motocitizen.content.Content
 import motocitizen.content.message.Message
 import motocitizen.main.R
-import motocitizen.utils.getTime
+import motocitizen.utils.timeString
 
 abstract class MessageRow(context: Context, val message: Message, val type: Type) : FrameLayout(context) {
     companion object {
@@ -52,7 +51,7 @@ abstract class MessageRow(context: Context, val message: Message, val type: Type
     }
 
     private fun bindValues() {
-        (findViewById(R.id.time) as TextView).text = getTime(message.time)
+        (findViewById(R.id.time) as TextView).text = message.time.timeString()
         //todo dirty hack
         (findViewById(R.id.text) as TextView).text = String.format("%s%s \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0", if (type == Type.MIDDLE || type == Type.LAST) "" else "\n", message.text)
     }

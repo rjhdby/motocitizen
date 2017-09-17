@@ -133,7 +133,7 @@ abstract public class PopupWindowGeneral {
         Button coordinates = new Button(content.getContext());
         coordinates.setText(R.string.copy_coordinates);
         coordinates.setOnClickListener(v -> {
-            LatLng           latlng = LocationUtils.Location2LatLng(point.location());
+            LatLng           latlng = point.getCoordinates();
             String           text   = String.valueOf(latlng.latitude) + "," + String.valueOf(latlng.longitude);
             ClipboardManager myClipboard;
             myClipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);

@@ -10,6 +10,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -62,7 +63,7 @@ public class MyGoogleMapManager implements MyMapManager {
 
     public MyGoogleMapManager(FragmentActivity activity) {
 
-        jumpToPoint(MyLocationManager.getLocation());
+        jumpToPoint(LocationUtils.toLatLng(MyLocationManager.getLocation()));
         selected = "";
         android.support.v4.app.FragmentManager     fragmentManager     = activity.getSupportFragmentManager();
         final SupportMapFragment                   mapFragment         = new SupportMapFragment();
@@ -77,7 +78,7 @@ public class MyGoogleMapManager implements MyMapManager {
         map.clear();
         if (user != null) user.remove();
         Location location = MyLocationManager.getLocation();
-        user = map.addMarker(new MarkerOptions().position(LocationUtils.Location2LatLng(location)).title(Type.USER.getText()).icon(Type.USER.getIcon()));
+        user = map.addMarker(new MarkerOptions().position(LocationUtils.toLatLng(location)).title(Type.USER.getText()).icon(Type.USER.getIcon()));
 
         for(Accident accident:Content.INSTANCE.getVisible()){
             String title = accident.getType().getText();
@@ -91,33 +92,18 @@ public class MyGoogleMapManager implements MyMapManager {
             Marker marker = map.addMarker(new MarkerOptions().position(accident.getCoordinates()).title(title).icon(accident.getType().getIcon()).alpha(alpha));
             accidents.put(marker.getId(), accident.getId());
         }
-
-//        for (int id : Content.INSTANCE.getAccidents().keySet()) {
-//            Accident point = Content.INSTANCE.getAccidents().get(id);
-//            if (point.isInvisible()) continue;
-//            String title = point.getType().getText();
-//            title += point.getMedicine() != Medicine.UNKNOWN ? ", " + point.getMedicine().getText() : "";
-//            title += ", " + DateUtils.getIntervalFromNowInText(context, point.getTime()) + " назад";
-//
-//            int age = (int) (((new Date()).getTime() - point.getTime().getTime()) / 3600000);
-//
-//            float alpha = age < 2 ? 1.0f : age < 6 ? 0.5f : 0.2f;
-//
-//            Marker marker = map.addMarker(new MarkerOptions().position(point.getCoordinates()).title(title).icon(point.getType().getIcon()).alpha(alpha));
-//            accidents.put(marker.getId(), id);
-//        }
     }
 
     public void animateToPoint(final Location location) {
         if (map == null) delayedAction.add(() -> animateToPoint(location));
         else
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(LocationUtils.Location2LatLng(location), DEFAULT_ZOOM));
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(LocationUtils.toLatLng(location), DEFAULT_ZOOM));
     }
 
-    public void jumpToPoint(final Location location) {
-        if (map == null) delayedAction.add(() -> jumpToPoint(location));
+    public void jumpToPoint(final LatLng latLng) {
+        if (map == null) delayedAction.add(() -> jumpToPoint(latLng));
         else
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(LocationUtils.Location2LatLng(location), DEFAULT_ZOOM));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
     }
 
     private void init(final Context context) {

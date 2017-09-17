@@ -161,7 +161,7 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         ((TextView) findViewById(TYPE_VIEW)).setText(accident.getType().getText());
         medicineView.setText("(" + accident.getMedicine().getText() + ")");
         statusView.setText(accident.getStatus().getText());
-        ((TextView) findViewById(TIME_VIEW)).setText(DateUtils.getTime(accident.getTime()));
+        ((TextView) findViewById(TIME_VIEW)).setText(DateUtils.timeString(accident.getTime()));
         ((TextView) findViewById(OWNER_VIEW)).setText(accident.ownerName());
         ((TextView) findViewById(ADDRESS_VIEW)).setText(accident.getAddress());
         ((TextView) findViewById(DISTANCE_VIEW)).setText(accident.distanceString());

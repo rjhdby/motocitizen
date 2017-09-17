@@ -5,25 +5,28 @@ package motocitizen.utils
 import android.location.Location
 import android.location.LocationManager
 import com.google.android.gms.maps.model.LatLng
-import motocitizen.geocoder.MyGeoCoder
 import motocitizen.datasources.network.requests.GeoCoderRequest
+import motocitizen.geocoder.MyGeoCoder
+import motocitizen.geolocation.MyLocationManager
 import org.json.JSONException
 import java.io.IOException
 
 val EQUATOR = 20038
 
-fun distance(l1: Location, l2: LatLng): Float = l1.distanceTo(LatLng2Location(l2))
+fun Location.toLatLng(): LatLng = LatLng(this.latitude, this.longitude)
 
-fun LatLng2Location(latLng: LatLng): Location {
+fun LatLng.distanceTo(latLng: LatLng): Float = distanceTo(latLng.toLocation())
+
+fun LatLng.distanceTo(location: Location): Float = this.toLocation().distanceTo(location)
+
+fun LatLng.toLocation(): Location {
     val location = Location(LocationManager.GPS_PROVIDER)
-    location.latitude = latLng.latitude
-    location.longitude = latLng.longitude
+    location.latitude = this.latitude
+    location.longitude = this.longitude
     return location
 }
 
-fun Location2LatLng(location: Location): LatLng = LatLng(location.latitude, location.longitude)
-
-fun LatLngByAddress(address: String, callback: (LatLng?) -> Unit) {
+fun fromAddress(address: String, callback: (LatLng?) -> Unit) {
     try {
         val addresses = MyGeoCoder.getInstance().getFromLocationName(address, 1)
         if (addresses.size > 0) {
@@ -41,3 +44,14 @@ fun LatLngByAddress(address: String, callback: (LatLng?) -> Unit) {
         }
     })
 }
+
+fun distanceString(latLng: LatLng): String {
+    val meters = metersFromUser(latLng)
+    return if (meters > 1000) {
+        ((meters / 10).toFloat() / 100).toString() + "км"
+    } else {
+        meters.toString() + "м"
+    }
+}
+
+fun metersFromUser(latLng: LatLng): Int = Math.round(latLng.distanceTo(MyLocationManager.getLocation()))

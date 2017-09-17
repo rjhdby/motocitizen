@@ -1,7 +1,5 @@
 package motocitizen.content.accident
 
-import android.location.Location
-import android.location.LocationManager
 import com.google.android.gms.maps.model.LatLng
 import motocitizen.content.Content
 import motocitizen.content.history.History
@@ -11,16 +9,15 @@ import motocitizen.dictionary.AccidentStatus.ACTIVE
 import motocitizen.dictionary.AccidentStatus.HIDDEN
 import motocitizen.dictionary.Medicine
 import motocitizen.dictionary.Type
-import motocitizen.geolocation.MyLocationManager
 import motocitizen.user.User
 import motocitizen.utils.Preferences
+import motocitizen.utils.metersFromUser
 import java.util.*
 import kotlin.collections.ArrayList
 
 abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val time: Date, var address: String, var coordinates: LatLng, val owner: Int) {
     private val MS_IN_HOUR = 3_600_000
     abstract val status: AccidentStatus
-    //val messages = ArrayList<Int>()
     val volunteers = ArrayList<VolunteerAction>()
     val history = ArrayList<History>()
     var messagesCount = 0
@@ -31,33 +28,24 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
 
     fun ownerName() = Content.volunteer(owner).name
 
-    fun distanceString(): String = if (metersFromUser() > 1000) {
-        kiloMetersFromUser().toString() + "км"
-    } else {
-        metersFromUser().toString() + "м"
-    }
+    fun distanceString(): String = motocitizen.utils.distanceString(coordinates)
 
-    private fun metersFromUser(): Int = Math.round(location().distanceTo(MyLocationManager.getLocation()))
-    private fun kiloMetersFromUser(): Float = (metersFromUser() / 10).toFloat() / 100
-
-    fun location(): Location {
-        val location = Location(LocationManager.GPS_PROVIDER)
-        location.latitude = coordinates.latitude
-        location.longitude = coordinates.longitude
-        return location
-    }
+//    fun location(): Location {
+//        val location = Location(LocationManager.GPS_PROVIDER)
+//        location.latitude = coordinates.latitude
+//        location.longitude = coordinates.longitude
+//        return location
+//    }
 
     fun messagesCount(): Int = messagesCount
 
-    fun isInvisible(): Boolean {
-        val hidden = status == HIDDEN && !User.isModerator
-        val distanceFilter = metersFromUser() > Preferences.visibleDistance * 1000
-        val typeFilter = Preferences.isHidden(type)
-        val timeFilter = time.time + Preferences.hoursAgo.toLong() * MS_IN_HOUR < Date().time
-        return hidden || distanceFilter || typeFilter || timeFilter
+    fun isVisible(): Boolean {
+        val visible = User.isModerator || status != HIDDEN
+        val distanceFilter = metersFromUser(coordinates) < Preferences.visibleDistance * 1000
+        val settingsFilter = Preferences.isEnabled(type)
+        val timeFilter = time.time + Preferences.hoursAgo.toLong() * MS_IN_HOUR > Date().time
+        return visible && distanceFilter && settingsFilter && timeFilter
     }
-
-    fun isVisible(): Boolean = !isInvisible()
 
     fun isActive(): Boolean = status === ACTIVE
 
