@@ -139,11 +139,11 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         super.onResume();
         generalLayout.setOnLongClickListener(v -> {
             PopupWindow popupWindow;
-            popupWindow = (new AccidentListPopup(AccidentDetailsActivity.this, accident.getId()))
+            popupWindow = (new AccidentListPopup(AccidentDetailsActivity.this, accident))
                     .getPopupWindow(AccidentDetailsActivity.this);
-            int viewLocation[] = new int[ 2 ];
+            int viewLocation[] = new int[2];
             v.getLocationOnScreen(viewLocation);
-            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[ 0 ], viewLocation[ 1 ]);
+            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
             return true;
         });
         update();
@@ -233,7 +233,7 @@ public class AccidentDetailsActivity extends AppCompatActivity {
                 return true;
             case R.id.action_share:
                 //todo pornography
-                Router.INSTANCE.share(this, AccidentListPopup.getAccidentTextToCopy(accident));
+                Router.INSTANCE.share(this, Utils.getAccidentTextToCopy(accident));
                 return true;
             case R.id.action_hide_info:
             case R.id.menu_hide_info:

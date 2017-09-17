@@ -80,7 +80,7 @@ abstract class Row protected constructor(context: Context, val accident: Acciden
         setOnLongClickListener { v ->
             val viewLocation = IntArray(2)
             v.getLocationOnScreen(viewLocation)
-            AccidentListPopup(context, accident.id)
+            AccidentListPopup(context, accident)
                     .getPopupWindow(context)
                     .showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1])
             true
