@@ -24,4 +24,6 @@ enum class Type(val code: String, val text: String, private val mapIcon: Int) {
                    ?: Type.OTHER
         }
     }
+
+    fun isAccident() = this == Type.MOTO_AUTO || this == Type.SOLO || this == Type.MOTO_MOTO || this == Type.MOTO_MAN
 }
