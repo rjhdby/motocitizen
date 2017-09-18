@@ -80,7 +80,7 @@ public class MyGoogleMapManager implements MyMapManager {
         Location location = MyLocationManager.getLocation();
         user = map.addMarker(new MarkerOptions().position(LocationUtils.toLatLng(location)).title(Type.USER.getText()).icon(Type.USER.getIcon()));
 
-        for(Accident accident:Content.INSTANCE.getVisible()){
+        for (Accident accident : Content.INSTANCE.getVisible()) {
             String title = accident.getType().getText();
             title += accident.getMedicine() != Medicine.UNKNOWN ? ", " + accident.getMedicine().getText() : "";
             title += ", " + DateUtils.getIntervalFromNowInText(context, accident.getTime()) + " назад";

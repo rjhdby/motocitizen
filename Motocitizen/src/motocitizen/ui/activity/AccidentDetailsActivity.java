@@ -86,13 +86,6 @@ public class AccidentDetailsActivity extends AppCompatActivity {
 
         setContentView(ROOT_LAYOUT);
 
-        detailVolunteersFragment = new DetailVolunteersFragment(accident);
-        detailMessagesFragment = new DetailMessagesFragment(accident);
-        detailHistoryFragment = new DetailHistoryFragment(accident);
-
-        tabs = (RadioGroup) findViewById(TABS_GROUP);
-        tabs.setVisibility(View.INVISIBLE);
-
         Content.INSTANCE.requestDetailsForAccident(accident, response -> {
             this.runOnUiThread(this::setupFragments);
             return Unit.INSTANCE;
@@ -101,37 +94,45 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
 
-        generalLayout = findViewById(GENERAL_INFORMATION_VIEW);
-        statusView = (TextView) findViewById(STATUS_VIEW);
-        medicineView = (TextView) findViewById(MEDICINE_VIEW);
+        bindViews();
 
         menuReconstruction();
     }
 
+    private void bindViews() {
+        tabs = (RadioGroup) findViewById(TABS_GROUP);
+        tabs.setVisibility(View.INVISIBLE);
+        generalLayout = findViewById(GENERAL_INFORMATION_VIEW);
+        statusView = (TextView) findViewById(STATUS_VIEW);
+        medicineView = (TextView) findViewById(MEDICINE_VIEW);
+    }
+
     private void setupFragments() {
+        detailVolunteersFragment = new DetailVolunteersFragment(accident);
+        detailMessagesFragment = new DetailMessagesFragment(accident);
+        detailHistoryFragment = new DetailHistoryFragment(accident);
         /*
         * Описание группы закладок внутри деталей происшествия
         */
         tabs.setVisibility(View.VISIBLE);
-        tabs.setOnCheckedChangeListener((group, checkedId) -> {
-            Fragment fragment;
-            switch (group.getCheckedRadioButtonId()) {
-                case MESSAGE_TAB:
-                    fragment = detailMessagesFragment;
-                    break;
-                case HISTORY_TAB:
-                    fragment = detailHistoryFragment;
-                    break;
-                case VOLUNTEER_TAB:
-                    fragment = detailVolunteersFragment;
-                    break;
-                default:
-                    return;
-            }
-            getFragmentManager().beginTransaction().replace(FRAGMENT_ROOT_VIEW, fragment).commit();
-        });
+        tabs.setOnCheckedChangeListener((group, checkedId) -> getFragmentManager()
+                .beginTransaction()
+                .replace(FRAGMENT_ROOT_VIEW, selectFragment(group.getCheckedRadioButtonId()))
+                .commit());
 
         getFragmentManager().beginTransaction().replace(FRAGMENT_ROOT_VIEW, detailVolunteersFragment).commit();
+    }
+
+    private Fragment selectFragment(int tabId) {
+        switch (tabId) {
+            case MESSAGE_TAB:
+                return detailMessagesFragment;
+            case HISTORY_TAB:
+                return detailHistoryFragment;
+            case VOLUNTEER_TAB:
+            default:
+                return detailVolunteersFragment;
+        }
     }
 
     @Override
@@ -141,9 +142,9 @@ public class AccidentDetailsActivity extends AppCompatActivity {
             PopupWindow popupWindow;
             popupWindow = (new AccidentListPopup(AccidentDetailsActivity.this, accident))
                     .getPopupWindow(AccidentDetailsActivity.this);
-            int viewLocation[] = new int[2];
+            int viewLocation[] = new int[ 2 ];
             v.getLocationOnScreen(viewLocation);
-            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
+            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[ 0 ], viewLocation[ 1 ]);
             return true;
         });
         update();

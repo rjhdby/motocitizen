@@ -14,5 +14,5 @@ fun Date.dateTimeString(): String = SimpleDateFormat("dd.MM.yy HH:mm", Locale.ge
 fun getIntervalFromNowInText(context: Context, date: Date): String {
     val minutes = ((Date().time - date.time) / 60000).toInt()
     if (minutes == 0) return "Только что"
-    return context.resources.getString(R.string.time_interval_short, minutes / 60, minutes % 60)
+    return context.getString(R.string.time_interval_short, minutes / 60, minutes % 60)
 }

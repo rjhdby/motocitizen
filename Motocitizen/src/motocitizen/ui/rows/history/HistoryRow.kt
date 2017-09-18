@@ -10,7 +10,6 @@ import motocitizen.content.history.History
 import motocitizen.main.R
 import motocitizen.user.User
 import motocitizen.utils.dateTimeString
-import motocitizen.utils.getStringTime
 
 class HistoryRow : LinearLayout {
     //todo refactor
