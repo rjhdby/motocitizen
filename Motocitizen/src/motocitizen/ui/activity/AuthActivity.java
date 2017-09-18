@@ -1,6 +1,5 @@
 package motocitizen.ui.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +23,10 @@ import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
 
+import org.json.JSONObject;
+
 import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 import motocitizen.MyApp;
 import motocitizen.main.R;
 import motocitizen.router.Router;
@@ -67,16 +69,72 @@ public class AuthActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        try {
-            if (User.INSTANCE.isAuthorized()) {
-                Router.INSTANCE.goTo(this, Router.Target.MAIN);
-            }
-        } catch (Error e) {
-            ToastUtils.show(this, e.getLocalizedMessage());
+        setContentView(R.layout.auth);
+        bindViews();
+        setUpListeners();
+
+        if (User.INSTANCE.isAuthorized()) {
+            Router.INSTANCE.goTo(this, Router.Target.MAIN);
         }
 
+        vkWakeUpSession();
+
+        ((TextView) findViewById(R.id.accListYesterdayLine)).setMovementMethod(LinkMovementMethod.getInstance());
+        fillCtrls();
+    }
+
+    private void bindViews() {
+        login = (EditText) findViewById(R.id.auth_login);
+        password = (EditText) findViewById(R.id.auth_password);
+        anonymous = (CheckBox) findViewById(R.id.auth_anonim);
+        cancelBtn = (Button) findViewById(R.id.cancel_button);
+        logoutBtn = (Button) findViewById(R.id.logout_button);
+        loginBtn = (Button) findViewById(R.id.login_button);
+        loginVK = (Button) findViewById(R.id.vk);
+    }
+
+    private void setUpListeners() {
+        loginVK.setOnClickListener(v -> VKSdk.login(AuthActivity.this, VKScope.PAGES));
+        findViewById(R.id.vk333).setOnClickListener(v -> vkAuth());
+        loginBtn.setOnClickListener(v -> loginButtonPressed());
+        logoutBtn.setOnClickListener(v -> logOutButtonPressed());
+        login.addTextChangedListener(textWatcher());
+        password.addTextChangedListener(textWatcher());
+        anonymous.setOnClickListener(v -> anonymousCheckBoxPressed());
+        cancelBtn.setOnClickListener(v -> finish());
+    }
+
+    private void loginButtonPressed() {
+        // Анонимный вход
+        Preferences.INSTANCE.setAnonymous(anonymous.isChecked());
+        if (anonymous.isChecked()) {
+            ((TextView) findViewById(R.id.auth_error_helper)).setText("");
+            Router.INSTANCE.goTo(AuthActivity.this, Router.Target.MAIN);
+            return;
+        }
+        if (!MyApp.isOnline(AuthActivity.this)) {
+            ToastUtils.show(AuthActivity.this, AuthActivity.this.getString(R.string.auth_not_available));
+            return;
+        }
+        auth();
+    }
+
+    private void logOutButtonPressed() {
+        //TODO Добавить запрос подтверждения на выход.
+        Preferences.INSTANCE.resetAuth();
+        Preferences.INSTANCE.setAnonymous(true);
+        MyApp.logoff();
+        fillCtrls();
+    }
+
+    private void anonymousCheckBoxPressed() {
+        login.setEnabled(!anonymous.isChecked());
+        password.setEnabled(!anonymous.isChecked());
+        enableLoginBtn();
+    }
+
+    private void vkWakeUpSession() {
         VKSdk.wakeUpSession(this, new VKCallback<VKSdk.LoginState>() {
             @Override
             public void onResult(VKSdk.LoginState res) {
@@ -100,56 +158,33 @@ public class AuthActivity extends AppCompatActivity {
 
             }
         });
+    }
 
+    private void vkAuth() {
+        VKApi.users().get().executeWithListener(new VKRequest.VKRequestListener() {
+            @Override
+            public void onComplete(VKResponse response) {
+                super.onComplete(response);
+            }
 
-        setContentView(R.layout.auth);
-        login = (EditText) findViewById(R.id.auth_login);
-        password = (EditText) findViewById(R.id.auth_password);
-        anonymous = (CheckBox) findViewById(R.id.auth_anonim);
-        cancelBtn = (Button) findViewById(R.id.cancel_button);
-        logoutBtn = (Button) findViewById(R.id.logout_button);
-        loginBtn = (Button) findViewById(R.id.login_button);
+            @Override
+            public void attemptFailed(VKRequest request, int attemptNumber, int totalAttempts) {
+                super.attemptFailed(request, attemptNumber, totalAttempts);
+            }
 
-        loginVK = (Button) findViewById(R.id.vk);
-        loginVK.setOnClickListener(v -> VKSdk.login(AuthActivity.this, VKScope.PAGES));
+            @Override
+            public void onError(VKError error) {
+                super.onError(error);
+            }
 
-        Button vk333 = (Button) findViewById(R.id.vk333);
-        vk333.setOnClickListener(v -> {
-            VKApi.users().get().executeWithListener(new VKRequest.VKRequestListener() {
-                @Override
-                public void onComplete(VKResponse response) {
-                    super.onComplete(response);
-                }
-
-                @Override
-                public void attemptFailed(VKRequest request, int attemptNumber, int totalAttempts) {
-                    super.attemptFailed(request, attemptNumber, totalAttempts);
-                }
-
-                @Override
-                public void onError(VKError error) {
-                    super.onError(error);
-                }
-
-                @Override
-                public void onProgress(VKRequest.VKProgressType progressType, long bytesLoaded, long bytesTotal) {
-                    super.onProgress(progressType, bytesLoaded, bytesTotal);
-                }
-            });
-
-            // VKRequest request = VKApi.users().get();
-            //  WeakReference<VKResponse>  fgfgfg = request.response;
-
+            @Override
+            public void onProgress(VKRequest.VKProgressType progressType, long bytesLoaded, long bytesTotal) {
+                super.onProgress(progressType, bytesLoaded, bytesTotal);
+            }
         });
-
-
-        TextView accListYesterdayLine = (TextView) findViewById(R.id.accListYesterdayLine);
-        accListYesterdayLine.setMovementMethod(LinkMovementMethod.getInstance());
-        fillCtrls();
     }
 
     private void fillCtrls() {
-
         login.setText(Preferences.INSTANCE.getLogin());
         password.setText(Preferences.INSTANCE.getPassword());
         anonymous.setChecked(Preferences.INSTANCE.getAnonymous());
@@ -178,77 +213,37 @@ public class AuthActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        final Activity local = this;
-        loginBtn.setOnClickListener(v -> {
-            // Анонимный вход
-            Preferences.INSTANCE.setAnonymous(anonymous.isChecked());
-            if (anonymous.isChecked()) {
-                ((TextView) findViewById(R.id.auth_error_helper)).setText("");
-                Router.INSTANCE.goTo(local, Router.Target.MAIN);
-                return;
-            }
-            if (!MyApp.isOnline(AuthActivity.this)) {
-                ToastUtils.show(AuthActivity.this, AuthActivity.this.getString(R.string.auth_not_available));
-                return;
-            }
-            auth();
-        });
-        logoutBtn.setOnClickListener(v -> {
-            //TODO Добавить запрос подтверждения на выход.
-            Preferences.INSTANCE.resetAuth();
-            Preferences.INSTANCE.setAnonymous(true);
-            MyApp.logoff();
-            fillCtrls();
-        });
-        login.addTextChangedListener(new TextWatcher() {
+    private TextWatcher textWatcher() {
+        return new TextWatcher() {
+            public void afterTextChanged(Editable s) {}
 
-            public void afterTextChanged(Editable s) {
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 enableLoginBtn();
             }
-        });
-        password.addTextChangedListener(new TextWatcher() {
-
-            public void afterTextChanged(Editable s) {
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                enableLoginBtn();
-            }
-        });
-        anonymous.setOnClickListener(view -> {
-            CheckBox checkBox = (CheckBox) view;
-            login.setEnabled(!checkBox.isChecked());
-            password.setEnabled(!checkBox.isChecked());
-            enableLoginBtn();
-        });
-        cancelBtn.setOnClickListener(v -> finish());
+        };
     }
 
     private void auth() {
-        User.INSTANCE.auth(login.getText().toString(),
-                           password.getText().toString(),
-                           result -> {
-                               if (User.INSTANCE.isAuthorized()) {
-                                   Router.INSTANCE.goTo(AuthActivity.this, Router.Target.MAIN);
-                               } else {
-                                   AuthActivity.this.runOnUiThread(() -> {
-                                       TextView authErrorHelper = (TextView) findViewById(R.id.auth_error_helper);
-                                       authErrorHelper.setText(R.string.auth_password_error);
-                                   });
-                               }
-                               return Unit.INSTANCE;
-                           });
+        User.INSTANCE.auth(login.getText().toString(), password.getText().toString(), authCallback());
+    }
+
+    private Function1<JSONObject, Unit> authCallback() {
+        return result -> {
+            if (User.INSTANCE.isAuthorized()) {
+                Router.INSTANCE.goTo(AuthActivity.this, Router.Target.MAIN);
+            } else {
+                showAuthError();
+            }
+            return Unit.INSTANCE;
+        };
+    }
+
+    private void showAuthError() {
+        AuthActivity.this.runOnUiThread(() -> {
+            TextView authErrorHelper = (TextView) findViewById(R.id.auth_error_helper);
+            authErrorHelper.setText(R.string.auth_password_error);
+        });
     }
 }
