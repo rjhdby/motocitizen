@@ -31,22 +31,27 @@ class StartupActivity : AppCompatActivity() {
         super.onResume()
         Dexter.withActivity(this)
                 .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                .withListener(object : BasePermissionListener() {
-                    override fun onPermissionGranted(response: PermissionGrantedResponse?) {
-                        MyLocationManager.enableReal()
-                        ahead()
-                    }
+                .withListener(permissionListener())
+                .check()
+    }
 
-                    override fun onPermissionRationaleShouldBeShown(permission: PermissionRequest?, token: PermissionToken) {
-                        super.onPermissionRationaleShouldBeShown(permission, token)
-                        token.continuePermissionRequest()
-                    }
+    private fun permissionListener(): BasePermissionListener {
+        return object : BasePermissionListener() {
+            override fun onPermissionGranted(response: PermissionGrantedResponse?) {
+                MyLocationManager.enableReal()
+                ahead()
+            }
 
-                    override fun onPermissionDenied(response: PermissionDeniedResponse?) {
-                        super.onPermissionDenied(response)
-                        ahead()
-                    }
-                }).check()
+            override fun onPermissionRationaleShouldBeShown(permission: PermissionRequest?, token: PermissionToken) {
+                super.onPermissionRationaleShouldBeShown(permission, token)
+                token.continuePermissionRequest()
+            }
+
+            override fun onPermissionDenied(response: PermissionDeniedResponse?) {
+                super.onPermissionDenied(response)
+                ahead()
+            }
+        }
     }
 
     private fun ahead() {
@@ -61,8 +66,6 @@ class StartupActivity : AppCompatActivity() {
         User.auth(
                 Preferences.login,
                 Preferences.password,
-                {
-                    Router.goTo(this@StartupActivity, if (User.isAuthorized) Router.Target.MAIN else Router.Target.AUTH)
-                })
+                { Router.goTo(this@StartupActivity, if (User.isAuthorized) Router.Target.MAIN else Router.Target.AUTH) })
     }
 }
