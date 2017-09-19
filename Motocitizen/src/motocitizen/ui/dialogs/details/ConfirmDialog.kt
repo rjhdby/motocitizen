@@ -1,4 +1,4 @@
-package motocitizen.ui.fragments
+package motocitizen.ui.dialogs.details
 
 import android.app.Activity
 import android.app.AlertDialog

@@ -1,6 +1,6 @@
 package motocitizen.user
 
-internal enum class Role constructor(val code: Int, val text: String) {
+enum class Role constructor(val code: Int, val text: String) {
     RO(0, "только чтение"),
     //    BANNED("banned", "забанен"),
     STANDARD(1, "пользователь"),

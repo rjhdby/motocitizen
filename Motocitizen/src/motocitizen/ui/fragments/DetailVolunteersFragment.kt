@@ -15,6 +15,7 @@ import motocitizen.main.R
 import motocitizen.datasources.network.requests.CancelOnWayRequest
 import motocitizen.datasources.network.requests.OnWayRequest
 import motocitizen.ui.activity.AccidentDetailsActivity.*
+import motocitizen.ui.dialogs.details.ConfirmDialog
 import motocitizen.ui.rows.volunteer.VolunteerRowFactory
 import motocitizen.user.User
 import motocitizen.utils.Preferences
