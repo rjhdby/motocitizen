@@ -1,11 +1,12 @@
-package motocitizen.ui.dialogs
+package motocitizen.ui.frames.create
 
 import android.support.v4.app.FragmentActivity
 import android.view.View
 import motocitizen.dictionary.Medicine
 import motocitizen.main.R
+import motocitizen.ui.frames.FrameInterface
 
-class SelectDamageFrame(val context: FragmentActivity, val callback: (Medicine) -> Unit) {
+class DamageFrame(val context: FragmentActivity, val callback: (Medicine) -> Unit) : FrameInterface {
     private val ROOT_VIEW = R.id.create_people_frame
     private val view = context.findViewById(ROOT_VIEW)
 
@@ -14,11 +15,11 @@ class SelectDamageFrame(val context: FragmentActivity, val callback: (Medicine) 
                 .forEach { id -> setListener(id, damageSelectListener(id)) }
     }
 
-    fun show() {
+    override fun show() {
         view.visibility = View.VISIBLE
     }
 
-    fun hide() {
+    override fun hide() {
         view.visibility = View.INVISIBLE
     }
 

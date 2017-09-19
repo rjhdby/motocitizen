@@ -1,24 +1,25 @@
-package motocitizen.ui.dialogs
+package motocitizen.ui.frames.create
 
 import android.support.v4.app.FragmentActivity
 import android.view.View
 import motocitizen.dictionary.Type
 import motocitizen.main.R
+import motocitizen.ui.frames.FrameInterface
 
-class SelectTypeFrame(val context: FragmentActivity, val callback: (Type) -> Unit) {
-    private val ROOT_VIEW = R.id.create_type_frame
+class SubTypeFrame(val context: FragmentActivity, val callback: (Type) -> Unit) : FrameInterface {
+    private val ROOT_VIEW = R.id.create_acc_frame
     private val view = context.findViewById(ROOT_VIEW)
 
     init {
-        intArrayOf(R.id.ACCIDENT, R.id.BREAK, R.id.STEAL, R.id.OTHER)
+        intArrayOf(R.id.MOTO_AUTO, R.id.SOLO, R.id.MOTO_MOTO, R.id.MOTO_MAN)
                 .forEach { id -> setListener(id, typeSelectListener(id)) }
     }
 
-    fun show() {
+    override fun show() {
         view.visibility = View.VISIBLE
     }
 
-    fun hide() {
+    override fun hide() {
         view.visibility = View.INVISIBLE
     }
 
@@ -29,10 +30,10 @@ class SelectTypeFrame(val context: FragmentActivity, val callback: (Type) -> Uni
     private fun typeSelectListener(id: Int): View.OnClickListener = View.OnClickListener { _ -> callback(getSelectedType(id)) }
 
     private fun getSelectedType(id: Int): Type = when (id) {
-        R.id.ACCIDENT -> Type.MOTO_AUTO
-        R.id.BREAK    -> Type.BREAK
-        R.id.STEAL    -> Type.STEAL
-        R.id.OTHER    -> Type.OTHER
-        else          -> Type.OTHER
+        R.id.SOLO      -> Type.SOLO
+        R.id.MOTO_MOTO -> Type.MOTO_MOTO
+        R.id.MOTO_MAN  -> Type.MOTO_MAN
+        R.id.MOTO_AUTO -> Type.MOTO_AUTO
+        else           -> Type.MOTO_AUTO
     }
 }

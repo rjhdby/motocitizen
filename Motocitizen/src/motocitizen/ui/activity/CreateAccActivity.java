@@ -1,15 +1,11 @@
 package motocitizen.ui.activity;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -24,15 +20,18 @@ import motocitizen.dictionary.Medicine;
 import motocitizen.dictionary.Type;
 import motocitizen.geolocation.MyLocationManager;
 import motocitizen.main.R;
-import motocitizen.ui.dialogs.SelectDamageFrame;
-import motocitizen.ui.dialogs.SelectDescriptionFrame;
-import motocitizen.ui.dialogs.SelectLocationFrame;
-import motocitizen.ui.dialogs.SelectSubTypeFrame;
-import motocitizen.ui.dialogs.SelectTypeFrame;
+import motocitizen.ui.dialogs.create.EmptyAddressDialog;
+import motocitizen.ui.frames.FrameInterface;
+import motocitizen.ui.frames.create.DamageFrame;
+import motocitizen.ui.frames.create.DescriptionFrame;
+import motocitizen.ui.frames.create.LocationFrame;
+import motocitizen.ui.frames.create.SubTypeFrame;
+import motocitizen.ui.frames.create.TypeFrame;
 import motocitizen.utils.DateUtils;
 import motocitizen.utils.Preferences;
 import motocitizen.utils.ToastUtils;
 
+import static motocitizen.ui.activity.CreateAccActivity.Frames.DAMAGE;
 import static motocitizen.ui.activity.CreateAccActivity.Frames.DESCRIPTION;
 import static motocitizen.ui.activity.CreateAccActivity.Frames.MAP;
 import static motocitizen.ui.activity.CreateAccActivity.Frames.SUB_TYPE;
@@ -47,10 +46,7 @@ public class CreateAccActivity extends FragmentActivity {
         DESCRIPTION
     }
 
-    private Frames current = MAP;
-
-    private static final int ROOT_LAYOUT   = R.layout.create_point;
-    private static final int DIALOG_LAYOUT = R.layout.dialog;
+    private static final int ROOT_LAYOUT = R.layout.create_point;
 
     private static final int WHAT  = R.id.create_what;
     private static final int WHO   = R.id.create_who;
@@ -60,20 +56,22 @@ public class CreateAccActivity extends FragmentActivity {
     private static final int BACK_BUTTON   = R.id.BACK;
     private static final int STAT_CHECKBOX = R.id.forStat;//todo move to frame
 
-    private SelectTypeFrame        selectTypeFrame;
-    private SelectSubTypeFrame     selectSubTypeFrame;
-    private SelectDamageFrame      selectDamageFrame;
-    private SelectLocationFrame    selectLocationFrame;
-    private SelectDescriptionFrame selectDescriptionFrame;
+    private FrameInterface typeFrame;
+    private FrameInterface subTypeFrame;
+    private FrameInterface damageFrame;
+    private FrameInterface locationFrame;
+    private FrameInterface descriptionFrame;
 
     private TextView whatField;
     private TextView whoField;
     private TextView whereField;
     private TextView whenField;
+    private CheckBox forStat;
 
     private Button backButton;
 
     private AccidentBuilder builder = new AccidentBuilder();
+    private Frames          current = MAP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,148 +79,127 @@ public class CreateAccActivity extends FragmentActivity {
         setContentView(ROOT_LAYOUT);
 
         bindViews();
-        showFrame(MAP);
-        selectLocationFrame.show();
+        changeFrameTo(MAP);
+
+        locationFrame.show(); //do not use changeFrameTo()
 
         setupListeners();
         refreshDescription();
     }
 
-    private void showFrame(Frames frame) {
-        hideCurrentFrame();
-        current = frame;
-        switch (current) {
-            case MAP: selectLocationFrame.show();
-                break;
-            case TYPE: selectTypeFrame.show();
-                break;
-            case SUB_TYPE: selectSubTypeFrame.show();
-                break;
-            case DAMAGE:
-                selectDamageFrame.show();
-                break;
-            case DESCRIPTION: selectDescriptionFrame.show();
-                break;
-        }
-        backButton.setEnabled(current != MAP);
-        refreshDescription();
-    }
-
-    private void hideCurrentFrame() {
-        switch (current) {
-            case MAP: selectLocationFrame.hide();
-                break;
-            case TYPE: selectTypeFrame.hide();
-                break;
-            case SUB_TYPE: selectSubTypeFrame.hide();
-                break;
-            case DAMAGE:
-                selectDamageFrame.hide();
-                break;
-            case DESCRIPTION: selectDescriptionFrame.hide();
-                break;
-        }
-    }
-
     private void bindViews() {
         backButton = (Button) findViewById(BACK_BUTTON);
+
+        forStat = ((CheckBox) findViewById(STAT_CHECKBOX));
 
         whatField = (TextView) findViewById(WHAT);
         whoField = (TextView) findViewById(WHO);
         whereField = (TextView) findViewById(WHERE);
         whenField = (TextView) findViewById(WHEN);
 
-        selectLocationFrame = new SelectLocationFrame(this, this::selectLocationCallback);
-        selectTypeFrame = new SelectTypeFrame(this, this::selectTypeCallback);
-        selectDamageFrame = new SelectDamageFrame(this, this::selectDamageCallback);
-        selectSubTypeFrame = new SelectSubTypeFrame(this, this::selectSubTypeCallback);
-        selectDescriptionFrame = new SelectDescriptionFrame(this, builder, this::selectDescriptionCallback);
+        locationFrame = new LocationFrame(this, this::selectLocationCallback);
+        typeFrame = new TypeFrame(this, this::selectTypeCallback);
+        damageFrame = new DamageFrame(this, this::selectDamageCallback);
+        subTypeFrame = new SubTypeFrame(this, this::selectSubTypeCallback);
+        descriptionFrame = new DescriptionFrame(this, builder, this::selectDescriptionCallback);
+    }
+
+    private void setupListeners() {
+        findViewById(R.id.CANCEL).setOnClickListener(v -> finish());
+        findViewById(R.id.BACK).setOnClickListener(v -> backButtonPressed());
+    }
+
+    @Override
+    public boolean onKeyUp(int keycode, @NonNull KeyEvent e) {
+        if (keycode == KeyEvent.KEYCODE_BACK) {
+            backButtonPressed();
+            return true;
+        }
+        return super.onKeyUp(keycode, e);
+    }
+
+    private void backButtonPressed() {
+        if (current == MAP) finish();
+        changeFrameTo(getPrevFrame());
+        refreshDescription();
+    }
+
+    private void changeFrameTo(Frames frame) {
+        hideCurrentFrame();
+        current = frame;
+        getFrame(current).show();
+        backButton.setEnabled(current != MAP);
+        refreshDescription();
+    }
+
+    private void refreshDescription() {
+        String medicine = builder.getMedicine() == Medicine.UNKNOWN ? "" : ". " + builder.getMedicine().getText();
+
+        whatField.setText(String.format("%s%s", builder.getType().getText(), medicine));
+        whoField.setText(Preferences.INSTANCE.getLogin());
+        whereField.setText(builder.getAddress());
+        whenField.setText(DateUtils.dateTimeString(builder.getTime()));
+    }
+
+    private void hideCurrentFrame() {
+        getFrame(current).hide();
+    }
+
+    private FrameInterface getFrame(Frames frame) {
+        switch (frame) {
+            case MAP: return locationFrame;
+            case TYPE: return typeFrame;
+            case SUB_TYPE: return subTypeFrame;
+            case DAMAGE: return damageFrame;
+            case DESCRIPTION: return descriptionFrame;
+            default: return locationFrame;
+        }
     }
 
     private Unit selectDescriptionCallback() {
-        confirm();
+        //        disableConfirm(); //todo
+        new CreateAccidentRequest(builder.build(),
+                                  this::createAccidentCallback,
+                                  forStat.isChecked());//todo remove flag argument
         return Unit.INSTANCE;
     }
 
     private Unit selectLocationCallback(LatLng latLng) {
         builder.coordinates(latLng);
         builder.address(MyLocationManager.getInstance().getAddress(latLng));
-        showFrame(TYPE);
+        changeFrameTo(TYPE);
         if (builder.getAddress().equals("")) {
-            showRatingDialog();
+            new EmptyAddressDialog(this, this::addressDialogCallback);
         }
         return Unit.INSTANCE;
     }
 
     private Unit selectTypeCallback(Type type) {
         builder.type(type);
-        if (type.isAccident()) {
-            showFrame(SUB_TYPE);
-        } else {
-            showFrame(DESCRIPTION);
-        }
+        changeFrameTo(type.isAccident() ? SUB_TYPE : DESCRIPTION);
         return Unit.INSTANCE;
     }
 
     private Unit selectSubTypeCallback(Type type) {
         builder.type(type);
-        showFrame(Frames.DAMAGE);
+        changeFrameTo(DAMAGE);
         return Unit.INSTANCE;
     }
 
     private Unit selectDamageCallback(Medicine medicine) {
         builder.medicine(medicine);
-        showFrame(DESCRIPTION);
+        changeFrameTo(DESCRIPTION);
         return Unit.INSTANCE;
     }
 
-    private void refreshDescription() {
-        String text = builder.getType().getText();
-        text += builder.getMedicine() == Medicine.UNKNOWN ? "" : ". " + builder.getMedicine().getText();
-
-        whatField.setText(text);
-        whoField.setText(Preferences.INSTANCE.getLogin());
-        whereField.setText(builder.getAddress());
-        whenField.setText(DateUtils.dateTimeString(builder.getTime()));
+    private Unit addressDialogCallback(String address) {
+        if (address.length() > 0) {
+            builder.address(address);
+            refreshDescription();
+        }
+        return Unit.INSTANCE;
     }
 
-    private void setupListeners() {
-        findViewById(R.id.CANCEL).setOnClickListener(v -> finish());
-        findViewById(R.id.BACK).setOnClickListener(v -> backButton());
-    }
-
-    /**
-     * Показ диалога для ввода адреса, когда он не был определён по координатам
-     */
-    public void showRatingDialog() {
-        final AlertDialog.Builder addressDialog = new AlertDialog.Builder(this);
-        addressDialog.setTitle(R.string.addressDialog);
-        View linearLayout = getLayoutInflater().inflate(DIALOG_LAYOUT, null);
-        addressDialog.setView(linearLayout);
-        EditText addressEditText = (EditText) linearLayout.findViewById(R.id.address_edit_Text);
-        addressDialog
-                .setPositiveButton("Готово", dialogPositiveListener(addressEditText))
-                .setNegativeButton("Отмена", (dialog, id) -> dialog.cancel());
-        addressDialog.create();
-        addressDialog.show();
-    }
-
-    private Dialog.OnClickListener dialogPositiveListener(EditText addressEditText) {
-        return (dialog, which) -> {
-            String temp = addressEditText.getText().toString().replaceAll("\\s", "");
-            if (temp.length() > 0) {
-                builder.address(addressEditText.getText().toString());
-                refreshDescription();
-            }
-        };
-    }
-
-    private void confirm() {
-//        disableConfirm(); //todo
-        new CreateAccidentRequest(builder.build(),
-                                  this::createAccidentCallback,
-                                  ((CheckBox) findViewById(STAT_CHECKBOX)).isChecked());//todo remove flag argument
-    }
 
     private Unit createAccidentCallback(JSONObject response) {
         try {
@@ -255,35 +232,14 @@ public class CreateAccActivity extends FragmentActivity {
         }
     }
 
-    private void backButton() {
+    private Frames getPrevFrame() {
         switch (current) {
-            case MAP:
-                finish();
-                break;
-            case DAMAGE:
-                showFrame(SUB_TYPE);
-                break;
-            case SUB_TYPE:
-                showFrame(TYPE);
-                break;
-            case TYPE:
-                showFrame(MAP);
-                break;
-            case DESCRIPTION:
-                showFrame(builder.build().isAccident() ? Frames.DAMAGE : TYPE);
-                break;
-        }
-        refreshDescription();
-    }
-
-    @Override
-    public boolean onKeyUp(int keycode, @NonNull KeyEvent e) {
-        switch (keycode) {
-            case KeyEvent.KEYCODE_BACK:
-                backButton();
-                return true;
-            default:
-                return super.onKeyUp(keycode, e);
+            case MAP: return MAP;
+            case DAMAGE: return SUB_TYPE;
+            case SUB_TYPE: return TYPE;
+            case TYPE: return MAP;
+            case DESCRIPTION: return builder.build().isAccident() ? DAMAGE : TYPE;
+            default: return current;
         }
     }
 }
