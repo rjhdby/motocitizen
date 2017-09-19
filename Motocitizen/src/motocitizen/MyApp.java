@@ -13,11 +13,12 @@ import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKAccessTokenTracker;
 import com.vk.sdk.VKSdk;
 
-import motocitizen.ui.activity.AuthActivity;
 import motocitizen.datasources.database.Database;
-import motocitizen.geo.geocoder.MyGeoCoder;
-import motocitizen.user.User;
 import motocitizen.datasources.preferences.Preferences;
+import motocitizen.geo.MyGoogleApiClient;
+import motocitizen.geo.geocoder.MyGeoCoder;
+import motocitizen.ui.activity.AuthActivity;
+import motocitizen.user.User;
 
 public class MyApp extends MultiDexApplication {
 
@@ -43,6 +44,7 @@ public class MyApp extends MultiDexApplication {
         Preferences.INSTANCE.initialize(this);
         Database.INSTANCE.initialize(this);
         MyGeoCoder.INSTANCE.initialize(this);
+        MyGoogleApiClient.INSTANCE.initialize(this);
         FirebaseMessaging.getInstance().subscribeToTopic("accidents");
         vkAccessTokenTracker.startTracking();
         VKSdk.initialize(this);
