@@ -200,7 +200,6 @@ public class CreateAccActivity extends FragmentActivity {
         return Unit.INSTANCE;
     }
 
-
     private Unit createAccidentCallback(JSONObject response) {
         try {
             if (response.has("r") && response.getJSONObject("r").has("id")) {
