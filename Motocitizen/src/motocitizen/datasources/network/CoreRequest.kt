@@ -19,7 +19,7 @@ abstract class CoreRequest(val callback: (JSONObject) -> Unit = {}) {
     private fun buildRequest() = Request.Builder()
             .post(makePost(params))
             .url(url)
-            .build()!!
+            .build()
 
     protected fun call() {
         client.newCall(buildRequest()).enqueue(object : Callback {

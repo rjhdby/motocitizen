@@ -7,11 +7,13 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 object Content {
-    var inPlace: Int = 0 //todo
+    var inPlace: Accident? = null //todo
 
     fun accident(id: Int): Accident = AccidentsController.accidents[id]!! //TODO can produce NPE
     fun volunteer(id: Int): Volunteer = VolunteersController.volunteers[id]!!//TODO can produce NPE
     fun message(id: Int): Message = MessagesController.messages[id]!!//TODO can produce NPE
+
+    fun getByFilter(filter: (Accident) -> Boolean): List<Accident> = AccidentsController.accidents.values.filter(filter)
 
     fun requestUpdate(callback: (JSONObject) -> Unit) {
         AccidentsController.update(callback)

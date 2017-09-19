@@ -12,14 +12,14 @@ object MyGoogleApiClient {
     private var client: GoogleApiClient? = null
     private var delayedJob: () -> Unit = {}
 
-    fun isConnected() = client?.isConnected.let { false }
+    private fun isConnected() = client?.isConnected.let { false }
 
     fun initialize(context: Context) {
         client = GoogleApiClient.Builder(context).addConnectionCallbacks(connectionCallback()).addApi(LocationServices.API).build()
         client?.connect()
     }
 
-    fun getLastLocation(): Location? {
+    fun getLastLocation(): Location {
         if (client == null) return motocitizen.datasources.preferences.Preferences.savedLatLng.toLocation()
         return LocationServices.FusedLocationApi.getLastLocation(client)
     }
