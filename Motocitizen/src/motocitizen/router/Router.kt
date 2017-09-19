@@ -46,15 +46,6 @@ object Router {
         activity.startActivity(sendIntent)
     }
 
-    //TODO EXTERMINATUS!!!!
-    fun exit(activity: Activity) {
-        val intent = Intent(Intent.ACTION_MAIN)
-        intent.addCategory(Intent.CATEGORY_HOME)
-        activity.startActivity(intent)
-        val pid = android.os.Process.myPid()
-        android.os.Process.killProcess(pid)
-    }
-
     fun toExternalMap(activity: Activity, latLng: LatLng) {
         val uri = "geo:" + latLng.latitude + "," + latLng.longitude
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))

@@ -219,9 +219,6 @@ public class MainScreenActivity extends AppCompatActivity {
             case R.id.small_menu_about:
                 Router.INSTANCE.goTo(this, Router.Target.ABOUT);
                 return true;
-            case R.id.small_menu_exit:
-                Router.INSTANCE.exit(this);
-                return true;
             case R.id.action_refresh:
                 getAccidents();
                 return true;
