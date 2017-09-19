@@ -6,11 +6,12 @@ import motocitizen.geocoder.MyGeoCoder
 import java.io.IOException
 
 object AddressResolver {
+
     fun getAddress(location: LatLng): String {
         try {
-            val list = findAddressByLocation(location)
-            if (list != null && list.isNotEmpty()) {
-                return buildAddressString(list[0])
+            val address = findAddressByLocation(location)
+            if (address != null) {
+                return buildAddressString(address)
             }
         } catch (e: IOException) {
             e.printStackTrace()
@@ -31,8 +32,8 @@ object AddressResolver {
     }
 
     @Throws(IOException::class)
-    private fun findAddressByLocation(location: LatLng): List<Address>? =
-            MyGeoCoder.getInstance().getFromLocation(location.latitude, location.longitude, 1)
+    private fun findAddressByLocation(location: LatLng): Address? =
+            MyGeoCoder.getFromLocation(location.latitude, location.longitude)
 
     private fun extractLocality(address: Address): String {
         if (address.locality != null) return address.locality

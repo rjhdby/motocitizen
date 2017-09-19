@@ -42,7 +42,7 @@ public class MyApp extends MultiDexApplication {
         super.onCreate();
         Preferences.INSTANCE.initialize(this);
         Database.INSTANCE.initialize(this);
-        MyGeoCoder.init(this);
+        MyGeoCoder.INSTANCE.initialize(this);
         FirebaseMessaging.getInstance().subscribeToTopic("accidents");
         vkAccessTokenTracker.startTracking();
         VKSdk.initialize(this);

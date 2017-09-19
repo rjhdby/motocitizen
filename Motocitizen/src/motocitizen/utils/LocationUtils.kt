@@ -26,16 +26,16 @@ fun LatLng.toLocation(): Location {
     return location
 }
 
-fun fromAddress(address: String, callback: (LatLng?) -> Unit) {
+fun fromAddress(name: String, callback: (LatLng?) -> Unit) {
     try {
-        val addresses = MyGeoCoder.getInstance().getFromLocationName(address, 1)
-        if (addresses.size > 0) {
-            callback(LatLng(addresses[0].latitude, addresses[0].longitude))
+        val address = MyGeoCoder.getFromLocationName(name)
+        if (address != null) {
+            callback(LatLng(address.latitude, address.longitude))
             return
         }
     } catch (e: IOException) {
     }
-    GeoCoderRequest(address, callback = { response ->
+    GeoCoderRequest(name, callback = { response ->
         try {
             val location = response.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location")
             callback(LatLng(location.getDouble("lat"), location.getDouble("lng")))
