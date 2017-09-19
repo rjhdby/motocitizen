@@ -34,9 +34,9 @@ import motocitizen.router.Router;
 import motocitizen.ui.rows.accident.AccidentRowFactory;
 import motocitizen.ui.rows.accident.Row;
 import motocitizen.user.User;
-import motocitizen.utils.BounceScrollView;
-import motocitizen.utils.ChangeLog;
-import motocitizen.utils.Preferences;
+import motocitizen.ui.views.BounceScrollView;
+import motocitizen.ui.changelog.ChangeLog;
+import motocitizen.datasources.preferences.Preferences;
 import motocitizen.utils.Utils;
 
 public class MainScreenActivity extends AppCompatActivity {

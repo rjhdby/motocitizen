@@ -1,12 +1,10 @@
-package motocitizen.utils.popups
+package motocitizen.ui.popups
 
 import android.content.Context
 import android.widget.PopupWindow
 import motocitizen.content.accident.Accident
-import motocitizen.dictionary.Medicine
 import motocitizen.user.User
-import motocitizen.utils.Preferences
-import motocitizen.utils.dateTimeString
+import motocitizen.datasources.preferences.Preferences
 import motocitizen.utils.getAccidentTextToCopy
 import motocitizen.utils.getPhonesFromText
 

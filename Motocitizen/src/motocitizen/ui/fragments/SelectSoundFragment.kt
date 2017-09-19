@@ -15,7 +15,7 @@ import android.widget.Button
 import android.widget.TableRow
 import android.widget.TextView
 import motocitizen.main.R
-import motocitizen.utils.Preferences
+import motocitizen.datasources.preferences.Preferences
 
 class SelectSoundFragment : Fragment() {
     private val ROOT_LAYOUT = R.layout.select_sound_fragment

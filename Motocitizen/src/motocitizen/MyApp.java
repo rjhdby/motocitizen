@@ -17,7 +17,7 @@ import motocitizen.ui.activity.AuthActivity;
 import motocitizen.datasources.database.Database;
 import motocitizen.geocoder.MyGeoCoder;
 import motocitizen.user.User;
-import motocitizen.utils.Preferences;
+import motocitizen.datasources.preferences.Preferences;
 
 public class MyApp extends MultiDexApplication {
 

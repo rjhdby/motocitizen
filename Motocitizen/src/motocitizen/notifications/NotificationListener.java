@@ -17,13 +17,12 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import kotlin.Unit;
-import motocitizen.content.AccidentsController;
 import motocitizen.content.Content;
 import motocitizen.content.accident.Accident;
 import motocitizen.dictionary.Medicine;
 import motocitizen.main.R;
 import motocitizen.ui.activity.AccidentDetailsActivity;
-import motocitizen.utils.Preferences;
+import motocitizen.datasources.preferences.Preferences;
 
 public class NotificationListener extends FirebaseMessagingService {
     private static int                 ICON        = R.mipmap.ic_launcher;

@@ -18,7 +18,7 @@ import motocitizen.router.Router
 import motocitizen.ui.activity.AccidentDetailsActivity
 import motocitizen.utils.getIntervalFromNowInText
 import motocitizen.utils.newId
-import motocitizen.utils.popups.AccidentListPopup
+import motocitizen.ui.popups.AccidentListPopup
 
 //todo refactor
 abstract class Row protected constructor(context: Context, val accident: Accident) : FrameLayout(context) {

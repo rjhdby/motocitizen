@@ -18,7 +18,7 @@ import motocitizen.datasources.network.requests.LeaveRequest;
 import motocitizen.ui.activity.MainScreenActivity;
 import motocitizen.user.User;
 import motocitizen.utils.LocationUtils;
-import motocitizen.utils.Preferences;
+import motocitizen.datasources.preferences.Preferences;
 
 public class NormalLocationManager implements SecuredLocationManagerInterface {
     /* constants */

@@ -1,4 +1,4 @@
-package motocitizen.utils.popups;
+package motocitizen.ui.popups;
 
 import android.app.Activity;
 import android.content.ClipData;
@@ -22,7 +22,6 @@ import motocitizen.datasources.network.requests.BanRequest;
 import motocitizen.datasources.network.requests.EndAccident;
 import motocitizen.datasources.network.requests.HideAccident;
 import motocitizen.router.Router;
-import motocitizen.utils.LocationUtils;
 import motocitizen.utils.ToastUtils;
 
 abstract public class PopupWindowGeneral {

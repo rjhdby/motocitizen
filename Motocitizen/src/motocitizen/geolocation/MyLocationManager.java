@@ -6,7 +6,7 @@ import android.location.LocationManager;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import motocitizen.utils.Preferences;
+import motocitizen.datasources.preferences.Preferences;
 
 public class MyLocationManager {
     private static final int DEFAULT_ACCURACY = 1000;

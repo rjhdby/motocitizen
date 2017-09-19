@@ -9,8 +9,8 @@ import android.webkit.WebView
 import android.widget.TextView
 import motocitizen.main.R
 import motocitizen.router.Router
-import motocitizen.utils.ChangeLog
-import motocitizen.utils.Preferences
+import motocitizen.ui.changelog.ChangeLog
+import motocitizen.datasources.preferences.Preferences
 
 //Посмотреть http://android-developers.blogspot.in/2013/08/actionbarcompat-and-io-2013-app-source.html
 class AboutActivity : AppCompatActivity() {

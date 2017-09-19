@@ -13,7 +13,7 @@ import motocitizen.geolocation.MyLocationManager
 import motocitizen.main.R
 import motocitizen.router.Router
 import motocitizen.user.User
-import motocitizen.utils.Preferences
+import motocitizen.datasources.preferences.Preferences
 
 class StartupActivity : AppCompatActivity() {
 

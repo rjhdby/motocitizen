@@ -1,4 +1,4 @@
-package motocitizen.utils.popups
+package motocitizen.ui.popups
 
 import android.content.Context
 import android.widget.PopupWindow

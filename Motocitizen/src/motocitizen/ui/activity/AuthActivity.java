@@ -31,7 +31,7 @@ import motocitizen.MyApp;
 import motocitizen.main.R;
 import motocitizen.router.Router;
 import motocitizen.user.User;
-import motocitizen.utils.Preferences;
+import motocitizen.datasources.preferences.Preferences;
 import motocitizen.utils.ToastUtils;
 
 public class AuthActivity extends AppCompatActivity {

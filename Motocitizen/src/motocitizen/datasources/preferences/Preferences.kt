@@ -1,4 +1,4 @@
-package motocitizen.utils
+package motocitizen.datasources.preferences
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -10,6 +10,7 @@ import android.preference.PreferenceManager
 import com.google.android.gms.maps.model.LatLng
 
 import motocitizen.dictionary.Type
+import motocitizen.utils.EQUATOR
 
 object Preferences {
     fun initialize(context: Context) {

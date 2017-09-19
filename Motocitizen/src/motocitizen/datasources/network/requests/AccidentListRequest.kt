@@ -3,7 +3,7 @@ package motocitizen.datasources.network.requests
 import motocitizen.datasources.network.ApiRequest
 import motocitizen.datasources.network.Methods
 import motocitizen.user.User
-import motocitizen.utils.Preferences
+import motocitizen.datasources.preferences.Preferences
 import org.json.JSONObject
 
 class AccidentListRequest(callback: (JSONObject) -> Unit) : ApiRequest(callback) {

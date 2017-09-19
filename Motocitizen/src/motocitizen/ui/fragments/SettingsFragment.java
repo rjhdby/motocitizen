@@ -8,7 +8,7 @@ import motocitizen.main.R;
 import motocitizen.router.Router;
 import motocitizen.user.User;
 import motocitizen.utils.LocationUtils;
-import motocitizen.utils.Preferences;
+import motocitizen.datasources.preferences.Preferences;
 import motocitizen.utils.ToastUtils;
 
 public class SettingsFragment extends PreferenceFragment {

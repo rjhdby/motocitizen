@@ -1,4 +1,4 @@
-package motocitizen.utils
+package motocitizen.ui.changelog
 
 /*
  * Special thanx to Karsten Priegnitz for idea of this class

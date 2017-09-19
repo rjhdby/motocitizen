@@ -1,7 +1,7 @@
 /*
  * Thanx for Thien Nguyen
  */
-package motocitizen.utils
+package motocitizen.ui.views
 
 import android.content.Context
 import android.util.AttributeSet

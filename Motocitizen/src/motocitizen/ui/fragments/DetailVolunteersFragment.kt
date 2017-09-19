@@ -18,7 +18,7 @@ import motocitizen.ui.activity.AccidentDetailsActivity.*
 import motocitizen.ui.dialogs.details.ConfirmDialog
 import motocitizen.ui.rows.volunteer.VolunteerRowFactory
 import motocitizen.user.User
-import motocitizen.utils.Preferences
+import motocitizen.datasources.preferences.Preferences
 
 class DetailVolunteersFragment() : Fragment() {
     private val ROOT_LAYOUT = R.layout.fragment_detail_volunteers

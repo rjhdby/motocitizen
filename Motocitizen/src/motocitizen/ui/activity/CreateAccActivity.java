@@ -28,7 +28,7 @@ import motocitizen.ui.frames.create.LocationFrame;
 import motocitizen.ui.frames.create.SubTypeFrame;
 import motocitizen.ui.frames.create.TypeFrame;
 import motocitizen.utils.DateUtils;
-import motocitizen.utils.Preferences;
+import motocitizen.datasources.preferences.Preferences;
 import motocitizen.utils.ToastUtils;
 
 import static motocitizen.ui.activity.CreateAccActivity.Frames.DAMAGE;

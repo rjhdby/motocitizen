@@ -34,7 +34,7 @@ import motocitizen.ui.fragments.DetailVolunteersFragment;
 import motocitizen.user.User;
 import motocitizen.utils.DateUtils;
 import motocitizen.utils.Utils;
-import motocitizen.utils.popups.AccidentListPopup;
+import motocitizen.ui.popups.AccidentListPopup;
 
 import static motocitizen.dictionary.AccidentStatus.ACTIVE;
 import static motocitizen.dictionary.AccidentStatus.ENDED;

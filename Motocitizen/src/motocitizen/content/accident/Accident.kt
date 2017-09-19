@@ -10,7 +10,7 @@ import motocitizen.dictionary.AccidentStatus.HIDDEN
 import motocitizen.dictionary.Medicine
 import motocitizen.dictionary.Type
 import motocitizen.user.User
-import motocitizen.utils.Preferences
+import motocitizen.datasources.preferences.Preferences
 import motocitizen.utils.metersFromUser
 import java.util.*
 import kotlin.collections.ArrayList

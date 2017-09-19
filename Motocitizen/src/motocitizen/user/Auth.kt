@@ -2,7 +2,7 @@ package motocitizen.user
 
 import android.util.Log
 import motocitizen.datasources.network.requests.AuthRequest
-import motocitizen.utils.Preferences
+import motocitizen.datasources.preferences.Preferences
 import org.json.JSONException
 import org.json.JSONObject
 import java.security.MessageDigest

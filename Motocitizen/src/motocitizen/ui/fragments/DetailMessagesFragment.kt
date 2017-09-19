@@ -19,7 +19,7 @@ import motocitizen.ui.activity.AccidentDetailsActivity
 import motocitizen.ui.activity.AccidentDetailsActivity.ACCIDENT_ID_KEY
 import motocitizen.ui.rows.message.MessageRowFactory
 import motocitizen.user.User
-import motocitizen.utils.popups.MessagesPopup
+import motocitizen.ui.popups.MessagesPopup
 import motocitizen.utils.show
 import org.json.JSONException
 import org.json.JSONObject
