@@ -8,17 +8,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import motocitizen.ui.activity.AccidentDetailsActivity
 import motocitizen.content.Content
 import motocitizen.content.accident.Accident
-import motocitizen.main.R
 import motocitizen.datasources.network.requests.CancelOnWayRequest
 import motocitizen.datasources.network.requests.OnWayRequest
-import motocitizen.ui.activity.AccidentDetailsActivity.*
+import motocitizen.datasources.preferences.Preferences
+import motocitizen.main.R
+import motocitizen.ui.activity.AccidentDetailsActivity
+import motocitizen.ui.activity.AccidentDetailsActivity.ACCIDENT_ID_KEY
 import motocitizen.ui.dialogs.details.ConfirmDialog
 import motocitizen.ui.rows.volunteer.VolunteerRowFactory
 import motocitizen.user.User
-import motocitizen.datasources.preferences.Preferences
 
 class DetailVolunteersFragment() : Fragment() {
     private val ROOT_LAYOUT = R.layout.fragment_detail_volunteers
@@ -69,9 +69,9 @@ class DetailVolunteersFragment() : Fragment() {
     private fun setupAccess() {
         with(accident) {
             val active = accident.isActive() && User.isAuthorized
-            confirmButton.visibility = if (id != Preferences.onWay && id != Content.inPlace && active) View.VISIBLE else View.GONE
-            cancelButton.visibility = if (id == Preferences.onWay && id != Content.inPlace && active) View.VISIBLE else View.GONE
-            disabledButton.visibility = if (id == Content.inPlace && active) View.VISIBLE else View.GONE
+            confirmButton.visibility = if (id != Preferences.onWay && accident != Content.inPlace && active) View.VISIBLE else View.GONE
+            cancelButton.visibility = if (id == Preferences.onWay && accident != Content.inPlace && active) View.VISIBLE else View.GONE
+            disabledButton.visibility = if (accident == Content.inPlace && active) View.VISIBLE else View.GONE
         }
     }
 

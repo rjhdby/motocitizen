@@ -8,9 +8,9 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.BasePermissionListener
-import motocitizen.geo.geolocation.MyLocationManager
 
 object Permissions {
+    var locationEnabled = false
     fun requestLocation(activity: Activity, successCallback: () -> Unit, failureCallback: () -> Unit = {}) {
         Dexter.withActivity(activity)
                 .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -21,7 +21,7 @@ object Permissions {
     private fun permissionListener(successCallback: () -> Unit, failureCallback: () -> Unit): BasePermissionListener {
         return object : BasePermissionListener() {
             override fun onPermissionGranted(response: PermissionGrantedResponse?) {
-                MyLocationManager.enableReal()
+                locationEnabled = true
                 successCallback()
             }
 
@@ -32,6 +32,7 @@ object Permissions {
 
             override fun onPermissionDenied(response: PermissionDeniedResponse?) {
                 super.onPermissionDenied(response)
+                locationEnabled = false
                 failureCallback()
             }
         }

@@ -6,7 +6,10 @@ import android.os.Bundle
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
-import motocitizen.utils.toLocation
+import com.google.android.gms.maps.model.LatLng
+import motocitizen.datasources.preferences.Preferences
+import motocitizen.permissions.Permissions
+import motocitizen.utils.toLatLng
 
 object MyGoogleApiClient {
     private var client: GoogleApiClient? = null
@@ -19,9 +22,9 @@ object MyGoogleApiClient {
         client?.connect()
     }
 
-    fun getLastLocation(): Location {
-        if (client == null) return motocitizen.datasources.preferences.Preferences.savedLatLng.toLocation()
-        return LocationServices.FusedLocationApi.getLastLocation(client)
+    fun getLastLocation(): LatLng {
+        if (client == null || !Permissions.locationEnabled) return Preferences.savedLatLng
+        return LocationServices.FusedLocationApi.getLastLocation(client).toLatLng()
     }
 
     fun runLocationService(locationRequest: LocationRequest, locationListener: (Location) -> Unit) {

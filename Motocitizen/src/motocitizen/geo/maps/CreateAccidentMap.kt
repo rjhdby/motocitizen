@@ -15,7 +15,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import motocitizen.content.Content
 import motocitizen.content.accident.Accident
 import motocitizen.dictionary.Medicine
-import motocitizen.geo.geolocation.MyLocationManager
+import motocitizen.geo.geolocation.LocationManager
 import motocitizen.main.R
 import motocitizen.permissions.Permissions
 import motocitizen.user.User
@@ -35,7 +35,7 @@ class CreateAccidentMap(val fragment: FragmentActivity) {
 
     private val searchEditText = fragment.findViewById(SEARCH_INPUT) as EditText
 
-    private val initialLocation = MyLocationManager.getLocation()!!
+    private val initialLocation = LocationManager.getLocation()
     private lateinit var map: GoogleMap
 
     init {
@@ -46,7 +46,7 @@ class CreateAccidentMap(val fragment: FragmentActivity) {
 
     private fun mapReadyCallback(): OnMapReadyCallback = OnMapReadyCallback { googleMap ->
         map = googleMap
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(initialLocation.toLatLng(), DEFAULT_ZOOM))
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(initialLocation, DEFAULT_ZOOM))
         setUpMapUi()
         placeAccidentsOnMap()
     }
@@ -67,7 +67,7 @@ class CreateAccidentMap(val fragment: FragmentActivity) {
         searchButton.visibility = View.GONE
 
         map.addCircle(CircleOptions()
-                              .center(initialLocation.toLatLng())
+                              .center(initialLocation)
                               .radius(PERMITTED_REGION_RADIUS.toDouble())
                               .fillColor(PERMITTED_REGION_COLOR))
         map.setOnCameraMoveCanceledListener(cameraMoveCanceledListener())

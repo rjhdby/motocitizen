@@ -3,11 +3,9 @@
 package motocitizen.utils
 
 import android.location.Location
-import android.location.LocationManager
 import com.google.android.gms.maps.model.LatLng
 import motocitizen.datasources.network.requests.GeoCoderRequest
 import motocitizen.geo.geocoder.MyGeoCoder
-import motocitizen.geo.geolocation.MyLocationManager
 import org.json.JSONException
 import java.io.IOException
 
@@ -54,4 +52,4 @@ fun distanceString(latLng: LatLng): String {
     }
 }
 
-fun metersFromUser(latLng: LatLng): Int = Math.round(latLng.distanceTo(MyLocationManager.getLocation()))
+fun metersFromUser(latLng: LatLng): Int = Math.round(latLng.distanceTo(LocationManager.getLocation()))

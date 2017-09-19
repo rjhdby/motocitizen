@@ -1,6 +1,5 @@
 package motocitizen.geo.geolocation
 
-import android.content.Context
 import android.location.Location
 import com.google.android.gms.maps.model.LatLng
 import motocitizen.content.Content
@@ -12,9 +11,8 @@ import motocitizen.geo.geocoder.AddressResolver
 import motocitizen.ui.activity.MainScreenActivity
 import motocitizen.user.User
 import motocitizen.utils.distanceTo
-import motocitizen.utils.toLatLng
 
-class NormalLocationManager : SecuredLocationManagerInterface {
+object LocationManager {
     private val ARRIVED_MAX_ACCURACY = 200
 
     private fun locationListener(location: Location) {
@@ -23,21 +21,21 @@ class NormalLocationManager : SecuredLocationManagerInterface {
         checkInPlace(location)
     }
 
-    override fun getLocation(): Location = MyGoogleApiClient.getLastLocation()
+    fun getLocation(): LatLng = MyGoogleApiClient.getLastLocation()
 
-    override fun getAddress(location: LatLng): String = AddressResolver.getAddress(location)
+    fun getAddress(location: LatLng): String = AddressResolver.getAddress(location)
 
-    override fun sleep(context: Context) {
+    fun sleep() {
         MyGoogleApiClient.runLocationService(LocationRequestFactory.coarse()) { location: Location -> locationListener(location) }
     }
 
-    override fun wakeup(context: Context) {
+    fun wakeup() {
         MyGoogleApiClient.runLocationService(LocationRequestFactory.accurate()) { location: Location -> locationListener(location) }
     }
 
     //todo exterminatus
     private fun requestAddress() {
-        MainScreenActivity.updateStatusBar(getAddress(location.toLatLng()))
+        MainScreenActivity.updateStatusBar(getAddress(getLocation()))
     }
 
     private fun checkInPlace(location: Location) {

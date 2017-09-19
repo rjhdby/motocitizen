@@ -16,9 +16,10 @@ import org.json.JSONObject;
 import kotlin.Unit;
 import motocitizen.content.accident.AccidentBuilder;
 import motocitizen.datasources.network.requests.CreateAccidentRequest;
+import motocitizen.datasources.preferences.Preferences;
 import motocitizen.dictionary.Medicine;
 import motocitizen.dictionary.Type;
-import motocitizen.geo.geolocation.MyLocationManager;
+import motocitizen.geo.geolocation.LocationManager;
 import motocitizen.main.R;
 import motocitizen.ui.dialogs.create.EmptyAddressDialog;
 import motocitizen.ui.frames.FrameInterface;
@@ -28,7 +29,6 @@ import motocitizen.ui.frames.create.LocationFrame;
 import motocitizen.ui.frames.create.SubTypeFrame;
 import motocitizen.ui.frames.create.TypeFrame;
 import motocitizen.utils.DateUtils;
-import motocitizen.datasources.preferences.Preferences;
 import motocitizen.utils.ToastUtils;
 
 import static motocitizen.ui.activity.CreateAccActivity.Frames.DAMAGE;
@@ -166,7 +166,7 @@ public class CreateAccActivity extends FragmentActivity {
 
     private Unit selectLocationCallback(LatLng latLng) {
         builder.coordinates(latLng);
-        builder.address(MyLocationManager.getInstance().getAddress(latLng));
+        builder.address(LocationManager.INSTANCE.getAddress(latLng));
         changeFrameTo(TYPE);
         if (builder.getAddress().equals("")) {
             new EmptyAddressDialog(this, this::addressDialogCallback);
