@@ -1,4 +1,4 @@
-package motocitizen.geolocation;
+package motocitizen.geo.geolocation;
 
 import android.content.Context;
 import android.location.Location;
@@ -15,14 +15,15 @@ import motocitizen.content.Content;
 import motocitizen.content.accident.Accident;
 import motocitizen.datasources.network.requests.InPlaceRequest;
 import motocitizen.datasources.network.requests.LeaveRequest;
+import motocitizen.datasources.preferences.Preferences;
+import motocitizen.geo.geocoder.AddressResolver;
 import motocitizen.ui.activity.MainScreenActivity;
 import motocitizen.user.User;
 import motocitizen.utils.LocationUtils;
-import motocitizen.datasources.preferences.Preferences;
 
 public class NormalLocationManager implements SecuredLocationManagerInterface {
     /* constants */
-    private static final int ARRIVED_MAX_ACCURACY = 300;
+    private static final int ARRIVED_MAX_ACCURACY = 200;
     /* end constants */
 
     private Location                            current;
@@ -36,15 +37,17 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
     }
 
     private void setup() {
-        if (connectionCallback == null) connectionCallback = new MyConnectionCallback();
-        if (locationListener == null) locationListener = location -> {
-            current = location;
-            Preferences.INSTANCE.setSavedLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
-            requestAddress();
-            checkInPlace(location);
-        };
+        if (connectionCallback == null) connectionCallback = connectionCallback();
+        if (locationListener == null) locationListener = this::locationListener;
         if (locationRequest == null)
             locationRequest = getProvider(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    private void locationListener(Location location) {
+        current = location;
+        Preferences.INSTANCE.setSavedLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
+        requestAddress();
+        checkInPlace(location);
     }
 
     private LocationRequest getProvider(int accuracy) {
@@ -57,7 +60,7 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
         }
     }
 
-    @SuppressWarnings({"MissingPermission"})
+    @SuppressWarnings({ "MissingPermission" })
     public Location getLocation() {
         if (googleApiClient != null) {
             current = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
@@ -75,7 +78,7 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
         return getAddress(LocationUtils.toLatLng(current));
     }
 
-    @SuppressWarnings({"MissingPermission"})
+    @SuppressWarnings({ "MissingPermission" })
     private void runLocationService(Context context, int accuracy) {
         setup();
         locationRequest = getProvider(accuracy);
@@ -137,25 +140,27 @@ public class NormalLocationManager implements SecuredLocationManagerInterface {
         return location != null && (LocationUtils.distanceTo(acc.getCoordinates(), location) - location.getAccuracy() < 100);
     }
 
-    @SuppressWarnings({"MissingPermission"})
-    private class MyConnectionCallback implements GoogleApiClient.ConnectionCallbacks {
-        @Override
-        public void onConnected(Bundle connectionHint) {
-            //TODO Это пиздец
-            while (!googleApiClient.isConnected()) {
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+    @SuppressWarnings({ "MissingPermission" })
+    private GoogleApiClient.ConnectionCallbacks connectionCallback() {
+        return new GoogleApiClient.ConnectionCallbacks() {
+            @Override
+            public void onConnected(Bundle connectionHint) {
+                //TODO Это пиздец
+                while (!googleApiClient.isConnected()) {
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
+                LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, locationListener);
+                LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, locationListener);
+                current = getLocation();
             }
-            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, locationListener);
-            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, locationListener);
-            current = getLocation();
-        }
 
-        @Override
-        public void onConnectionSuspended(int arg0) {
-        }
+            @Override
+            public void onConnectionSuspended(int arg0) {
+            }
+        };
     }
 }

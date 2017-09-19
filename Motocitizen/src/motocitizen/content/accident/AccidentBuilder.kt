@@ -2,12 +2,11 @@ package motocitizen.content.accident
 
 import com.google.android.gms.maps.model.LatLng
 import motocitizen.content.history.History
-import motocitizen.content.message.Message
 import motocitizen.content.volunteer.VolunteerAction
 import motocitizen.dictionary.AccidentStatus
 import motocitizen.dictionary.Medicine
 import motocitizen.dictionary.Type
-import motocitizen.geolocation.MyLocationManager
+import motocitizen.geo.geolocation.MyLocationManager
 import motocitizen.user.User
 import java.util.*
 import kotlin.collections.ArrayList

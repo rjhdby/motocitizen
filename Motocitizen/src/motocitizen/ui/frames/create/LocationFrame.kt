@@ -4,7 +4,7 @@ import android.support.v4.app.FragmentActivity
 import android.view.View
 import com.google.android.gms.maps.model.LatLng
 import motocitizen.main.R
-import motocitizen.maps.google.CreateAccidentMap
+import motocitizen.geo.maps.CreateAccidentMap
 import motocitizen.ui.frames.FrameInterface
 
 class LocationFrame(val context: FragmentActivity, val callback: (LatLng) -> Unit): FrameInterface {

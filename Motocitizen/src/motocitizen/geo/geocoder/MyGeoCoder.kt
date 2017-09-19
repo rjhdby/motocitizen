@@ -1,4 +1,4 @@
-package motocitizen.geocoder
+package motocitizen.geo.geocoder
 
 import android.content.Context
 import android.location.Address

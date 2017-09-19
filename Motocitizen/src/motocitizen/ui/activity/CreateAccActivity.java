@@ -18,7 +18,7 @@ import motocitizen.content.accident.AccidentBuilder;
 import motocitizen.datasources.network.requests.CreateAccidentRequest;
 import motocitizen.dictionary.Medicine;
 import motocitizen.dictionary.Type;
-import motocitizen.geolocation.MyLocationManager;
+import motocitizen.geo.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.ui.dialogs.create.EmptyAddressDialog;
 import motocitizen.ui.frames.FrameInterface;

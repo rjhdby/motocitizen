@@ -1,6 +1,5 @@
 package motocitizen.ui.activity;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,10 +14,6 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.single.BasePermissionListener;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,17 +21,17 @@ import kotlin.Unit;
 import motocitizen.MyApp;
 import motocitizen.content.Content;
 import motocitizen.content.accident.Accident;
-import motocitizen.geolocation.MyLocationManager;
+import motocitizen.datasources.preferences.Preferences;
+import motocitizen.geo.geolocation.MyLocationManager;
+import motocitizen.geo.maps.MainMapManager;
 import motocitizen.main.R;
-import motocitizen.maps.MyMapManager;
-import motocitizen.maps.google.MyGoogleMapManager;
+import motocitizen.permissions.Permissions;
 import motocitizen.router.Router;
+import motocitizen.ui.changelog.ChangeLog;
 import motocitizen.ui.rows.accident.AccidentRowFactory;
 import motocitizen.ui.rows.accident.Row;
-import motocitizen.user.User;
 import motocitizen.ui.views.BounceScrollView;
-import motocitizen.ui.changelog.ChangeLog;
-import motocitizen.datasources.preferences.Preferences;
+import motocitizen.user.User;
 import motocitizen.utils.Utils;
 
 public class MainScreenActivity extends AppCompatActivity {
@@ -51,8 +46,8 @@ public class MainScreenActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private ViewGroup   listContent;
 
-    private MenuItem     refreshItem;
-    private MyMapManager map;
+    private MenuItem       refreshItem;
+    private MainMapManager map;
     private boolean inTransaction = false;
     private byte    currentScreen = LIST;
     private static ActionBar actionBar;
@@ -98,20 +93,18 @@ public class MainScreenActivity extends AppCompatActivity {
         ((BounceScrollView) this.findViewById(R.id.accListRefresh)).setOverScrollListener(this::getAccidents);
         listContent = (ViewGroup) this.findViewById(R.id.accListContent);
 
-        if (map == null) map = new MyGoogleMapManager(this);
-        Dexter.withActivity(this)
-              .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-              .withListener(new BasePermissionListener() {
-                  @Override
-                  public void onPermissionGranted(PermissionGrantedResponse response) {
-                      map.enableLocation();
-                  }
-              }).check();
+        if (map == null) map = new MainMapManager(this);
+        Permissions.INSTANCE.requestLocation(this, this::hasLocationPermission, () -> Unit.INSTANCE);
 
         setPermissions();
         setScreen(currentScreen);
         redraw();
         getAccidents();
+    }
+
+    private Unit hasLocationPermission() {
+        map.enableLocation();
+        return Unit.INSTANCE;
     }
 
     @Override

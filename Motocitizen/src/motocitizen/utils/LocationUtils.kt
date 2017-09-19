@@ -6,8 +6,8 @@ import android.location.Location
 import android.location.LocationManager
 import com.google.android.gms.maps.model.LatLng
 import motocitizen.datasources.network.requests.GeoCoderRequest
-import motocitizen.geocoder.MyGeoCoder
-import motocitizen.geolocation.MyLocationManager
+import motocitizen.geo.geocoder.MyGeoCoder
+import motocitizen.geo.geolocation.MyLocationManager
 import org.json.JSONException
 import java.io.IOException
 

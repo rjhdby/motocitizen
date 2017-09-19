@@ -15,7 +15,7 @@ import com.vk.sdk.VKSdk;
 
 import motocitizen.ui.activity.AuthActivity;
 import motocitizen.datasources.database.Database;
-import motocitizen.geocoder.MyGeoCoder;
+import motocitizen.geo.geocoder.MyGeoCoder;
 import motocitizen.user.User;
 import motocitizen.datasources.preferences.Preferences;
 

@@ -1,4 +1,4 @@
-package motocitizen.geolocation
+package motocitizen.geo.geolocation
 
 import com.google.android.gms.location.LocationRequest
 

@@ -1,4 +1,4 @@
-package motocitizen.geolocation;
+package motocitizen.geo.geolocation;
 
 import android.content.Context;
 import android.location.Location;
