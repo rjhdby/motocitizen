@@ -8,53 +8,46 @@ import android.util.AttributeSet
 import android.widget.ScrollView
 
 class BounceScrollView : ScrollView {
+    private val MAX_Y_OVER_SCROLL_DISTANCE = 40
 
-    private var mMaxYOverScrollDistance: Int = 0
-    private var isRequestedUpdate = false
-    private var listener: OverScrollListenerInterface? = null
-
-    constructor(context: Context) : super(context) {
-        initBounceScrollView()
-    }
-
-    fun setOverScrollListener(listener: OverScrollListenerInterface) {
-        this.listener = listener
-    }
-
-    private fun initBounceScrollView() {
+    init {
         val metrics = context.resources.displayMetrics
         val density = metrics.density
 
         mMaxYOverScrollDistance = (density * MAX_Y_OVER_SCROLL_DISTANCE).toInt()
     }
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        initBounceScrollView()
+    private var mMaxYOverScrollDistance: Int = 0
+    private var isRequestedUpdate = false
+    private var listener: () -> Unit = {}
+
+    constructor(context: Context) : super(context)
+
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+
+    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle)
+
+    fun setOverScrollListener(listener: () -> Unit) {
+        this.listener = listener
     }
 
-    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {
-        initBounceScrollView()
-    }
-
-    override fun overScrollBy(deltaX: Int, deltaY: Int, scrollX: Int, scrollY: Int, scrollRangeX: Int, scrollRangeY: Int, maxOverScrollX: Int, maxOverScrollY: Int, isTouchEvent: Boolean): Boolean {
+    override fun overScrollBy(deltaX: Int,
+                              deltaY: Int,
+                              scrollX: Int,
+                              scrollY: Int,
+                              scrollRangeX: Int,
+                              scrollRangeY: Int,
+                              maxOverScrollX: Int,
+                              maxOverScrollY: Int,
+                              isTouchEvent: Boolean): Boolean {
 
         if (scrollY < -mMaxYOverScrollDistance * 0.9 && !isRequestedUpdate) {
             isRequestedUpdate = true
         }
         if (scrollY > -mMaxYOverScrollDistance * 0.1 && isRequestedUpdate) {
             isRequestedUpdate = false
-            if (listener == null) return false
-            listener!!.onOverScroll()
+            listener()
         }
         return super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX, mMaxYOverScrollDistance, isTouchEvent)
-    }
-
-    companion object {
-        private val MAX_Y_OVER_SCROLL_DISTANCE = 40
-    }
-
-    @FunctionalInterface
-    interface OverScrollListenerInterface {
-        fun onOverScroll()
     }
 }

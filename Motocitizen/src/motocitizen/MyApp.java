@@ -18,7 +18,7 @@ import motocitizen.datasources.preferences.Preferences;
 import motocitizen.geo.MyGoogleApiClient;
 import motocitizen.geo.geocoder.MyGeoCoder;
 import motocitizen.ui.activity.AuthActivity;
-import motocitizen.user.User;
+import motocitizen.user.Auth;
 
 public class MyApp extends MultiDexApplication {
 
@@ -29,7 +29,7 @@ public class MyApp extends MultiDexApplication {
     }
 
     public static void logoff() {
-        User.INSTANCE.logoff();
+        Auth.INSTANCE.logoff();
     }
 
     public static boolean isOnline(Context context) {

@@ -6,6 +6,7 @@ import motocitizen.datasources.preferences.Preferences
 import motocitizen.main.R
 import motocitizen.permissions.Permissions
 import motocitizen.router.Router
+import motocitizen.user.Auth
 import motocitizen.user.User
 
 class StartupActivity : AppCompatActivity() {
@@ -35,7 +36,7 @@ class StartupActivity : AppCompatActivity() {
             Router.goTo(this, Router.Target.AUTH)
             return
         }
-        User.auth(
+        Auth.auth(
                 Preferences.login,
                 Preferences.password,
                 { Router.goTo(this@StartupActivity, if (User.isAuthorized) Router.Target.MAIN else Router.Target.AUTH) })

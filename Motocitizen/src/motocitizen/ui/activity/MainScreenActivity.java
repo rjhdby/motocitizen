@@ -21,6 +21,7 @@ import kotlin.Unit;
 import motocitizen.MyApp;
 import motocitizen.content.Content;
 import motocitizen.content.accident.Accident;
+import motocitizen.datasources.network.ApiResponse;
 import motocitizen.datasources.preferences.Preferences;
 import motocitizen.geo.geolocation.MyLocationManager;
 import motocitizen.geo.maps.MainMapManager;
@@ -62,51 +63,60 @@ public class MainScreenActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Permissions.INSTANCE.requestLocation(this,
-                                             () -> {MyLocationManager.INSTANCE.wakeup(); return Unit.INSTANCE;},
-                                             () -> Unit.INSTANCE);
-
-        if (Preferences.INSTANCE.getNewVersion()) {
-            AlertDialog changeLogDlg = ChangeLog.INSTANCE.getDialog(this);
-            changeLogDlg.show();
-            Preferences.INSTANCE.setNewVersion(false);
-        }
-        PackageManager pm = this.getPackageManager();
-        if (!pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
-            this.findViewById(R.id.dial_button).setEnabled(false);
-        }
-
-        if (accListView == null) accListView = this.findViewById(R.id.acc_list);
-        if (progressBar == null)
-            progressBar = (ProgressBar) this.findViewById(R.id.progressBar);
-        if (mapContainer == null)
-            mapContainer = (ViewGroup) this.findViewById(R.id.google_map);
-        if (createAccButton == null)
-            createAccButton = (ImageButton) this.findViewById(R.id.add_point_button);
-        if (toAccListButton == null)
-            toAccListButton = (ImageButton) this.findViewById(R.id.list_button);
-        if (toMapButton == null)
-            toMapButton = (ImageButton) this.findViewById(R.id.map_button);
-
-        createAccButton.setOnClickListener(v -> Router.INSTANCE.goTo(this, Router.Target.CREATE));
-        toAccListButton.setOnClickListener(v -> setScreen(LIST));
-        toMapButton.setOnClickListener(v -> setScreen(MAP));
-        this.findViewById(R.id.dial_button).setOnClickListener(v -> Router.INSTANCE.dial(this, getString(R.string.phone)));
-        ((BounceScrollView) this.findViewById(R.id.accListRefresh)).setOverScrollListener(this::getAccidents);
-        listContent = (ViewGroup) this.findViewById(R.id.accListContent);
-
         if (map == null) map = new MainMapManager(this);
-        Permissions.INSTANCE.requestLocation(this, this::hasLocationPermission, () -> Unit.INSTANCE);
+        wakeUpLocationUpdate();
+        showChangeLogIfUpdated();
+
+        disableDialOnTablets();
+
+        bindViews();
+        setUpListeners();
 
         setPermissions();
-        setScreen(currentScreen);
+        showCurrentFrame();
         redraw();
         getAccidents();
     }
 
-    private Unit hasLocationPermission() {
-        map.enableLocation();
-        return Unit.INSTANCE;
+    private void wakeUpLocationUpdate() {
+        Permissions.INSTANCE.requestLocation(this,
+                                             () -> {
+                                                 MyLocationManager.INSTANCE.wakeup();
+                                                 map.enableLocation();
+                                                 return Unit.INSTANCE;
+                                             },
+                                             () -> Unit.INSTANCE);
+    }
+
+    private void disableDialOnTablets() {
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
+            this.findViewById(R.id.dial_button).setEnabled(false);
+        }
+    }
+
+    private void showChangeLogIfUpdated() {
+        if (!Preferences.INSTANCE.getNewVersion()) return;
+        AlertDialog changeLogDlg = ChangeLog.INSTANCE.getDialog(this);
+        changeLogDlg.show();
+        Preferences.INSTANCE.setNewVersion(false);
+    }
+
+    private void setUpListeners() {
+        createAccButton.setOnClickListener(v -> Router.INSTANCE.goTo(this, Router.Target.CREATE));
+        toAccListButton.setOnClickListener(v -> showListFrame());
+        toMapButton.setOnClickListener(v -> showMapFrame());
+        this.findViewById(R.id.dial_button).setOnClickListener(v -> Router.INSTANCE.dial(this, getString(R.string.phone)));
+        ((BounceScrollView) this.findViewById(R.id.accListRefresh)).setOverScrollListener(this::getAccidents);
+    }
+
+    private void bindViews() {
+        accListView = this.findViewById(R.id.acc_list);
+        progressBar = (ProgressBar) this.findViewById(R.id.progressBar);
+        mapContainer = (ViewGroup) this.findViewById(R.id.google_map);
+        createAccButton = (ImageButton) this.findViewById(R.id.add_point_button);
+        toAccListButton = (ImageButton) this.findViewById(R.id.list_button);
+        toMapButton = (ImageButton) this.findViewById(R.id.map_button);
+        listContent = (ViewGroup) this.findViewById(R.id.accListContent);
     }
 
     @Override
@@ -131,6 +141,7 @@ public class MainScreenActivity extends AppCompatActivity {
         setIntent(intent);
     }
 
+    //todo exterminatus static
     public static void updateStatusBar(String address) {
         String subTitle = "";
         //Делим примерно пополам, учитывая пробел или запятую
@@ -163,20 +174,23 @@ public class MainScreenActivity extends AppCompatActivity {
         map.placeAccidents(this);
     }
 
-    private void getAccidents() {
-        if (inTransaction) return;
+    private Unit getAccidents() {
+        if (inTransaction) return Unit.INSTANCE;
         if (MyApp.isOnline(this)) {
             startRefreshAnimation();
-            Content.INSTANCE.requestUpdate(result -> {
-                this.runOnUiThread(() -> {
-                    stopRefreshAnimation();
-                    redraw();
-                });
-                return Unit.INSTANCE;
-            });
+            Content.INSTANCE.requestUpdate(this::updateCompleteCallback);
         } else {
             Toast.makeText(this, getString(R.string.inet_not_available), Toast.LENGTH_LONG).show();
         }
+        return Unit.INSTANCE;
+    }
+
+    private Unit updateCompleteCallback(ApiResponse stub) {
+        runOnUiThread(() -> {
+            stopRefreshAnimation();
+            redraw();
+        });
+        return Unit.INSTANCE;
     }
 
     private void setRefreshAnimation(boolean status) {
@@ -227,7 +241,7 @@ public class MainScreenActivity extends AppCompatActivity {
         return false;
     }
 
-    private void setScreen(byte target) {
+    private void setFrame(byte target) {
         currentScreen = target;
         toAccListButton.setAlpha(target == LIST ? 1f : 0.3f);
         toMapButton.setAlpha(target == MAP ? 1f : 0.3f);
@@ -235,8 +249,20 @@ public class MainScreenActivity extends AppCompatActivity {
         mapContainer.animate().translationX(target == MAP ? 0 : Utils.getWidth(this) * 2);
     }
 
+    private void showListFrame() {
+        setFrame(LIST);
+    }
+
+    private void showMapFrame() {
+        setFrame(MAP);
+    }
+
+    private void showCurrentFrame() {
+        setFrame(currentScreen);
+    }
+
     public void toMap(int id) {
-        setScreen(MAP);
+        showMapFrame();
         map.jumpToPoint(Content.INSTANCE.accident(id).getCoordinates());
     }
 }

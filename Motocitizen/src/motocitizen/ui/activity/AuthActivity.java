@@ -29,6 +29,7 @@ import motocitizen.datasources.network.ApiResponse;
 import motocitizen.datasources.preferences.Preferences;
 import motocitizen.main.R;
 import motocitizen.router.Router;
+import motocitizen.user.Auth;
 import motocitizen.user.User;
 import motocitizen.utils.ToastUtils;
 
@@ -78,7 +79,7 @@ public class AuthActivity extends AppCompatActivity {
 
         vkWakeUpSession();
 
-        ((TextView) findViewById(R.id.accListYesterdayLine)).setMovementMethod(LinkMovementMethod.getInstance());
+        ((TextView) findViewById(R.id.auth_error_text)).setMovementMethod(LinkMovementMethod.getInstance());
         fillCtrls();
     }
 
@@ -104,18 +105,19 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     private void loginButtonPressed() {
-        // Анонимный вход
         Preferences.INSTANCE.setAnonymous(anonymous.isChecked());
         if (anonymous.isChecked()) {
             ((TextView) findViewById(R.id.auth_error_helper)).setText("");
             Router.INSTANCE.goTo(AuthActivity.this, Router.Target.MAIN);
-            return;
+        } else if (isOnline()) {
+            auth();
+        } else {
+            ToastUtils.show(this, R.string.auth_not_available);
         }
-        if (!MyApp.isOnline(AuthActivity.this)) {
-            ToastUtils.show(AuthActivity.this, AuthActivity.this.getString(R.string.auth_not_available));
-            return;
-        }
-        auth();
+    }
+
+    private boolean isOnline() {
+        return MyApp.isOnline(this);
     }
 
     private void logOutButtonPressed() {
@@ -186,21 +188,20 @@ public class AuthActivity extends AppCompatActivity {
         login.setText(Preferences.INSTANCE.getLogin());
         password.setText(Preferences.INSTANCE.getPassword());
         anonymous.setChecked(Preferences.INSTANCE.getAnonymous());
-        View     accListYesterdayLine = findViewById(R.id.accListYesterdayLine);
-        TextView roleView             = (TextView) findViewById(R.id.role);
+//        View     accListYesterdayLine = findViewById(R.id.auth_error_text);
+        TextView roleView = (TextView) findViewById(R.id.role);
 
         boolean isAuthorized = User.INSTANCE.isAuthorized();
         loginBtn.setEnabled(!isAuthorized);
         logoutBtn.setEnabled(isAuthorized);
         anonymous.setEnabled(!isAuthorized);
-        accListYesterdayLine.setVisibility(isAuthorized ? View.GONE : View.VISIBLE);
+//        accListYesterdayLine.setVisibility(isAuthorized ? View.GONE : View.VISIBLE);
         roleView.setVisibility(isAuthorized ? View.VISIBLE : View.GONE);
         login.setEnabled(!isAuthorized && !anonymous.isChecked());
         password.setEnabled(!isAuthorized && !anonymous.isChecked());
         //Авторизованы?
         if (isAuthorized) {
-            String format = getString(R.string.auth_role);
-            roleView.setText(String.format(format, User.INSTANCE.getRoleName()));
+            roleView.setText(String.format(getString(R.string.auth_role), User.INSTANCE.getRoleName()));
         } else {
             enableLoginBtn();
         }
@@ -224,7 +225,7 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     private void auth() {
-        User.INSTANCE.auth(login.getText().toString(), password.getText().toString(), this::authCallback);
+        Auth.INSTANCE.auth(login.getText().toString(), password.getText().toString(), this::authCallback);
     }
 
     private Unit authCallback(ApiResponse response) {

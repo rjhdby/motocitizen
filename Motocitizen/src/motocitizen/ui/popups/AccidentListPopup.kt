@@ -1,7 +1,6 @@
 package motocitizen.ui.popups
 
 import android.content.Context
-import android.widget.PopupWindow
 import motocitizen.content.accident.Accident
 import motocitizen.user.User
 import motocitizen.datasources.preferences.Preferences
@@ -11,25 +10,24 @@ import motocitizen.utils.getPhonesFromText
 //todo renew after hide/end/activate
 
 class AccidentListPopup(val context: Context, private val accident: Accident) : PopupWindowGeneral(context) {
-    fun getPopupWindow(context: Context): PopupWindow {
+    init {
         val accText = accident.getAccidentTextToCopy()
 
-        content.addView(copyButtonRow(context, accText))
+        rootView.addView(copyButtonView(accText))
         for (phone in getPhonesFromText(accident.description)) {
-            content.addView(phoneButtonRow(context, phone), layoutParams)
-            content.addView(smsButtonRow(context, phone), layoutParams)
+            rootView.addView(phoneButtonView(phone), layoutParams)
+            rootView.addView(smsButtonView(phone), layoutParams)
         }
         if (User.isModerator || Preferences.login == accident.ownerName())
-            content.addView(finishButtonRow(accident))
+            rootView.addView(finishButtonView(accident))
 
         if (User.isModerator) {
-            content.addView(hideButtonRow(accident))
-            content.addView(banButtonRow(context, accident.owner), layoutParams)
+            rootView.addView(hideButtonView(accident))
+            rootView.addView(banButtonView(accident.owner), layoutParams)
         }
 
-        content.addView(shareMessage(context, accText))
-        content.addView(coordinatesButtonRow(context, accident), layoutParams)
-        popupWindow.contentView = content
-        return popupWindow
+        rootView.addView(shareMessageView(accText))
+        rootView.addView(coordinatesButtonView(accident), layoutParams)
+        contentView = rootView
     }
 }

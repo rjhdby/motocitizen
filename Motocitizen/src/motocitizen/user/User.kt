@@ -8,17 +8,6 @@ object User {
     var id = 0
     var isAuthorized = false
 
-    fun auth(login: String, password: String, callback: (ApiResponse) -> Unit) {
-        Auth.auth(login, password, callback)
-    }
-
-    fun logoff() {
-        name = ""
-        role = Role.RO
-        id = 0
-        isAuthorized = false
-    }
-
     val isModerator: Boolean
         get() = role.isModerator
 

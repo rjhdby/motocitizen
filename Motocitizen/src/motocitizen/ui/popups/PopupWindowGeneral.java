@@ -5,6 +5,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -16,6 +17,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import kotlin.Unit;
 import motocitizen.content.accident.Accident;
+import motocitizen.datasources.network.ApiResponse;
 import motocitizen.datasources.network.requests.ActivateAccident;
 import motocitizen.datasources.network.requests.BanRequest;
 import motocitizen.datasources.network.requests.EndAccident;
@@ -24,143 +26,129 @@ import motocitizen.main.R;
 import motocitizen.router.Router;
 import motocitizen.utils.ToastUtils;
 
-abstract public class PopupWindowGeneral {
-    final protected TableRow.LayoutParams layoutParams;
-    final protected TableLayout           content;
-    final protected PopupWindow           popupWindow;
+abstract public class PopupWindowGeneral extends PopupWindow {
+    private static final ColorDrawable         windowBackGround = new ColorDrawable(0x00ffffff);
+    private static final int                   contentColor     = 0xFF202020;
+    final protected      TableRow.LayoutParams layoutParams     = new TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+    private         Context     context;
+    final protected TableLayout rootView;
 
-    protected PopupWindowGeneral(Context context) {
-        layoutParams = new TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        content = new TableLayout(context);
-        content.setOrientation(LinearLayout.HORIZONTAL);
-        content.setBackgroundColor(0xFF202020); //TODO ёбаный стыд
-        content.setLayoutParams(layoutParams);
-        popupWindow = new PopupWindow(content, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        popupWindow.setBackgroundDrawable(new ColorDrawable(0x00ffffff)); //TODO ёбаный стыд 2
-        popupWindow.setOutsideTouchable(true);
+    PopupWindowGeneral(Context context) {
+        this.context = context;
+        rootView = new TableLayout(context);
+        rootView.setOrientation(LinearLayout.HORIZONTAL);
+        rootView.setBackgroundColor(contentColor);
+        rootView.setLayoutParams(layoutParams);
+        setContentView(rootView);
+        setWidth(LayoutParams.WRAP_CONTENT);
+        setHeight(LayoutParams.WRAP_CONTENT);
+        setBackgroundDrawable(windowBackGround);
+        setOutsideTouchable(true);
     }
 
-    TableRow shareMessage(final Context context, final String textToShare) {
-        TableRow tr = new TableRow(content.getContext());
-        Button   b  = new Button(content.getContext());
-        b.setText(R.string.share);
-        b.setOnClickListener(v -> {
-            Router.INSTANCE.share((Activity) context, textToShare);
-            popupWindow.dismiss();
-        });
-        tr.addView(b, layoutParams);
-        return tr;
+    protected TableRow shareMessageView(final String textToShare) {
+        return makeButton(R.string.share, v -> shareButtonPressed(textToShare));
     }
 
-    TableRow copyButtonRow(final Context context, final String textToCopy) {
-        TableRow tr = new TableRow(content.getContext());
-        Button   b  = new Button(content.getContext());
-        b.setText(R.string.copy);
-        b.setOnClickListener(v -> {
-            ClipboardManager myClipboard;
-            myClipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-            ClipData myClip;
-            myClip = ClipData.newPlainText("text", textToCopy);
-            myClipboard.setPrimaryClip(myClip);
-            popupWindow.dismiss();
-        });
-        tr.addView(b, layoutParams);
-        return tr;
+    private void shareButtonPressed(String text) {
+        Router.INSTANCE.share((Activity) context, text);
+        dismiss();
     }
 
-    TableRow phoneButtonRow(final Context context, final String phone) {
-        Button dial = new Button(content.getContext());
-        dial.setText(context.getString(R.string.popup_dial, phone));
-        dial.setOnClickListener(v -> {
-            popupWindow.dismiss();
-            Router.INSTANCE.dial((Activity) context, phone);
-        });
-        TableRow tr = new TableRow(content.getContext());
-        tr.addView(dial, layoutParams);
-        return tr;
+    protected TableRow copyButtonView(String text) {
+        return makeButton(R.string.copy, v -> copyButtonPressed(text));
     }
 
-    TableRow smsButtonRow(final Context context, final String phone) {
-        Button dial = new Button(content.getContext());
-        dial.setText(context.getString(R.string.popup_sms, phone));
-        dial.setOnClickListener(v -> {
-            popupWindow.dismiss();
-            Router.INSTANCE.sms((Activity) context, phone);
-        });
-        TableRow tr = new TableRow(content.getContext());
-        tr.addView(dial, layoutParams);
-        return tr;
+    private void copyButtonPressed(String text) {
+        ClipboardManager myClipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        myClipboard.setPrimaryClip(ClipData.newPlainText("text", text));
+        dismiss();
     }
 
-    TableRow finishButtonRow(final Accident point) {
-        Button finish = new Button(content.getContext());
-        finish.setText(point.isEnded() ? R.string.unfinish : R.string.finish);
-
-        finish.setOnClickListener(v -> {
-            popupWindow.dismiss();
-            if (point.isEnded()) {
-                new ActivateAccident(point.getId(), null);
-            } else {
-                new EndAccident(point.getId(), null);
-            }
-//            new AccidentChangeStateRequest(point.isEnded() ? AccidentStatus.ACTIVE.getCode() : AccidentStatus.ENDED.getCode(), point.getId(), null);
-        });
-        TableRow tr = new TableRow(content.getContext());
-        tr.addView(finish, layoutParams);
-        return tr;
+    protected TableRow phoneButtonView(String phone) {
+        return makeButton(context.getString(R.string.popup_dial, phone), v -> phoneButtonPressed(phone));
     }
 
-    TableRow hideButtonRow(final Accident point) {
-        Button finish = new Button(content.getContext());
-        finish.setText(point.isHidden() ? R.string.show : R.string.hide);
-
-        finish.setOnClickListener(v -> {
-            popupWindow.dismiss();
-            if (point.isHidden()) {
-                new ActivateAccident(point.getId(), null);
-            } else {
-                new HideAccident(point.getId(), null);
-            }
-//            new AccidentChangeStateRequest(point.isHidden() ? AccidentStatus.ACTIVE.getCode() : AccidentStatus.HIDDEN.getCode(), point.getId(), null);
-        });
-        TableRow tr = new TableRow(content.getContext());
-        tr.addView(finish, layoutParams);
-        return tr;
+    private void phoneButtonPressed(String phone) {
+        dismiss();
+        Router.INSTANCE.dial((Activity) context, phone);
     }
 
-    TableRow coordinatesButtonRow(final Context context, final Accident point) {
-        Button coordinates = new Button(content.getContext());
-        coordinates.setText(R.string.copy_coordinates);
-        coordinates.setOnClickListener(v -> {
-            LatLng           latlng = point.getCoordinates();
-            String           text   = String.valueOf(latlng.latitude) + "," + String.valueOf(latlng.longitude);
-            ClipboardManager myClipboard;
-            myClipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-            ClipData myClip;
-            myClip = ClipData.newPlainText("text", text);
-            myClipboard.setPrimaryClip(myClip);
-            popupWindow.dismiss();
-            ToastUtils.show(context, context.getString(R.string.coordinates_copied));
-        });
-        TableRow tr = new TableRow(content.getContext());
-        tr.addView(coordinates, layoutParams);
-        return tr;
+    protected TableRow smsButtonView(String phone) {
+        return makeButton(context.getString(R.string.popup_sms, phone), v -> smsButtonPressed(phone));
     }
 
-    TableRow banButtonRow(final Context context, final int id) {
-        Button ban = new Button(content.getContext());
-        ban.setText("Забанить");
-        //TODO разобраться с пирамидой зла
-        ban.setOnClickListener(v -> {
-            new BanRequest(id, result -> {
-                ((Activity) context).runOnUiThread(
-                        () -> ToastUtils.show(context, result.hasError() ? "Ошибка связи с сервером" : "Пользователь забанен"));
-                return Unit.INSTANCE;
-            });
-            popupWindow.dismiss();
-        });
-        TableRow tr = new TableRow(content.getContext());
-        tr.addView(ban, layoutParams);
-        return tr;
+    private void smsButtonPressed(String phone) {
+        dismiss();
+        Router.INSTANCE.sms((Activity) context, phone);
+    }
+
+    protected TableRow finishButtonView(Accident point) {
+        return makeButton(point.isEnded() ? R.string.unfinish : R.string.finish, v -> finishButtonPressed(point));
+    }
+
+    private void finishButtonPressed(Accident point) {
+        dismiss();
+        if (point.isEnded()) {
+            new ActivateAccident(point.getId(), response -> Unit.INSTANCE);
+        } else {
+            new EndAccident(point.getId(), response -> Unit.INSTANCE);
+        }
+    }
+
+    protected TableRow hideButtonView(Accident point) {
+        return makeButton(point.isHidden() ? R.string.show : R.string.hide, v -> hideButtonPressed(point));
+    }
+
+    private void hideButtonPressed(Accident point) {
+        dismiss();
+        if (point.isHidden()) {
+            new ActivateAccident(point.getId(), response -> Unit.INSTANCE);
+        } else {
+            new HideAccident(point.getId(), response -> Unit.INSTANCE);
+        }
+    }
+
+    protected TableRow coordinatesButtonView(Accident point) {
+        return makeButton(R.string.copy_coordinates, v -> coordinatesButtonPressed(point));
+    }
+
+    private void coordinatesButtonPressed(Accident point) {
+        LatLng           latlng      = point.getCoordinates();
+        ClipboardManager myClipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        myClipboard.setPrimaryClip(ClipData.newPlainText("text", String.format("%s,%s", latlng.latitude, latlng.longitude)));
+        dismiss();
+        ToastUtils.show(context, context.getString(R.string.coordinates_copied));
+    }
+
+    protected TableRow banButtonView(int id) {
+        return makeButton("Забанить", v -> banButtonPressed(id));
+    }
+
+    private void banButtonPressed(int id) {
+        new BanRequest(id, this::banRequestCallback);
+        dismiss();
+    }
+
+    private Unit banRequestCallback(ApiResponse response) {
+        ((Activity) context).runOnUiThread(
+                () -> ToastUtils.show(context, response.hasError()
+                                               ? "Ошибка связи с сервером"
+                                               : "Пользователь забанен")
+                                          );
+        return Unit.INSTANCE;
+    }
+
+    private TableRow makeButton(String text, View.OnClickListener listener) {
+        Button button = new Button(context);
+        button.setText(text);
+        button.setOnClickListener(listener);
+        TableRow tableRow = new TableRow(context);
+        tableRow.addView(button, layoutParams);
+        return tableRow;
+    }
+
+    private TableRow makeButton(int text, View.OnClickListener listener) {
+        return makeButton(context.getString(text), listener);
     }
 }

@@ -139,8 +139,7 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         super.onResume();
         generalLayout.setOnLongClickListener(v -> {
             PopupWindow popupWindow;
-            popupWindow = (new AccidentListPopup(AccidentDetailsActivity.this, accident))
-                    .getPopupWindow(AccidentDetailsActivity.this);
+            popupWindow = (new AccidentListPopup(AccidentDetailsActivity.this, accident));
             int viewLocation[] = new int[ 2 ];
             v.getLocationOnScreen(viewLocation);
             popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[ 0 ], viewLocation[ 1 ]);

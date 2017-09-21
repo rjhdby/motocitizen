@@ -140,7 +140,7 @@ class DetailMessagesFragment() : Fragment() {
     private inner class MessageRowLongClickListener internal constructor(private val message: Message) : View.OnLongClickListener {
 
         override fun onLongClick(view: View): Boolean {
-            val popupWindow: PopupWindow = MessagesPopup(activity, message.id).getPopupWindow(activity)
+            val popupWindow: PopupWindow = MessagesPopup(activity, message.id)
             val viewLocation = IntArray(2)
             view.getLocationOnScreen(viewLocation)
             popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1])

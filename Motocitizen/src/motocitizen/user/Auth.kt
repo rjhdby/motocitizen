@@ -5,7 +5,6 @@ import motocitizen.datasources.network.ApiResponse
 import motocitizen.datasources.network.requests.AuthRequest
 import motocitizen.datasources.preferences.Preferences
 import org.json.JSONException
-import org.json.JSONObject
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import kotlin.experimental.and
@@ -55,5 +54,12 @@ object Auth {
         }
 
         return sb.toString()
+    }
+
+    fun logoff() {
+        User.name = ""
+        User.role = Role.RO
+        User.id = 0
+        User.isAuthorized = false
     }
 }
