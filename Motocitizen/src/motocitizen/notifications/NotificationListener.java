@@ -36,7 +36,10 @@ public class NotificationListener extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Map     data = remoteMessage.getData();
         Integer id   = Integer.parseInt(data.get("id").toString());
-        Content.INSTANCE.requestSingleAccident(id, result -> {raiseNotification(id); return Unit.INSTANCE;});
+        Content.INSTANCE.requestSingleAccident(id, result -> {
+            raiseNotification(id);
+            return Unit.INSTANCE;
+        });
     }
 
     private void raiseNotification(Integer id) {

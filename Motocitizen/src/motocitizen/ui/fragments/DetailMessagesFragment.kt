@@ -13,16 +13,16 @@ import motocitizen.content.Content
 import motocitizen.content.accident.Accident
 import motocitizen.content.message.Message
 import motocitizen.datasources.database.StoreMessages
+import motocitizen.datasources.network.ApiResponse
 import motocitizen.datasources.network.requests.SendMessageRequest
 import motocitizen.main.R
 import motocitizen.ui.activity.AccidentDetailsActivity
 import motocitizen.ui.activity.AccidentDetailsActivity.ACCIDENT_ID_KEY
+import motocitizen.ui.popups.MessagesPopup
 import motocitizen.ui.rows.message.MessageRowFactory
 import motocitizen.user.User
-import motocitizen.ui.popups.MessagesPopup
 import motocitizen.utils.show
 import org.json.JSONException
-import org.json.JSONObject
 
 class DetailMessagesFragment() : Fragment() {
     private val ROOT_LAYOUT = R.layout.fragment_detail_messages
@@ -117,10 +117,10 @@ class DetailMessagesFragment() : Fragment() {
         StoreMessages.setLast(accident.id, accident.messagesCount())
     }
 
-    private fun sendMessageCallback(response: JSONObject) {
+    private fun sendMessageCallback(response: ApiResponse) {
         try {
-            if (response.getJSONObject("e").has("c")) {
-                val text = response.getJSONObject("e").getString("t")
+            if (response.hasError()) {
+                val text = response.error.text
                 activity.runOnUiThread { show(activity, text) }
             }
         } catch (e: JSONException) {

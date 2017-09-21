@@ -15,7 +15,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import motocitizen.content.Content
 import motocitizen.content.accident.Accident
 import motocitizen.dictionary.Medicine
-import motocitizen.geo.geolocation.LocationManager
+import motocitizen.geo.geolocation.MyLocationManager
 import motocitizen.main.R
 import motocitizen.permissions.Permissions
 import motocitizen.user.User
@@ -35,7 +35,7 @@ class CreateAccidentMap(val fragment: FragmentActivity) {
 
     private val searchEditText = fragment.findViewById(SEARCH_INPUT) as EditText
 
-    private val initialLocation = LocationManager.getLocation()
+    private val initialLocation = MyLocationManager.getLocation()
     private lateinit var map: GoogleMap
 
     init {

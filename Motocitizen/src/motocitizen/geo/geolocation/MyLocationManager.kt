@@ -12,7 +12,7 @@ import motocitizen.ui.activity.MainScreenActivity
 import motocitizen.user.User
 import motocitizen.utils.distanceTo
 
-object LocationManager {
+object MyLocationManager {
     private val ARRIVED_MAX_ACCURACY = 200
 
     private fun locationListener(location: Location) {

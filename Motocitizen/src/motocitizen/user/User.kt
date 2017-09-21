@@ -1,6 +1,6 @@
 package motocitizen.user
 
-import org.json.JSONObject
+import motocitizen.datasources.network.ApiResponse
 
 object User {
     var role = Role.RO
@@ -8,7 +8,7 @@ object User {
     var id = 0
     var isAuthorized = false
 
-    fun auth(login: String, password: String, callback: (JSONObject) -> Unit) {
+    fun auth(login: String, password: String, callback: (ApiResponse) -> Unit) {
         Auth.auth(login, password, callback)
     }
 

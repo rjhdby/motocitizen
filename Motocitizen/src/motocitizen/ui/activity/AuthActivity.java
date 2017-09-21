@@ -23,15 +23,13 @@ import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
 
-import org.json.JSONObject;
-
 import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 import motocitizen.MyApp;
+import motocitizen.datasources.network.ApiResponse;
+import motocitizen.datasources.preferences.Preferences;
 import motocitizen.main.R;
 import motocitizen.router.Router;
 import motocitizen.user.User;
-import motocitizen.datasources.preferences.Preferences;
 import motocitizen.utils.ToastUtils;
 
 public class AuthActivity extends AppCompatActivity {
@@ -226,18 +224,16 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     private void auth() {
-        User.INSTANCE.auth(login.getText().toString(), password.getText().toString(), authCallback());
+        User.INSTANCE.auth(login.getText().toString(), password.getText().toString(), this::authCallback);
     }
 
-    private Function1<JSONObject, Unit> authCallback() {
-        return result -> {
-            if (User.INSTANCE.isAuthorized()) {
-                Router.INSTANCE.goTo(AuthActivity.this, Router.Target.MAIN);
-            } else {
-                showAuthError();
-            }
-            return Unit.INSTANCE;
-        };
+    private Unit authCallback(ApiResponse response) {
+        if (User.INSTANCE.isAuthorized()) {
+            Router.INSTANCE.goTo(AuthActivity.this, Router.Target.MAIN);
+        } else {
+            showAuthError();
+        }
+        return Unit.INSTANCE;
     }
 
     private void showAuthError() {

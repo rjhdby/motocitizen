@@ -22,7 +22,7 @@ import motocitizen.MyApp;
 import motocitizen.content.Content;
 import motocitizen.content.accident.Accident;
 import motocitizen.datasources.preferences.Preferences;
-import motocitizen.geo.geolocation.LocationManager;
+import motocitizen.geo.geolocation.MyLocationManager;
 import motocitizen.geo.maps.MainMapManager;
 import motocitizen.main.R;
 import motocitizen.permissions.Permissions;
@@ -63,7 +63,7 @@ public class MainScreenActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Permissions.INSTANCE.requestLocation(this,
-                                             () -> {LocationManager.INSTANCE.wakeup(); return Unit.INSTANCE;},
+                                             () -> {MyLocationManager.INSTANCE.wakeup(); return Unit.INSTANCE;},
                                              () -> Unit.INSTANCE);
 
         if (Preferences.INSTANCE.getNewVersion()) {
@@ -113,7 +113,7 @@ public class MainScreenActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         Permissions.INSTANCE.requestLocation(this,
-                                             () -> {LocationManager.INSTANCE.sleep(); return Unit.INSTANCE;},
+                                             () -> {MyLocationManager.INSTANCE.sleep(); return Unit.INSTANCE;},
                                              () -> Unit.INSTANCE);
     }
 

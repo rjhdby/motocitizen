@@ -16,11 +16,11 @@ import com.google.android.gms.maps.model.LatLng;
 
 import kotlin.Unit;
 import motocitizen.content.accident.Accident;
-import motocitizen.main.R;
 import motocitizen.datasources.network.requests.ActivateAccident;
 import motocitizen.datasources.network.requests.BanRequest;
 import motocitizen.datasources.network.requests.EndAccident;
 import motocitizen.datasources.network.requests.HideAccident;
+import motocitizen.main.R;
 import motocitizen.router.Router;
 import motocitizen.utils.ToastUtils;
 
@@ -154,7 +154,7 @@ abstract public class PopupWindowGeneral {
         ban.setOnClickListener(v -> {
             new BanRequest(id, result -> {
                 ((Activity) context).runOnUiThread(
-                        () -> ToastUtils.show(context, result.has("error") ? "Ошибка связи с сервером" : "Пользователь забанен"));
+                        () -> ToastUtils.show(context, result.hasError() ? "Ошибка связи с сервером" : "Пользователь забанен"));
                 return Unit.INSTANCE;
             });
             popupWindow.dismiss();

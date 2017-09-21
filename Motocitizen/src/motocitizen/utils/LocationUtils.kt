@@ -3,9 +3,11 @@
 package motocitizen.utils
 
 import android.location.Location
+import android.location.LocationManager
 import com.google.android.gms.maps.model.LatLng
 import motocitizen.datasources.network.requests.GeoCoderRequest
 import motocitizen.geo.geocoder.MyGeoCoder
+import motocitizen.geo.geolocation.MyLocationManager
 import org.json.JSONException
 import java.io.IOException
 
@@ -35,8 +37,7 @@ fun fromAddress(name: String, callback: (LatLng?) -> Unit) {
     }
     GeoCoderRequest(name, callback = { response ->
         try {
-            val location = response.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location")
-            callback(LatLng(location.getDouble("lat"), location.getDouble("lng")))
+            callback(LatLng(response.resultObject.getDouble("lat"), response.resultObject.getDouble("lng")))
         } catch (e: JSONException) {
             callback(null)
         }
@@ -52,4 +53,4 @@ fun distanceString(latLng: LatLng): String {
     }
 }
 
-fun metersFromUser(latLng: LatLng): Int = Math.round(latLng.distanceTo(LocationManager.getLocation()))
+fun metersFromUser(latLng: LatLng): Int = Math.round(latLng.distanceTo(MyLocationManager.getLocation()))

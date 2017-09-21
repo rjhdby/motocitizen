@@ -10,16 +10,14 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import kotlin.Unit;
 import motocitizen.content.accident.AccidentBuilder;
+import motocitizen.datasources.network.ApiResponse;
 import motocitizen.datasources.network.requests.CreateAccidentRequest;
 import motocitizen.datasources.preferences.Preferences;
 import motocitizen.dictionary.Medicine;
 import motocitizen.dictionary.Type;
-import motocitizen.geo.geolocation.LocationManager;
+import motocitizen.geo.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.ui.dialogs.create.EmptyAddressDialog;
 import motocitizen.ui.frames.FrameInterface;
@@ -166,7 +164,7 @@ public class CreateAccActivity extends FragmentActivity {
 
     private Unit selectLocationCallback(LatLng latLng) {
         builder.coordinates(latLng);
-        builder.address(LocationManager.INSTANCE.getAddress(latLng));
+        builder.address(MyLocationManager.INSTANCE.getAddress(latLng));
         changeFrameTo(TYPE);
         if (builder.getAddress().equals("")) {
             new EmptyAddressDialog(this, this::addressDialogCallback);
@@ -200,18 +198,14 @@ public class CreateAccActivity extends FragmentActivity {
         return Unit.INSTANCE;
     }
 
-    private Unit createAccidentCallback(JSONObject response) {
-        try {
-            if (response.has("r") && response.getJSONObject("r").has("id")) {
-                finish();
-                return Unit.INSTANCE;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+    private Unit createAccidentCallback(ApiResponse response) {
+        if (response.getResultObject().has("id")) {
+            finish();
+            return Unit.INSTANCE;
         }
 
         CreateAccActivity.this.runOnUiThread(() -> {
-            ToastUtils.show(CreateAccActivity.this, makeErrorMessage(response.optString("e", response.optString("r", ""))));
+            ToastUtils.show(CreateAccActivity.this, makeErrorMessage(response.getError().getText()));
             //enableConfirm();//todo
         });
         return Unit.INSTANCE;

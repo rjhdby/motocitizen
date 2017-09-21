@@ -1,12 +1,12 @@
 package motocitizen.datasources.network.requests
 
 import motocitizen.datasources.network.ApiRequest
+import motocitizen.datasources.network.ApiResponse
 import motocitizen.datasources.network.Methods
-import motocitizen.user.User
 import motocitizen.datasources.preferences.Preferences
-import org.json.JSONObject
+import motocitizen.user.User
 
-class AccidentListRequest(callback: (JSONObject) -> Unit) : ApiRequest(callback) {
+class AccidentListRequest(callback: (ApiResponse) -> Unit) : ApiRequest(callback) {
     init {
         if (User.name != "") {
             params.put("u", User.name)

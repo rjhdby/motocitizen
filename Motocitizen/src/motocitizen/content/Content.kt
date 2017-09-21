@@ -3,6 +3,7 @@ package motocitizen.content
 import motocitizen.content.accident.Accident
 import motocitizen.content.message.Message
 import motocitizen.content.volunteer.Volunteer
+import motocitizen.datasources.network.ApiResponse
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -15,15 +16,15 @@ object Content {
 
     fun getByFilter(filter: (Accident) -> Boolean): List<Accident> = AccidentsController.accidents.values.filter(filter)
 
-    fun requestUpdate(callback: (JSONObject) -> Unit) {
+    fun requestUpdate(callback: (ApiResponse) -> Unit) {
         AccidentsController.update(callback)
     }
 
-    fun requestSingleAccident(id: Int, callback: (JSONObject) -> Unit) {
+    fun requestSingleAccident(id: Int, callback: (ApiResponse) -> Unit) {
         AccidentsController.requestSingleAccident(id, callback)
     }
 
-    fun requestDetailsForAccident(accident: Accident, callback: (JSONObject) -> Unit) {
+    fun requestDetailsForAccident(accident: Accident, callback: (ApiResponse) -> Unit) {
         AccidentsController.requestDetailsForAccident(accident, callback)
     }
 

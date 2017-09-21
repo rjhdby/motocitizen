@@ -3,14 +3,13 @@ package motocitizen.datasources.network
 import motocitizen.main.BuildConfig
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
-import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 
-abstract class CoreRequest(val callback: (JSONObject) -> Unit = {}) {
+abstract class CoreRequest(val callback: (ApiResponse) -> Unit = {}) {
     var params: HashMap<String, String> = HashMap()
     abstract val url: String
-    private val error = JSONObject("""{"e":{"c":0,"t":"server error"}}""")
+    val error = JSONObject("""{"r":{},"e":{"c":0,"t":"server error"}}""")
     private val logLevel = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
     private val client = OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
@@ -24,7 +23,7 @@ abstract class CoreRequest(val callback: (JSONObject) -> Unit = {}) {
     protected fun call() {
         client.newCall(buildRequest()).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                callback(response("HTTP RESPONSE ERROR " + e.toString()))
+                callback(ApiResponse(error))
             }
 
             @Throws(java.io.IOException::class)
@@ -34,13 +33,7 @@ abstract class CoreRequest(val callback: (JSONObject) -> Unit = {}) {
         })
     }
 
-    private fun response(string: String): JSONObject {
-        return try {
-            JSONObject(string)
-        } catch (e: JSONException) {
-            error
-        }
-    }
+    abstract fun response(string: String): ApiResponse
 
     private fun makePost(post: Map<String, String>): RequestBody {
         val body = FormBody.Builder()

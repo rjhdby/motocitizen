@@ -24,7 +24,7 @@ import motocitizen.content.Content;
 import motocitizen.content.accident.Accident;
 import motocitizen.dictionary.Medicine;
 import motocitizen.dictionary.Type;
-import motocitizen.geo.geolocation.LocationManager;
+import motocitizen.geo.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.router.Router;
 import motocitizen.utils.DateUtils;
@@ -62,7 +62,7 @@ public class MainMapManager {
 
     public MainMapManager(FragmentActivity activity) {
 
-        jumpToPoint(LocationManager.INSTANCE.getLocation());
+        jumpToPoint(MyLocationManager.INSTANCE.getLocation());
         selected = "";
         android.support.v4.app.FragmentManager     fragmentManager     = activity.getSupportFragmentManager();
         final SupportMapFragment                   mapFragment         = new SupportMapFragment();
@@ -76,7 +76,7 @@ public class MainMapManager {
         if (map == null) return;
         map.clear();
         if (user != null) user.remove();
-        LatLng location = LocationManager.INSTANCE.getLocation();
+        LatLng location = MyLocationManager.INSTANCE.getLocation();
         user = map.addMarker(new MarkerOptions().position(location).title(Type.USER.getText()).icon(Type.USER.getIcon()));
 
         for (Accident accident : Content.INSTANCE.getVisible()) {

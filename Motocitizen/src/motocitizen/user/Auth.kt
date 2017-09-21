@@ -1,6 +1,7 @@
 package motocitizen.user
 
 import android.util.Log
+import motocitizen.datasources.network.ApiResponse
 import motocitizen.datasources.network.requests.AuthRequest
 import motocitizen.datasources.preferences.Preferences
 import org.json.JSONException
@@ -10,22 +11,22 @@ import java.security.NoSuchAlgorithmException
 import kotlin.experimental.and
 
 object Auth {
-    fun auth(login: String, password: String, callback: (JSONObject) -> Unit) {
+    fun auth(login: String, password: String, callback: (ApiResponse) -> Unit) {
         Preferences.password = password
         AuthRequest(login, makePassHash(password), { response ->
             authRequestCallback(response, login, callback)
         })
     }
 
-    private fun authRequestCallback(response: JSONObject, login: String, callback: (JSONObject) -> Unit) {
+    private fun authRequestCallback(response: ApiResponse, login: String, callback: (ApiResponse) -> Unit) {
         parseAuthResult(response, login)
         callback(response)
     }
 
-    private fun parseAuthResult(response: JSONObject, login: String) {
+    private fun parseAuthResult(response: ApiResponse, login: String) {
         User.isAuthorized = false
         try {
-            val result = response.getJSONObject("r")
+            val result = response.resultObject
             User.id = Integer.parseInt(result.getString("id"))
             User.name = login
             User.role = Role.parse(result.getInt("r"))

@@ -13,14 +13,13 @@ import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import org.json.JSONObject;
-
 import java.util.List;
 
 import kotlin.Unit;
 import motocitizen.content.Content;
 import motocitizen.content.accident.Accident;
 import motocitizen.content.accident.AccidentFactory;
+import motocitizen.datasources.network.ApiResponse;
 import motocitizen.datasources.network.requests.ActivateAccident;
 import motocitizen.datasources.network.requests.EndAccident;
 import motocitizen.datasources.network.requests.HideAccident;
@@ -31,10 +30,10 @@ import motocitizen.router.Router;
 import motocitizen.ui.fragments.DetailHistoryFragment;
 import motocitizen.ui.fragments.DetailMessagesFragment;
 import motocitizen.ui.fragments.DetailVolunteersFragment;
+import motocitizen.ui.popups.AccidentListPopup;
 import motocitizen.user.User;
 import motocitizen.utils.DateUtils;
 import motocitizen.utils.Utils;
-import motocitizen.ui.popups.AccidentListPopup;
 
 import static motocitizen.dictionary.AccidentStatus.ACTIVE;
 import static motocitizen.dictionary.AccidentStatus.ENDED;
@@ -285,8 +284,8 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         }
     }
 
-    private Unit accidentChangeCallback(JSONObject result) {
-        if (result.has("error")) {
+    private Unit accidentChangeCallback(ApiResponse result) {
+        if (result.hasError()) {
             //todo
         } else {
             //TODO Суперкостыль

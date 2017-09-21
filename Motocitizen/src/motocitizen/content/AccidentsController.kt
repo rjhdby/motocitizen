@@ -4,66 +4,70 @@ import motocitizen.content.accident.Accident
 import motocitizen.content.accident.AccidentFactory
 import motocitizen.content.history.History
 import motocitizen.content.volunteer.VolunteerAction
+import motocitizen.datasources.network.ApiResponse
 import motocitizen.datasources.network.requests.AccidentListRequest
 import motocitizen.datasources.network.requests.AccidentRequest
 import motocitizen.datasources.network.requests.DetailsRequest
 import motocitizen.datasources.network.requests.HasNewRequest
 import org.json.JSONArray
 import org.json.JSONException
-import org.json.JSONObject
 import java.util.*
 
 object AccidentsController {
-    var lastUpdate: Long = 0
+    private var lastUpdate: Long = 0
     val accidents: TreeMap<Int, Accident> = TreeMap()
 
-    fun update(callback: (JSONObject) -> Unit) {
+    fun update(callback: (ApiResponse) -> Unit) {
         if (lastUpdate == 0L) {
             requestList(callback)
         } else {
             HasNewRequest(lastUpdate,
-                          { response ->
-                              if (response.getJSONArray("r")[0] == "y") requestList(callback) else callback(response)
-                          })
+                          { response -> if (hasNewCheck(response)) requestList(callback) else callback(response) })
         }
     }
 
-    private fun requestList(callback: (JSONObject) -> Unit) {
+    private fun hasNewCheck(response: ApiResponse): Boolean = response.resultArray[0] == "y"
+
+    private fun requestList(callback: (ApiResponse) -> Unit) {
         AccidentListRequest({ response ->
-                                parseGetListResponse(response)
-                                lastUpdate = Date().time / 1000
+                                listRequestCallback(response)
                                 callback(response)
                             })
     }
 
-    fun requestDetailsForAccident(accident: Accident, callback: (JSONObject) -> Unit) {
+    private fun listRequestCallback(response: ApiResponse) {
+        parseGetListResponse(response)
+        lastUpdate = Date().time / 1000
+    }
+
+    fun requestDetailsForAccident(accident: Accident, callback: (ApiResponse) -> Unit) {
         DetailsRequest(accident.id, { result ->
             attachDetailsToAccident(accident, result)
             callback(result)
         })
     }
 
-    private fun attachDetailsToAccident(accident: Accident, result: JSONObject) {
+    private fun attachDetailsToAccident(accident: Accident, result: ApiResponse) {
         try {
-            Content.addVolunteers(result.getJSONObject("r").getJSONObject("u"))
-            attachVolunteersToAccident(accident, result.getJSONObject("r").getJSONArray("v"))
-            Content.addMessages(result.getJSONObject("r").getJSONArray("m"))
-            attachHistoryToAccident(accident, result.getJSONObject("r").getJSONArray("h"))
+            Content.addVolunteers(result.resultObject.getJSONObject("u"))
+            attachVolunteersToAccident(accident, result.resultObject.getJSONArray("v"))
+            Content.addMessages(result.resultObject.getJSONArray("m"))
+            attachHistoryToAccident(accident, result.resultObject.getJSONArray("h"))
         } catch (e: JSONException) {
             e.printStackTrace()
         }
     }
 
-    private fun parseGetListResponse(result: JSONObject) {
+    private fun parseGetListResponse(apiResponse: ApiResponse) {
         try {
-            Content.addVolunteers(result.getJSONObject("r").getJSONObject("u"))
-            addAccidents(result.getJSONObject("r").getJSONArray("l"))
+            Content.addVolunteers(apiResponse.resultObject.getJSONObject("u"))
+            addAccidents(apiResponse.resultObject.getJSONArray("l"))
         } catch (e: JSONException) {
             e.printStackTrace()
         }
     }
 
-    fun requestSingleAccident(id: Int, callback: (JSONObject) -> Unit) {
+    fun requestSingleAccident(id: Int, callback: (ApiResponse) -> Unit) {
         AccidentRequest(id, { response ->
             parseGetListResponse(response)
             callback(response)

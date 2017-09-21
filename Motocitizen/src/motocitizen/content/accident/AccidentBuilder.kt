@@ -6,7 +6,7 @@ import motocitizen.content.volunteer.VolunteerAction
 import motocitizen.dictionary.AccidentStatus
 import motocitizen.dictionary.Medicine
 import motocitizen.dictionary.Type
-import motocitizen.geo.geolocation.LocationManager
+import motocitizen.geo.geolocation.MyLocationManager
 import motocitizen.user.User
 import java.util.*
 import kotlin.collections.ArrayList
@@ -24,7 +24,7 @@ class AccidentBuilder {
         private set
     var address = ""
         private set
-    var coordinates = LocationManager.getLocation()
+    var coordinates = MyLocationManager.getLocation()
         private set
     var owner = User.id
         private set
