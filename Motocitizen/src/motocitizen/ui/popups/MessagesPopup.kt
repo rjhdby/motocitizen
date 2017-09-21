@@ -9,11 +9,10 @@ import motocitizen.utils.getPhonesFromText
 
 class MessagesPopup(context: Context, id: Int) : PopupWindowGeneral(context) {
     private val message: Message = Content.message(id)
+
     init {
         rootView.addView(copyButtonView(message.owner.toString() + ": " + message.text), layoutParams)
-        for (phone in getPhonesFromText(message.text)) {
-            rootView.addView(phoneButtonView(phone), layoutParams)
-        }
+        getPhonesFromText(message.text).forEach { phone -> rootView.addView(phoneButtonView(phone), layoutParams) }
         contentView = rootView
     }
 }

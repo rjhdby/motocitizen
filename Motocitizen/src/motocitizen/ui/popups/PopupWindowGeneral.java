@@ -70,8 +70,8 @@ abstract public class PopupWindowGeneral extends PopupWindow {
     }
 
     private void phoneButtonPressed(String phone) {
-        dismiss();
         Router.INSTANCE.dial((Activity) context, phone);
+        dismiss();
     }
 
     protected TableRow smsButtonView(String phone) {
@@ -79,8 +79,8 @@ abstract public class PopupWindowGeneral extends PopupWindow {
     }
 
     private void smsButtonPressed(String phone) {
-        dismiss();
         Router.INSTANCE.sms((Activity) context, phone);
+        dismiss();
     }
 
     protected TableRow finishButtonView(Accident point) {
@@ -88,12 +88,12 @@ abstract public class PopupWindowGeneral extends PopupWindow {
     }
 
     private void finishButtonPressed(Accident point) {
-        dismiss();
         if (point.isEnded()) {
             new ActivateAccident(point.getId(), response -> Unit.INSTANCE);
         } else {
             new EndAccident(point.getId(), response -> Unit.INSTANCE);
         }
+        dismiss();
     }
 
     protected TableRow hideButtonView(Accident point) {
@@ -101,12 +101,12 @@ abstract public class PopupWindowGeneral extends PopupWindow {
     }
 
     private void hideButtonPressed(Accident point) {
-        dismiss();
         if (point.isHidden()) {
             new ActivateAccident(point.getId(), response -> Unit.INSTANCE);
         } else {
             new HideAccident(point.getId(), response -> Unit.INSTANCE);
         }
+        dismiss();
     }
 
     protected TableRow coordinatesButtonView(Accident point) {
@@ -117,8 +117,8 @@ abstract public class PopupWindowGeneral extends PopupWindow {
         LatLng           latlng      = point.getCoordinates();
         ClipboardManager myClipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         myClipboard.setPrimaryClip(ClipData.newPlainText("text", String.format("%s,%s", latlng.latitude, latlng.longitude)));
-        dismiss();
         ToastUtils.show(context, context.getString(R.string.coordinates_copied));
+        dismiss();
     }
 
     protected TableRow banButtonView(int id) {
@@ -132,9 +132,10 @@ abstract public class PopupWindowGeneral extends PopupWindow {
 
     private Unit banRequestCallback(ApiResponse response) {
         ((Activity) context).runOnUiThread(
-                () -> ToastUtils.show(context, response.hasError()
-                                               ? "Ошибка связи с сервером"
-                                               : "Пользователь забанен")
+                () -> ToastUtils.show(context,
+                                      response.hasError()
+                                      ? "Ошибка связи с сервером"
+                                      : "Пользователь забанен")
                                           );
         return Unit.INSTANCE;
     }

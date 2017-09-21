@@ -2,19 +2,19 @@ package motocitizen.ui.popups
 
 import android.content.Context
 import motocitizen.content.accident.Accident
-import motocitizen.user.User
 import motocitizen.datasources.preferences.Preferences
+import motocitizen.user.User
 import motocitizen.utils.getAccidentTextToCopy
 import motocitizen.utils.getPhonesFromText
 
 //todo renew after hide/end/activate
 
-class AccidentListPopup(val context: Context, private val accident: Accident) : PopupWindowGeneral(context) {
+class AccidentListPopup(val context: Context, accident: Accident) : PopupWindowGeneral(context) {
     init {
         val accText = accident.getAccidentTextToCopy()
 
         rootView.addView(copyButtonView(accText))
-        for (phone in getPhonesFromText(accident.description)) {
+        getPhonesFromText(accident.description).forEach { phone ->
             rootView.addView(phoneButtonView(phone), layoutParams)
             rootView.addView(smsButtonView(phone), layoutParams)
         }

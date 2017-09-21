@@ -4,10 +4,8 @@ import android.util.Log
 import motocitizen.datasources.network.ApiResponse
 import motocitizen.datasources.network.requests.AuthRequest
 import motocitizen.datasources.preferences.Preferences
+import motocitizen.utils.md5
 import org.json.JSONException
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
-import kotlin.experimental.and
 
 object Auth {
     fun auth(login: String, password: String, callback: (ApiResponse) -> Unit) {
@@ -40,21 +38,7 @@ object Auth {
 
     fun getPassHash(): String = Auth.makePassHash(Preferences.password)
 
-    private fun makePassHash(pass: String): String {
-        val sb = StringBuilder()
-        try {
-            val md = MessageDigest.getInstance("MD5")
-            md.update(pass.toByteArray())
-            val digest = md.digest()
-            for (b in digest) {
-                sb.append(String.format("%02x", b and 0xff.toByte()))
-            }
-        } catch (e: NoSuchAlgorithmException) {
-            e.printStackTrace()
-        }
-
-        return sb.toString()
-    }
+    private fun makePassHash(pass: String): String = md5(pass)
 
     fun logoff() {
         User.name = ""

@@ -44,39 +44,19 @@ object ChangeLog {
                 val marker = if (line.isNotEmpty()) line[0] else '\u0000'
                 if (marker == '$') {
                     closeList()
-                } else {
-                    when (marker) {
-                        '%'  -> {
-                            // line contains version title
-                            closeList()
-                            sb.append("<div class='title'>").append(line.substring(1).trim { it <= ' ' }).append("</div>\n")
-                        }
-                        '_'  -> {
-                            // line contains version title
-                            closeList()
-                            sb.append("<div class='subtitle'>").append(line.substring(1).trim { it <= ' ' }).append("</div>\n")
-                        }
-                        '!'  -> {
-                            // line contains free text
-                            closeList()
-                            sb.append("<div class='freetext'>").append(line.substring(1).trim { it <= ' ' }).append("</div>\n")
-                        }
-                        '#'  -> {
-                            // line contains numbered list item
-                            openList(LIST_ORDERED)
-                            sb.append("<li>").append(line.substring(1).trim { it <= ' ' }).append("</li>\n")
-                        }
-                        '*'  -> {
-                            // line contains bullet list item
-                            openList(LIST_UNORDERED)
-                            sb.append("<li>").append(line.substring(1).trim { it <= ' ' }).append("</li>\n")
-                        }
-                        else -> {
-                            // no special character: just use line as is
-                            closeList()
-                            sb.append(line).appendln()
-                        }
-                    }
+                    continue
+                }
+                when (marker) {
+                    '#'  -> openList(LIST_ORDERED)
+                    '*'  -> openList(LIST_UNORDERED)
+                    else -> closeList()
+                }
+                when (marker) {
+                    '%'      -> sb.append("<div class='title'>").append(line.substring(1).trim { it <= ' ' }).append("</div>\n") // line contains version title
+                    '_'      -> sb.append("<div class='subtitle'>").append(line.substring(1).trim { it <= ' ' }).append("</div>\n") // line contains version title
+                    '!'      -> sb.append("<div class='freetext'>").append(line.substring(1).trim { it <= ' ' }).append("</div>\n") // line contains free text
+                    '#', '*' -> sb.append("<li>").append(line.substring(1).trim { it <= ' ' }).append("</li>\n")// line contains numbered list item
+                    else     -> sb.append(line).appendln() // no special character: just use line as is
                 }
             }
             closeList()
@@ -91,10 +71,9 @@ object ChangeLog {
     private fun openList(listMode: Byte) {
         if (currentListMode != listMode) {
             closeList()
-            if (listMode == LIST_ORDERED) {
-                sb.append("<div class='list'><ol>\n")
-            } else if (listMode == LIST_UNORDERED) {
-                sb.append("<div class='list'><ul>\n")
+            when (listMode) {
+                LIST_ORDERED   -> sb.append("<div class='list'><ol>\n")
+                LIST_UNORDERED -> sb.append("<div class='list'><ul>\n")
             }
         }
         currentListMode = listMode

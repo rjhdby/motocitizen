@@ -9,9 +9,11 @@ import android.util.DisplayMetrics
 import android.view.View
 import motocitizen.content.accident.Accident
 import motocitizen.dictionary.Medicine
+import java.security.MessageDigest
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.regex.Pattern
+import kotlin.experimental.and
 
 fun getPhonesFromText(string: String): List<String> {
     val out = ArrayList<String>()
@@ -25,16 +27,15 @@ fun getPhonesFromText(string: String): List<String> {
 fun newId(): Int {
     if (Build.VERSION.SDK_INT > 16) {
         return View.generateViewId()
-    } else {
-        val sNextGeneratedId = AtomicInteger(1)
-        while (true) {
-            val result = sNextGeneratedId.get()
-            var newValue = result + 1
-            if (newValue > 0x00FFFFFF)
-                newValue = 1
-            if (sNextGeneratedId.compareAndSet(result, newValue)) {
-                return result
-            }
+    }
+    val sNextGeneratedId = AtomicInteger(1)
+    while (true) {
+        val result = sNextGeneratedId.get()
+        var newValue = result + 1
+        if (newValue > 0x00FFFFFF)
+            newValue = 1
+        if (sNextGeneratedId.compareAndSet(result, newValue)) {
+            return result
         }
     }
 }
@@ -56,4 +57,16 @@ fun Accident.getAccidentTextToCopy(): String {
     res.append(this.address).append(". ")
     res.append(this.description).append(".")
     return res.toString()
+}
+
+fun md5(input: String): String {
+    val sb = StringBuilder()
+    val md = MessageDigest.getInstance("MD5")
+    md.update(input.toByteArray())
+    val digest = md.digest()
+    for (b in digest) {
+        sb.append(String.format("%02x", b and 0xff.toByte()))
+    }
+
+    return sb.toString()
 }
