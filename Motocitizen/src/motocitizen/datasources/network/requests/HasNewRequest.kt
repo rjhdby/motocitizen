@@ -6,8 +6,10 @@ import motocitizen.datasources.network.Methods
 
 class HasNewRequest(time: Long, callback: (ApiResponse) -> Unit) : ApiRequest(callback) {
     init {
-        params.put("ut", time.toString())
-        params.put("m", Methods.HAS_NEW.code)
+        with(params) {
+            put("ut", time.toString())
+            put("m", Methods.HAS_NEW.code)
+        }
         call()
     }
 }

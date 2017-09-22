@@ -11,6 +11,7 @@ import motocitizen.dictionary.Medicine
 import motocitizen.dictionary.Type
 import motocitizen.user.User
 import motocitizen.datasources.preferences.Preferences
+import motocitizen.utils.distanceString
 import motocitizen.utils.metersFromUser
 import java.util.*
 import kotlin.collections.ArrayList
@@ -26,18 +27,9 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
             field = value.trim()
         }
 
-    fun ownerName() = Content.volunteer(owner).name
+    fun ownerName() = Content.volunteerName(owner)
 
-    fun distanceString(): String = motocitizen.utils.distanceString(coordinates)
-
-//    fun location(): Location {
-//        val location = Location(LocationManager.GPS_PROVIDER)
-//        location.latitude = coordinates.latitude
-//        location.longitude = coordinates.longitude
-//        return location
-//    }
-
-    fun messagesCount(): Int = messagesCount
+    fun distanceString(): String = distanceString(coordinates)
 
     fun isVisible(): Boolean {
         val visible = User.isModerator || status != HIDDEN

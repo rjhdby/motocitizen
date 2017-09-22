@@ -30,8 +30,6 @@ class AccidentBuilder {
         private set
     var description = ""
         private set
-//    var messages = ArrayList<Message>()
-//        private set
     var volunteers = ArrayList<VolunteerAction>()
         private set
     var history = ArrayList<History>()
@@ -39,27 +37,27 @@ class AccidentBuilder {
     var messagesCount = 0
         private set
 
-    fun id(id: Int): AccidentBuilder = apply { this.id = id }
+    fun id(id: Int) = apply { this.id = id }
 
-    fun status(status: AccidentStatus): AccidentBuilder = apply { this.status = status }
+    fun status(status: AccidentStatus) = apply { this.status = status }
 
-    fun type(type: Type): AccidentBuilder = apply { this.type = type }
+    fun type(type: Type) = apply { this.type = type }
 
-    fun medicine(medicine: Medicine): AccidentBuilder = apply { this.medicine = medicine }
+    fun medicine(medicine: Medicine) = apply { this.medicine = medicine }
 
-    fun time(time: Date): AccidentBuilder = apply { this.time = time }
+    fun time(time: Date) = apply { this.time = time }
 
-    fun address(address: String): AccidentBuilder = apply { this.address = address }
+    fun address(address: String) = apply { this.address = address }
 
-    fun coordinates(coordinates: LatLng): AccidentBuilder = apply { this.coordinates = coordinates }
+    fun coordinates(coordinates: LatLng) = apply { this.coordinates = coordinates }
 
-    fun owner(owner: Int): AccidentBuilder = apply { this.owner = owner }
+    fun owner(owner: Int) = apply { this.owner = owner }
 
-    fun description(description: String): AccidentBuilder = apply { this.description = description }
+    fun description(description: String) = apply { this.description = description }
 
-    fun messagesCount(count: Int): AccidentBuilder = apply { this.messagesCount = count }
+    fun messagesCount(count: Int) = apply { this.messagesCount = count }
 
-    fun from(accident: Accident): AccidentBuilder {
+    fun from(accident: Accident) = apply {
         id = accident.id
         type = accident.type
         medicine = accident.medicine
@@ -68,28 +66,30 @@ class AccidentBuilder {
         coordinates = accident.coordinates
         owner = accident.owner
         description = accident.description
-//        messages = accident.messages
         volunteers = accident.volunteers
         history = accident.history
         messagesCount = accident.messagesCount
-        return this
     }
 
     fun build(): Accident {
-        val accident = when {
-            status == AccidentStatus.ACTIVE && owner == User.id -> OwnedActiveAccident(id, type, medicine, time, address, coordinates, owner)
-            status == AccidentStatus.ENDED && owner == User.id  -> OwnedEndedAccident(id, type, medicine, time, address, coordinates, owner)
-            status == AccidentStatus.HIDDEN && owner == User.id -> OwnedHiddenAccident(id, type, medicine, time, address, coordinates, owner)
-            status == AccidentStatus.ACTIVE                     -> ActiveAccident(id, type, medicine, time, address, coordinates, owner)
-            status == AccidentStatus.ENDED                      -> EndedAccident(id, type, medicine, time, address, coordinates, owner)
-            status == AccidentStatus.HIDDEN                     -> HiddenAccident(id, type, medicine, time, address, coordinates, owner)
-            else                                                -> throw Exception("Wrong data from server")
-        }
+        val accident = if (owner == User.id) ownedAccident() else commonAccident()
+
         accident.description = description
-//        accident.messages.addAll(messages)
         accident.volunteers.addAll(volunteers)
         accident.history.addAll(history)
         accident.messagesCount = messagesCount
         return accident
+    }
+
+    private fun commonAccident(): Accident = when (status) {
+        AccidentStatus.ACTIVE -> ActiveAccident(id, type, medicine, time, address, coordinates, owner)
+        AccidentStatus.ENDED  -> EndedAccident(id, type, medicine, time, address, coordinates, owner)
+        AccidentStatus.HIDDEN -> HiddenAccident(id, type, medicine, time, address, coordinates, owner)
+    }
+
+    private fun ownedAccident(): Accident = when (status) {
+        AccidentStatus.ACTIVE -> OwnedActiveAccident(id, type, medicine, time, address, coordinates)
+        AccidentStatus.ENDED  -> OwnedEndedAccident(id, type, medicine, time, address, coordinates)
+        AccidentStatus.HIDDEN -> OwnedHiddenAccident(id, type, medicine, time, address, coordinates)
     }
 }

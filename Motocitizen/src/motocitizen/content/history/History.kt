@@ -11,5 +11,5 @@ constructor(json: JSONObject) {
     val owner = json.getInt("o")
     val time = Date(json.getLong("ut") * 1000)
     val action = HistoryAction.parse(json.getString("a"))
-    fun ownerName() = Content.volunteer(owner).name
+    fun ownerName() = Content.volunteerName(owner)
 }

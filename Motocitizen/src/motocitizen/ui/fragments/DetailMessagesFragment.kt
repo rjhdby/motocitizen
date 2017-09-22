@@ -114,7 +114,7 @@ class DetailMessagesFragment() : Fragment() {
 
     private fun updateUnreadMessages() {
         if (Content.messagesForAccident(accident).isEmpty()) return
-        StoreMessages.setLast(accident.id, accident.messagesCount())
+        StoreMessages.setLast(accident.id, accident.messagesCount)
     }
 
     private fun sendMessageCallback(response: ApiResponse) {

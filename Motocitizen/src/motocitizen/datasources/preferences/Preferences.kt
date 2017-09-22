@@ -8,11 +8,45 @@ import android.net.Uri
 import android.preference.PreferenceManager
 
 import com.google.android.gms.maps.model.LatLng
+import motocitizen.datasources.preferences.Preferences.Stored.*
 
 import motocitizen.dictionary.Type
 import motocitizen.utils.EQUATOR
 
 object Preferences {
+    private val DEFAULT_LATITUDE = 55.752295f
+    private val DEFAULT_LONGITUDE = 37.622735f
+    private val DEFAULT_SHOW_DISTANCE = 200
+    private val DEFAULT_ALARM_DISTANCE = 20
+    private val DEFAULT_MAX_NOTIFICATIONS = 3
+    private val DEFAULT_MAX_AGE = 24
+    private val DEFAULT_VIBRATION = true
+    private val DEFAULT_DO_NOT_DISTURB = false
+    private val DEFAULT_IS_ANONYMOUS = false
+    private val DEFAULT_SHOW_TYPE = true
+
+    enum class Stored(val key: String, val default: Any) {
+        IS_SHOW_ACCIDENT("mc.show.acc", DEFAULT_SHOW_TYPE),
+        IS_SHOW_BREAK("mc.show.break", DEFAULT_SHOW_TYPE),
+        IS_SHOW_STEAL("mc.show.steal", DEFAULT_SHOW_TYPE),
+        IS_SHOW_OTHER("mc.show.other", DEFAULT_SHOW_TYPE),
+        VISIBLE_DISTANCE("mc.distance.show", DEFAULT_SHOW_DISTANCE),
+        ALARM_DISTANCE("mc.distance.alarm", DEFAULT_ALARM_DISTANCE),
+        DO_NOT_DISTURB("do.not.disturb", DEFAULT_DO_NOT_DISTURB),
+        HOURS_AGO("hours.ago", DEFAULT_MAX_AGE),
+        MAX_NOTIFICATIONS("notifications.max", DEFAULT_MAX_NOTIFICATIONS),
+        VIBRATION("use.vibration", DEFAULT_VIBRATION),
+        ANONYMOUS("mc.anonim", DEFAULT_IS_ANONYMOUS),
+        LATITUDE("savedlat", DEFAULT_LATITUDE),
+        LONGITUDE("savedlng", DEFAULT_LONGITUDE),
+        ON_WAY("mc.onway", 0),
+        APP_VERSION("mc.app.version", 0),
+        SOUND_TITLE("mc.notification.sound.title", "default system"),
+        SOUND_URI("mc.notification.sound", ""),
+        LOGIN("mc.login", ""),
+        PASSWORD("mc.password", "")
+    }
+
     fun initialize(context: Context) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context)
         initSound(context)
@@ -27,96 +61,87 @@ object Preferences {
         }
     }
 
-    val DEFAULT_LATITUDE = 55.752295f
-    val DEFAULT_LONGITUDE = 37.622735f
-    private val DEFAULT_SHOW_DISTANCE = 200
-    private val DEFAULT_ALARM_DISTANCE = 20
-    private val DEFAULT_MAX_NOTIFICATIONS = 3
-    private val DEFAULT_MAX_AGE = 24
-    private val DEFAULT_VIBRATION = true
-    private val DEFAULT_DO_NOT_DISTURB = false
-    private val DEFAULT_IS_ANONYMOUS = false
-    private val DEFAULT_SHOW_TYPE = true
 
     var newVersion = false
     lateinit private var preferences: SharedPreferences
 
     var showAcc
-        get() = preferences.getBoolean("mc.show.acc", DEFAULT_SHOW_TYPE)
-        set(value) = preferences.edit().putBoolean("mc.show.acc", value).apply()
+        get() = getBoolean(IS_SHOW_ACCIDENT)
+        set(value) = putBoolean(IS_SHOW_ACCIDENT, value)
     var showBreak
-        get() = preferences.getBoolean("mc.show.break", DEFAULT_SHOW_TYPE)
-        set(value) = preferences.edit().putBoolean("mc.show.break", value).apply()
+        get() = getBoolean(IS_SHOW_BREAK)
+        set(value) = putBoolean(IS_SHOW_BREAK, value)
     var showSteal
-        get() = preferences.getBoolean("mc.show.steal", DEFAULT_SHOW_TYPE)
-        set(value) = preferences.edit().putBoolean("mc.show.steal", value).apply()
+        get() = getBoolean(IS_SHOW_STEAL)
+        set(value) = putBoolean(IS_SHOW_STEAL, value)
     var showOther
-        get() = preferences.getBoolean("mc.show.other", DEFAULT_SHOW_TYPE)
-        set(value) = preferences.edit().putBoolean("mc.show.other", value).apply()
+        get() = getBoolean(IS_SHOW_OTHER)
+        set(value) = putBoolean(IS_SHOW_OTHER, value)
     //todo разобраться
     var visibleDistance: Int
         get() {
             return try {
-                preferences.getInt("mc.distance.show", DEFAULT_SHOW_DISTANCE)
+                getInt(VISIBLE_DISTANCE)
             } catch (e: Exception) {
-                Integer.parseInt(preferences.getString("mc.distance.show", DEFAULT_SHOW_DISTANCE.toString()))
+                Integer.parseInt(getString(VISIBLE_DISTANCE))
             }
         }
         set(value) {
-            preferences.edit().putString("mc.distance.show", (if (value > EQUATOR) EQUATOR else value).toString()).apply()
+            putString(VISIBLE_DISTANCE, if (value > EQUATOR) EQUATOR else value)
         }
     var alarmDistance: Int
         get() {
             return try {
-                preferences.getInt("mc.distance.alarm", DEFAULT_ALARM_DISTANCE)
+                getInt(ALARM_DISTANCE)
             } catch (e: Exception) {
-                Integer.parseInt(preferences.getString("mc.distance.alarm", DEFAULT_ALARM_DISTANCE.toString()))
+                Integer.parseInt(getString(ALARM_DISTANCE))
             }
         }
         set(value) {
-            preferences.edit().putString("mc.distance.alarm", (if (value > EQUATOR) EQUATOR else value).toString()).apply()
+            putString(ALARM_DISTANCE, if (value > EQUATOR) EQUATOR else value)
         }
     var doNotDisturb
-        get() = preferences.getBoolean("do.not.disturb", DEFAULT_DO_NOT_DISTURB)
-        set(value) = preferences.edit().putBoolean("do.not.disturb", value).apply()
+        get() = getBoolean(DO_NOT_DISTURB)
+        set(value) = putBoolean(DO_NOT_DISTURB, value)
     var hoursAgo
-        get() = Integer.parseInt(preferences.getString("hours.ago", DEFAULT_MAX_AGE.toString()))
-        set(value) = preferences.edit().putString("hours.ago", value.toString()).apply()
+        get() = Integer.parseInt(getString(HOURS_AGO))
+        set(value) = putString(HOURS_AGO, value)
     var maxNotifications
-        get() = Integer.parseInt(preferences.getString("notifications.max", DEFAULT_MAX_NOTIFICATIONS.toString()))
-        set(value) = preferences.edit().putString("notifications.max", value.toString()).apply()
+        get() = Integer.parseInt(getString(MAX_NOTIFICATIONS))
+        set(value) = putString(MAX_NOTIFICATIONS, value)
     var onWay
-        get() = preferences.getInt("mc.onway", 0)
-        set(value) = preferences.edit().putInt("mc.onway", value).apply()
+        get() = getInt(ON_WAY)
+        set(value) = putInt(ON_WAY, value)
     var soundTitle: String
-        get() = preferences.getString("mc.notification.sound.title", "default system")
-        set(value) = preferences.edit().putString("mc.notification.sound.title", value).apply()
+        get() = getString(SOUND_TITLE)
+        set(value) = putString(SOUND_TITLE, value)
     var soundURI: String
-        get() = preferences.getString("mc.notification.sound", "")
-        set(uri) = preferences.edit().putString("mc.notification.sound", uri).apply()
+        get() = getString(SOUND_URI)
+        set(uri) = putString(SOUND_URI, uri)
     var sound: Uri? = null
         private set
     var vibration: Boolean
-        get() = preferences.getBoolean("use.vibration", DEFAULT_VIBRATION)
-        set(value) = preferences.edit().putBoolean("use.vibration", value).apply()
+        get() = getBoolean(VIBRATION)
+        set(value) = putBoolean(VIBRATION, value)
     var login: String
-        get() = preferences.getString("mc.login", "")
-        set(value) = preferences.edit().putString("mc.login", value).apply()
+        get() = getString(LOGIN)
+        set(value) = putString(LOGIN, value)
     var password: String
-        get() = preferences.getString("mc.password", "")
-        set(value) = preferences.edit().putString("mc.password", value).apply()
+        get() = getString(PASSWORD)
+        set(value) = putString(PASSWORD, value)
     var anonymous
-        get() = preferences.getBoolean("mc.anonim", DEFAULT_IS_ANONYMOUS)
-        set(value) = preferences.edit().putBoolean("mc.anonim", value).apply()
+        get() = getBoolean(ANONYMOUS)
+        set(value) = putBoolean(ANONYMOUS, value)
     var appVersion
-        get() = preferences.getInt("mc.app.version", 0)
-        set(value) = preferences.edit().putInt("mc.app.version", value).apply()
+        get() = getInt(APP_VERSION)
+        set(value) = putInt(APP_VERSION, value)
 
     var savedLatLng
-        get() = LatLng(preferences.getFloat("savedlat", DEFAULT_LATITUDE).toDouble(), preferences.getFloat("savedlng", DEFAULT_LONGITUDE).toDouble())
-        set(latLng) = preferences.edit().putFloat("savedlat", latLng.latitude.toFloat()).putFloat("savedlng", latLng.longitude.toFloat()).apply()
-    val GCMRegistrationCode = "mc.gcm.id"
-    val GcmAppVersion = "gcm.app.version"
+        get() = LatLng(getFloat(LATITUDE).toDouble(), getFloat(LONGITUDE).toDouble())
+        set(latLng) {
+            putFloat(LATITUDE, latLng.latitude.toFloat())
+            putFloat(LONGITUDE, latLng.longitude.toFloat())
+        }
 
     fun setSound(title: String, uri: Uri) {
         soundTitle = title
@@ -129,12 +154,6 @@ object Preferences {
         } else
             Uri.parse(soundURI)
     }
-
-    //todo избавиться
-    fun putBoolean(name: String, value: Boolean) {
-        preferences.edit().putBoolean(name, value).apply()
-    }
-
 
     fun setDefaultSoundAlarm() {
         soundTitle = "default system"
@@ -153,6 +172,7 @@ object Preferences {
         else                                                     -> true
     }
 
+    //todo wtf!?
     fun getPreferenceName(preference: String): String = when (preference) {
         "hoursAgo"         -> "hours.ago"
         "showAcc"          -> "mc.show.acc"
@@ -165,4 +185,17 @@ object Preferences {
         "useVibration"     -> "use.vibration"
         else               -> "unknown"
     }
+
+    private fun putString(stored: Stored, value: Any) = preferences.edit().putString(stored.key, value.toString()).apply()
+    private fun getString(stored: Stored) = preferences.getString(stored.key, stored.default.toString())
+
+    private fun putBoolean(stored: Stored, value: Boolean) = preferences.edit().putBoolean(stored.key, value).apply()
+    private fun getBoolean(stored: Stored) = preferences.getBoolean(stored.key, stored.default as Boolean)
+
+    private fun putInt(stored: Stored, value: Int) = preferences.edit().putInt(stored.key, value).apply()
+    private fun getInt(stored: Stored) = preferences.getInt(stored.key, stored.default as Int)
+
+    private fun putFloat(stored: Stored, value: Float) = preferences.edit().putFloat(stored.key, value).apply()
+    private fun getFloat(stored: Stored) = preferences.getFloat(stored.key, stored.default as Float)
 }
+

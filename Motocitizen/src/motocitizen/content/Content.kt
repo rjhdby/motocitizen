@@ -14,7 +14,9 @@ object Content {
     fun volunteer(id: Int): Volunteer = VolunteersController.volunteers[id]!!//TODO can produce NPE
     fun message(id: Int): Message = MessagesController.messages[id]!!//TODO can produce NPE
 
-    fun getByFilter(filter: (Accident) -> Boolean): List<Accident> = AccidentsController.accidents.values.filter(filter)
+    fun volunteerName(id: Int): String = VolunteersController.volunteers[id]?.name ?: ""  //todo
+
+    inline fun getByFilter(filter: (Accident) -> Boolean): List<Accident> = AccidentsController.accidents.values.filter(filter)
 
     fun requestUpdate(callback: (ApiResponse) -> Unit) {
         AccidentsController.update(callback)
@@ -39,8 +41,6 @@ object Content {
     fun getVisible() = AccidentsController.accidents.values.filter { it.isVisible() }.toList()
 
     fun getVisibleReversed() = getVisible().sortedByDescending { it.id }
-
-    fun getIds() = AccidentsController.accidents.keys
 
     fun messagesForAccident(accident: Accident) = MessagesController.messages.values.filter { it.accidentId == accident.id }
 }

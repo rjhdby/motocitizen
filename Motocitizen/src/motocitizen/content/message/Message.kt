@@ -14,7 +14,7 @@ constructor(json: JSONObject) {
     val time = Date(json.getLong("ut") * 1000)
     val accidentId = json.getInt("a")
     val isOwner: Boolean
-        get() = owner == User.id
+        inline get() = owner == User.id
 
-    fun ownerName() = Content.volunteer(owner).name
+    fun ownerName() = Content.volunteerName(owner)
 }

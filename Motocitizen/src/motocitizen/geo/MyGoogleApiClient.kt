@@ -15,10 +15,12 @@ object MyGoogleApiClient {
     private var client: GoogleApiClient? = null
     private var delayedJob: () -> Unit = {}
 
-    private fun isConnected() = client?.isConnected.let { false }
+    private fun isConnected() = client?.isConnected ?: false
 
     fun initialize(context: Context) {
-        client = GoogleApiClient.Builder(context).addConnectionCallbacks(connectionCallback()).addApi(LocationServices.API).build()
+        client = GoogleApiClient.Builder(context)
+                .addConnectionCallbacks(connectionCallback())
+                .addApi(LocationServices.API).build()
         client?.connect()
     }
 

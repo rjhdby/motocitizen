@@ -7,7 +7,9 @@ abstract class ApiRequestWithAuth(callback: (ApiResponse) -> Unit = {},
                                   login: String = User.name,
                                   passHash: String = Auth.getPassHash()) : ApiRequest(callback) {
     init {
-        params.put("l", login)
-        params.put("p", passHash)
+        with(params) {
+            put("l", login)
+            put("p", passHash)
+        }
     }
 }

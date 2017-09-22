@@ -7,8 +7,10 @@ import motocitizen.datasources.network.Methods
 
 class LeaveRequest(accident: Accident, callback: (ApiResponse) -> Unit) : ApiRequestWithAuth(callback) {
     init {
-        params.put("id", accident.id.toString())
-        params.put("m", Methods.LEAVE.code)
+        with(params) {
+            put("id", accident.id.toString())
+            put("m", Methods.LEAVE.code)
+        }
         call()
     }
 }

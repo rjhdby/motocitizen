@@ -6,8 +6,10 @@ import motocitizen.datasources.network.Methods
 
 class DetailsRequest(id: Int, callback: (ApiResponse) -> Unit) : ApiRequest(callback) {
     init {
-        params.put("id", id.toString())
-        params.put("m", Methods.DETAILS.code)
+        with(params) {
+            put("id", id.toString())
+            put("m", Methods.DETAILS.code)
+        }
         call()
     }
 }

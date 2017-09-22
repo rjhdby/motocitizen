@@ -7,8 +7,10 @@ import motocitizen.user.User
 
 class AuthRequest(login: String, passHash: String, callback: (ApiResponse) -> Unit) : ApiRequestWithAuth(callback, login, passHash) {
     init {
-        params.put("m", Methods.AUTH.code)
-        params.put("versionName", User.name)
+        with(params) {
+            put("m", Methods.AUTH.code)
+            put("versionName", User.name)
+        }
         call()
     }
 }

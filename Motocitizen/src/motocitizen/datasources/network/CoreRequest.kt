@@ -21,17 +21,22 @@ abstract class CoreRequest(val callback: (ApiResponse) -> Unit = {}) {
             .build()
 
     protected fun call() {
-        client.newCall(buildRequest()).enqueue(object : Callback {
+        client.newCall(buildRequest()).enqueue(enqueueCallback())
+    }
+
+    private fun enqueueCallback(): Callback {
+        return object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 callback(ApiResponse(error))
             }
 
-            @Throws(java.io.IOException::class)
+            @Throws(IOException::class)
             override fun onResponse(call: Call, response: Response) {
                 callback(response(response.body().string()))
             }
-        })
+        }
     }
+
 
     abstract fun response(string: String): ApiResponse
 

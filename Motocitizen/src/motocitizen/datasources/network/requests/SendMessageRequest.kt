@@ -6,9 +6,11 @@ import motocitizen.datasources.network.Methods
 
 class SendMessageRequest(text: String, accidentId: Int, callback: (ApiResponse) -> Unit) : ApiRequestWithAuth(callback) {
     init {
-        params.put("m", Methods.MESSAGE.code)
-        params.put("id", accidentId.toString())
-        params.put("t", text)
+        with(params) {
+            put("m", Methods.MESSAGE.code)
+            put("id", accidentId.toString())
+            put("t", text)
+        }
         call()
     }
 }

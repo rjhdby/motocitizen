@@ -16,9 +16,9 @@ import motocitizen.datasources.database.StoreMessages
 import motocitizen.main.R
 import motocitizen.router.Router
 import motocitizen.ui.activity.AccidentDetailsActivity
+import motocitizen.ui.popups.AccidentListPopup
 import motocitizen.utils.getIntervalFromNowInText
 import motocitizen.utils.newId
-import motocitizen.ui.popups.AccidentListPopup
 
 //todo refactor
 abstract class Row protected constructor(context: Context, val accident: Accident) : FrameLayout(context) {
@@ -34,7 +34,6 @@ abstract class Row protected constructor(context: Context, val accident: Acciden
         id = newId()
     }
 
-    //todo messages
     private fun messagesText(accident: Accident): Spanned {
         val text = formatMessagesText(accident)
         return if (Build.VERSION.SDK_INT >= 24) {
@@ -43,14 +42,14 @@ abstract class Row protected constructor(context: Context, val accident: Acciden
             Html.fromHtml(text)
         }
     }
-
+//todo remove html
     private fun formatMessagesText(accident: Accident): String {
-        if (accident.messagesCount() == 0) return ""
+        if (accident.messagesCount == 0) return ""
         val read = StoreMessages.getLast(accident.id)
-        return if (accident.messagesCount() > read)
-            String.format("<font color=#C62828><b>(%s)</b></font>", accident.messagesCount())
+        return if (accident.messagesCount > read)
+            String.format("<font color=#C62828><b>(%s)</b></font>", accident.messagesCount)
         else
-            String.format("<b>%s</b>", accident.messagesCount())
+            String.format("<b>%s</b>", accident.messagesCount)
     }
 
     override fun onAttachedToWindow() {
@@ -67,10 +66,10 @@ abstract class Row protected constructor(context: Context, val accident: Acciden
     private fun bindValues() {
         (findViewById(R.id.accident_row_content) as TextView).setTextColor(textColor)
         (findViewById(R.id.accident_row_content) as TextView).text = context.resources.getString(R.string.accident_row_content, accident.title())
-        (findViewById(R.id.accident_row_time) as TextView).text = getIntervalFromNowInText(context, accident.time)
+        (findViewById(R.id.accident_row_time) as TextView).text = getIntervalFromNowInText(accident.time)
         (findViewById(R.id.accident_row_unread) as TextView).text = messagesText(accident)
     }
-
+//todo extract
     private fun setUpListeners() {
         setOnClickListener { _ ->
             val bundle = Bundle()

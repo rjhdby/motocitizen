@@ -21,29 +21,26 @@ object AccidentsController {
         if (lastUpdate == 0L) {
             requestList(callback)
         } else {
-            HasNewRequest(lastUpdate,
-                          { response -> if (hasNewCheck(response)) requestList(callback) else callback(response) })
+            HasNewRequest(lastUpdate, { if (hasNewCheck(it)) requestList(callback) else callback(it) })
         }
     }
 
     private fun hasNewCheck(response: ApiResponse): Boolean = response.resultArray[0] == "y"
 
     private fun requestList(callback: (ApiResponse) -> Unit) {
-        AccidentListRequest({ response ->
-                                listRequestCallback(response)
-                                callback(response)
-                            })
+        AccidentListRequest { listRequestCallback(it, callback) }
     }
 
-    private fun listRequestCallback(response: ApiResponse) {
+    inline private fun listRequestCallback(response: ApiResponse, callback: (ApiResponse) -> Unit) {
         parseGetListResponse(response)
         lastUpdate = Date().time / 1000
+        callback(response)
     }
 
     fun requestDetailsForAccident(accident: Accident, callback: (ApiResponse) -> Unit) {
-        DetailsRequest(accident.id, { result ->
-            attachDetailsToAccident(accident, result)
-            callback(result)
+        DetailsRequest(accident.id, {
+            attachDetailsToAccident(accident, it)
+            callback(it)
         })
     }
 
@@ -58,6 +55,13 @@ object AccidentsController {
         }
     }
 
+    fun requestSingleAccident(id: Int, callback: (ApiResponse) -> Unit) {
+        AccidentRequest(id, {
+            parseGetListResponse(it)
+            callback(it)
+        })
+    }
+
     private fun parseGetListResponse(apiResponse: ApiResponse) {
         try {
             Content.addVolunteers(apiResponse.resultObject.getJSONObject("u"))
@@ -65,13 +69,6 @@ object AccidentsController {
         } catch (e: JSONException) {
             e.printStackTrace()
         }
-    }
-
-    fun requestSingleAccident(id: Int, callback: (ApiResponse) -> Unit) {
-        AccidentRequest(id, { response ->
-            parseGetListResponse(response)
-            callback(response)
-        })
     }
 
     private fun addAccidents(json: JSONArray) {
@@ -87,6 +84,6 @@ object AccidentsController {
 
     private fun attachHistoryToAccident(accident: Accident, json: JSONArray) {
         accident.history.clear()
-        (0 until json.length()).forEach { i -> accident.history.add(History(json.getJSONObject(i))) }
+        (0 until json.length()).forEach { accident.history.add(History(json.getJSONObject(it))) }
     }
 }

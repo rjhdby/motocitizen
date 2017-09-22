@@ -11,10 +11,8 @@ import motocitizen.main.R
 import motocitizen.utils.timeString
 
 abstract class MessageRow(context: Context, val message: Message, val type: Type) : FrameLayout(context) {
-    companion object {
-        enum class Type {
-            FIRST, MIDDLE, LAST, ONE
-        }
+    enum class Type {
+        FIRST, MIDDLE, LAST, ONE
     }
 
     abstract val LAYOUT: Int

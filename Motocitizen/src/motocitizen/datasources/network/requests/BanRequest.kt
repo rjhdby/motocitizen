@@ -6,8 +6,10 @@ import motocitizen.datasources.network.Methods
 
 class BanRequest(id: Int, callback: (ApiResponse) -> Unit) : ApiRequestWithAuth(callback) {
     init {
-        params.put("m", Methods.BAN.code)
-        params.put("id", id.toString())
+        with(params) {
+            put("m", Methods.BAN.code)
+            put("id", id.toString())
+        }
         call()
     }
 }

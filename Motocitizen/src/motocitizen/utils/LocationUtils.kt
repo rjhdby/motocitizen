@@ -2,6 +2,7 @@
 
 package motocitizen.utils
 
+import android.location.Address
 import android.location.Location
 import android.location.LocationManager
 import com.google.android.gms.maps.model.LatLng
@@ -26,6 +27,7 @@ fun LatLng.toLocation(): Location {
     return location
 }
 
+//todo smell
 fun fromAddress(name: String, callback: (LatLng?) -> Unit) {
     try {
         val address = MyGeoCoder.getFromLocationName(name)
@@ -47,10 +49,23 @@ fun fromAddress(name: String, callback: (LatLng?) -> Unit) {
 fun distanceString(latLng: LatLng): String {
     val meters = metersFromUser(latLng)
     return if (meters > 1000) {
-        ((meters / 10).toFloat() / 100).toString() + "км"
+        m2km(meters).toString() + "км"
     } else {
         meters.toString() + "м"
     }
 }
 
+fun m2km(meters: Int): Float = (meters / 10).toFloat() / 100
+
 fun metersFromUser(latLng: LatLng): Int = Math.round(latLng.distanceTo(MyLocationManager.getLocation()))
+
+fun Address.buildAddressString(): String {
+    return StringBuilder()
+            .append(locality ?: adminArea ?: getAddressLine(0) ?: "")
+            .append(" ")
+            .append(thoroughfare ?: subAdminArea ?: "")
+            .append(" ")
+            .append(featureName ?: "")
+            .toString()
+            .trim { it <= ' ' }
+}

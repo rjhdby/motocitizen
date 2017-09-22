@@ -8,16 +8,19 @@ import motocitizen.datasources.network.requests.InPlaceRequest
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.geo.MyGoogleApiClient
 import motocitizen.geo.geocoder.AddressResolver
-import motocitizen.ui.activity.MainScreenActivity
 import motocitizen.user.User
 import motocitizen.utils.distanceTo
+import motocitizen.utils.toLatLng
 
 object MyLocationManager {
     private val ARRIVED_MAX_ACCURACY = 200
 
+    private val subscribers = HashMap<String, (LatLng) -> Unit>()
+
     private fun locationListener(location: Location) {
         Preferences.savedLatLng = LatLng(location.latitude, location.longitude)
-        requestAddress()
+//        requestAddress()
+        subscribers.values.forEach { it(location.toLatLng()) }
         checkInPlace(location)
     }
 
@@ -33,10 +36,18 @@ object MyLocationManager {
         MyGoogleApiClient.runLocationService(LocationRequestFactory.accurate()) { location: Location -> locationListener(location) }
     }
 
-    //todo exterminatus
-    private fun requestAddress() {
-        MainScreenActivity.updateStatusBar(getAddress(getLocation()))
+    fun subscribeToLocationUpdate(name: String, callback: (LatLng) -> Unit) {
+        subscribers.put(name, callback)
     }
+
+    fun unSubscribe(name: String) {
+        subscribers.remove(name)
+    }
+
+    //todo exterminatus
+//    private fun requestAddress() {
+//        MainScreenActivity.updateStatusBar(getAddress(getLocation()))
+//    }
 
     private fun checkInPlace(location: Location) {
         if (User.name == "") return

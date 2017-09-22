@@ -8,11 +8,13 @@ import motocitizen.user.User
 
 class AccidentListRequest(callback: (ApiResponse) -> Unit) : ApiRequest(callback) {
     init {
-        if (User.name != "") {
-            params.put("u", User.name)
+        with(params) {
+            if (User.name != "") {
+                put("u", User.name)
+            }
+            put("a", Preferences.hoursAgo.toString())
+            put("m", Methods.LIST.code)
         }
-        params.put("a", Preferences.hoursAgo.toString())
-        params.put("m", Methods.LIST.code)
         call()
     }
 }
