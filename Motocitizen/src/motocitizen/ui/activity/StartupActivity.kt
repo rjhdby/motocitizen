@@ -3,6 +3,8 @@ package motocitizen.ui.activity
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import motocitizen.datasources.preferences.Preferences
+import motocitizen.datasources.preferences.Preferences.Stored.LOGIN
+import motocitizen.datasources.preferences.Preferences.Stored.PASSWORD
 import motocitizen.main.R
 import motocitizen.permissions.Permissions
 import motocitizen.router.Router
@@ -37,8 +39,8 @@ class StartupActivity : AppCompatActivity() {
             return
         }
         Auth.auth(
-                Preferences.login,
-                Preferences.password,
+                LOGIN.string(),
+                PASSWORD.string(),
                 { Router.goTo(this@StartupActivity, if (User.isAuthorized) Router.Target.MAIN else Router.Target.AUTH) })
     }
 }

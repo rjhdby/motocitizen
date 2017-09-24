@@ -44,7 +44,27 @@ object Preferences {
         SOUND_TITLE("mc.notification.sound.title", "default system"),
         SOUND_URI("mc.notification.sound", ""),
         LOGIN("mc.login", ""),
-        PASSWORD("mc.password", "")
+        PASSWORD("mc.password", "");
+
+        fun put(value: Any) {
+            val editor = preferences.edit()
+            when (default) {
+                is Int     -> editor.putInt(key, value as Int)
+                is Boolean -> editor.putBoolean(key, value as Boolean)
+                is String  -> editor.putString(key, value as String)
+                is Float   -> editor.putFloat(key, value as Float)
+            }
+            editor.apply()
+        }
+
+        fun boolean(): Boolean = preferences.getBoolean(key, default as Boolean)
+        fun string(): String = preferences.getString(key, default.toString())
+        fun float(): Float = preferences.getFloat(key, default as Float)
+        fun int(): Int = preferences.getInt(key, default as Int)
+
+//        private fun get(key:String):Any{
+//            preferences.
+//        }
     }
 
     fun initialize(context: Context) {
@@ -65,82 +85,38 @@ object Preferences {
     var newVersion = false
     lateinit private var preferences: SharedPreferences
 
-    var showAcc
-        get() = getBoolean(IS_SHOW_ACCIDENT)
-        set(value) = putBoolean(IS_SHOW_ACCIDENT, value)
-    var showBreak
-        get() = getBoolean(IS_SHOW_BREAK)
-        set(value) = putBoolean(IS_SHOW_BREAK, value)
-    var showSteal
-        get() = getBoolean(IS_SHOW_STEAL)
-        set(value) = putBoolean(IS_SHOW_STEAL, value)
-    var showOther
-        get() = getBoolean(IS_SHOW_OTHER)
-        set(value) = putBoolean(IS_SHOW_OTHER, value)
-    //todo разобраться
-    var visibleDistance: Int
-        get() {
-            return try {
-                getInt(VISIBLE_DISTANCE)
-            } catch (e: Exception) {
-                Integer.parseInt(getString(VISIBLE_DISTANCE))
-            }
-        }
-        set(value) {
-            putString(VISIBLE_DISTANCE, if (value > EQUATOR) EQUATOR else value)
-        }
-    var alarmDistance: Int
-        get() {
-            return try {
-                getInt(ALARM_DISTANCE)
-            } catch (e: Exception) {
-                Integer.parseInt(getString(ALARM_DISTANCE))
-            }
-        }
-        set(value) {
-            putString(ALARM_DISTANCE, if (value > EQUATOR) EQUATOR else value)
-        }
     var doNotDisturb
         get() = getBoolean(DO_NOT_DISTURB)
-        set(value) = putBoolean(DO_NOT_DISTURB, value)
-    var hoursAgo
-        get() = Integer.parseInt(getString(HOURS_AGO))
-        set(value) = putString(HOURS_AGO, value)
-    var maxNotifications
-        get() = Integer.parseInt(getString(MAX_NOTIFICATIONS))
-        set(value) = putString(MAX_NOTIFICATIONS, value)
+        set(value) = DO_NOT_DISTURB.put(value)
     var onWay
         get() = getInt(ON_WAY)
-        set(value) = putInt(ON_WAY, value)
+        set(value) = ON_WAY.put(value)
     var soundTitle: String
         get() = getString(SOUND_TITLE)
-        set(value) = putString(SOUND_TITLE, value)
+        set(value) = SOUND_TITLE.put(value)
     var soundURI: String
         get() = getString(SOUND_URI)
-        set(uri) = putString(SOUND_URI, uri)
+        set(uri) = SOUND_URI.put(uri)
     var sound: Uri? = null
         private set
-    var vibration: Boolean
-        get() = getBoolean(VIBRATION)
-        set(value) = putBoolean(VIBRATION, value)
     var login: String
-        get() = getString(LOGIN)
-        set(value) = putString(LOGIN, value)
+        get() = LOGIN.string()
+        set(value) = LOGIN.put(value)
     var password: String
-        get() = getString(PASSWORD)
-        set(value) = putString(PASSWORD, value)
+        get() = PASSWORD.string()
+        set(value) = PASSWORD.put(value)
     var anonymous
         get() = getBoolean(ANONYMOUS)
-        set(value) = putBoolean(ANONYMOUS, value)
+        set(value) = ANONYMOUS.put(value)
     var appVersion
         get() = getInt(APP_VERSION)
-        set(value) = putInt(APP_VERSION, value)
+        set(value) = APP_VERSION.put(value)
 
     var savedLatLng
         get() = LatLng(getFloat(LATITUDE).toDouble(), getFloat(LONGITUDE).toDouble())
         set(latLng) {
-            putFloat(LATITUDE, latLng.latitude.toFloat())
-            putFloat(LONGITUDE, latLng.longitude.toFloat())
+            LATITUDE.put(latLng.latitude.toFloat())
+            LONGITUDE.put(latLng.longitude.toFloat())
         }
 
     fun setSound(title: String, uri: Uri) {
@@ -161,15 +137,15 @@ object Preferences {
     }
 
     fun resetAuth() {
-        preferences.edit().remove(login).remove(password).apply()
+        preferences.edit().remove(LOGIN.key).remove(PASSWORD.key).apply()
     }
 
     fun isEnabled(type: Type): Boolean = when (type) {
-        Type.BREAK                                               -> showBreak
-        Type.MOTO_AUTO, Type.MOTO_MOTO, Type.MOTO_MAN, Type.SOLO -> showAcc
-        Type.STEAL                                               -> showSteal
-        Type.OTHER                                               -> showOther
-        else                                                     -> true
+        Type.BREAK                                               -> IS_SHOW_BREAK.boolean()
+        Type.MOTO_AUTO, Type.MOTO_MOTO, Type.MOTO_MAN, Type.SOLO -> IS_SHOW_ACCIDENT.boolean()
+        Type.STEAL                                               -> IS_SHOW_STEAL.boolean()
+        Type.OTHER                                               -> IS_SHOW_OTHER.boolean()
+        Type.USER                                                -> true
     }
 
     //todo wtf!?
@@ -186,16 +162,12 @@ object Preferences {
         else               -> "unknown"
     }
 
-    private fun putString(stored: Stored, value: Any) = preferences.edit().putString(stored.key, value.toString()).apply()
     private fun getString(stored: Stored) = preferences.getString(stored.key, stored.default.toString())
 
-    private fun putBoolean(stored: Stored, value: Boolean) = preferences.edit().putBoolean(stored.key, value).apply()
     private fun getBoolean(stored: Stored) = preferences.getBoolean(stored.key, stored.default as Boolean)
 
-    private fun putInt(stored: Stored, value: Int) = preferences.edit().putInt(stored.key, value).apply()
     private fun getInt(stored: Stored) = preferences.getInt(stored.key, stored.default as Int)
 
-    private fun putFloat(stored: Stored, value: Float) = preferences.edit().putFloat(stored.key, value).apply()
     private fun getFloat(stored: Stored) = preferences.getFloat(stored.key, stored.default as Float)
 }
 

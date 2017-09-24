@@ -4,6 +4,7 @@ import android.preference.Preference
 import android.preference.Preference.OnPreferenceChangeListener
 import android.preference.PreferenceFragment
 import motocitizen.datasources.preferences.Preferences
+import motocitizen.datasources.preferences.Preferences.Stored.*
 import motocitizen.main.R
 import motocitizen.router.Router
 import motocitizen.user.User
@@ -43,11 +44,11 @@ class SettingsFragment : PreferenceFragment() {
 
     private fun update() {
         authPreference.summary = if (login.isNotEmpty()) User.roleName + ": " + login else User.roleName
-        maxNotifications.summary = preferences.maxNotifications.toString()
-        hoursAgo.summary = preferences.hoursAgo.toString()
+        maxNotifications.summary = MAX_NOTIFICATIONS.string()
+        hoursAgo.summary = HOURS_AGO.string()
         notificationSoundPreference.summary = preferences.soundTitle
-        notificationDistPreference.summary = preferences.visibleDistance.toString()
-        notificationAlarmPreference.summary = preferences.alarmDistance.toString()
+        notificationDistPreference.summary = VISIBLE_DISTANCE.string()
+        notificationAlarmPreference.summary = ALARM_DISTANCE.string()
     }
 
     private fun setUpListeners() {
@@ -55,7 +56,7 @@ class SettingsFragment : PreferenceFragment() {
         notificationAlarmPreference.onPreferenceChangeListener = OnPreferenceChangeListener(this::distanceListener)
         maxNotifications.onPreferenceChangeListener = OnPreferenceChangeListener(this::maxNotificationsListener)
         hoursAgo.onPreferenceChangeListener = OnPreferenceChangeListener(this::hoursAgoListener)
-        useVibration.onPreferenceChangeListener = OnPreferenceChangeListener(this::vibrationListener)
+        useVibration.onPreferenceChangeListener = OnPreferenceChangeListener { _, newValue -> this.vibrationListener(newValue) }
         buttonSound.onPreferenceClickListener = Preference.OnPreferenceClickListener { this.soundButtonPressed() }
         buttonAuth.onPreferenceClickListener = Preference.OnPreferenceClickListener { this.authButtonPressed() }
         showAcc.onPreferenceChangeListener = OnPreferenceChangeListener(this::visibleListener)
@@ -76,8 +77,8 @@ class SettingsFragment : PreferenceFragment() {
         return true
     }
 
-    private fun vibrationListener(preference: Preference, newValue: Any): Boolean {
-        preferences.vibration = newValue as Boolean
+    private fun vibrationListener(newValue: Any): Boolean {
+        VIBRATION.put(newValue)
         return true
     }
 
@@ -111,8 +112,8 @@ class SettingsFragment : PreferenceFragment() {
         val value = Math.min(EQUATOR, Integer.parseInt(newValue as String))
 
         when (preference) {
-            notificationDistPreference  -> preferences.visibleDistance = value
-            notificationAlarmPreference -> preferences.alarmDistance = value
+            notificationDistPreference  -> VISIBLE_DISTANCE.put(value)
+            notificationAlarmPreference -> ALARM_DISTANCE.put(value)
         }
         update()
         return false
@@ -120,10 +121,10 @@ class SettingsFragment : PreferenceFragment() {
 
     private fun visibleListener(preference: Preference, newValue: Any): Boolean {
         when (preference.key) {
-            "mc.show.acc"   -> preferences.showAcc = newValue as Boolean
-            "mc.show.break" -> preferences.showBreak = newValue as Boolean
-            "mc.show.steal" -> preferences.showSteal = newValue as Boolean
-            "mc.show.other" -> preferences.showOther = newValue as Boolean
+            "mc.show.acc"   -> IS_SHOW_ACCIDENT.put(newValue)
+            "mc.show.break" -> IS_SHOW_BREAK.put(newValue)
+            "mc.show.steal" -> IS_SHOW_STEAL.put(newValue)
+            "mc.show.other" -> IS_SHOW_OTHER.put(newValue)
         }
         if (isAllHidden) {
             show(activity, getString(R.string.no_one_accident_visible))
@@ -133,5 +134,5 @@ class SettingsFragment : PreferenceFragment() {
     }
 
     private val isAllHidden: Boolean
-        inline get() = !(preferences.showAcc || preferences.showBreak || preferences.showOther || preferences.showSteal)
+        inline get() = !(IS_SHOW_ACCIDENT.boolean() || IS_SHOW_BREAK.boolean() || IS_SHOW_STEAL.boolean() || IS_SHOW_OTHER.boolean())
 }

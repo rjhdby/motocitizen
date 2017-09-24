@@ -4,13 +4,15 @@ import com.google.android.gms.maps.model.LatLng
 import motocitizen.content.Content
 import motocitizen.content.history.History
 import motocitizen.content.volunteer.VolunteerAction
+import motocitizen.datasources.preferences.Preferences
+import motocitizen.datasources.preferences.Preferences.Stored.HOURS_AGO
+import motocitizen.datasources.preferences.Preferences.Stored.VISIBLE_DISTANCE
 import motocitizen.dictionary.AccidentStatus
 import motocitizen.dictionary.AccidentStatus.ACTIVE
 import motocitizen.dictionary.AccidentStatus.HIDDEN
 import motocitizen.dictionary.Medicine
 import motocitizen.dictionary.Type
 import motocitizen.user.User
-import motocitizen.datasources.preferences.Preferences
 import motocitizen.utils.distanceString
 import motocitizen.utils.metersFromUser
 import java.util.*
@@ -33,9 +35,9 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
 
     fun isVisible(): Boolean {
         val visible = User.isModerator || status != HIDDEN
-        val distanceFilter = metersFromUser(coordinates) < Preferences.visibleDistance * 1000
+        val distanceFilter = metersFromUser(coordinates) < VISIBLE_DISTANCE.int() * 1000
         val settingsFilter = Preferences.isEnabled(type)
-        val timeFilter = time.time + Preferences.hoursAgo.toLong() * MS_IN_HOUR > Date().time
+        val timeFilter = time.time + HOURS_AGO.int().toLong() * MS_IN_HOUR > Date().time
         return visible && distanceFilter && settingsFilter && timeFilter
     }
 
