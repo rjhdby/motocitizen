@@ -154,7 +154,7 @@ class MainScreenActivity : AppCompatActivity() {
             redraw()
         }
     }
-
+//todo extract progressBar to separate class
     private fun stopRefreshAnimation() {
         setRefreshAnimation(false)
     }
