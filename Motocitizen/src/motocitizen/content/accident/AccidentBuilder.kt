@@ -1,11 +1,11 @@
 package motocitizen.content.accident
 
-import com.google.android.gms.maps.model.LatLng
 import motocitizen.content.history.History
 import motocitizen.content.volunteer.VolunteerAction
 import motocitizen.dictionary.AccidentStatus
 import motocitizen.dictionary.Medicine
 import motocitizen.dictionary.Type
+import motocitizen.geo.geocoder.AccidentLocation
 import motocitizen.geo.geolocation.MyLocationManager
 import motocitizen.user.User
 import java.util.*
@@ -22,9 +22,7 @@ class AccidentBuilder {
         private set
     var time = Date()
         private set
-    var address = ""
-        private set
-    var coordinates = MyLocationManager.getLocation()
+    var location = AccidentLocation(coordinates = MyLocationManager.getLocation())
         private set
     var owner = User.id
         private set
@@ -47,9 +45,7 @@ class AccidentBuilder {
 
     fun time(time: Date) = apply { this.time = time }
 
-    fun address(address: String) = apply { this.address = address }
-
-    fun coordinates(coordinates: LatLng) = apply { this.coordinates = coordinates }
+    fun location(location: AccidentLocation) = apply { this.location = location }
 
     fun owner(owner: Int) = apply { this.owner = owner }
 
@@ -62,8 +58,7 @@ class AccidentBuilder {
         type = accident.type
         medicine = accident.medicine
         time = accident.time
-        address = accident.address
-        coordinates = accident.coordinates
+        location = accident.location
         owner = accident.owner
         description = accident.description
         volunteers = accident.volunteers
@@ -82,14 +77,14 @@ class AccidentBuilder {
     }
 
     private fun commonAccident(): Accident = when (status) {
-        AccidentStatus.ACTIVE -> ActiveAccident(id, type, medicine, time, address, coordinates, owner)
-        AccidentStatus.ENDED  -> EndedAccident(id, type, medicine, time, address, coordinates, owner)
-        AccidentStatus.HIDDEN -> HiddenAccident(id, type, medicine, time, address, coordinates, owner)
+        AccidentStatus.ACTIVE -> ActiveAccident(id, type, medicine, time, location, owner)
+        AccidentStatus.ENDED  -> EndedAccident(id, type, medicine, time, location, owner)
+        AccidentStatus.HIDDEN -> HiddenAccident(id, type, medicine, time, location, owner)
     }
 
     private fun ownedAccident(): Accident = when (status) {
-        AccidentStatus.ACTIVE -> OwnedActiveAccident(id, type, medicine, time, address, coordinates)
-        AccidentStatus.ENDED  -> OwnedEndedAccident(id, type, medicine, time, address, coordinates)
-        AccidentStatus.HIDDEN -> OwnedHiddenAccident(id, type, medicine, time, address, coordinates)
+        AccidentStatus.ACTIVE -> OwnedActiveAccident(id, type, medicine, time, location)
+        AccidentStatus.ENDED  -> OwnedEndedAccident(id, type, medicine, time, location)
+        AccidentStatus.HIDDEN -> OwnedHiddenAccident(id, type, medicine, time, location)
     }
 }

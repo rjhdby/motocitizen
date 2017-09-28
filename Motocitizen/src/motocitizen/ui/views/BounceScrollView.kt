@@ -1,5 +1,5 @@
 /*
- * Thanx for Thien Nguyen
+ * Thanks for Thien Nguyen
  */
 package motocitizen.ui.views
 

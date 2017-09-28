@@ -30,14 +30,14 @@ class StartupActivity : AppCompatActivity() {
 
 
     private fun ahead() {
-        if (Preferences.anonymous) {
-            Router.goTo(this, Router.Target.MAIN)
-            return
+        when {
+            Preferences.anonymous   -> Router.goTo(this, Router.Target.MAIN)
+            Preferences.login == "" -> Router.goTo(this, Router.Target.AUTH)
+            else                    -> tryToLogon()
         }
-        if (Preferences.login == "") {
-            Router.goTo(this, Router.Target.AUTH)
-            return
-        }
+    }
+
+    private fun tryToLogon() {
         Auth.auth(
                 LOGIN.string(),
                 PASSWORD.string(),

@@ -16,6 +16,8 @@ import motocitizen.datasources.network.requests.EndAccident
 import motocitizen.datasources.network.requests.HideAccident
 import motocitizen.main.R
 import motocitizen.router.Router
+import motocitizen.utils.isEnded
+import motocitizen.utils.isHidden
 import motocitizen.utils.show
 
 abstract class PopupWindowGeneral internal constructor(private val context: Context) : PopupWindow() {

@@ -5,6 +5,8 @@ package motocitizen.utils
 import java.text.SimpleDateFormat
 import java.util.*
 
+val MS_IN_HOUR = 3_600_000
+
 fun Date.timeString(): String = SimpleDateFormat("HH:mm", Locale.getDefault()).format(this)
 
 fun Date.dateTimeString(): String = SimpleDateFormat("dd.MM.yy HH:mm", Locale.getDefault()).format(this)
@@ -15,3 +17,6 @@ fun getIntervalFromNowInText(date: Date): String {
     return String.format("%dч %dм", minutes / 60, minutes % 60)
     //context.getString(R.string.time_interval_short, minutes / 60, minutes % 60)
 }
+
+fun DateFromSeconds(seconds: Long) = Date(seconds * 1000)
+fun Date.seconds() = this.time / 1000

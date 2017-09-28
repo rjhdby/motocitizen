@@ -8,18 +8,19 @@ import motocitizen.datasources.preferences.Preferences
 import motocitizen.datasources.preferences.Preferences.Stored.HOURS_AGO
 import motocitizen.datasources.preferences.Preferences.Stored.VISIBLE_DISTANCE
 import motocitizen.dictionary.AccidentStatus
-import motocitizen.dictionary.AccidentStatus.ACTIVE
 import motocitizen.dictionary.AccidentStatus.HIDDEN
 import motocitizen.dictionary.Medicine
 import motocitizen.dictionary.Type
+import motocitizen.geo.geocoder.AccidentLocation
 import motocitizen.user.User
+import motocitizen.utils.MS_IN_HOUR
 import motocitizen.utils.distanceString
 import motocitizen.utils.metersFromUser
 import java.util.*
 import kotlin.collections.ArrayList
 
-abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val time: Date, var address: String, var coordinates: LatLng, val owner: Int) {
-    private val MS_IN_HOUR = 3_600_000
+//todo simplify constructor
+abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val time: Date, var location: AccidentLocation, val owner: Int) {
     abstract val status: AccidentStatus
     val volunteers = ArrayList<VolunteerAction>()
     val history = ArrayList<History>()
@@ -28,6 +29,14 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
         set(value) {
             field = value.trim()
         }
+
+    var coordinates: LatLng = location.coordinates
+        get() = location.coordinates
+        private set
+
+    var address: String = location.address
+        get() = location.address
+        private set
 
     fun ownerName() = Content.volunteerName(owner)
 
@@ -40,12 +49,6 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
         val timeFilter = time.time + HOURS_AGO.int().toLong() * MS_IN_HOUR > Date().time
         return visible && distanceFilter && settingsFilter && timeFilter
     }
-
-    fun isActive(): Boolean = status === ACTIVE
-
-    fun isEnded(): Boolean = status !== ACTIVE
-
-    fun isHidden(): Boolean = status === HIDDEN
 
     fun isAccident(): Boolean = type == Type.MOTO_AUTO || type == Type.MOTO_MOTO || type == Type.MOTO_MAN || type == Type.SOLO
 

@@ -44,10 +44,6 @@ object MyLocationManager {
         subscribers.remove(name)
     }
 
-    //todo exterminatus
-//    private fun requestAddress() {
-//        MainScreenActivity.updateStatusBar(getAddress(getLocation()))
-//    }
 
     private fun checkInPlace(location: Location) {
         if (User.name == "") return
@@ -67,10 +63,10 @@ object MyLocationManager {
     }
 
     private fun isArrived(location: Location, accident: Accident): Boolean {
-        return accident.coordinates.distanceTo(location) < Math.max(ARRIVED_MAX_ACCURACY.toFloat(), location.accuracy)
+        return accident.coordinates.distanceTo(location) < Math.max(ARRIVED_MAX_ACCURACY, location.accuracy.toInt())
     }
 
-    private fun isInPlace(location: Location?, accident: Accident): Boolean {
-        return location != null && accident.coordinates.distanceTo(location) - location.accuracy < ARRIVED_MAX_ACCURACY
+    private fun isInPlace(location: Location, accident: Accident): Boolean {
+        return accident.coordinates.distanceTo(location) - location.accuracy < ARRIVED_MAX_ACCURACY
     }
 }

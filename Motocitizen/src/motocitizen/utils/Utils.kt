@@ -7,8 +7,6 @@ import android.content.Context
 import android.os.Build
 import android.util.DisplayMetrics
 import android.view.View
-import motocitizen.content.accident.Accident
-import motocitizen.dictionary.Medicine
 import java.security.MessageDigest
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
@@ -44,19 +42,6 @@ fun getWidth(context: Context): Int {
     val displayMetrics = DisplayMetrics()
     (context as Activity).windowManager.defaultDisplay.getMetrics(displayMetrics)
     return displayMetrics.widthPixels
-}
-
-fun Accident.getAccidentTextToCopy(): String {
-    val res = StringBuilder()
-    res.append(this.time.dateTimeString()).append(" ")
-    res.append(this.ownerName()).append(": ")
-    res.append(this.type.text).append(". ")
-    if (this.medicine !== Medicine.UNKNOWN) {
-        res.append(this.medicine.text).append(". ")
-    }
-    res.append(this.address).append(". ")
-    res.append(this.description).append(".")
-    return res.toString()
 }
 
 fun md5(input: String): String {

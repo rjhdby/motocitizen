@@ -12,7 +12,6 @@ import motocitizen.router.Router
 import motocitizen.ui.changelog.ChangeLog
 import motocitizen.datasources.preferences.Preferences
 
-//Посмотреть http://android-developers.blogspot.in/2013/08/actionbarcompat-and-io-2013-app-source.html
 class AboutActivity : AppCompatActivity() {
     private val ROOT_LAYOUT = R.layout.activity_about
     private val VERSION = R.id.about_code_version

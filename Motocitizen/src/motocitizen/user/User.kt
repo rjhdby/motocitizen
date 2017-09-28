@@ -1,7 +1,5 @@
 package motocitizen.user
 
-import motocitizen.datasources.network.ApiResponse
-
 object User {
     var role = Role.RO
     var name = ""

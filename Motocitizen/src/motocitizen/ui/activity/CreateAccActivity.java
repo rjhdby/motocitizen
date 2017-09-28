@@ -17,6 +17,7 @@ import motocitizen.datasources.network.requests.CreateAccidentRequest;
 import motocitizen.datasources.preferences.Preferences;
 import motocitizen.dictionary.Medicine;
 import motocitizen.dictionary.Type;
+import motocitizen.geo.geocoder.AccidentLocation;
 import motocitizen.geo.geolocation.MyLocationManager;
 import motocitizen.main.R;
 import motocitizen.ui.dialogs.create.EmptyAddressDialog;
@@ -68,8 +69,8 @@ public class CreateAccActivity extends FragmentActivity {
 
     private Button backButton;
 
-    private AccidentBuilder builder = new AccidentBuilder();
-    private Frames          current = MAP;
+    private final AccidentBuilder builder = new AccidentBuilder();
+    private       Frames          current = MAP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,7 +136,7 @@ public class CreateAccActivity extends FragmentActivity {
 
         whatField.setText(String.format("%s%s", builder.getType().getText(), medicine));
         whoField.setText(Preferences.INSTANCE.getLogin());
-        whereField.setText(builder.getAddress());
+        whereField.setText(builder.getLocation().getAddress());
         whenField.setText(DateUtils.dateTimeString(builder.getTime()));
     }
 
@@ -145,12 +146,18 @@ public class CreateAccActivity extends FragmentActivity {
 
     private FrameInterface getFrame(Frames frame) {
         switch (frame) {
-            case MAP: return locationFrame;
-            case TYPE: return typeFrame;
-            case SUB_TYPE: return subTypeFrame;
-            case DAMAGE: return damageFrame;
-            case DESCRIPTION: return descriptionFrame;
-            default: return locationFrame;
+            case MAP:
+                return locationFrame;
+            case TYPE:
+                return typeFrame;
+            case SUB_TYPE:
+                return subTypeFrame;
+            case DAMAGE:
+                return damageFrame;
+            case DESCRIPTION:
+                return descriptionFrame;
+            default:
+                return locationFrame;
         }
     }
 
@@ -163,10 +170,9 @@ public class CreateAccActivity extends FragmentActivity {
     }
 
     private Unit selectLocationCallback(LatLng latLng) {
-        builder.coordinates(latLng);
-        builder.address(MyLocationManager.INSTANCE.getAddress(latLng));
+        builder.location(new AccidentLocation(MyLocationManager.INSTANCE.getAddress(latLng), latLng));
         changeFrameTo(TYPE);
-        if (builder.getAddress().equals("")) {
+        if (builder.getLocation().getAddress().equals("")) {
             new EmptyAddressDialog(this, this::addressDialogCallback);
         }
         return Unit.INSTANCE;
@@ -192,7 +198,7 @@ public class CreateAccActivity extends FragmentActivity {
 
     private Unit addressDialogCallback(String address) {
         if (address.length() > 0) {
-            builder.address(address);
+            builder.location(new AccidentLocation(address, builder.getLocation().getCoordinates()));
             refreshDescription();
         }
         return Unit.INSTANCE;
@@ -227,12 +233,18 @@ public class CreateAccActivity extends FragmentActivity {
 
     private Frames getPrevFrame() {
         switch (current) {
-            case MAP: return MAP;
-            case DAMAGE: return SUB_TYPE;
-            case SUB_TYPE: return TYPE;
-            case TYPE: return MAP;
-            case DESCRIPTION: return builder.build().isAccident() ? DAMAGE : TYPE;
-            default: return current;
+            case MAP:
+                return MAP;
+            case DAMAGE:
+                return SUB_TYPE;
+            case SUB_TYPE:
+                return TYPE;
+            case TYPE:
+                return MAP;
+            case DESCRIPTION:
+                return builder.build().isAccident() ? DAMAGE : TYPE;
+            default:
+                return current;
         }
     }
 }

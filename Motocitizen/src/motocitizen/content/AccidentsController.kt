@@ -9,6 +9,7 @@ import motocitizen.datasources.network.requests.AccidentListRequest
 import motocitizen.datasources.network.requests.AccidentRequest
 import motocitizen.datasources.network.requests.DetailsRequest
 import motocitizen.datasources.network.requests.HasNewRequest
+import motocitizen.utils.seconds
 import org.json.JSONArray
 import org.json.JSONException
 import java.util.*
@@ -33,7 +34,7 @@ object AccidentsController {
 
     inline private fun listRequestCallback(response: ApiResponse, callback: (ApiResponse) -> Unit) {
         parseGetListResponse(response)
-        lastUpdate = Date().time / 1000
+        lastUpdate = Date().seconds()
         callback(response)
     }
 
@@ -44,15 +45,13 @@ object AccidentsController {
         })
     }
 
-    private fun attachDetailsToAccident(accident: Accident, result: ApiResponse) {
-        try {
-            Content.addVolunteers(result.resultObject.getJSONObject("u"))
-            attachVolunteersToAccident(accident, result.resultObject.getJSONArray("v"))
-            Content.addMessages(result.resultObject.getJSONArray("m"))
-            attachHistoryToAccident(accident, result.resultObject.getJSONArray("h"))
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
+    private fun attachDetailsToAccident(accident: Accident, result: ApiResponse) = try {
+        Content.addVolunteers(result.resultObject.getJSONObject("u"))
+        attachVolunteersToAccident(accident, result.resultObject.getJSONArray("v"))
+        Content.addMessages(result.resultObject.getJSONArray("m"))
+        attachHistoryToAccident(accident, result.resultObject.getJSONArray("h"))
+    } catch (e: JSONException) {
+        e.printStackTrace()
     }
 
     fun requestSingleAccident(id: Int, callback: (ApiResponse) -> Unit) {
@@ -62,20 +61,16 @@ object AccidentsController {
         })
     }
 
-    private fun parseGetListResponse(apiResponse: ApiResponse) {
-        try {
-            Content.addVolunteers(apiResponse.resultObject.getJSONObject("u"))
-            addAccidents(apiResponse.resultObject.getJSONArray("l"))
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
+    private fun parseGetListResponse(apiResponse: ApiResponse) = try {
+        Content.addVolunteers(apiResponse.resultObject.getJSONObject("u"))
+        addAccidents(apiResponse.resultObject.getJSONArray("l"))
+    } catch (e: JSONException) {
+        e.printStackTrace()
     }
 
-    private fun addAccidents(json: JSONArray) {
-        (0 until json.length())
-                .map { AccidentFactory.make(json.getJSONObject(it)) }
-                .forEach { accidents.put(it.id, it) }
-    }
+    private fun addAccidents(json: JSONArray) = (0 until json.length())
+            .map { AccidentFactory.make(json.getJSONObject(it)) }
+            .forEach { accidents.put(it.id, it) }
 
     private fun attachVolunteersToAccident(accident: Accident, json: JSONArray) {
         accident.volunteers.clear()

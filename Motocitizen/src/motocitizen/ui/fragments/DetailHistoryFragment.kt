@@ -9,8 +9,7 @@ import android.widget.LinearLayout
 import motocitizen.content.Content
 import motocitizen.content.accident.Accident
 import motocitizen.main.R
-import motocitizen.ui.activity.AccidentDetailsActivity
-import motocitizen.ui.activity.AccidentDetailsActivity.*
+import motocitizen.ui.activity.AccidentDetailsActivity.ACCIDENT_ID_KEY
 import motocitizen.ui.rows.history.HistoryRowFactory
 
 

@@ -32,6 +32,7 @@ import motocitizen.ui.fragments.DetailMessagesFragment;
 import motocitizen.ui.fragments.DetailVolunteersFragment;
 import motocitizen.ui.popups.AccidentListPopup;
 import motocitizen.user.User;
+import motocitizen.utils.AccidentUtilsKt;
 import motocitizen.utils.DateUtils;
 import motocitizen.utils.Utils;
 
@@ -232,7 +233,7 @@ public class AccidentDetailsActivity extends AppCompatActivity {
                 return true;
             case R.id.action_share:
                 //todo pornography
-                Router.INSTANCE.share(this, Utils.getAccidentTextToCopy(accident));
+                Router.INSTANCE.share(this, AccidentUtilsKt.getAccidentTextToCopy(accident));
                 return true;
             case R.id.action_hide_info:
             case R.id.menu_hide_info:

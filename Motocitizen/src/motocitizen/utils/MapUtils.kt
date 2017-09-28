@@ -9,7 +9,6 @@ import java.util.*
 
 val DEFAULT_ZOOM = 16f
 
-private val MS_IN_HOUR = 3600000
 private val DENSE = 1f
 private val SEMI_DENSE = 0.5f
 private val TRANSPARENT = 0.2f

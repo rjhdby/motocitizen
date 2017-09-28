@@ -6,12 +6,9 @@ import android.content.pm.PackageManager
 import android.media.RingtoneManager
 import android.net.Uri
 import android.preference.PreferenceManager
-
 import com.google.android.gms.maps.model.LatLng
 import motocitizen.datasources.preferences.Preferences.Stored.*
-
 import motocitizen.dictionary.Type
-import motocitizen.utils.EQUATOR
 
 object Preferences {
     private val DEFAULT_LATITUDE = 55.752295f

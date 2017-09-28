@@ -1,7 +1,7 @@
 package motocitizen.ui.changelog
 
 /*
- * Special thanx to Karsten Priegnitz for idea of this class
+ * Special thanks to Karsten Priegnitz for idea of this class
  * https://code.google.com/p/android-change-log/
  */
 
