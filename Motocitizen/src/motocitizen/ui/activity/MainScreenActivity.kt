@@ -76,9 +76,8 @@ class MainScreenActivity : AppCompatActivity() {
     }
 
     private fun disableDialOnTablets() {
-        if (!packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
-            this.findViewById(R.id.dial_button).isEnabled = false
-        }
+        if (packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) return
+        findViewById(R.id.dial_button).isEnabled = false
     }
 
     private fun showChangeLogIfUpdated() {
@@ -92,18 +91,18 @@ class MainScreenActivity : AppCompatActivity() {
         createAccButton.setOnClickListener { Router.goTo(this, Router.Target.CREATE) }
         toAccListButton.setOnClickListener { showListFrame() }
         toMapButton.setOnClickListener { showMapFrame() }
-        this.findViewById(R.id.dial_button).setOnClickListener { Router.dial(this, getString(R.string.phone)) }
-        (this.findViewById(R.id.accListRefresh) as BounceScrollView).setOverScrollListener { accidents }
+        findViewById(R.id.dial_button).setOnClickListener { Router.dial(this, getString(R.string.phone)) }
+        (findViewById(R.id.accListRefresh) as BounceScrollView).setOverScrollListener { accidents }
     }
 
     private fun bindViews() {
-        accListView = this.findViewById(R.id.acc_list)
-        progressBar = this.findViewById(R.id.progressBar) as ProgressBar
-        mapContainer = this.findViewById(R.id.google_map) as ViewGroup
-        createAccButton = this.findViewById(R.id.add_point_button) as ImageButton
-        toAccListButton = this.findViewById(R.id.list_button) as ImageButton
-        toMapButton = this.findViewById(R.id.map_button) as ImageButton
-        listContent = this.findViewById(R.id.accListContent) as ViewGroup
+        accListView = findViewById(R.id.acc_list)
+        progressBar = findViewById(R.id.progressBar) as ProgressBar
+        mapContainer = findViewById(R.id.google_map) as ViewGroup
+        createAccButton = findViewById(R.id.add_point_button) as ImageButton
+        toAccListButton = findViewById(R.id.list_button) as ImageButton
+        toMapButton = findViewById(R.id.map_button) as ImageButton
+        listContent = findViewById(R.id.accListContent) as ViewGroup
     }
 
     override fun onPause() {
@@ -133,12 +132,11 @@ class MainScreenActivity : AppCompatActivity() {
         val newList = Content.getVisibleReversed().map { AccidentRowFactory.make(this, it) }
         listContent.removeAllViews()
 
-        for (row in newList) {
-            listContent.addView(row)
-        }
+        newList.forEach(listContent::addView)
+
         map.addContent()
     }
-
+//todo WTF!?
     private val accidents: Unit
         get() {
             if (inTransaction) return
@@ -220,7 +218,7 @@ class MainScreenActivity : AppCompatActivity() {
         showMapFrame()
         map.jumpToPoint(Content.accident(id).coordinates)
     }
-
+//todo refactor
     private fun updateStatusBar(latLng: LatLng) {
         var address = MyLocationManager.getAddress(latLng)
         var subTitle = ""

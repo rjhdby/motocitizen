@@ -40,7 +40,13 @@ class AuthActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        if (!VKSdk.onActivityResult(requestCode, resultCode, data, object : VKCallback<VKAccessToken> {
+        if (!VKSdk.onActivityResult(requestCode, resultCode, data, vkCallback())) {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
+    private fun vkCallback(): VKCallback<VKAccessToken> {
+        return object : VKCallback<VKAccessToken> {
             override fun onResult(res: VKAccessToken) {
                 Toast.makeText(applicationContext, "Пользователь успешно авторизовался", Toast.LENGTH_LONG).show()
             }
@@ -48,8 +54,6 @@ class AuthActivity : AppCompatActivity() {
             override fun onError(error: VKError) {
                 Toast.makeText(applicationContext, "Произошла ошибка авторизации (например, пользователь запретил авторизацию)", Toast.LENGTH_LONG).show()
             }
-        })) {
-            super.onActivityResult(requestCode, resultCode, data)
         }
     }
 
@@ -58,7 +62,7 @@ class AuthActivity : AppCompatActivity() {
         setContentView(R.layout.auth)
         bindViews()
         setUpListeners()
-
+//todo ???
         if (User.isAuthorized) {
             Router.goTo(this, Router.Target.MAIN)
         }
@@ -93,13 +97,15 @@ class AuthActivity : AppCompatActivity() {
     private fun loginButtonPressed() {
         Preferences.anonymous = anonymous.isChecked
         when {
-            anonymous.isChecked -> {
-                (findViewById(R.id.auth_error_helper) as TextView).text = ""
-                Router.goTo(this@AuthActivity, Router.Target.MAIN)
-            }
+            anonymous.isChecked -> anonymousLogon()
             isOnline            -> auth()
             else                -> show(this, R.string.auth_not_available)
         }
+    }
+
+    private fun anonymousLogon() {
+        (findViewById(R.id.auth_error_helper) as TextView).text = ""
+        Router.goTo(this@AuthActivity, Router.Target.MAIN)
     }
 
     private val isOnline: Boolean
@@ -159,7 +165,7 @@ class AuthActivity : AppCompatActivity() {
             }
         })
     }
-
+//todo refactor
     private fun fillCtrls() {
         login.setText(Preferences.login)
         password.setText(Preferences.password)
