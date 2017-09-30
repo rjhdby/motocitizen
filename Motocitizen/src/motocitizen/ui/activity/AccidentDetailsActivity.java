@@ -34,7 +34,7 @@ import motocitizen.ui.popups.AccidentListPopup;
 import motocitizen.user.User;
 import motocitizen.utils.AccidentUtilsKt;
 import motocitizen.utils.DateUtils;
-import motocitizen.utils.Utils;
+import motocitizen.utils.StringUtils;
 
 import static motocitizen.dictionary.AccidentStatus.ACTIVE;
 import static motocitizen.dictionary.AccidentStatus.ENDED;
@@ -141,9 +141,9 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         generalLayout.setOnLongClickListener(v -> {
             PopupWindow popupWindow;
             popupWindow = (new AccidentListPopup(AccidentDetailsActivity.this, accident));
-            int viewLocation[] = new int[ 2 ];
+            int viewLocation[] = new int[2];
             v.getLocationOnScreen(viewLocation);
-            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[ 0 ], viewLocation[ 1 ]);
+            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1]);
             return true;
         });
         update();
@@ -177,7 +177,7 @@ public class AccidentDetailsActivity extends AppCompatActivity {
         mMenu = menu;
         //TODO Костыль
         if (accident == null) return super.onCreateOptionsMenu(menu);
-        List<String> contactNumbers = Utils.getPhonesFromText(accident.getDescription());
+        List<String> contactNumbers = StringUtils.getPhonesFromText(accident.getDescription());
         if (contactNumbers.isEmpty()) return super.onCreateOptionsMenu(menu);
         if (contactNumbers.size() == 1) {
             mMenu.add(0, SMS_MENU_MIN_ID, 0, getString(R.string.send_sms) + contactNumbers.get(0));

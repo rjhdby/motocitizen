@@ -1,5 +1,6 @@
 package motocitizen.ui.activity
 
+import afterTextChanged
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -88,8 +89,8 @@ class AuthActivity : AppCompatActivity() {
         findViewById(R.id.vk333).setOnClickListener { vkAuth() }
         loginBtn.setOnClickListener { loginButtonPressed() }
         logoutBtn.setOnClickListener { logOutButtonPressed() }
-        login.addTextChangedListener(textWatcher())
-        password.addTextChangedListener(textWatcher())
+        login.afterTextChanged { enableLoginBtn() }
+        password.afterTextChanged { enableLoginBtn() }
         anonymous.setOnClickListener { anonymousCheckBoxPressed() }
         cancelBtn.setOnClickListener { finish() }
     }
@@ -129,13 +130,10 @@ class AuthActivity : AppCompatActivity() {
         VKSdk.wakeUpSession(this, object : VKCallback<VKSdk.LoginState> {
             override fun onResult(res: VKSdk.LoginState) {
                 when (res) {
-                    VKSdk.LoginState.LoggedOut -> {
-                    }
+                    VKSdk.LoginState.LoggedOut -> Unit
                     VKSdk.LoginState.LoggedIn  -> Router.goTo(this@AuthActivity, Router.Target.MAIN)
-                    VKSdk.LoginState.Pending   -> {
-                    }
-                    VKSdk.LoginState.Unknown   -> {
-                    }
+                    VKSdk.LoginState.Pending   -> Unit
+                    VKSdk.LoginState.Unknown   -> Unit
                 }//showLogin();
                 //showLogout();
             }
@@ -165,7 +163,8 @@ class AuthActivity : AppCompatActivity() {
             }
         })
     }
-//todo refactor
+
+    //todo refactor
     private fun fillCtrls() {
         login.setText(Preferences.login)
         password.setText(Preferences.password)
@@ -186,18 +185,6 @@ class AuthActivity : AppCompatActivity() {
             roleView.text = String.format(getString(R.string.auth_role), User.roleName)
         } else {
             enableLoginBtn()
-        }
-    }
-
-    private fun textWatcher(): TextWatcher {
-        return object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {}
-
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                enableLoginBtn()
-            }
         }
     }
 

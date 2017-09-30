@@ -1,21 +1,18 @@
 package motocitizen.ui.fragments
 
 import android.app.Fragment
-import android.content.Context
 import android.graphics.Color
 import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.SparseArray
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TableRow
-import android.widget.TextView
-import motocitizen.main.R
 import motocitizen.datasources.preferences.Preferences
+import motocitizen.main.R
+import motocitizen.ui.rows.sound.SoundRow
 
 class SelectSoundFragment : Fragment() {
     private val ROOT_LAYOUT = R.layout.select_sound_fragment
@@ -52,7 +49,7 @@ class SelectSoundFragment : Fragment() {
             Preferences.initSound(activity)
             finish()
         }
-        selectSoundCancelButton.setOnClickListener { v -> finish() }
+        selectSoundCancelButton.setOnClickListener { finish() }
 
         drawList()
     }
@@ -74,9 +71,8 @@ class SelectSoundFragment : Fragment() {
     }
 
     private fun inflateRow(viewGroup: ViewGroup, currentPosition: Int) {
-        val li = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val tr = SoundRow(viewGroup.context, notifications.get(currentPosition).title)
 
-        val tr = li.inflate(R.layout.sound_row, viewGroup, false) as TableRow
         tr.tag = currentPosition
         tr.setOnClickListener { view ->
             val tag = view.tag as Int
@@ -91,7 +87,6 @@ class SelectSoundFragment : Fragment() {
             currentTitle = notifications.get(tag).title
         }
 
-        (tr.findViewById(R.id.sound) as TextView).text = notifications.get(currentPosition).title
         viewGroup.addView(tr)
     }
 

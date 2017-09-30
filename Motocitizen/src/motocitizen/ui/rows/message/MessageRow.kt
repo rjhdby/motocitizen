@@ -1,21 +1,23 @@
 package motocitizen.ui.rows.message
 
 import android.content.Context
-import android.view.LayoutInflater
+import android.graphics.Color
+import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import android.widget.TextView
 import motocitizen.content.message.Message
 import motocitizen.main.R
 import motocitizen.utils.timeString
+import org.jetbrains.anko.matchParent
+import org.jetbrains.anko.textView
+import org.jetbrains.anko.wrapContent
 
 abstract class MessageRow(context: Context, val message: Message, val type: Type) : FrameLayout(context) {
     enum class Type {
         FIRST, MIDDLE, LAST, ONE
     }
 
-    abstract val LAYOUT: Int
     abstract val ONE: Int
     abstract val FIRST: Int
     private val MIDDLE = R.drawable.message_row_middle
@@ -23,11 +25,22 @@ abstract class MessageRow(context: Context, val message: Message, val type: Type
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        LayoutInflater.from(context).inflate(LAYOUT, this, true)
         setBackground()
         joinRowsByOwner()
-        setUpOwnerField()
-        bindValues()
+        textView(message.ownerName()) {
+            layoutParams = LayoutParams(matchParent, wrapContent)
+            visibility = if (type == Type.FIRST || type == Type.ONE) View.VISIBLE else View.INVISIBLE
+            setTextColor(Color.parseColor(if (message.isOwner) "#00ffff" else "#ffff00"))
+        }
+        textView(String.format("%s%s \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0", if (type == Type.MIDDLE || type == Type.LAST) "" else "\n", message.text)) {
+            layoutParams = LayoutParams(wrapContent, matchParent)
+            maxLines = 10
+        }
+        textView(message.time.timeString()) {
+            layoutParams = LayoutParams(matchParent, wrapContent)
+            gravity = Gravity.END or Gravity.BOTTOM
+            setTextColor(Color.parseColor(if (message.isOwner) "#21272b" else "#21272b"))
+        }
     }
 
     private fun setBackground() {
@@ -42,21 +55,9 @@ abstract class MessageRow(context: Context, val message: Message, val type: Type
 
     private fun joinRowsByOwner() {
         if (type == Type.MIDDLE || type == Type.LAST) {
-            val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            val lp = LinearLayout.LayoutParams(matchParent, wrapContent)
             lp.topMargin = 0
             layoutParams = lp
         }
-    }
-
-    private fun bindValues() {
-        (findViewById(R.id.time) as TextView).text = message.time.timeString()
-        //todo dirty hack
-        (findViewById(R.id.text) as TextView).text = String.format("%s%s \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0", if (type == Type.MIDDLE || type == Type.LAST) "" else "\n", message.text)
-    }
-
-    private fun setUpOwnerField() {
-        val ownerView = findViewById(R.id.owner) as TextView
-        ownerView.text = message.ownerName()
-        if (type == Type.MIDDLE || type == Type.LAST) ownerView.visibility = View.INVISIBLE
     }
 }

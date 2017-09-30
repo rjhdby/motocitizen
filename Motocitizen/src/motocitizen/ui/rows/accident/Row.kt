@@ -2,15 +2,15 @@ package motocitizen.ui.rows.accident
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.text.Spanned
 import android.view.Gravity
-import android.view.LayoutInflater
+import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import android.widget.TextView
 import motocitizen.content.accident.Accident
 import motocitizen.datasources.database.StoreMessages
 import motocitizen.main.R
@@ -18,7 +18,9 @@ import motocitizen.router.Router
 import motocitizen.ui.activity.AccidentDetailsActivity
 import motocitizen.ui.popups.AccidentListPopup
 import motocitizen.utils.getIntervalFromNowInText
-import motocitizen.utils.newId
+import org.jetbrains.anko.matchParent
+import org.jetbrains.anko.textView
+import org.jetbrains.anko.wrapContent
 
 //todo refactor
 abstract class Row protected constructor(context: Context, val accident: Accident) : FrameLayout(context) {
@@ -26,13 +28,8 @@ abstract class Row protected constructor(context: Context, val accident: Acciden
     val ENDED_COLOR = 0x70FFFFFF
     val HIDDEN_COLOR = 0x30FFFFFF
     abstract val background: Int
-    abstract val LAYOUT: Int
     abstract val textColor: Int
     abstract val margins: Array<Int>
-
-    init {
-        id = newId()
-    }
 
     private fun messagesText(accident: Accident): Spanned {
         val text = formatMessagesText(accident)
@@ -42,7 +39,8 @@ abstract class Row protected constructor(context: Context, val accident: Acciden
             Html.fromHtml(text)
         }
     }
-//todo remove html
+
+    //todo remove html
     private fun formatMessagesText(accident: Accident): String {
         if (accident.messagesCount == 0) return ""
         val read = StoreMessages.getLast(accident.id)
@@ -54,34 +52,47 @@ abstract class Row protected constructor(context: Context, val accident: Acciden
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        lp.setMargins(margins[0], margins[1], margins[2], margins[3])
-        layoutParams = lp
-        LayoutInflater.from(context).inflate(LAYOUT, this, true)
+        setMargins()
         setBackgroundResource(background)
-        bindValues()
+        textView(context.resources.getString(R.string.accident_row_content, accident.title())) {
+            layoutParams = LayoutParams(matchParent, wrapContent)
+            minLines = 3
+            setTextColor(textColor)
+        }
+        textView(getIntervalFromNowInText(accident.time)) {
+            layoutParams = LayoutParams(matchParent, matchParent)
+            gravity = Gravity.END
+            typeface = Typeface.DEFAULT_BOLD
+        }
+        textView(messagesText(accident)) {
+            layoutParams = LayoutParams(matchParent, matchParent)
+            gravity = Gravity.BOTTOM or Gravity.END
+        }
         setUpListeners()
     }
 
-    private fun bindValues() {
-        (findViewById(R.id.accident_row_content) as TextView).setTextColor(textColor)
-        (findViewById(R.id.accident_row_content) as TextView).text = context.resources.getString(R.string.accident_row_content, accident.title())
-        (findViewById(R.id.accident_row_time) as TextView).text = getIntervalFromNowInText(accident.time)
-        (findViewById(R.id.accident_row_unread) as TextView).text = messagesText(accident)
+    private fun setMargins() {
+        layoutParams = LinearLayout.LayoutParams(matchParent, wrapContent)
+                .apply { setMargins(margins[0], margins[1], margins[2], margins[3]) }
     }
-//todo extract
+
+    //todo extract
     private fun setUpListeners() {
-        setOnClickListener { _ ->
-            val bundle = Bundle()
-            bundle.putInt(AccidentDetailsActivity.ACCIDENT_ID_KEY, accident.id)
-            Router.goTo(context as Activity, Router.Target.DETAILS, bundle)
-        }
-        setOnLongClickListener { v ->
-            val viewLocation = IntArray(2)
-            v.getLocationOnScreen(viewLocation)
-            AccidentListPopup(context, accident)
-                    .showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1])
-            true
-        }
+        setOnClickListener { clickListener() }
+        setOnLongClickListener { longClickListener(it) }
+    }
+
+    private fun clickListener() {
+        val bundle = Bundle()
+        bundle.putInt(AccidentDetailsActivity.ACCIDENT_ID_KEY, accident.id)
+        Router.goTo(context as Activity, Router.Target.DETAILS, bundle)
+    }
+
+    private fun longClickListener(v: View): Boolean {
+        val viewLocation = IntArray(2)
+        v.getLocationOnScreen(viewLocation)
+        AccidentListPopup(context, accident)
+                .showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1])
+        return true
     }
 }

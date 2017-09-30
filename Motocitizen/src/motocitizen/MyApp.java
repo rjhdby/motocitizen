@@ -19,6 +19,7 @@ import motocitizen.geo.MyGoogleApiClient;
 import motocitizen.geo.geocoder.MyGeoCoder;
 import motocitizen.ui.activity.AuthActivity;
 import motocitizen.user.Auth;
+import motocitizen.utils.GraphUtils;
 
 public class MyApp extends MultiDexApplication {
 
@@ -43,6 +44,7 @@ public class MyApp extends MultiDexApplication {
         super.onCreate();
         Preferences.INSTANCE.initialize(this);
         Database.INSTANCE.initialize(this);
+        GraphUtils.INSTANCE.initialize(this);
         MyGeoCoder.INSTANCE.initialize(this);
         MyGoogleApiClient.INSTANCE.initialize(this);
         FirebaseMessaging.getInstance().subscribeToTopic("accidents");

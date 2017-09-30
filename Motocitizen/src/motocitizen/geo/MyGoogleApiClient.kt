@@ -26,7 +26,7 @@ object MyGoogleApiClient {
 
     fun getLastLocation(): LatLng {
         if (client == null || !Permissions.locationEnabled) return Preferences.savedLatLng
-        return LocationServices.FusedLocationApi.getLastLocation(client).toLatLng()
+        return LocationServices.FusedLocationApi.getLastLocation(client)?.toLatLng() ?: Preferences.savedLatLng
     }
 
     fun runLocationService(locationRequest: LocationRequest, locationListener: (Location) -> Unit) {

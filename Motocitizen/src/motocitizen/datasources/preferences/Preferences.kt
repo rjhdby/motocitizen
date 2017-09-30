@@ -57,7 +57,11 @@ object Preferences {
         fun boolean(): Boolean = preferences.getBoolean(key, default as Boolean)
         fun string(): String = preferences.getString(key, default.toString())
         fun float(): Float = preferences.getFloat(key, default as Float)
-        fun int(): Int = preferences.getInt(key, default as Int)
+        fun int(): Int = try {
+            preferences.getInt(key, default as Int)
+        } catch (e: Exception) {
+            preferences.getString(key, default.toString()).toInt()
+        }
 
 //        private fun get(key:String):Any{
 //            preferences.

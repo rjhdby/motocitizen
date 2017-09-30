@@ -2,19 +2,19 @@ package motocitizen.ui.rows.volunteer
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.view.LayoutInflater
 import android.widget.TableRow
-import android.widget.TextView
 import motocitizen.content.volunteer.VolunteerAction
-import motocitizen.main.R
 import motocitizen.utils.timeString
+import org.jetbrains.anko.matchParent
+import org.jetbrains.anko.textView
 
 @SuppressLint("ViewConstructor")
-open class VolunteerRow(context: Context, volunteer: VolunteerAction) : TableRow(context) {
-    init {
-        LayoutInflater.from(context).inflate(R.layout.volunteer_row, this, true)
-        (this.findViewById(R.id.volunteer) as TextView).text = volunteer.ownerName()
-        (this.findViewById(R.id.action) as TextView).text = volunteer.status.text //todo
-        (this.findViewById(R.id.time) as TextView).text = volunteer.time.timeString()
+open class VolunteerRow(context: Context, val volunteer: VolunteerAction) : TableRow(context) {
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        layoutParams = LayoutParams(matchParent, matchParent)
+        textView(volunteer.ownerName())
+        textView(volunteer.status.text)
+        textView(volunteer.time.timeString())
     }
 }

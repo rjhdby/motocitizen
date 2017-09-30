@@ -39,7 +39,7 @@ object Auth {
 
     fun getPassHash(): String = Auth.makePassHash(Preferences.password)
 
-    private fun makePassHash(pass: String): String = md5(pass)
+    private fun makePassHash(pass: String): String = pass.md5()
 
     fun logoff() {
         User.name = ""

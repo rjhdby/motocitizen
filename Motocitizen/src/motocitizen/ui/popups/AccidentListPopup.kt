@@ -14,7 +14,7 @@ class AccidentListPopup(val context: Context, accident: Accident) : PopupWindowG
         val accText = accident.getAccidentTextToCopy()
 
         rootView.addView(copyButtonView(accText))
-        getPhonesFromText(accident.description).forEach { phone ->
+        accident.description.getPhonesFromText().forEach { phone ->
             rootView.addView(phoneButtonView(phone), layoutParams)
             rootView.addView(smsButtonView(phone), layoutParams)
         }

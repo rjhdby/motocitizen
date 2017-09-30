@@ -6,6 +6,9 @@ import android.net.Uri
 import android.os.Bundle
 import com.google.android.gms.maps.model.LatLng
 import motocitizen.ui.activity.*
+import org.jetbrains.anko.makeCall
+import org.jetbrains.anko.sendSMS
+import org.jetbrains.anko.share
 
 object Router {
     enum class Target constructor(val activity: Class<*>) {
@@ -27,23 +30,15 @@ object Router {
     }
 
     fun dial(activity: Activity, phone: String) {
-        val intent = Intent(Intent.ACTION_DIAL)
-        intent.data = Uri.parse("tel:+" + phone)
-        activity.startActivity(intent)
+        activity.makeCall(phone)
     }
 
     fun sms(activity: Activity, phone: String) {
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = Uri.parse("sms:" + phone)
-        activity.startActivity(intent)
+        activity.sendSMS(phone)
     }
 
     fun share(activity: Activity, text: String) {
-        val sendIntent = Intent()
-        sendIntent.action = Intent.ACTION_SEND
-        sendIntent.putExtra(Intent.EXTRA_TEXT, text)
-        sendIntent.type = "text/plain"
-        activity.startActivity(sendIntent)
+        activity.share(text)
     }
 
     fun toExternalMap(activity: Activity, latLng: LatLng) {

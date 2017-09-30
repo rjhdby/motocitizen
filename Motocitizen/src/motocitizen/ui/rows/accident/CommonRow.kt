@@ -6,5 +6,4 @@ import motocitizen.main.R
 
 abstract class CommonRow(context: Context, accident: Accident) : Row(context, accident) {
     override val margins = arrayOf(4, 2, 16, 2)
-    override val LAYOUT = R.layout.accident_row
 }

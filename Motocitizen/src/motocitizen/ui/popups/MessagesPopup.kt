@@ -12,7 +12,7 @@ class MessagesPopup(context: Context, id: Int) : PopupWindowGeneral(context) {
 
     init {
         rootView.addView(copyButtonView(message.owner.toString() + ": " + message.text), layoutParams)
-        getPhonesFromText(message.text).forEach { phone -> rootView.addView(phoneButtonView(phone), layoutParams) }
+        message.text.getPhonesFromText().forEach { phone -> rootView.addView(phoneButtonView(phone), layoutParams) }
         contentView = rootView
     }
 }

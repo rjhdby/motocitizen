@@ -8,9 +8,6 @@ enum class AccidentStatus constructor(val code: String, val text: String) {
 //    DUPLICATE("d", "Дубль");
 
     companion object {
-        fun parse(status: String): AccidentStatus {
-            return AccidentStatus.values().firstOrNull { it.code == status }
-                   ?: AccidentStatus.ACTIVE
-        }
+        fun parse(status: String): AccidentStatus = AccidentStatus.values().firstOrNull { it.code == status } ?: AccidentStatus.ACTIVE
     }
 }

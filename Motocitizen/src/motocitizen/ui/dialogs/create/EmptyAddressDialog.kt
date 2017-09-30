@@ -1,21 +1,31 @@
 package motocitizen.ui.dialogs.create
 
+import afterTextChanged
 import android.app.Activity
-import android.app.AlertDialog
-import android.widget.EditText
+import android.view.ViewGroup
+import android.widget.LinearLayout
 import motocitizen.main.R
+import org.jetbrains.anko.*
 
-class EmptyAddressDialog(context: Activity, successCallback: (String) -> Unit) : AlertDialog.Builder(context) {
-    private val DIALOG_LAYOUT = R.layout.dialog
+class EmptyAddressDialog(context: Activity, successCallback: (String) -> Unit) {
+    private var text = ""
 
     init {
-        setTitle(R.string.addressDialog)
-        val linearLayout = context.layoutInflater.inflate(DIALOG_LAYOUT, null)
-        setView(linearLayout)
-        val addressEditText = linearLayout.findViewById(R.id.address_edit_Text) as EditText
-        setPositiveButton("Готово", { _, _ -> successCallback(addressEditText.text.toString().trim()) })
-        setNegativeButton("Отмена", { dialog, _ -> dialog.cancel() })
-        create()
-        show()
+        context.alert {
+            title = context.resources.getString(R.string.addressDialog)
+            customView {
+                verticalLayout {
+                    layoutParams = LinearLayout.LayoutParams(matchParent, matchParent)
+                    editText {
+                        layoutParams = ViewGroup.LayoutParams(matchParent, wrapContent)
+                        afterTextChanged { this@EmptyAddressDialog.text = text.toString().trim() }
+                        hint = "Введите адрес"
+                        setEms(10)
+                    }
+                }
+            }
+            positiveButton("Готово") { _ -> successCallback(text) }
+            negativeButton("Отмена") { dialog -> dialog.cancel() }
+        }.show()
     }
 }

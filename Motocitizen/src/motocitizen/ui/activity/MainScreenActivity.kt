@@ -25,7 +25,7 @@ import motocitizen.ui.changelog.ChangeLog
 import motocitizen.ui.rows.accident.AccidentRowFactory
 import motocitizen.ui.views.BounceScrollView
 import motocitizen.user.User
-import motocitizen.utils.getWidth
+import motocitizen.utils.GraphUtils
 
 class MainScreenActivity : AppCompatActivity() {
     private val LIST: Byte = 0
@@ -136,7 +136,8 @@ class MainScreenActivity : AppCompatActivity() {
 
         map.addContent()
     }
-//todo WTF!?
+
+    //todo WTF!?
     private val accidents: Unit
         get() {
             if (inTransaction) return
@@ -154,7 +155,8 @@ class MainScreenActivity : AppCompatActivity() {
             redraw()
         }
     }
-//todo extract progressBar to separate class
+
+    //todo extract progressBar to separate class
     private fun stopRefreshAnimation() {
         setRefreshAnimation(false)
     }
@@ -210,15 +212,16 @@ class MainScreenActivity : AppCompatActivity() {
         currentScreen = target
         toAccListButton.alpha = if (target == LIST) 1f else 0.3f
         toMapButton.alpha = if (target == MAP) 1f else 0.3f
-        accListView.animate().translationX((if (target == LIST) 0 else -getWidth(this) * 2).toFloat())
-        mapContainer.animate().translationX((if (target == MAP) 0 else getWidth(this) * 2).toFloat())
+        accListView.animate().translationX((if (target == LIST) 0 else -GraphUtils.displayWidth * 2).toFloat())
+        mapContainer.animate().translationX((if (target == MAP) 0 else GraphUtils.displayWidth * 2).toFloat())
     }
 
     private fun toMap(id: Int) {
         showMapFrame()
         map.jumpToPoint(Content.accident(id).coordinates)
     }
-//todo refactor
+
+    //todo refactor
     private fun updateStatusBar(latLng: LatLng) {
         var address = MyLocationManager.getAddress(latLng)
         var subTitle = ""

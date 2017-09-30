@@ -3,7 +3,8 @@ repositories {
     jcenter()
 }
 buildscript {
-    ext.kotlin_version = '1.1.4-3'
+    ext.kotlin_version = '1.1.51'
+    ext.anko_version = '0.10.1'
     ext.google_services = '10.2.4'
     ext.google_support = '25.3.1'
     ext.okhttp = '3.7.0'
@@ -85,6 +86,8 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
 
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compile "org.jetbrains.anko:anko:$anko_version"
+    compile "org.jetbrains.anko:anko-commons:$anko_version"
 
     compile "com.squareup.okhttp3:okhttp:$okhttp"
     compile "com.squareup.okhttp3:logging-interceptor:$okhttp"
