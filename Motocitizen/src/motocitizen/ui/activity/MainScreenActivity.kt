@@ -26,19 +26,19 @@ import motocitizen.ui.rows.accident.AccidentRowFactory
 import motocitizen.ui.views.BounceScrollView
 import motocitizen.user.User
 import motocitizen.utils.GraphUtils
+import motocitizen.utils.bindView
 
 class MainScreenActivity : AppCompatActivity() {
     private val LIST: Byte = 0
     private val MAP: Byte = 1
-    private lateinit var actionBar: ActionBar
 
-    private lateinit var mapContainer: ViewGroup
-    private lateinit var createAccButton: ImageButton
-    private lateinit var toAccListButton: ImageButton
-    private lateinit var toMapButton: ImageButton
-    private lateinit var accListView: View
-    private lateinit var progressBar: ProgressBar
-    private lateinit var listContent: ViewGroup
+    private val mapContainer: ViewGroup by bindView(R.id.google_map)
+    private val createAccButton: ImageButton by bindView(R.id.add_point_button)
+    private val toAccListButton: ImageButton by bindView(R.id.list_button)
+    private val toMapButton: ImageButton by bindView(R.id.map_button)
+    private val accListView: View by bindView(R.id.acc_list)
+    private val progressBar: ProgressBar by bindView(R.id.progressBar)
+    private val listContent: ViewGroup by bindView(R.id.accListContent)
 
     private var refreshItem: MenuItem? = null
     private lateinit var map: MainMapManager
@@ -48,7 +48,6 @@ class MainScreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_screen_activity)
-        actionBar = supportActionBar!!  //todo NPE
         map = MainMapManager(this)
     }
 
@@ -59,7 +58,6 @@ class MainScreenActivity : AppCompatActivity() {
         MyLocationManager.subscribeToLocationUpdate("MAIN", this::updateStatusBar)
         disableDialOnTablets()
 
-        bindViews()
         setUpListeners()
 
         setPermissions()
@@ -93,16 +91,6 @@ class MainScreenActivity : AppCompatActivity() {
         toMapButton.setOnClickListener { showMapFrame() }
         findViewById(R.id.dial_button).setOnClickListener { Router.dial(this, getString(R.string.phone)) }
         (findViewById(R.id.accListRefresh) as BounceScrollView).setOverScrollListener { accidents }
-    }
-
-    private fun bindViews() {
-        accListView = findViewById(R.id.acc_list)
-        progressBar = findViewById(R.id.progressBar) as ProgressBar
-        mapContainer = findViewById(R.id.google_map) as ViewGroup
-        createAccButton = findViewById(R.id.add_point_button) as ImageButton
-        toAccListButton = findViewById(R.id.list_button) as ImageButton
-        toMapButton = findViewById(R.id.map_button) as ImageButton
-        listContent = findViewById(R.id.accListContent) as ViewGroup
     }
 
     override fun onPause() {
@@ -234,7 +222,7 @@ class MainScreenActivity : AppCompatActivity() {
             address = address.substring(0, Math.max(commaPos, spacePos))
         }
 
-        actionBar.title = address
-        if (!subTitle.isEmpty()) actionBar.subtitle = subTitle
+        actionBar?.title = address
+        if (!subTitle.isEmpty()) actionBar?.subtitle = subTitle
     }
 }

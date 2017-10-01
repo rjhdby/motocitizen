@@ -13,6 +13,7 @@ import android.widget.Button
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.main.R
 import motocitizen.ui.rows.sound.SoundRow
+import motocitizen.utils.bindView
 
 class SelectSoundFragment : Fragment() {
     private val ROOT_LAYOUT = R.layout.select_sound_fragment
@@ -22,7 +23,7 @@ class SelectSoundFragment : Fragment() {
     private val CANCEL_BUTTON = R.id.select_sound_cancel_button
 
     private var notifications: SparseArray<Sound> = SparseArray()
-    private lateinit var ringtoneList: ViewGroup
+    private val ringtoneList: ViewGroup by bindView(CONTENT_VIEW)
     private var currentId = 0
     private var currentUri = Preferences.sound
     private var currentTitle = Preferences.soundTitle
@@ -37,7 +38,6 @@ class SelectSoundFragment : Fragment() {
         activity.findViewById(ROOT_VIEW).visibility = View.VISIBLE
         if (notifications.size() == 0) getSystemSounds()
 
-        ringtoneList = activity.findViewById(CONTENT_VIEW) as ViewGroup
         val selectSoundConfirmButton = activity.findViewById(SAVE_BUTTON) as Button
         val selectSoundCancelButton = activity.findViewById(CANCEL_BUTTON) as Button
 

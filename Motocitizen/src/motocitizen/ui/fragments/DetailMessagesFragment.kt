@@ -17,7 +17,7 @@ import motocitizen.datasources.network.ApiResponse
 import motocitizen.datasources.network.requests.SendMessageRequest
 import motocitizen.main.R
 import motocitizen.ui.activity.AccidentDetailsActivity
-import motocitizen.ui.activity.AccidentDetailsActivity.ACCIDENT_ID_KEY
+import motocitizen.ui.activity.AccidentDetailsActivity.Companion.ACCIDENT_ID_KEY
 import motocitizen.ui.popups.MessagesPopup
 import motocitizen.ui.rows.message.MessageRowFactory
 import motocitizen.user.User
@@ -33,8 +33,8 @@ class DetailMessagesFragment() : Fragment() {
     private val SCROLL_VIEW = R.id.activity__details_messages_scroll
 
     private lateinit var rootView: View
-    private lateinit var scrollView: ScrollView
-    private lateinit var messagesView: ViewGroup
+    private val scrollView: ScrollView by lazy { rootView.findViewById(SCROLL_VIEW) as ScrollView }
+    private val messagesView: ViewGroup by lazy { rootView.findViewById(MESSAGES_VIEW) as ViewGroup }
     private lateinit var accident: Accident
 
     constructor(accident: Accident) : this() {
@@ -43,8 +43,6 @@ class DetailMessagesFragment() : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         rootView = inflater.inflate(ROOT_LAYOUT, container, false)
-        messagesView = rootView.findViewById(MESSAGES_VIEW) as ViewGroup
-        scrollView = rootView.findViewById(SCROLL_VIEW) as ScrollView
 
         setupNewMessageForm()
 

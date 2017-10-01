@@ -16,6 +16,7 @@ import motocitizen.dictionary.Type
 import motocitizen.geo.geolocation.MyLocationManager
 import motocitizen.main.R
 import motocitizen.router.Router
+import motocitizen.ui.activity.AccidentDetailsActivity
 import motocitizen.utils.DEFAULT_ZOOM
 import motocitizen.utils.accidentMarker
 import java.util.*
@@ -45,7 +46,7 @@ class MainMapManager(val fragment: FragmentActivity) {
         runDelayedJobs()
     }
 
-    private fun runDelayedJobs(){
+    private fun runDelayedJobs() {
         delayedAction.forEach { it() }
         delayedAction.clear()
     }
@@ -106,7 +107,7 @@ class MainMapManager(val fragment: FragmentActivity) {
 
     private fun toDetails(context: Context, id: Int) {
         val bundle = Bundle()
-        bundle.putInt("accidentID", id)
+        bundle.putInt(AccidentDetailsActivity.ACCIDENT_ID_KEY, id)
         Router.goTo(context as Activity, Router.Target.DETAILS, bundle)
     }
 }

@@ -8,5 +8,5 @@ import motocitizen.user.User
 import java.util.*
 
 class OwnedEndedAccident(id: Int, type: Type, damage: Medicine, time: Date, location: AccidentLocation) : Accident(id, type, damage, time, location, User.id) {
-    override val status = AccidentStatus.ENDED
+    override var status = AccidentStatus.ENDED
 }

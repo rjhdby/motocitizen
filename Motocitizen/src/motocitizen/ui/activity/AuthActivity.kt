@@ -4,8 +4,6 @@ import afterTextChanged
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.text.Editable
-import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
 import android.view.View
 import android.widget.*
@@ -23,17 +21,17 @@ import motocitizen.main.R
 import motocitizen.router.Router
 import motocitizen.user.Auth
 import motocitizen.user.User
+import motocitizen.utils.bindView
 import motocitizen.utils.show
 
 class AuthActivity : AppCompatActivity() {
-
-    private lateinit var logoutBtn: Button
-    private lateinit var loginBtn: Button
-    private lateinit var cancelBtn: Button
-    private lateinit var loginVK: Button
-    private lateinit var login: EditText
-    private lateinit var password: EditText
-    private lateinit var anonymous: CheckBox
+    private val logoutBtn: Button by bindView(R.id.logout_button)
+    private val loginBtn: Button by bindView(R.id.login_button)
+    private val cancelBtn: Button by bindView(R.id.cancel_button)
+    private val loginVK: Button by bindView(R.id.vk)
+    private val login: EditText by bindView(R.id.auth_login)
+    private val password: EditText by bindView(R.id.auth_password)
+    private val anonymous: CheckBox by bindView(R.id.auth_anonim)
 
     private fun enableLoginBtn() {
         val logPasReady = login.text.toString().isNotEmpty() && password.text.toString().isNotEmpty()
@@ -61,7 +59,6 @@ class AuthActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.auth)
-        bindViews()
         setUpListeners()
 //todo ???
         if (User.isAuthorized) {
@@ -72,16 +69,6 @@ class AuthActivity : AppCompatActivity() {
 
         (findViewById(R.id.auth_error_text) as TextView).movementMethod = LinkMovementMethod.getInstance()
         fillCtrls()
-    }
-
-    private fun bindViews() {
-        login = findViewById(R.id.auth_login) as EditText
-        password = findViewById(R.id.auth_password) as EditText
-        anonymous = findViewById(R.id.auth_anonim) as CheckBox
-        cancelBtn = findViewById(R.id.cancel_button) as Button
-        logoutBtn = findViewById(R.id.logout_button) as Button
-        loginBtn = findViewById(R.id.login_button) as Button
-        loginVK = findViewById(R.id.vk) as Button
     }
 
     private fun setUpListeners() {

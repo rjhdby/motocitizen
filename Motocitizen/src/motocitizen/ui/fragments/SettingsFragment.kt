@@ -1,35 +1,32 @@
 package motocitizen.ui.fragments
 
 import android.preference.Preference
-import android.preference.Preference.OnPreferenceChangeListener
 import android.preference.PreferenceFragment
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.datasources.preferences.Preferences.Stored.*
 import motocitizen.main.R
 import motocitizen.router.Router
 import motocitizen.user.User
-import motocitizen.utils.EQUATOR
-import motocitizen.utils.preferenceByName
-import motocitizen.utils.show
+import motocitizen.utils.*
 
 class SettingsFragment : PreferenceFragment() {
     private val PREFERENCES = R.xml.preferences
 
-    private lateinit var notificationDistPreference: Preference
-    private lateinit var notificationAlarmPreference: Preference
     private val preferences = Preferences
 
-    private lateinit var buttonAuth: Preference
-    private lateinit var buttonSound: Preference
-    private lateinit var showAcc: Preference
-    private lateinit var showBreak: Preference
-    private lateinit var showSteal: Preference
-    private lateinit var showOther: Preference
-    private lateinit var hoursAgo: Preference
-    private lateinit var maxNotifications: Preference
-    private lateinit var useVibration: Preference
-    private lateinit var notificationSoundPreference: Preference
-    private lateinit var authPreference: Preference
+    private val notificationDistPreference: Preference by lazy { preferenceByName("distanceShow") }
+    private val notificationAlarmPreference: Preference by lazy { preferenceByName("distanceAlarm") }
+    private val buttonAuth: Preference by lazy { findPreference(resources.getString(R.string.settings_auth_button)) }
+    private val buttonSound: Preference by lazy { findPreference(resources.getString(R.string.notification_sound)) }
+    private val showAcc: Preference by lazy { preferenceByName("showAcc") }
+    private val showBreak: Preference by lazy { preferenceByName("showBreak") }
+    private val showSteal: Preference by lazy { preferenceByName("showSteal") }
+    private val showOther: Preference by lazy { preferenceByName("showOther") }
+    private val hoursAgo: Preference by lazy { preferenceByName("hoursAgo") }
+    private val maxNotifications: Preference by lazy { preferenceByName("maxNotifications") }
+    private val useVibration: Preference by lazy { preferenceByName("useVibration") }
+    private val notificationSoundPreference: Preference by lazy { findPreference(resources.getString(R.string.notification_sound)) }
+    private val authPreference: Preference by lazy { findPreference(resources.getString(R.string.settings_auth_button)) }
 
     private var login = preferences.login
 
@@ -37,7 +34,6 @@ class SettingsFragment : PreferenceFragment() {
         super.onResume()
         preferenceScreen = null
         addPreferencesFromResource(PREFERENCES)
-        bindPreferences()
         setUpListeners()
         update()
     }
@@ -52,17 +48,18 @@ class SettingsFragment : PreferenceFragment() {
     }
 
     private fun setUpListeners() {
-        notificationDistPreference.onPreferenceChangeListener = OnPreferenceChangeListener(this::distanceListener)
-        notificationAlarmPreference.onPreferenceChangeListener = OnPreferenceChangeListener(this::distanceListener)
-        maxNotifications.onPreferenceChangeListener = OnPreferenceChangeListener(this::maxNotificationsListener)
-        hoursAgo.onPreferenceChangeListener = OnPreferenceChangeListener(this::hoursAgoListener)
-        useVibration.onPreferenceChangeListener = OnPreferenceChangeListener { _, newValue -> this.vibrationListener(newValue) }
-        buttonSound.onPreferenceClickListener = Preference.OnPreferenceClickListener { this.soundButtonPressed() }
-        buttonAuth.onPreferenceClickListener = Preference.OnPreferenceClickListener { this.authButtonPressed() }
-        showAcc.onPreferenceChangeListener = OnPreferenceChangeListener(this::visibleListener)
-        showBreak.onPreferenceChangeListener = OnPreferenceChangeListener(this::visibleListener)
-        showSteal.onPreferenceChangeListener = OnPreferenceChangeListener(this::visibleListener)
-        showOther.onPreferenceChangeListener = OnPreferenceChangeListener(this::visibleListener)
+        buttonSound.onClickListener { this.soundButtonPressed() }
+        buttonAuth.onClickListener { this.authButtonPressed() }
+
+        notificationDistPreference.onChangeListener(this::distanceListener)
+        notificationAlarmPreference.onChangeListener(this::distanceListener)
+        maxNotifications.onChangeListener(this::maxNotificationsListener)
+        hoursAgo.onChangeListener(this::hoursAgoListener)
+        useVibration.onChangeListener { _, newValue -> this.vibrationListener(newValue) }
+        showAcc.onChangeListener(this::visibleListener)
+        showBreak.onChangeListener(this::visibleListener)
+        showSteal.onChangeListener(this::visibleListener)
+        showOther.onChangeListener(this::visibleListener)
     }
 
     private fun maxNotificationsListener(preference: Preference, newValue: Any): Boolean {
@@ -90,22 +87,6 @@ class SettingsFragment : PreferenceFragment() {
     private fun soundButtonPressed(): Boolean {
         fragmentManager.beginTransaction().replace(android.R.id.content, SelectSoundFragment()).commit()
         return true
-    }
-
-    private fun bindPreferences() {
-        notificationDistPreference = preferenceByName("distanceShow")
-        notificationAlarmPreference = preferenceByName("distanceAlarm")
-        showAcc = preferenceByName("showAcc")
-        showBreak = preferenceByName("showBreak")
-        showSteal = preferenceByName("showSteal")
-        showOther = preferenceByName("showOther")
-        hoursAgo = preferenceByName("hoursAgo")
-        maxNotifications = preferenceByName("maxNotifications")
-        useVibration = preferenceByName("useVibration")
-        buttonAuth = findPreference(resources.getString(R.string.settings_auth_button))
-        buttonSound = findPreference(resources.getString(R.string.notification_sound))
-        notificationSoundPreference = findPreference(resources.getString(R.string.notification_sound))
-        authPreference = findPreference(resources.getString(R.string.settings_auth_button))
     }
 
     private fun distanceListener(preference: Preference, newValue: Any): Boolean {

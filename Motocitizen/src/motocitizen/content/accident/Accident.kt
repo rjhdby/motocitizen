@@ -21,7 +21,7 @@ import kotlin.collections.ArrayList
 
 //todo simplify constructor
 abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val time: Date, var location: AccidentLocation, val owner: Int) {
-    abstract val status: AccidentStatus
+    abstract var status: AccidentStatus
     val volunteers = ArrayList<VolunteerAction>()
     val history = ArrayList<History>()
     var messagesCount = 0

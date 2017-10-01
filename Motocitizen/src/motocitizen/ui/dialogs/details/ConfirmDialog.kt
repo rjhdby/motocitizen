@@ -7,16 +7,12 @@ import android.app.DialogFragment
 import android.content.res.Resources
 import android.os.Bundle
 
-class ConfirmDialog() : DialogFragment() {
+class ConfirmDialog(val title: String) : DialogFragment() {
     private val YES_STRING = android.R.string.yes
     private val NO_STRING = android.R.string.no
     private val ICON = android.R.drawable.ic_dialog_alert
 
-    private lateinit var title: String
-
-    constructor(title: String) : this() {
-        this.title = title
-    }
+    constructor() : this("")
 
     override fun onCreateDialog(savedInstanceState: Bundle): Dialog {
         val dialog = AlertDialog.Builder(activity)

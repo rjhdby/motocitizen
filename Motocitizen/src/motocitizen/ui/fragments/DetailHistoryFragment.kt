@@ -9,14 +9,14 @@ import android.widget.LinearLayout
 import motocitizen.content.Content
 import motocitizen.content.accident.Accident
 import motocitizen.main.R
-import motocitizen.ui.activity.AccidentDetailsActivity.ACCIDENT_ID_KEY
+import motocitizen.ui.activity.AccidentDetailsActivity.Companion.ACCIDENT_ID_KEY
 import motocitizen.ui.rows.history.HistoryRowFactory
-
 
 class DetailHistoryFragment() : Fragment() {
     private val ROOT_LAYOUT = R.layout.fragment_detail_history
     private val CONTENT_VIEW = R.id.details_log_content
-    private lateinit var logContent: LinearLayout
+    private lateinit var rootView: View
+    private val logContent: LinearLayout by lazy { rootView.findViewById(CONTENT_VIEW) as LinearLayout }
     private lateinit var accident: Accident
 
     constructor(accident: Accident) : this() {
@@ -24,9 +24,7 @@ class DetailHistoryFragment() : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(ROOT_LAYOUT, container, false)
-        logContent = rootView.findViewById(CONTENT_VIEW) as LinearLayout
-
+        rootView = inflater.inflate(ROOT_LAYOUT, container, false)
         redrawHistory()
         return rootView
     }

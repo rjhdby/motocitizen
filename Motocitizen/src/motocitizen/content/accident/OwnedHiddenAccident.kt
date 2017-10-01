@@ -8,5 +8,5 @@ import motocitizen.user.User
 import java.util.*
 
 class OwnedHiddenAccident(id: Int, type: Type, damage: Medicine, time: Date, location: AccidentLocation) : Accident(id, type, damage, time, location, User.id) {
-    override val status = AccidentStatus.HIDDEN
+    override var status = AccidentStatus.HIDDEN
 }

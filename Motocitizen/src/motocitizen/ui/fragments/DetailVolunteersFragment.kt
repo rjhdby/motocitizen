@@ -15,7 +15,7 @@ import motocitizen.datasources.network.requests.OnWayRequest
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.main.R
 import motocitizen.ui.activity.AccidentDetailsActivity
-import motocitizen.ui.activity.AccidentDetailsActivity.ACCIDENT_ID_KEY
+import motocitizen.ui.activity.AccidentDetailsActivity.Companion.ACCIDENT_ID_KEY
 import motocitizen.ui.dialogs.details.ConfirmDialog
 import motocitizen.ui.rows.volunteer.VolunteerRowFactory
 import motocitizen.user.User
@@ -32,10 +32,11 @@ class DetailVolunteersFragment() : Fragment() {
     private val DIALOG_ON_WAY_CONFIRM = 1
     private val DIALOG_CANCEL_ON_WAY_CONFIRM = 2
 
-    private lateinit var confirmButton: ImageButton
-    private lateinit var cancelButton: ImageButton
-    private lateinit var disabledButton: ImageButton
-    private lateinit var content: ViewGroup
+    private lateinit var rootView: View
+    private val confirmButton: ImageButton by lazy { rootView.findViewById(CONFIRM_BUTTON) as ImageButton }
+    private val cancelButton: ImageButton by lazy { rootView.findViewById(CANCEL_BUTTON) as ImageButton }
+    private val disabledButton: ImageButton by lazy { rootView.findViewById(DISABLED_BUTTON) as ImageButton }
+    private val content: ViewGroup by lazy { rootView.findViewById(CONTENT_VIEW) as ViewGroup }
 
     private lateinit var accident: Accident
 
@@ -44,13 +45,9 @@ class DetailVolunteersFragment() : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(ROOT_LAYOUT, container, false)
+        rootView = inflater.inflate(ROOT_LAYOUT, container, false)
 
         val toMapButton = rootView.findViewById(TO_MAP_BUTTON)
-        confirmButton = rootView.findViewById(CONFIRM_BUTTON) as ImageButton
-        cancelButton = rootView.findViewById(CANCEL_BUTTON) as ImageButton
-        disabledButton = rootView.findViewById(DISABLED_BUTTON) as ImageButton
-        content = rootView.findViewById(CONTENT_VIEW) as ViewGroup
 
         disabledButton.isEnabled = false
 
