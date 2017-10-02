@@ -17,6 +17,7 @@ import motocitizen.main.R
 import motocitizen.router.Router
 import motocitizen.ui.activity.AccidentDetailsActivity
 import motocitizen.ui.popups.AccidentListPopup
+import motocitizen.utils.MarginArray
 import motocitizen.utils.getIntervalFromNowInText
 import org.jetbrains.anko.matchParent
 import org.jetbrains.anko.textView
@@ -24,12 +25,12 @@ import org.jetbrains.anko.wrapContent
 
 //todo refactor
 abstract class Row protected constructor(context: Context, val accident: Accident) : FrameLayout(context) {
-    val ACTIVE_COLOR = 0x70FFFFFF
-    val ENDED_COLOR = 0x70FFFFFF
-    val HIDDEN_COLOR = 0x30FFFFFF
+    private val ACTIVE_COLOR = 0x70FFFFFF
+    private val ENDED_COLOR = 0x70FFFFFF
+    private val HIDDEN_COLOR = 0x30FFFFFF
     abstract val background: Int
     abstract val textColor: Int
-    abstract val margins: Array<Int>
+    abstract val margins: MarginArray
 
     private fun messagesText(accident: Accident): Spanned {
         val text = formatMessagesText(accident)
