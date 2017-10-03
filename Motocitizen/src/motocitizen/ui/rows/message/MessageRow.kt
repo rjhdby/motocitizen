@@ -39,7 +39,7 @@ abstract class MessageRow(context: Context, val message: Message, val type: Type
         textView(message.time.timeString()) {
             layoutParams = LayoutParams(matchParent, wrapContent)
             gravity = Gravity.END or Gravity.BOTTOM
-            setTextColor(Color.parseColor(if (message.isOwner) "#21272b" else "#21272b"))
+            setTextColor(Color.parseColor(if (message.isOwner) "#21272b" else "#21272b")) //todo 0xff21272b.toInt()
         }
     }
 

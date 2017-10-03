@@ -18,7 +18,7 @@ import motocitizen.datasources.network.requests.SendMessageRequest
 import motocitizen.main.R
 import motocitizen.ui.activity.AccidentDetailsActivity
 import motocitizen.ui.activity.AccidentDetailsActivity.Companion.ACCIDENT_ID_KEY
-import motocitizen.ui.popups.MessagesPopup
+import motocitizen.ui.menus.MessageContextMenu
 import motocitizen.ui.rows.message.MessageRowFactory
 import motocitizen.user.User
 import motocitizen.utils.show
@@ -138,7 +138,7 @@ class DetailMessagesFragment() : Fragment() {
     private inner class MessageRowLongClickListener internal constructor(private val message: Message) : View.OnLongClickListener {
 
         override fun onLongClick(view: View): Boolean {
-            val popupWindow: PopupWindow = MessagesPopup(activity, message.id)
+            val popupWindow: PopupWindow = MessageContextMenu(activity, message)
             val viewLocation = IntArray(2)
             view.getLocationOnScreen(viewLocation)
             popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1])

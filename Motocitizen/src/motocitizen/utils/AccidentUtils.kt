@@ -19,3 +19,9 @@ fun Accident.getAccidentTextToCopy(): String {
     res.append(this.description).append(".")
     return res.toString()
 }
+
+val Accident.latitude
+    get() = coordinates.latitude
+
+val Accident.longitude
+    get() = coordinates.longitude

@@ -23,8 +23,8 @@ import motocitizen.ui.fragments.DetailHistoryFragment
 import motocitizen.ui.fragments.DetailMessagesFragment
 import motocitizen.ui.fragments.DetailVolunteersFragment
 import motocitizen.ui.frames.create.DetailsSummaryFrame
+import motocitizen.ui.menus.AccidentContextMenu
 import motocitizen.ui.menus.DetailsMenuController
-import motocitizen.ui.popups.AccidentListPopup
 import motocitizen.utils.bindView
 import org.jetbrains.anko.startActivity
 
@@ -84,7 +84,7 @@ class AccidentDetailsActivity : AppCompatActivity() {
         super.onResume()
         findViewById(GENERAL_INFORMATION_VIEW).setOnLongClickListener { v ->
             val popupWindow: PopupWindow
-            popupWindow = AccidentListPopup(this@AccidentDetailsActivity, accident)
+            popupWindow = AccidentContextMenu(this@AccidentDetailsActivity, accident)
             val viewLocation = IntArray(2)
             v.getLocationOnScreen(viewLocation)
             popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1])

@@ -16,7 +16,7 @@ import motocitizen.datasources.database.StoreMessages
 import motocitizen.main.R
 import motocitizen.router.Router
 import motocitizen.ui.activity.AccidentDetailsActivity
-import motocitizen.ui.popups.AccidentListPopup
+import motocitizen.ui.menus.AccidentContextMenu
 import motocitizen.utils.MarginArray
 import motocitizen.utils.getIntervalFromNowInText
 import org.jetbrains.anko.matchParent
@@ -25,9 +25,9 @@ import org.jetbrains.anko.wrapContent
 
 //todo refactor
 abstract class Row protected constructor(context: Context, val accident: Accident) : FrameLayout(context) {
-    private val ACTIVE_COLOR = 0x70FFFFFF
-    private val ENDED_COLOR = 0x70FFFFFF
-    private val HIDDEN_COLOR = 0x30FFFFFF
+    val ACTIVE_COLOR = 0x70FFFFFF
+    val ENDED_COLOR = 0x70FFFFFF
+    val HIDDEN_COLOR = 0x30FFFFFF
     abstract val background: Int
     abstract val textColor: Int
     abstract val margins: MarginArray
@@ -92,7 +92,7 @@ abstract class Row protected constructor(context: Context, val accident: Acciden
     private fun longClickListener(v: View): Boolean {
         val viewLocation = IntArray(2)
         v.getLocationOnScreen(viewLocation)
-        AccidentListPopup(context, accident)
+        AccidentContextMenu(context, accident)
                 .showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1])
         return true
     }
