@@ -28,5 +28,5 @@ abstract class ContextMenu(val context: Context) : PopupWindow() {
         }))
     }
 
-    fun addButton(name: Int, callback: () -> Unit) = addButton(context.getString(name), callback)
+    fun addButton(resource: Int, callback: () -> Unit) = addButton(context.getString(resource), callback)
 }
