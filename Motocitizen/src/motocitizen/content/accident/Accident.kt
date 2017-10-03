@@ -40,11 +40,11 @@ abstract class Accident(val id: Int, var type: Type, var medicine: Medicine, val
 
     fun ownerName() = Content.volunteerName(owner)
 
-    fun distanceString(): String = distanceString(coordinates)
+    fun distanceString(): String = coordinates.distanceString()
 
     fun isVisible(): Boolean {
         val visible = User.isModerator || status != HIDDEN
-        val distanceFilter = metersFromUser(coordinates) < VISIBLE_DISTANCE.int() * 1000
+        val distanceFilter = coordinates.metersFromUser() < VISIBLE_DISTANCE.int() * 1000
         val settingsFilter = Preferences.isEnabled(type)
         val timeFilter = time.time + HOURS_AGO.int().toLong() * MS_IN_HOUR > Date().time
         return visible && distanceFilter && settingsFilter && timeFilter

@@ -11,12 +11,12 @@ fun Date.timeString(): String = SimpleDateFormat("HH:mm", Locale.getDefault()).f
 
 fun Date.dateTimeString(): String = SimpleDateFormat("dd.MM.yy HH:mm", Locale.getDefault()).format(this)
 
-fun getIntervalFromNowInText(date: Date): String {
-    val minutes = ((Date().time - date.time) / 60000).toInt()
+fun Date.getIntervalFromNowInText(): String {
+    val minutes = ((Date().time - time) / 60000).toInt()
     if (minutes == 0) return "Только что"
     return String.format("%dч %dм", minutes / 60, minutes % 60)
-    //context.getString(R.string.time_interval_short, minutes / 60, minutes % 60)
 }
 
-fun DateFromSeconds(seconds: Long) = Date(seconds * 1000)
 fun Date.seconds() = this.time / 1000
+
+fun dateFromSeconds(seconds: Long) = Date(seconds * 1000)

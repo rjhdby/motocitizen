@@ -35,7 +35,8 @@ class CreateAccidentMap(val fragment: FragmentActivity) {
     init {
         val mapFragment = fragment.supportFragmentManager.findFragmentById(MAP_CONTAINER) as SupportMapFragment
         mapFragment.getMapAsync(this::mapReadyCallback)
-        fragment.findViewById(R.id.SEARCH).setOnClickListener({ fromAddress(searchEditText.text.toString(), this::searchCallback) })
+        fragment.findViewById(R.id.SEARCH)
+                .setOnClickListener({ searchEditText.text.toString().requestLatLngFromAddress { searchCallback(it) } })
     }
 
     private fun mapReadyCallback(googleMap: GoogleMap) {

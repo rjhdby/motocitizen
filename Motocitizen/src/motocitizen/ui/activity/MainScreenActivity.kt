@@ -3,7 +3,6 @@ package motocitizen.ui.activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -25,8 +24,8 @@ import motocitizen.ui.changelog.ChangeLog
 import motocitizen.ui.rows.accident.AccidentRowFactory
 import motocitizen.ui.views.BounceScrollView
 import motocitizen.user.User
-import motocitizen.utils.GraphUtils
 import motocitizen.utils.bindView
+import motocitizen.utils.displayWidth
 
 class MainScreenActivity : AppCompatActivity() {
     private val LIST: Byte = 0
@@ -200,8 +199,8 @@ class MainScreenActivity : AppCompatActivity() {
         currentScreen = target
         toAccListButton.alpha = if (target == LIST) 1f else 0.3f
         toMapButton.alpha = if (target == MAP) 1f else 0.3f
-        accListView.animate().translationX((if (target == LIST) 0 else -GraphUtils.displayWidth * 2).toFloat())
-        mapContainer.animate().translationX((if (target == MAP) 0 else GraphUtils.displayWidth * 2).toFloat())
+        accListView.animate().translationX((if (target == LIST) 0 else -displayWidth() * 2).toFloat())
+        mapContainer.animate().translationX((if (target == MAP) 0 else displayWidth() * 2).toFloat())
     }
 
     private fun toMap(id: Int) {

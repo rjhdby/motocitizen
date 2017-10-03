@@ -60,7 +60,7 @@ abstract class Row protected constructor(context: Context, val accident: Acciden
             minLines = 3
             setTextColor(textColor)
         }
-        textView(getIntervalFromNowInText(accident.time)) {
+        textView(accident.time.getIntervalFromNowInText()) {
             layoutParams = LayoutParams(matchParent, matchParent)
             gravity = Gravity.END
             typeface = Typeface.DEFAULT_BOLD

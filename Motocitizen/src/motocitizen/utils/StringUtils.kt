@@ -19,11 +19,8 @@ fun String.getPhonesFromText(): List<String> {
 fun String.md5(): String {
     val sb = StringBuilder()
     val md = MessageDigest.getInstance("MD5")
-    md.update(this.toByteArray())
-    val digest = md.digest()
-    for (b in digest) {
-        sb.append(String.format("%02x", b and 0xff.toByte()))
-    }
+    md.update(toByteArray())
+    md.digest().forEach { sb.append(String.format("%02x", it and 0xff.toByte())) }
 
     return sb.toString()
 }

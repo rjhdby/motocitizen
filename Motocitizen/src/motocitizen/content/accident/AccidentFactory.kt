@@ -5,7 +5,7 @@ import motocitizen.dictionary.AccidentStatus
 import motocitizen.dictionary.Medicine
 import motocitizen.dictionary.Type
 import motocitizen.geo.geocoder.AccidentLocation
-import motocitizen.utils.DateFromSeconds
+import motocitizen.utils.dateFromSeconds
 import org.json.JSONObject
 
 object AccidentFactory {
@@ -14,7 +14,7 @@ object AccidentFactory {
             .status(AccidentStatus.parse(json.getString("s")))
             .type(Type.parse(json.getString("t")))
             .medicine(Medicine.parse(json.getString("m")))
-            .time(DateFromSeconds(json.getLong("ut")))
+            .time(dateFromSeconds(json.getLong("ut")))
             .location(makeLocation(json))
             .owner(json.getInt("o"))
             .description(json.getString("d"))

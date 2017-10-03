@@ -14,30 +14,30 @@ import java.io.IOException
 
 val EQUATOR = 20038
 
-fun Location.toLatLng(): LatLng = LatLng(this.latitude, this.longitude)
+fun Location.toLatLng(): LatLng = LatLng(latitude, longitude)
 
 fun LatLng.distanceTo(latLng: LatLng): Float = distanceTo(latLng.toLocation())
 
-fun LatLng.distanceTo(location: Location): Float = this.toLocation().distanceTo(location)
+fun LatLng.distanceTo(location: Location): Float = toLocation().distanceTo(location)
 
 fun LatLng.toLocation(): Location {
     val location = Location(LocationManager.GPS_PROVIDER)
-    location.latitude = this.latitude
-    location.longitude = this.longitude
+    location.latitude = latitude
+    location.longitude = longitude
     return location
 }
 
 //todo smell
-fun fromAddress(name: String, callback: (LatLng?) -> Unit) {
+fun String.requestLatLngFromAddress(callback: (LatLng?) -> Unit) {
     try {
-        val address = MyGeoCoder.getFromLocationName(name)
+        val address = MyGeoCoder.getFromLocationName(this)
         if (address != null) {
-            callback(LatLng(address.latitude, address.longitude))
+            callback(address.latLng)
             return
         }
     } catch (e: IOException) {
     }
-    GeoCoderRequest(name, callback = { response ->
+    GeoCoderRequest(this, { response ->
         try {
             callback(LatLng(response.resultObject.getDouble("lat"), response.resultObject.getDouble("lng")))
         } catch (e: JSONException) {
@@ -46,18 +46,16 @@ fun fromAddress(name: String, callback: (LatLng?) -> Unit) {
     })
 }
 
-fun distanceString(latLng: LatLng): String {
-    val meters = metersFromUser(latLng)
+fun LatLng.distanceString(): String {
+    val meters = metersFromUser()
     return if (meters > 1000) {
-        m2km(meters).toString() + "км"
+        meters.toKilometers().toString() + "км"
     } else {
         meters.toString() + "м"
     }
 }
 
-fun m2km(meters: Int): Float = (meters / 10).toFloat() / 100
-
-fun metersFromUser(latLng: LatLng): Int = Math.round(latLng.distanceTo(MyLocationManager.getLocation()))
+fun LatLng.metersFromUser(): Int = Math.round(distanceTo(MyLocationManager.getLocation()))
 
 fun Address.buildAddressString(): String {
     return StringBuilder()
@@ -69,3 +67,6 @@ fun Address.buildAddressString(): String {
             .toString()
             .trim { it <= ' ' }
 }
+
+val Address.latLng
+    get() = LatLng(latitude, longitude)

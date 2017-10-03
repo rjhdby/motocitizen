@@ -29,7 +29,6 @@ import motocitizen.ui.frames.create.SubTypeFrame;
 import motocitizen.ui.frames.create.TypeFrame;
 import motocitizen.utils.ContextUtilsKt;
 import motocitizen.utils.DateUtils;
-import motocitizen.utils.ToastUtils;
 
 import static motocitizen.ui.activity.CreateAccActivity.Frames.DAMAGE;
 import static motocitizen.ui.activity.CreateAccActivity.Frames.DESCRIPTION;

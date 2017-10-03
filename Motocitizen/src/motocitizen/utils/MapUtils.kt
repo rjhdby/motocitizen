@@ -26,11 +26,8 @@ private fun calculateAlpha(accident: Accident): Float {
 
 private fun markerTitle(accident: Accident): String {
     val medicine = if (accident.medicine === Medicine.NO) "" else ", " + accident.medicine.text
-    val interval = getIntervalFromNowInText(accident.time)
-    return String.format("%s%s, %s назад",
-                         accident.type.text,
-                         medicine,
-                         interval)
+    val interval = accident.time.getIntervalFromNowInText()
+    return "${accident.type.text}$medicine, $interval назад"
 }
 
 private fun makeMarker(accident: Accident): MarkerOptions {
@@ -40,6 +37,3 @@ private fun makeMarker(accident: Accident): MarkerOptions {
             .icon(accident.type.icon)
             .alpha(calculateAlpha(accident))
 }
-
-
-
