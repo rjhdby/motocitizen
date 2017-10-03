@@ -47,7 +47,7 @@ class CreateAccidentMap(val fragment: FragmentActivity) {
 
     private fun searchCallback(latLng: LatLng?) {
         if (latLng == null) {
-            show(fragment, fragment.getString(R.string.nothing_is_found))
+            fragment.showToast(R.string.nothing_is_found)
         } else {
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM))
         }

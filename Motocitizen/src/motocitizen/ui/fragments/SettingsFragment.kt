@@ -108,7 +108,7 @@ class SettingsFragment : PreferenceFragment() {
             "mc.show.other" -> IS_SHOW_OTHER.put(newValue)
         }
         if (isAllHidden) {
-            show(activity, getString(R.string.no_one_accident_visible))
+            activity.showToast(getString(R.string.no_one_accident_visible))
         }
         update()
         return false

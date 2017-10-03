@@ -21,7 +21,7 @@ import motocitizen.ui.activity.AccidentDetailsActivity.Companion.ACCIDENT_ID_KEY
 import motocitizen.ui.menus.MessageContextMenu
 import motocitizen.ui.rows.message.MessageRowFactory
 import motocitizen.user.User
-import motocitizen.utils.show
+import motocitizen.utils.showToast
 import org.json.JSONException
 
 class DetailMessagesFragment() : Fragment() {
@@ -119,10 +119,10 @@ class DetailMessagesFragment() : Fragment() {
         try {
             if (response.hasError()) {
                 val text = response.error.text
-                activity.runOnUiThread { show(activity, text) }
+                activity.runOnUiThread { activity.showToast(text) }
             }
         } catch (e: JSONException) {
-            show(activity, "Неизвестная ошибка" + response.toString())
+            activity.showToast("Неизвестная ошибка" + response.toString())
             e.printStackTrace()
         }
 

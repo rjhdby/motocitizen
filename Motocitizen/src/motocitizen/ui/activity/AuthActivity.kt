@@ -6,7 +6,10 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.method.LinkMovementMethod
 import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.CheckBox
+import android.widget.EditText
+import android.widget.TextView
 import com.vk.sdk.VKAccessToken
 import com.vk.sdk.VKCallback
 import com.vk.sdk.VKScope
@@ -22,7 +25,7 @@ import motocitizen.router.Router
 import motocitizen.user.Auth
 import motocitizen.user.User
 import motocitizen.utils.bindView
-import motocitizen.utils.show
+import motocitizen.utils.showToast
 
 class AuthActivity : AppCompatActivity() {
     private val logoutBtn: Button by bindView(R.id.logout_button)
@@ -47,11 +50,11 @@ class AuthActivity : AppCompatActivity() {
     private fun vkCallback(): VKCallback<VKAccessToken> {
         return object : VKCallback<VKAccessToken> {
             override fun onResult(res: VKAccessToken) {
-                Toast.makeText(applicationContext, "Пользователь успешно авторизовался", Toast.LENGTH_LONG).show()
+                showToast("Пользователь успешно авторизовался")
             }
 
             override fun onError(error: VKError) {
-                Toast.makeText(applicationContext, "Произошла ошибка авторизации (например, пользователь запретил авторизацию)", Toast.LENGTH_LONG).show()
+                showToast("Произошла ошибка авторизации (например, пользователь запретил авторизацию)")
             }
         }
     }
@@ -87,7 +90,7 @@ class AuthActivity : AppCompatActivity() {
         when {
             anonymous.isChecked -> anonymousLogon()
             isOnline            -> auth()
-            else                -> show(this, R.string.auth_not_available)
+            else                -> showToast(R.string.auth_not_available)
         }
     }
 

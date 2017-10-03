@@ -27,6 +27,7 @@ import motocitizen.ui.frames.create.DescriptionFrame;
 import motocitizen.ui.frames.create.LocationFrame;
 import motocitizen.ui.frames.create.SubTypeFrame;
 import motocitizen.ui.frames.create.TypeFrame;
+import motocitizen.utils.ContextUtilsKt;
 import motocitizen.utils.DateUtils;
 import motocitizen.utils.ToastUtils;
 
@@ -211,7 +212,7 @@ public class CreateAccActivity extends FragmentActivity {
         }
 
         CreateAccActivity.this.runOnUiThread(() -> {
-            ToastUtils.show(CreateAccActivity.this, makeErrorMessage(response.getError().getText()));
+            ContextUtilsKt.showToast(CreateAccActivity.this, makeErrorMessage(response.getError().getText()));
             //enableConfirm();//todo
         });
         return Unit.INSTANCE;

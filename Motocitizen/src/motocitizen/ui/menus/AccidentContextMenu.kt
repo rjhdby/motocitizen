@@ -55,10 +55,10 @@ class AccidentContextMenu(context: Context, val accident: Accident) : ContextMen
 
     private fun banRequestCallback(response: ApiResponse) {
         (context as Activity).runOnUiThread {
-            show(context, if (response.hasError())
-                "Ошибка связи с сервером"
-            else
-                "Пользователь забанен")
+            context.showToast(if (response.hasError())
+                                  "Ошибка связи с сервером"
+                              else
+                                  "Пользователь забанен")
         }
     }
 }
