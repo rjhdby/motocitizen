@@ -68,7 +68,6 @@ class MainScreenActivity : AppCompatActivity() {
     private fun wakeUpLocationUpdate() {
         Permissions.requestLocation(this, {
             MyLocationManager.wakeup()
-            map.enableLocation()
         }) { }
     }
 
@@ -121,7 +120,7 @@ class MainScreenActivity : AppCompatActivity() {
 
         newList.forEach(listContent::addView)
 
-        map.addContent()
+        map.update()
     }
 
     //todo WTF!?
@@ -205,7 +204,7 @@ class MainScreenActivity : AppCompatActivity() {
 
     private fun toMap(id: Int) {
         showMapFrame()
-        map.jumpToPoint(Content.accident(id).coordinates)
+        map.centerOnAccident(Content.accident(id))
     }
 
     //todo refactor
