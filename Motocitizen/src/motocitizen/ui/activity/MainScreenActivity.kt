@@ -12,6 +12,9 @@ import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.google.android.gms.maps.model.LatLng
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.runBlocking
 import motocitizen.MyApp
 import motocitizen.content.Content
 import motocitizen.datasources.preferences.Preferences
@@ -115,7 +118,11 @@ class MainScreenActivity : AppCompatActivity() {
     }
 
     private fun redraw() {
-        val newList = Content.getVisibleReversed().map { AccidentRowFactory.make(this, it) }
+        val newList = runBlocking {
+            Content.getVisibleReversed()
+                    .map { async(CommonPool) { AccidentRowFactory.make(this@MainScreenActivity, it) } }
+                    .map { it.await() }
+        }
         listContent.removeAllViews()
 
         newList.forEach(listContent::addView)

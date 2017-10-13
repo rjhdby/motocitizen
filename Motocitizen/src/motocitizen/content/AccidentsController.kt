@@ -1,5 +1,8 @@
 package motocitizen.content
 
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.runBlocking
 import motocitizen.content.accident.Accident
 import motocitizen.content.accident.AccidentFactory
 import motocitizen.content.history.History
@@ -68,9 +71,14 @@ object AccidentsController {
         e.printStackTrace()
     }
 
-    private fun addAccidents(json: JSONArray) = (0 until json.length())
-            .map { AccidentFactory.make(json.getJSONObject(it)) }
-            .forEach { accidents.put(it.id, it) }
+    private fun addAccidents(json: JSONArray) {
+        runBlocking {
+            (0 until json.length())
+                    .map { async(CommonPool) { AccidentFactory.make(json.getJSONObject(it)) } }
+                    .map { it.await() }
+                    .forEach { accidents.put(it.id, it) }
+        }
+    }
 
     private fun attachVolunteersToAccident(accident: Accident, json: JSONArray) {
         accident.volunteers.clear()

@@ -8,6 +8,7 @@ buildscript {
     ext.google_services = '10.2.4'
     ext.google_support = '25.3.1'
     ext.okhttp = '3.7.0'
+    ext.coroutines_version = '0.19.1'
     repositories {
         mavenCentral()
         jcenter()
@@ -21,7 +22,6 @@ buildscript {
 }
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 25
@@ -42,20 +42,15 @@ android {
     aaptOptions {
         cruncherEnabled = false
     }
-    retrolambda {
-        jvmArgs '-noverify'
-    }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
 
     defaultConfig {
-        multiDexEnabled true
         applicationId "motocitizen.main"
     }
     dexOptions {
-//        preDexLibraries = false
         javaMaxHeapSize "4g"
     }
     sourceSets {
@@ -86,6 +81,7 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
 
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     compile "org.jetbrains.anko:anko:$anko_version"
     compile "org.jetbrains.anko:anko-commons:$anko_version"
 
@@ -95,3 +91,8 @@ dependencies {
     compile 'com.karumi:dexter:4.1.0'
 }
 apply plugin: 'com.google.gms.google-services'
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}
