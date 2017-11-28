@@ -8,6 +8,8 @@ import motocitizen.content.accident.Accident
 import motocitizen.dictionary.AccidentStatus
 import motocitizen.dictionary.Medicine
 import motocitizen.main.R
+import motocitizen.utils.distanceString
+import motocitizen.utils.name
 import motocitizen.utils.timeString
 
 class DetailsSummaryFrame(val activity: FragmentActivity, val accident: Accident) {
@@ -30,10 +32,10 @@ class DetailsSummaryFrame(val activity: FragmentActivity, val accident: Accident
             statusView.visibility = if (accident.status === AccidentStatus.ACTIVE) View.GONE else View.VISIBLE
             medicineView.visibility = if (accident.medicine === Medicine.UNKNOWN) View.GONE else View.VISIBLE
             typeView.text = accident.type.text
-            medicineView.text = "(" + accident.medicine.text + ")"
+            medicineView.text = "(${accident.medicine.text})"
             statusView.text = accident.status.text
             timeView.text = accident.time.timeString()
-            ownerView.text = accident.ownerName()
+            ownerView.text = accident.owner.name()
             addressView.text = accident.address
             distanceView.text = accident.distanceString()
             descriptionView.text = accident.description

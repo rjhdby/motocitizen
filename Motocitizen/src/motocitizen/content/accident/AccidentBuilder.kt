@@ -67,24 +67,12 @@ class AccidentBuilder {
     }
 
     fun build(): Accident {
-        val accident = if (owner == User.id) ownedAccident() else commonAccident()
+        val accident = Accident(id, type, medicine, time, location, owner, status)
 
         accident.description = description
         accident.volunteers.addAll(volunteers)
         accident.history.addAll(history)
         accident.messagesCount = messagesCount
         return accident
-    }
-
-    private fun commonAccident(): Accident = when (status) {
-        AccidentStatus.ACTIVE -> ActiveAccident(id, type, medicine, time, location, owner)
-        AccidentStatus.ENDED  -> EndedAccident(id, type, medicine, time, location, owner)
-        AccidentStatus.HIDDEN -> HiddenAccident(id, type, medicine, time, location, owner)
-    }
-
-    private fun ownedAccident(): Accident = when (status) {
-        AccidentStatus.ACTIVE -> OwnedActiveAccident(id, type, medicine, time, location)
-        AccidentStatus.ENDED  -> OwnedEndedAccident(id, type, medicine, time, location)
-        AccidentStatus.HIDDEN -> OwnedHiddenAccident(id, type, medicine, time, location)
     }
 }

@@ -5,7 +5,7 @@ import motocitizen.datasources.network.ApiRequestWithAuth
 import motocitizen.datasources.network.ApiResponse
 import motocitizen.datasources.network.Methods
 
-class CreateAccidentRequest(accident: Accident, callback: (ApiResponse) -> Unit, forStat: Boolean = false) : ApiRequestWithAuth(callback) {
+class CreateAccidentRequest(accident: Accident, callback: (ApiResponse) -> Unit, forStat: Boolean = false) : ApiRequestWithAuth(callback = callback) {
     init {
         with(params) {
             put("m", Methods.CREATE.code)

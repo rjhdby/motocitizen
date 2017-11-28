@@ -1,13 +1,5 @@
 package motocitizen.utils
 
-import android.content.Context
-import android.util.DisplayMetrics
-import org.jetbrains.anko.windowManager
+import motocitizen.MyApp
 
-object GraphUtils {
-    var dpScale: Float = 1f
-
-    fun initialize(context: Context) {
-        dpScale = context.resources.displayMetrics.density
-    }
-}
+val dpScale: Float by lazy { MyApp.context.resources.displayMetrics.density }

@@ -6,7 +6,6 @@ import com.google.firebase.messaging.RemoteMessage
 import motocitizen.content.Content
 import motocitizen.content.accident.Accident
 import motocitizen.datasources.preferences.Preferences
-import motocitizen.datasources.preferences.Preferences.Stored.MAX_NOTIFICATIONS
 import java.util.*
 
 class NotificationListener : FirebaseMessagingService() {
@@ -41,7 +40,7 @@ class NotificationListener : FirebaseMessagingService() {
     private fun manageTray() {
         tray.push(idHash)
         //        while (tray.size() > Preferences.Stored.MAX_NOTIFICATIONS.int()) {
-        while (tray.size > MAX_NOTIFICATIONS.int()) {
+        while (tray.size > Preferences.maxNotifications) {
             val remove = tray.pollLast()
             notificationManager!!.cancel(remove)
         }

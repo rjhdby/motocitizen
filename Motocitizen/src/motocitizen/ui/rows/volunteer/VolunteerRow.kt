@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.TableRow
 import motocitizen.content.volunteer.VolunteerAction
+import motocitizen.utils.name
 import motocitizen.utils.timeString
 import org.jetbrains.anko.matchParent
 import org.jetbrains.anko.textView
@@ -13,7 +14,7 @@ open class VolunteerRow(context: Context, val volunteer: VolunteerAction) : Tabl
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         layoutParams = LayoutParams(matchParent, matchParent)
-        textView(volunteer.ownerName())
+        textView(volunteer.owner.name())
         textView(volunteer.status.text)
         textView(volunteer.time.timeString())
     }

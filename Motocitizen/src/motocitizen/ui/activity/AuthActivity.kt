@@ -35,7 +35,7 @@ class AuthActivity : AppCompatActivity() {
     private val login: EditText by bindView(R.id.auth_login)
     private val password: EditText by bindView(R.id.auth_password)
     private val anonymous: CheckBox by bindView(R.id.auth_anonim)
-
+    
     private fun enableLoginBtn() {
         val logPasReady = login.text.toString().isNotEmpty() && password.text.toString().isNotEmpty()
         loginBtn.isEnabled = anonymous.isChecked || logPasReady

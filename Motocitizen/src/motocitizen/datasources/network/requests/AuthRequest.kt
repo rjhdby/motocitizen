@@ -5,7 +5,7 @@ import motocitizen.datasources.network.ApiResponse
 import motocitizen.datasources.network.Methods
 import motocitizen.user.User
 
-class AuthRequest(login: String, passHash: String, callback: (ApiResponse) -> Unit) : ApiRequestWithAuth(callback, login, passHash) {
+class AuthRequest(login: String, passHash: String, callback: (ApiResponse) -> Unit) : ApiRequestWithAuth(login, passHash, callback) {
     init {
         with(params) {
             put("m", Methods.AUTH.code)

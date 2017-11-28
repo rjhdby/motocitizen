@@ -8,6 +8,7 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import motocitizen.content.message.Message
 import motocitizen.main.R
+import motocitizen.utils.name
 import motocitizen.utils.timeString
 import org.jetbrains.anko.matchParent
 import org.jetbrains.anko.textView
@@ -27,7 +28,7 @@ abstract class MessageRow(context: Context, val message: Message, val type: Type
         super.onAttachedToWindow()
         setBackground()
         joinRowsByOwner()
-        textView(message.ownerName()) {
+        textView(message.owner.name()) {
             layoutParams = LayoutParams(matchParent, wrapContent)
             visibility = if (type == Type.FIRST || type == Type.ONE) View.VISIBLE else View.INVISIBLE
             setTextColor(Color.parseColor(if (message.isOwner) "#00ffff" else "#ffff00"))
@@ -43,15 +44,13 @@ abstract class MessageRow(context: Context, val message: Message, val type: Type
         }
     }
 
-    private fun setBackground() {
-        setBackgroundResource(
-                when (type) {
-                    Type.MIDDLE -> MIDDLE
-                    Type.FIRST  -> FIRST
-                    Type.LAST   -> LAST
-                    Type.ONE    -> ONE
-                })
-    }
+    private fun setBackground() = setBackgroundResource(
+            when (type) {
+                Type.MIDDLE -> MIDDLE
+                Type.FIRST  -> FIRST
+                Type.LAST   -> LAST
+                Type.ONE    -> ONE
+            })
 
     private fun joinRowsByOwner() {
         if (type == Type.MIDDLE || type == Type.LAST) {

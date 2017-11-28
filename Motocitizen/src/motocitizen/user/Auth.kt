@@ -4,13 +4,12 @@ import android.util.Log
 import motocitizen.datasources.network.ApiResponse
 import motocitizen.datasources.network.requests.AuthRequest
 import motocitizen.datasources.preferences.Preferences
-import motocitizen.datasources.preferences.Preferences.Stored.PASSWORD
 import motocitizen.utils.md5
 import org.json.JSONException
 
 object Auth {
     fun auth(login: String, password: String, callback: (ApiResponse) -> Unit) {
-        PASSWORD.put(password)
+        Preferences.password = password
         AuthRequest(login, makePassHash(password), { response ->
             authRequestCallback(response, login, callback)
         })

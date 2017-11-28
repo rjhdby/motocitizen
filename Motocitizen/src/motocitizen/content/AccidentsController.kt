@@ -25,7 +25,7 @@ object AccidentsController {
         if (lastUpdate == 0L) {
             requestList(callback)
         } else {
-            HasNewRequest(lastUpdate, { if (hasNewCheck(it)) requestList(callback) else callback(it) })
+            HasNewRequest(lastUpdate) { if (hasNewCheck(it)) requestList(callback) else callback(it) }
         }
     }
 
@@ -42,10 +42,10 @@ object AccidentsController {
     }
 
     fun requestDetailsForAccident(accident: Accident, callback: (ApiResponse) -> Unit) {
-        DetailsRequest(accident.id, {
+        DetailsRequest(accident.id) {
             attachDetailsToAccident(accident, it)
             callback(it)
-        })
+        }
     }
 
     private fun attachDetailsToAccident(accident: Accident, result: ApiResponse) = try {

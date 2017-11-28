@@ -1,8 +1,10 @@
 package motocitizen.datasources.network
 
+import motocitizen.utils.getIntOr
+import motocitizen.utils.getStringOr
 import org.json.JSONObject
 
-class Error(jsonObject: JSONObject) {
-    val code: Int = if (jsonObject.has("c")) jsonObject.getInt("c") else 0
-    val text: String = if (jsonObject.has("t")) jsonObject.getString("t") else ""
+class Error(json: JSONObject) {
+    val code: Int = json.getIntOr("c", 0)
+    val text: String = json.getStringOr("t", "")
 }

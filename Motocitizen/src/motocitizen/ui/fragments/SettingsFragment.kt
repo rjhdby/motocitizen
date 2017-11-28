@@ -3,7 +3,6 @@ package motocitizen.ui.fragments
 import android.preference.Preference
 import android.preference.PreferenceFragment
 import motocitizen.datasources.preferences.Preferences
-import motocitizen.datasources.preferences.Preferences.Stored.*
 import motocitizen.main.R
 import motocitizen.router.Router
 import motocitizen.user.User
@@ -40,11 +39,11 @@ class SettingsFragment : PreferenceFragment() {
 
     private fun update() {
         authPreference.summary = if (login.isNotEmpty()) User.roleName + ": " + login else User.roleName
-        maxNotifications.summary = MAX_NOTIFICATIONS.string()
-        hoursAgo.summary = HOURS_AGO.string()
+        maxNotifications.summary = Preferences.maxNotifications.toString()
+        hoursAgo.summary = Preferences.hoursAgo.toString()
         notificationSoundPreference.summary = preferences.soundTitle
-        notificationDistPreference.summary = VISIBLE_DISTANCE.string()
-        notificationAlarmPreference.summary = ALARM_DISTANCE.string()
+        notificationDistPreference.summary = Preferences.visibleDistance.toString()
+        notificationAlarmPreference.summary = Preferences.alarmDistance.toString()
     }
 
     private fun setUpListeners() {
@@ -75,7 +74,7 @@ class SettingsFragment : PreferenceFragment() {
     }
 
     private fun vibrationListener(newValue: Any): Boolean {
-        VIBRATION.put(newValue)
+        Preferences.vibration = newValue as Boolean
         return true
     }
 
@@ -93,8 +92,8 @@ class SettingsFragment : PreferenceFragment() {
         val value = Math.min(EQUATOR, Integer.parseInt(newValue as String))
 
         when (preference) {
-            notificationDistPreference  -> VISIBLE_DISTANCE.put(value)
-            notificationAlarmPreference -> ALARM_DISTANCE.put(value)
+            notificationDistPreference  -> Preferences.visibleDistance = value
+            notificationAlarmPreference -> Preferences.alarmDistance = value
         }
         update()
         return false
@@ -102,10 +101,10 @@ class SettingsFragment : PreferenceFragment() {
 
     private fun visibleListener(preference: Preference, newValue: Any): Boolean {
         when (preference.key) {
-            "mc.show.acc"   -> IS_SHOW_ACCIDENT.put(newValue)
-            "mc.show.break" -> IS_SHOW_BREAK.put(newValue)
-            "mc.show.steal" -> IS_SHOW_STEAL.put(newValue)
-            "mc.show.other" -> IS_SHOW_OTHER.put(newValue)
+            "mc.show.acc"   -> Preferences.showAccidents = newValue as Boolean
+            "mc.show.break" -> Preferences.showBreaks = newValue as Boolean
+            "mc.show.steal" -> Preferences.showSteal = newValue as Boolean
+            "mc.show.other" -> Preferences.showOther = newValue as Boolean
         }
         if (isAllHidden) {
             activity.showToast(getString(R.string.no_one_accident_visible))
@@ -115,5 +114,5 @@ class SettingsFragment : PreferenceFragment() {
     }
 
     private val isAllHidden: Boolean
-        inline get() = !(IS_SHOW_ACCIDENT.boolean() || IS_SHOW_BREAK.boolean() || IS_SHOW_STEAL.boolean() || IS_SHOW_OTHER.boolean())
+        inline get() = !with(Preferences) { showAccidents || showSteal || showBreaks || showOther }
 }

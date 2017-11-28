@@ -7,6 +7,7 @@ import android.widget.LinearLayout
 import motocitizen.content.history.History
 import motocitizen.user.User
 import motocitizen.utils.dateTimeString
+import motocitizen.utils.name
 import org.jetbrains.anko.textView
 
 class HistoryRow : LinearLayout {
@@ -21,7 +22,7 @@ class HistoryRow : LinearLayout {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        textView(history.ownerName()) { if (history.owner == User.id) setBackgroundColor(Color.DKGRAY) }
+        textView(history.owner.name()) { if (history.owner == User.id) setBackgroundColor(Color.DKGRAY) }
         textView(history.action.text)
         textView(history.time.dateTimeString())
     }

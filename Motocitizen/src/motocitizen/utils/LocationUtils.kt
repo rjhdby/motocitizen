@@ -31,19 +31,19 @@ fun LatLng.toLocation(): Location {
 fun String.requestLatLngFromAddress(callback: (LatLng?) -> Unit) {
     try {
         val address = MyGeoCoder.getFromLocationName(this)
-        if (address != null) {
+        if (address.hasLatitude()) {
             callback(address.latLng)
             return
         }
     } catch (e: IOException) {
     }
-    GeoCoderRequest(this, { response ->
+    GeoCoderRequest(this) {
         try {
-            callback(LatLng(response.resultObject.getDouble("lat"), response.resultObject.getDouble("lng")))
+            callback(LatLng(it.resultObject.getDouble("lat"), it.resultObject.getDouble("lng")))
         } catch (e: JSONException) {
             callback(null)
         }
-    })
+    }
 }
 
 fun LatLng.distanceString(): String {
@@ -65,7 +65,7 @@ fun Address.buildAddressString(): String {
             .append(" ")
             .append(featureName ?: "")
             .toString()
-            .trim { it <= ' ' }
+            .trim()
 }
 
 val Address.latLng

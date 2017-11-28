@@ -5,7 +5,7 @@ import motocitizen.datasources.network.ApiRequestWithAuth
 import motocitizen.datasources.network.ApiResponse
 import motocitizen.datasources.network.Methods
 
-class LeaveRequest(accident: Accident, callback: (ApiResponse) -> Unit) : ApiRequestWithAuth(callback) {
+class LeaveRequest(accident: Accident, callback: (ApiResponse) -> Unit) : ApiRequestWithAuth(callback = callback) {
     init {
         with(params) {
             put("id", accident.id.toString())

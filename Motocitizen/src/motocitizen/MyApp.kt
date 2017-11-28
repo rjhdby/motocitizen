@@ -1,25 +1,20 @@
 package motocitizen
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.support.multidex.MultiDex
 import android.support.multidex.MultiDexApplication
 import android.widget.Toast
-
 import com.google.firebase.messaging.FirebaseMessaging
 import com.vk.sdk.VKAccessToken
 import com.vk.sdk.VKAccessTokenTracker
 import com.vk.sdk.VKSdk
-
-import motocitizen.datasources.database.Database
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.geo.MyGoogleApiClient
-import motocitizen.geo.geocoder.MyGeoCoder
 import motocitizen.ui.activity.AuthActivity
 import motocitizen.user.Auth
-import motocitizen.utils.GraphUtils
 
 class MyApp : MultiDexApplication() {
 
@@ -44,10 +39,8 @@ class MyApp : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
+        context = applicationContext
         Preferences.initialize(this)
-        Database.initialize(this)
-        GraphUtils.initialize(this)
-        MyGeoCoder.initialize(this)
         MyGoogleApiClient.initialize(this)
         FirebaseMessaging.getInstance().subscribeToTopic("accidents")
         vkAccessTokenTracker.startTracking()
@@ -55,6 +48,8 @@ class MyApp : MultiDexApplication() {
     }
 
     companion object {
+        @SuppressLint("StaticFieldLeak")
+        lateinit var context: Context
 
         fun logoff() {
             Auth.logoff()

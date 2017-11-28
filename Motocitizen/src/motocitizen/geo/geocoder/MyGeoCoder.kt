@@ -1,25 +1,22 @@
 package motocitizen.geo.geocoder
 
-import android.content.Context
 import android.location.Address
 import android.location.Geocoder
+import motocitizen.MyApp
+import java.util.*
 
 object MyGeoCoder {
-    private lateinit var geoCoder: Geocoder
+    private val geoCoder: Geocoder by lazy { Geocoder(MyApp.context) }
 
-    fun initialize(context: Context) {
-        geoCoder = Geocoder(context)
-    }
-//todo remove null
-    fun getFromLocation(latitude: Double, longitude: Double): Address? {
+    fun getFromLocation(latitude: Double, longitude: Double): Address {
         val result = geoCoder.getFromLocation(latitude, longitude, 1)
-        if (result == null || result.isEmpty()) return null
+        if (result == null || result.isEmpty()) return Address(Locale.getDefault())
         return result[0]
     }
 
-    fun getFromLocationName(name: String): Address? {
+    fun getFromLocationName(name: String): Address {
         val result = geoCoder.getFromLocationName(name, 1)
-        if (result == null || result.isEmpty()) return null
+        if (result == null || result.isEmpty()) return Address(Locale.getDefault())
         return result[0]
     }
 }

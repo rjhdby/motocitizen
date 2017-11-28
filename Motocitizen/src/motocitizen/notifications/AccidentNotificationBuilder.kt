@@ -14,6 +14,7 @@ import motocitizen.datasources.preferences.Preferences
 import motocitizen.dictionary.Medicine
 import motocitizen.main.R
 import motocitizen.ui.activity.AccidentDetailsActivity
+import motocitizen.utils.distanceString
 
 class AccidentNotificationBuilder(val context: Context, val accident: Accident) {
     private val ICON = R.mipmap.ic_launcher
@@ -38,7 +39,7 @@ class AccidentNotificationBuilder(val context: Context, val accident: Accident) 
     else
         Preferences.sound
 
-    private fun makeVibration(): LongArray = if (Preferences.Stored.VIBRATION.boolean())
+    private fun makeVibration(): LongArray = if (Preferences.vibration)
         longArrayOf(1000, 1000, 1000)
     else
         LongArray(0)

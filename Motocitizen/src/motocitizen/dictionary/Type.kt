@@ -18,12 +18,5 @@ enum class Type(val code: String, val text: String, private val mapIcon: Int) {
     val icon: BitmapDescriptor
         get() = BitmapDescriptorFactory.fromResource(this.mapIcon)
 
-    companion object {
-        fun parse(type: String): Type {
-            return Type.values().firstOrNull { it.code == type }
-                   ?: Type.OTHER
-        }
-    }
-
-    fun isAccident() = this == Type.MOTO_AUTO || this == Type.SOLO || this == Type.MOTO_MOTO || this == Type.MOTO_MAN
+    fun isAccident() = this in arrayOf(MOTO_AUTO, SOLO, MOTO_MOTO, MOTO_MAN)
 }

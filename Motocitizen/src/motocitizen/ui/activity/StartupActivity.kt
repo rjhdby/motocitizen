@@ -39,8 +39,8 @@ class StartupActivity : AppCompatActivity() {
 
     private fun tryToLogon() {
         Auth.auth(
-                LOGIN.string(),
-                PASSWORD.string(),
+                Preferences.login,
+                Preferences.password,
                 { Router.goTo(this@StartupActivity, if (User.isAuthorized) Router.Target.MAIN else Router.Target.AUTH) })
     }
 }

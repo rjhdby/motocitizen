@@ -20,9 +20,7 @@ abstract class CoreRequest(val callback: (ApiResponse) -> Unit = {}) {
             .url(url)
             .build()
 
-    protected fun call() {
-        client.newCall(buildRequest()).enqueue(enqueueCallback())
-    }
+    protected fun call() = client.newCall(buildRequest()).enqueue(enqueueCallback())
 
     private fun enqueueCallback(): Callback {
         return object : Callback {
@@ -36,7 +34,6 @@ abstract class CoreRequest(val callback: (ApiResponse) -> Unit = {}) {
             }
         }
     }
-
 
     abstract fun response(string: String): ApiResponse
 

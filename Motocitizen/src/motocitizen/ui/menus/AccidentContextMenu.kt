@@ -28,7 +28,7 @@ class AccidentContextMenu(context: Context, val accident: Accident) : ContextMen
         }
         addButton(R.string.copy_coordinates) { context.copyToClipBoard(String.format("%s,%s", accident.latitude, accident.longitude)) }
 
-        if (Preferences.login == accident.ownerName() || User.isModerator) {
+        if (Preferences.login == accident.owner.name() || User.isModerator) {
             addButton(if (accident.isEnded()) R.string.unfinish else R.string.finish, this::finishButtonPressed)
         }
         if (User.isModerator) {

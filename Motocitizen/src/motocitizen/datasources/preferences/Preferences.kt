@@ -9,6 +9,8 @@ import android.preference.PreferenceManager
 import com.google.android.gms.maps.model.LatLng
 import motocitizen.datasources.preferences.Preferences.Stored.*
 import motocitizen.dictionary.Type
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
 object Preferences {
     private val DEFAULT_LATITUDE = 55.752295f
@@ -22,7 +24,7 @@ object Preferences {
     private val DEFAULT_IS_ANONYMOUS = false
     private val DEFAULT_SHOW_TYPE = true
 
-    enum class Stored(val key: String, val default: Any) {
+    private enum class Stored(val key: String, val default: Any) {
         IS_SHOW_ACCIDENT("mc.show.acc", DEFAULT_SHOW_TYPE),
         IS_SHOW_BREAK("mc.show.break", DEFAULT_SHOW_TYPE),
         IS_SHOW_STEAL("mc.show.steal", DEFAULT_SHOW_TYPE),
@@ -42,30 +44,6 @@ object Preferences {
         SOUND_URI("mc.notification.sound", ""),
         LOGIN("mc.login", ""),
         PASSWORD("mc.password", "");
-
-        fun put(value: Any) {
-            val editor = preferences.edit()
-            when (default) {
-                is Int     -> editor.putInt(key, value as Int)
-                is Boolean -> editor.putBoolean(key, value as Boolean)
-                is String  -> editor.putString(key, value as String)
-                is Float   -> editor.putFloat(key, value as Float)
-            }
-            editor.apply()
-        }
-
-        fun boolean(): Boolean = preferences.getBoolean(key, default as Boolean)
-        fun string(): String = preferences.getString(key, default.toString())
-        fun float(): Float = preferences.getFloat(key, default as Float)
-        fun int(): Int = try {
-            preferences.getInt(key, default as Int)
-        } catch (e: Exception) {
-            preferences.getString(key, default.toString()).toInt()
-        }
-
-//        private fun get(key:String):Any{
-//            preferences.
-//        }
     }
 
     fun initialize(context: Context) {
@@ -82,44 +60,45 @@ object Preferences {
         }
     }
 
-
     var newVersion = false
     lateinit private var preferences: SharedPreferences
 
-    var doNotDisturb
-        get() = getBoolean(DO_NOT_DISTURB)
-        set(value) = DO_NOT_DISTURB.put(value)
-    var onWay
-        get() = getInt(ON_WAY)
-        set(value) = ON_WAY.put(value)
-    var soundTitle: String
-        get() = getString(SOUND_TITLE)
-        set(value) = SOUND_TITLE.put(value)
-    var soundURI: String
-        get() = getString(SOUND_URI)
-        set(uri) = SOUND_URI.put(uri)
+    var doNotDisturb by PreferenceDelegate<Boolean>(DO_NOT_DISTURB)
+    var onWay by PreferenceDelegate<Int>(ON_WAY)
+    var soundTitle by PreferenceDelegate<String>(SOUND_TITLE)
+    var soundURI by PreferenceDelegate<String>(SOUND_URI)
     var sound: Uri? = null
         private set
-    var login: String
-        get() = LOGIN.string()
-        set(value) = LOGIN.put(value)
-    var password: String
-        get() = PASSWORD.string()
-        set(value) = PASSWORD.put(value)
-    var anonymous
-        get() = getBoolean(ANONYMOUS)
-        set(value) = ANONYMOUS.put(value)
-    var appVersion
-        get() = getInt(APP_VERSION)
-        set(value) = APP_VERSION.put(value)
+    var login by PreferenceDelegate<String>(LOGIN)
+    var password by PreferenceDelegate<String>(PASSWORD)
+    var anonymous by PreferenceDelegate<Boolean>(ANONYMOUS)
+    var appVersion by PreferenceDelegate<Int>(APP_VERSION)
+
+    var visibleDistance by PreferenceDelegate<Int>(VISIBLE_DISTANCE)
+    var alarmDistance by PreferenceDelegate<Int>(ALARM_DISTANCE)
+
+    var showAccidents by PreferenceDelegate<Boolean>(IS_SHOW_ACCIDENT)
+    var showBreaks by PreferenceDelegate<Boolean>(IS_SHOW_BREAK)
+    var showSteal by PreferenceDelegate<Boolean>(IS_SHOW_STEAL)
+    var showOther by PreferenceDelegate<Boolean>(IS_SHOW_OTHER)
+
+    var vibration by PreferenceDelegate<Boolean>(VIBRATION)
+
+    var hoursAgo by PreferenceDelegate<Int>(HOURS_AGO)
+
+    var maxNotifications by PreferenceDelegate<Int>(MAX_NOTIFICATIONS)
+
+    private var latitude by PreferenceDelegate<Float>(LATITUDE)
+    private var longitude by PreferenceDelegate<Float>(LONGITUDE)
 
     var savedLatLng
-        get() = LatLng(getFloat(LATITUDE).toDouble(), getFloat(LONGITUDE).toDouble())
+        get() = LatLng(latitude.toDouble(), longitude.toDouble())
         set(latLng) {
-            LATITUDE.put(latLng.latitude.toFloat())
-            LONGITUDE.put(latLng.longitude.toFloat())
+            latitude = latLng.latitude.toFloat()
+            longitude = latLng.longitude.toFloat()
         }
 
+    //todo refactor sound settings
     fun setSound(title: String, uri: Uri) {
         soundTitle = title
         soundURI = uri.toString()
@@ -138,14 +117,15 @@ object Preferences {
     }
 
     fun resetAuth() {
-        preferences.edit().remove(LOGIN.key).remove(PASSWORD.key).apply()
+        login = ""
+        password = ""
     }
 
     fun isEnabled(type: Type): Boolean = when (type) {
-        Type.BREAK                                               -> IS_SHOW_BREAK.boolean()
-        Type.MOTO_AUTO, Type.MOTO_MOTO, Type.MOTO_MAN, Type.SOLO -> IS_SHOW_ACCIDENT.boolean()
-        Type.STEAL                                               -> IS_SHOW_STEAL.boolean()
-        Type.OTHER                                               -> IS_SHOW_OTHER.boolean()
+        Type.BREAK                                               -> showBreaks
+        Type.MOTO_AUTO, Type.MOTO_MOTO, Type.MOTO_MAN, Type.SOLO -> showAccidents
+        Type.STEAL                                               -> showSteal
+        Type.OTHER                                               -> showOther
         Type.USER                                                -> true
     }
 
@@ -163,12 +143,27 @@ object Preferences {
         else               -> "unknown"
     }
 
-    private fun getString(stored: Stored) = preferences.getString(stored.key, stored.default.toString())
+    private class PreferenceDelegate<T>(private val stored: Stored) : ReadWriteProperty<Preferences, T> {
 
-    private fun getBoolean(stored: Stored) = preferences.getBoolean(stored.key, stored.default as Boolean)
+        @Suppress("UNCHECKED_CAST")
+        override fun getValue(thisRef: Preferences, property: KProperty<*>): T =
+                when (stored.default) {
+                    is String  -> preferences.getString(stored.key, stored.default) as T
+                    is Boolean -> preferences.getBoolean(stored.key, stored.default) as T
+                    is Int     -> preferences.getInt(stored.key, stored.default) as T
+                    is Float   -> preferences.getFloat(stored.key, stored.default) as T
+                    else       -> throw TypeCastException("Wrong property type")
+                }
 
-    private fun getInt(stored: Stored) = preferences.getInt(stored.key, stored.default as Int)
-
-    private fun getFloat(stored: Stored) = preferences.getFloat(stored.key, stored.default as Float)
+        override fun setValue(thisRef: Preferences, property: KProperty<*>, value: T) {
+            preferences.edit().apply {
+                when (stored.default) {
+                    is Int     -> putInt(stored.key, value as Int)
+                    is Boolean -> putBoolean(stored.key, value as Boolean)
+                    is String  -> putString(stored.key, value as String)
+                    is Float   -> putFloat(stored.key, value as Float)
+                }
+            }.apply()
+        }
+    }
 }
-
