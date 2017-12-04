@@ -20,8 +20,9 @@ object MyGoogleApiClient {
     fun initialize(context: Context) {
         client = GoogleApiClient.Builder(context)
                 .addConnectionCallbacks(connectionCallback())
-                .addApi(LocationServices.API).build()
-        client?.connect()
+                .addApi(LocationServices.API)
+                .build()
+                ?.apply { connect() }
     }
 
     fun getLastLocation(): LatLng {
@@ -36,18 +37,17 @@ object MyGoogleApiClient {
         }
     }
 
-    private fun queryJob(job: () -> Unit) {
-        if (isConnected()) job()
-        else delayedJob = job
+    private fun queryJob(job: () -> Unit) = when {
+        isConnected() -> job()
+        else          -> delayedJob = job
     }
 
-    private fun connectionCallback(): GoogleApiClient.ConnectionCallbacks {
-        return object : GoogleApiClient.ConnectionCallbacks {
-            override fun onConnected(connectionHint: Bundle?) {
-                delayedJob()
+    private fun connectionCallback(): GoogleApiClient.ConnectionCallbacks =
+            object : GoogleApiClient.ConnectionCallbacks {
+                override fun onConnected(connectionHint: Bundle?) {
+                    delayedJob()
+                }
+
+                override fun onConnectionSuspended(arg0: Int) {}
             }
-
-            override fun onConnectionSuspended(arg0: Int) {}
-        }
-    }
 }

@@ -54,13 +54,11 @@ class CreateAccidentMap(fragment: FragmentActivity) : MapManager(fragment, R.id.
         map.setOnCameraMoveCanceledListener(this::cameraMoveCanceledListener)
     }
 
-    private fun permittedCircle(): CircleOptions {
-        return CircleOptions()
-                .center(initialLocation)
-                .radius(PERMITTED_REGION_RADIUS.toDouble())
-                .fillColor(PERMITTED_REGION_COLOR)
-    }
-
+    private fun permittedCircle(): CircleOptions = CircleOptions()
+            .center(initialLocation)
+            .radius(PERMITTED_REGION_RADIUS.toDouble())
+            .fillColor(PERMITTED_REGION_COLOR)
+//todo ???
     private fun cameraMoveCanceledListener() {
         mcCreateFineAddressConfirm.isEnabled = false
         val distance = map.cameraPosition.target.distanceTo(initialLocation).toDouble()

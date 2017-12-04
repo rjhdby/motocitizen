@@ -6,7 +6,7 @@ import motocitizen.datasources.network.Methods
 
 class AccidentRequest(id: Int, callback: (ApiResponse) -> Unit) : ApiRequest(callback) {
     init {
-        with(params) {
+        params.apply {
             put("m", Methods.LIST.code)
             put("id", id.toString())
         }

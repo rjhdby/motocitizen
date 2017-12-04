@@ -6,7 +6,7 @@ import motocitizen.datasources.network.Methods
 
 class InPlaceRequest(accident: Accident) : ApiRequestWithAuth() {
     init {
-        with(params) {
+        params.apply {
             put("id", accident.id.toString())
             put("m", Methods.IN_PLACE.code)
         }

@@ -6,7 +6,7 @@ import motocitizen.datasources.network.Methods
 
 class OnWayRequest(id: Int, callback: (ApiResponse) -> Unit) : ApiRequestWithAuth(callback = callback) {
     init {
-        with(params) {
+        params.apply {
             put("id", id.toString())
             put("m", Methods.ON_WAY.code)
         }

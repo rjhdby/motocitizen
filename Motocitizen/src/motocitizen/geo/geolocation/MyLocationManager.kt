@@ -18,7 +18,7 @@ object MyLocationManager {
     private val subscribers = HashMap<String, (LatLng) -> Unit>()
 
     private fun locationListener(location: Location) {
-        Preferences.savedLatLng = LatLng(location.latitude, location.longitude)
+        Preferences.savedLatLng = location.toLatLng()
 //        requestAddress()
         subscribers.values.forEach { it(location.toLatLng()) }
         checkInPlace(location)
@@ -62,11 +62,9 @@ object MyLocationManager {
         }
     }
 
-    private fun isArrived(location: Location, accident: Accident): Boolean {
-        return accident.coordinates.distanceTo(location) < Math.max(ARRIVED_MAX_ACCURACY, location.accuracy.toInt())
-    }
+    private fun isArrived(location: Location, accident: Accident): Boolean =
+            accident.distanceTo(location) < Math.max(ARRIVED_MAX_ACCURACY, location.accuracy.toInt())
 
-    private fun isInPlace(location: Location, accident: Accident): Boolean {
-        return accident.coordinates.distanceTo(location) - location.accuracy < ARRIVED_MAX_ACCURACY
-    }
+    private fun isInPlace(location: Location, accident: Accident): Boolean =
+            accident.distanceTo(location) - location.accuracy < ARRIVED_MAX_ACCURACY
 }

@@ -67,7 +67,7 @@ object Preferences {
     var onWay by PreferenceDelegate<Int>(ON_WAY)
     var soundTitle by PreferenceDelegate<String>(SOUND_TITLE)
     var soundURI by PreferenceDelegate<String>(SOUND_URI)
-    var sound: Uri? = null
+    lateinit var sound: Uri
         private set
     var login by PreferenceDelegate<String>(LOGIN)
     var password by PreferenceDelegate<String>(PASSWORD)

@@ -211,7 +211,7 @@ class MainScreenActivity : AppCompatActivity() {
 
     private fun toMap(id: Int) {
         showMapFrame()
-        map.centerOnAccident(Content.accident(id))
+        map.centerOnAccident(Content[id]!!)
     }
 
     //todo refactor

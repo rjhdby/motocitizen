@@ -13,7 +13,7 @@ import motocitizen.utils.timeString
 import org.jetbrains.anko.matchParent
 import org.jetbrains.anko.textView
 import org.jetbrains.anko.wrapContent
-
+//todo smell
 abstract class MessageRow(context: Context, val message: Message, val type: Type) : FrameLayout(context) {
     enum class Type {
         FIRST, MIDDLE, LAST, ONE

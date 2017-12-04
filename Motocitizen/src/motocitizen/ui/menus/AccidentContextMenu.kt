@@ -18,6 +18,17 @@ import org.jetbrains.anko.share
 
 class AccidentContextMenu(context: Context, val accident: Accident) : ContextMenu(context) {
     init {
+        addCommonMenu(context)
+        addOwnerAndModeratorMenu()
+        addModeratorMenu()
+    }
+
+    private fun addOwnerAndModeratorMenu() {
+        if (!User.isModerator && Preferences.login != accident.owner.name()) return
+        addButton(if (accident.isEnded()) R.string.unfinish else R.string.finish, this::finishButtonPressed)
+    }
+
+    private fun addCommonMenu(context: Context) {
         addButton(R.string.share) { context.share(accident.getAccidentTextToCopy()) }
         addButton(R.string.copy) { context.copyToClipBoard(accident.getAccidentTextToCopy()) }
         accident.description.getPhonesFromText().forEach {
@@ -27,29 +38,26 @@ class AccidentContextMenu(context: Context, val accident: Accident) : ContextMen
             addButton(context.getString(R.string.popup_sms, it)) { context.sendSMS(it) }
         }
         addButton(R.string.copy_coordinates) { context.copyToClipBoard(String.format("%s,%s", accident.latitude, accident.longitude)) }
+    }
 
-        if (Preferences.login == accident.owner.name() || User.isModerator) {
-            addButton(if (accident.isEnded()) R.string.unfinish else R.string.finish, this::finishButtonPressed)
-        }
-        if (User.isModerator) {
-            addButton(if (accident.isHidden()) R.string.show else R.string.hide, this::hideButtonPressed)
-            addButton("Забанить") { BanRequest(accident.owner, this::banRequestCallback) }
-        }
+    private fun addModeratorMenu() {
+        if (!User.isModerator) return Unit
+        addButton(if (accident.isHidden()) R.string.show else R.string.hide, this::hideButtonPressed)
+        addButton("Забанить") { BanRequest(accident.owner, this::banRequestCallback) }
     }
 
     private fun finishButtonPressed() {
-        if (accident.isEnded()) {
-            ActivateAccident(accident.id) { }
-        } else {
-            EndAccident(accident.id) { }
+        when {
+            accident.isEnded() -> ActivateAccident(accident.id) { }
+            else               -> EndAccident(accident.id) { }
         }
+
     }
 
     private fun hideButtonPressed() {
-        if (accident.isHidden()) {
-            ActivateAccident(accident.id) { }
-        } else {
-            HideAccident(accident.id) { }
+        when {
+            accident.isHidden() -> ActivateAccident(accident.id) { }
+            else                -> HideAccident(accident.id) { }
         }
     }
 

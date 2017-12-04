@@ -6,7 +6,7 @@ import motocitizen.datasources.network.Methods
 
 class CancelOnWayRequest(id: Int, callback: (ApiResponse) -> Unit) : ApiRequestWithAuth(callback = callback) {
     init {
-        with(params) {
+        params.apply {
             put("id", id.toString())
             put("m", Methods.CANCEL_ON_WAY.code)
         }

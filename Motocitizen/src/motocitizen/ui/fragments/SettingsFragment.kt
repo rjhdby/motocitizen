@@ -1,5 +1,6 @@
 package motocitizen.ui.fragments
 
+import android.preference.CheckBoxPreference
 import android.preference.Preference
 import android.preference.PreferenceFragment
 import motocitizen.datasources.preferences.Preferences
@@ -10,8 +11,6 @@ import motocitizen.utils.*
 
 class SettingsFragment : PreferenceFragment() {
     private val PREFERENCES = R.xml.preferences
-
-    private val preferences = Preferences
 
     private val notificationDistPreference: Preference by lazy { preferenceByName("distanceShow") }
     private val notificationAlarmPreference: Preference by lazy { preferenceByName("distanceAlarm") }
@@ -27,7 +26,7 @@ class SettingsFragment : PreferenceFragment() {
     private val notificationSoundPreference: Preference by lazy { findPreference(resources.getString(R.string.notification_sound)) }
     private val authPreference: Preference by lazy { findPreference(resources.getString(R.string.settings_auth_button)) }
 
-    private var login = preferences.login
+    private var login = Preferences.login
 
     override fun onResume() {
         super.onResume()
@@ -41,9 +40,13 @@ class SettingsFragment : PreferenceFragment() {
         authPreference.summary = if (login.isNotEmpty()) User.roleName + ": " + login else User.roleName
         maxNotifications.summary = Preferences.maxNotifications.toString()
         hoursAgo.summary = Preferences.hoursAgo.toString()
-        notificationSoundPreference.summary = preferences.soundTitle
+        notificationSoundPreference.summary = Preferences.soundTitle
         notificationDistPreference.summary = Preferences.visibleDistance.toString()
         notificationAlarmPreference.summary = Preferences.alarmDistance.toString()
+        (showAcc as CheckBoxPreference).isChecked = Preferences.showAccidents
+        (showBreak as CheckBoxPreference).isChecked = Preferences.showBreaks
+        (showSteal as CheckBoxPreference).isChecked = Preferences.showSteal
+        (showOther as CheckBoxPreference).isChecked = Preferences.showOther
     }
 
     private fun setUpListeners() {
@@ -64,6 +67,20 @@ class SettingsFragment : PreferenceFragment() {
     private fun maxNotificationsListener(preference: Preference, newValue: Any): Boolean {
         preference.summary = newValue as String
         return true
+    }
+
+    private fun visibleListener(preference: Preference, newValue: Any): Boolean {
+        when (preference.key) {
+            "mc.show.acc"   -> Preferences.showAccidents = newValue as Boolean
+            "mc.show.break" -> Preferences.showBreaks = newValue as Boolean
+            "mc.show.steal" -> Preferences.showSteal = newValue as Boolean
+            "mc.show.other" -> Preferences.showOther = newValue as Boolean
+        }
+        if (isAllHidden) {
+            activity.showToast(getString(R.string.no_one_accident_visible))
+        }
+        update()
+        return false
     }
 
     private fun hoursAgoListener(preference: Preference, newValue: Any): Boolean {
@@ -99,19 +116,6 @@ class SettingsFragment : PreferenceFragment() {
         return false
     }
 
-    private fun visibleListener(preference: Preference, newValue: Any): Boolean {
-        when (preference.key) {
-            "mc.show.acc"   -> Preferences.showAccidents = newValue as Boolean
-            "mc.show.break" -> Preferences.showBreaks = newValue as Boolean
-            "mc.show.steal" -> Preferences.showSteal = newValue as Boolean
-            "mc.show.other" -> Preferences.showOther = newValue as Boolean
-        }
-        if (isAllHidden) {
-            activity.showToast(getString(R.string.no_one_accident_visible))
-        }
-        update()
-        return false
-    }
 
     private val isAllHidden: Boolean
         inline get() = !with(Preferences) { showAccidents || showSteal || showBreaks || showOther }

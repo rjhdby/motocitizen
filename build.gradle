@@ -4,9 +4,9 @@ repositories {
     google()
 }
 buildscript {
-    ext.kotlin_version = '1.1.61'
+    ext.kotlin_version = '1.2.0'
     ext.anko_version = '0.10.1'
-    ext.google_services = '11.6.0'
+    ext.google_services = '11.6.2'
     ext.google_support = '25.4.0'
     ext.okhttp = '3.7.0'
     ext.coroutines_version = '0.19.1'
@@ -68,6 +68,17 @@ android {
         instrumentTest.setRoot('tests')
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
+    }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/motocitizen_debug.kotlin_module'
     }
 }
 

@@ -17,8 +17,9 @@ import motocitizen.main.R
 import motocitizen.router.Router
 import motocitizen.ui.activity.AccidentDetailsActivity
 import motocitizen.ui.menus.AccidentContextMenu
-import motocitizen.utils.MarginArray
+import motocitizen.utils.Margins
 import motocitizen.utils.getIntervalFromNowInText
+import motocitizen.utils.margins
 import org.jetbrains.anko.matchParent
 import org.jetbrains.anko.textView
 import org.jetbrains.anko.wrapContent
@@ -30,7 +31,7 @@ abstract class Row protected constructor(context: Context, val accident: Acciden
     val HIDDEN_COLOR = 0x30FFFFFF
     abstract val background: Int
     abstract val textColor: Int
-    abstract val margins: MarginArray
+    abstract val margins: Margins
 
     private fun messagesText(accident: Accident): Spanned {
         val text = formatMessagesText(accident)
@@ -73,8 +74,8 @@ abstract class Row protected constructor(context: Context, val accident: Acciden
     }
 
     private fun setMargins() {
-        layoutParams = LinearLayout.LayoutParams(matchParent, wrapContent)
-                .apply { setMargins(margins[0], margins[1], margins[2], margins[3]) }
+        layoutParams = LinearLayout.LayoutParams(matchParent, wrapContent).margins(margins)
+//                .apply { setMargins(margins[0], margins[1], margins[2], margins[3]) }
     }
 
     //todo extract

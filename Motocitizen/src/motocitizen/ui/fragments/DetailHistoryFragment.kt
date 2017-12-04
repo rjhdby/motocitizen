@@ -43,6 +43,6 @@ class DetailHistoryFragment() : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (savedInstanceState == null) return
-        accident = Content.accident(savedInstanceState.getInt(ACCIDENT_ID_KEY))
+        accident = Content[savedInstanceState.getInt(ACCIDENT_ID_KEY)]!!
     }
 }

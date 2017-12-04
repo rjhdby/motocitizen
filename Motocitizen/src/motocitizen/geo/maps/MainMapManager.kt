@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import motocitizen.content.accident.Accident
@@ -20,15 +19,13 @@ class MainMapManager(fragment: FragmentActivity) : MapManager(fragment, R.id.goo
         map.setOnMapLongClickListener { Router.toExternalMap(fragment as Activity, it) }
     }
 
-    override fun update() {
-        addContent { addUserMarker() }
-    }
+    override fun update() = addContent { addUserMarker() }
 
     private var user: Marker? = null
     private var selected: String = ""
 
     private fun addUserMarker() {
-        if (user != null) user!!.remove()
+        user?.remove()
         val location = MyLocationManager.getLocation()
         user = map.addMarker(MarkerOptions().position(location).title(Type.USER.text).icon(Type.USER.icon))
     }
@@ -50,7 +47,5 @@ class MainMapManager(fragment: FragmentActivity) : MapManager(fragment, R.id.goo
         Router.goTo(context as Activity, Router.Target.DETAILS, bundle)
     }
 
-    fun centerOnAccident(accident: Accident) {
-        centerOn(accident.coordinates)
-    }
+    fun centerOnAccident(accident: Accident) = centerOn(accident.coordinates)
 }

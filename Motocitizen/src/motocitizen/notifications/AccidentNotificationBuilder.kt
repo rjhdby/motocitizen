@@ -34,26 +34,24 @@ class AccidentNotificationBuilder(val context: Context, val accident: Accident) 
 
     private fun makePendingIntent(): PendingIntent = PendingIntent.getActivity(context, accident.coordinates.hashCode(), makeIntent(), PendingIntent.FLAG_ONE_SHOT)
 
-    private fun makeSound(): Uri? = if (Preferences.soundTitle == "default system")
-        RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-    else
-        Preferences.sound
+    private fun makeSound(): Uri = when {
+        Preferences.soundTitle == "default system" -> RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+        else                                       -> Preferences.sound
+    }
 
-    private fun makeVibration(): LongArray = if (Preferences.vibration)
-        longArrayOf(1000, 1000, 1000)
-    else
-        LongArray(0)
+    private fun makeVibration(): LongArray = when {
+        Preferences.vibration -> longArrayOf(1000, 1000, 1000)
+        else                  -> LongArray(0)
+    }
 
     private fun makeTitle(): String = String.format("%s%s(%s)", accident.type.text, makeDamageString(), accident.distanceString())
 
     private fun makeLargeIcon(): Bitmap = BitmapFactory.decodeResource(context.resources, ICON)
 
-    private fun makeIntent(): Intent {
-        val intent = Intent(context, AccidentDetailsActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        intent.putExtra(AccidentDetailsActivity.ACCIDENT_ID_KEY, accident.id)
-        return intent
+    private fun makeIntent() = Intent(context, AccidentDetailsActivity::class.java).apply {
+        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        putExtra(AccidentDetailsActivity.ACCIDENT_ID_KEY, accident.id)
     }
 
     private fun makeDamageString(): String = if (accident.medicine === Medicine.UNKNOWN) "" else ", " + accident.medicine.text

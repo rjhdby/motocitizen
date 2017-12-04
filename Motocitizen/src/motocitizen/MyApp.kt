@@ -13,6 +13,7 @@ import com.vk.sdk.VKAccessTokenTracker
 import com.vk.sdk.VKSdk
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.geo.MyGoogleApiClient
+import motocitizen.migration.Migration
 import motocitizen.ui.activity.AuthActivity
 import motocitizen.user.Auth
 
@@ -39,7 +40,10 @@ class MyApp : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
+        Migration.makeMigration(this)
+
         context = applicationContext
+
         Preferences.initialize(this)
         MyGoogleApiClient.initialize(this)
         FirebaseMessaging.getInstance().subscribeToTopic("accidents")

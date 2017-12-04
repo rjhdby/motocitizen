@@ -1,17 +1,16 @@
 package motocitizen.ui.menus
 
 import android.content.Context
-import android.widget.LinearLayout
 import android.widget.PopupWindow
+import motocitizen.utils.matchWrapParams
 import org.jetbrains.anko.backgroundColor
-import org.jetbrains.anko.matchParent
 import org.jetbrains.anko.verticalLayout
 import org.jetbrains.anko.wrapContent
 
 abstract class ContextMenu(val context: Context) : PopupWindow() {
     private val rootView = context.verticalLayout {
         backgroundColor = 0xFF202020.toInt()
-        layoutParams = LinearLayout.LayoutParams(matchParent, wrapContent)
+        layoutParams = matchWrapParams
     }
 
     init {

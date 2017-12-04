@@ -44,7 +44,7 @@
     <PreferenceCategory
         android:key="@string/config_title_notify_category"
         android:title="@string/config_title_notify_category">
-        <EditTextPreference
+        <motocitizen.ui.views.IntEditTextPreference
             android:defaultValue="200"
             android:dialogTitle="@string/settings_distance"
             android:key="mc.distance.show"
@@ -53,7 +53,7 @@
             android:summary="@string/settings_distance"
             android:tag="mc.distance.show"
             android:title="@string/settings_distance"/>
-        <EditTextPreference
+        <motocitizen.ui.views.IntEditTextPreference
             android:defaultValue="20"
             android:dialogTitle="@string/settings_distance_alarm"
             android:key="mc.distance.alarm"
@@ -62,7 +62,7 @@
             android:summary="@string/settings_distance_alarm"
             android:tag="mc.distance.alarm"
             android:title="@string/settings_distance_alarm"/>
-        <EditTextPreference
+        <motocitizen.ui.views.IntEditTextPreference
             android:defaultValue="24"
             android:dialogTitle="@string/settings_hours_ago"
             android:key="hours.ago"
@@ -71,7 +71,7 @@
             android:summary=""
             android:tag="hours.ago"
             android:title="@string/settings_hours_ago"/>
-        <EditTextPreference
+        <motocitizen.ui.views.IntEditTextPreference
             android:defaultValue="3"
             android:dialogTitle="@string/settings_max_notifications"
             android:key="notifications.max"

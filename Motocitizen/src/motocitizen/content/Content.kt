@@ -10,9 +10,10 @@ import org.json.JSONObject
 object Content {
     var inPlace: Accident? = null //todo
 
-    fun accident(id: Int): Accident = AccidentsController.accidents[id]!! //TODO can produce NPE
     fun volunteer(id: Int): Volunteer = VolunteersController.volunteers[id]!!//TODO can produce NPE
     fun message(id: Int): Message = MessagesController.messages[id]!!//TODO can produce NPE
+
+    operator fun get(index: Int) = AccidentsController.accidents[index]
 
     fun volunteerName(id: Int): String = VolunteersController.volunteers[id]?.name ?: ""  //todo
 

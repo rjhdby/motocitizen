@@ -27,17 +27,17 @@ abstract class MapManager(protected val fragment: FragmentActivity, mapContainer
         mapFragment.getMapAsync { mapReadyCallback(it) }
     }
 
-    protected fun addContent(callback: () -> Unit) {
-        queryJob {
-            map.clear()
-            addAccidentsMarkers()
-            callback()
-        }
+    protected fun addContent(callback: () -> Unit) = queryJob {
+        map.clear()
+        addAccidentsMarkers()
+        callback()
     }
 
     private fun queryJob(job: () -> Unit) {
-        if (mapReady) job()
-        else delayedAction.add { job() }
+        when {
+            mapReady -> job()
+            else     -> delayedAction.add { job() }
+        }
     }
 
     private fun runDelayedJobs() {
@@ -60,8 +60,10 @@ abstract class MapManager(protected val fragment: FragmentActivity, mapContainer
     private fun mapReadyCallback(googleMap: GoogleMap) {
         mapReady = true
         map = googleMap
-        map.uiSettings.isMyLocationButtonEnabled = true
-        map.uiSettings.isZoomControlsEnabled = true
+        map.uiSettings.apply {
+            isMyLocationButtonEnabled = true
+            isZoomControlsEnabled = true
+        }
         centerOn(MyLocationManager.getLocation())
         enableLocation()
         update()

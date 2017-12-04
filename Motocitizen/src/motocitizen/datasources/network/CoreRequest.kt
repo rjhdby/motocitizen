@@ -10,9 +10,8 @@ abstract class CoreRequest(val callback: (ApiResponse) -> Unit = {}) {
     var params: HashMap<String, String> = HashMap()
     abstract val url: String
     val error = JSONObject("""{"r":{},"e":{"c":0,"t":"server error"}}""")
-    private val logLevel = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
     private val client = OkHttpClient.Builder()
-            .addInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
+            .addInterceptor(HttpLoggingInterceptor().setLevel(logLevel()))
             .build()
 
     private fun buildRequest() = Request.Builder()
@@ -22,17 +21,11 @@ abstract class CoreRequest(val callback: (ApiResponse) -> Unit = {}) {
 
     protected fun call() = client.newCall(buildRequest()).enqueue(enqueueCallback())
 
-    private fun enqueueCallback(): Callback {
-        return object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                callback(ApiResponse(error))
-            }
+    private fun enqueueCallback(): Callback = object : Callback {
+        override fun onFailure(call: Call, e: IOException) = callback(ApiResponse(error))
 
-            @Throws(IOException::class)
-            override fun onResponse(call: Call, response: Response) {
-                callback(response(response.body().string()))
-            }
-        }
+        @Throws(IOException::class)
+        override fun onResponse(call: Call, response: Response) = callback(response(response.body().string()))
     }
 
     abstract fun response(string: String): ApiResponse
@@ -41,5 +34,10 @@ abstract class CoreRequest(val callback: (ApiResponse) -> Unit = {}) {
         val body = FormBody.Builder()
         post.forEach { (k, v) -> body.add(k, v) }
         return body.build()
+    }
+
+    private fun logLevel() = when {
+        BuildConfig.DEBUG -> HttpLoggingInterceptor.Level.BODY
+        else              -> HttpLoggingInterceptor.Level.NONE
     }
 }

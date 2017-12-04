@@ -40,9 +40,9 @@ class AccidentDetailsActivity : AppCompatActivity() {
     private val HISTORY_TAB = R.id.details_tab_history
     private val VOLUNTEER_TAB = R.id.details_tab_people
 
-    private val accident: Accident by lazy { Content.accident(intent.extras.getInt(ACCIDENT_ID_KEY)) }
-    private val summaryFrame: DetailsSummaryFrame by lazy { DetailsSummaryFrame(this, accident) }
-    private val menuController: DetailsMenuController by lazy { DetailsMenuController(this, accident) }
+    lateinit private var accident: Accident
+    lateinit private var summaryFrame: DetailsSummaryFrame
+    lateinit private var menuController: DetailsMenuController
 
     private val tabs: RadioGroup by bindView(R.id.details_tabs_group)
 
@@ -52,6 +52,9 @@ class AccidentDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(ROOT_LAYOUT)
+        accident = Content[intent.extras.getInt(ACCIDENT_ID_KEY)]!!
+        menuController = DetailsMenuController(this, accident)
+        summaryFrame = DetailsSummaryFrame(this, accident)
 
         Content.requestDetailsForAccident(accident) { this.runOnUiThread { this.setupFragments() } }
         tabs.visibility = View.INVISIBLE
@@ -95,12 +98,12 @@ class AccidentDetailsActivity : AppCompatActivity() {
 
     fun update() {
         summaryFrame.update()
-        menuController.menuReconstruction()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         menuController.optionsMenuCreated(menu)
-        return super.onCreateOptionsMenu(menu)
+        menuController.menuReconstruction()
+        return super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

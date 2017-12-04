@@ -13,36 +13,41 @@ class NotificationListener : FirebaseMessagingService() {
     private val tray = LinkedList<Int>()
 
     private val preferences = Preferences
-    private var notificationManager: NotificationManagerCompat? = null
-    private var accident: Accident? = null
+    lateinit private var notificationManager: NotificationManagerCompat
+    lateinit private var accident: Accident
     private var idHash: Int = 0
 
-    override fun onMessageReceived(remoteMessage: RemoteMessage?) {
-        val data = remoteMessage!!.data
-        val id = Integer.parseInt(data["id"].toString())
-        Content.requestSingleAccident(id) { raiseNotification(id) }
+    override fun onMessageReceived(remoteMessage: RemoteMessage) {
+        val data = remoteMessage.data
+        try {
+            val id = Integer.parseInt(data["id"].toString())
+            Content.requestSingleAccident(id) {
+                raiseNotification(id)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
-    private fun raiseNotification(id: Int?) {
-        accident = Content.accident(id!!)
-        notificationManager = NotificationManagerCompat.from(this)
+    private fun raiseNotification(id: Int) {
+        accident = Content[id] ?: return
         if (doNotShow()) return
+        notificationManager = NotificationManagerCompat.from(this)
 
-        idHash = accident!!.coordinates.hashCode()
+        idHash = accident.coordinates.hashCode()
 
-        notificationManager!!.notify(idHash, AccidentNotificationBuilder(this, accident!!).build())
+        notificationManager.notify(idHash, AccidentNotificationBuilder(this, accident).build())
         manageTray()
     }
 
-    private fun doNotShow(): Boolean = accident == null || !accident!!.isVisible() || preferences.doNotDisturb
+    private fun doNotShow(): Boolean = !accident.isVisible() || preferences.doNotDisturb
 
 
     private fun manageTray() {
         tray.push(idHash)
-        //        while (tray.size() > Preferences.Stored.MAX_NOTIFICATIONS.int()) {
         while (tray.size > Preferences.maxNotifications) {
             val remove = tray.pollLast()
-            notificationManager!!.cancel(remove)
+            notificationManager.cancel(remove)
         }
     }
 

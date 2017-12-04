@@ -10,9 +10,9 @@ import org.json.JSONException
 object Auth {
     fun auth(login: String, password: String, callback: (ApiResponse) -> Unit) {
         Preferences.password = password
-        AuthRequest(login, makePassHash(password), { response ->
-            authRequestCallback(response, login, callback)
-        })
+        AuthRequest(login, password.md5()) {
+            authRequestCallback(it, login, callback)
+        }
     }
 
     private fun authRequestCallback(response: ApiResponse, login: String, callback: (ApiResponse) -> Unit) {
@@ -24,26 +24,26 @@ object Auth {
         User.isAuthorized = false
         try {
             val result = response.resultObject
-            User.id = Integer.parseInt(result.getString("id"))
-            User.name = login
-            User.role = Role.parse(result.getInt("r"))
+            User.apply {
+                id = Integer.parseInt(result.getString("id"))
+                name = login
+                role = Role.parse(result.getInt("r"))
+                isAuthorized = true
+            }
             Preferences.login = User.name
             Preferences.anonymous = false
-            User.isAuthorized = true
         } catch (e: JSONException) {
             e.printStackTrace()
             Log.d("AUTH ERROR", response.toString())
         }
     }
 
-    fun getPassHash(): String = Auth.makePassHash(Preferences.password)
+    fun getPassHash(): String = Preferences.password.md5()
 
-    private fun makePassHash(pass: String): String = pass.md5()
-
-    fun logoff() {
-        User.name = ""
-        User.role = Role.RO
-        User.id = 0
-        User.isAuthorized = false
+    fun logoff() = User.apply {
+        name = ""
+        role = Role.RO
+        id = 0
+        isAuthorized = false
     }
 }

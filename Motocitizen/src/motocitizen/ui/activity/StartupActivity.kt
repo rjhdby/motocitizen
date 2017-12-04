@@ -3,8 +3,6 @@ package motocitizen.ui.activity
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import motocitizen.datasources.preferences.Preferences
-import motocitizen.datasources.preferences.Preferences.Stored.LOGIN
-import motocitizen.datasources.preferences.Preferences.Stored.PASSWORD
 import motocitizen.main.R
 import motocitizen.permissions.Permissions
 import motocitizen.router.Router
