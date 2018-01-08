@@ -9,13 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import motocitizen.main.R
 import motocitizen.ui.fragments.SettingsFragment
+import org.jetbrains.anko.frameLayout
 
 class SettingsActivity : Activity() {
-    private val ROOT_LAYOUT = R.layout.activity_settings
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(ROOT_LAYOUT)
+        setContentView(frameLayout {})
         if (savedInstanceState == null) {
             fragmentManager.beginTransaction().replace(android.R.id.content, SettingsFragment()).commit()
         }
@@ -26,8 +26,7 @@ class SettingsActivity : Activity() {
     class PlaceholderFragment : Fragment() {
         private val SETTINGS_FRAGMENT = R.layout.fragment_settings
 
-        override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-            return inflater!!.inflate(SETTINGS_FRAGMENT, container, false)
-        }
+        override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+                inflater!!.inflate(SETTINGS_FRAGMENT, container, false)
     }
 }

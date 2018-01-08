@@ -45,7 +45,7 @@ class SelectSoundFragment : Fragment() {
             if (currentTitle == "default system") {
                 Preferences.setDefaultSoundAlarm()
             } else
-                Preferences.setSound(currentTitle, currentUri!!)
+                Preferences.setSound(currentTitle, currentUri)
             Preferences.initSound(activity)
             finish()
         }

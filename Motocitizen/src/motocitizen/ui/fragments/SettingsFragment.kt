@@ -3,6 +3,7 @@ package motocitizen.ui.fragments
 import android.preference.CheckBoxPreference
 import android.preference.Preference
 import android.preference.PreferenceFragment
+import motocitizen.content.AccidentsController
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.main.R
 import motocitizen.router.Router
@@ -58,10 +59,8 @@ class SettingsFragment : PreferenceFragment() {
         maxNotifications.onChangeListener(this::maxNotificationsListener)
         hoursAgo.onChangeListener(this::hoursAgoListener)
         useVibration.onChangeListener { _, newValue -> this.vibrationListener(newValue) }
-        showAcc.onChangeListener(this::visibleListener)
-        showBreak.onChangeListener(this::visibleListener)
-        showSteal.onChangeListener(this::visibleListener)
-        showOther.onChangeListener(this::visibleListener)
+        arrayOf(showAcc, showBreak, showOther, showSteal)
+                .forEach { it.onChangeListener(this::visibleListener) }
     }
 
     private fun maxNotificationsListener(preference: Preference, newValue: Any): Boolean {
@@ -87,6 +86,7 @@ class SettingsFragment : PreferenceFragment() {
         var value = newValue
         if (value == "0") value = "1"
         preference.summary = value.toString()
+        AccidentsController.resetLastUpdate()
         return true
     }
 

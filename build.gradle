@@ -4,9 +4,9 @@ repositories {
     google()
 }
 buildscript {
-    ext.kotlin_version = '1.2.0'
+    ext.kotlin_version = '1.2.10'
     ext.anko_version = '0.10.1'
-    ext.google_services = '11.6.2'
+    ext.google_services = '11.8.0'
     ext.google_support = '25.4.0'
     ext.okhttp = '3.7.0'
     ext.coroutines_version = '0.19.1'

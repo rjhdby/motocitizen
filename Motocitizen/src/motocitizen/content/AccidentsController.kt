@@ -21,6 +21,10 @@ object AccidentsController {
     private var lastUpdate: Long = 0
     val accidents: TreeMap<Int, Accident> = TreeMap()
 
+    fun resetLastUpdate() {
+        lastUpdate = 0
+    }
+
     fun update(callback: (ApiResponse) -> Unit) {
         if (lastUpdate == 0L) {
             requestList(callback)

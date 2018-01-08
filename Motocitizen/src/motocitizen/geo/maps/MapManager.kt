@@ -54,7 +54,7 @@ abstract class MapManager(protected val fragment: FragmentActivity, mapContainer
     }
 
     private fun enableLocation() {
-        Permissions.requestLocation(fragment, { map.isMyLocationEnabled = true })
+        Permissions.requestLocation(fragment, { map.isMyLocationEnabled = true }, {})
     }
 
     private fun mapReadyCallback(googleMap: GoogleMap) {
