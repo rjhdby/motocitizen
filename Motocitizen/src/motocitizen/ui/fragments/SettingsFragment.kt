@@ -93,6 +93,7 @@ class SettingsFragment : PreferenceFragment() {
         } else {
             FirebaseMessaging.getInstance().unsubscribeFromTopic("test")
         }
+        AccidentsController.resetLastUpdate()
         update()
         return false
     }
