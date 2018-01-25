@@ -1,6 +1,7 @@
 package motocitizen.notifications
 
 import android.support.v4.app.NotificationManagerCompat
+import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import motocitizen.content.Content
@@ -13,11 +14,12 @@ class NotificationListener : FirebaseMessagingService() {
     private val tray = LinkedList<Int>()
 
     private val preferences = Preferences
-    lateinit private var notificationManager: NotificationManagerCompat
-    lateinit private var accident: Accident
+    private lateinit var notificationManager: NotificationManagerCompat
+    private lateinit var accident: Accident
     private var idHash: Int = 0
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
+        Log.e("FCM",remoteMessage.from)
         val data = remoteMessage.data
         try {
             val id = Integer.parseInt(data["id"].toString())
@@ -50,6 +52,4 @@ class NotificationListener : FirebaseMessagingService() {
             notificationManager.cancel(remove)
         }
     }
-
-
 }

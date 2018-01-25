@@ -12,6 +12,9 @@ class AccidentListRequest(callback: (ApiResponse) -> Unit) : ApiRequest(callback
             if (User.name != "") {
                 put("u", User.name)
             }
+            if (Preferences.isTester) {
+                put("test", "1")
+            }
             put("a", Preferences.hoursAgo.toString())
             put("m", Methods.LIST.code)
         }

@@ -40,6 +40,15 @@
             android:summaryOn="@string/settings_summary_on"
             android:tag="mc.show.other"
             android:title="@string/settings_other"/>
+        <CheckBoxPreference
+            android:id="@+id/value_app_tester"
+            android:defaultValue="true"
+            android:dialogTitle="Режим тестирования"
+            android:key="tester"
+            android:summaryOff="@string/settings_summary_off"
+            android:summaryOn="@string/settings_summary_on"
+            android:tag="tester"
+            android:title="Режим тестирования"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:key="@string/config_title_notify_category"

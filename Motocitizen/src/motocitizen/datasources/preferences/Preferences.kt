@@ -13,16 +13,17 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 object Preferences {
-    private val DEFAULT_LATITUDE = 55.752295f
-    private val DEFAULT_LONGITUDE = 37.622735f
-    private val DEFAULT_SHOW_DISTANCE = 200
-    private val DEFAULT_ALARM_DISTANCE = 20
-    private val DEFAULT_MAX_NOTIFICATIONS = 3
-    private val DEFAULT_MAX_AGE = 24
-    private val DEFAULT_VIBRATION = true
-    private val DEFAULT_DO_NOT_DISTURB = false
-    private val DEFAULT_IS_ANONYMOUS = false
-    private val DEFAULT_SHOW_TYPE = true
+    private const val DEFAULT_LATITUDE = 55.752295f
+    private const val DEFAULT_LONGITUDE = 37.622735f
+    private const val DEFAULT_SHOW_DISTANCE = 200
+    private const val DEFAULT_ALARM_DISTANCE = 20
+    private const val DEFAULT_MAX_NOTIFICATIONS = 3
+    private const val DEFAULT_MAX_AGE = 24
+    private const val DEFAULT_VIBRATION = true
+    private const val DEFAULT_DO_NOT_DISTURB = false
+    private const val DEFAULT_IS_ANONYMOUS = false
+    private const val DEFAULT_SHOW_TYPE = true
+    private const val DEFAULT_TESTER = false
 
     private enum class Stored(val key: String, val default: Any) {
         IS_SHOW_ACCIDENT("mc.show.acc", DEFAULT_SHOW_TYPE),
@@ -43,11 +44,14 @@ object Preferences {
         SOUND_TITLE("mc.notification.sound.title", "default system"),
         SOUND_URI("mc.notification.sound", ""),
         LOGIN("mc.login", ""),
-        PASSWORD("mc.password", "");
+        PASSWORD("mc.password", ""),
+        IS_TESTER("tester", DEFAULT_TESTER);
     }
 
     fun initialize(context: Context) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context)
+        firstTimeSetup()
+
         initSound(context)
         try {
             val version = context.packageManager.getPackageInfo(context.packageName, 0).versionCode
@@ -60,8 +64,24 @@ object Preferences {
         }
     }
 
+    private fun firstTimeSetup() {
+        values()
+                .forEach {
+                    if (!preferences.contains(it.key)) {
+                        preferences.edit().apply {
+                            when (it.default) {
+                                is Int     -> putInt(it.key, it.default)
+                                is Boolean -> putBoolean(it.key, it.default)
+                                is String  -> putString(it.key, it.default)
+                                is Float   -> putFloat(it.key, it.default)
+                            }
+                        }.apply()
+                    }
+                }
+    }
+
     var newVersion = false
-    lateinit private var preferences: SharedPreferences
+    private lateinit var preferences: SharedPreferences
 
     var doNotDisturb by PreferenceDelegate<Boolean>(DO_NOT_DISTURB)
     var onWay by PreferenceDelegate<Int>(ON_WAY)
@@ -87,6 +107,8 @@ object Preferences {
     var hoursAgo by PreferenceDelegate<Int>(HOURS_AGO)
 
     var maxNotifications by PreferenceDelegate<Int>(MAX_NOTIFICATIONS)
+
+    var isTester by PreferenceDelegate<Boolean>(IS_TESTER)
 
     private var latitude by PreferenceDelegate<Float>(LATITUDE)
     private var longitude by PreferenceDelegate<Float>(LONGITUDE)
@@ -140,6 +162,7 @@ object Preferences {
         "distanceAlarm"    -> "mc.distance.alarm"
         "maxNotifications" -> "notifications.max"
         "useVibration"     -> "use.vibration"
+        "isTester"         -> "tester"
         else               -> "unknown"
     }
 

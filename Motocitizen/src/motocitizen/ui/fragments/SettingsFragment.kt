@@ -3,6 +3,7 @@ package motocitizen.ui.fragments
 import android.preference.CheckBoxPreference
 import android.preference.Preference
 import android.preference.PreferenceFragment
+import com.google.firebase.messaging.FirebaseMessaging
 import motocitizen.content.AccidentsController
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.main.R
@@ -22,6 +23,7 @@ class SettingsFragment : PreferenceFragment() {
     private val showSteal: Preference by lazy { preferenceByName("showSteal") }
     private val showOther: Preference by lazy { preferenceByName("showOther") }
     private val hoursAgo: Preference by lazy { preferenceByName("hoursAgo") }
+    private val isTester: Preference by lazy { preferenceByName("isTester") }
     private val maxNotifications: Preference by lazy { preferenceByName("maxNotifications") }
     private val useVibration: Preference by lazy { preferenceByName("useVibration") }
     private val notificationSoundPreference: Preference by lazy { findPreference(resources.getString(R.string.notification_sound)) }
@@ -48,19 +50,21 @@ class SettingsFragment : PreferenceFragment() {
         (showBreak as CheckBoxPreference).isChecked = Preferences.showBreaks
         (showSteal as CheckBoxPreference).isChecked = Preferences.showSteal
         (showOther as CheckBoxPreference).isChecked = Preferences.showOther
+        (isTester as CheckBoxPreference).isChecked = Preferences.isTester
     }
 
     private fun setUpListeners() {
         buttonSound.onClickListener { this.soundButtonPressed() }
         buttonAuth.onClickListener { this.authButtonPressed() }
 
-        notificationDistPreference.onChangeListener(this::distanceListener)
-        notificationAlarmPreference.onChangeListener(this::distanceListener)
-        maxNotifications.onChangeListener(this::maxNotificationsListener)
-        hoursAgo.onChangeListener(this::hoursAgoListener)
+        notificationDistPreference.onChangeListener(::distanceListener)
+        notificationAlarmPreference.onChangeListener(::distanceListener)
+        maxNotifications.onChangeListener(::maxNotificationsListener)
+        hoursAgo.onChangeListener(::hoursAgoListener)
         useVibration.onChangeListener { _, newValue -> this.vibrationListener(newValue) }
+        isTester.onChangeListener(::isTesterListener)
         arrayOf(showAcc, showBreak, showOther, showSteal)
-                .forEach { it.onChangeListener(this::visibleListener) }
+                .forEach { it.onChangeListener(::visibleListener) }
     }
 
     private fun maxNotificationsListener(preference: Preference, newValue: Any): Boolean {
@@ -77,6 +81,17 @@ class SettingsFragment : PreferenceFragment() {
         }
         if (isAllHidden) {
             activity.showToast(getString(R.string.no_one_accident_visible))
+        }
+        update()
+        return false
+    }
+
+    private fun isTesterListener(preference: Preference, newValue: Any): Boolean {
+        Preferences.isTester = newValue as Boolean
+        if (newValue) {
+            FirebaseMessaging.getInstance().subscribeToTopic("test")
+        } else {
+            FirebaseMessaging.getInstance().unsubscribeFromTopic("test")
         }
         update()
         return false

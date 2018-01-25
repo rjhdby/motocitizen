@@ -47,6 +47,8 @@ class MyApp : MultiDexApplication() {
         Preferences.initialize(this)
         MyGoogleApiClient.initialize(this)
         FirebaseMessaging.getInstance().subscribeToTopic("accidents")
+        if (Preferences.isTester) FirebaseMessaging.getInstance().subscribeToTopic("test")
+
         vkAccessTokenTracker.startTracking()
         VKSdk.initialize(this)
     }

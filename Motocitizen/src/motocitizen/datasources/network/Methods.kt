@@ -14,5 +14,6 @@ enum class Methods constructor(val code: String) {
     ACTIVATE_ACCIDENT("activateAccident"),
     END_ACCIDENT("endAccident"),
     HAS_NEW("hasNew"),
-    HIDE_ACCIDENT("hideAccident")
+    HIDE_ACCIDENT("hideAccident"),
+    ACCIDENT("getAccident")
 }
