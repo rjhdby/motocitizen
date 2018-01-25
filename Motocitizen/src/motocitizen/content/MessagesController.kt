@@ -10,6 +10,6 @@ object MessagesController {
     fun addMessages(json: JSONArray) {
         json.asList()
                 .map { Message(it) }
-                .forEach { messages.put(it.id, it) }
+                .forEach { messages[it.id] = it }
     }
 }

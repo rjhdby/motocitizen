@@ -15,7 +15,7 @@ fun JSONObject.getAccidentLocation() = AccidentLocation(getString("a"), LatLng(g
 fun JSONObject.getHistoryAction() = HistoryAction.values().firstOrNull { it.code == getString("a") } ?: HistoryAction.OTHER
 fun JSONObject.getVolunteerAction() = VolunteerActions.values().firstOrNull { it.code == getString("s") } ?: VolunteerActions.ON_WAY
 
-fun JSONArray.asList() = (0..this.length()).map { getJSONObject(it) }.toList()
+fun JSONArray.asList(): List<JSONObject> = (0 until this.length()).map { getJSONObject(it) }.toList()
 
 fun JSONObject.getIntOr(key: String, default: Int): Int = try {
     getInt(key)
