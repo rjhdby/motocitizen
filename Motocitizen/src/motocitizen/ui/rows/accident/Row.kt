@@ -38,6 +38,7 @@ abstract class Row protected constructor(context: Context, val accident: Acciden
         return if (Build.VERSION.SDK_INT >= 24) {
             Html.fromHtml(text, android.text.Html.TO_HTML_PARAGRAPH_LINES_CONSECUTIVE)
         } else {
+            @Suppress("DEPRECATION")
             Html.fromHtml(text)
         }
     }

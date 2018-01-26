@@ -3,13 +3,13 @@ package motocitizen.geo.geolocation
 import com.google.android.gms.location.LocationRequest
 
 object LocationRequestFactory {
-    private val LOW_INTERVAL = 60000L
-    private val LOW_BEST = 30000L
-    private val LOW_DISPLACEMENT = 200f
+    private const val LOW_INTERVAL = 120000L
+    private const val LOW_BEST = 30000L
+    private const val LOW_DISPLACEMENT = 400f
 
-    private val HIGH_INTERVAL = 5000L
-    private val HIGH_BEST = 1000L
-    private val HIGH_DISPLACEMENT = 10f
+    private const val HIGH_INTERVAL = 5000L
+    private const val HIGH_BEST = 1000L
+    private const val HIGH_DISPLACEMENT = 10f
 
     fun accurate(): LocationRequest =
             make(HIGH_INTERVAL, HIGH_BEST, HIGH_DISPLACEMENT, LocationRequest.PRIORITY_HIGH_ACCURACY)

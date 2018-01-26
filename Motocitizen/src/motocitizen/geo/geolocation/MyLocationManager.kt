@@ -1,49 +1,67 @@
 package motocitizen.geo.geolocation
 
 import android.location.Location
+import android.os.Looper
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
+import motocitizen.MyApp
 import motocitizen.content.Content
 import motocitizen.content.accident.Accident
 import motocitizen.datasources.network.requests.InPlaceRequest
 import motocitizen.datasources.preferences.Preferences
-import motocitizen.geo.MyGoogleApiClient
 import motocitizen.geo.geocoder.AddressResolver
 import motocitizen.user.User
 import motocitizen.utils.distanceTo
 import motocitizen.utils.toLatLng
+import motocitizen.utils.toLocation
 
 object MyLocationManager {
-    private val ARRIVED_MAX_ACCURACY = 200
+    private const val ARRIVED_MAX_ACCURACY = 200
 
     private val subscribers = HashMap<String, (LatLng) -> Unit>()
 
+    private val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult?) {
+            locationListener(locationResult?.lastLocation ?: Preferences.savedLatLng.toLocation())
+        }
+    }
+
     private fun locationListener(location: Location) {
         Preferences.savedLatLng = location.toLatLng()
-//        requestAddress()
         subscribers.values.forEach { it(location.toLatLng()) }
         checkInPlace(location)
     }
 
-    fun getLocation(): LatLng = MyGoogleApiClient.getLastLocation()
+    fun getLocation(): LatLng = Preferences.savedLatLng
 
     fun getAddress(location: LatLng): String = AddressResolver.getAddress(location)
 
     fun sleep() {
-        MyGoogleApiClient.runLocationService(LocationRequestFactory.coarse()) { location: Location -> locationListener(location) }
+        runLocationService(LocationRequestFactory.coarse())
     }
 
+    @SuppressWarnings("MissingPermission")
     fun wakeup() {
-        MyGoogleApiClient.runLocationService(LocationRequestFactory.accurate()) { location: Location -> locationListener(location) }
+        LocationServices.getFusedLocationProviderClient(MyApp.context)
+                .lastLocation
+                .addOnSuccessListener { location ->
+                    if (location != null) {
+                        Preferences.savedLatLng = location.toLatLng()
+                    }
+                }
+        runLocationService(LocationRequestFactory.accurate())
     }
 
     fun subscribeToLocationUpdate(name: String, callback: (LatLng) -> Unit) {
-        subscribers.put(name, callback)
+        subscribers[name] = callback
     }
 
     fun unSubscribe(name: String) {
         subscribers.remove(name)
     }
-
 
     private fun checkInPlace(location: Location) {
         if (User.name == "") return
@@ -67,4 +85,10 @@ object MyLocationManager {
 
     private fun isInPlace(location: Location, accident: Accident): Boolean =
             accident.distanceTo(location) - location.accuracy < ARRIVED_MAX_ACCURACY
+
+    @SuppressWarnings("MissingPermission")
+    private fun runLocationService(locationRequest: LocationRequest) {
+        LocationServices.getFusedLocationProviderClient(MyApp.context).removeLocationUpdates(locationCallback)
+        LocationServices.getFusedLocationProviderClient(MyApp.context).requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
+    }
 }

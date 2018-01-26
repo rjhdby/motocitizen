@@ -1,23 +1,23 @@
 package motocitizen
 
 import android.annotation.SuppressLint
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
-import android.support.multidex.MultiDex
-import android.support.multidex.MultiDexApplication
+//import android.support.multidex.MultiDex
+//import android.support.multidex.MultiDexApplication
 import android.widget.Toast
 import com.google.firebase.messaging.FirebaseMessaging
 import com.vk.sdk.VKAccessToken
 import com.vk.sdk.VKAccessTokenTracker
 import com.vk.sdk.VKSdk
 import motocitizen.datasources.preferences.Preferences
-import motocitizen.geo.MyGoogleApiClient
 import motocitizen.migration.Migration
 import motocitizen.ui.activity.AuthActivity
 import motocitizen.user.Auth
 
-class MyApp : MultiDexApplication() {
+class MyApp : Application() {
 
     /**
      * AccessToken invalidated. Слушатель токена
@@ -33,10 +33,10 @@ class MyApp : MultiDexApplication() {
         }
     }
 
-    override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(base)
-        MultiDex.install(this)
-    }
+//    override fun attachBaseContext(base: Context) {
+//        super.attachBaseContext(base)
+////        MultiDex.install(this)
+//    }
 
     override fun onCreate() {
         super.onCreate()
@@ -45,7 +45,7 @@ class MyApp : MultiDexApplication() {
         context = applicationContext
 
         Preferences.initialize(this)
-        MyGoogleApiClient.initialize(this)
+//        MyGoogleApiClient.initialize(this)
         FirebaseMessaging.getInstance().subscribeToTopic("accidents")
         if (Preferences.isTester) FirebaseMessaging.getInstance().subscribeToTopic("test")
 

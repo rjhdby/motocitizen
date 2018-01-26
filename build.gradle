@@ -33,11 +33,13 @@ android {
         release {
             minifyEnabled true
             shrinkResources true
+            useProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
             minifyEnabled true
             shrinkResources true
+            useProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -51,9 +53,6 @@ android {
 
     defaultConfig {
         applicationId "motocitizen.main"
-    }
-    dexOptions {
-        javaMaxHeapSize "4g"
     }
     sourceSets {
         main {
@@ -91,9 +90,8 @@ dependencies {
 
     compile "com.android.support:design:$google_support"
     compile "com.android.support:appcompat-v7:$google_support"
-    compile 'com.android.support:multidex:1.0.2'
 
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     compile "org.jetbrains.anko:anko:$anko_version"
     compile "org.jetbrains.anko:anko-commons:$anko_version"
