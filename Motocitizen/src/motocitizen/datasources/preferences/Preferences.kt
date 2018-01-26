@@ -7,12 +7,69 @@ import android.media.RingtoneManager
 import android.net.Uri
 import android.preference.PreferenceManager
 import com.google.android.gms.maps.model.LatLng
+import motocitizen.MyApp
 import motocitizen.datasources.preferences.Preferences.Stored.*
 import motocitizen.dictionary.Type
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 object Preferences {
+    private val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(MyApp.context)
+
+    var appVersion by PreferenceDelegate<Int>(APP_VERSION)
+    var doNotDisturb by PreferenceDelegate<Boolean>(DO_NOT_DISTURB)
+    var onWay by PreferenceDelegate<Int>(ON_WAY)
+    var soundTitle by PreferenceDelegate<String>(SOUND_TITLE)
+    var soundURI by PreferenceDelegate<String>(SOUND_URI)
+    lateinit var sound: Uri
+        private set
+    var login by PreferenceDelegate<String>(LOGIN)
+    var password by PreferenceDelegate<String>(PASSWORD)
+    var anonymous by PreferenceDelegate<Boolean>(ANONYMOUS)
+
+    var visibleDistance by PreferenceDelegate<Int>(VISIBLE_DISTANCE)
+    var alarmDistance by PreferenceDelegate<Int>(ALARM_DISTANCE)
+
+    var showAccidents by PreferenceDelegate<Boolean>(IS_SHOW_ACCIDENT)
+    var showBreaks by PreferenceDelegate<Boolean>(IS_SHOW_BREAK)
+    var showSteal by PreferenceDelegate<Boolean>(IS_SHOW_STEAL)
+    var showOther by PreferenceDelegate<Boolean>(IS_SHOW_OTHER)
+
+    var vibration by PreferenceDelegate<Boolean>(VIBRATION)
+
+    var hoursAgo by PreferenceDelegate<Int>(HOURS_AGO)
+
+    var maxNotifications by PreferenceDelegate<Int>(MAX_NOTIFICATIONS)
+
+    var isTester by PreferenceDelegate<Boolean>(IS_TESTER)
+
+    private var latitude by PreferenceDelegate<Float>(LATITUDE)
+    private var longitude by PreferenceDelegate<Float>(LONGITUDE)
+
+    var savedLatLng
+        get() = LatLng(latitude.toDouble(), longitude.toDouble())
+        set(latLng) {
+            latitude = latLng.latitude.toFloat()
+            longitude = latLng.longitude.toFloat()
+        }
+
+    var newVersion = false
+
+    init {
+        firstTimeSetup()
+        initSound(MyApp.context)
+
+        try {
+            val version = MyApp.context.packageManager.getPackageInfo(MyApp.context.packageName, 0).versionCode
+            if (version != appVersion) {
+                newVersion = true
+                appVersion = version
+            }
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+        }
+    }
+
     private const val DEFAULT_LATITUDE = 55.752295f
     private const val DEFAULT_LONGITUDE = 37.622735f
     private const val DEFAULT_SHOW_DISTANCE = 200
@@ -48,22 +105,6 @@ object Preferences {
         IS_TESTER("tester", DEFAULT_TESTER);
     }
 
-    fun initialize(context: Context) {
-        preferences = PreferenceManager.getDefaultSharedPreferences(context)
-        firstTimeSetup()
-
-        initSound(context)
-        try {
-            val version = context.packageManager.getPackageInfo(context.packageName, 0).versionCode
-            if (version != appVersion) {
-                newVersion = true
-                appVersion = version
-            }
-        } catch (e: PackageManager.NameNotFoundException) {
-            e.printStackTrace()
-        }
-    }
-
     private fun firstTimeSetup() {
         values()
                 .forEach {
@@ -80,45 +121,6 @@ object Preferences {
                 }
     }
 
-    var newVersion = false
-    private lateinit var preferences: SharedPreferences
-
-    var doNotDisturb by PreferenceDelegate<Boolean>(DO_NOT_DISTURB)
-    var onWay by PreferenceDelegate<Int>(ON_WAY)
-    var soundTitle by PreferenceDelegate<String>(SOUND_TITLE)
-    var soundURI by PreferenceDelegate<String>(SOUND_URI)
-    lateinit var sound: Uri
-        private set
-    var login by PreferenceDelegate<String>(LOGIN)
-    var password by PreferenceDelegate<String>(PASSWORD)
-    var anonymous by PreferenceDelegate<Boolean>(ANONYMOUS)
-    var appVersion by PreferenceDelegate<Int>(APP_VERSION)
-
-    var visibleDistance by PreferenceDelegate<Int>(VISIBLE_DISTANCE)
-    var alarmDistance by PreferenceDelegate<Int>(ALARM_DISTANCE)
-
-    var showAccidents by PreferenceDelegate<Boolean>(IS_SHOW_ACCIDENT)
-    var showBreaks by PreferenceDelegate<Boolean>(IS_SHOW_BREAK)
-    var showSteal by PreferenceDelegate<Boolean>(IS_SHOW_STEAL)
-    var showOther by PreferenceDelegate<Boolean>(IS_SHOW_OTHER)
-
-    var vibration by PreferenceDelegate<Boolean>(VIBRATION)
-
-    var hoursAgo by PreferenceDelegate<Int>(HOURS_AGO)
-
-    var maxNotifications by PreferenceDelegate<Int>(MAX_NOTIFICATIONS)
-
-    var isTester by PreferenceDelegate<Boolean>(IS_TESTER)
-
-    private var latitude by PreferenceDelegate<Float>(LATITUDE)
-    private var longitude by PreferenceDelegate<Float>(LONGITUDE)
-
-    var savedLatLng
-        get() = LatLng(latitude.toDouble(), longitude.toDouble())
-        set(latLng) {
-            latitude = latLng.latitude.toFloat()
-            longitude = latLng.longitude.toFloat()
-        }
 
     //todo refactor sound settings
     fun setSound(title: String, uri: Uri) {

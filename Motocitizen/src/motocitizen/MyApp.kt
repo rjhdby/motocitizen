@@ -37,7 +37,6 @@ class MyApp : Application() {
 
         context = applicationContext
 
-        Preferences.initialize(this)
         FirebaseMessaging.getInstance().subscribeToTopic("accidents")
         if (Preferences.isTester) FirebaseMessaging.getInstance().subscribeToTopic("test")
 
