@@ -14,7 +14,7 @@ class DescriptionFrame(val context: FragmentActivity, val accidentBuilder: Accid
     private val ROOT_VIEW = R.id.create_final_frame
     private val CREATE_BUTTON = R.id.CREATE
     private val confirmButton = context.findViewById(CREATE_BUTTON) as Button
-    private val view = context.findViewById(ROOT_VIEW)
+    private val view = context.findViewById<View>(ROOT_VIEW)
 
     init {
         confirmButton.isEnabled = false

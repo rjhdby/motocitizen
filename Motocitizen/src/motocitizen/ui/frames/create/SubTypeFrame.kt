@@ -8,7 +8,7 @@ import motocitizen.ui.frames.FrameInterface
 
 class SubTypeFrame(val context: FragmentActivity, val callback: (Type) -> Unit) : FrameInterface {
     private val ROOT_VIEW = R.id.create_acc_frame
-    private val view = context.findViewById(ROOT_VIEW)
+    private val view = context.findViewById<View>(ROOT_VIEW)
 
     init {
         intArrayOf(R.id.MOTO_AUTO, R.id.SOLO, R.id.MOTO_MOTO, R.id.MOTO_MAN)
@@ -24,7 +24,7 @@ class SubTypeFrame(val context: FragmentActivity, val callback: (Type) -> Unit) 
     }
 
     private fun setListener(id: Int, listener: View.OnClickListener) {
-        context.findViewById(id).setOnClickListener(listener)
+        context.findViewById<View>(id).setOnClickListener(listener)
     }
 
     private fun typeSelectListener(id: Int): View.OnClickListener = View.OnClickListener { _ -> callback(getSelectedType(id)) }

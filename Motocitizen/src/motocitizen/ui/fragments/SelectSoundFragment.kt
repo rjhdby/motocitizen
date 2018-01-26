@@ -35,7 +35,7 @@ class SelectSoundFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        activity.findViewById(ROOT_VIEW).visibility = View.VISIBLE
+        activity.findViewById<View>(ROOT_VIEW).visibility = View.VISIBLE
         if (notifications.size() == 0) getSystemSounds()
 
         val selectSoundConfirmButton = activity.findViewById(SAVE_BUTTON) as Button
@@ -78,7 +78,7 @@ class SelectSoundFragment : Fragment() {
             val tag = view.tag as Int
             if (currentId != 0) {
 
-                ringtoneList.findViewWithTag(currentId).setBackgroundColor(android.R.attr.colorBackground)
+                ringtoneList.findViewWithTag<View>(currentId).setBackgroundColor(android.R.attr.colorBackground)
             }
             currentId = tag
             view.setBackgroundColor(Color.GRAY)
@@ -91,7 +91,7 @@ class SelectSoundFragment : Fragment() {
     }
 
     private fun finish() {
-        activity.findViewById(R.id.select_sound_fragment).visibility = View.GONE
+        activity.findViewById<View>(R.id.select_sound_fragment).visibility = View.GONE
         fragmentManager.beginTransaction().remove(this).replace(android.R.id.content, SettingsFragment()).commit()
     }
 

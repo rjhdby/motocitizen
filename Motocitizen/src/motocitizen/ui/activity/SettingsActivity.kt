@@ -26,7 +26,7 @@ class SettingsActivity : Activity() {
     class PlaceholderFragment : Fragment() {
         private val SETTINGS_FRAGMENT = R.layout.fragment_settings
 
-        override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-                inflater!!.inflate(SETTINGS_FRAGMENT, container, false)
+        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+                inflater.inflate(SETTINGS_FRAGMENT, container, false)
     }
 }

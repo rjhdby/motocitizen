@@ -3,6 +3,7 @@ package motocitizen.ui.activity
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.view.KeyEvent
+import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.TextView
@@ -74,7 +75,7 @@ class CreateAccActivity : FragmentActivity() {
     }
 
     private fun setupListeners() {
-        findViewById(R.id.CANCEL).setOnClickListener { finish() }
+        findViewById<View>(R.id.CANCEL).setOnClickListener { finish() }
         backButton.setOnClickListener { backButtonPressed() }
     }
 

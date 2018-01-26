@@ -78,7 +78,7 @@ class MainScreenActivity : AppCompatActivity() {
 
     private fun disableDialOnTablets() {
         if (packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) return
-        findViewById(R.id.dial_button).isEnabled = false
+        findViewById<View>(R.id.dial_button).isEnabled = false
     }
 
     private fun showChangeLogIfUpdated() {
@@ -92,8 +92,8 @@ class MainScreenActivity : AppCompatActivity() {
         createAccButton.setOnClickListener { Router.goTo(this, Router.Target.CREATE) }
         toAccListButton.setOnClickListener { showListFrame() }
         toMapButton.setOnClickListener { showMapFrame() }
-        findViewById(R.id.dial_button).setOnClickListener { Router.dial(this, getString(R.string.phone)) }
-        (findViewById(R.id.accListRefresh) as BounceScrollView).setOverScrollListener { accidents }
+        findViewById<View>(R.id.dial_button).setOnClickListener { Router.dial(this, getString(R.string.phone)) }
+        (findViewById<BounceScrollView>(R.id.accListRefresh)).setOverScrollListener { accidents }
     }
 
     override fun onPause() {

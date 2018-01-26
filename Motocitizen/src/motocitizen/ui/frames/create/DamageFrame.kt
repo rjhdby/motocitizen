@@ -8,7 +8,7 @@ import motocitizen.ui.frames.FrameInterface
 
 class DamageFrame(val context: FragmentActivity, val callback: (Medicine) -> Unit) : FrameInterface {
     private val ROOT_VIEW = R.id.create_people_frame
-    private val view = context.findViewById(ROOT_VIEW)
+    private val view = context.findViewById<View>(ROOT_VIEW)
 
     init {
         intArrayOf(R.id.PEOPLE_OK, R.id.PEOPLE_LIGHT, R.id.PEOPLE_HEAVY, R.id.PEOPLE_LETHAL, R.id.PEOPLE_UNKNOWN)
@@ -24,7 +24,7 @@ class DamageFrame(val context: FragmentActivity, val callback: (Medicine) -> Uni
     }
 
     private fun setListener(id: Int, listener: View.OnClickListener) {
-        context.findViewById(id).setOnClickListener(listener)
+        context.findViewById<View>(id).setOnClickListener(listener)
     }
 
     private fun damageSelectListener(id: Int): View.OnClickListener = View.OnClickListener { _ -> callback(getSelectedMedicine(id)) }

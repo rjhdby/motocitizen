@@ -52,7 +52,7 @@ class DetailMessagesFragment() : Fragment() {
     }
 
     private fun setupNewMessageForm() {
-        val formView = rootView.findViewById(FORM_VIEW)
+        val formView = rootView.findViewById<View>(FORM_VIEW)
 
         if (!User.isStandard) {
             formView.visibility = View.INVISIBLE
@@ -62,7 +62,7 @@ class DetailMessagesFragment() : Fragment() {
 
         val inputField = rootView.findViewById(INPUT_FIELD) as EditText
 
-        rootView.findViewById(SEND_BUTTON).setOnClickListener { _ ->
+        rootView.findViewById<View>(SEND_BUTTON).setOnClickListener { _ ->
             val text = inputField.text.toString().replace("\\s".toRegex(), "")
             if (text.isNotEmpty()) {
                 SendMessageRequest(inputField.text.toString(), accident.id, { result -> sendMessageCallback(result) })

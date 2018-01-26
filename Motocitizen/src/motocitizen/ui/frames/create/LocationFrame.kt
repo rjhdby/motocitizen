@@ -10,10 +10,10 @@ import motocitizen.ui.frames.FrameInterface
 class LocationFrame(val context: FragmentActivity, val callback: (LatLng) -> Unit): FrameInterface {
     private val ROOT_VIEW = R.id.create_map
     private var map: CreateAccidentMap = CreateAccidentMap(context)
-    private val view = context.findViewById(ROOT_VIEW)
+    private val view = context.findViewById<View>(ROOT_VIEW)
 
     init {
-        context.findViewById(R.id.ADDRESS).setOnClickListener(addressSelectListener())
+        context.findViewById<View>(R.id.ADDRESS).setOnClickListener(addressSelectListener())
     }
 
     override fun show() {

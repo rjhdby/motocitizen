@@ -47,7 +47,7 @@ class DetailVolunteersFragment() : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         rootView = inflater.inflate(ROOT_LAYOUT, container, false)
 
-        val toMapButton = rootView.findViewById(TO_MAP_BUTTON)
+        val toMapButton = rootView.findViewById<View>(TO_MAP_BUTTON)
 
         disabledButton.isEnabled = false
 

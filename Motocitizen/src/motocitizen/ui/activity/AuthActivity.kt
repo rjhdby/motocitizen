@@ -76,7 +76,7 @@ class AuthActivity : AppCompatActivity() {
 
     private fun setUpListeners() {
         loginVK.setOnClickListener { VKSdk.login(this@AuthActivity, VKScope.PAGES) }
-        findViewById(R.id.vk333).setOnClickListener { vkAuth() }
+        findViewById<Button>(R.id.vk333).setOnClickListener { vkAuth() }
         loginBtn.setOnClickListener { loginButtonPressed() }
         logoutBtn.setOnClickListener { logOutButtonPressed() }
         login.afterTextChanged { enableLoginBtn() }

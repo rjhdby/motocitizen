@@ -85,7 +85,7 @@ class AccidentDetailsActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        findViewById(GENERAL_INFORMATION_VIEW).setOnLongClickListener { v ->
+        findViewById<View>(GENERAL_INFORMATION_VIEW).setOnLongClickListener { v ->
             val popupWindow: PopupWindow
             popupWindow = AccidentContextMenu(this@AccidentDetailsActivity, accident)
             val viewLocation = IntArray(2)

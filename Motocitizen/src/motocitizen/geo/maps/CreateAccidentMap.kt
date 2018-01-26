@@ -22,7 +22,7 @@ class CreateAccidentMap(fragment: FragmentActivity) : MapManager(fragment, R.id.
 
     override fun onMapReady() {
         addMapConstraints()
-        fragment.findViewById(R.id.SEARCH)
+        fragment.findViewById<ImageButton>(R.id.SEARCH)
                 .setOnClickListener({ searchEditText.text.toString().requestLatLngFromAddress { searchCallback(it) } })
     }
 
