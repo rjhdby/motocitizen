@@ -5,8 +5,6 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
-//import android.support.multidex.MultiDex
-//import android.support.multidex.MultiDexApplication
 import android.widget.Toast
 import com.google.firebase.messaging.FirebaseMessaging
 import com.vk.sdk.VKAccessToken
@@ -33,11 +31,6 @@ class MyApp : Application() {
         }
     }
 
-//    override fun attachBaseContext(base: Context) {
-//        super.attachBaseContext(base)
-////        MultiDex.install(this)
-//    }
-
     override fun onCreate() {
         super.onCreate()
         Migration.makeMigration(this)
@@ -45,7 +38,6 @@ class MyApp : Application() {
         context = applicationContext
 
         Preferences.initialize(this)
-//        MyGoogleApiClient.initialize(this)
         FirebaseMessaging.getInstance().subscribeToTopic("accidents")
         if (Preferences.isTester) FirebaseMessaging.getInstance().subscribeToTopic("test")
 
