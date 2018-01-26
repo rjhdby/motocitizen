@@ -6,8 +6,8 @@ import android.database.sqlite.SQLiteOpenHelper
 import motocitizen.MyApp
 
 object Database {
-    private val VERSION = 3
-    private val DATABASE = "motodtp"
+    private const val VERSION = 3
+    private const val DATABASE = "motodtp"
 
     val db: SQLiteOpenHelper by lazy { Helper(MyApp.context) }
 

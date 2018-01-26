@@ -30,7 +30,7 @@ import org.jetbrains.anko.startActivity
 
 class AccidentDetailsActivity : AppCompatActivity() {
     companion object {
-        val ACCIDENT_ID_KEY = "id"
+        const val ACCIDENT_ID_KEY = "id"
     }
 
     private val ROOT_LAYOUT = R.layout.activity_accident_details
@@ -40,9 +40,9 @@ class AccidentDetailsActivity : AppCompatActivity() {
     private val HISTORY_TAB = R.id.details_tab_history
     private val VOLUNTEER_TAB = R.id.details_tab_people
 
-    lateinit private var accident: Accident
-    lateinit private var summaryFrame: DetailsSummaryFrame
-    lateinit private var menuController: DetailsMenuController
+    private lateinit var accident: Accident
+    private lateinit var summaryFrame: DetailsSummaryFrame
+    private lateinit var menuController: DetailsMenuController
 
     private val tabs: RadioGroup by bindView(R.id.details_tabs_group)
 

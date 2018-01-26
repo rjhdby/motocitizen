@@ -31,8 +31,10 @@ import motocitizen.utils.bindView
 import motocitizen.utils.displayWidth
 
 class MainScreenActivity : AppCompatActivity() {
-    private val LIST: Byte = 0
-    private val MAP: Byte = 1
+    companion object {
+        private const val LIST: Byte = 0
+        private const val MAP: Byte = 1
+    }
 
     private val mapContainer: ViewGroup by bindView(R.id.google_map)
     private val createAccButton: ImageButton by bindView(R.id.add_point_button)

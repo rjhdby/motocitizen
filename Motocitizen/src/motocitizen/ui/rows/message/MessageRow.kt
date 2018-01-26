@@ -19,6 +19,7 @@ abstract class MessageRow(context: Context, val message: Message, val type: Type
         FIRST, MIDDLE, LAST, ONE
     }
 
+    //todo WTF!?
     abstract val ONE: Int
     abstract val FIRST: Int
     private val MIDDLE = R.drawable.message_row_middle

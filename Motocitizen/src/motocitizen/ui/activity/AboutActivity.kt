@@ -13,12 +13,6 @@ import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 
 class AboutActivity : AppCompatActivity() {
-    //    private val ROOT_LAYOUT = R.layout.activity_about
-//    private val VERSION = R.id.about_code_version
-//    private val BUSINESS_CARD_BUTTON = R.id.businessCardButton
-//    private val URL_VIEW = R.id.about_url_support
-//    private val WEB_VIEW = R.id.change_log
-//    private val changeLogColor = Color.rgb(48, 48, 48)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,15 +46,7 @@ class AboutActivity : AppCompatActivity() {
         setContentView(layout)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-//        loadChangeLog()
     }
-
-//    private fun loadChangeLog() {
-//        val webView = findViewById(WEB_VIEW) as WebView
-//        webView.setBackgroundColor(changeLogColor)
-//        webView.loadDataWithBaseURL(null, ChangeLog.getLog(this), "text/html", "UTF-8", null)
-//    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean = true
 }

@@ -8,7 +8,9 @@ import android.util.AttributeSet
 import android.widget.ScrollView
 
 class BounceScrollView : ScrollView {
-    private val MAX_Y_OVER_SCROLL_DISTANCE = 40
+    companion object {
+        private const val MAX_Y_OVER_SCROLL_DISTANCE = 40
+    }
 
     init {
         val metrics = context.resources.displayMetrics

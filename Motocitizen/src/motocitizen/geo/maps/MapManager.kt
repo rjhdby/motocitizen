@@ -1,5 +1,6 @@
 package motocitizen.geo.maps
 
+import android.annotation.SuppressLint
 import android.support.v4.app.FragmentActivity
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -53,6 +54,7 @@ abstract class MapManager(protected val fragment: FragmentActivity, mapContainer
         markers.put(map.accidentMarker(accident).id, accident.id)
     }
 
+    @SuppressLint("MissingPermission")
     private fun enableLocation() {
         Permissions.requestLocation(fragment, { map.isMyLocationEnabled = true }, {})
     }

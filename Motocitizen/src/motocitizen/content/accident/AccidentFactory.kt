@@ -1,6 +1,5 @@
 package motocitizen.content.accident
 
-import motocitizen.dictionary.AccidentStatus
 import motocitizen.utils.*
 import org.json.JSONObject
 
@@ -17,9 +16,4 @@ object AccidentFactory {
                 description = json.getString("d")
                 messagesCount = json.getInt("mc")
             }
-
-    fun refactor(accident: Accident, status: AccidentStatus): Accident = AccidentBuilder()
-            .from(accident)
-            .status(status)
-            .build()
 }

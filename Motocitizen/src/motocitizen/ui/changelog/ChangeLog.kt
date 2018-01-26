@@ -16,9 +16,9 @@ import java.io.IOException
 import java.io.InputStreamReader
 
 object ChangeLog {
-    private val LIST_NONE: Byte = 0
-    private val LIST_ORDERED: Byte = 1
-    private val LIST_UNORDERED: Byte = 2
+    private const val LIST_NONE: Byte = 0
+    private const val LIST_ORDERED: Byte = 1
+    private const val LIST_UNORDERED: Byte = 2
 
     private val sb = StringBuffer()
     private var currentListMode = LIST_NONE

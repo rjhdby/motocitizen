@@ -5,7 +5,7 @@ package motocitizen.utils
 import java.text.SimpleDateFormat
 import java.util.*
 
-val MS_IN_HOUR = 3_600_000
+const val MS_IN_HOUR = 3_600_000
 
 fun Date.timeString(): String = SimpleDateFormat("HH:mm", Locale.getDefault()).format(this)
 

@@ -14,20 +14,23 @@ import motocitizen.utils.getPhonesFromText
 
 //todo refactor
 class DetailsMenuController(val activity: FragmentActivity, val accident: Accident) {
+    companion object {
+        private const val SMS_MENU_MIN_ID = 100
+        private const val SMS_MENU_MAX_ID = 200
+        private const val CALL_MENU_MIN_ID = 400
+        private const val CALL_MENU_MAX_ID = 500
+    }
     enum class MenuAction {
         TO_MAP, HIDE_INFO, SHARE, SEND_HIDE_REQUEST, SEND_FINISH_REQUEST, NOTHING
     }
 
     private val GENERAL_INFORMATION_VIEW = R.id.acc_details_general
     private val MENU = R.menu.menu_accident_details
-    private val SMS_MENU_MIN_ID = 100
-    private val SMS_MENU_MAX_ID = 200
-    private val CALL_MENU_MIN_ID = 400
-    private val CALL_MENU_MAX_ID = 500
+
 
     private var generalLayout: View = activity.findViewById(GENERAL_INFORMATION_VIEW)
 
-    lateinit var mMenu: Menu
+    private lateinit var mMenu: Menu
 
     //todo yobanyj pizdets!!!
     fun optionsMenuCreated(menu: Menu) {

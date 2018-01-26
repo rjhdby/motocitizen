@@ -41,7 +41,7 @@ class AccidentContextMenu(context: Context, val accident: Accident) : ContextMen
     }
 
     private fun addModeratorMenu() {
-        if (!User.isModerator) return Unit
+        if (!User.isModerator) return
         addButton(if (accident.isHidden()) R.string.show else R.string.hide, this::hideButtonPressed)
         addButton("Забанить") { BanRequest(accident.owner, this::banRequestCallback) }
     }

@@ -12,7 +12,7 @@ import motocitizen.geo.geolocation.MyLocationManager
 import org.json.JSONException
 import java.io.IOException
 
-val EQUATOR = 20038
+const val EQUATOR = 20038
 
 fun Location.toLatLng(): LatLng = LatLng(latitude, longitude)
 

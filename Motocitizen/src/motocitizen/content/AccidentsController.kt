@@ -39,7 +39,7 @@ object AccidentsController {
         AccidentListRequest { listRequestCallback(it, callback) }
     }
 
-    inline private fun listRequestCallback(response: ApiResponse, callback: (ApiResponse) -> Unit) {
+    private inline fun listRequestCallback(response: ApiResponse, callback: (ApiResponse) -> Unit) {
         parseGetListResponse(response)
         lastUpdate = Date().seconds()
         callback(response)

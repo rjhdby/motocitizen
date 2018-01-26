@@ -15,6 +15,11 @@ import motocitizen.utils.requestLatLngFromAddress
 import motocitizen.utils.showToast
 
 class CreateAccidentMap(fragment: FragmentActivity) : MapManager(fragment, R.id.create_map_container) {
+    companion object {
+        private const val PERMITTED_REGION_COLOR = 0x20FF0000
+        private const val PERMITTED_REGION_RADIUS = 2000
+    }
+
     override fun onMapReady() {
         addMapConstraints()
         fragment.findViewById(R.id.SEARCH)
@@ -24,9 +29,6 @@ class CreateAccidentMap(fragment: FragmentActivity) : MapManager(fragment, R.id.
     override fun update() {
         addContent { }
     }
-
-    private val PERMITTED_REGION_COLOR = 0x20FF0000
-    private val PERMITTED_REGION_RADIUS = 2000
 
     private val searchEditText = fragment.findViewById(R.id.SearchEditText) as EditText
     private val mcCreateFineAddressConfirm = fragment.findViewById(R.id.ADDRESS) as Button
@@ -58,7 +60,8 @@ class CreateAccidentMap(fragment: FragmentActivity) : MapManager(fragment, R.id.
             .center(initialLocation)
             .radius(PERMITTED_REGION_RADIUS.toDouble())
             .fillColor(PERMITTED_REGION_COLOR)
-//todo ???
+
+    //todo ???
     private fun cameraMoveCanceledListener() {
         mcCreateFineAddressConfirm.isEnabled = false
         val distance = map.cameraPosition.target.distanceTo(initialLocation).toDouble()

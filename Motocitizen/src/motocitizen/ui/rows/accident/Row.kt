@@ -26,9 +26,12 @@ import org.jetbrains.anko.wrapContent
 
 //todo refactor
 abstract class Row protected constructor(context: Context, val accident: Accident) : FrameLayout(context) {
-    val ACTIVE_COLOR = 0x70FFFFFF
-    val ENDED_COLOR = 0x70FFFFFF
-    val HIDDEN_COLOR = 0x30FFFFFF
+    companion object {
+        const val ACTIVE_COLOR = 0x70FFFFFF
+        const val ENDED_COLOR = 0x70FFFFFF
+        const val HIDDEN_COLOR = 0x30FFFFFF
+    }
+
     abstract val background: Int
     abstract val textColor: Int
     abstract val margins: Margins

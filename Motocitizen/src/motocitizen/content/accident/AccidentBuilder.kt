@@ -51,8 +51,6 @@ class AccidentBuilder {
 
     fun description(description: String) = apply { this.description = description }
 
-    fun messagesCount(count: Int) = apply { this.messagesCount = count }
-
     fun from(accident: Accident) = apply {
         id = accident.id
         type = accident.type
