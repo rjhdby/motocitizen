@@ -3,24 +3,42 @@
               xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:gravity="center"
               android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/auth_error_text"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/activity_auth_header"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:gravity="bottom"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/role"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/auth_role"/>
+        <Button
+            android:id="@+id/vk"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Войти через Вконтакт"/>
+
+        <Button
+            android:id="@+id/anonymous"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Войти без регистрации"/>
+
+        <Button
+            android:id="@+id/forum"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Войти через форум (для старых пользователей)"/>
+    </LinearLayout>
 
     <TableLayout
+        android:id="@+id/forum_login_form"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="gone">
 
         <TableRow
             android:layout_width="wrap_content"
@@ -39,8 +57,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:inputType="text"
-                android:ems="10">
+                android:ems="10"
+                android:inputType="text">
 
                 <requestFocus/>
             </EditText>
@@ -65,23 +83,15 @@
                 android:inputType="textPassword"/>
         </TableRow>
 
-        <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+        <TableRow>
 
-            <TextView
-                android:id="@+id/activity_auth_anonim_label"
+            <Button
+                android:id="@+id/login_button"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/activity_auth_anonim_label"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
-
-            <CheckBox
-                android:id="@+id/auth_anonim"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"/>
+                android:layout_weight="0.5"
+                android:text="@string/activity_auth_login_label"/>
         </TableRow>
 
         <TableRow
@@ -97,59 +107,4 @@
                 android:textColor="#FFFF0000"/>
         </TableRow>
     </TableLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="bottom"
-        android:weightSum="1.5">
-
-        <Button
-            android:id="@+id/cancel_button"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="@string/activity_auth_cancel_label"/>
-
-        <Button
-            android:id="@+id/logout_button"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="@string/activity_auth_logout_label"/>
-
-        <Button
-            android:id="@+id/login_button"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="@string/activity_auth_login_label"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="bottom"
-        android:weightSum="1.5">
-
-        <Button
-            android:id="@+id/vk"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="Вход через ВК"/>
-
-        <Button
-            android:id="@+id/vk333"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="Получить инфу о себе"/>
-
-    </LinearLayout>
 </LinearLayout>

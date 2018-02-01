@@ -1,6 +1,9 @@
 package motocitizen.notifications
 
+import android.annotation.TargetApi
 import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -8,7 +11,9 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.RingtoneManager
 import android.net.Uri
+import android.os.Build
 import android.support.v4.app.NotificationCompat
+import motocitizen.MyApp
 import motocitizen.content.accident.Accident
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.dictionary.Medicine
@@ -17,9 +22,24 @@ import motocitizen.ui.activity.AccidentDetailsActivity
 import motocitizen.utils.distanceString
 
 class AccidentNotificationBuilder(val context: Context, val accident: Accident) {
+    @TargetApi(Build.VERSION_CODES.O)
+    companion object {
+        const val chanelId = "motoaccidents"
+
+        init {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                val channel = NotificationChannel(chanelId,
+                                                  "Moto accidents",
+                                                  NotificationManager.IMPORTANCE_DEFAULT);
+                channel.description = "Moto accidents notifications"
+                (MyApp.context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(channel)
+            }
+        }
+    }
+
     private val ICON = R.mipmap.ic_launcher
 
-    fun build(): Notification = NotificationCompat.Builder(context)
+    fun build(): Notification = NotificationCompat.Builder(context, chanelId)
             .setContentIntent(makePendingIntent())
             .setSmallIcon(ICON)
             .setLargeIcon(makeLargeIcon())

@@ -7,6 +7,8 @@ import motocitizen.datasources.preferences.Preferences
 import motocitizen.user.User
 
 class AccidentListRequest(callback: (ApiResponse) -> Unit) : ApiRequest(callback) {
+    override val method = Methods.LIST
+
     init {
         params.apply {
             if (User.name != "") {
@@ -16,7 +18,6 @@ class AccidentListRequest(callback: (ApiResponse) -> Unit) : ApiRequest(callback
                 put("test", "1")
             }
             put("a", Preferences.hoursAgo.toString())
-            put("m", Methods.LIST.code)
         }
         call()
     }

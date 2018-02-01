@@ -5,11 +5,10 @@ import motocitizen.datasources.network.ApiResponse
 import motocitizen.datasources.network.Methods
 
 class BanRequest(id: Int, callback: (ApiResponse) -> Unit) : ApiRequestWithAuth(callback = callback) {
+    override val method: String = Methods.BAN
+
     init {
-        params.apply {
-            put("m", Methods.BAN.code)
-            put("id", id.toString())
-        }
+        params["id"] = id.toString()
         call()
     }
 }

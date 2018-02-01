@@ -4,20 +4,16 @@ import afterTextChanged
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.text.method.LinkMovementMethod
+import android.util.Log
 import android.view.View
 import android.widget.Button
-import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
 import com.vk.sdk.VKAccessToken
 import com.vk.sdk.VKCallback
 import com.vk.sdk.VKScope
 import com.vk.sdk.VKSdk
-import com.vk.sdk.api.VKApi
 import com.vk.sdk.api.VKError
-import com.vk.sdk.api.VKRequest
-import com.vk.sdk.api.VKResponse
 import motocitizen.MyApp
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.main.R
@@ -27,21 +23,23 @@ import motocitizen.user.User
 import motocitizen.utils.bindView
 import motocitizen.utils.showToast
 
+//todo refactor
 class AuthActivity : AppCompatActivity() {
-    private val logoutBtn: Button by bindView(R.id.logout_button)
     private val loginBtn: Button by bindView(R.id.login_button)
-    private val cancelBtn: Button by bindView(R.id.cancel_button)
     private val loginVK: Button by bindView(R.id.vk)
     private val login: EditText by bindView(R.id.auth_login)
     private val password: EditText by bindView(R.id.auth_password)
-    private val anonymous: CheckBox by bindView(R.id.auth_anonim)
-    
+    private val anonymous by bindView<Button>(R.id.anonymous)
+
+    private val forum by bindView<Button>(R.id.forum)
+
+    private val forumLoginForm by bindView<View>(R.id.forum_login_form)
+
     private fun enableLoginBtn() {
-        val logPasReady = login.text.toString().isNotEmpty() && password.text.toString().isNotEmpty()
-        loginBtn.isEnabled = anonymous.isChecked || logPasReady
+        loginBtn.isEnabled = login.text.toString().isNotEmpty() && password.text.toString().isNotEmpty()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (!VKSdk.onActivityResult(requestCode, resultCode, data, vkCallback())) {
             super.onActivityResult(requestCode, resultCode, data)
         }
@@ -50,7 +48,7 @@ class AuthActivity : AppCompatActivity() {
     private fun vkCallback(): VKCallback<VKAccessToken> {
         return object : VKCallback<VKAccessToken> {
             override fun onResult(res: VKAccessToken) {
-                showToast("Пользователь успешно авторизовался")
+                Auth.auth(Auth.AuthType.VK) { Router.goTo(this@AuthActivity, Router.Target.MAIN) }
             }
 
             override fun onError(error: VKError) {
@@ -63,58 +61,36 @@ class AuthActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.auth)
         setUpListeners()
-//todo ???
-        if (User.isAuthorized) {
-            Router.goTo(this, Router.Target.MAIN)
-        }
 
         vkWakeUpSession()
 
-        (findViewById(R.id.auth_error_text) as TextView).movementMethod = LinkMovementMethod.getInstance()
         fillCtrls()
     }
 
     private fun setUpListeners() {
         loginVK.setOnClickListener { VKSdk.login(this@AuthActivity, VKScope.PAGES) }
-        findViewById<Button>(R.id.vk333).setOnClickListener { vkAuth() }
         loginBtn.setOnClickListener { loginButtonPressed() }
-        logoutBtn.setOnClickListener { logOutButtonPressed() }
         login.afterTextChanged { enableLoginBtn() }
         password.afterTextChanged { enableLoginBtn() }
-        anonymous.setOnClickListener { anonymousCheckBoxPressed() }
-        cancelBtn.setOnClickListener { finish() }
+        anonymous.setOnClickListener { anonymousLogon() }
+        forum.setOnClickListener { forumLoginForm.visibility = View.VISIBLE }
     }
 
     private fun loginButtonPressed() {
-        Preferences.anonymous = anonymous.isChecked
         when {
-            anonymous.isChecked -> anonymousLogon()
-            isOnline            -> auth()
-            else                -> showToast(R.string.auth_not_available)
+            isOnline -> auth()
+            else     -> showToast(R.string.auth_not_available)
         }
     }
 
     private fun anonymousLogon() {
-        (findViewById(R.id.auth_error_helper) as TextView).text = ""
+        (findViewById<TextView>(R.id.auth_error_helper)).text = ""
+        Auth.auth(Auth.AuthType.ANON) {}
         Router.goTo(this@AuthActivity, Router.Target.MAIN)
     }
 
     private val isOnline: Boolean
         get() = MyApp.isOnline(this)
-
-    private fun logOutButtonPressed() {
-        //TODO Добавить запрос подтверждения на выход.
-        Preferences.resetAuth()
-        Preferences.anonymous = true
-        MyApp.logoff()
-        fillCtrls()
-    }
-
-    private fun anonymousCheckBoxPressed() {
-        login.isEnabled = !anonymous.isChecked
-        password.isEnabled = !anonymous.isChecked
-        enableLoginBtn()
-    }
 
     private fun vkWakeUpSession() {
         VKSdk.wakeUpSession(this, object : VKCallback<VKSdk.LoginState> {
@@ -124,32 +100,11 @@ class AuthActivity : AppCompatActivity() {
                     VKSdk.LoginState.LoggedIn  -> Router.goTo(this@AuthActivity, Router.Target.MAIN)
                     VKSdk.LoginState.Pending   -> Unit
                     VKSdk.LoginState.Unknown   -> Unit
-                }//showLogin();
-                //showLogout();
+                }
             }
 
             override fun onError(error: VKError) {
 
-            }
-        })
-    }
-
-    private fun vkAuth() {
-        VKApi.users().get().executeWithListener(object : VKRequest.VKRequestListener() {
-            override fun onComplete(response: VKResponse) {
-                super.onComplete(response)
-            }
-
-            override fun attemptFailed(request: VKRequest, attemptNumber: Int, totalAttempts: Int) {
-                super.attemptFailed(request, attemptNumber, totalAttempts)
-            }
-
-            override fun onError(error: VKError) {
-                super.onError(error)
-            }
-
-            override fun onProgress(progressType: VKRequest.VKProgressType, bytesLoaded: Long, bytesTotal: Long) {
-                super.onProgress(progressType, bytesLoaded, bytesTotal)
             }
         })
     }
@@ -158,28 +113,17 @@ class AuthActivity : AppCompatActivity() {
     private fun fillCtrls() {
         login.setText(Preferences.login)
         password.setText(Preferences.password)
-        anonymous.isChecked = Preferences.anonymous
-        //        View     accListYesterdayLine = findViewById(R.id.auth_error_text);
-        val roleView = findViewById(R.id.role) as TextView
 
         val isAuthorized = User.isAuthorized
         loginBtn.isEnabled = !isAuthorized
-        logoutBtn.isEnabled = isAuthorized
-        anonymous.isEnabled = !isAuthorized
-        //        accListYesterdayLine.setVisibility(isAuthorized ? View.GONE : View.VISIBLE);
-        roleView.visibility = if (isAuthorized) View.VISIBLE else View.GONE
-        login.isEnabled = !isAuthorized && !anonymous.isChecked
-        password.isEnabled = !isAuthorized && !anonymous.isChecked
-        //Авторизованы?
-        if (isAuthorized) {
-            roleView.text = String.format(getString(R.string.auth_role), User.roleName)
-        } else {
-            enableLoginBtn()
-        }
+        login.isEnabled = !isAuthorized
+        password.isEnabled = !isAuthorized
     }
 
     private fun auth() {
-        Auth.auth(login.text.toString(), password.text.toString()) { authCallback() }
+        Preferences.login = login.text.toString()
+        Preferences.password = password.text.toString()
+        Auth.auth(Auth.AuthType.FORUM) { authCallback() }
     }
 
     private fun authCallback() {
@@ -191,7 +135,7 @@ class AuthActivity : AppCompatActivity() {
 
     private fun showAuthError() {
         this@AuthActivity.runOnUiThread {
-            val authErrorHelper = findViewById(R.id.auth_error_helper) as TextView
+            val authErrorHelper = findViewById<TextView>(R.id.auth_error_helper)
             authErrorHelper.setText(R.string.auth_password_error)
         }
     }

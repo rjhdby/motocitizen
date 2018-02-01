@@ -3,5 +3,5 @@ package motocitizen.migration
 import android.content.Context
 
 interface MigrationInterface {
-    fun process(context: Context, old: Int, new: Int)
+    fun process(context: Context)
 }

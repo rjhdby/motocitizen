@@ -55,6 +55,12 @@ object Preferences {
 
     var newVersion = false
 
+    var authType by PreferenceDelegate<String>(AUTH_TYPE)
+
+    var vkToken by PreferenceDelegate<String>(VK_TOKEN)
+
+    var oldVersion: Int = appVersion
+
     init {
         firstTimeSetup()
         initSound(MyApp.context)
@@ -81,6 +87,7 @@ object Preferences {
     private const val DEFAULT_IS_ANONYMOUS = false
     private const val DEFAULT_SHOW_TYPE = true
     private const val DEFAULT_TESTER = false
+    private const val DEFAULT_AUTH_TYPE = "none"
 
     private enum class Stored(val key: String, val default: Any) {
         IS_SHOW_ACCIDENT("mc.show.acc", DEFAULT_SHOW_TYPE),
@@ -102,7 +109,9 @@ object Preferences {
         SOUND_URI("mc.notification.sound", ""),
         LOGIN("mc.login", ""),
         PASSWORD("mc.password", ""),
-        IS_TESTER("tester", DEFAULT_TESTER);
+        IS_TESTER("tester", DEFAULT_TESTER),
+        AUTH_TYPE("authType", DEFAULT_AUTH_TYPE),
+        VK_TOKEN("vkToken", "");
     }
 
     private fun firstTimeSetup() {
@@ -138,11 +147,6 @@ object Preferences {
     fun setDefaultSoundAlarm() {
         soundTitle = "default system"
         soundURI = "default"
-    }
-
-    fun resetAuth() {
-        login = ""
-        password = ""
     }
 
     fun isEnabled(type: Type): Boolean = when (type) {

@@ -5,11 +5,10 @@ import motocitizen.datasources.network.ApiResponse
 import motocitizen.datasources.network.Methods
 
 class EndAccident(accidentId: Int, callback: (ApiResponse) -> Unit = {}) : ApiRequestWithAuth(callback = callback) {
+    override val method = Methods.END_ACCIDENT
+
     init {
-        params.apply {
-            put("m", Methods.END_ACCIDENT.code)
-            put("id", accidentId.toString())
-        }
+        params["id"] = accidentId.toString()
         call()
     }
 }

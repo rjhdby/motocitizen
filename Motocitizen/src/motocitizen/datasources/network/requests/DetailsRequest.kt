@@ -5,11 +5,10 @@ import motocitizen.datasources.network.ApiResponse
 import motocitizen.datasources.network.Methods
 
 class DetailsRequest(id: Int, callback: (ApiResponse) -> Unit) : ApiRequest(callback) {
+    override val method: String = Methods.DETAILS
+
     init {
-        params.apply {
-            put("id", id.toString())
-            put("m", Methods.DETAILS.code)
-        }
+        params["id"] = id.toString()
         call()
     }
 }

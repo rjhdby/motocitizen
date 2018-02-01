@@ -8,6 +8,7 @@ import motocitizen.content.AccidentsController
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.main.R
 import motocitizen.router.Router
+import motocitizen.user.Auth
 import motocitizen.user.User
 import motocitizen.utils.*
 
@@ -112,6 +113,7 @@ class SettingsFragment : PreferenceFragment() {
     }
 
     private fun authButtonPressed(): Boolean {
+        Auth.logoff()
         Router.goTo(activity, Router.Target.AUTH)
         return true
     }

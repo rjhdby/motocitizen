@@ -26,19 +26,27 @@ class StartupActivity : AppCompatActivity() {
         Permissions.requestLocation(this, this::ahead)
     }
 
-
+    //todo enum
     private fun ahead() {
-        when {
-            Preferences.anonymous   -> Router.goTo(this, Router.Target.MAIN)
-            Preferences.login == "" -> Router.goTo(this, Router.Target.AUTH)
-            else                    -> tryToLogon()
-        }
+        Auth.autoAuth { Router.goTo(this@StartupActivity, if (User.isAuthorized) Router.Target.MAIN else Router.Target.AUTH) }
+//        when (Preferences.authType) {
+//            "none"  -> Router.goTo(this, Router.Target.AUTH)
+//            "anon"  -> Router.goTo(this, Router.Target.MAIN)
+//            "forum" -> tryToLogon()
+//            "vk"    -> vkLogin()
+//            else    -> tryToLogon()
+//        }
     }
 
-    private fun tryToLogon() {
-        Auth.auth(
-                Preferences.login,
-                Preferences.password,
-                { Router.goTo(this@StartupActivity, if (User.isAuthorized) Router.Target.MAIN else Router.Target.AUTH) })
-    }
+//    private fun vkLogin() {
+//        Auth.auth(Auth.AuthType.VK) {
+//            Router.goTo(this@StartupActivity, if (User.isAuthorized) Router.Target.MAIN else Router.Target.AUTH)
+//        }
+//    }
+
+//    private fun tryToLogon() {
+//        Auth.auth(Auth.AuthType.FORUM) {
+//            Router.goTo(this@StartupActivity, if (User.isAuthorized) Router.Target.MAIN else Router.Target.AUTH)
+//        }
+//    }
 }

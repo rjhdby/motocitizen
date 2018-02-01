@@ -5,11 +5,10 @@ import motocitizen.datasources.network.ApiResponse
 import motocitizen.datasources.network.Methods
 
 class HideAccident(accidentId: Int, callback: (ApiResponse) -> Unit) : ApiRequestWithAuth(callback = callback) {
+    override val method = Methods.HIDE_ACCIDENT
+
     init {
-        params.apply {
-            put("m", Methods.HIDE_ACCIDENT.code)
-            put("id", accidentId.toString())
-        }
+        params["id"] = accidentId.toString()
         call()
     }
 }

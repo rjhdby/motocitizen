@@ -19,7 +19,7 @@ abstract class CoreRequest(val callback: (ApiResponse) -> Unit = {}) {
             .url(url)
             .build()
 
-    protected fun call() = client.newCall(buildRequest()).enqueue(enqueueCallback())
+    protected open fun call() = client.newCall(buildRequest()).enqueue(enqueueCallback())
 
     private fun enqueueCallback(): Callback = object : Callback {
         override fun onFailure(call: Call, e: IOException) = callback(ApiResponse(error))

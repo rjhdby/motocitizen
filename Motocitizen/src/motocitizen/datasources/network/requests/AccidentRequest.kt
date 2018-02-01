@@ -6,9 +6,10 @@ import motocitizen.datasources.network.Methods
 import motocitizen.datasources.preferences.Preferences
 
 class AccidentRequest(id: Int, callback: (ApiResponse) -> Unit) : ApiRequest(callback) {
+    override val method: String = Methods.ACCIDENT
+
     init {
         params.apply {
-            put("m", Methods.ACCIDENT.code)
             put("id", id.toString())
             if (Preferences.isTester) {
                 put("test", "1")

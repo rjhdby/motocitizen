@@ -1,15 +1,17 @@
 package motocitizen.datasources.network
 
+import motocitizen.datasources.preferences.Preferences
 import motocitizen.user.Auth
-import motocitizen.user.User
+import motocitizen.utils.md5
 
-abstract class ApiRequestWithAuth(login: String = User.name,
-                                  passHash: String = Auth.getPassHash(),
-                                  callback: (ApiResponse) -> Unit = {}) : ApiRequest(callback) {
+//todo VK
+abstract class ApiRequestWithAuth(callback: (ApiResponse) -> Unit = {}) : ApiRequest(callback) {
     init {
-        params.apply {
-            put("l", login)
-            put("p", passHash)
+        if (Auth.getType() == Auth.AuthType.FORUM) {
+            params["l"] = Preferences.login
+            params["p"] = Preferences.password.md5()
+        } else {
+            params["v"] = Preferences.vkToken
         }
     }
 }

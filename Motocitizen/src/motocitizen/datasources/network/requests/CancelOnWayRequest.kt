@@ -5,11 +5,10 @@ import motocitizen.datasources.network.ApiResponse
 import motocitizen.datasources.network.Methods
 
 class CancelOnWayRequest(id: Int, callback: (ApiResponse) -> Unit) : ApiRequestWithAuth(callback = callback) {
+    override val method: String = Methods.CANCEL_ON_WAY
+
     init {
-        params.apply {
-            put("id", id.toString())
-            put("m", Methods.CANCEL_ON_WAY.code)
-        }
+        params["id"] = id.toString()
         call()
     }
 }

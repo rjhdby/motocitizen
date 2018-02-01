@@ -5,11 +5,10 @@ import motocitizen.datasources.network.ApiRequestWithAuth
 import motocitizen.datasources.network.Methods
 
 class InPlaceRequest(accident: Accident) : ApiRequestWithAuth() {
+    override val method = Methods.IN_PLACE
+
     init {
-        params.apply {
-            put("id", accident.id.toString())
-            put("m", Methods.IN_PLACE.code)
-        }
+        params["id"] = accident.id.toString()
         call()
     }
 }
