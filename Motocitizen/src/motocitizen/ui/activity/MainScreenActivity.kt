@@ -82,10 +82,10 @@ class MainScreenActivity : AppCompatActivity() {
     }
 
     private fun showChangeLogIfUpdated() {
-        if (!Preferences.newVersion) return
+        if (!MyApp.firstStart) return
         val changeLogDlg = ChangeLog.getDialog(this)
         changeLogDlg.show()
-        Preferences.newVersion = false
+        MyApp.firstStart = false
     }
 
     private fun setUpListeners() {

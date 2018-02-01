@@ -2,14 +2,14 @@ package motocitizen.migration
 
 import android.content.Context
 import android.content.SharedPreferences
-import motocitizen.datasources.preferences.Preferences
+import android.preference.PreferenceManager
+import motocitizen.MyApp
 
 object PreferencesMigration : MigrationInterface {
     lateinit var preferences: SharedPreferences
     override fun process(context: Context) {
-        if (Preferences.oldVersion == Preferences.appVersion) return
-
-        if (Preferences.oldVersion < 994) {
+        preferences = PreferenceManager.getDefaultSharedPreferences(context)
+        if (MyApp.oldVersion < 995) {
             migrate933to994()
         }
     }
@@ -19,13 +19,14 @@ object PreferencesMigration : MigrationInterface {
         stringToInt("mc.distance.show")
         stringToInt("mc.distance.alarm")
         stringToInt("notifications.max")
-        if (Preferences.authType != "none") return
-        Preferences.authType = when {
-            Preferences.anonymous       -> "anon"
-            Preferences.password !== "" -> "forum"
-            Preferences.vkToken !== ""  -> "vk"
-            else                        -> "none"
-        }
+
+        if (preferences.getString("authType", "") != "") return
+        preferences.edit().putString("authType", when {
+            preferences.getBoolean("mc.anonim", false)     -> "anon"
+            preferences.getString("mc.password", "") != "" -> "forum"
+            preferences.getString("vkToken", "") != ""     -> "vk"
+            else                                           -> "none"
+        }).apply()
     }
 
     private fun stringToInt(name: String) {

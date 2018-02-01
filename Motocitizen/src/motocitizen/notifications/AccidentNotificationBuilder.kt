@@ -1,6 +1,5 @@
 package motocitizen.notifications
 
-import android.annotation.TargetApi
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -22,15 +21,12 @@ import motocitizen.ui.activity.AccidentDetailsActivity
 import motocitizen.utils.distanceString
 
 class AccidentNotificationBuilder(val context: Context, val accident: Accident) {
-    @TargetApi(Build.VERSION_CODES.O)
     companion object {
         const val chanelId = "motoaccidents"
 
         init {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                val channel = NotificationChannel(chanelId,
-                                                  "Moto accidents",
-                                                  NotificationManager.IMPORTANCE_DEFAULT);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val channel = NotificationChannel(chanelId, "Moto accidents", NotificationManager.IMPORTANCE_DEFAULT)
                 channel.description = "Moto accidents notifications"
                 (MyApp.context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(channel)
             }

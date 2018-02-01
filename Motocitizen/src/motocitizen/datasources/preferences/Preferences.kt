@@ -2,7 +2,6 @@ package motocitizen.datasources.preferences
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
 import android.media.RingtoneManager
 import android.net.Uri
 import android.preference.PreferenceManager
@@ -25,7 +24,6 @@ object Preferences {
         private set
     var login by PreferenceDelegate<String>(LOGIN)
     var password by PreferenceDelegate<String>(PASSWORD)
-    var anonymous by PreferenceDelegate<Boolean>(ANONYMOUS)
 
     var visibleDistance by PreferenceDelegate<Int>(VISIBLE_DISTANCE)
     var alarmDistance by PreferenceDelegate<Int>(ALARM_DISTANCE)
@@ -53,27 +51,13 @@ object Preferences {
             longitude = latLng.longitude.toFloat()
         }
 
-    var newVersion = false
-
     var authType by PreferenceDelegate<String>(AUTH_TYPE)
 
     var vkToken by PreferenceDelegate<String>(VK_TOKEN)
 
-    var oldVersion: Int = appVersion
-
     init {
-        firstTimeSetup()
         initSound(MyApp.context)
-
-        try {
-            val version = MyApp.context.packageManager.getPackageInfo(MyApp.context.packageName, 0).versionCode
-            if (version != appVersion) {
-                newVersion = true
-                appVersion = version
-            }
-        } catch (e: PackageManager.NameNotFoundException) {
-            e.printStackTrace()
-        }
+        appVersion = MyApp.context.packageManager.getPackageInfo(MyApp.context.packageName, 0).versionCode
     }
 
     private const val DEFAULT_LATITUDE = 55.752295f
@@ -84,7 +68,6 @@ object Preferences {
     private const val DEFAULT_MAX_AGE = 24
     private const val DEFAULT_VIBRATION = true
     private const val DEFAULT_DO_NOT_DISTURB = false
-    private const val DEFAULT_IS_ANONYMOUS = false
     private const val DEFAULT_SHOW_TYPE = true
     private const val DEFAULT_TESTER = false
     private const val DEFAULT_AUTH_TYPE = "none"
@@ -100,7 +83,6 @@ object Preferences {
         HOURS_AGO("hours.ago", DEFAULT_MAX_AGE),
         MAX_NOTIFICATIONS("notifications.max", DEFAULT_MAX_NOTIFICATIONS),
         VIBRATION("use.vibration", DEFAULT_VIBRATION),
-        ANONYMOUS("mc.anonim", DEFAULT_IS_ANONYMOUS),
         LATITUDE("savedlat", DEFAULT_LATITUDE),
         LONGITUDE("savedlng", DEFAULT_LONGITUDE),
         ON_WAY("mc.onway", 0),
@@ -113,23 +95,6 @@ object Preferences {
         AUTH_TYPE("authType", DEFAULT_AUTH_TYPE),
         VK_TOKEN("vkToken", "");
     }
-
-    private fun firstTimeSetup() {
-        values()
-                .forEach {
-                    if (!preferences.contains(it.key)) {
-                        preferences.edit().apply {
-                            when (it.default) {
-                                is Int     -> putInt(it.key, it.default)
-                                is Boolean -> putBoolean(it.key, it.default)
-                                is String  -> putString(it.key, it.default)
-                                is Float   -> putFloat(it.key, it.default)
-                            }
-                        }.apply()
-                    }
-                }
-    }
-
 
     //todo refactor sound settings
     fun setSound(title: String, uri: Uri) {

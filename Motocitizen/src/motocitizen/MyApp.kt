@@ -5,7 +5,7 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
-import android.util.Log
+import android.preference.PreferenceManager
 import android.widget.Toast
 import com.google.firebase.messaging.FirebaseMessaging
 import com.vk.sdk.VKAccessToken
@@ -14,9 +14,9 @@ import com.vk.sdk.VKSdk
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.migration.Migration
 import motocitizen.ui.activity.AuthActivity
-import motocitizen.user.Auth
 
 class MyApp : Application() {
+
 
     /**
      * AccessToken invalidated. Слушатель токена
@@ -37,8 +37,9 @@ class MyApp : Application() {
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
-
-        if (Preferences.newVersion) Migration.makeMigration(this)
+        oldVersion = PreferenceManager.getDefaultSharedPreferences(this).getInt("mc.app.version", 0)
+        val currentVersion = packageManager.getPackageInfo(packageName, 0).versionCode
+        if (oldVersion < currentVersion) Migration.makeMigration(this)
 
         FirebaseMessaging.getInstance().subscribeToTopic("accidents")
         if (Preferences.isTester) FirebaseMessaging.getInstance().subscribeToTopic("test")
@@ -50,6 +51,8 @@ class MyApp : Application() {
     companion object {
         @SuppressLint("StaticFieldLeak")
         lateinit var context: Context
+        public var firstStart = false
+        var oldVersion = 0
 
         fun isOnline(context: Context): Boolean {
             val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
