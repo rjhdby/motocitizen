@@ -15,10 +15,10 @@ fun Accident.getAccidentTextToCopy(): String {
 }
 
 val Accident.latitude
-    get() = coordinates.latitude
+    inline get() = coordinates.latitude
 
 val Accident.longitude
-    get() = coordinates.longitude
+    inline get() = coordinates.longitude
 
 fun Accident.distanceString(): String = coordinates.distanceString()
 

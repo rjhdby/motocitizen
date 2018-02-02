@@ -10,10 +10,10 @@ import android.util.SparseArray
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TableLayout
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.main.R
 import motocitizen.ui.rows.sound.SoundRow
-import motocitizen.utils.bindView
 
 class SelectSoundFragment : Fragment() {
     private val ROOT_LAYOUT = R.layout.select_sound_fragment
@@ -23,7 +23,7 @@ class SelectSoundFragment : Fragment() {
     private val CANCEL_BUTTON = R.id.select_sound_cancel_button
 
     private var notifications: SparseArray<Sound> = SparseArray()
-    private val ringtoneList: ViewGroup by bindView(CONTENT_VIEW)
+    private val ringtoneList: TableLayout by lazy { activity.findViewById<TableLayout>(CONTENT_VIEW) }
     private var currentId = 0
     private var currentUri = Preferences.sound
     private var currentTitle = Preferences.soundTitle

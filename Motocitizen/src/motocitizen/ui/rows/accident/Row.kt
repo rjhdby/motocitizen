@@ -79,10 +79,8 @@ abstract class Row protected constructor(context: Context, val accident: Acciden
 
     private fun setMargins() {
         layoutParams = LinearLayout.LayoutParams(matchParent, wrapContent).margins(margins)
-//                .apply { setMargins(margins[0], margins[1], margins[2], margins[3]) }
     }
 
-    //todo extract
     private fun setUpListeners() {
         setOnClickListener { clickListener() }
         setOnLongClickListener { longClickListener(it) }

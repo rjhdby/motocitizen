@@ -12,6 +12,7 @@ import motocitizen.datasources.network.requests.AccidentListRequest
 import motocitizen.datasources.network.requests.AccidentRequest
 import motocitizen.datasources.network.requests.DetailsRequest
 import motocitizen.datasources.network.requests.HasNewRequest
+import motocitizen.utils.asList
 import motocitizen.utils.seconds
 import org.json.JSONArray
 import org.json.JSONException
@@ -80,17 +81,17 @@ object AccidentsController {
             (0 until json.length())
                     .map { async(CommonPool) { AccidentFactory.make(json.getJSONObject(it)) } }
                     .map { it.await() }
-                    .forEach { accidents.put(it.id, it) }
+                    .forEach { accidents[it.id] = it }
         }
     }
 
     private fun attachVolunteersToAccident(accident: Accident, json: JSONArray) {
         accident.volunteers.clear()
-        (0 until json.length()).mapTo(accident.volunteers) { VolunteerAction(json.getJSONObject(it)) }
+        json.asList().mapTo(accident.volunteers) { VolunteerAction(it) }
     }
 
     private fun attachHistoryToAccident(accident: Accident, json: JSONArray) {
         accident.history.clear()
-        (0 until json.length()).forEach { accident.history.add(History(json.getJSONObject(it))) }
+        json.asList().forEach { accident.history.add(History(it)) }
     }
 }

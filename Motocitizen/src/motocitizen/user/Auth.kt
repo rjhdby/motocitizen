@@ -14,13 +14,7 @@ object Auth {
         VK("vk");
 
         companion object {
-            private fun typeByValue(value: String): AuthType = try {
-                values().filter { it.value == value }[0]
-            } catch (e: Exception) {
-                NONE
-            }
-
-            fun current(): AuthType = typeByValue(Preferences.authType)
+            fun current(): AuthType = values().firstOrNull { it.value == Preferences.authType } ?: NONE
         }
     }
 
@@ -35,7 +29,7 @@ object Auth {
                 authAsAnon()
                 callback()
             }
-            AuthType.FORUM, AuthType.VK -> AuthRequest { authRequestCallback(it, "", callback) }
+            AuthType.FORUM, AuthType.VK -> AuthRequest { authRequestCallback(it, callback) }
         }
     }
 
@@ -43,21 +37,21 @@ object Auth {
         auth(AuthType.current(), callback)
     }
 
-    private fun authRequestCallback(response: ApiResponse, login: String, callback: () -> Unit) {
-        parseAuthResult(response, login)
+    private fun authRequestCallback(response: ApiResponse, callback: () -> Unit) {
+        parseAuthResult(response)
         if (!User.isAuthorized) logoff()
         callback()
     }
 
     fun getType(): AuthType = AuthType.current()
 
-    private fun parseAuthResult(response: ApiResponse, login: String = "") {
+    private fun parseAuthResult(response: ApiResponse) {
         User.isAuthorized = false
         try {
             val result = response.resultObject
             User.apply {
                 id = Integer.parseInt(result.getString("id"))
-                name = if (login == "") result.getString("l") else login
+                name = result.getString("l")
                 role = Role.parse(result.getInt("r"))
                 isAuthorized = true
             }

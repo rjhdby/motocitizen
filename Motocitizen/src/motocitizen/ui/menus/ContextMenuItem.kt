@@ -1,11 +1,9 @@
 package motocitizen.ui.menus
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.widget.Button
+import android.support.v7.widget.AppCompatButton
 
-@SuppressLint("ViewConstructor")
-class ContextMenuItem(context: Context, val name: String, val callback: () -> Unit) : Button(context) {
+class ContextMenuItem(context: Context, val name: String, val callback: () -> Unit) : AppCompatButton(context) {
     init {
         text = name
         setOnClickListener { callback() }

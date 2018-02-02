@@ -42,7 +42,7 @@ object Router {
     }
 
     fun toExternalMap(activity: Activity, latLng: LatLng) {
-        val uri = "geo:" + latLng.latitude + "," + latLng.longitude
+        val uri = "geo:${latLng.latitude},${latLng.longitude}"
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
         activity.startActivity(intent)
     }

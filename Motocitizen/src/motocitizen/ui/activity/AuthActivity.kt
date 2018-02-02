@@ -4,7 +4,6 @@ import afterTextChanged
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -30,9 +29,7 @@ class AuthActivity : AppCompatActivity() {
     private val login: EditText by bindView(R.id.auth_login)
     private val password: EditText by bindView(R.id.auth_password)
     private val anonymous by bindView<Button>(R.id.anonymous)
-
     private val forum by bindView<Button>(R.id.forum)
-
     private val forumLoginForm by bindView<View>(R.id.forum_login_form)
 
     private fun enableLoginBtn() {

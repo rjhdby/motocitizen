@@ -7,11 +7,11 @@ object User {
     var isAuthorized = false
 
     val isModerator: Boolean
-        get() = role.isModerator
+        inline get() = role.isModerator
 
     val isStandard: Boolean
-        get() = role.isStandard
+        inline get() = role.isStandard
 
     val roleName: String
-        get() = role.text
+        inline get() = role.text
 }

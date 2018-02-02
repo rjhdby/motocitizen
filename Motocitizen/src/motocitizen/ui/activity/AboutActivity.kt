@@ -23,7 +23,7 @@ class AboutActivity : AppCompatActivity() {
             }
 
             textView(R.string.about_info)
-            textView(getString(R.string.code_version_prefix) + ": " + Preferences.appVersion)
+            textView(getString(R.string.code_version_prefix) + ": " + packageManager.getPackageInfo(packageName, 0).versionName)
             textView(R.string.about_url_support) {
                 movementMethod = LinkMovementMethod.getInstance()
             }

@@ -15,6 +15,6 @@ enum class Role constructor(val code: Int, val text: String) {
         inline get() = this >= MODERATOR
 
     companion object {
-        fun parse(role: Int): Role = Role.values().firstOrNull { it.code == role } ?: RO
+        fun parse(role: Int): Role = values().firstOrNull { it.code == role } ?: RO
     }
 }

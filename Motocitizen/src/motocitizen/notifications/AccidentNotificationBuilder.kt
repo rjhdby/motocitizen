@@ -24,6 +24,7 @@ class AccidentNotificationBuilder(val context: Context, val accident: Accident) 
     companion object {
         const val chanelId = "motoaccidents"
 
+
         init {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val channel = NotificationChannel(chanelId, "Moto accidents", NotificationManager.IMPORTANCE_DEFAULT)

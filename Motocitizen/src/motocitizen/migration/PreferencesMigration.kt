@@ -9,12 +9,12 @@ object PreferencesMigration : MigrationInterface {
     lateinit var preferences: SharedPreferences
     override fun process(context: Context) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context)
-        if (MyApp.oldVersion < 995) {
-            migrate933to994()
+        if (MyApp.oldVersion < 996) {
+            migrate933to996()
         }
     }
 
-    private fun migrate933to994() {
+    private fun migrate933to996() {
         stringToInt("hours.ago")
         stringToInt("mc.distance.show")
         stringToInt("mc.distance.alarm")

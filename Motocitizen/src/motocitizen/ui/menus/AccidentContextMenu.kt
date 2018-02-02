@@ -8,7 +8,6 @@ import motocitizen.datasources.network.requests.ActivateAccident
 import motocitizen.datasources.network.requests.BanRequest
 import motocitizen.datasources.network.requests.EndAccident
 import motocitizen.datasources.network.requests.HideAccident
-import motocitizen.datasources.preferences.Preferences
 import motocitizen.main.R
 import motocitizen.user.User
 import motocitizen.utils.*
@@ -24,7 +23,7 @@ class AccidentContextMenu(context: Context, val accident: Accident) : ContextMen
     }
 
     private fun addOwnerAndModeratorMenu() {
-        if (!User.isModerator && Preferences.login != accident.owner.name()) return
+        if (!User.isModerator && User.id != accident.owner) return
         addButton(if (accident.isEnded()) R.string.unfinish else R.string.finish, this::finishButtonPressed)
     }
 

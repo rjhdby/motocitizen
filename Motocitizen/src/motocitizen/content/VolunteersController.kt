@@ -8,6 +8,6 @@ object VolunteersController {
     val volunteers: TreeMap<Int, Volunteer> = TreeMap()
     fun addVolunteers(volunteersList: JSONObject) {
         volunteersList.keys()
-                .forEach { volunteers.put(it.toInt(), Volunteer(it.toInt(), volunteersList.getString(it))) }
+                .forEach { volunteers[it.toInt()] = Volunteer(it.toInt(), volunteersList.getString(it)) }
     }
 }

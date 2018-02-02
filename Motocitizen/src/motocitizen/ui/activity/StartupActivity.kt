@@ -2,7 +2,6 @@ package motocitizen.ui.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import motocitizen.datasources.preferences.Preferences
 import motocitizen.main.R
 import motocitizen.permissions.Permissions
 import motocitizen.router.Router

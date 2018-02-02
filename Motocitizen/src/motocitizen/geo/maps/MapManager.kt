@@ -51,7 +51,7 @@ abstract class MapManager(protected val fragment: FragmentActivity, mapContainer
     }
 
     private fun addMarker(accident: Accident) {
-        markers.put(map.accidentMarker(accident).id, accident.id)
+        markers[map.accidentMarker(accident).id] = accident.id
     }
 
     @SuppressLint("MissingPermission")

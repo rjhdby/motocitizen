@@ -51,7 +51,7 @@ class MyApp : Application() {
     companion object {
         @SuppressLint("StaticFieldLeak")
         lateinit var context: Context
-        public var firstStart = false
+        var firstStart = false
         var oldVersion = 0
 
         fun isOnline(context: Context): Boolean {
