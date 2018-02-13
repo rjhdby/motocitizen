@@ -120,6 +120,8 @@ class DetailMessagesFragment() : Fragment() {
             if (response.hasError()) {
                 val text = response.error.text
                 activity.runOnUiThread { activity.showToast(text) }
+            } else {
+                accident.messagesCount++
             }
         } catch (e: JSONException) {
             activity.showToast("Неизвестная ошибка" + response.toString())

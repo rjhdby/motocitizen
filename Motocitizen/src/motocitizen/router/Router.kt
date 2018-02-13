@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import com.google.android.gms.maps.model.LatLng
 import motocitizen.ui.activity.*
+import motocitizen.utils.makeDial
 import org.jetbrains.anko.makeCall
 import org.jetbrains.anko.sendSMS
 import org.jetbrains.anko.share
@@ -30,7 +31,7 @@ object Router {
     }
 
     fun dial(activity: Activity, phone: String) {
-        activity.makeCall(phone)
+        activity.makeDial(phone)
     }
 
     fun sms(activity: Activity, phone: String) {

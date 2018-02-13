@@ -11,7 +11,7 @@ import com.karumi.dexter.listener.single.BasePermissionListener
 
 object Permissions {
     var locationEnabled = false
-    fun requestLocation(activity: Activity, successCallback: () -> Unit, failureCallback: () -> Unit = {}) {
+    fun requestLocation(activity: Activity, failureCallback: () -> Unit = {}, successCallback: () -> Unit) {
         Dexter.withActivity(activity)
                 .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                 .withListener(permissionListener(successCallback, failureCallback))

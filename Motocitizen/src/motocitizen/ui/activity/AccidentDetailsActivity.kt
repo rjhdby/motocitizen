@@ -19,6 +19,7 @@ import motocitizen.dictionary.AccidentStatus
 import motocitizen.dictionary.AccidentStatus.ACTIVE
 import motocitizen.dictionary.AccidentStatus.ENDED
 import motocitizen.main.R
+import motocitizen.router.SubscribeManager
 import motocitizen.ui.fragments.DetailHistoryFragment
 import motocitizen.ui.fragments.DetailMessagesFragment
 import motocitizen.ui.fragments.DetailVolunteersFragment
@@ -141,6 +142,7 @@ class AccidentDetailsActivity : AppCompatActivity() {
         if (result.hasError()) {
             //todo
         } else {
+            SubscribeManager.fireEvent(SubscribeManager.Event.ACCIDENTS_UPDATED)
             //TODO Суперкостыль
             accident.status = accNewState!!
             update()

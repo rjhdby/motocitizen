@@ -1,7 +1,5 @@
 package motocitizen.content
 
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.runBlocking
 import motocitizen.content.accident.Accident
 import motocitizen.content.accident.AccidentFactory
@@ -13,6 +11,7 @@ import motocitizen.datasources.network.requests.AccidentRequest
 import motocitizen.datasources.network.requests.DetailsRequest
 import motocitizen.datasources.network.requests.HasNewRequest
 import motocitizen.utils.asList
+import motocitizen.utils.asyncMap
 import motocitizen.utils.seconds
 import org.json.JSONArray
 import org.json.JSONException
@@ -79,8 +78,7 @@ object AccidentsController {
     private fun addAccidents(json: JSONArray) {
         runBlocking {
             (0 until json.length())
-                    .map { async(CommonPool) { AccidentFactory.make(json.getJSONObject(it)) } }
-                    .map { it.await() }
+                    .asyncMap { AccidentFactory.make(json.getJSONObject(it)) }
                     .forEach { accidents[it.id] = it }
         }
     }

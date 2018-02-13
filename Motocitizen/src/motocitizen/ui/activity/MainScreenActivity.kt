@@ -11,8 +11,6 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.Toast
-import com.google.android.gms.maps.model.LatLng
-import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.runBlocking
 import motocitizen.MyApp
@@ -23,10 +21,12 @@ import motocitizen.geo.maps.MainMapManager
 import motocitizen.main.R
 import motocitizen.permissions.Permissions
 import motocitizen.router.Router
+import motocitizen.router.SubscribeManager
 import motocitizen.ui.changelog.ChangeLog
 import motocitizen.ui.rows.accident.AccidentRowFactory
 import motocitizen.ui.views.BounceScrollView
 import motocitizen.user.User
+import motocitizen.utils.asyncMap
 import motocitizen.utils.bindView
 import motocitizen.utils.displayWidth
 
@@ -34,6 +34,7 @@ class MainScreenActivity : AppCompatActivity() {
     companion object {
         private const val LIST: Byte = 0
         private const val MAP: Byte = 1
+        private const val SUBSCRIBE_TAG = "mainScreen"
     }
 
     private val mapContainer: ViewGroup by bindView(R.id.google_map)
@@ -43,6 +44,9 @@ class MainScreenActivity : AppCompatActivity() {
     private val accListView: View by bindView(R.id.acc_list)
     private val progressBar: ProgressBar by bindView(R.id.progressBar)
     private val listContent: ViewGroup by bindView(R.id.accListContent)
+    private val dialButton: ImageButton by bindView(R.id.dial_button)
+
+    private val bounceScrollView: BounceScrollView by bindView(R.id.accListRefresh)
 
     private var refreshItem: MenuItem? = null
     private lateinit var map: MainMapManager
@@ -53,59 +57,55 @@ class MainScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_screen_activity)
         map = MainMapManager(this)
+        showChangeLogIfUpdated()
     }
 
     override fun onResume() {
         super.onResume()
-        wakeUpLocationUpdate()
-        showChangeLogIfUpdated()
-        MyLocationManager.subscribeToLocationUpdate("MAIN", this::updateStatusBar)
-        disableDialOnTablets()
 
-        setUpListeners()
+        runBlocking {
+            showCurrentFrame()
+            setUpFeaturesAccessibility()
+            setUpListeners()
+            subscribe()
+            val redraw = redraw()
+            async {
+                MyLocationManager.wakeup(this@MainScreenActivity)
+            }
+            redraw.await()
+            requestAccidents()
+        }
 
-        setPermissions()
-        showCurrentFrame()
-        redraw()
-        accidents
     }
 
-    private fun wakeUpLocationUpdate() {
-        Permissions.requestLocation(this, {
-            MyLocationManager.wakeup()
-        }) { }
-    }
-
-    private fun disableDialOnTablets() {
-        if (packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) return
-        findViewById<View>(R.id.dial_button).isEnabled = false
+    private fun subscribe() = async {
+        SubscribeManager.subscribe(SubscribeManager.Event.LOCATION_UPDATED, SUBSCRIBE_TAG) { updateStatusBar() }
+        SubscribeManager.subscribe(SubscribeManager.Event.ACCIDENTS_UPDATED, SUBSCRIBE_TAG) { redraw() }
     }
 
     private fun showChangeLogIfUpdated() {
         if (!MyApp.firstStart) return
-        val changeLogDlg = ChangeLog.getDialog(this)
-        changeLogDlg.show()
+        ChangeLog.getDialog(this).show()
         MyApp.firstStart = false
     }
 
-    private fun setUpListeners() {
-        createAccButton.setOnClickListener { Router.goTo(this, Router.Target.CREATE) }
+    private fun setUpListeners() = async {
+        createAccButton.setOnClickListener { Router.goTo(this@MainScreenActivity, Router.Target.CREATE) }
         toAccListButton.setOnClickListener { showListFrame() }
         toMapButton.setOnClickListener { showMapFrame() }
-        findViewById<View>(R.id.dial_button).setOnClickListener { Router.dial(this, getString(R.string.phone)) }
-        (findViewById<BounceScrollView>(R.id.accListRefresh)).setOverScrollListener { accidents }
+        dialButton.setOnClickListener { Router.dial(this@MainScreenActivity, getString(R.string.phone)) }
+        bounceScrollView.setOverScrollListener { requestAccidents() }
     }
 
     override fun onPause() {
         super.onPause()
-        MyLocationManager.unSubscribe("MAIN")
-        Permissions.requestLocation(this, { MyLocationManager.sleep() }) { }
+        SubscribeManager.unSubscribeAll(SUBSCRIBE_TAG)
+        Permissions.requestLocation(this) { MyLocationManager.sleep() }
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         if (intent.hasExtra("toMap")) {
-            //mainFragment.toMap(intent.getExtras().getInt("toMap", 0));
             toMap(intent.extras.getInt("toMap", 0))
             intent.removeExtra("toMap")
         }
@@ -115,34 +115,30 @@ class MainScreenActivity : AppCompatActivity() {
         setIntent(intent)
     }
 
-    private fun setPermissions() {
+    private fun setUpFeaturesAccessibility() = async {
         createAccButton.visibility = if (User.isStandard) View.VISIBLE else View.INVISIBLE
+        dialButton.isEnabled = packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)
     }
 
-    private fun redraw() {
-        val newList = runBlocking {
-            Content.getVisibleReversed()
-                    .map { async(CommonPool) { AccidentRowFactory.make(this@MainScreenActivity, it) } }
-                    .map { it.await() }
+    private fun redraw() = async {
+        val newList = Content.getVisibleReversed().asyncMap { AccidentRowFactory.make(this@MainScreenActivity, it) }
+
+        runOnUiThread {
+            listContent.removeAllViews()
+            newList.forEach(listContent::addView)
+            map.update()
         }
-        listContent.removeAllViews()
-
-        newList.forEach(listContent::addView)
-
-        map.update()
     }
 
-    //todo WTF!?
-    private val accidents: Unit
-        get() {
-            if (inTransaction) return
-            if (MyApp.isOnline(this)) {
-                startRefreshAnimation()
-                Content.requestUpdate { updateCompleteCallback() }
-            } else {
-                Toast.makeText(this, getString(R.string.inet_not_available), Toast.LENGTH_LONG).show()
-            }
+    private fun requestAccidents() {
+        if (inTransaction) return
+        if (MyApp.isOnline(this)) {
+            startRefreshAnimation()
+            Content.requestUpdate { updateCompleteCallback() }
+        } else {
+            Toast.makeText(this, getString(R.string.inet_not_available), Toast.LENGTH_LONG).show()
         }
+    }
 
     private fun updateCompleteCallback() {
         runOnUiThread {
@@ -178,10 +174,10 @@ class MainScreenActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.small_menu_refresh  -> accidents
+            R.id.small_menu_refresh  -> requestAccidents()
             R.id.small_menu_settings -> Router.goTo(this, Router.Target.SETTINGS)
             R.id.small_menu_about    -> Router.goTo(this, Router.Target.ABOUT)
-            R.id.action_refresh      -> accidents
+            R.id.action_refresh      -> requestAccidents()
             R.id.do_not_disturb      -> {
                 item.setIcon(if (Preferences.doNotDisturb) R.drawable.ic_lock_ringer_on_alpha else R.drawable.ic_lock_ringer_off_alpha)
                 Preferences.doNotDisturb = !Preferences.doNotDisturb
@@ -217,8 +213,8 @@ class MainScreenActivity : AppCompatActivity() {
     }
 
     //todo refactor
-    private fun updateStatusBar(latLng: LatLng) {
-        var address = MyLocationManager.getAddress(latLng)
+    private fun updateStatusBar() {
+        var address = MyLocationManager.getAddress()
         var subTitle = ""
         //Делим примерно пополам, учитывая пробел или запятую
         val commaPos = address.lastIndexOf(",", address.length / 2)

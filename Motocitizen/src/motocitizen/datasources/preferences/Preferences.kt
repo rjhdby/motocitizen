@@ -57,7 +57,9 @@ object Preferences {
 
     init {
         initSound(MyApp.context)
+        val oldVersion = appVersion
         appVersion = MyApp.context.packageManager.getPackageInfo(MyApp.context.packageName, 0).versionCode
+        if (oldVersion != appVersion) MyApp.firstStart = true
     }
 
     private const val DEFAULT_LATITUDE = 55.752295f

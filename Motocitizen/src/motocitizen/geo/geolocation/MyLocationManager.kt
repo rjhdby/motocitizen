@@ -1,5 +1,6 @@
 package motocitizen.geo.geolocation
 
+import android.app.Activity
 import android.location.Location
 import android.os.Looper
 import com.google.android.gms.location.LocationCallback
@@ -13,6 +14,8 @@ import motocitizen.content.accident.Accident
 import motocitizen.datasources.network.requests.InPlaceRequest
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.geo.geocoder.AddressResolver
+import motocitizen.permissions.Permissions
+import motocitizen.router.SubscribeManager
 import motocitizen.user.User
 import motocitizen.utils.distanceTo
 import motocitizen.utils.toLatLng
@@ -21,7 +24,7 @@ import motocitizen.utils.toLocation
 object MyLocationManager {
     private const val ARRIVED_MAX_ACCURACY = 200
 
-    private val subscribers = HashMap<String, (LatLng) -> Unit>()
+//    private val subscribers = HashMap<String, (LatLng) -> Unit>()
 
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult?) {
@@ -31,37 +34,40 @@ object MyLocationManager {
 
     private fun locationListener(location: Location) {
         Preferences.savedLatLng = location.toLatLng()
-        subscribers.values.forEach { it(location.toLatLng()) }
+        SubscribeManager.fireEvent(SubscribeManager.Event.LOCATION_UPDATED)
+//        subscribers.values.forEach { it(location.toLatLng()) }
         checkInPlace(location)
     }
 
     fun getLocation(): LatLng = Preferences.savedLatLng
 
-    fun getAddress(location: LatLng): String = AddressResolver.getAddress(location)
+    fun getAddress(location: LatLng = getLocation()): String = AddressResolver.getAddress(location)
 
     fun sleep() {
         runLocationService(LocationRequestFactory.coarse())
     }
 
     @SuppressWarnings("MissingPermission")
-    fun wakeup() {
-        LocationServices.getFusedLocationProviderClient(MyApp.context)
-                .lastLocation
-                .addOnSuccessListener { location ->
-                    if (location != null) {
-                        Preferences.savedLatLng = location.toLatLng()
+    fun wakeup(context: Activity) {
+        Permissions.requestLocation(context) {
+            LocationServices.getFusedLocationProviderClient(context)
+                    .lastLocation
+                    .addOnSuccessListener { location ->
+                        if (location != null) {
+                            Preferences.savedLatLng = location.toLatLng()
+                        }
                     }
-                }
-        runLocationService(LocationRequestFactory.accurate())
+            runLocationService(LocationRequestFactory.accurate())
+        }
     }
 
-    fun subscribeToLocationUpdate(name: String, callback: (LatLng) -> Unit) {
-        subscribers[name] = callback
-    }
-
-    fun unSubscribe(name: String) {
-        subscribers.remove(name)
-    }
+//    fun subscribeToLocationUpdate(name: String, callback: (LatLng) -> Unit) {
+//        subscribers[name] = callback
+//    }
+//
+//    fun unSubscribe(name: String) {
+//        subscribers.remove(name)
+//    }
 
     private fun checkInPlace(location: Location) {
         if (User.name == "") return

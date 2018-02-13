@@ -3,6 +3,8 @@ package motocitizen.utils
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.util.DisplayMetrics
 import android.widget.Toast
 import org.jetbrains.anko.windowManager
@@ -19,4 +21,13 @@ fun Context.displayWidth(): Int {
     val displayMetrics = DisplayMetrics()
     windowManager.defaultDisplay.getMetrics(displayMetrics)
     return displayMetrics.widthPixels
+}
+
+fun Context.makeDial(number: String) {
+    return try {
+        val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$number"))
+        startActivity(intent)
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
 }

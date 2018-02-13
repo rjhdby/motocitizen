@@ -22,7 +22,7 @@ class StartupActivity : AppCompatActivity() {
     //TODO проверка разрешений
     public override fun onResume() {
         super.onResume()
-        Permissions.requestLocation(this, this::ahead)
+        Permissions.requestLocation(this) { ahead() }
     }
 
     //todo enum

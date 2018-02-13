@@ -8,7 +8,9 @@ import motocitizen.datasources.network.requests.ActivateAccident
 import motocitizen.datasources.network.requests.BanRequest
 import motocitizen.datasources.network.requests.EndAccident
 import motocitizen.datasources.network.requests.HideAccident
+import motocitizen.dictionary.AccidentStatus
 import motocitizen.main.R
+import motocitizen.router.SubscribeManager
 import motocitizen.user.User
 import motocitizen.utils.*
 import org.jetbrains.anko.makeCall
@@ -47,16 +49,27 @@ class AccidentContextMenu(context: Context, val accident: Accident) : ContextMen
 
     private fun finishButtonPressed() {
         when {
-            accident.isEnded() -> ActivateAccident(accident.id) { }
-            else               -> EndAccident(accident.id) { }
+            accident.isEnded() -> ActivateAccident(accident.id) {
+                accident.status = AccidentStatus.ACTIVE
+                SubscribeManager.fireEvent(SubscribeManager.Event.ACCIDENTS_UPDATED)
+            }
+            else               -> EndAccident(accident.id) {
+                accident.status = AccidentStatus.ENDED
+                SubscribeManager.fireEvent(SubscribeManager.Event.ACCIDENTS_UPDATED)
+            }
         }
-
     }
 
     private fun hideButtonPressed() {
         when {
-            accident.isHidden() -> ActivateAccident(accident.id) { }
-            else                -> HideAccident(accident.id) { }
+            accident.isHidden() -> ActivateAccident(accident.id) {
+                accident.status = AccidentStatus.ACTIVE
+                SubscribeManager.fireEvent(SubscribeManager.Event.ACCIDENTS_UPDATED)
+            }
+            else                -> HideAccident(accident.id) {
+                accident.status = AccidentStatus.HIDDEN
+                SubscribeManager.fireEvent(SubscribeManager.Event.ACCIDENTS_UPDATED)
+            }
         }
     }
 
