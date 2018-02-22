@@ -26,7 +26,9 @@ import motocitizen.utils.dateTimeString
 import motocitizen.utils.showToast
 
 class CreateAccActivity : FragmentActivity() {
-    private val ROOT_LAYOUT = R.layout.create_point
+    companion object {
+        private const val ROOT_LAYOUT = R.layout.create_point
+    }
 
     private val typeFrame: FrameInterface by lazy { TypeFrame(this, this::selectTypeCallback) }
     private val subTypeFrame: FrameInterface by lazy { SubTypeFrame(this, this::selectSubTypeCallback) }
@@ -130,9 +132,9 @@ class CreateAccActivity : FragmentActivity() {
     private fun selectLocationCallback(latLng: LatLng) {
         builder.location(AccidentLocation(MyLocationManager.getAddress(latLng), latLng))
         changeFrameTo(TYPE)
-        if (builder.location.address.isEmpty()) {
-            EmptyAddressDialog(this, this::addressDialogCallback)
-        }
+//        if (builder.location.address.isEmpty()) {
+        EmptyAddressDialog(this, builder.location.address, this::addressDialogCallback)
+//        }
     }
 
     private fun selectTypeCallback(type: Type) {
@@ -159,11 +161,11 @@ class CreateAccActivity : FragmentActivity() {
     private fun createAccidentCallback(response: ApiResponse) {
         if (response.resultObject.has("id")) {
             finish()
-        }
-
-        runOnUiThread {
-            showToast(makeErrorMessage(response.error.text))
-            //enableConfirm();//todo
+        } else {
+            runOnUiThread {
+                showToast(makeErrorMessage(response.error.text))
+                //enableConfirm();//todo
+            }
         }
     }
 
@@ -171,6 +173,6 @@ class CreateAccActivity : FragmentActivity() {
         "AUTH ERROR"            -> "Вы не авторизованы"
         "NO RIGHTS", "READONLY" -> "Недостаточно прав"
         "PROBABLY SPAM"         -> "Нельзя создавать события так часто"
-        else                    -> "Неизвестная ошибка"
+        else                    -> source
     }
 }

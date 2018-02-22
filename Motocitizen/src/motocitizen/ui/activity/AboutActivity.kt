@@ -4,23 +4,18 @@ import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.method.LinkMovementMethod
-import android.view.Menu
-import motocitizen.datasources.preferences.Preferences
 import motocitizen.main.R
-import motocitizen.router.Router
+import motocitizen.ui.Screens
 import motocitizen.ui.changelog.ChangeLog
+import motocitizen.utils.goTo
+import motocitizen.utils.lparamsMatchParent
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 
 class AboutActivity : AppCompatActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val layout = verticalLayout {
-            lparams {
-                width = matchParent
-                height = matchParent
-            }
+    val layout by lazy {
+        verticalLayout {
+            lparamsMatchParent()
 
             textView(R.string.about_info)
             textView(getString(R.string.code_version_prefix) + ": " + packageManager.getPackageInfo(packageName, 0).versionName)
@@ -30,23 +25,19 @@ class AboutActivity : AppCompatActivity() {
             textView(R.string.about_authors)
             button(R.string.business_card) {
                 onClick {
-                    Router.goTo(this@AboutActivity, Router.Target.BUSINESS_CARD)
+                    goTo(Screens.BUSINESS_CARD)
                 }
             }.lparams { width = matchParent }
             webView {
-                lparams {
-                    width = matchParent
-                    height = matchParent
-                }
-
+                lparamsMatchParent()
                 backgroundColor = Color.rgb(48, 48, 48)
             }.loadDataWithBaseURL(null, ChangeLog.getLog(this@AboutActivity), "text/html", "UTF-8", null)
-
         }
-        setContentView(layout)
-
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean = true
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(layout)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
 }

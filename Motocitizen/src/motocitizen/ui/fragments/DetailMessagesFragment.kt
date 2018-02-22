@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.PopupWindow
 import android.widget.ScrollView
 import motocitizen.content.Content
@@ -21,29 +22,27 @@ import motocitizen.ui.activity.AccidentDetailsActivity.Companion.ACCIDENT_ID_KEY
 import motocitizen.ui.menus.MessageContextMenu
 import motocitizen.ui.rows.message.MessageRowFactory
 import motocitizen.user.User
+import motocitizen.utils.hide
+import motocitizen.utils.show
 import motocitizen.utils.showToast
 import org.json.JSONException
 
 class DetailMessagesFragment() : Fragment() {
-    private val ROOT_LAYOUT = R.layout.fragment_detail_messages
-    private val MESSAGES_VIEW = R.id.details_messages_table
-    private val FORM_VIEW = R.id.new_message_area
-    private val INPUT_FIELD = R.id.new_message_text
-    private val SEND_BUTTON = R.id.new_message_send
-    private val SCROLL_VIEW = R.id.activity__details_messages_scroll
-
     private lateinit var rootView: View
-    private val scrollView: ScrollView by lazy { rootView.findViewById(SCROLL_VIEW) as ScrollView }
-    private val messagesView: ViewGroup by lazy { rootView.findViewById(MESSAGES_VIEW) as ViewGroup }
+    private lateinit var scrollView: ScrollView
+    private lateinit var messagesView: ViewGroup
+    private lateinit var formView: View
+    private lateinit var sendButton: ImageButton
+    private lateinit var inputField: EditText
     private lateinit var accident: Accident
 
     constructor(accident: Accident) : this() {
         this.accident = accident
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        rootView = inflater.inflate(ROOT_LAYOUT, container, false)
-
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle?): View? {
+        rootView = inflater.inflate(R.layout.fragment_detail_messages, container, false)
+        bindViews()
         setupNewMessageForm()
 
         update()//todo exterminatus
@@ -51,21 +50,25 @@ class DetailMessagesFragment() : Fragment() {
         return rootView
     }
 
-    private fun setupNewMessageForm() {
-        val formView = rootView.findViewById<View>(FORM_VIEW)
+    private fun bindViews() {
+        scrollView = rootView.findViewById(R.id.activity__details_messages_scroll)
+        messagesView = rootView.findViewById(R.id.details_messages_table)
+        formView = rootView.findViewById(R.id.new_message_area)
+        sendButton = rootView.findViewById(R.id.new_message_send)
+        inputField = rootView.findViewById(R.id.new_message_text)
+    }
 
-        if (!User.isStandard) {
-            formView.visibility = View.INVISIBLE
+    private fun setupNewMessageForm() {
+        if (User.isReadOnly()) {
+            formView.hide()
             return
         }
-        formView.visibility = View.VISIBLE
+        formView.show()
 
-        val inputField = rootView.findViewById(INPUT_FIELD) as EditText
-
-        rootView.findViewById<View>(SEND_BUTTON).setOnClickListener { _ ->
+        sendButton.setOnClickListener {
             val text = inputField.text.toString().replace("\\s".toRegex(), "")
             if (text.isNotEmpty()) {
-                SendMessageRequest(inputField.text.toString(), accident.id, { result -> sendMessageCallback(result) })
+                SendMessageRequest(inputField.text.toString(), accident.id, ::sendMessageCallback)
                 inputField.setText("")
             }
         }
@@ -82,19 +85,20 @@ class DetailMessagesFragment() : Fragment() {
 
         var last = 0
         val group = ArrayList<Message>()
-        messages.forEach { message ->
-            if (last != message.owner && last != 0) {
+        messages.forEach {
+            if (last != it.owner && last != 0) {
                 addMessageRows(group)
                 group.clear()
             }
-            group.add(message)
-            last = message.owner
+            group.add(it)
+            last = it.owner
         }
         addMessageRows(group)
 
         updateUnreadMessages()
     }
 
+    //todo pizdets
     private fun addMessageRows(list: List<Message>) {
         if (list.size == 1) {
             drawRow(MessageRowFactory.makeOne(activity, list.first()), list.first())

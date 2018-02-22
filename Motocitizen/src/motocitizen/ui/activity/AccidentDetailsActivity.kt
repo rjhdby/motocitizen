@@ -3,11 +3,9 @@ package motocitizen.ui.activity
 import android.app.Fragment
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.PopupWindow
 import android.widget.RadioGroup
 import motocitizen.content.Content
 import motocitizen.content.accident.Accident
@@ -19,27 +17,39 @@ import motocitizen.dictionary.AccidentStatus
 import motocitizen.dictionary.AccidentStatus.ACTIVE
 import motocitizen.dictionary.AccidentStatus.ENDED
 import motocitizen.main.R
-import motocitizen.router.SubscribeManager
+import motocitizen.subscribe.SubscribeManager
+import motocitizen.ui.Screens
 import motocitizen.ui.fragments.DetailHistoryFragment
 import motocitizen.ui.fragments.DetailMessagesFragment
 import motocitizen.ui.fragments.DetailVolunteersFragment
 import motocitizen.ui.frames.create.DetailsSummaryFrame
 import motocitizen.ui.menus.AccidentContextMenu
 import motocitizen.ui.menus.DetailsMenuController
-import motocitizen.utils.bindView
-import org.jetbrains.anko.startActivity
+import motocitizen.utils.*
 
 class AccidentDetailsActivity : AppCompatActivity() {
     companion object {
         const val ACCIDENT_ID_KEY = "id"
+        private const val ROOT_LAYOUT = R.layout.activity_accident_details
+        private const val GENERAL_INFORMATION_VIEW = R.id.acc_details_general
+        private const val FRAGMENT_ROOT_VIEW = R.id.details_tab_content
     }
 
-    private val ROOT_LAYOUT = R.layout.activity_accident_details
-    private val GENERAL_INFORMATION_VIEW = R.id.acc_details_general
-    private val FRAGMENT_ROOT_VIEW = R.id.details_tab_content
-    private val MESSAGE_TAB = R.id.details_tab_messages
-    private val HISTORY_TAB = R.id.details_tab_history
-    private val VOLUNTEER_TAB = R.id.details_tab_people
+    enum class Tab(val id: Int) {
+        MESSAGE_TAB(R.id.details_tab_messages),
+        HISTORY_TAB(R.id.details_tab_history),
+        VOLUNTEER_TAB(R.id.details_tab_people);
+
+        companion object {
+            fun byId(id: Int) = values().firstOrNull { it.id == id } ?: VOLUNTEER_TAB
+        }
+
+        fun fragment(accident: Accident): Fragment = when (this) {
+            MESSAGE_TAB   -> DetailMessagesFragment(accident)
+            HISTORY_TAB   -> DetailHistoryFragment(accident)
+            VOLUNTEER_TAB -> DetailVolunteersFragment(accident)
+        }
+    }
 
     private lateinit var accident: Accident
     private lateinit var summaryFrame: DetailsSummaryFrame
@@ -57,44 +67,30 @@ class AccidentDetailsActivity : AppCompatActivity() {
         menuController = DetailsMenuController(this, accident)
         summaryFrame = DetailsSummaryFrame(this, accident)
 
-        Content.requestDetailsForAccident(accident) { this.runOnUiThread { this.setupFragments() } }
-        tabs.visibility = View.INVISIBLE
+        Content.requestDetailsForAccident(accident) { setupFragments() }
+        tabs.hide()
         update()
     }
 
-    private fun setupFragments() {
-        /*
-        * Описание группы закладок внутри деталей происшествия
-        */
-        tabs.visibility = View.VISIBLE
+    private fun setupFragments() = runOnUiThread {
+        tabs.show()
+        showFragment(Tab.VOLUNTEER_TAB)
         tabs.setOnCheckedChangeListener { group, _ ->
-            fragmentManager
-                    .beginTransaction()
-                    .replace(FRAGMENT_ROOT_VIEW, selectFragment(group.checkedRadioButtonId))
-                    .commit()
+            showFragment(Tab.byId(group.checkedRadioButtonId))
         }
-
-        fragmentManager.beginTransaction().replace(FRAGMENT_ROOT_VIEW, selectFragment(VOLUNTEER_TAB)).commit()
     }
 
-    private fun selectFragment(tabId: Int): Fragment = when (tabId) {
-        MESSAGE_TAB   -> DetailMessagesFragment(accident)
-        HISTORY_TAB   -> DetailHistoryFragment(accident)
-        VOLUNTEER_TAB -> DetailVolunteersFragment(accident)
-        else          -> DetailVolunteersFragment(accident)
-    }
+    private fun showFragment(tab: Tab) = changeFragmentTo(FRAGMENT_ROOT_VIEW, tab.fragment(accident))
 
     override fun onResume() {
         super.onResume()
-        findViewById<View>(GENERAL_INFORMATION_VIEW).setOnLongClickListener { v ->
-            val popupWindow: PopupWindow
-            popupWindow = AccidentContextMenu(this@AccidentDetailsActivity, accident)
-            val viewLocation = IntArray(2)
-            v.getLocationOnScreen(viewLocation)
-            popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1])
-            true
-        }
+        findViewById<View>(GENERAL_INFORMATION_VIEW).setOnLongClickListener(this@AccidentDetailsActivity::generalPopUpListener)
         update()
+    }
+
+    private fun generalPopUpListener(view: View): Boolean {
+        AccidentContextMenu(this, accident).showAsDropDown(view)
+        return true
     }
 
     fun update() {
@@ -120,21 +116,23 @@ class AccidentDetailsActivity : AppCompatActivity() {
 
     private fun sendFinishRequest() {
         //TODO Суперкостыль !!!
-        if (accident.status === ENDED) {
-            ActivateAccident(accident.id, this::accidentChangeCallback)
-        } else {
-            EndAccident(accident.id, this::accidentChangeCallback)
+        when (accident.status) {
+            ENDED -> ActivateAccident(accident.id, this::accidentChangeCallback)
+            else  -> EndAccident(accident.id, this::accidentChangeCallback)
         }
     }
 
     private fun sendHideRequest() {
         //TODO какая то хуета
-        accNewState = if (accident.status === ENDED) {
-            ActivateAccident(accident.id, this::accidentChangeCallback)
-            ACTIVE
-        } else {
-            HideAccident(accident.id, this::accidentChangeCallback)
-            ENDED
+        accNewState = when (accident.status) {
+            ENDED -> {
+                ActivateAccident(accident.id, this::accidentChangeCallback)
+                ACTIVE
+            }
+            else  -> {
+                HideAccident(accident.id, this::accidentChangeCallback)
+                ENDED
+            }
         }
     }
 
@@ -150,6 +148,6 @@ class AccidentDetailsActivity : AppCompatActivity() {
     }
 
     fun jumpToMap() {
-        startActivity<MainScreenActivity>("toMap" to accident.id)
+        goTo(Screens.MAIN, mapOf("toMap" to accident.id))
     }
 }

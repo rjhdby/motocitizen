@@ -4,9 +4,10 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import motocitizen.main.R
 import motocitizen.permissions.Permissions
-import motocitizen.router.Router
+import motocitizen.ui.Screens
 import motocitizen.user.Auth
 import motocitizen.user.User
+import motocitizen.utils.goTo
 
 class StartupActivity : AppCompatActivity() {
 
@@ -19,33 +20,12 @@ class StartupActivity : AppCompatActivity() {
         setContentView(R.layout.activity_startup)
     }
 
-    //TODO проверка разрешений
     public override fun onResume() {
         super.onResume()
         Permissions.requestLocation(this) { ahead() }
     }
 
-    //todo enum
     private fun ahead() {
-        Auth.autoAuth { Router.goTo(this@StartupActivity, if (User.isAuthorized) Router.Target.MAIN else Router.Target.AUTH) }
-//        when (Preferences.authType) {
-//            "none"  -> Router.goTo(this, Router.Target.AUTH)
-//            "anon"  -> Router.goTo(this, Router.Target.MAIN)
-//            "forum" -> tryToLogon()
-//            "vk"    -> vkLogin()
-//            else    -> tryToLogon()
-//        }
+        Auth.autoAuth { goTo(if (User.isAuthorized) Screens.MAIN else Screens.AUTH) }
     }
-
-//    private fun vkLogin() {
-//        Auth.auth(Auth.AuthType.VK) {
-//            Router.goTo(this@StartupActivity, if (User.isAuthorized) Router.Target.MAIN else Router.Target.AUTH)
-//        }
-//    }
-
-//    private fun tryToLogon() {
-//        Auth.auth(Auth.AuthType.FORUM) {
-//            Router.goTo(this@StartupActivity, if (User.isAuthorized) Router.Target.MAIN else Router.Target.AUTH)
-//        }
-//    }
 }

@@ -6,6 +6,8 @@ import com.google.android.gms.maps.model.LatLng
 import motocitizen.main.R
 import motocitizen.geo.maps.CreateAccidentMap
 import motocitizen.ui.frames.FrameInterface
+import motocitizen.utils.hide
+import motocitizen.utils.show
 
 class LocationFrame(val context: FragmentActivity, val callback: (LatLng) -> Unit): FrameInterface {
     private val ROOT_VIEW = R.id.create_map
@@ -16,13 +18,9 @@ class LocationFrame(val context: FragmentActivity, val callback: (LatLng) -> Uni
         context.findViewById<View>(R.id.ADDRESS).setOnClickListener(addressSelectListener())
     }
 
-    override fun show() {
-        view.visibility = View.VISIBLE
-    }
+    override fun show() = view.show()
 
-    override fun hide() {
-        view.visibility = View.INVISIBLE
-    }
+    override fun hide() = view.hide()
 
-    private fun addressSelectListener(): View.OnClickListener = View.OnClickListener { _ -> callback(map.coordinates()) }
+    private fun addressSelectListener(): View.OnClickListener = View.OnClickListener { callback(map.coordinates()) }
 }

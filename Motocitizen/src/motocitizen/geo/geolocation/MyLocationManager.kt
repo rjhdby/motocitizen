@@ -15,7 +15,7 @@ import motocitizen.datasources.network.requests.InPlaceRequest
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.geo.geocoder.AddressResolver
 import motocitizen.permissions.Permissions
-import motocitizen.router.SubscribeManager
+import motocitizen.subscribe.SubscribeManager
 import motocitizen.user.User
 import motocitizen.utils.distanceTo
 import motocitizen.utils.toLatLng

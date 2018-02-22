@@ -18,25 +18,23 @@ import motocitizen.ui.activity.AccidentDetailsActivity
 import motocitizen.ui.activity.AccidentDetailsActivity.Companion.ACCIDENT_ID_KEY
 import motocitizen.ui.dialogs.details.ConfirmDialog
 import motocitizen.ui.rows.volunteer.VolunteerRowFactory
-import motocitizen.user.User
+import motocitizen.utils.hide
 import motocitizen.utils.isActive
+import motocitizen.utils.show
+import org.jetbrains.anko.runOnUiThread
 
 class DetailVolunteersFragment() : Fragment() {
-    private val ROOT_LAYOUT = R.layout.fragment_detail_volunteers
-    private val CONTENT_VIEW = R.id.acc_onway_table
-    private val TO_MAP_BUTTON = R.id.details_to_map_button
-    private val CONFIRM_BUTTON = R.id.onway_button
-    private val CANCEL_BUTTON = R.id.onway_cancel_button
-    private val DISABLED_BUTTON = R.id.onway_disabled_button
-
-    private val DIALOG_ON_WAY_CONFIRM = 1
-    private val DIALOG_CANCEL_ON_WAY_CONFIRM = 2
+    companion object {
+        private const val DIALOG_ON_WAY_CONFIRM = 1
+        private const val DIALOG_CANCEL_ON_WAY_CONFIRM = 2
+    }
 
     private lateinit var rootView: View
-    private val confirmButton: ImageButton by lazy { rootView.findViewById(CONFIRM_BUTTON) as ImageButton }
-    private val cancelButton: ImageButton by lazy { rootView.findViewById(CANCEL_BUTTON) as ImageButton }
-    private val disabledButton: ImageButton by lazy { rootView.findViewById(DISABLED_BUTTON) as ImageButton }
-    private val content: ViewGroup by lazy { rootView.findViewById(CONTENT_VIEW) as ViewGroup }
+    private lateinit var confirmButton: ImageButton
+    private lateinit var cancelButton: ImageButton
+    private lateinit var disabledButton: ImageButton
+    private lateinit var content: ViewGroup
+    private lateinit var toMapButton: View
 
     private lateinit var accident: Accident
 
@@ -44,34 +42,46 @@ class DetailVolunteersFragment() : Fragment() {
         this.accident = accident
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        rootView = inflater.inflate(ROOT_LAYOUT, container, false)
-
-        val toMapButton = rootView.findViewById<View>(TO_MAP_BUTTON)
-
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle?): View? {
+        rootView = inflater.inflate(R.layout.fragment_detail_volunteers, container, false)
+        bindViews()
         disabledButton.isEnabled = false
-
-        confirmButton.setOnClickListener { _ -> showOnWayDialog() }
-        cancelButton.setOnClickListener { _ -> showCancelDialog() }
-        toMapButton.setOnClickListener { _ -> (activity as AccidentDetailsActivity).jumpToMap() }
+        setUpListeners()
         update()
         return rootView
+    }
+
+    private fun bindViews() {
+        confirmButton = rootView.findViewById(R.id.onway_button)
+        cancelButton = rootView.findViewById(R.id.onway_cancel_button)
+        disabledButton = rootView.findViewById(R.id.onway_disabled_button)
+        content = rootView.findViewById(R.id.acc_onway_table)
+        toMapButton = rootView.findViewById(R.id.details_to_map_button)
+    }
+
+    private fun setUpListeners() {
+        confirmButton.setOnClickListener { showOnWayDialog() }
+        cancelButton.setOnClickListener { showCancelDialog() }
+        toMapButton.setOnClickListener { (activity as AccidentDetailsActivity).jumpToMap() }
     }
 
     private fun update() {
         setupAccess()
         content.removeAllViews()
-        accident.volunteers.forEach { action -> content.addView(VolunteerRowFactory.make(activity, action)) }
+        accident.volunteers.forEach { content.addView(VolunteerRowFactory.make(activity, it)) }
     }
 
-    private fun setupAccess() {
-        with(accident) {
-            val active = accident.isActive() && User.isAuthorized
-            confirmButton.visibility = if (id != Preferences.onWay && accident != Content.inPlace && active) View.VISIBLE else View.GONE
-            cancelButton.visibility = if (id == Preferences.onWay && accident != Content.inPlace && active) View.VISIBLE else View.GONE
-            disabledButton.visibility = if (accident == Content.inPlace && active) View.VISIBLE else View.GONE
-        }
+    private fun setupAccess() =runOnUiThread{
+        cancelButton.apply { if (canShowCancel()) show() else hide() }
+        confirmButton.apply { if (canShowConfirm()) show() else hide() }
+        disabledButton.apply { if (canShowDisabled()) show() else hide() }
     }
+
+    private fun canShowCancel() = accident.isActive() && accident != Content.inPlace && accident.id == Preferences.onWay
+
+    private fun canShowConfirm() = accident.isActive() && accident != Content.inPlace && accident.id != Preferences.onWay
+
+    private fun canShowDisabled() = accident.isActive() && accident == Content.inPlace
 
     private fun showOnWayDialog() {
         val onWayConfirm = ConfirmDialog(activity.getString(R.string.title_dialog_onway_confirm))
@@ -95,12 +105,12 @@ class DetailVolunteersFragment() : Fragment() {
 
     private fun sendOnWay() {
         Preferences.onWay = accident.id
-        OnWayRequest(accident.id, { _ -> })//todo
+        OnWayRequest(accident.id, { setupAccess() })//todo
     }
 
     private fun sendCancelOnWay() {
         Preferences.onWay = 0
-        CancelOnWayRequest(accident.id, { _ -> }) //todo
+        CancelOnWayRequest(accident.id, { setupAccess() }) //todo
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

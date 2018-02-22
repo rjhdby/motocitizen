@@ -5,6 +5,8 @@ import android.view.View
 import motocitizen.dictionary.Medicine
 import motocitizen.main.R
 import motocitizen.ui.frames.FrameInterface
+import motocitizen.utils.hide
+import motocitizen.utils.show
 
 class DamageFrame(val context: FragmentActivity, val callback: (Medicine) -> Unit) : FrameInterface {
     private val ROOT_VIEW = R.id.create_people_frame
@@ -15,13 +17,9 @@ class DamageFrame(val context: FragmentActivity, val callback: (Medicine) -> Uni
                 .forEach { id -> setListener(id, damageSelectListener(id)) }
     }
 
-    override fun show() {
-        view.visibility = View.VISIBLE
-    }
+    override fun show() = view.show()
 
-    override fun hide() {
-        view.visibility = View.INVISIBLE
-    }
+    override fun hide() = view.hide()
 
     private fun setListener(id: Int, listener: View.OnClickListener) {
         context.findViewById<View>(id).setOnClickListener(listener)

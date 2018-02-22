@@ -7,7 +7,7 @@ import android.widget.LinearLayout
 import motocitizen.main.R
 import org.jetbrains.anko.*
 
-class EmptyAddressDialog(context: Activity, successCallback: (String) -> Unit) {
+class EmptyAddressDialog(context: Activity, address: String, successCallback: (String) -> Unit) {
     private var text = ""
 
     init {
@@ -17,6 +17,7 @@ class EmptyAddressDialog(context: Activity, successCallback: (String) -> Unit) {
                 verticalLayout {
                     layoutParams = LinearLayout.LayoutParams(matchParent, matchParent)
                     editText {
+                        setText(address)
                         layoutParams = ViewGroup.LayoutParams(matchParent, wrapContent)
                         afterTextChanged { this@EmptyAddressDialog.text = text.toString().trim() }
                         hint = "Введите адрес"

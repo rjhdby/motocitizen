@@ -1,4 +1,4 @@
-package motocitizen.router
+package motocitizen.subscribe
 
 object SubscribeManager {
     enum class Event {

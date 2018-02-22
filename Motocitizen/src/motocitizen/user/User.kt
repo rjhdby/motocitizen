@@ -6,12 +6,11 @@ object User {
     var id = 0
     var isAuthorized = false
 
-    val isModerator: Boolean
-        inline get() = role.isModerator
+    fun isReadOnly() = role == Role.RO
 
-    val isStandard: Boolean
-        inline get() = role.isStandard
+    fun notIsReadOnly() = !isReadOnly()
 
-    val roleName: String
-        inline get() = role.text
+    fun isModerator() = role.isModerator
+
+    fun notIsModerator() = !isModerator()
 }

@@ -10,6 +10,7 @@ import android.content.Context
 import android.graphics.Color
 import android.view.ContextThemeWrapper
 import android.webkit.WebView
+import motocitizen.MyApp
 import motocitizen.main.R
 import java.io.BufferedReader
 import java.io.IOException
@@ -23,7 +24,13 @@ object ChangeLog {
     private val sb = StringBuffer()
     private var currentListMode = LIST_NONE
 
-    fun getDialog(context: Context): AlertDialog {
+    fun show(context: Context) {
+        if (!MyApp.firstStart) return
+        ChangeLog.getDialog(context).show()
+        MyApp.firstStart = false
+    }
+
+    private fun getDialog(context: Context): AlertDialog {
         val wv = WebView(context)
 
         wv.setBackgroundColor(Color.BLACK)

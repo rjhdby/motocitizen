@@ -16,9 +16,9 @@ const val EQUATOR = 20038
 
 fun Location.toLatLng(): LatLng = LatLng(latitude, longitude)
 
-fun LatLng.distanceTo(latLng: LatLng): Float = distanceTo(latLng.toLocation())
+fun LatLng.distanceTo(latLng: LatLng): Kilometer = distanceTo(latLng.toLocation())
 
-fun LatLng.distanceTo(location: Location): Float = toLocation().distanceTo(location)
+fun LatLng.distanceTo(location: Location): Kilometer = toLocation().distanceTo(location)
 
 fun LatLng.toLocation(): Location {
     val location = Location(LocationManager.GPS_PROVIDER)
@@ -55,7 +55,7 @@ fun LatLng.distanceString(): String {
     }
 }
 
-fun LatLng.metersFromUser(): Int = Math.round(distanceTo(MyLocationManager.getLocation()))
+fun LatLng.metersFromUser(): Meter = Math.round(distanceTo(MyLocationManager.getLocation()))
 
 fun Address.buildAddressString(): String {
     return StringBuilder()

@@ -1,34 +1,36 @@
 package motocitizen.ui.fragments
 
-import android.preference.CheckBoxPreference
 import android.preference.Preference
 import android.preference.PreferenceFragment
 import com.google.firebase.messaging.FirebaseMessaging
 import motocitizen.content.AccidentsController
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.main.R
-import motocitizen.router.Router
+import motocitizen.ui.Screens
 import motocitizen.user.Auth
 import motocitizen.user.User
 import motocitizen.utils.*
 
 class SettingsFragment : PreferenceFragment() {
-    private val PREFERENCES = R.xml.preferences
+    companion object {
+        private const val PREFERENCES = R.xml.preferences
+    }
 
-    private val notificationDistPreference: Preference by lazy { preferenceByName("distanceShow") }
-    private val notificationAlarmPreference: Preference by lazy { preferenceByName("distanceAlarm") }
     private val buttonAuth: Preference by lazy { findPreference(resources.getString(R.string.settings_auth_button)) }
     private val buttonSound: Preference by lazy { findPreference(resources.getString(R.string.notification_sound)) }
-    private val showAcc: Preference by lazy { preferenceByName("showAcc") }
-    private val showBreak: Preference by lazy { preferenceByName("showBreak") }
-    private val showSteal: Preference by lazy { preferenceByName("showSteal") }
-    private val showOther: Preference by lazy { preferenceByName("showOther") }
-    private val hoursAgo: Preference by lazy { preferenceByName("hoursAgo") }
-    private val isTester: Preference by lazy { preferenceByName("isTester") }
-    private val maxNotifications: Preference by lazy { preferenceByName("maxNotifications") }
-    private val useVibration: Preference by lazy { preferenceByName("useVibration") }
     private val notificationSoundPreference: Preference by lazy { findPreference(resources.getString(R.string.notification_sound)) }
     private val authPreference: Preference by lazy { findPreference(resources.getString(R.string.settings_auth_button)) }
+
+    private val notificationDistPreference by bindPreference("distanceShow")
+    private val notificationAlarmPreference by bindPreference("distanceAlarm")
+    private val showAcc by bindCheckBoxPreference("showAcc")
+    private val showBreak by bindCheckBoxPreference("showBreak")
+    private val showSteal by bindCheckBoxPreference("showSteal")
+    private val showOther by bindCheckBoxPreference("showOther")
+    private val hoursAgo by bindPreference("hoursAgo")
+    private val isTester by bindCheckBoxPreference("isTester")
+    private val maxNotifications by bindPreference("maxNotifications")
+    private val useVibration by bindPreference("useVibration")
 
     private var login = Preferences.login
 
@@ -41,28 +43,28 @@ class SettingsFragment : PreferenceFragment() {
     }
 
     private fun update() {
-        authPreference.summary = if (login.isNotEmpty()) User.roleName + ": " + login else User.roleName
+        authPreference.summary = if (login.isNotEmpty()) User.role.text + ": " + login else User.role.text
         maxNotifications.summary = Preferences.maxNotifications.toString()
         hoursAgo.summary = Preferences.hoursAgo.toString()
         notificationSoundPreference.summary = Preferences.soundTitle
         notificationDistPreference.summary = Preferences.visibleDistance.toString()
         notificationAlarmPreference.summary = Preferences.alarmDistance.toString()
-        (showAcc as CheckBoxPreference).isChecked = Preferences.showAccidents
-        (showBreak as CheckBoxPreference).isChecked = Preferences.showBreaks
-        (showSteal as CheckBoxPreference).isChecked = Preferences.showSteal
-        (showOther as CheckBoxPreference).isChecked = Preferences.showOther
-        (isTester as CheckBoxPreference).isChecked = Preferences.isTester
+        showAcc.isChecked = Preferences.showAccidents
+        showBreak.isChecked = Preferences.showBreaks
+        showSteal.isChecked = Preferences.showSteal
+        showOther.isChecked = Preferences.showOther
+        isTester.isChecked = Preferences.isTester
     }
 
     private fun setUpListeners() {
-        buttonSound.onClickListener { this.soundButtonPressed() }
-        buttonAuth.onClickListener { this.authButtonPressed() }
+        buttonSound.onClickListener { soundButtonPressed() }
+        buttonAuth.onClickListener { authButtonPressed() }
 
         notificationDistPreference.onChangeListener(::distanceListener)
         notificationAlarmPreference.onChangeListener(::distanceListener)
         maxNotifications.onChangeListener(::maxNotificationsListener)
         hoursAgo.onChangeListener(::hoursAgoListener)
-        useVibration.onChangeListener { _, newValue -> this.vibrationListener(newValue) }
+        useVibration.onChangeListener { _, newValue -> vibrationListener(newValue) }
         isTester.onChangeListener(::isTesterListener)
         arrayOf(showAcc, showBreak, showOther, showSteal)
                 .forEach { it.onChangeListener(::visibleListener) }
@@ -89,11 +91,10 @@ class SettingsFragment : PreferenceFragment() {
 
     private fun isTesterListener(preference: Preference, newValue: Any): Boolean {
         Preferences.isTester = newValue as Boolean
-        if (newValue) {
-            FirebaseMessaging.getInstance().subscribeToTopic("test")
-        } else {
-            FirebaseMessaging.getInstance().unsubscribeFromTopic("test")
+        FirebaseMessaging.getInstance().apply {
+            if (newValue) subscribeToTopic("test") else unsubscribeFromTopic("test")
         }
+
         AccidentsController.resetLastUpdate()
         update()
         return false
@@ -114,7 +115,7 @@ class SettingsFragment : PreferenceFragment() {
 
     private fun authButtonPressed(): Boolean {
         Auth.logoff()
-        Router.goTo(activity, Router.Target.AUTH)
+        goTo(Screens.AUTH)
         return true
     }
 
@@ -124,7 +125,7 @@ class SettingsFragment : PreferenceFragment() {
     }
 
     private fun distanceListener(preference: Preference, newValue: Any): Boolean {
-        val value = Math.min(EQUATOR, Integer.parseInt(newValue as String))
+        val value = (newValue as String).toInt().coerceAtMost(EQUATOR)
 
         when (preference) {
             notificationDistPreference  -> Preferences.visibleDistance = value
@@ -133,7 +134,6 @@ class SettingsFragment : PreferenceFragment() {
         update()
         return false
     }
-
 
     private val isAllHidden: Boolean
         inline get() = !with(Preferences) { showAccidents || showSteal || showBreaks || showOther }

@@ -2,7 +2,6 @@ package motocitizen.geo.maps
 
 import android.app.Activity
 import android.content.Context
-import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
@@ -10,13 +9,15 @@ import motocitizen.content.accident.Accident
 import motocitizen.dictionary.Type
 import motocitizen.geo.geolocation.MyLocationManager
 import motocitizen.main.R
-import motocitizen.router.Router
+import motocitizen.ui.Screens
 import motocitizen.ui.activity.AccidentDetailsActivity
+import motocitizen.utils.goTo
+import motocitizen.utils.toExternalMap
 
 class MainMapManager(fragment: FragmentActivity) : MapManager(fragment, R.id.google_map) {
     override fun onMapReady() {
         map.setOnMarkerClickListener { markerClicked(fragment, it) }
-        map.setOnMapLongClickListener { Router.toExternalMap(fragment as Activity, it) }
+        map.setOnMapLongClickListener { (fragment as Activity).toExternalMap(it) }
     }
 
     override fun update() = addContent { addUserMarker() }
@@ -42,9 +43,7 @@ class MainMapManager(fragment: FragmentActivity) : MapManager(fragment, R.id.goo
     }
 
     private fun toDetails(context: Context, id: Int) {
-        val bundle = Bundle()
-        bundle.putInt(AccidentDetailsActivity.ACCIDENT_ID_KEY, id)
-        Router.goTo(context as Activity, Router.Target.DETAILS, bundle)
+        (context as Activity).goTo(Screens.DETAILS, mapOf(AccidentDetailsActivity.ACCIDENT_ID_KEY to id))
     }
 
     fun centerOnAccident(accident: Accident) = centerOn(accident.coordinates)

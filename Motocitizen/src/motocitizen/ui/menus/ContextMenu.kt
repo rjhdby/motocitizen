@@ -21,12 +21,11 @@ abstract class ContextMenu(val context: Context) : PopupWindow() {
         height = wrapContent
     }
 
-    fun addButton(name: String, callback: () -> Unit) {
-        rootView.addView(ContextMenuItem(context, name, {
-            dismiss()
-            callback()
-        }))
-    }
+    fun addButton(name: String, callback: () -> Unit) = rootView.addView(
+            ContextMenuItem(context, name) {
+                dismiss()
+                callback()
+            })
 
     fun addButton(resource: Int, callback: () -> Unit) = addButton(context.getString(resource), callback)
 }

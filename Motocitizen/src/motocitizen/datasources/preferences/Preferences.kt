@@ -13,6 +13,7 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 object Preferences {
+
     private val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(MyApp.context)
 
     var appVersion by PreferenceDelegate<Int>(APP_VERSION)
@@ -98,6 +99,12 @@ object Preferences {
         VK_TOKEN("vkToken", "");
     }
 
+    init {
+        Stored.values()
+                .filterNot { preferences.contains(it.key) }
+                .forEach { setValue(it, it.default) }
+    }
+
     //todo refactor sound settings
     fun setSound(title: String, uri: Uri) {
         soundTitle = title
@@ -139,6 +146,17 @@ object Preferences {
         else               -> "unknown"
     }
 
+    private fun setValue(stored: Stored, value: Any) {
+        preferences.edit().apply {
+            when (stored.default) {
+                is Int     -> putInt(stored.key, value as Int)
+                is Boolean -> putBoolean(stored.key, value as Boolean)
+                is String  -> putString(stored.key, value as String)
+                is Float   -> putFloat(stored.key, value as Float)
+            }
+        }.apply()
+    }
+
     private class PreferenceDelegate<T>(private val stored: Stored) : ReadWriteProperty<Preferences, T> {
 
         @Suppress("UNCHECKED_CAST")
@@ -152,14 +170,7 @@ object Preferences {
                 }
 
         override fun setValue(thisRef: Preferences, property: KProperty<*>, value: T) {
-            preferences.edit().apply {
-                when (stored.default) {
-                    is Int     -> putInt(stored.key, value as Int)
-                    is Boolean -> putBoolean(stored.key, value as Boolean)
-                    is String  -> putString(stored.key, value as String)
-                    is Float   -> putFloat(stored.key, value as Float)
-                }
-            }.apply()
+            Preferences.setValue(stored, value as Any)
         }
     }
 }

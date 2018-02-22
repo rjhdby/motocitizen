@@ -1,7 +1,6 @@
 package motocitizen.geo.maps
 
 import android.support.v4.app.FragmentActivity
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
@@ -11,6 +10,7 @@ import motocitizen.geo.geolocation.MyLocationManager
 import motocitizen.main.R
 import motocitizen.user.User
 import motocitizen.utils.distanceTo
+import motocitizen.utils.gone
 import motocitizen.utils.requestLatLngFromAddress
 import motocitizen.utils.showToast
 
@@ -45,12 +45,11 @@ class CreateAccidentMap(fragment: FragmentActivity) : MapManager(fragment, R.id.
     }
 
     private fun addMapConstraints() {
-        if (User.isModerator) return
+        if (User.isModerator()) return
 
         //Прячем кнопки поиска адреса
-        searchEditText.visibility = View.GONE
-
-        searchButton.visibility = View.GONE
+        searchEditText.gone()
+        searchButton.gone()
 
         map.addCircle(permittedCircle())
         map.setOnCameraMoveCanceledListener(this::cameraMoveCanceledListener)

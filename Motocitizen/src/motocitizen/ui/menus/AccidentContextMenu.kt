@@ -10,10 +10,9 @@ import motocitizen.datasources.network.requests.EndAccident
 import motocitizen.datasources.network.requests.HideAccident
 import motocitizen.dictionary.AccidentStatus
 import motocitizen.main.R
-import motocitizen.router.SubscribeManager
+import motocitizen.subscribe.SubscribeManager
 import motocitizen.user.User
 import motocitizen.utils.*
-import org.jetbrains.anko.makeCall
 import org.jetbrains.anko.sendSMS
 import org.jetbrains.anko.share
 
@@ -25,7 +24,7 @@ class AccidentContextMenu(context: Context, val accident: Accident) : ContextMen
     }
 
     private fun addOwnerAndModeratorMenu() {
-        if (!User.isModerator && User.id != accident.owner) return
+        if (User.notIsModerator() && User.id != accident.owner) return
         addButton(if (accident.isEnded()) R.string.unfinish else R.string.finish, this::finishButtonPressed)
     }
 
@@ -33,7 +32,7 @@ class AccidentContextMenu(context: Context, val accident: Accident) : ContextMen
         addButton(R.string.share) { context.share(accident.getAccidentTextToCopy()) }
         addButton(R.string.copy) { context.copyToClipBoard(accident.getAccidentTextToCopy()) }
         accident.description.getPhonesFromText().forEach {
-            addButton(context.getString(R.string.popup_dial, it)) { context.makeCall(it) }
+            addButton(context.getString(R.string.popup_dial, it)) { context.makeDial(it) }
         }
         accident.description.getPhonesFromText().forEach {
             addButton(context.getString(R.string.popup_sms, it)) { context.sendSMS(it) }
@@ -42,7 +41,7 @@ class AccidentContextMenu(context: Context, val accident: Accident) : ContextMen
     }
 
     private fun addModeratorMenu() {
-        if (!User.isModerator) return
+        if (User.notIsModerator()) return
         addButton(if (accident.isHidden()) R.string.show else R.string.hide, this::hideButtonPressed)
         addButton("Забанить") { BanRequest(accident.owner, this::banRequestCallback) }
     }

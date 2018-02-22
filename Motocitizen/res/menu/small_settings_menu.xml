@@ -14,11 +14,6 @@
         android:icon="@drawable/ic_lock_ringer_on_alpha"
         android:title="@string/do_not_disturb"/>
     <item
-        android:id="@+id/small_menu_refresh"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:title="@string/small_menu_refresh"/>
-    <item
         android:id="@+id/small_menu_settings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

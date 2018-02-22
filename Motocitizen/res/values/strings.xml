@@ -85,7 +85,6 @@
     <string name="current_version_text">Текущая версия:</string>
     <string name="title_dialog_acc_not_actual">Этот инцидент уже не актуален.</string>
     <string name="auth_role">Вы: %1$s.</string>
-    <string name="unknown_error">Неизвестная ошибка</string>
     <string name="auth_password_error">Не удалось авторизоваться. Возможно неверно введен логин или пароль.</string>
     <string name="title_dialog_cancel_onway_confirm">Вы хотите отменить выезд?</string>
     <string name="onway_cancel_button">Отмена выезда</string>
@@ -108,7 +107,7 @@
     <string name="time_interval_short">%1$dч %2$dм</string>
     <string name="accident_row_content">%1$s \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0"</string>
     <string name="search_address_hint">адрес</string>
-    <string name="phone">78007751734</string>
-    <string name="addressDialog">Адрес по координатам не найден, желаете ввести его ?</string>
+    <string name="phone">+78007751734</string>
+    <string name="addressDialog">Уточните адрес. Номер дома, в центр/в область/внешнее/внутреннее и т.д.</string>
     <integer name="com_vk_sdk_AppId">6355438</integer>
 </resources>

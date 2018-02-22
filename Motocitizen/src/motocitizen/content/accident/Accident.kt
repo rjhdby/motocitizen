@@ -10,6 +10,7 @@ import motocitizen.dictionary.Medicine
 import motocitizen.dictionary.Type
 import motocitizen.geo.geocoder.AccidentLocation
 import motocitizen.user.User
+import motocitizen.utils.Id
 import motocitizen.utils.MS_IN_HOUR
 import motocitizen.utils.distanceString
 import motocitizen.utils.metersFromUser
@@ -18,12 +19,12 @@ import kotlin.collections.ArrayList
 
 //todo simplify constructor
 class Accident(
-        val id: Int,
+        val id: Id,
         var type: Type,
         var medicine: Medicine,
         val time: Date,
         var location: AccidentLocation,
-        val owner: Int,
+        val owner: Id,
         var status: AccidentStatus) {
 
     val volunteers = ArrayList<VolunteerAction>()
@@ -43,7 +44,7 @@ class Accident(
         private set
 
     fun isVisible() = when {
-        !User.isModerator && status == HIDDEN                                -> false
+        User.notIsModerator() && status == HIDDEN                            -> false
         coordinates.metersFromUser() > Preferences.visibleDistance * 1000    -> false
         !Preferences.isEnabled(type)                                         -> false
         time.time + Preferences.hoursAgo.toLong() * MS_IN_HOUR < Date().time -> false

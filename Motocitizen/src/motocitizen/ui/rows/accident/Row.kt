@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Typeface
 import android.os.Build
-import android.os.Bundle
 import android.text.Html
 import android.text.Spanned
 import android.view.Gravity
@@ -14,11 +13,12 @@ import android.widget.LinearLayout
 import motocitizen.content.accident.Accident
 import motocitizen.datasources.database.StoreMessages
 import motocitizen.main.R
-import motocitizen.router.Router
+import motocitizen.ui.Screens
 import motocitizen.ui.activity.AccidentDetailsActivity
 import motocitizen.ui.menus.AccidentContextMenu
 import motocitizen.utils.Margins
 import motocitizen.utils.getIntervalFromNowInText
+import motocitizen.utils.goTo
 import motocitizen.utils.margins
 import org.jetbrains.anko.matchParent
 import org.jetbrains.anko.textView
@@ -87,16 +87,11 @@ abstract class Row protected constructor(context: Context, val accident: Acciden
     }
 
     private fun clickListener() {
-        val bundle = Bundle()
-        bundle.putInt(AccidentDetailsActivity.ACCIDENT_ID_KEY, accident.id)
-        Router.goTo(context as Activity, Router.Target.DETAILS, bundle)
+        (context as Activity).goTo(Screens.DETAILS, mapOf(AccidentDetailsActivity.ACCIDENT_ID_KEY to accident.id))
     }
 
     private fun longClickListener(v: View): Boolean {
-        val viewLocation = IntArray(2)
-        v.getLocationOnScreen(viewLocation)
-        AccidentContextMenu(context, accident)
-                .showAtLocation(v, Gravity.NO_GRAVITY, viewLocation[0], viewLocation[1])
+        AccidentContextMenu(context, accident).showAsDropDown(v)
         return true
     }
 }

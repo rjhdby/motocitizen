@@ -33,7 +33,11 @@ object AccidentsController {
         }
     }
 
-    private fun hasNewCheck(response: ApiResponse): Boolean = response.resultArray[0] == "y"
+    private fun hasNewCheck(response: ApiResponse): Boolean = try {
+        response.resultArray[0] == "y"
+    } catch (e: Exception) {
+        true
+    }
 
     private fun requestList(callback: (ApiResponse) -> Unit) {
         AccidentListRequest { listRequestCallback(it, callback) }

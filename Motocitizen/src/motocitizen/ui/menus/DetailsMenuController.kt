@@ -7,10 +7,13 @@ import android.view.View
 import motocitizen.content.accident.Accident
 import motocitizen.dictionary.AccidentStatus
 import motocitizen.main.R
-import motocitizen.router.Router
 import motocitizen.user.User
 import motocitizen.utils.getAccidentTextToCopy
 import motocitizen.utils.getPhonesFromText
+import motocitizen.utils.gone
+import motocitizen.utils.makeDial
+import org.jetbrains.anko.sendSMS
+import org.jetbrains.anko.share
 
 //todo refactor
 class DetailsMenuController(val activity: FragmentActivity, val accident: Accident) {
@@ -19,14 +22,13 @@ class DetailsMenuController(val activity: FragmentActivity, val accident: Accide
         private const val SMS_MENU_MAX_ID = 200
         private const val CALL_MENU_MIN_ID = 400
         private const val CALL_MENU_MAX_ID = 500
+        private const val GENERAL_INFORMATION_VIEW = R.id.acc_details_general
+        private const val MENU = R.menu.menu_accident_details
     }
+
     enum class MenuAction {
         TO_MAP, HIDE_INFO, SHARE, SEND_HIDE_REQUEST, SEND_FINISH_REQUEST, NOTHING
     }
-
-    private val GENERAL_INFORMATION_VIEW = R.id.acc_details_general
-    private val MENU = R.menu.menu_accident_details
-
 
     private var generalLayout: View = activity.findViewById(GENERAL_INFORMATION_VIEW)
 
@@ -51,24 +53,25 @@ class DetailsMenuController(val activity: FragmentActivity, val accident: Accide
             }
         }
     }
-//todo bloody hell
+
+    //todo bloody hell
     fun itemSelected(item: MenuItem): MenuAction {
         if (item.itemId in SMS_MENU_MIN_ID..(SMS_MENU_MAX_ID - 1)) {
             val smsPrefix = activity.getString(R.string.send_sms)
             var number = item.title as String
             if (number.contains(smsPrefix))
                 number = number.substring(smsPrefix.length, number.length)
-            Router.sms(activity, number)
+            activity.sendSMS(number)
         } else if (item.itemId in CALL_MENU_MIN_ID..(CALL_MENU_MAX_ID - 1)) {
             val callPrefix = activity.getString(R.string.make_call)
             var number = item.title as String
             if (number.contains(callPrefix))
                 number = number.substring(callPrefix.length, number.length)
-            Router.dial(activity, number)
+            activity.makeDial(number)
         }
 
         when (item.itemId) {
-            R.id.action_share                          -> Router.share(activity, accident.getAccidentTextToCopy())
+            R.id.action_share                          -> activity.share(accident.getAccidentTextToCopy())
             R.id.action_hide_info, R.id.menu_hide_info -> hideMenuAction()
         }
 
@@ -93,7 +96,7 @@ class DetailsMenuController(val activity: FragmentActivity, val accident: Accide
         val menuItemActionHideInfo = mMenu.findItem(R.id.action_hide_info)
         val menuItemMenuHideInfo = mMenu.findItem(R.id.menu_hide_info)
         if (state == View.INVISIBLE) {
-            generalLayout.visibility = View.GONE
+            generalLayout.gone()
             menuItemActionHideInfo.setIcon(R.drawable.ic_panel_down)
             menuItemMenuHideInfo.title = activity.getString(R.string.show_info_details)
         } else {
@@ -107,8 +110,8 @@ class DetailsMenuController(val activity: FragmentActivity, val accident: Accide
     fun menuReconstruction() {
         val finish = mMenu.findItem(R.id.menu_acc_finish)
         val hide = mMenu.findItem(R.id.menu_acc_hide)
-        finish.isVisible = User.isModerator
-        hide.isVisible = User.isModerator
+        finish.isVisible = User.isModerator()
+        hide.isVisible = User.isModerator()
         finish.setTitle(R.string.finish)
         hide.setTitle(R.string.hide)
         when (accident.status) {

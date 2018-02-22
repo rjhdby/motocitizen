@@ -45,8 +45,8 @@
             android:defaultValue="true"
             android:dialogTitle="Режим тестирования"
             android:key="tester"
-            android:summaryOff="@string/settings_summary_off"
-            android:summaryOn="@string/settings_summary_on"
+            android:summaryOff="Отключен"
+            android:summaryOn="Включен"
             android:tag="tester"
             android:title="Режим тестирования"/>
     </PreferenceCategory>

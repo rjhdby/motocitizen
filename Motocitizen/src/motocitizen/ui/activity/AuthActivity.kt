@@ -16,10 +16,11 @@ import com.vk.sdk.api.VKError
 import motocitizen.MyApp
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.main.R
-import motocitizen.router.Router
+import motocitizen.ui.Screens
 import motocitizen.user.Auth
 import motocitizen.user.User
 import motocitizen.utils.bindView
+import motocitizen.utils.goTo
 import motocitizen.utils.showToast
 
 //todo refactor
@@ -28,9 +29,26 @@ class AuthActivity : AppCompatActivity() {
     private val loginVK: Button by bindView(R.id.vk)
     private val login: EditText by bindView(R.id.auth_login)
     private val password: EditText by bindView(R.id.auth_password)
-    private val anonymous by bindView<Button>(R.id.anonymous)
-    private val forum by bindView<Button>(R.id.forum)
-    private val forumLoginForm by bindView<View>(R.id.forum_login_form)
+    private val anonymous: Button by bindView(R.id.anonymous)
+    private val forum: Button by bindView(R.id.forum)
+    private val forumLoginForm: View by bindView(R.id.forum_login_form)
+//    private lateinit var loginBtn: Button
+//    private lateinit var loginVK: Button
+//    private lateinit var login: EditText
+//    private lateinit var password: EditText
+//    private lateinit var anonymous: Button
+//    private lateinit var forum: Button
+//    private lateinit var forumLoginForm: View
+//
+//    private fun bindViews() {
+//        loginBtn = findViewById(R.id.login_button)
+//        loginVK = findViewById(R.id.vk)
+//        login = findViewById(R.id.auth_login)
+//        password = findViewById(R.id.auth_password)
+//        anonymous = findViewById(R.id.anonymous)
+//        forum = findViewById(R.id.forum)
+//        forumLoginForm = findViewById(R.id.forum_login_form)
+//    }
 
     private fun enableLoginBtn() {
         loginBtn.isEnabled = login.text.toString().isNotEmpty() && password.text.toString().isNotEmpty()
@@ -45,7 +63,7 @@ class AuthActivity : AppCompatActivity() {
     private fun vkCallback(): VKCallback<VKAccessToken> {
         return object : VKCallback<VKAccessToken> {
             override fun onResult(res: VKAccessToken) {
-                Auth.auth(Auth.AuthType.VK) { Router.goTo(this@AuthActivity, Router.Target.MAIN) }
+                Auth.auth(Auth.AuthType.VK) { goTo(Screens.MAIN) }
             }
 
             override fun onError(error: VKError) {
@@ -57,6 +75,7 @@ class AuthActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.auth)
+//        bindViews()
         setUpListeners()
 
         vkWakeUpSession()
@@ -83,7 +102,7 @@ class AuthActivity : AppCompatActivity() {
     private fun anonymousLogon() {
         (findViewById<TextView>(R.id.auth_error_helper)).text = ""
         Auth.auth(Auth.AuthType.ANON) {}
-        Router.goTo(this@AuthActivity, Router.Target.MAIN)
+        goTo(Screens.MAIN)
     }
 
     private val isOnline: Boolean
@@ -94,7 +113,7 @@ class AuthActivity : AppCompatActivity() {
             override fun onResult(res: VKSdk.LoginState) {
                 when (res) {
                     VKSdk.LoginState.LoggedOut -> Unit
-                    VKSdk.LoginState.LoggedIn  -> Router.goTo(this@AuthActivity, Router.Target.MAIN)
+                    VKSdk.LoginState.LoggedIn  -> goTo(Screens.MAIN)
                     VKSdk.LoginState.Pending   -> Unit
                     VKSdk.LoginState.Unknown   -> Unit
                 }
@@ -125,7 +144,7 @@ class AuthActivity : AppCompatActivity() {
 
     private fun authCallback() {
         when {
-            User.isAuthorized -> Router.goTo(this@AuthActivity, Router.Target.MAIN)
+            User.isAuthorized -> goTo(Screens.MAIN)
             else              -> showAuthError()
         }
     }

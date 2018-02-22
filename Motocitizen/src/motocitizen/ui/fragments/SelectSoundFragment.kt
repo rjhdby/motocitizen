@@ -14,34 +14,38 @@ import android.widget.TableLayout
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.main.R
 import motocitizen.ui.rows.sound.SoundRow
+import motocitizen.utils.bindView
+import motocitizen.utils.gone
+import motocitizen.utils.show
 
+//todo pizdets
 class SelectSoundFragment : Fragment() {
-    private val ROOT_LAYOUT = R.layout.select_sound_fragment
-    private val ROOT_VIEW = R.id.select_sound_fragment
-    private val CONTENT_VIEW = R.id.sound_select_table
-    private val SAVE_BUTTON = R.id.select_sound_save_button
-    private val CANCEL_BUTTON = R.id.select_sound_cancel_button
 
     private var notifications: SparseArray<Sound> = SparseArray()
-    private val ringtoneList: TableLayout by lazy { activity.findViewById<TableLayout>(CONTENT_VIEW) }
+    private val rootView: View by bindView(R.id.select_sound_fragment)
+    private val ringtoneList: TableLayout by bindView(R.id.sound_select_table)
+    private val selectSoundConfirmButton: Button by bindView(R.id.select_sound_save_button)
+    private val selectSoundCancelButton: Button by bindView(R.id.select_sound_cancel_button)
     private var currentId = 0
     private var currentUri = Preferences.sound
     private var currentTitle = Preferences.soundTitle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activity.setContentView(ROOT_LAYOUT)
+        activity.setContentView(R.layout.select_sound_fragment)
     }
 
     override fun onResume() {
         super.onResume()
-        activity.findViewById<View>(ROOT_VIEW).visibility = View.VISIBLE
+        rootView.show()
         if (notifications.size() == 0) getSystemSounds()
 
-        val selectSoundConfirmButton = activity.findViewById(SAVE_BUTTON) as Button
-        val selectSoundCancelButton = activity.findViewById(CANCEL_BUTTON) as Button
+        setUpListeners()
+        drawList()
+    }
 
-        selectSoundConfirmButton.setOnClickListener { _ ->
+    private fun setUpListeners() {
+        selectSoundConfirmButton.setOnClickListener {
             if (currentTitle == "default system") {
                 Preferences.setDefaultSoundAlarm()
             } else
@@ -50,8 +54,6 @@ class SelectSoundFragment : Fragment() {
             finish()
         }
         selectSoundCancelButton.setOnClickListener { finish() }
-
-        drawList()
     }
 
     private fun getSystemSounds() {
@@ -66,22 +68,19 @@ class SelectSoundFragment : Fragment() {
         }
     }
 
-    private fun drawList() {
-        (0 until notifications.size()).forEach { i -> inflateRow(ringtoneList, notifications.keyAt(i)) }
-    }
+    private fun drawList() = (0 until notifications.size()).forEach { inflateRow(ringtoneList, notifications.keyAt(it)) }
 
     private fun inflateRow(viewGroup: ViewGroup, currentPosition: Int) {
         val tr = SoundRow(viewGroup.context, notifications.get(currentPosition).title)
 
         tr.tag = currentPosition
-        tr.setOnClickListener { view ->
-            val tag = view.tag as Int
+        tr.setOnClickListener {
+            val tag = it.tag as Int
             if (currentId != 0) {
-
                 ringtoneList.findViewWithTag<View>(currentId).setBackgroundColor(android.R.attr.colorBackground)
             }
             currentId = tag
-            view.setBackgroundColor(Color.GRAY)
+            it.setBackgroundColor(Color.GRAY)
             notifications.get(tag).play()
             currentUri = notifications.get(tag).uri
             currentTitle = notifications.get(tag).title
@@ -91,7 +90,8 @@ class SelectSoundFragment : Fragment() {
     }
 
     private fun finish() {
-        activity.findViewById<View>(R.id.select_sound_fragment).visibility = View.GONE
+        rootView.gone()
+
         fragmentManager.beginTransaction().remove(this).replace(android.R.id.content, SettingsFragment()).commit()
     }
 

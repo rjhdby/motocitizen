@@ -9,6 +9,8 @@ import android.widget.EditText
 import motocitizen.content.accident.AccidentBuilder
 import motocitizen.main.R
 import motocitizen.ui.frames.FrameInterface
+import motocitizen.utils.hide
+import motocitizen.utils.show
 
 class DescriptionFrame(val context: FragmentActivity, val accidentBuilder: AccidentBuilder, val callback: () -> Unit) : FrameInterface {
     private val ROOT_VIEW = R.id.create_final_frame
@@ -18,17 +20,17 @@ class DescriptionFrame(val context: FragmentActivity, val accidentBuilder: Accid
 
     init {
         confirmButton.isEnabled = false
-        confirmButton.setOnClickListener { _ -> callback() }
+        confirmButton.setOnClickListener { callback() }
         (context.findViewById(R.id.create_final_text) as EditText).addTextChangedListener(finalTextWatcher())
     }
 
     override fun show() {
-        view.visibility = View.VISIBLE
+        view.show()
         setConfirmButtonStatus()
     }
 
     override fun hide() {
-        view.visibility = View.INVISIBLE
+        view.hide()
         confirmButton.isEnabled = false
     }
 

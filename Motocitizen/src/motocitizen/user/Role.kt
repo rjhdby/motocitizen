@@ -8,9 +8,6 @@ enum class Role constructor(val code: Int, val text: String) {
     //    ADMINISTRATOR("admin", "администратор"),
     DEVELOPER(3, "разработчик");
 
-    val isStandard: Boolean
-        inline get() = this >= STANDARD
-
     val isModerator: Boolean
         inline get() = this >= MODERATOR
 
