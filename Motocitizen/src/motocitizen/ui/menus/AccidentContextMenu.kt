@@ -43,7 +43,7 @@ class AccidentContextMenu(context: Context, val accident: Accident) : ContextMen
     private fun addModeratorMenu() {
         if (User.notIsModerator()) return
         addButton(if (accident.isHidden()) R.string.show else R.string.hide, this::hideButtonPressed)
-        addButton("Забанить") { BanRequest(accident.owner, this::banRequestCallback) }
+        addButton("Забанить") { BanRequest(accident.owner, this::banRequestCallback).call() }
     }
 
     private fun finishButtonPressed() {
@@ -51,11 +51,11 @@ class AccidentContextMenu(context: Context, val accident: Accident) : ContextMen
             accident.isEnded() -> ActivateAccident(accident.id) {
                 accident.status = AccidentStatus.ACTIVE
                 SubscribeManager.fireEvent(SubscribeManager.Event.ACCIDENTS_UPDATED)
-            }
+            }.call()
             else               -> EndAccident(accident.id) {
                 accident.status = AccidentStatus.ENDED
                 SubscribeManager.fireEvent(SubscribeManager.Event.ACCIDENTS_UPDATED)
-            }
+            }.call()
         }
     }
 
@@ -64,11 +64,11 @@ class AccidentContextMenu(context: Context, val accident: Accident) : ContextMen
             accident.isHidden() -> ActivateAccident(accident.id) {
                 accident.status = AccidentStatus.ACTIVE
                 SubscribeManager.fireEvent(SubscribeManager.Event.ACCIDENTS_UPDATED)
-            }
+            }.call()
             else                -> HideAccident(accident.id) {
                 accident.status = AccidentStatus.HIDDEN
                 SubscribeManager.fireEvent(SubscribeManager.Event.ACCIDENTS_UPDATED)
-            }
+            }.call()
         }
     }
 

@@ -117,8 +117,8 @@ class AccidentDetailsActivity : AppCompatActivity() {
     private fun sendFinishRequest() {
         //TODO Суперкостыль !!!
         when (accident.status) {
-            ENDED -> ActivateAccident(accident.id, this::accidentChangeCallback)
-            else  -> EndAccident(accident.id, this::accidentChangeCallback)
+            ENDED -> ActivateAccident(accident.id, this::accidentChangeCallback).call()
+            else  -> EndAccident(accident.id, this::accidentChangeCallback).call()
         }
     }
 
@@ -126,11 +126,11 @@ class AccidentDetailsActivity : AppCompatActivity() {
         //TODO какая то хуета
         accNewState = when (accident.status) {
             ENDED -> {
-                ActivateAccident(accident.id, this::accidentChangeCallback)
+                ActivateAccident(accident.id, this::accidentChangeCallback).call()
                 ACTIVE
             }
             else  -> {
-                HideAccident(accident.id, this::accidentChangeCallback)
+                HideAccident(accident.id, this::accidentChangeCallback).call()
                 ENDED
             }
         }

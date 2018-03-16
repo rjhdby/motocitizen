@@ -29,7 +29,7 @@ object Auth {
                 authAsAnon()
                 callback()
             }
-            AuthType.FORUM, AuthType.VK -> AuthRequest { authRequestCallback(it, callback) }
+            AuthType.FORUM, AuthType.VK -> AuthRequest { authRequestCallback(it, callback) }.call()
         }
     }
 

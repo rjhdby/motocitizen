@@ -43,7 +43,7 @@ fun String.requestLatLngFromAddress(callback: (LatLng?) -> Unit) {
         } catch (e: JSONException) {
             callback(null)
         }
-    }
+    }.call()
 }
 
 fun LatLng.distanceString(): String {

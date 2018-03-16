@@ -4,11 +4,8 @@ import motocitizen.datasources.network.ApiRequest
 import motocitizen.datasources.network.ApiResponse
 import motocitizen.datasources.network.Methods
 
-class HasNewRequest(time: Long, callback: (ApiResponse) -> Unit) : ApiRequest(callback) {
-    override val method = Methods.HAS_NEW
-
+class HasNewRequest(time: Long, callback: (ApiResponse) -> Unit) : ApiRequest(Methods.HAS_NEW, callback = callback) {
     init {
-        params["ut"] = time.toString()
-        call()
+        addParams("ut" to time.toString())
     }
 }

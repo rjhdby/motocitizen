@@ -126,7 +126,7 @@ class CreateAccActivity : FragmentActivity() {
         //        disableConfirm(); //todo
         CreateAccidentRequest(builder.build(),
                               this::createAccidentCallback,
-                              forStat.isChecked)//todo remove flag argument
+                              forStat.isChecked).call() //todo remove flag argument
     }
 
     private fun selectLocationCallback(latLng: LatLng) {

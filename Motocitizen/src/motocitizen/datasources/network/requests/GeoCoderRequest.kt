@@ -9,11 +9,7 @@ class GeoCoderRequest(address: String, callback: (ApiResponse) -> Unit) : CoreRe
     override val url: String = "https://maps.googleapis.com/maps/api/geocode/json"
 
     init {
-        params.apply {
-            put("language", "ru")
-            put("address", address)
-        }
-        call()
+        addParams("language" to "ru", "address" to address)
     }
 
     override fun response(string: String): ApiResponse {

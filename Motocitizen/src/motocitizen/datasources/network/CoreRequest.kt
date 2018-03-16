@@ -7,8 +7,9 @@ import org.json.JSONObject
 import java.io.IOException
 
 abstract class CoreRequest(val callback: (ApiResponse) -> Unit = {}) {
-    var params: HashMap<String, String> = HashMap()
     abstract val url: String
+    private val params: HashMap<String, String> = hashMapOf()
+
     val error = JSONObject("""{"r":{},"e":{"c":0,"t":"server error"}}""")
     private val client = OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().setLevel(logLevel()))
@@ -19,7 +20,7 @@ abstract class CoreRequest(val callback: (ApiResponse) -> Unit = {}) {
             .url(url)
             .build()
 
-    protected open fun call() = client.newCall(buildRequest()).enqueue(enqueueCallback())
+    open fun call() = client.newCall(buildRequest()).enqueue(enqueueCallback())
 
     private fun enqueueCallback(): Callback = object : Callback {
         override fun onFailure(call: Call, e: IOException) = callback(ApiResponse(error))
@@ -39,5 +40,9 @@ abstract class CoreRequest(val callback: (ApiResponse) -> Unit = {}) {
     private fun logLevel() = when {
         BuildConfig.DEBUG -> HttpLoggingInterceptor.Level.BODY
         else              -> HttpLoggingInterceptor.Level.NONE
+    }
+
+    protected fun addParams(vararg fields: Pair<String, String>) {
+        fields.forEach { params[it.first] = it.second }
     }
 }

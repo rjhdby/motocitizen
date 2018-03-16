@@ -82,7 +82,7 @@ object MyLocationManager {
         val accident = list[0]
         if (isArrived(location, accident)) {
             Content.inPlace = accident
-            InPlaceRequest(accident)
+            InPlaceRequest(accident.id).call()
         }
     }
 

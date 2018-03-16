@@ -29,7 +29,7 @@ object AccidentsController {
         if (lastUpdate == 0L) {
             requestList(callback)
         } else {
-            HasNewRequest(lastUpdate) { if (hasNewCheck(it)) requestList(callback) else callback(it) }
+            HasNewRequest(lastUpdate) { if (hasNewCheck(it)) requestList(callback) else callback(it) }.call()
         }
     }
 
@@ -40,7 +40,7 @@ object AccidentsController {
     }
 
     private fun requestList(callback: (ApiResponse) -> Unit) {
-        AccidentListRequest { listRequestCallback(it, callback) }
+        AccidentListRequest { listRequestCallback(it, callback) }.call()
     }
 
     private inline fun listRequestCallback(response: ApiResponse, callback: (ApiResponse) -> Unit) {
@@ -53,7 +53,7 @@ object AccidentsController {
         DetailsRequest(accident.id) {
             attachDetailsToAccident(accident, it)
             callback(it)
-        }
+        }.call()
     }
 
     private fun attachDetailsToAccident(accident: Accident, result: ApiResponse) = try {
@@ -69,7 +69,7 @@ object AccidentsController {
         AccidentRequest(id, {
             parseGetListResponse(it)
             callback(it)
-        })
+        }).call()
     }
 
     private fun parseGetListResponse(apiResponse: ApiResponse) = try {

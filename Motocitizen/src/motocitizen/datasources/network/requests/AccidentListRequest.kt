@@ -6,19 +6,10 @@ import motocitizen.datasources.network.Methods
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.user.User
 
-class AccidentListRequest(callback: (ApiResponse) -> Unit) : ApiRequest(callback) {
-    override val method = Methods.LIST
-
+class AccidentListRequest(callback: (ApiResponse) -> Unit) : ApiRequest(Methods.LIST, callback = callback) {
     init {
-        params.apply {
-            if (User.name != "") {
-                put("u", User.name)
-            }
-            if (Preferences.isTester) {
-                put("test", "1")
-            }
-            put("a", Preferences.hoursAgo.toString())
-        }
-        call()
+        addParams("a" to Preferences.hoursAgo.toString())
+        if (User.name != "") addParams("u" to User.name)
+        if (Preferences.isTester) addParams("test" to "1")
     }
 }

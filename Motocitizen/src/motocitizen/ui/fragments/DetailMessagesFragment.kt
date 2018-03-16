@@ -68,7 +68,7 @@ class DetailMessagesFragment() : Fragment() {
         sendButton.setOnClickListener {
             val text = inputField.text.toString().replace("\\s".toRegex(), "")
             if (text.isNotEmpty()) {
-                SendMessageRequest(inputField.text.toString(), accident.id, ::sendMessageCallback)
+                SendMessageRequest(inputField.text.toString(), accident.id, ::sendMessageCallback).call()
                 inputField.setText("")
             }
         }
