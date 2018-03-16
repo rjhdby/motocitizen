@@ -10,7 +10,7 @@ import motocitizen.content.Content
 import motocitizen.content.accident.Accident
 import motocitizen.main.R
 import motocitizen.ui.activity.AccidentDetailsActivity.Companion.ACCIDENT_ID_KEY
-import motocitizen.ui.rows.history.HistoryRowFactory
+import motocitizen.ui.rows.history.HistoryRow
 
 class DetailHistoryFragment() : Fragment() {
     companion object {
@@ -34,7 +34,7 @@ class DetailHistoryFragment() : Fragment() {
 
     private fun redrawHistory() {
         logContent.removeAllViews()
-        accident.history.forEach { logContent.addView(HistoryRowFactory.make(activity, it)) }
+        accident.history.forEach { logContent.addView(HistoryRow(activity, it)) }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

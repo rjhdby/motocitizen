@@ -6,7 +6,8 @@ import motocitizen.MyApp
 import org.jetbrains.anko.windowManager
 
 val dpScale: Float by lazy { MyApp.context.resources.displayMetrics.density }
-private fun Context.getDisplayMetrics(): DisplayMetrics{
+
+private fun Context.getDisplayMetrics(): DisplayMetrics {
     val displayMetrics = DisplayMetrics()
     windowManager.defaultDisplay.getMetrics(displayMetrics)
     return displayMetrics

@@ -29,12 +29,10 @@ object PreferencesMigration : MigrationInterface {
         }).apply()
     }
 
-    private fun stringToInt(name: String) {
-        try {
-            val pref = preferences.getString(name, "").toInt()
-            preferences.edit().remove(name).apply()
-            preferences.edit().putInt(name, pref).apply()
-        } catch (e: Exception) {
-        }
+    private fun stringToInt(name: String) = try {
+        val pref = preferences.getString(name, "").toInt()
+        preferences.edit().remove(name).apply()
+        preferences.edit().putInt(name, pref).apply()
+    } catch (e: Exception) {
     }
 }

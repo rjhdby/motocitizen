@@ -105,7 +105,7 @@ class AccidentDetailsActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (menuController.itemSelected(item)) {
-            DetailsMenuController.MenuAction.TO_MAP                                            -> jumpToMap()
+            DetailsMenuController.MenuAction.TO_MAP                                            -> toMap()
             DetailsMenuController.MenuAction.HIDE_INFO, DetailsMenuController.MenuAction.SHARE -> Unit
             DetailsMenuController.MenuAction.SEND_HIDE_REQUEST                                 -> sendHideRequest()
             DetailsMenuController.MenuAction.SEND_FINISH_REQUEST                               -> sendFinishRequest()
@@ -147,7 +147,5 @@ class AccidentDetailsActivity : AppCompatActivity() {
         }
     }
 
-    fun jumpToMap() {
-        goTo(Screens.MAIN, mapOf("toMap" to accident.id))
-    }
+    fun toMap() = goTo(Screens.MAIN, mapOf("toMap" to accident.id))
 }

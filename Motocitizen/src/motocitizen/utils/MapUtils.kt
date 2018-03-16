@@ -30,10 +30,8 @@ private fun markerTitle(accident: Accident): String {
     return "${accident.type.text}$medicine, $interval назад"
 }
 
-private fun makeMarker(accident: Accident): MarkerOptions {
-    return MarkerOptions()
-            .position(accident.coordinates)
-            .title(markerTitle(accident))
-            .icon(accident.type.icon)
-            .alpha(calculateAlpha(accident))
-}
+private fun makeMarker(accident: Accident) = MarkerOptions()
+        .position(accident.coordinates)
+        .title(markerTitle(accident))
+        .icon(accident.type.icon)
+        .alpha(calculateAlpha(accident))

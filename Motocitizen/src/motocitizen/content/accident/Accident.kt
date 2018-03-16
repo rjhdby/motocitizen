@@ -5,6 +5,7 @@ import motocitizen.content.history.History
 import motocitizen.content.volunteer.VolunteerAction
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.dictionary.AccidentStatus
+import motocitizen.dictionary.AccidentStatus.ACTIVE
 import motocitizen.dictionary.AccidentStatus.HIDDEN
 import motocitizen.dictionary.Medicine
 import motocitizen.dictionary.Type
@@ -59,4 +60,8 @@ class Accident(
         val damage = if (medicine == Medicine.UNKNOWN || !isAccident()) "" else ", " + medicine.text
         return String.format("%s%s(%s)%n%s%n%s", type.text, damage, distanceString(), address, description)
     }
+
+    fun isActive() = status == ACTIVE
+    fun isEnded() = !isActive()
+    fun isHidden() = status == HIDDEN
 }

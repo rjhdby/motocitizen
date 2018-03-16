@@ -50,9 +50,9 @@ class CreateAccActivity : FragmentActivity() {
     private val prevFrame: Frames
         get() = when (current) {
             MAP         -> MAP
-            DAMAGE      -> SUB_TYPE
-            SUB_TYPE    -> TYPE
             TYPE        -> MAP
+            SUB_TYPE    -> TYPE
+            DAMAGE      -> SUB_TYPE
             DESCRIPTION -> if (builder.build().isAccident()) DAMAGE else TYPE
         }
 
@@ -130,31 +130,29 @@ class CreateAccActivity : FragmentActivity() {
     }
 
     private fun selectLocationCallback(latLng: LatLng) {
-        builder.location(AccidentLocation(MyLocationManager.getAddress(latLng), latLng))
+        builder.location = AccidentLocation(MyLocationManager.getAddress(latLng), latLng)
         changeFrameTo(TYPE)
-//        if (builder.location.address.isEmpty()) {
         EmptyAddressDialog(this, builder.location.address, this::addressDialogCallback)
-//        }
     }
 
     private fun selectTypeCallback(type: Type) {
-        builder.type(type)
+        builder.type = type
         changeFrameTo(if (type.isAccident()) SUB_TYPE else DESCRIPTION)
     }
 
     private fun selectSubTypeCallback(type: Type) {
-        builder.type(type)
+        builder.type = type
         changeFrameTo(DAMAGE)
     }
 
     private fun selectDamageCallback(medicine: Medicine) {
-        builder.medicine(medicine)
+        builder.medicine = medicine
         changeFrameTo(DESCRIPTION)
     }
 
     private fun addressDialogCallback(address: String) {
         if (address.isEmpty()) return
-        builder.location(AccidentLocation(address, builder.location.coordinates))
+        builder.location = AccidentLocation(address, builder.location.coordinates)
         refreshDescription()
     }
 

@@ -79,12 +79,10 @@ object AccidentsController {
         e.printStackTrace()
     }
 
-    private fun addAccidents(json: JSONArray) {
-        runBlocking {
-            (0 until json.length())
-                    .asyncMap { AccidentFactory.make(json.getJSONObject(it)) }
-                    .forEach { accidents[it.id] = it }
-        }
+    private fun addAccidents(json: JSONArray) = runBlocking {
+        (0 until json.length())
+                .asyncMap { AccidentFactory.make(json.getJSONObject(it)) }
+                .forEach { accidents[it.id] = it }
     }
 
     private fun attachVolunteersToAccident(accident: Accident, json: JSONArray) {

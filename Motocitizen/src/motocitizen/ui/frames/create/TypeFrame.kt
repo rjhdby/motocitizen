@@ -9,12 +9,11 @@ import motocitizen.utils.hide
 import motocitizen.utils.show
 
 class TypeFrame(val context: FragmentActivity, val callback: (Type) -> Unit) : FrameInterface {
-    private val ROOT_VIEW = R.id.create_type_frame
-    private val view = context.findViewById<View>(ROOT_VIEW)
+    private val view = context.findViewById<View>(R.id.create_type_frame)
 
     init {
         intArrayOf(R.id.ACCIDENT, R.id.BREAK, R.id.STEAL, R.id.OTHER)
-                .forEach { id -> setListener(id, typeSelectListener(id)) }
+                .forEach { setListener(it, typeSelectListener(it)) }
     }
 
     override fun show() = view.show()
@@ -25,7 +24,7 @@ class TypeFrame(val context: FragmentActivity, val callback: (Type) -> Unit) : F
         context.findViewById<View>(id).setOnClickListener(listener)
     }
 
-    private fun typeSelectListener(id: Int): View.OnClickListener = View.OnClickListener { _ -> callback(getSelectedType(id)) }
+    private fun typeSelectListener(id: Int): View.OnClickListener = View.OnClickListener { callback(getSelectedType(id)) }
 
     private fun getSelectedType(id: Int): Type = when (id) {
         R.id.ACCIDENT -> Type.MOTO_AUTO

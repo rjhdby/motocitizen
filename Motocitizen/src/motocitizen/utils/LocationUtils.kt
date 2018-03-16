@@ -48,10 +48,9 @@ fun String.requestLatLngFromAddress(callback: (LatLng?) -> Unit) {
 
 fun LatLng.distanceString(): String {
     val meters = metersFromUser()
-    return if (meters > 1000) {
-        meters.toKilometers().toString() + "км"
-    } else {
-        meters.toString() + "м"
+    return when {
+        meters > 1000 -> meters.toKilometers().toString() + "км"
+        else          -> meters.toString() + "м"
     }
 }
 

@@ -22,13 +22,11 @@ fun Context.showToast(text: String) = runOnUiThread { Toast.makeText(this, text,
 
 fun Context.showToast(resource: Int) = runOnUiThread { showToast(getString(resource)) }
 
-fun Context.makeDial(number: String) {
-    return try {
-        val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$number"))
-        startActivity(intent)
-    } catch (e: Exception) {
-        e.printStackTrace()
-    }
+fun Context.makeDial(number: String) = try {
+    val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$number"))
+    startActivity(intent)
+} catch (e: Exception) {
+    e.printStackTrace()
 }
 
 fun Activity.goTo(target: Screens, bundle: Map<String, Any>) {
@@ -46,9 +44,7 @@ fun Activity.goTo(target: Screens, bundle: Map<String, Any>) {
     startActivity(intent)
 }
 
-fun Activity.goTo(target: Screens) {
-    startActivity(Intent(this, target.activity))
-}
+fun Activity.goTo(target: Screens) = startActivity(Intent(this, target.activity))
 
 fun Fragment.goTo(target: Screens) = activity.goTo(target)
 

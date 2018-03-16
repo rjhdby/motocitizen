@@ -72,7 +72,6 @@ object Auth {
         Preferences.apply {
             login = ""
             password = ""
-//            vkToken = ""
             authType = AuthType.NONE.value
         }
         User.apply {

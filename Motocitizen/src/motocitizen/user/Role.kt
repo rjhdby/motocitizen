@@ -9,7 +9,7 @@ enum class Role constructor(val code: Int, val text: String) {
     DEVELOPER(3, "разработчик");
 
     val isModerator: Boolean
-        inline get() = this >= MODERATOR
+        inline get() = this in arrayOf(MODERATOR, DEVELOPER)
 
     companion object {
         fun parse(role: Int): Role = values().firstOrNull { it.code == role } ?: RO

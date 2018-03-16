@@ -17,9 +17,8 @@ import motocitizen.main.R
 import motocitizen.ui.activity.AccidentDetailsActivity
 import motocitizen.ui.activity.AccidentDetailsActivity.Companion.ACCIDENT_ID_KEY
 import motocitizen.ui.dialogs.details.ConfirmDialog
-import motocitizen.ui.rows.volunteer.VolunteerRowFactory
+import motocitizen.ui.rows.volunteer.VolunteerRow
 import motocitizen.utils.hide
-import motocitizen.utils.isActive
 import motocitizen.utils.show
 import org.jetbrains.anko.runOnUiThread
 
@@ -62,16 +61,16 @@ class DetailVolunteersFragment() : Fragment() {
     private fun setUpListeners() {
         confirmButton.setOnClickListener { showOnWayDialog() }
         cancelButton.setOnClickListener { showCancelDialog() }
-        toMapButton.setOnClickListener { (activity as AccidentDetailsActivity).jumpToMap() }
+        toMapButton.setOnClickListener { (activity as AccidentDetailsActivity).toMap() }
     }
 
     private fun update() {
         setupAccess()
         content.removeAllViews()
-        accident.volunteers.forEach { content.addView(VolunteerRowFactory.make(activity, it)) }
+        accident.volunteers.forEach { content.addView(VolunteerRow(activity, it)) }
     }
 
-    private fun setupAccess() =runOnUiThread{
+    private fun setupAccess() = runOnUiThread {
         cancelButton.apply { if (canShowCancel()) show() else hide() }
         confirmButton.apply { if (canShowConfirm()) show() else hide() }
         disabledButton.apply { if (canShowDisabled()) show() else hide() }

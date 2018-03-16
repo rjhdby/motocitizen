@@ -26,9 +26,7 @@ class CreateAccidentMap(fragment: FragmentActivity) : MapManager(fragment, R.id.
                 .setOnClickListener({ searchEditText.text.toString().requestLatLngFromAddress { searchCallback(it) } })
     }
 
-    override fun update() {
-        addContent { }
-    }
+    override fun update() = addContent { }
 
     private val searchEditText = fragment.findViewById(R.id.SearchEditText) as EditText
     private val mcCreateFineAddressConfirm = fragment.findViewById(R.id.ADDRESS) as Button

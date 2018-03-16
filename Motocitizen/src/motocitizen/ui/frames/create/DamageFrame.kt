@@ -9,12 +9,11 @@ import motocitizen.utils.hide
 import motocitizen.utils.show
 
 class DamageFrame(val context: FragmentActivity, val callback: (Medicine) -> Unit) : FrameInterface {
-    private val ROOT_VIEW = R.id.create_people_frame
-    private val view = context.findViewById<View>(ROOT_VIEW)
+    private val view = context.findViewById<View>(R.id.create_people_frame)
 
     init {
         intArrayOf(R.id.PEOPLE_OK, R.id.PEOPLE_LIGHT, R.id.PEOPLE_HEAVY, R.id.PEOPLE_LETHAL, R.id.PEOPLE_UNKNOWN)
-                .forEach { id -> setListener(id, damageSelectListener(id)) }
+                .forEach { setListener(it, damageSelectListener(it)) }
     }
 
     override fun show() = view.show()
@@ -25,9 +24,9 @@ class DamageFrame(val context: FragmentActivity, val callback: (Medicine) -> Uni
         context.findViewById<View>(id).setOnClickListener(listener)
     }
 
-    private fun damageSelectListener(id: Int): View.OnClickListener = View.OnClickListener { _ -> callback(getSelectedMedicine(id)) }
+    private fun damageSelectListener(id: Int) = View.OnClickListener { callback(getSelectedMedicine(id)) }
 
-    private fun getSelectedMedicine(id: Int): Medicine = when (id) {
+    private fun getSelectedMedicine(id: Int) = when (id) {
         R.id.PEOPLE_OK      -> Medicine.NO
         R.id.PEOPLE_LIGHT   -> Medicine.LIGHT
         R.id.PEOPLE_HEAVY   -> Medicine.HEAVY

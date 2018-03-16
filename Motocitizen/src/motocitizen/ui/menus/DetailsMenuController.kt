@@ -5,7 +5,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import motocitizen.content.accident.Accident
-import motocitizen.dictionary.AccidentStatus
 import motocitizen.main.R
 import motocitizen.user.User
 import motocitizen.utils.getAccidentTextToCopy
@@ -41,15 +40,16 @@ class DetailsMenuController(val activity: FragmentActivity, val accident: Accide
         //TODO Костыль
         val contactNumbers = accident.description.getPhonesFromText()
         if (contactNumbers.isEmpty()) return
+
         if (contactNumbers.size == 1) {
             mMenu.add(0, SMS_MENU_MIN_ID, 0, activity.getString(R.string.send_sms) + contactNumbers[0])
             mMenu.add(0, CALL_MENU_MIN_ID, 0, activity.getString(R.string.make_call) + contactNumbers[0])
         } else {
             val smsSub = mMenu.addSubMenu(activity.getString(R.string.send_sms))
             val callSub = mMenu.addSubMenu(activity.getString(R.string.make_call))
-            for (i in contactNumbers.indices) {
-                smsSub.add(0, SMS_MENU_MIN_ID + i, 0, contactNumbers[i])
-                callSub.add(0, CALL_MENU_MIN_ID + i, 0, contactNumbers[i])
+            contactNumbers.indices.forEach {
+                smsSub.add(0, SMS_MENU_MIN_ID + it, 0, contactNumbers[it])
+                callSub.add(0, CALL_MENU_MIN_ID + it, 0, contactNumbers[it])
             }
         }
     }
@@ -58,16 +58,10 @@ class DetailsMenuController(val activity: FragmentActivity, val accident: Accide
     fun itemSelected(item: MenuItem): MenuAction {
         if (item.itemId in SMS_MENU_MIN_ID..(SMS_MENU_MAX_ID - 1)) {
             val smsPrefix = activity.getString(R.string.send_sms)
-            var number = item.title as String
-            if (number.contains(smsPrefix))
-                number = number.substring(smsPrefix.length, number.length)
-            activity.sendSMS(number)
+            activity.sendSMS(item.title.toString().substringAfter(smsPrefix))
         } else if (item.itemId in CALL_MENU_MIN_ID..(CALL_MENU_MAX_ID - 1)) {
             val callPrefix = activity.getString(R.string.make_call)
-            var number = item.title as String
-            if (number.contains(callPrefix))
-                number = number.substring(callPrefix.length, number.length)
-            activity.makeDial(number)
+            activity.makeDial(item.title.toString().substringAfter(callPrefix))
         }
 
         when (item.itemId) {
@@ -85,12 +79,11 @@ class DetailsMenuController(val activity: FragmentActivity, val accident: Accide
         }
     }
 
-    private fun hideMenuAction() {
-        showGeneralLayout(when (generalLayout.visibility) {
-                              View.VISIBLE -> View.INVISIBLE
-                              else         -> View.VISIBLE
-                          })
-    }
+    private fun hideMenuAction() = showGeneralLayout(
+            when (generalLayout.visibility) {
+                View.VISIBLE -> View.INVISIBLE
+                else         -> View.VISIBLE
+            })
 
     private fun showGeneralLayout(state: Int) {
         val menuItemActionHideInfo = mMenu.findItem(R.id.action_hide_info)
@@ -106,18 +99,14 @@ class DetailsMenuController(val activity: FragmentActivity, val accident: Accide
         }
     }
 
-    //todo smell
     fun menuReconstruction() {
-        val finish = mMenu.findItem(R.id.menu_acc_finish)
-        val hide = mMenu.findItem(R.id.menu_acc_hide)
-        finish.isVisible = User.isModerator()
-        hide.isVisible = User.isModerator()
-        finish.setTitle(R.string.finish)
-        hide.setTitle(R.string.hide)
-        when (accident.status) {
-            AccidentStatus.ENDED  -> finish.setTitle(R.string.unfinish)
-            AccidentStatus.HIDDEN -> hide.setTitle(R.string.show)
-            else                  -> Unit
+        mMenu.findItem(R.id.menu_acc_finish).apply {
+            isVisible = User.isModerator()
+            setTitle(if (accident.isEnded()) R.string.finish else R.string.unfinish)
+        }
+        mMenu.findItem(R.id.menu_acc_hide).apply {
+            isVisible = User.isModerator()
+            setTitle(if (accident.isHidden()) R.string.show else R.string.hide)
         }
     }
 }

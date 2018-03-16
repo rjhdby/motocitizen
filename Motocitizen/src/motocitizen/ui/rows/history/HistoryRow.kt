@@ -13,7 +13,6 @@ import org.jetbrains.anko.textView
 class HistoryRow : LinearLayout {
     private lateinit var history: History
 
-    //todo refactor
     constructor(context: Context, history: History) : super(context) {
         this.history = history
         layoutParams = generateDefaultLayoutParams()

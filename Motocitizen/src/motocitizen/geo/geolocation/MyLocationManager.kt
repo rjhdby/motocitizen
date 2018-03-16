@@ -24,8 +24,6 @@ import motocitizen.utils.toLocation
 object MyLocationManager {
     private const val ARRIVED_MAX_ACCURACY = 200
 
-//    private val subscribers = HashMap<String, (LatLng) -> Unit>()
-
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult?) {
             locationListener(locationResult?.lastLocation ?: Preferences.savedLatLng.toLocation())
@@ -35,7 +33,6 @@ object MyLocationManager {
     private fun locationListener(location: Location) {
         Preferences.savedLatLng = location.toLatLng()
         SubscribeManager.fireEvent(SubscribeManager.Event.LOCATION_UPDATED)
-//        subscribers.values.forEach { it(location.toLatLng()) }
         checkInPlace(location)
     }
 
@@ -60,14 +57,6 @@ object MyLocationManager {
             runLocationService(LocationRequestFactory.accurate())
         }
     }
-
-//    fun subscribeToLocationUpdate(name: String, callback: (LatLng) -> Unit) {
-//        subscribers[name] = callback
-//    }
-//
-//    fun unSubscribe(name: String) {
-//        subscribers.remove(name)
-//    }
 
     private fun checkInPlace(location: Location) {
         if (User.name == "") return
@@ -94,7 +83,9 @@ object MyLocationManager {
 
     @SuppressWarnings("MissingPermission")
     private fun runLocationService(locationRequest: LocationRequest) {
-        LocationServices.getFusedLocationProviderClient(MyApp.context).removeLocationUpdates(locationCallback)
-        LocationServices.getFusedLocationProviderClient(MyApp.context).requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
+        LocationServices.getFusedLocationProviderClient(MyApp.context).apply {
+            removeLocationUpdates(locationCallback)
+            requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
+        }
     }
 }

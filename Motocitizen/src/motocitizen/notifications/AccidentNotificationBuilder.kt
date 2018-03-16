@@ -23,7 +23,7 @@ import motocitizen.utils.distanceString
 class AccidentNotificationBuilder(val context: Context, val accident: Accident) {
     companion object {
         const val chanelId = "motoaccidents"
-
+        private const val ICON = R.mipmap.ic_launcher
 
         init {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -34,7 +34,6 @@ class AccidentNotificationBuilder(val context: Context, val accident: Accident) 
         }
     }
 
-    private val ICON = R.mipmap.ic_launcher
 
     fun build(): Notification = NotificationCompat.Builder(context, chanelId)
             .setContentIntent(makePendingIntent())

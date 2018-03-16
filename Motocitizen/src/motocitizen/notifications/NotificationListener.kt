@@ -18,7 +18,6 @@ class NotificationListener : FirebaseMessagingService() {
     private var idHash: Int = 0
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-//        Log.e("FCM",remoteMessage.from)
         val data = remoteMessage.data
         try {
             val id = Integer.parseInt(data["id"].toString())

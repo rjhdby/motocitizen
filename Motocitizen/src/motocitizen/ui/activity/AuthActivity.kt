@@ -27,31 +27,15 @@ import motocitizen.utils.showToast
 class AuthActivity : AppCompatActivity() {
     private val loginBtn: Button by bindView(R.id.login_button)
     private val loginVK: Button by bindView(R.id.vk)
-    private val login: EditText by bindView(R.id.auth_login)
-    private val password: EditText by bindView(R.id.auth_password)
+    private val loginField: EditText by bindView(R.id.auth_login)
+    private val passwordField: EditText by bindView(R.id.auth_password)
     private val anonymous: Button by bindView(R.id.anonymous)
     private val forum: Button by bindView(R.id.forum)
     private val forumLoginForm: View by bindView(R.id.forum_login_form)
-//    private lateinit var loginBtn: Button
-//    private lateinit var loginVK: Button
-//    private lateinit var login: EditText
-//    private lateinit var password: EditText
-//    private lateinit var anonymous: Button
-//    private lateinit var forum: Button
-//    private lateinit var forumLoginForm: View
-//
-//    private fun bindViews() {
-//        loginBtn = findViewById(R.id.login_button)
-//        loginVK = findViewById(R.id.vk)
-//        login = findViewById(R.id.auth_login)
-//        password = findViewById(R.id.auth_password)
-//        anonymous = findViewById(R.id.anonymous)
-//        forum = findViewById(R.id.forum)
-//        forumLoginForm = findViewById(R.id.forum_login_form)
-//    }
+    private val authErrorHelper: TextView by bindView(R.id.auth_error_helper)
 
     private fun enableLoginBtn() {
-        loginBtn.isEnabled = login.text.toString().isNotEmpty() && password.text.toString().isNotEmpty()
+        loginBtn.isEnabled = loginField.text.toString().isNotEmpty() && passwordField.text.toString().isNotEmpty()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -63,7 +47,7 @@ class AuthActivity : AppCompatActivity() {
     private fun vkCallback(): VKCallback<VKAccessToken> {
         return object : VKCallback<VKAccessToken> {
             override fun onResult(res: VKAccessToken) {
-                Auth.auth(Auth.AuthType.VK) { goTo(Screens.MAIN) }
+                Auth.auth(Auth.AuthType.VK) { toMainScreen() }
             }
 
             override fun onError(error: VKError) {
@@ -80,29 +64,26 @@ class AuthActivity : AppCompatActivity() {
 
         vkWakeUpSession()
 
-        fillCtrls()
+        initializeScreen()
     }
 
     private fun setUpListeners() {
         loginVK.setOnClickListener { VKSdk.login(this@AuthActivity, VKScope.PAGES) }
         loginBtn.setOnClickListener { loginButtonPressed() }
-        login.afterTextChanged { enableLoginBtn() }
-        password.afterTextChanged { enableLoginBtn() }
+        loginField.afterTextChanged { enableLoginBtn() }
+        passwordField.afterTextChanged { enableLoginBtn() }
         anonymous.setOnClickListener { anonymousLogon() }
         forum.setOnClickListener { forumLoginForm.visibility = View.VISIBLE }
     }
 
-    private fun loginButtonPressed() {
-        when {
-            isOnline -> auth()
-            else     -> showToast(R.string.auth_not_available)
-        }
+    private fun loginButtonPressed() = when {
+        isOnline -> auth()
+        else     -> showToast(R.string.auth_not_available)
     }
 
     private fun anonymousLogon() {
-        (findViewById<TextView>(R.id.auth_error_helper)).text = ""
         Auth.auth(Auth.AuthType.ANON) {}
-        goTo(Screens.MAIN)
+        toMainScreen()
     }
 
     private val isOnline: Boolean
@@ -110,49 +91,33 @@ class AuthActivity : AppCompatActivity() {
 
     private fun vkWakeUpSession() {
         VKSdk.wakeUpSession(this, object : VKCallback<VKSdk.LoginState> {
-            override fun onResult(res: VKSdk.LoginState) {
-                when (res) {
-                    VKSdk.LoginState.LoggedOut -> Unit
-                    VKSdk.LoginState.LoggedIn  -> goTo(Screens.MAIN)
-                    VKSdk.LoginState.Pending   -> Unit
-                    VKSdk.LoginState.Unknown   -> Unit
-                }
+            override fun onResult(res: VKSdk.LoginState) = when (res) {
+                VKSdk.LoginState.LoggedIn -> toMainScreen()
+                else                      -> Unit
             }
 
-            override fun onError(error: VKError) {
-
-            }
+            override fun onError(error: VKError) {}
         })
     }
 
-    //todo refactor
-    private fun fillCtrls() {
-        login.setText(Preferences.login)
-        password.setText(Preferences.password)
-
-        val isAuthorized = User.isAuthorized
-        loginBtn.isEnabled = !isAuthorized
-        login.isEnabled = !isAuthorized
-        password.isEnabled = !isAuthorized
+    private fun initializeScreen() {
+        loginField.setText(Preferences.login)
+        passwordField.setText(Preferences.password)
+        arrayOf(loginBtn, loginField, passwordField).forEach { it.isEnabled = !User.isAuthorized }
     }
 
     private fun auth() {
-        Preferences.login = login.text.toString()
-        Preferences.password = password.text.toString()
+        Preferences.apply {
+            login = loginField.text.toString()
+            password = passwordField.text.toString()
+        }
         Auth.auth(Auth.AuthType.FORUM) { authCallback() }
     }
 
-    private fun authCallback() {
-        when {
-            User.isAuthorized -> goTo(Screens.MAIN)
-            else              -> showAuthError()
-        }
+    private fun authCallback() = when {
+        User.isAuthorized -> toMainScreen()
+        else              -> authErrorHelper.setText(R.string.auth_password_error)
     }
 
-    private fun showAuthError() {
-        this@AuthActivity.runOnUiThread {
-            val authErrorHelper = findViewById<TextView>(R.id.auth_error_helper)
-            authErrorHelper.setText(R.string.auth_password_error)
-        }
-    }
+    private fun toMainScreen() = goTo(Screens.MAIN)
 }

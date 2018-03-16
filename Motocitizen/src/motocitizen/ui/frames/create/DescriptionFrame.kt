@@ -13,10 +13,8 @@ import motocitizen.utils.hide
 import motocitizen.utils.show
 
 class DescriptionFrame(val context: FragmentActivity, val accidentBuilder: AccidentBuilder, val callback: () -> Unit) : FrameInterface {
-    private val ROOT_VIEW = R.id.create_final_frame
-    private val CREATE_BUTTON = R.id.CREATE
-    private val confirmButton = context.findViewById(CREATE_BUTTON) as Button
-    private val view = context.findViewById<View>(ROOT_VIEW)
+    private val confirmButton = context.findViewById(R.id.CREATE) as Button
+    private val view = context.findViewById<View>(R.id.create_final_frame)
 
     init {
         confirmButton.isEnabled = false
@@ -39,7 +37,7 @@ class DescriptionFrame(val context: FragmentActivity, val accidentBuilder: Accid
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                accidentBuilder.description(s.toString())
+                accidentBuilder.description = s.toString()
                 setConfirmButtonStatus()
             }
 
