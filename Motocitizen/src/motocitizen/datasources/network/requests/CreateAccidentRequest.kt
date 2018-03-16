@@ -7,9 +7,7 @@ import motocitizen.datasources.network.Methods
 import motocitizen.datasources.preferences.Preferences
 
 
-class CreateAccidentRequest(accident: Accident, callback: (ApiResponse) -> Unit, forStat: Boolean = false) : ApiRequestWithAuth(callback = callback) {
-    override val method: String = Methods.CREATE
-
+class CreateAccidentRequest(accident: Accident, callback: (ApiResponse) -> Unit, forStat: Boolean = false) : ApiRequestWithAuth(Methods.CREATE, callback = callback) {
     init {
         addParams(
                 "t" to accident.type.code,

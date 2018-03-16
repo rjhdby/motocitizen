@@ -1,17 +1,12 @@
 package motocitizen.content
 
 import motocitizen.content.accident.Accident
-import motocitizen.content.message.Message
-import motocitizen.content.volunteer.Volunteer
 import motocitizen.datasources.network.ApiResponse
 import org.json.JSONArray
 import org.json.JSONObject
 
 object Content {
     var inPlace: Accident? = null //todo
-
-    fun volunteer(id: Int): Volunteer = VolunteersController.volunteers[id]!!//TODO can produce NPE
-    fun message(id: Int): Message = MessagesController.messages[id]!!//TODO can produce NPE
 
     operator fun get(index: Int) = AccidentsController.accidents[index]
 
