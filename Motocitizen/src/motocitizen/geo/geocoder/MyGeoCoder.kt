@@ -14,9 +14,11 @@ object MyGeoCoder {
         return result[0]
     }
 
-    fun getFromLocationName(name: String): Address {
+    fun getFromLocationName(name: String): Address = try {
         val result = geoCoder.getFromLocationName(name, 1)
-        if (result == null || result.isEmpty()) return Address(Locale.getDefault())
-        return result[0]
+        if (result == null || result.isEmpty()) Address(Locale.getDefault())
+        else result[0]
+    } catch (e: Exception) {
+        Address(Locale.getDefault())
     }
 }
