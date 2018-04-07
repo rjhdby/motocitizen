@@ -14,9 +14,7 @@ object Content {
 
     inline fun getByFilter(filter: (Accident) -> Boolean): List<Accident> = AccidentsController.accidents.values.filter(filter)
 
-    fun requestUpdate(callback: (ApiResponse) -> Unit) {
-        AccidentsController.update(callback)
-    }
+    fun requestUpdate(callback: (ApiResponse) -> Unit) = AccidentsController.update(callback)
 
     fun requestSingleAccident(id: Int, callback: (ApiResponse) -> Unit) {
         AccidentsController.requestSingleAccident(id, callback)
@@ -26,13 +24,9 @@ object Content {
         AccidentsController.requestDetailsForAccident(accident, callback)
     }
 
-    fun addVolunteers(json: JSONObject) {
-        VolunteersController.addVolunteers(json)
-    }
+    fun addVolunteers(json: JSONObject) = VolunteersController.addVolunteers(json)
 
-    fun addMessages(json: JSONArray) {
-        MessagesController.addMessages(json)
-    }
+    fun addMessages(json: JSONArray) = MessagesController.addMessages(json)
 
     fun getVisible() = AccidentsController.accidents.values.filter { it.isVisible() }.toList()
 

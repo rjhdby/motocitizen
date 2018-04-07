@@ -6,12 +6,12 @@ import android.widget.EditText
 import android.widget.ImageButton
 import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
+import motocitizen.geo.geocoder.MyGeoCoder
 import motocitizen.geo.geolocation.MyLocationManager
 import motocitizen.main.R
 import motocitizen.user.User
 import motocitizen.utils.distanceTo
 import motocitizen.utils.gone
-import motocitizen.utils.requestLatLngFromAddress
 import motocitizen.utils.showToast
 
 class CreateAccidentMap(fragment: FragmentActivity) : MapManager(fragment, R.id.create_map_container) {
@@ -23,7 +23,9 @@ class CreateAccidentMap(fragment: FragmentActivity) : MapManager(fragment, R.id.
     override fun onMapReady() {
         addMapConstraints()
         fragment.findViewById<ImageButton>(R.id.SEARCH)
-                .setOnClickListener({ searchEditText.text.toString().requestLatLngFromAddress { searchCallback(it) } })
+                .setOnClickListener {
+                    MyGeoCoder.latLngFromAddress(searchEditText.text.toString()) { searchCallback(it) }
+                }
     }
 
     override fun update() = addContent { }
@@ -34,12 +36,9 @@ class CreateAccidentMap(fragment: FragmentActivity) : MapManager(fragment, R.id.
 
     private val initialLocation = MyLocationManager.getLocation()
 
-    private fun searchCallback(latLng: LatLng?) {
-        if (latLng == null) {
-            fragment.showToast(R.string.nothing_is_found)
-        } else {
-            centerOn(latLng)
-        }
+    private fun searchCallback(latLng: LatLng?) = when (latLng) {
+        null -> fragment.showToast(R.string.nothing_is_found)
+        else -> centerOn(latLng)
     }
 
     private fun addMapConstraints() {
@@ -53,7 +52,7 @@ class CreateAccidentMap(fragment: FragmentActivity) : MapManager(fragment, R.id.
         map.setOnCameraMoveCanceledListener(this::cameraMoveCanceledListener)
     }
 
-    private fun permittedCircle(): CircleOptions = CircleOptions()
+    private fun permittedCircle() = CircleOptions()
             .center(initialLocation)
             .radius(PERMITTED_REGION_RADIUS.toDouble())
             .fillColor(PERMITTED_REGION_COLOR)

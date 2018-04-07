@@ -18,23 +18,21 @@ object Permissions {
                 .check()
     }
 
-    private fun permissionListener(successCallback: () -> Unit, failureCallback: () -> Unit): BasePermissionListener {
-        return object : BasePermissionListener() {
-            override fun onPermissionGranted(response: PermissionGrantedResponse?) {
-                locationEnabled = true
-                successCallback()
-            }
+    private fun permissionListener(successCallback: () -> Unit, failureCallback: () -> Unit) = object : BasePermissionListener() {
+        override fun onPermissionGranted(response: PermissionGrantedResponse?) {
+            locationEnabled = true
+            successCallback()
+        }
 
-            override fun onPermissionRationaleShouldBeShown(permission: PermissionRequest?, token: PermissionToken) {
-                super.onPermissionRationaleShouldBeShown(permission, token)
-                token.continuePermissionRequest()
-            }
+        override fun onPermissionRationaleShouldBeShown(permission: PermissionRequest?, token: PermissionToken) {
+            super.onPermissionRationaleShouldBeShown(permission, token)
+            token.continuePermissionRequest()
+        }
 
-            override fun onPermissionDenied(response: PermissionDeniedResponse?) {
-                super.onPermissionDenied(response)
-                locationEnabled = false
-                failureCallback()
-            }
+        override fun onPermissionDenied(response: PermissionDeniedResponse?) {
+            super.onPermissionDenied(response)
+            locationEnabled = false
+            failureCallback()
         }
     }
 }

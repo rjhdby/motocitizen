@@ -6,11 +6,10 @@ import android.location.Address
 import android.location.Location
 import android.location.LocationManager
 import com.google.android.gms.maps.model.LatLng
-import motocitizen.datasources.network.requests.GeoCoderRequest
-import motocitizen.geo.geocoder.MyGeoCoder
 import motocitizen.geo.geolocation.MyLocationManager
-import org.json.JSONException
-import java.io.IOException
+
+typealias Meter = Long
+typealias Kilometer = Float
 
 const val EQUATOR = 20038
 
@@ -18,32 +17,13 @@ fun Location.toLatLng(): LatLng = LatLng(latitude, longitude)
 
 fun LatLng.distanceTo(latLng: LatLng): Kilometer = distanceTo(latLng.toLocation())
 
-fun LatLng.distanceTo(location: Location): Kilometer = toLocation().distanceTo(location)
+fun LatLng.distanceTo(location: Location): Kilometer = toLocation().distanceTo(location) / 1000
 
 fun LatLng.toLocation(): Location {
     val location = Location(LocationManager.GPS_PROVIDER)
     location.latitude = latitude
     location.longitude = longitude
     return location
-}
-
-//todo smell
-fun String.requestLatLngFromAddress(callback: (LatLng?) -> Unit) {
-    try {
-        val address = MyGeoCoder.getFromLocationName(this)
-        if (address.hasLatitude()) {
-            callback(address.latLng)
-            return
-        }
-    } catch (e: IOException) {
-    }
-    GeoCoderRequest(this) {
-        try {
-            callback(LatLng(it.resultObject.getDouble("lat"), it.resultObject.getDouble("lng")))
-        } catch (e: JSONException) {
-            callback(null)
-        }
-    }.call()
 }
 
 fun LatLng.distanceString(): String {
@@ -54,7 +34,9 @@ fun LatLng.distanceString(): String {
     }
 }
 
-fun LatLng.metersFromUser(): Meter = Math.round(distanceTo(MyLocationManager.getLocation()))
+fun Meter.toKilometers(): Kilometer = (this / 10).toFloat() / 100
+
+fun LatLng.metersFromUser(): Meter = (distanceTo(MyLocationManager.getLocation()) * 1000).toLong()
 
 fun Address.buildAddressString(): String {
     return StringBuilder()

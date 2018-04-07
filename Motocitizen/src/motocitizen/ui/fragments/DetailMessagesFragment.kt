@@ -25,7 +25,7 @@ import motocitizen.user.User
 import motocitizen.utils.hide
 import motocitizen.utils.show
 import motocitizen.utils.showToast
-import org.json.JSONException
+import motocitizen.utils.tryOrDo
 
 class DetailMessagesFragment() : Fragment() {
     private lateinit var rootView: View
@@ -99,14 +99,12 @@ class DetailMessagesFragment() : Fragment() {
     }
 
     //todo pizdets
-    private fun addMessageRows(list: List<Message>) {
-        if (list.size == 1) {
-            drawRow(MessageRowFactory.makeOne(activity, list.first()), list.first())
-        } else {
-            drawRow(MessageRowFactory.makeFirst(activity, list.first()), list.first())
-            (1..list.size - 2).forEach { drawRow(MessageRowFactory.makeMiddle(activity, list[it]), list[it]) }
-            drawRow(MessageRowFactory.makeLast(activity, list.last()), list.last())
-        }
+    private fun addMessageRows(list: List<Message>) = if (list.size == 1) {
+        drawRow(MessageRowFactory.makeOne(activity, list.first()), list.first())
+    } else {
+        drawRow(MessageRowFactory.makeFirst(activity, list.first()), list.first())
+        (1..list.size - 2).forEach { drawRow(MessageRowFactory.makeMiddle(activity, list[it]), list[it]) }
+        drawRow(MessageRowFactory.makeLast(activity, list.last()), list.last())
     }
 
     private fun drawRow(view: View, message: Message) {
@@ -120,16 +118,13 @@ class DetailMessagesFragment() : Fragment() {
     }
 
     private fun sendMessageCallback(response: ApiResponse) {
-        try {
+        tryOrDo({ activity.showToast("Неизвестная ошибка" + response.toString()) }) {
             if (response.hasError()) {
                 val text = response.error.text
                 activity.runOnUiThread { activity.showToast(text) }
             } else {
                 accident.messagesCount++
             }
-        } catch (e: JSONException) {
-            activity.showToast("Неизвестная ошибка" + response.toString())
-            e.printStackTrace()
         }
 
         Content.requestDetailsForAccident(accident, {

@@ -9,14 +9,10 @@ fun <T : View> T.lparamsMatchParent(): T {
     return this
 }
 
-fun View.hide() {
-    visibility = View.INVISIBLE
-}
+fun View.hide() = changeVisibility(View.INVISIBLE)
+fun View.show() = changeVisibility(View.VISIBLE)
+fun View.gone() = changeVisibility(View.GONE)
 
-fun View.show() {
-    visibility = View.VISIBLE
-}
-
-fun View.gone() {
-    visibility = View.GONE
+private fun View.changeVisibility(newVisibility: Int) {
+    visibility = newVisibility
 }

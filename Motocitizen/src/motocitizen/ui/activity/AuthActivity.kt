@@ -44,15 +44,13 @@ class AuthActivity : AppCompatActivity() {
         }
     }
 
-    private fun vkCallback(): VKCallback<VKAccessToken> {
-        return object : VKCallback<VKAccessToken> {
-            override fun onResult(res: VKAccessToken) {
-                Auth.auth(Auth.AuthType.VK) { toMainScreen() }
-            }
+    private fun vkCallback() = object : VKCallback<VKAccessToken> {
+        override fun onResult(res: VKAccessToken) {
+            Auth.auth(Auth.AuthType.VK) { toMainScreen() }
+        }
 
-            override fun onError(error: VKError) {
-                showToast("Произошла ошибка авторизации (например, пользователь запретил авторизацию)")
-            }
+        override fun onError(error: VKError) {
+            showToast("Произошла ошибка авторизации (например, пользователь запретил авторизацию)")
         }
     }
 
@@ -116,7 +114,7 @@ class AuthActivity : AppCompatActivity() {
 
     private fun authCallback() = when {
         User.isAuthorized -> toMainScreen()
-        else              -> authErrorHelper.setText(R.string.auth_password_error)
+        else              -> runOnUiThread { authErrorHelper.setText(R.string.auth_password_error) }
     }
 
     private fun toMainScreen() = goTo(Screens.MAIN)

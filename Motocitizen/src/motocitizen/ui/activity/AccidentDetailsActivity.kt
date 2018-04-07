@@ -63,7 +63,16 @@ class AccidentDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(ROOT_LAYOUT)
-        accident = Content[intent.extras.getInt(ACCIDENT_ID_KEY)]!!
+        val id = intent.extras.getInt(ACCIDENT_ID_KEY)
+        try {
+            accident = Content[id] ?: throw RuntimeException()
+            init(accident)
+        } catch (e: Exception) {
+            goTo(Screens.MAIN)
+        }
+    }
+
+    private fun init(accident: Accident) {
         menuController = DetailsMenuController(this, accident)
         summaryFrame = DetailsSummaryFrame(this, accident)
 

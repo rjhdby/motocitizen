@@ -10,7 +10,7 @@ object User {
 
     fun notIsReadOnly() = !isReadOnly()
 
-    fun isModerator() = role.isModerator
+    fun isModerator() = role.isModerator()
 
     fun notIsModerator() = !isModerator()
 }

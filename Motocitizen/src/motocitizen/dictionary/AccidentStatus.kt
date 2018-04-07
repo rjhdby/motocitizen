@@ -1,6 +1,6 @@
 package motocitizen.dictionary
 
-enum class AccidentStatus constructor(val code: String, val text: String) {
+enum class AccidentStatus constructor(override val code: String, override val text: String) : Dictionary<String> {
     ACTIVE("a", "Активный"),
     ENDED("e", "Отбой"),
     HIDDEN("h", "Скрыт");

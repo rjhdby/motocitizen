@@ -1,6 +1,6 @@
 package motocitizen.dictionary
 
-enum class HistoryAction constructor(val code: String, val text: String) {
+enum class HistoryAction constructor(override val code: String, override val text: String): Dictionary<String> {
     CREATE("c", "Создал"),
     OPEN("a", "Отмена отбоя"),
     CLOSE("e", "Отбой"),

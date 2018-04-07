@@ -7,9 +7,7 @@ import java.util.*
 
 object MessagesController {
     val messages: TreeMap<Int, Message> = TreeMap()
-    fun addMessages(json: JSONArray) {
-        json.asList()
-                .map { Message(it) }
-                .forEach { messages[it.id] = it }
-    }
+    fun addMessages(json: JSONArray) = json.asList()
+            .map { Message(it) }
+            .forEach { messages[it.id] = it }
 }

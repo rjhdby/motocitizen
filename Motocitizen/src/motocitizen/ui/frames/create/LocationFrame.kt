@@ -21,5 +21,5 @@ class LocationFrame(val context: FragmentActivity, val callback: (LatLng) -> Uni
 
     override fun hide() = view.hide()
 
-    private fun addressSelectListener(): View.OnClickListener = View.OnClickListener { callback(map.coordinates()) }
+    private fun addressSelectListener() = View.OnClickListener { callback(map.coordinates()) }
 }

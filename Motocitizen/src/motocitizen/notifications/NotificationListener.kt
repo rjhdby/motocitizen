@@ -9,29 +9,21 @@ import motocitizen.datasources.preferences.Preferences
 import java.util.*
 
 class NotificationListener : FirebaseMessagingService() {
+    companion object {
+        private val tray = LinkedList<Int>()
+    }
 
-    private val tray = LinkedList<Int>()
-
-    private val preferences = Preferences
     private lateinit var notificationManager: NotificationManagerCompat
-    private lateinit var accident: Accident
     private var idHash: Int = 0
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        val data = remoteMessage.data
-        try {
-            val id = Integer.parseInt(data["id"].toString())
-            Content.requestSingleAccident(id) {
-                raiseNotification(id)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        val id = remoteMessage.data["id"]?.toInt() ?: return
+        Content.requestSingleAccident(id) { raiseNotification(id) }
     }
 
     private fun raiseNotification(id: Int) {
-        accident = Content[id] ?: return
-        if (doNotShow()) return
+        val accident = Content[id] ?: return
+        if (doNotShow(accident)) return
         notificationManager = NotificationManagerCompat.from(this)
 
         idHash = accident.coordinates.hashCode()
@@ -40,8 +32,7 @@ class NotificationListener : FirebaseMessagingService() {
         manageTray()
     }
 
-    private fun doNotShow(): Boolean = !accident.isVisible() || preferences.doNotDisturb
-
+    private fun doNotShow(accident: Accident): Boolean = !accident.isVisible() || Preferences.doNotDisturb
 
     private fun manageTray() {
         tray.push(idHash)

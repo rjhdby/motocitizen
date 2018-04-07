@@ -54,10 +54,9 @@ abstract class MessageRow(context: Context, val message: Message, val type: Type
             })
 
     private fun joinRowsByOwner() {
-        if (type == Type.MIDDLE || type == Type.LAST) {
-            val lp = LinearLayout.LayoutParams(matchParent, wrapContent)
-            lp.topMargin = 0
-            layoutParams = lp
-        }
+        if (type != Type.MIDDLE && type != Type.LAST) return
+        val lp = LinearLayout.LayoutParams(matchParent, wrapContent)
+        lp.topMargin = 0
+        layoutParams = lp
     }
 }

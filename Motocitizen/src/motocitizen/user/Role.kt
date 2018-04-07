@@ -1,6 +1,8 @@
 package motocitizen.user
 
-enum class Role constructor(val code: Int, val text: String) {
+import motocitizen.dictionary.Dictionary
+
+enum class Role constructor(override val code: Int, override val text: String) : Dictionary<Int> {
     RO(0, "только чтение"),
     //    BANNED("banned", "забанен"),
     STANDARD(1, "пользователь"),
@@ -8,10 +10,5 @@ enum class Role constructor(val code: Int, val text: String) {
     //    ADMINISTRATOR("admin", "администратор"),
     DEVELOPER(3, "разработчик");
 
-    val isModerator: Boolean
-        inline get() = this in arrayOf(MODERATOR, DEVELOPER)
-
-    companion object {
-        fun parse(role: Int): Role = values().firstOrNull { it.code == role } ?: RO
-    }
+    fun isModerator(): Boolean = this in arrayOf(MODERATOR, DEVELOPER)
 }

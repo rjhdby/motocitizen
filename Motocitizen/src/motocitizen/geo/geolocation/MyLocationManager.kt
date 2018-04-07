@@ -13,10 +13,11 @@ import motocitizen.content.Content
 import motocitizen.content.accident.Accident
 import motocitizen.datasources.network.requests.InPlaceRequest
 import motocitizen.datasources.preferences.Preferences
-import motocitizen.geo.geocoder.AddressResolver
+import motocitizen.geo.geocoder.MyGeoCoder
 import motocitizen.permissions.Permissions
 import motocitizen.subscribe.SubscribeManager
 import motocitizen.user.User
+import motocitizen.utils.buildAddressString
 import motocitizen.utils.distanceTo
 import motocitizen.utils.toLatLng
 import motocitizen.utils.toLocation
@@ -38,22 +39,16 @@ object MyLocationManager {
 
     fun getLocation(): LatLng = Preferences.savedLatLng
 
-    fun getAddress(location: LatLng = getLocation()): String = AddressResolver.getAddress(location)
+    fun getAddress(location: LatLng = getLocation()) = MyGeoCoder.getFromLocation(location).buildAddressString()
 
-    fun sleep() {
-        runLocationService(LocationRequestFactory.coarse())
-    }
+    fun sleep() = runLocationService(LocationRequestFactory.coarse())
 
     @SuppressWarnings("MissingPermission")
     fun wakeup(context: Activity) {
         Permissions.requestLocation(context) {
             LocationServices.getFusedLocationProviderClient(context)
                     .lastLocation
-                    .addOnSuccessListener { location ->
-                        if (location != null) {
-                            Preferences.savedLatLng = location.toLatLng()
-                        }
-                    }
+                    .addOnSuccessListener { if (it != null) Preferences.savedLatLng = it.toLatLng() }
             runLocationService(LocationRequestFactory.accurate())
         }
     }

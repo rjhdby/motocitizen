@@ -5,7 +5,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 
 import motocitizen.main.R
 
-enum class Type(val code: String, val text: String, private val mapIcon: Int) {
+enum class Type(override val code: String, override val text: String, private val mapIcon: Int): Dictionary<String> {
     BREAK("b", "Поломка", R.drawable.break_icon),
     SOLO("m", "Один участник", R.drawable.accident),
     MOTO_MOTO("mm", "Мот/мот", R.drawable.accident),

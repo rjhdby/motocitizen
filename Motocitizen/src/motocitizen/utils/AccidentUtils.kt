@@ -1,9 +1,13 @@
 package motocitizen.utils
 
 import android.location.Location
-import com.google.android.gms.maps.model.LatLng
+import motocitizen.content.Content
 import motocitizen.content.accident.Accident
 import motocitizen.dictionary.Medicine
+
+typealias Id = Int
+
+fun Id.name() = Content.volunteerName(this)
 
 fun Accident.getAccidentTextToCopy(): String {
     val medicineText = if (medicine == Medicine.UNKNOWN) "" else medicine.text + ". "
@@ -18,5 +22,4 @@ val Accident.longitude
 
 fun Accident.distanceString(): String = coordinates.distanceString()
 
-fun Accident.distanceTo(location: LatLng) = coordinates.distanceTo(location)
 fun Accident.distanceTo(location: Location) = coordinates.distanceTo(location)

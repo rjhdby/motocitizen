@@ -15,9 +15,7 @@ object SubscribeManager {
         if (events.contains(type)) runSubscribers(type)
     }
 
-    fun unSubscribeAll(tag: String) {
-        subscribers.values.forEach { it.remove(tag) }
-    }
+    fun unSubscribeAll(tag: String) = subscribers.values.forEach { it.remove(tag) }
 
     fun fireEvent(type: Event) {
         events.add(type)

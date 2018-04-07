@@ -4,7 +4,8 @@ import com.vk.sdk.VKSdk
 import motocitizen.datasources.network.ApiResponse
 import motocitizen.datasources.network.requests.AuthRequest
 import motocitizen.datasources.preferences.Preferences
-import org.json.JSONException
+import motocitizen.utils.getEnumOr
+import motocitizen.utils.tryOrPrintStack
 
 object Auth {
     enum class AuthType(val value: String) {
@@ -33,9 +34,7 @@ object Auth {
         }
     }
 
-    fun autoAuth(callback: () -> Unit) {
-        auth(AuthType.current(), callback)
-    }
+    fun autoAuth(callback: () -> Unit) = auth(AuthType.current(), callback)
 
     private fun authRequestCallback(response: ApiResponse, callback: () -> Unit) {
         parseAuthResult(response)
@@ -43,21 +42,19 @@ object Auth {
         callback()
     }
 
-    fun getType(): AuthType = AuthType.current()
+    fun isForumAuth() = AuthType.current() == Auth.AuthType.FORUM
 
     private fun parseAuthResult(response: ApiResponse) {
         User.isAuthorized = false
-        try {
+        tryOrPrintStack {
             val result = response.resultObject
             User.apply {
                 id = Integer.parseInt(result.getString("id"))
                 name = result.getString("l")
-                role = Role.parse(result.getInt("r"))
+                role = result.getEnumOr("r", Role.RO)
                 isAuthorized = true
             }
             Preferences.login = User.name
-        } catch (e: JSONException) {
-            e.printStackTrace()
         }
     }
 

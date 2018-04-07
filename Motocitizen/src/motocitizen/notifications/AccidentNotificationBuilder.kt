@@ -34,7 +34,6 @@ class AccidentNotificationBuilder(val context: Context, val accident: Accident) 
         }
     }
 
-
     fun build(): Notification = NotificationCompat.Builder(context, chanelId)
             .setContentIntent(makePendingIntent())
             .setSmallIcon(ICON)

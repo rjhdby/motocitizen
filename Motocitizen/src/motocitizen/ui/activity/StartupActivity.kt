@@ -25,7 +25,5 @@ class StartupActivity : AppCompatActivity() {
         Permissions.requestLocation(this) { ahead() }
     }
 
-    private fun ahead() {
-        Auth.autoAuth { goTo(if (User.isAuthorized) Screens.MAIN else Screens.AUTH) }
-    }
+    private fun ahead() = Auth.autoAuth { goTo(if (User.isAuthorized) Screens.MAIN else Screens.AUTH) }
 }

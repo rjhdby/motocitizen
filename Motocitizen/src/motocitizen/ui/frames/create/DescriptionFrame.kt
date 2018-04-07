@@ -32,17 +32,15 @@ class DescriptionFrame(val context: FragmentActivity, val accidentBuilder: Accid
         confirmButton.isEnabled = false
     }
 
-    private fun finalTextWatcher(): TextWatcher {
-        return object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+    private fun finalTextWatcher(): TextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                accidentBuilder.description = s.toString()
-                setConfirmButtonStatus()
-            }
-
-            override fun afterTextChanged(s: Editable) {}
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+            accidentBuilder.description = s.toString()
+            setConfirmButtonStatus()
         }
+
+        override fun afterTextChanged(s: Editable) {}
     }
 
     private fun setConfirmButtonStatus() {

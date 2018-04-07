@@ -31,12 +31,10 @@ fun Context.makeDial(number: String) = try {
 
 fun Activity.goTo(target: Screens, bundle: Map<String, Any>) {
     val intentBundle = Bundle()
-    bundle.onEach {
-        with(intentBundle) {
-            when (it.value) {
-                is Int    -> putInt(it.key, it.value as Int)
-                is String -> putString(it.key, it.value as String)
-            }
+    bundle.forEach {
+        when (it.value) {
+            is Int    -> intentBundle.putInt(it.key, it.value as Int)
+            is String -> intentBundle.putString(it.key, it.value as String)
         }
     }
     val intent = Intent(this, target.activity)

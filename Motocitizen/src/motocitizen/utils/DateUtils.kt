@@ -18,6 +18,4 @@ fun Date.getIntervalFromNowInText(): String {
     return String.format("%dч %dм", minutes / 60, minutes % 60)
 }
 
-fun Date.seconds() = this.time / 1000
-
-fun dateFromSeconds(seconds: Long) = Date(seconds * 1000)
+fun Date.seconds() = time / 1000

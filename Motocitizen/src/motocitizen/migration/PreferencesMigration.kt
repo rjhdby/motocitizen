@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import motocitizen.MyApp
+import motocitizen.utils.tryOrPrintStack
 
 object PreferencesMigration : MigrationInterface {
     lateinit var preferences: SharedPreferences
@@ -29,10 +30,9 @@ object PreferencesMigration : MigrationInterface {
         }).apply()
     }
 
-    private fun stringToInt(name: String) = try {
+    private fun stringToInt(name: String) = tryOrPrintStack {
         val pref = preferences.getString(name, "").toInt()
         preferences.edit().remove(name).apply()
         preferences.edit().putInt(name, pref).apply()
-    } catch (e: Exception) {
     }
 }

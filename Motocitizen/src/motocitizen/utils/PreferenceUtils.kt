@@ -13,8 +13,7 @@ fun Preference.onClickListener(callback: (Preference) -> Boolean) {
     onPreferenceClickListener = Preference.OnPreferenceClickListener(callback)
 }
 
-@Suppress("UNCHECKED_CAST")
-private fun <T : Preference> PreferenceFragment.preferenceBinder(name: String) = lazy { findPreference(Preferences.getPreferenceName(name)) as T }
+private inline fun <reified T : Preference> PreferenceFragment.preferenceBinder(name: String) = lazy { findPreference(Preferences.getPreferenceName(name)) as T }
 
 fun PreferenceFragment.bindPreference(name: String) = preferenceBinder<Preference>(name)
 

@@ -1,6 +1,6 @@
 package motocitizen.datasources.network
 
-import org.json.JSONException
+import motocitizen.utils.tryOr
 import org.json.JSONObject
 
 abstract class ApiRequest(private val method: String, val id: Int? = null, callback: (ApiResponse) -> Unit = {}) : CoreRequest(callback) {
@@ -13,9 +13,7 @@ abstract class ApiRequest(private val method: String, val id: Int? = null, callb
     }
 
     override fun response(string: String): ApiResponse = ApiResponse(
-            try {
+            tryOr(error) {
                 JSONObject(string)
-            } catch (e: JSONException) {
-                error
             })
 }
