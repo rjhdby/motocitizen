@@ -24,3 +24,12 @@ fun String.md5(): String {
 
     return sb.toString()
 }
+
+fun String.carryOver(symbols: Array<Char> = arrayOf(' ', ',')): Pair<String, String> {
+    val half = length / 2
+    val max = symbols.map { this.lastIndexOf(it, half) }.max() ?: -1
+    return when (max) {
+        -1   -> Pair(this, "")
+        else -> Pair(substring(0, max), substring(max + 1))
+    }
+}

@@ -7,12 +7,12 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.preference.PreferenceManager
 import android.widget.Toast
-import com.google.firebase.messaging.FirebaseMessaging
 import com.vk.sdk.VKAccessToken
 import com.vk.sdk.VKAccessTokenTracker
 import com.vk.sdk.VKSdk
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.migration.Migration
+import motocitizen.notifications.Messaging
 import motocitizen.ui.activity.AuthActivity
 
 class MyApp : Application() {
@@ -41,8 +41,8 @@ class MyApp : Application() {
         val currentVersion = packageManager.getPackageInfo(packageName, 0).versionCode
         if (oldVersion < currentVersion) Migration.makeMigration(this)
 
-        FirebaseMessaging.getInstance().subscribeToTopic("accidents")
-        if (Preferences.isTester) FirebaseMessaging.getInstance().subscribeToTopic("test")
+        Messaging.subscribe()
+        if (Preferences.isTester) Messaging.subscribeToTest()
 
         vkAccessTokenTracker.startTracking()
         VKSdk.initialize(this)

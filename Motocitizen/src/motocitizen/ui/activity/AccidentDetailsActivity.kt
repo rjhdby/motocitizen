@@ -63,22 +63,23 @@ class AccidentDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(ROOT_LAYOUT)
-        val id = intent.extras.getInt(ACCIDENT_ID_KEY)
+        init()
+    }
+
+    private fun init() {
         try {
+            val id = intent.extras.getInt(ACCIDENT_ID_KEY)
             accident = Content[id] ?: throw RuntimeException()
-            init(accident)
+            menuController = DetailsMenuController(this, accident)
+            summaryFrame = DetailsSummaryFrame(this, accident)
+
+            Content.requestDetailsForAccident(accident) { setupFragments() }
+            tabs.hide()
+            update()
         } catch (e: Exception) {
             goTo(Screens.MAIN)
         }
-    }
 
-    private fun init(accident: Accident) {
-        menuController = DetailsMenuController(this, accident)
-        summaryFrame = DetailsSummaryFrame(this, accident)
-
-        Content.requestDetailsForAccident(accident) { setupFragments() }
-        tabs.hide()
-        update()
     }
 
     private fun setupFragments() = runOnUiThread {
@@ -94,7 +95,7 @@ class AccidentDetailsActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         findViewById<View>(GENERAL_INFORMATION_VIEW).setOnLongClickListener(this@AccidentDetailsActivity::generalPopUpListener)
-        update()
+        init()
     }
 
     private fun generalPopUpListener(view: View): Boolean {

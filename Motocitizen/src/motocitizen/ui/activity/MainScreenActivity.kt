@@ -104,7 +104,7 @@ class MainScreenActivity : AppCompatActivity() {
     }
 
     private fun setUpFeaturesAccessibility() = async {
-        createAccButton.apply { if (User.notIsReadOnly()) show() else hide() }
+        createAccButton.apply { if (!User.isReadOnly()) show() else hide() }
         dialButton.isEnabled = packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)
     }
 
@@ -147,12 +147,14 @@ class MainScreenActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        when {
-            intent.hasExtra("toMap")     -> toMap(intent.extras.getInt("toMap", 0))
-            intent.hasExtra("toDetails") -> Unit //todo toDetails() ?
+        intent.apply {
+            when {
+                hasExtra("toMap")     -> toMap(intent.extras.getInt("toMap", 0))
+                hasExtra("toDetails") -> Unit //todo toDetails() ?
+            }
+            removeExtra("toMap")
+            removeExtra("toDetails")
         }
-        intent.removeExtra("toMap")
-        intent.removeExtra("toDetails")
         setIntent(intent)
     }
 
@@ -170,13 +172,15 @@ class MainScreenActivity : AppCompatActivity() {
             R.id.small_menu_settings -> goTo(Screens.SETTINGS)
             R.id.small_menu_about    -> goTo(Screens.ABOUT)
             R.id.action_refresh      -> requestAccidents()
-            R.id.do_not_disturb      -> {
-                item.setIcon(if (Preferences.doNotDisturb) R.drawable.ic_lock_ringer_on_alpha else R.drawable.ic_lock_ringer_off_alpha)
-                Preferences.doNotDisturb = !Preferences.doNotDisturb
-            }
+            R.id.do_not_disturb      -> flipDoNotDisturb(item)
             else                     -> return false
         }
         return true
+    }
+
+    private fun flipDoNotDisturb(item: MenuItem) {
+        item.setIcon(if (Preferences.doNotDisturb) R.drawable.ic_lock_ringer_on_alpha else R.drawable.ic_lock_ringer_off_alpha)
+        Preferences.doNotDisturb = !Preferences.doNotDisturb
     }
 
 
@@ -185,20 +189,12 @@ class MainScreenActivity : AppCompatActivity() {
         map.centerOnAccident(Content[id]!!)
     }
 
-    //todo refactor
     private fun updateStatusBar() {
-        var address = MyLocationManager.getAddress()
-        var subTitle = ""
-        //Делим примерно пополам, учитывая пробел или запятую
-        val commaPos = address.lastIndexOf(",", address.length / 2)
-        val spacePos = address.lastIndexOf(" ", address.length / 2)
+        val (part1, part2) = MyLocationManager.getAddress().carryOver()
 
-        if (commaPos != -1 || spacePos != -1) {
-            subTitle = address.substring(Math.max(commaPos, spacePos) + 1)
-            address = address.substring(0, Math.max(commaPos, spacePos))
+        actionBar?.apply {
+            title = part1
+            subtitle = part2
         }
-
-        actionBar?.title = address
-        if (!subTitle.isEmpty()) actionBar?.subtitle = subTitle
     }
 }

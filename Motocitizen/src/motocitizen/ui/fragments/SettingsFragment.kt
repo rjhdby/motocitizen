@@ -2,10 +2,10 @@ package motocitizen.ui.fragments
 
 import android.preference.Preference
 import android.preference.PreferenceFragment
-import com.google.firebase.messaging.FirebaseMessaging
 import motocitizen.content.AccidentsController
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.main.R
+import motocitizen.notifications.Messaging
 import motocitizen.ui.Screens
 import motocitizen.user.Auth
 import motocitizen.user.User
@@ -43,7 +43,7 @@ class SettingsFragment : PreferenceFragment() {
     }
 
     private fun update() {
-        authPreference.summary = if (login.isNotEmpty()) User.role.text + ": " + login else User.role.text
+        authPreference.summary = if (login.isNotEmpty()) User.roleName + ": " + login else User.roleName
         maxNotifications.summary = Preferences.maxNotifications.toString()
         hoursAgo.summary = Preferences.hoursAgo.toString()
         notificationSoundPreference.summary = Preferences.soundTitle
@@ -91,8 +91,8 @@ class SettingsFragment : PreferenceFragment() {
 
     private fun isTesterListener(preference: Preference, newValue: Any): Boolean {
         Preferences.isTester = newValue as Boolean
-        FirebaseMessaging.getInstance().apply {
-            if (newValue) subscribeToTopic("test") else unsubscribeFromTopic("test")
+        Messaging.apply {
+            if (newValue) subscribeToTest() else unSubscribeFromTest()
         }
 
         AccidentsController.resetLastUpdate()
@@ -114,7 +114,7 @@ class SettingsFragment : PreferenceFragment() {
     }
 
     private fun authButtonPressed(): Boolean {
-        Auth.logoff()
+        Auth.logout()
         goTo(Screens.AUTH)
         return true
     }

@@ -8,7 +8,7 @@ repositories {
 }
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.2'
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         minSdkVersion 15
@@ -22,8 +22,8 @@ configurations {
 }
 
 dependencies {
-    javadocDeps 'com.android.support:support-annotations:27.0.2'
-    compile "com.android.support:support-v4:27.0.2"
+    javadocDeps 'com.android.support:support-annotations:27.1.1'
+    compile "com.android.support:support-v4:27.1.1"
 //    compile "com.android.support:appcompat-v7:27.0.2"
 }
 

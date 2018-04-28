@@ -23,7 +23,7 @@ object Auth {
         Preferences.authType = type.value
         when (type) {
             AuthType.NONE               -> {
-                logoff()
+                logout()
                 callback()
             }
             AuthType.ANON               -> {
@@ -38,7 +38,7 @@ object Auth {
 
     private fun authRequestCallback(response: ApiResponse, callback: () -> Unit) {
         parseAuthResult(response)
-        if (!User.isAuthorized) logoff()
+        if (!User.isAuthorized) logout()
         callback()
     }
 
@@ -48,34 +48,26 @@ object Auth {
         User.isAuthorized = false
         tryOrPrintStack {
             val result = response.resultObject
-            User.apply {
-                id = Integer.parseInt(result.getString("id"))
-                name = result.getString("l")
-                role = result.getEnumOr("r", Role.RO)
-                isAuthorized = true
-            }
+            User.authenticate(id = Integer.parseInt(result.getString("id")),
+                              name = result.getString("l"),
+                              role = result.getEnumOr("r", Role.RO))
             Preferences.login = User.name
         }
     }
 
     private fun authAsAnon() {
-        logoff()
+        logout()
         Preferences.authType = AuthType.ANON.value
         User.isAuthorized = true
     }
 
-    fun logoff() {
+    fun logout() {
         VKSdk.logout()
-        Preferences.apply {
+        Preferences.run {
             login = ""
             password = ""
             authType = AuthType.NONE.value
         }
-        User.apply {
-            name = ""
-            role = Role.RO
-            id = 0
-            isAuthorized = false
-        }
+        User.logout()
     }
 }
