@@ -2,8 +2,8 @@
 <manifest package="motocitizen.main"
           xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          android:versionCode="10008"
-          android:versionName="1.0.2 Golova">
+          android:versionCode="10010"
+          android:versionName="1.0.4 Student">
 
     <uses-sdk
         android:minSdkVersion="15"

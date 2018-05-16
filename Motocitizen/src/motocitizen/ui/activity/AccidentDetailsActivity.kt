@@ -63,12 +63,12 @@ class AccidentDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(ROOT_LAYOUT)
-        init()
+        init(savedInstanceState?.getInt(ACCIDENT_ID_KEY))
     }
 
-    private fun init() {
+    private fun init(savedId: Int? = null) {
         try {
-            val id = intent.extras.getInt(ACCIDENT_ID_KEY)
+            val id = savedId ?: intent.extras.getInt(ACCIDENT_ID_KEY)
             accident = Content[id] ?: throw RuntimeException()
             menuController = DetailsMenuController(this, accident)
             summaryFrame = DetailsSummaryFrame(this, accident)
@@ -108,9 +108,14 @@ class AccidentDetailsActivity : AppCompatActivity() {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        menuController.optionsMenuCreated(menu)
-        menuController.menuReconstruction()
-        return super.onPrepareOptionsMenu(menu)
+        try {
+            menuController.optionsMenuCreated(menu)
+            menuController.menuReconstruction()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            return super.onPrepareOptionsMenu(menu)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -158,4 +163,9 @@ class AccidentDetailsActivity : AppCompatActivity() {
     }
 
     fun toMap() = goTo(Screens.MAIN, mapOf("toMap" to accident.id))
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putInt(ACCIDENT_ID_KEY, accident.id)
+    }
 }

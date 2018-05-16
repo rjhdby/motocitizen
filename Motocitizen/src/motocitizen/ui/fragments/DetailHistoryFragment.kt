@@ -34,7 +34,13 @@ class DetailHistoryFragment() : Fragment() {
 
     private fun redrawHistory() {
         logContent.removeAllViews()
-        accident.history.forEach { logContent.addView(HistoryRow(activity, it)) }
+        accident.history.forEach {
+            try {
+                logContent.addView(HistoryRow(activity, it))
+            } catch (e: IllegalArgumentException) {
+                //todo fuckup
+            }
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -67,7 +67,13 @@ class DetailVolunteersFragment() : Fragment() {
     private fun update() {
         setupAccess()
         content.removeAllViews()
-        accident.volunteers.forEach { content.addView(VolunteerRow(activity, it)) }
+        accident.volunteers.forEach {
+            try {
+                content.addView(VolunteerRow(activity, it))
+            } catch (e: IllegalArgumentException) {
+                //todo fuckup
+            }
+        }
     }
 
     private fun setupAccess() = runOnUiThread {
