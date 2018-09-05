@@ -4,9 +4,11 @@ import afterTextChanged
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.vk.sdk.VKAccessToken
 import com.vk.sdk.VKCallback
@@ -25,6 +27,7 @@ import motocitizen.utils.showToast
 
 //todo refactor
 class AuthActivity : AppCompatActivity() {
+    private val layout: LinearLayout by bindView(R.id.activity_auth)
     private val loginBtn: Button by bindView(R.id.login_button)
     private val loginVK: Button by bindView(R.id.vk)
     private val loginField: EditText by bindView(R.id.auth_login)
@@ -71,7 +74,7 @@ class AuthActivity : AppCompatActivity() {
         loginField.afterTextChanged { enableLoginBtn() }
         passwordField.afterTextChanged { enableLoginBtn() }
         anonymous.setOnClickListener { anonymousLogon() }
-        forum.setOnClickListener { forumLoginForm.visibility = View.VISIBLE }
+        forum.setOnClickListener { forumLoginForm.visibility = View.VISIBLE; layout.setVerticalGravity(Gravity.TOP)}
     }
 
     private fun loginButtonPressed() = when {
