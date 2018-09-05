@@ -106,12 +106,13 @@
         <RadioButton
             android:id="@+id/details_tab_people"
             style="@style/statusText"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/tab"
             android:button="@color/white"
             android:checked="true"
+            android:gravity="center_horizontal"
             android:tag="details_people_content"
             android:text="@string/tab_onway"/>
 
@@ -123,12 +124,13 @@
         <RadioButton
             android:id="@+id/details_tab_messages"
             style="@style/statusText"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/tab"
             android:button="@color/white"
             android:checked="false"
+            android:gravity="center_horizontal"
             android:tag="details_messages_content"
             android:text="@string/tab_messages"/>
 
@@ -140,12 +142,13 @@
         <RadioButton
             android:id="@+id/details_tab_history"
             style="@style/statusText"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/tab"
             android:button="@color/white"
             android:checked="false"
+            android:gravity="center_horizontal"
             android:tag="details_log_content"
             android:text="@string/tab_log"/>
     </RadioGroup>

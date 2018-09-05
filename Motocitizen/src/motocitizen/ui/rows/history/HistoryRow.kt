@@ -8,6 +8,7 @@ import motocitizen.content.history.History
 import motocitizen.user.User
 import motocitizen.utils.dateTimeString
 import motocitizen.utils.name
+import org.jetbrains.anko.leftPadding
 import org.jetbrains.anko.textView
 
 class HistoryRow : LinearLayout {
@@ -22,8 +23,8 @@ class HistoryRow : LinearLayout {
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         textView(history.owner.name()) { if (history.owner == User.id) setBackgroundColor(Color.DKGRAY) }
-        textView(history.action.text)
-        textView(history.time.dateTimeString())
+        textView(history.action.text) { leftPadding = 5 }
+        textView(history.time.dateTimeString()) { leftPadding = 5 }
     }
 
     constructor(context: Context) : super(context)
