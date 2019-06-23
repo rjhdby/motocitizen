@@ -39,7 +39,7 @@ abstract class Row protected constructor(context: Context, val accident: Acciden
     private fun messagesText(accident: Accident): Spanned {
         val text = formatMessagesText(accident)
         return if (Build.VERSION.SDK_INT >= 24) {
-            Html.fromHtml(text, android.text.Html.TO_HTML_PARAGRAPH_LINES_CONSECUTIVE)
+            Html.fromHtml(text, Html.TO_HTML_PARAGRAPH_LINES_CONSECUTIVE)
         } else {
             @Suppress("DEPRECATION")
             Html.fromHtml(text)

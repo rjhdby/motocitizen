@@ -9,7 +9,6 @@ import android.preference.PreferenceManager
 import android.widget.Toast
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.VKTokenExpiredHandler
-import com.vk.api.sdk.auth.VKAccessToken
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.migration.Migration
 import motocitizen.notifications.Messaging
@@ -21,7 +20,7 @@ class MyApp : Application() {
     /**
      * AccessToken invalidated. Слушатель токена
      */
-    private var vkAccessTokenHandler =object: VKTokenExpiredHandler {
+    private var vkAccessTokenHandler = object : VKTokenExpiredHandler {
         override fun onTokenExpired() {
             Toast.makeText(applicationContext, "Авторизация слетела, авторизируйтесь снова", Toast.LENGTH_LONG).show()
             val intent = Intent(applicationContext, AuthActivity::class.java)

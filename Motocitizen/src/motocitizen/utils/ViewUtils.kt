@@ -4,7 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 
 fun <T : View> T.lparamsMatchParent(): T {
-    val layoutParams = ViewGroup.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.MATCH_PARENT)
+    val layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
     this@lparamsMatchParent.layoutParams = layoutParams
     return this
 }

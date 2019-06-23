@@ -25,7 +25,7 @@ class EmptyAddressDialog(context: Activity, address: String, successCallback: (S
                     }
                 }
             }
-            positiveButton("Готово") { _ -> successCallback(text) }
+            positiveButton("Готово") { successCallback(text) }
             negativeButton("Отмена") { dialog -> dialog.cancel() }
         }.show()
     }

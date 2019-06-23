@@ -1,7 +1,6 @@
 package motocitizen.ui.fragments
 
 import android.app.Activity
-import android.app.Fragment
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -22,7 +21,7 @@ import motocitizen.utils.hide
 import motocitizen.utils.show
 import org.jetbrains.anko.runOnUiThread
 
-class DetailVolunteersFragment() : Fragment() {
+class DetailVolunteersFragment : FragmentForAccident() {
     companion object {
         private const val DIALOG_ON_WAY_CONFIRM = 1
         private const val DIALOG_CANCEL_ON_WAY_CONFIRM = 2
@@ -37,9 +36,10 @@ class DetailVolunteersFragment() : Fragment() {
 
     private lateinit var accident: Accident
 
-    constructor(accident: Accident) : this() {
+    override fun setAccident(accident: Accident) {
         this.accident = accident
     }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle?): View? {
         rootView = inflater.inflate(R.layout.fragment_detail_volunteers, container, false)
@@ -89,15 +89,18 @@ class DetailVolunteersFragment() : Fragment() {
     private fun canShowDisabled() = accident.isActive() && accident == Content.inPlace
 
     private fun showOnWayDialog() {
-        val onWayConfirm = ConfirmDialog(activity.getString(R.string.title_dialog_onway_confirm))
-        onWayConfirm.setTargetFragment(this, DIALOG_ON_WAY_CONFIRM)
-        onWayConfirm.show(fragmentManager, "dialog")
+        val dialog = ConfirmDialog()
+        dialog.title = activity.getString(R.string.title_dialog_onway_confirm)
+        dialog.setTargetFragment(this, DIALOG_ON_WAY_CONFIRM)
+        dialog.show(fragmentManager, "dialog")
+
     }
 
     private fun showCancelDialog() {
-        val cancelOnWayConfirm = ConfirmDialog(activity.getString(R.string.title_dialog_cancel_onway_confirm))
-        cancelOnWayConfirm.setTargetFragment(this, DIALOG_CANCEL_ON_WAY_CONFIRM)
-        cancelOnWayConfirm.show(fragmentManager, "dialog")
+        val dialog = ConfirmDialog()
+        dialog.title = activity.getString(R.string.title_dialog_cancel_onway_confirm)
+        dialog.setTargetFragment(this, DIALOG_CANCEL_ON_WAY_CONFIRM)
+        dialog.show(fragmentManager, "dialog")
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {

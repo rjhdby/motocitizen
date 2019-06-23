@@ -1,6 +1,5 @@
 package motocitizen.ui.fragments
 
-import android.app.Fragment
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -27,7 +26,7 @@ import motocitizen.utils.show
 import motocitizen.utils.showToast
 import motocitizen.utils.tryOrDo
 
-class DetailMessagesFragment() : Fragment() {
+class DetailMessagesFragment : FragmentForAccident() {
     private lateinit var rootView: View
     private lateinit var scrollView: ScrollView
     private lateinit var messagesView: ViewGroup
@@ -36,7 +35,7 @@ class DetailMessagesFragment() : Fragment() {
     private lateinit var inputField: EditText
     private lateinit var accident: Accident
 
-    constructor(accident: Accident) : this() {
+    override fun setAccident(accident: Accident) {
         this.accident = accident
     }
 

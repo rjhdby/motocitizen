@@ -45,9 +45,11 @@ class AccidentDetailsActivity : AppCompatActivity() {
         }
 
         fun fragment(accident: Accident): Fragment = when (this) {
-            MESSAGE_TAB   -> DetailMessagesFragment(accident)
-            HISTORY_TAB   -> DetailHistoryFragment(accident)
-            VOLUNTEER_TAB -> DetailVolunteersFragment(accident)
+            MESSAGE_TAB   -> DetailMessagesFragment()
+            HISTORY_TAB   -> DetailHistoryFragment()
+            VOLUNTEER_TAB -> DetailVolunteersFragment()
+        }.apply {
+            setAccident(accident)
         }
     }
 

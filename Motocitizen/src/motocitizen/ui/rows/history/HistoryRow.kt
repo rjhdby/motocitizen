@@ -17,7 +17,7 @@ class HistoryRow : LinearLayout {
     constructor(context: Context, history: History) : super(context) {
         this.history = history
         layoutParams = generateDefaultLayoutParams()
-        orientation = LinearLayout.HORIZONTAL
+        orientation = HORIZONTAL
     }
 
     override fun onAttachedToWindow() {

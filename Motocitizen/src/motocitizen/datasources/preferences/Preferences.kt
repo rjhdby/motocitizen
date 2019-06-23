@@ -100,7 +100,7 @@ object Preferences {
     }
 
     init {
-        Stored.values()
+        values()
                 .filterNot { preferences.contains(it.key) }
                 .forEach { setValue(it, it.default) }
     }
@@ -170,7 +170,7 @@ object Preferences {
                 }
 
         override fun setValue(thisRef: Preferences, property: KProperty<*>, value: T) {
-            Preferences.setValue(stored, value as Any)
+            setValue(stored, value as Any)
         }
     }
 }

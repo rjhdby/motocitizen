@@ -1,6 +1,5 @@
 package motocitizen.notifications
 
-import android.content.Intent
 import android.support.v4.app.NotificationManagerCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage

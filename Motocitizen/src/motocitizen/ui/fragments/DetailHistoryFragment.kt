@@ -1,6 +1,5 @@
 package motocitizen.ui.fragments
 
-import android.app.Fragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +11,7 @@ import motocitizen.main.R
 import motocitizen.ui.activity.AccidentDetailsActivity.Companion.ACCIDENT_ID_KEY
 import motocitizen.ui.rows.history.HistoryRow
 
-class DetailHistoryFragment() : Fragment() {
+class DetailHistoryFragment : FragmentForAccident() {
     companion object {
         private const val ROOT_LAYOUT = R.layout.fragment_detail_history
         private const val CONTENT_VIEW = R.id.details_log_content
@@ -22,7 +21,7 @@ class DetailHistoryFragment() : Fragment() {
     private val logContent: LinearLayout by lazy { rootView.findViewById(CONTENT_VIEW) as LinearLayout }
     private lateinit var accident: Accident
 
-    constructor(accident: Accident) : this() {
+    override fun setAccident(accident: Accident) {
         this.accident = accident
     }
 
