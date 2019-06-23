@@ -10,7 +10,7 @@ import motocitizen.ui.changelog.ChangeLog
 import motocitizen.utils.goTo
 import motocitizen.utils.lparamsMatchParent
 import org.jetbrains.anko.*
-import org.jetbrains.anko.sdk25.coroutines.onClick
+import org.jetbrains.anko.sdk27.coroutines.onClick
 
 class AboutActivity : AppCompatActivity() {
     val layout by lazy {
