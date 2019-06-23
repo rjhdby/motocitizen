@@ -4,13 +4,13 @@ repositories {
     google()
 }
 buildscript {
-    ext.kotlin_version = '1.2.41'
-    ext.anko_version = '0.10.1'
-    ext.google_services = '15.0.1'
-    ext.firebase = '15.0.2'
-    ext.google_support = '27.1.1'
-    ext.okhttp = '3.7.0'
-    ext.coroutines_version = '0.19.1'
+    ext.kotlin_version = "1.2.41"
+    ext.anko_version = "0.10.1"
+    ext.google_services = "15.0.1"
+    ext.firebase = "15.0.2"
+    ext.google_support = "27.1.1"
+    ext.okhttp = "3.7.0"
+    ext.coroutines_version = "0.19.1"
     repositories {
         mavenCentral()
         jcenter()
@@ -18,29 +18,29 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.android.tools.build:gradle:3.1.2'
-        classpath 'com.google.gms:google-services:3.0.0'
+        classpath "com.android.tools.build:gradle:3.1.2"
+        classpath "com.google.gms:google-services:3.0.0"
     }
 }
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
+apply plugin: "com.android.application"
+apply plugin: "kotlin-android"
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    buildToolsVersion "27.0.3"
 
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
             useProguard true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
         debug {
-            minifyEnabled true
-            shrinkResources true
-            useProguard true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            minifyEnabled true
+//            shrinkResources true
+//            useProguard true
+//            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
     aaptOptions {
@@ -56,32 +56,32 @@ android {
     }
     sourceSets {
         main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['Motocitizen/src', 'Motocitizen/assets']
-            resources.srcDirs = ['Motocitizen/src', 'Motocitizen/assets']
-            aidl.srcDirs = ['Motocitizen/src', 'Motocitizen/assets']
-            renderscript.srcDirs = ['Motocitizen/src', 'Motocitizen/assets']
-            res.srcDirs = ['Motocitizen/res', 'Motocitizen/res/tablerows']
-            assets.srcDirs = ['Motocitizen/assets']
+            manifest.srcFile "AndroidManifest.xml"
+            java.srcDirs = ["Motocitizen/src", "Motocitizen/assets"]
+            resources.srcDirs = ["Motocitizen/src", "Motocitizen/assets"]
+            aidl.srcDirs = ["Motocitizen/src", "Motocitizen/assets"]
+            renderscript.srcDirs = ["Motocitizen/src", "Motocitizen/assets"]
+            res.srcDirs = ["Motocitizen/res", "Motocitizen/res/tablerows"]
+            assets.srcDirs = ["Motocitizen/assets"]
         }
-        debug.setRoot('build-types/debug')
-        release.setRoot('build-types/release')
+        debug.setRoot("build-types/debug")
+        release.setRoot("build-types/release")
     }
     packagingOptions {
-        exclude 'META-INF/DEPENDENCIES'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/license.txt'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/NOTICE.txt'
-        exclude 'META-INF/notice.txt'
-        exclude 'META-INF/ASL2.0'
-        exclude 'META-INF/motocitizen_debug.kotlin_module'
+        exclude "META-INF/DEPENDENCIES"
+        exclude "META-INF/LICENSE"
+        exclude "META-INF/LICENSE.txt"
+        exclude "META-INF/license.txt"
+        exclude "META-INF/NOTICE"
+        exclude "META-INF/NOTICE.txt"
+        exclude "META-INF/notice.txt"
+        exclude "META-INF/ASL2.0"
+        exclude "META-INF/motocitizen_debug.kotlin_module"
     }
 }
 
 dependencies {
-    compile project(':vksdk_library')
+//    compile project(":vksdk_library")
     compile "com.google.android.gms:play-services-location:$google_services"
     compile "com.google.android.gms:play-services-maps:$google_services"
     compile "com.google.firebase:firebase-core:$firebase"
@@ -94,9 +94,10 @@ dependencies {
     compile "org.jetbrains.anko:anko-commons:$anko_version"
     compile "com.squareup.okhttp3:okhttp:$okhttp"
     compile "com.squareup.okhttp3:logging-interceptor:$okhttp"
-    compile 'com.karumi:dexter:4.1.0'
+    compile "com.karumi:dexter:4.1.0"
+    compile "com.vk:androidsdk:1.6.5"
 }
-apply plugin: 'com.google.gms.google-services'
+apply plugin: "com.google.gms.google-services"
 kotlin {
     experimental {
         coroutines "enable"

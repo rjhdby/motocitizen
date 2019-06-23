@@ -39,6 +39,8 @@
             </intent-filter>
         </service>
 
+        <meta-data android:name="com.vk.sdk.AppId" android:value="6355438"/>
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_launcher"/>
