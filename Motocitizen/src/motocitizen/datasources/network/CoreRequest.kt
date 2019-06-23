@@ -26,7 +26,7 @@ abstract class CoreRequest(val callback: (ApiResponse) -> Unit = {}) {
         override fun onFailure(call: Call, e: IOException) = callback(ApiResponse(error))
 
         @Throws(IOException::class)
-        override fun onResponse(call: Call, response: Response) = callback(response(response.body().string()))
+        override fun onResponse(call: Call, response: Response) = callback(response(response.body()?.string()?:"")) //todo
     }
 
     abstract fun response(string: String): ApiResponse

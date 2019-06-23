@@ -10,11 +10,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.vk.sdk.VKAccessToken
-import com.vk.sdk.VKCallback
-import com.vk.sdk.VKScope
-import com.vk.sdk.VKSdk
-import com.vk.sdk.api.VKError
+import com.vk.api.sdk.VK
+import com.vk.api.sdk.auth.VKAccessToken
+import com.vk.api.sdk.auth.VKAuthCallback
+import com.vk.api.sdk.auth.VKScope
 import motocitizen.MyApp
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.main.R
@@ -42,17 +41,17 @@ class AuthActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (!VKSdk.onActivityResult(requestCode, resultCode, data, vkCallback())) {
+        if (data == null || !VK.onActivityResult(requestCode, resultCode, data, vkCallback())) {
             super.onActivityResult(requestCode, resultCode, data)
         }
     }
 
-    private fun vkCallback() = object : VKCallback<VKAccessToken> {
-        override fun onResult(res: VKAccessToken) {
+    private fun vkCallback() = object : VKAuthCallback {
+        override fun onLogin(token: VKAccessToken) {
             Auth.auth(Auth.AuthType.VK) { toMainScreen() }
         }
 
-        override fun onError(error: VKError) {
+        override fun onLoginFailed(errorCode: Int) {
             showToast("Произошла ошибка авторизации (например, пользователь запретил авторизацию)")
         }
     }
@@ -63,18 +62,18 @@ class AuthActivity : AppCompatActivity() {
 //        bindViews()
         setUpListeners()
 
-        vkWakeUpSession()
+//        vkWakeUpSession()
 
         initializeScreen()
     }
 
     private fun setUpListeners() {
-        loginVK.setOnClickListener { VKSdk.login(this@AuthActivity, VKScope.PAGES) }
+        loginVK.setOnClickListener { VK.login(this@AuthActivity, listOf(VKScope.PAGES)) }
         loginBtn.setOnClickListener { loginButtonPressed() }
         loginField.afterTextChanged { enableLoginBtn() }
         passwordField.afterTextChanged { enableLoginBtn() }
         anonymous.setOnClickListener { anonymousLogon() }
-        forum.setOnClickListener { forumLoginForm.visibility = View.VISIBLE; layout.setVerticalGravity(Gravity.TOP)}
+        forum.setOnClickListener { forumLoginForm.visibility = View.VISIBLE; layout.setVerticalGravity(Gravity.TOP) }
     }
 
     private fun loginButtonPressed() = when {
@@ -90,16 +89,16 @@ class AuthActivity : AppCompatActivity() {
     private val isOnline: Boolean
         get() = MyApp.isOnline(this)
 
-    private fun vkWakeUpSession() {
-        VKSdk.wakeUpSession(this, object : VKCallback<VKSdk.LoginState> {
-            override fun onResult(res: VKSdk.LoginState) = when (res) {
-                VKSdk.LoginState.LoggedIn -> toMainScreen()
-                else                      -> Unit
-            }
-
-            override fun onError(error: VKError) {}
-        })
-    }
+//    private fun vkWakeUpSession() {
+//        VK.wakeUpSession(this, object : VKCallback<VKSdk.LoginState> {
+//            override fun onResult(res: VK.LoginState) = when (res) {
+//                VK.LoginState.LoggedIn -> toMainScreen()
+//                else                      -> Unit
+//            }
+//
+//            override fun onError(error: VKError) {}
+//        })
+//    }
 
     private fun initializeScreen() {
         loginField.setText(Preferences.login)

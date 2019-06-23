@@ -1,6 +1,6 @@
 package motocitizen.content
 
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.runBlocking
 import motocitizen.content.accident.Accident
 import motocitizen.content.accident.AccidentFactory
 import motocitizen.content.history.History

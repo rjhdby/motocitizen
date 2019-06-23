@@ -1,9 +1,9 @@
 package motocitizen.utils
 
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 
 fun <A, B> Iterable<A>.asyncMap(f: suspend (A) -> B): List<B> = runBlocking {
-    map { async(CommonPool) { f(it) } }.map { it.await() }
+    map { async(Dispatchers.Default) { f(it) } }.map { it.await() }
 }

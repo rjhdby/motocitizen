@@ -11,8 +11,9 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.Toast
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import motocitizen.MyApp
 import motocitizen.content.Content
 import motocitizen.datasources.preferences.Preferences
@@ -93,7 +94,7 @@ class MainScreenActivity : AppCompatActivity() {
         mapContainer.animate().translationX((if (target == MAP) 0 else displayWidth() * 2).toFloat())
     }
 
-    private fun redraw() = async {
+    private fun redraw() = GlobalScope.async {
         val newList = Content.getVisibleReversed().asyncMap { AccidentRowFactory.make(this@MainScreenActivity, it) }
 
         runOnUiThread {
@@ -103,12 +104,12 @@ class MainScreenActivity : AppCompatActivity() {
         }
     }
 
-    private fun setUpFeaturesAccessibility() = async {
+    private fun setUpFeaturesAccessibility() = GlobalScope.async {
         createAccButton.apply { if (!User.isReadOnly()) show() else hide() }
         dialButton.isEnabled = packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)
     }
 
-    private fun setUpListeners() = async {
+    private fun setUpListeners() = GlobalScope.async {
         createAccButton.setOnClickListener { goTo(Screens.CREATE) }
         toAccListButton.setOnClickListener { setFrame(LIST) }
         toMapButton.setOnClickListener { setFrame(MAP) }
@@ -116,7 +117,7 @@ class MainScreenActivity : AppCompatActivity() {
         bounceScrollView.setOverScrollListener { requestAccidents() }
     }
 
-    private fun subscribe() = async {
+    private fun subscribe() = GlobalScope.async {
         SubscribeManager.subscribe(SubscribeManager.Event.LOCATION_UPDATED, SUBSCRIBE_TAG) { updateStatusBar() }
         SubscribeManager.subscribe(SubscribeManager.Event.ACCIDENTS_UPDATED, SUBSCRIBE_TAG) { redraw() }
     }

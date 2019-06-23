@@ -7,9 +7,9 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.preference.PreferenceManager
 import android.widget.Toast
-import com.vk.sdk.VKAccessToken
-import com.vk.sdk.VKAccessTokenTracker
-import com.vk.sdk.VKSdk
+import com.vk.api.sdk.VK
+import com.vk.api.sdk.VKTokenExpiredHandler
+import com.vk.api.sdk.auth.VKAccessToken
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.migration.Migration
 import motocitizen.notifications.Messaging
@@ -21,17 +21,24 @@ class MyApp : Application() {
     /**
      * AccessToken invalidated. Слушатель токена
      */
-    private var vkAccessTokenTracker: VKAccessTokenTracker = object : VKAccessTokenTracker() {
-        override fun onVKAccessTokenChanged(oldToken: VKAccessToken?, newToken: VKAccessToken?) {
-            if (newToken == null) {
-                Toast.makeText(applicationContext, "Авторизация слетела, авторизируйтесь снова", Toast.LENGTH_LONG).show()
-                val intent = Intent(applicationContext, AuthActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                startActivity(intent)
-            } else {
-                Preferences.vkToken = newToken.accessToken
-            }
+    private var vkAccessTokenHandler =object: VKTokenExpiredHandler {
+        override fun onTokenExpired() {
+            Toast.makeText(applicationContext, "Авторизация слетела, авторизируйтесь снова", Toast.LENGTH_LONG).show()
+            val intent = Intent(applicationContext, AuthActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
         }
+
+//        override fun onVKAccessTokenChanged(oldToken: VKAccessToken?, newToken: VKAccessToken?) {
+//            if (newToken == null) {
+//                Toast.makeText(applicationContext, "Авторизация слетела, авторизируйтесь снова", Toast.LENGTH_LONG).show()
+//                val intent = Intent(applicationContext, AuthActivity::class.java)
+//                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+//                startActivity(intent)
+//            } else {
+//                Preferences.vkToken = newToken.accessToken
+//            }
+//        }
     }
 
     override fun onCreate() {
@@ -44,8 +51,9 @@ class MyApp : Application() {
         Messaging.subscribe()
         if (Preferences.isTester) Messaging.subscribeToTest()
 
-        vkAccessTokenTracker.startTracking()
-        VKSdk.initialize(this)
+//        vkAccessTokenTracker.startTracking()
+        VK.initialize(this)
+        VK.addTokenExpiredHandler(vkAccessTokenHandler)
     }
 
     companion object {

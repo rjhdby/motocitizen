@@ -1,6 +1,6 @@
 package motocitizen.user
 
-import com.vk.sdk.VKSdk
+import com.vk.api.sdk.VK
 import motocitizen.datasources.network.ApiResponse
 import motocitizen.datasources.network.requests.AuthRequest
 import motocitizen.datasources.preferences.Preferences
@@ -62,7 +62,7 @@ object Auth {
     }
 
     fun logout() {
-        VKSdk.logout()
+        VK.logout()
         Preferences.run {
             login = ""
             password = ""
