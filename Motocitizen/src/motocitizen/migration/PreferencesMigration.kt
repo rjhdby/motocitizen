@@ -9,6 +9,7 @@ import motocitizen.utils.tryOrPrintStack
 object PreferencesMigration : MigrationInterface {
     lateinit var preferences: SharedPreferences
     override fun process(context: Context) {
+        if (MyApp.oldVersion == 0) return
         preferences = PreferenceManager.getDefaultSharedPreferences(context)
         if (MyApp.oldVersion < 996) {
             migrate933to996()

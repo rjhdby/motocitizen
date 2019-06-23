@@ -113,12 +113,12 @@ class DetailVolunteersFragment : FragmentForAccident() {
 
     private fun sendOnWay() {
         Preferences.onWay = accident.id
-        OnWayRequest(accident.id, { setupAccess() }).call() //todo
+        OnWayRequest(accident.id) { setupAccess() }.call() //todo
     }
 
     private fun sendCancelOnWay() {
         Preferences.onWay = 0
-        CancelOnWayRequest(accident.id, { setupAccess() }).call() //todo
+        CancelOnWayRequest(accident.id) { setupAccess() }.call() //todo
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
