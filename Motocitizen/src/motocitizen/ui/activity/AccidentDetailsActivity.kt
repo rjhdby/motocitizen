@@ -1,6 +1,7 @@
 package motocitizen.ui.activity
 
 import android.app.Fragment
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
@@ -165,6 +166,15 @@ class AccidentDetailsActivity : AppCompatActivity() {
     }
 
     fun toMap() = goTo(Screens.MAIN, mapOf("toMap" to accident.id))
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent != null && intent.hasExtra(ACCIDENT_ID_KEY)) {
+            Content[intent.getIntExtra(ACCIDENT_ID_KEY, 0)]?.let {
+                accident = it
+            }
+        }
+    }
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)

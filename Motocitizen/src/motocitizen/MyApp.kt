@@ -27,17 +27,6 @@ class MyApp : Application() {
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(intent)
         }
-
-//        override fun onVKAccessTokenChanged(oldToken: VKAccessToken?, newToken: VKAccessToken?) {
-//            if (newToken == null) {
-//                Toast.makeText(applicationContext, "Авторизация слетела, авторизируйтесь снова", Toast.LENGTH_LONG).show()
-//                val intent = Intent(applicationContext, AuthActivity::class.java)
-//                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-//                startActivity(intent)
-//            } else {
-//                Preferences.vkToken = newToken.accessToken
-//            }
-//        }
     }
 
     override fun onCreate() {
@@ -50,7 +39,6 @@ class MyApp : Application() {
         Messaging.subscribe()
         if (Preferences.isTester) Messaging.subscribeToTest()
 
-//        vkAccessTokenTracker.startTracking()
         VK.initialize(this)
         VK.addTokenExpiredHandler(vkAccessTokenHandler)
     }
