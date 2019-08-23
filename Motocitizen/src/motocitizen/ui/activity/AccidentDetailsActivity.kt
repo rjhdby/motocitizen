@@ -97,7 +97,8 @@ class AccidentDetailsActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        findViewById<View>(GENERAL_INFORMATION_VIEW).setOnLongClickListener(this@AccidentDetailsActivity::generalPopUpListener)
+        findViewById<View>(GENERAL_INFORMATION_VIEW)
+                .setOnLongClickListener(this@AccidentDetailsActivity::generalPopUpListener)
         init()
     }
 
@@ -170,8 +171,11 @@ class AccidentDetailsActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         if (intent != null && intent.hasExtra(ACCIDENT_ID_KEY)) {
-            Content[intent.getIntExtra(ACCIDENT_ID_KEY, 0)]?.let {
-                accident = it
+            val cached = Content[intent.getIntExtra(ACCIDENT_ID_KEY, 0)]
+            if (cached == null) {
+                goTo(Screens.MAIN)
+            } else {
+                accident = cached
             }
         }
     }

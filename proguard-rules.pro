@@ -1,6 +1,8 @@
 # retrolambda
 -dontwarn java.lang.invoke.*
 
+-ignorewarnings
+
 # OkHttp
 -keepattributes Signature
 -keepattributes *Annotation*

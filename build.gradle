@@ -19,7 +19,7 @@ buildscript {
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "com.android.tools.build:gradle:3.1.2"
+        classpath 'com.android.tools.build:gradle:3.4.2'
         classpath "com.google.gms:google-services:3.0.0"
     }
 }
@@ -30,6 +30,10 @@ android {
     compileSdkVersion 27
     buildToolsVersion "29.0.0"
 
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
     buildTypes {
         release {
             minifyEnabled true
@@ -54,6 +58,8 @@ android {
 
     defaultConfig {
         applicationId "motocitizen.main"
+        minSdkVersion 19
+        targetSdkVersion 27
     }
     sourceSets {
         main {
