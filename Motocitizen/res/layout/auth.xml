@@ -20,6 +20,13 @@
             android:text="Войти через Вконтакт"/>
 
         <Button
+            android:id="@+id/google"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Войти через аккаунт Google (экспериментально)"/>
+
+        <Button
             android:id="@+id/anonymous"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"

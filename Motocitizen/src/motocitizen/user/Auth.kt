@@ -12,7 +12,8 @@ object Auth {
         NONE("none"),
         ANON("anon"),
         FORUM("forum"),
-        VK("vk");
+        VK("vk"),
+        GOOGLE("google");
 
         companion object {
             fun current(): AuthType = values().firstOrNull { it.value == Preferences.authType } ?: NONE
@@ -22,15 +23,15 @@ object Auth {
     fun auth(type: AuthType, callback: () -> Unit = {}) {
         Preferences.authType = type.value
         when (type) {
-            AuthType.NONE               -> {
+            AuthType.NONE                                -> {
                 logout()
                 callback()
             }
-            AuthType.ANON               -> {
+            AuthType.ANON                                -> {
                 authAsAnon()
                 callback()
             }
-            AuthType.FORUM, AuthType.VK -> AuthRequest { authRequestCallback(it, callback) }.call()
+            AuthType.GOOGLE, AuthType.FORUM, AuthType.VK -> AuthRequest { authRequestCallback(it, callback) }.call()
         }
     }
 
@@ -42,7 +43,9 @@ object Auth {
         callback()
     }
 
-    fun isForumAuth() = AuthType.current() == Auth.AuthType.FORUM
+    fun isForumAuth() = AuthType.current() == AuthType.FORUM
+
+    fun isGoogleAuth() = AuthType.current() == AuthType.GOOGLE
 
     private fun parseAuthResult(response: ApiResponse) {
         User.isAuthorized = false

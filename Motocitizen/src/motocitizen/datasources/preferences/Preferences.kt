@@ -56,6 +56,10 @@ object Preferences {
 
     var vkToken by PreferenceDelegate<String>(VK_TOKEN)
 
+    var googleAccount by PreferenceDelegate<String>(GOOGLE_ACCOUNT)
+
+    var googleName by PreferenceDelegate<String>(GOOGLE_NAME)
+
     init {
         initSound(MyApp.context)
         val oldVersion = appVersion
@@ -96,7 +100,9 @@ object Preferences {
         PASSWORD("mc.password", ""),
         IS_TESTER("tester", DEFAULT_TESTER),
         AUTH_TYPE("authType", DEFAULT_AUTH_TYPE),
-        VK_TOKEN("vkToken", "");
+        VK_TOKEN("vkToken", ""),
+        GOOGLE_ACCOUNT("googleAccount", ""),
+        GOOGLE_NAME("googleName", "");
     }
 
     init {

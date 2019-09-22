@@ -106,8 +106,10 @@ class MainScreenActivity : AppCompatActivity() {
     }
 
     private fun setUpFeaturesAccessibility() = GlobalScope.launch {
-        createAccButton.apply { if (!User.isReadOnly()) show() else hide() }
-        dialButton.isEnabled = packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)
+        runOnUiThread {
+            createAccButton.apply { if (!User.isReadOnly()) show() else hide() }
+            dialButton.isEnabled = packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)
+        }
     }
 
     private fun setUpListeners() = GlobalScope.launch {

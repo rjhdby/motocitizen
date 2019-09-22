@@ -35,9 +35,15 @@ object AccidentsController {
     private fun requestList(callback: (ApiResponse) -> Unit) = AccidentListRequest { listRequestCallback(it, callback) }.call()
 
     private inline fun listRequestCallback(response: ApiResponse, callback: (ApiResponse) -> Unit) {
-        parseGetListResponse(response)
-        lastUpdate = Date().seconds()
-        callback(response)
+        try {
+            parseGetListResponse(response)
+            lastUpdate = Date().seconds()
+            callback(response)
+        } catch (e: RuntimeException) {  // fucking kludge
+            parseGetListResponse(response)
+            lastUpdate = Date().seconds()
+            callback(response)
+        }
     }
 
     fun requestDetailsForAccident(accident: Accident, callback: (ApiResponse) -> Unit) = DetailsRequest(accident.id) {
@@ -52,10 +58,10 @@ object AccidentsController {
         attachHistoryToAccident(accident, result.resultObject.getJSONArray("h"))
     }
 
-    fun requestSingleAccident(id: Int, callback: (ApiResponse) -> Unit) = AccidentRequest(id, {
+    fun requestSingleAccident(id: Int, callback: (ApiResponse) -> Unit) = AccidentRequest(id) {
         parseGetListResponse(it)
         callback(it)
-    }).call()
+    }.call()
 
     private fun parseGetListResponse(apiResponse: ApiResponse) = tryOrPrintStack {
         Content.addVolunteers(apiResponse.resultObject.getJSONObject("u"))
