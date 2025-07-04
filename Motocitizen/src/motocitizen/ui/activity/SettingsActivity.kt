@@ -1,30 +1,36 @@
 package motocitizen.ui.activity
 
-import android.app.Activity
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import motocitizen.main.R
 import motocitizen.ui.fragments.SettingsFragment
-import org.jetbrains.anko.frameLayout
 
-class SettingsActivity : Activity() {
+class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(frameLayout {})
+        setContentView(FrameLayout(this))
         if (savedInstanceState == null) {
-            fragmentManager.beginTransaction().replace(android.R.id.content, SettingsFragment()).commit()
+            supportFragmentManager.beginTransaction()
+                .replace(android.R.id.content, SettingsFragment())
+                .commit()
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean = false
 
     class PlaceholderFragment : Fragment() {
-        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-                inflater.inflate(R.layout.fragment_settings, container, false)
+        override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+        ): View? =
+            inflater.inflate(R.layout.fragment_settings, container, false)
     }
 }

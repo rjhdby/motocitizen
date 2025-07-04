@@ -1,12 +1,12 @@
 package motocitizen.ui.activity
 
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
 import android.view.KeyEvent
 import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.TextView
+import androidx.fragment.app.FragmentActivity
 import com.google.android.gms.maps.model.LatLng
 import motocitizen.content.accident.AccidentBuilder
 import motocitizen.datasources.network.ApiResponse
@@ -27,7 +27,7 @@ import motocitizen.utils.showToast
 
 class CreateAccActivity : FragmentActivity() {
     companion object {
-        private const val ROOT_LAYOUT = R.layout.create_point
+        private val ROOT_LAYOUT = R.layout.create_point
     }
 
     private val typeFrame: FrameInterface by lazy { TypeFrame(this, this::selectTypeCallback) }
@@ -106,7 +106,10 @@ class CreateAccActivity : FragmentActivity() {
     private fun refreshDescription() {
         val medicine = if (builder.medicine === Medicine.UNKNOWN) "" else ". ${builder.medicine.text}"
 
-        whatField.text = "${builder.type.text}$medicine"
+        whatField.text = buildString {
+            append(builder.type.text)
+            append(medicine)
+        }
         whoField.text = Preferences.login
         whereField.text = builder.location.address
         whenField.text = builder.time.dateTimeString()

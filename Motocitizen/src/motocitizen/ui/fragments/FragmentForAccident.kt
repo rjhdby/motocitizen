@@ -1,6 +1,6 @@
 package motocitizen.ui.fragments
 
-import android.app.Fragment
+import androidx.fragment.app.Fragment
 import motocitizen.content.accident.Accident
 
 abstract class FragmentForAccident : Fragment() {

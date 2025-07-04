@@ -1,7 +1,7 @@
 package motocitizen.ui.frames.create
 
-import android.support.v4.app.FragmentActivity
 import android.view.View
+import androidx.fragment.app.FragmentActivity
 import com.google.android.gms.maps.model.LatLng
 import motocitizen.geo.maps.CreateAccidentMap
 import motocitizen.main.R

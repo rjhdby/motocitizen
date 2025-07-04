@@ -1,9 +1,9 @@
 package motocitizen.geo.maps
 
-import android.support.v4.app.FragmentActivity
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import androidx.fragment.app.FragmentActivity
 import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import motocitizen.geo.geocoder.MyGeoCoder
@@ -30,9 +30,9 @@ class CreateAccidentMap(fragment: FragmentActivity) : MapManager(fragment, R.id.
 
     override fun update() = addContent { }
 
-    private val searchEditText = fragment.findViewById(R.id.SearchEditText) as EditText
-    private val mcCreateFineAddressConfirm = fragment.findViewById(R.id.ADDRESS) as Button
-    private val searchButton = fragment.findViewById(R.id.SEARCH) as ImageButton
+    private val searchEditText: EditText = fragment.findViewById(R.id.SearchEditText)
+    private val mcCreateFineAddressConfirm: Button = fragment.findViewById(R.id.ADDRESS)
+    private val searchButton: ImageButton = fragment.findViewById(R.id.SEARCH)
 
     private val initialLocation = MyLocationManager.getLocation()
 

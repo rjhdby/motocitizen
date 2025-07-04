@@ -1,7 +1,7 @@
 package motocitizen.ui.menus
 
 import android.content.Context
-import android.support.v7.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatButton
 
 class ContextMenuItem(context: Context, val name: String, val callback: () -> Unit) : AppCompatButton(context) {
     init {

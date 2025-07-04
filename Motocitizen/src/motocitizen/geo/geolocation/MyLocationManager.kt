@@ -26,8 +26,8 @@ object MyLocationManager {
     private const val ARRIVED_MAX_ACCURACY = 200
 
     private val locationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult?) {
-            locationListener(locationResult?.lastLocation ?: Preferences.savedLatLng.toLocation())
+        override fun onLocationResult(locationResult: LocationResult) {
+            locationListener(locationResult.lastLocation ?: Preferences.savedLatLng.toLocation())
         }
     }
 

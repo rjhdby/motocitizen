@@ -26,7 +26,7 @@ object ChangeLog {
 
     fun show(context: Context) {
         if (!MyApp.firstStart) return
-        ChangeLog.getDialog(context).show()
+        getDialog(context).show()
         MyApp.firstStart = false
     }
 
@@ -47,7 +47,7 @@ object ChangeLog {
 
             while (true) {
                 var line: String? = br.readLine() ?: break
-                line = line!!.trim { it <= ' ' }
+                line = line!!.trim()
                 val marker = if (line.isNotEmpty()) line[0] else '\u0000'
                 if (marker == '$') {
                     closeList()
@@ -59,11 +59,11 @@ object ChangeLog {
                     else -> closeList()
                 }
                 when (marker) {
-                    '%'      -> sb.append("<div class='title'>").append(line.substring(1).trim { it <= ' ' }).append("</div>\n") // line contains version title
-                    '_'      -> sb.append("<div class='subtitle'>").append(line.substring(1).trim { it <= ' ' }).append("</div>\n") // line contains version title
-                    '!'      -> sb.append("<div class='freetext'>").append(line.substring(1).trim { it <= ' ' }).append("</div>\n") // line contains free text
-                    '#', '*' -> sb.append("<li>").append(line.substring(1).trim { it <= ' ' }).append("</li>\n")// line contains numbered list item
-                    else     -> sb.append(line).appendln() // no special character: just use line as is
+                    '%'      -> sb.append("<div class='title'>").append(line.substring(1).trim()).append("</div>\n") // line contains version title
+                    '_'      -> sb.append("<div class='subtitle'>").append(line.substring(1).trim()).append("</div>\n") // line contains version title
+                    '!'      -> sb.append("<div class='freetext'>").append(line.substring(1).trim()).append("</div>\n") // line contains free text
+                    '#', '*' -> sb.append("<li>").append(line.substring(1).trim()).append("</li>\n")// line contains numbered list item
+                    else     -> sb.append(line).appendLine() // no special character: just use line as is
                 }
             }
             closeList()

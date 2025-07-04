@@ -1,7 +1,9 @@
 package motocitizen.ui.fragments
 
-import android.preference.Preference
-import android.preference.PreferenceFragment
+import android.os.Bundle
+import androidx.preference.CheckBoxPreference
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
 import motocitizen.content.AccidentsController
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.main.R
@@ -9,41 +11,75 @@ import motocitizen.notifications.Messaging
 import motocitizen.ui.Screens
 import motocitizen.user.Auth
 import motocitizen.user.User
-import motocitizen.utils.*
+import motocitizen.utils.EQUATOR
+import motocitizen.utils.goTo
+import motocitizen.utils.showToast
 
-class SettingsFragment : PreferenceFragment() {
-    companion object {
-        private const val PREFERENCES = R.xml.preferences
-    }
+class SettingsFragment : PreferenceFragmentCompat() {
+    private val PREFERENCES = R.xml.preferences
 
-    private val buttonAuth: Preference by lazy { findPreference(resources.getString(R.string.settings_auth_button)) }
-    private val buttonSound: Preference by lazy { findPreference(resources.getString(R.string.notification_sound)) }
-    private val notificationSoundPreference: Preference by lazy { findPreference(resources.getString(R.string.notification_sound)) }
-    private val authPreference: Preference by lazy { findPreference(resources.getString(R.string.settings_auth_button)) }
+    // Инициализация будет происходить после onCreatePreferences
+    private lateinit var buttonAuth: Preference
+    private lateinit var buttonSound: Preference
+    private lateinit var notificationSoundPreference: Preference
+    private lateinit var authPreference: Preference
 
-    private val notificationDistPreference by bindPreference("distanceShow")
-    private val notificationAlarmPreference by bindPreference("distanceAlarm")
-    private val showAcc by bindCheckBoxPreference("showAcc")
-    private val showBreak by bindCheckBoxPreference("showBreak")
-    private val showSteal by bindCheckBoxPreference("showSteal")
-    private val showOther by bindCheckBoxPreference("showOther")
-    private val hoursAgo by bindPreference("hoursAgo")
-    private val isTester by bindCheckBoxPreference("isTester")
-    private val maxNotifications by bindPreference("maxNotifications")
-    private val useVibration by bindPreference("useVibration")
+    private lateinit var notificationDistPreference: Preference
+    private lateinit var notificationAlarmPreference: Preference
+    private lateinit var showAcc: CheckBoxPreference
+    private lateinit var showBreak: CheckBoxPreference
+    private lateinit var showSteal: CheckBoxPreference
+    private lateinit var showOther: CheckBoxPreference
+    private lateinit var hoursAgo: Preference
+    private lateinit var isTester: CheckBoxPreference
+    private lateinit var maxNotifications: Preference
+    private lateinit var useVibration: Preference
 
     private var login = Preferences.login
 
-    override fun onResume() {
-        super.onResume()
-        preferenceScreen = null
-        addPreferencesFromResource(PREFERENCES)
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(PREFERENCES, rootKey)
+
+        // Привязка всех Preferences после инициализации
+        buttonAuth = requirePreference(R.string.settings_auth_button)
+        buttonSound = requirePreference(R.string.notification_sound)
+        notificationSoundPreference = requirePreference(R.string.notification_sound)
+        authPreference = requirePreference(R.string.settings_auth_button)
+
+        notificationDistPreference = requirePreference("distanceShow")
+        notificationAlarmPreference = requirePreference("distanceAlarm")
+        showAcc = requireCheckBox("showAcc")
+        showBreak = requireCheckBox("showBreak")
+        showSteal = requireCheckBox("showSteal")
+        showOther = requireCheckBox("showOther")
+        hoursAgo = requirePreference("hoursAgo")
+        isTester = requireCheckBox("isTester")
+        maxNotifications = requirePreference("maxNotifications")
+        useVibration = requirePreference("useVibration")
+
         setUpListeners()
         update()
     }
 
+    private fun <T : Preference> requirePreference(key: String): T =
+        findPreference(Preferences.getPreferenceName(key)) ?: error("Preference not found: $key")
+
+    private fun <T : Preference> requirePreference(resId: Int): T =
+        findPreference(getString(resId)) ?: error("Preference not found: ${getString(resId)}")
+
+    private fun requireCheckBox(key: String): CheckBoxPreference =
+        requirePreference(key)
+
+    private fun Preference.onChangeListener(callback: (Preference, Any) -> Boolean) {
+        onPreferenceChangeListener = Preference.OnPreferenceChangeListener(callback)
+    }
+
+    private fun Preference.onClickListener(callback: (Preference) -> Boolean) {
+        onPreferenceClickListener = Preference.OnPreferenceClickListener(callback)
+    }
+
     private fun update() {
-        authPreference.summary = if (login.isNotEmpty()) User.roleName + ": " + login else User.roleName
+        authPreference.summary = if (login.isNotEmpty()) "${User.roleName}: $login" else User.roleName
         maxNotifications.summary = Preferences.maxNotifications.toString()
         hoursAgo.summary = Preferences.hoursAgo.toString()
         notificationSoundPreference.summary = Preferences.soundTitle
@@ -66,44 +102,44 @@ class SettingsFragment : PreferenceFragment() {
         hoursAgo.onChangeListener(::hoursAgoListener)
         useVibration.onChangeListener { _, newValue -> vibrationListener(newValue) }
         isTester.onChangeListener(::isTesterListener)
-        arrayOf(showAcc, showBreak, showOther, showSteal)
-                .forEach { it.onChangeListener(::visibleListener) }
+
+        arrayOf(showAcc, showBreak, showOther, showSteal).forEach {
+            it.onChangeListener(::visibleListener)
+        }
     }
 
     private fun maxNotificationsListener(preference: Preference, newValue: Any): Boolean {
-        preference.summary = newValue as String
+        preference.summary = newValue.toString()
         return true
     }
 
     private fun visibleListener(preference: Preference, newValue: Any): Boolean {
         when (preference.key) {
-            "mc.show.acc"   -> Preferences.showAccidents = newValue as Boolean
+            "mc.show.acc" -> Preferences.showAccidents = newValue as Boolean
             "mc.show.break" -> Preferences.showBreaks = newValue as Boolean
             "mc.show.steal" -> Preferences.showSteal = newValue as Boolean
             "mc.show.other" -> Preferences.showOther = newValue as Boolean
         }
-        if (isAllHidden) {
-            activity.showToast(getString(R.string.no_one_accident_visible))
-        }
+        if (isAllHidden) activity?.showToast(getString(R.string.no_one_accident_visible))
         update()
         return false
     }
 
     private fun isTesterListener(preference: Preference, newValue: Any): Boolean {
         Preferences.isTester = newValue as Boolean
-        Messaging.apply {
-            if (newValue) subscribeToTest() else unSubscribeFromTest()
+        if (newValue) {
+            Messaging.subscribeToTest()
+        } else {
+            Messaging.unSubscribeFromTest()
         }
-
         AccidentsController.resetLastUpdate()
         update()
         return false
     }
 
     private fun hoursAgoListener(preference: Preference, newValue: Any): Boolean {
-        var value = newValue
-        if (value == "0") value = "1"
-        preference.summary = value.toString()
+        val value = if (newValue == "0") "1" else newValue.toString()
+        preference.summary = value
         AccidentsController.resetLastUpdate()
         return true
     }
@@ -115,20 +151,22 @@ class SettingsFragment : PreferenceFragment() {
 
     private fun authButtonPressed(): Boolean {
         Auth.logout()
-        goTo(Screens.AUTH)
+        requireActivity().goTo(Screens.AUTH)
         return true
     }
 
     private fun soundButtonPressed(): Boolean {
-        fragmentManager.beginTransaction().replace(android.R.id.content, SelectSoundFragment()).commit()
+        parentFragmentManager.beginTransaction()
+            .replace(android.R.id.content, SelectSoundFragment())
+            .addToBackStack(null)
+            .commit()
         return true
     }
 
     private fun distanceListener(preference: Preference, newValue: Any): Boolean {
         val value = (newValue as String).toInt().coerceAtMost(EQUATOR)
-
         when (preference) {
-            notificationDistPreference  -> Preferences.visibleDistance = value
+            notificationDistPreference -> Preferences.visibleDistance = value
             notificationAlarmPreference -> Preferences.alarmDistance = value
         }
         update()
@@ -136,5 +174,5 @@ class SettingsFragment : PreferenceFragment() {
     }
 
     private val isAllHidden: Boolean
-        inline get() = !with(Preferences) { showAccidents || showSteal || showBreaks || showOther }
+        get() = !with(Preferences) { showAccidents || showSteal || showBreaks || showOther }
 }

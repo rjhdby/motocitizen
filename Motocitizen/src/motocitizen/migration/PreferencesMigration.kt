@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import motocitizen.MyApp
 import motocitizen.utils.tryOrPrintStack
+import androidx.core.content.edit
 
 object PreferencesMigration : MigrationInterface {
     lateinit var preferences: SharedPreferences
@@ -23,17 +24,20 @@ object PreferencesMigration : MigrationInterface {
         stringToInt("notifications.max")
 
         if (preferences.getString("authType", "") != "") return
-        preferences.edit().putString("authType", when {
-            preferences.getBoolean("mc.anonim", false)     -> "anon"
+        val authType = when {
+            preferences.getBoolean("mc.anonim", false) -> "anon"
             preferences.getString("mc.password", "") != "" -> "forum"
-            preferences.getString("vkToken", "") != ""     -> "vk"
-            else                                           -> "none"
-        }).apply()
+            preferences.getString("vkToken", "") != "" -> "vk"
+            else -> "none"
+        }
+        preferences.edit { putString("authType", authType) }
     }
 
     private fun stringToInt(name: String) = tryOrPrintStack {
-        val pref = preferences.getString(name, "").toInt()
-        preferences.edit().remove(name).apply()
-        preferences.edit().putInt(name, pref).apply()
+        val pref = preferences.getString(name, "")!!.toInt()
+        preferences.edit {
+            remove(name)
+            putInt(name, pref)
+        }
     }
 }

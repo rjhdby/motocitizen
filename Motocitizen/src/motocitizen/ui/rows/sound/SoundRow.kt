@@ -3,19 +3,32 @@ package motocitizen.ui.rows.sound
 import android.content.Context
 import android.widget.LinearLayout
 import android.widget.TableRow
+import android.widget.TextView
 import motocitizen.utils.dp
-import org.jetbrains.anko.linearLayout
-import org.jetbrains.anko.matchParent
-import org.jetbrains.anko.textView
 
 class SoundRow(context: Context, val title: String) : TableRow(context) {
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        layoutParams = LayoutParams(matchParent, matchParent)
-        textView(title)
-        linearLayout {
-            orientation = LinearLayout.VERTICAL
-            layoutParams = LayoutParams(matchParent, 2.dp())
+    init {
+        layoutParams = LayoutParams(
+            LayoutParams.MATCH_PARENT,
+            LayoutParams.MATCH_PARENT
+        )
+
+        val titleView = TextView(context).apply {
+            text = title
+            layoutParams = LayoutParams(
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT
+            )
         }
+        addView(titleView)
+
+        val lineView = LinearLayout(context).apply {
+            orientation = VERTICAL
+            layoutParams = LayoutParams(
+                LayoutParams.MATCH_PARENT,
+                2.dp()
+            )
+        }
+        addView(lineView)
     }
 }

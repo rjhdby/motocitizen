@@ -1,11 +1,11 @@
 package motocitizen.ui.frames.create
 
-import android.support.v4.app.FragmentActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import androidx.fragment.app.FragmentActivity
 import motocitizen.content.accident.AccidentBuilder
 import motocitizen.main.R
 import motocitizen.ui.frames.FrameInterface
@@ -13,13 +13,13 @@ import motocitizen.utils.hide
 import motocitizen.utils.show
 
 class DescriptionFrame(val context: FragmentActivity, val accidentBuilder: AccidentBuilder, val callback: () -> Unit) : FrameInterface {
-    private val confirmButton = context.findViewById(R.id.CREATE) as Button
+    private val confirmButton: Button = context.findViewById(R.id.CREATE)
     private val view = context.findViewById<View>(R.id.create_final_frame)
 
     init {
         confirmButton.isEnabled = false
         confirmButton.setOnClickListener { callback() }
-        (context.findViewById(R.id.create_final_text) as EditText).addTextChangedListener(finalTextWatcher())
+        (context.findViewById<EditText>(R.id.create_final_text)!!).addTextChangedListener(finalTextWatcher())
     }
 
     override fun show() {

@@ -1,24 +1,26 @@
 package motocitizen.ui.menus
 
 import android.content.Context
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.LinearLayout
 import android.widget.PopupWindow
-import org.jetbrains.anko.backgroundColor
-import org.jetbrains.anko.matchParent
-import org.jetbrains.anko.verticalLayout
-import org.jetbrains.anko.wrapContent
 
 abstract class ContextMenu(val context: Context) : PopupWindow() {
-    private val rootView = context.verticalLayout {
-        backgroundColor = 0xFF202020.toInt()
-        layoutParams = LinearLayout.LayoutParams(matchParent, wrapContent)
+    private val rootView = LinearLayout(context).apply {
+        orientation = LinearLayout.VERTICAL
+        setBackgroundColor(0xFF202020.toInt())
+        layoutParams = LinearLayout.LayoutParams(
+            MATCH_PARENT,
+            WRAP_CONTENT
+        )
     }
 
     init {
         isOutsideTouchable = true
         contentView = rootView
-        width = wrapContent
-        height = wrapContent
+        width = WRAP_CONTENT
+        height = WRAP_CONTENT
     }
 
     fun addButton(name: String, callback: () -> Unit) = rootView.addView(

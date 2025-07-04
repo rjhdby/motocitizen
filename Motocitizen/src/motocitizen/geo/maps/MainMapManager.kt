@@ -2,7 +2,7 @@ package motocitizen.geo.maps
 
 import android.app.Activity
 import android.content.Context
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.FragmentActivity
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import motocitizen.content.accident.Accident

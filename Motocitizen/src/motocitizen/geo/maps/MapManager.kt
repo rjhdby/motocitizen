@@ -1,7 +1,7 @@
 package motocitizen.geo.maps
 
 import android.annotation.SuppressLint
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.FragmentActivity
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
@@ -51,7 +51,8 @@ abstract class MapManager(protected val fragment: FragmentActivity, mapContainer
     }
 
     private fun addMarker(accident: Accident) {
-        markers[map.accidentMarker(accident).id] = accident.id
+        val marker = map.accidentMarker(accident) ?: return
+        markers[marker.id] = accident.id
     }
 
     @SuppressLint("MissingPermission")

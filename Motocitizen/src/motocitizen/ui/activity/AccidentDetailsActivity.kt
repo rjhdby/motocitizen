@@ -1,13 +1,13 @@
 package motocitizen.ui.activity
 
-import android.app.Fragment
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.RadioGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import motocitizen.content.Content
 import motocitizen.content.accident.Accident
 import motocitizen.datasources.network.ApiResponse
@@ -31,9 +31,9 @@ import motocitizen.utils.*
 class AccidentDetailsActivity : AppCompatActivity() {
     companion object {
         const val ACCIDENT_ID_KEY = "id"
-        private const val ROOT_LAYOUT = R.layout.activity_accident_details
-        private const val GENERAL_INFORMATION_VIEW = R.id.acc_details_general
-        private const val FRAGMENT_ROOT_VIEW = R.id.details_tab_content
+        private val ROOT_LAYOUT = R.layout.activity_accident_details
+        private val GENERAL_INFORMATION_VIEW = R.id.acc_details_general
+        private val FRAGMENT_ROOT_VIEW = R.id.details_tab_content
     }
 
     enum class Tab(val id: Int) {
@@ -42,7 +42,7 @@ class AccidentDetailsActivity : AppCompatActivity() {
         VOLUNTEER_TAB(R.id.details_tab_people);
 
         companion object {
-            fun byId(id: Int) = values().firstOrNull { it.id == id } ?: VOLUNTEER_TAB
+            fun byId(id: Int) = entries.firstOrNull { it.id == id } ?: VOLUNTEER_TAB
         }
 
         fun fragment(accident: Accident): Fragment = when (this) {
@@ -71,7 +71,7 @@ class AccidentDetailsActivity : AppCompatActivity() {
 
     private fun init(savedId: Int? = null) {
         try {
-            val id = savedId ?: intent.extras.getInt(ACCIDENT_ID_KEY)
+            val id = savedId ?: intent.extras?.getInt(ACCIDENT_ID_KEY) ?: throw RuntimeException()
             accident = Content[id] ?: throw RuntimeException()
             menuController = DetailsMenuController(this, accident)
             summaryFrame = DetailsSummaryFrame(this, accident)
@@ -168,9 +168,9 @@ class AccidentDetailsActivity : AppCompatActivity() {
 
     fun toMap() = goTo(Screens.MAIN, mapOf("toMap" to accident.id))
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        if (intent != null && intent.hasExtra(ACCIDENT_ID_KEY)) {
+        if (intent.hasExtra(ACCIDENT_ID_KEY)) {
             val cached = Content[intent.getIntExtra(ACCIDENT_ID_KEY, 0)]
             if (cached == null) {
                 goTo(Screens.MAIN)
@@ -180,8 +180,8 @@ class AccidentDetailsActivity : AppCompatActivity() {
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState?.putInt(ACCIDENT_ID_KEY, accident.id)
+        outState.putInt(ACCIDENT_ID_KEY, accident.id)
     }
 }

@@ -39,7 +39,7 @@ class DetailMessagesFragment : FragmentForAccident() {
         this.accident = accident
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         rootView = inflater.inflate(R.layout.fragment_detail_messages, container, false)
         bindViews()
         setupNewMessageForm()
@@ -98,12 +98,17 @@ class DetailMessagesFragment : FragmentForAccident() {
     }
 
     //todo pizdets
-    private fun addMessageRows(list: List<Message>) = if (list.size == 1) {
-        drawRow(MessageRowFactory.makeOne(activity, list.first()), list.first())
-    } else {
-        drawRow(MessageRowFactory.makeFirst(activity, list.first()), list.first())
-        (1..list.size - 2).forEach { drawRow(MessageRowFactory.makeMiddle(activity, list[it]), list[it]) }
-        drawRow(MessageRowFactory.makeLast(activity, list.last()), list.last())
+    private fun addMessageRows(list: List<Message>) {
+        val activity = requireActivity()
+        if (list.size == 1) {
+            drawRow(MessageRowFactory.makeOne(activity, list.first()), list.first())
+        } else {
+            drawRow(MessageRowFactory.makeFirst(activity, list.first()), list.first())
+            (1..list.size - 2).forEach {
+                drawRow(MessageRowFactory.makeMiddle(activity, list[it]), list[it])
+            }
+            drawRow(MessageRowFactory.makeLast(activity, list.last()), list.last())
+        }
     }
 
     private fun drawRow(view: View, message: Message) {
@@ -117,6 +122,7 @@ class DetailMessagesFragment : FragmentForAccident() {
     }
 
     private fun sendMessageCallback(response: ApiResponse) {
+        val activity = requireActivity()
         tryOrDo({ activity.showToast("Неизвестная ошибка" + response.toString()) }) {
             if (response.hasError()) {
                 val text = response.error.text
@@ -135,9 +141,10 @@ class DetailMessagesFragment : FragmentForAccident() {
         })
     }
 
-    private inner class MessageRowLongClickListener internal constructor(private val message: Message) : View.OnLongClickListener {
+    private inner class MessageRowLongClickListener(private val message: Message) : View.OnLongClickListener {
 
         override fun onLongClick(view: View): Boolean {
+            val activity = requireActivity()
             val popupWindow: PopupWindow = MessageContextMenu(activity, message)
             val viewLocation = IntArray(2)
             view.getLocationOnScreen(viewLocation)
@@ -151,8 +158,8 @@ class DetailMessagesFragment : FragmentForAccident() {
         super.onSaveInstanceState(outState)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         if (savedInstanceState == null) return
         accident = Content[savedInstanceState.getInt(ACCIDENT_ID_KEY)]!!
     }

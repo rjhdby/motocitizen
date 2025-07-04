@@ -1,11 +1,9 @@
 package motocitizen.ui.dialogs.details
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
-import android.app.DialogFragment
-import android.content.res.Resources
 import android.os.Bundle
+import androidx.fragment.app.DialogFragment
 
 class ConfirmDialog : DialogFragment() {
     companion object {
@@ -17,11 +15,19 @@ class ConfirmDialog : DialogFragment() {
     var title: String? = ""
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = AlertDialog.Builder(activity)
-        dialog.setTitle(title?:"")
-        dialog.setIcon(ICON)
-        dialog.setPositiveButton(Resources.getSystem().getString(YES_STRING)) { _, _ -> targetFragment.onActivityResult(targetRequestCode, Activity.RESULT_OK, activity.intent) }
-        dialog.setNegativeButton(Resources.getSystem().getString(NO_STRING)) { _, _ -> targetFragment.onActivityResult(targetRequestCode, Activity.RESULT_CANCELED, activity.intent) }
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle(title ?: "")
+            .setIcon(ICON)
+            .setPositiveButton(getString(YES_STRING)) { _, _ ->
+                parentFragmentManager.setFragmentResult("confirm_dialog_result", Bundle().apply {
+                    putBoolean("confirmed", true)
+                })
+            }
+            .setNegativeButton(getString(NO_STRING)) { _, _ ->
+                parentFragmentManager.setFragmentResult("confirm_dialog_result", Bundle().apply {
+                    putBoolean("confirmed", false)
+                })
+            }
         return dialog.create()
     }
 }

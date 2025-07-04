@@ -3,7 +3,6 @@ package motocitizen.ui.activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -11,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.Toast
-import kotlinx.coroutines.GlobalScope
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -36,6 +35,7 @@ class MainScreenActivity : AppCompatActivity() {
         private const val MAP: Byte = 1
         private const val SUBSCRIBE_TAG = "mainScreen"
     }
+    private val listenersScope = BackgroundScope.Default()
 
     private val mapContainer: ViewGroup by bindView(R.id.google_map)
     private val createAccButton: ImageButton by bindView(R.id.add_point_button)
@@ -71,7 +71,7 @@ class MainScreenActivity : AppCompatActivity() {
         runBlocking {
             showCurrentFrame()
             setUpFeaturesAccessibility()
-            val redraw = async{redraw()}
+            val redraw = async { redraw() }
             setUpListeners()
             subscribe()
             launch {
@@ -91,12 +91,15 @@ class MainScreenActivity : AppCompatActivity() {
         currentScreen = target
         toAccListButton.alpha = if (target == LIST) 1f else 0.3f
         toMapButton.alpha = if (target == MAP) 1f else 0.3f
-        accListView.animate().translationX((if (target == LIST) 0 else -displayWidth() * 2).toFloat())
-        mapContainer.animate().translationX((if (target == MAP) 0 else displayWidth() * 2).toFloat())
+        accListView.animate()
+            .translationX((if (target == LIST) 0 else -displayWidth() * 2).toFloat())
+        mapContainer.animate()
+            .translationX((if (target == MAP) 0 else displayWidth() * 2).toFloat())
     }
 
     private fun redraw() {
-        val newList = Content.getVisibleReversed().asyncMap { AccidentRowFactory.make(this@MainScreenActivity, it) }
+        val newList = Content.getVisibleReversed()
+            .asyncMap { AccidentRowFactory.make(this@MainScreenActivity, it) }
 
         runOnUiThread {
             listContent.removeAllViews()
@@ -105,14 +108,12 @@ class MainScreenActivity : AppCompatActivity() {
         }
     }
 
-    private fun setUpFeaturesAccessibility() = GlobalScope.launch {
-        runOnUiThread {
-            createAccButton.apply { if (!User.isReadOnly()) show() else hide() }
-            dialButton.isEnabled = packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)
-        }
+    private fun setUpFeaturesAccessibility() = runOnUiThread {
+        createAccButton.apply { if (!User.isReadOnly()) show() else hide() }
+        dialButton.isEnabled = packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)
     }
 
-    private fun setUpListeners() = GlobalScope.launch {
+    private fun setUpListeners() = listenersScope.launch {
         createAccButton.setOnClickListener { goTo(Screens.CREATE) }
         toAccListButton.setOnClickListener { setFrame(LIST) }
         toMapButton.setOnClickListener { setFrame(MAP) }
@@ -120,16 +121,27 @@ class MainScreenActivity : AppCompatActivity() {
         bounceScrollView.setOverScrollListener { requestAccidents() }
     }
 
-    private fun subscribe() = GlobalScope.launch {
-        SubscribeManager.subscribe(SubscribeManager.Event.LOCATION_UPDATED, SUBSCRIBE_TAG) { updateStatusBar() }
-        SubscribeManager.subscribe(SubscribeManager.Event.ACCIDENTS_UPDATED, SUBSCRIBE_TAG) {GlobalScope.launch {  redraw() }}
+    private fun subscribe() = listenersScope.launch {
+        SubscribeManager.subscribe(
+            SubscribeManager.Event.LOCATION_UPDATED,
+            SUBSCRIBE_TAG
+        ) { updateStatusBar() }
+        SubscribeManager.subscribe(
+            SubscribeManager.Event.ACCIDENTS_UPDATED,
+            SUBSCRIBE_TAG
+        ) { listenersScope.launch { redraw() } }
     }
 
     private fun requestAccidents() {
         when {
-            transaction           -> return
-            !MyApp.isOnline(this) -> Toast.makeText(this, getString(R.string.inet_not_available), Toast.LENGTH_LONG).show()
-            else                  -> {
+            transaction -> return
+            !MyApp.isOnline(this) -> Toast.makeText(
+                this,
+                getString(R.string.inet_not_available),
+                Toast.LENGTH_LONG
+            ).show()
+
+            else -> {
                 transaction = true
                 progressBar.show()
                 Content.requestUpdate { updateCompleteCallback() }
@@ -153,7 +165,7 @@ class MainScreenActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         intent.apply {
             when {
-                hasExtra("toMap")     -> toMap(intent.extras.getInt("toMap", 0))
+                hasExtra("toMap") -> toMap(intent.extras?.getInt("toMap", 0) ?: 0)
                 hasExtra("toDetails") -> Unit //todo toDetails() ?
             }
             removeExtra("toMap")
@@ -174,10 +186,10 @@ class MainScreenActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.small_menu_settings -> goTo(Screens.SETTINGS)
-            R.id.small_menu_about    -> goTo(Screens.ABOUT)
-            R.id.action_refresh      -> requestAccidents()
-            R.id.do_not_disturb      -> flipDoNotDisturb(item)
-            else                     -> return false
+            R.id.small_menu_about -> goTo(Screens.ABOUT)
+            R.id.action_refresh -> requestAccidents()
+            R.id.do_not_disturb -> flipDoNotDisturb(item)
+            else -> return false
         }
         return true
     }

@@ -1,6 +1,10 @@
 package motocitizen.notifications
 
-import android.support.v4.app.NotificationManagerCompat
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import motocitizen.content.Content
@@ -18,7 +22,9 @@ class NotificationListener : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         val id = remoteMessage.data["id"]?.toInt() ?: return
-        Content.requestSingleAccident(id) { raiseNotification(id) }
+        Content.requestSingleAccident(id) {
+            raiseNotification(id)
+        }
     }
 
     private fun raiseNotification(id: Int) {
@@ -27,17 +33,23 @@ class NotificationListener : FirebaseMessagingService() {
         notificationManager = NotificationManagerCompat.from(this)
 
         idHash = accident.coordinates.hashCode()
-
+        val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+        } else {
+            PackageManager.PERMISSION_GRANTED
+        }
+        if (permission != PackageManager.PERMISSION_GRANTED) return
         notificationManager.notify(idHash, AccidentNotificationBuilder(this, accident).build())
         manageTray()
     }
 
-    private fun doNotShow(accident: Accident): Boolean = !accident.isVisible() || Preferences.doNotDisturb
+    private fun doNotShow(accident: Accident): Boolean =
+        !accident.isVisible() || Preferences.doNotDisturb
 
     private fun manageTray() {
         tray.push(idHash)
         while (tray.size > Preferences.maxNotifications) {
-            val remove = tray.pollLast()
+            val remove = tray.pollLast() ?: continue
             notificationManager.cancel(remove)
         }
     }

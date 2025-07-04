@@ -10,8 +10,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.RingtoneManager
 import android.net.Uri
-import android.os.Build
-import android.support.v4.app.NotificationCompat
+import androidx.core.app.NotificationCompat
 import motocitizen.MyApp
 import motocitizen.content.accident.Accident
 import motocitizen.datasources.preferences.Preferences
@@ -23,14 +22,12 @@ import motocitizen.utils.distanceString
 class AccidentNotificationBuilder(val context: Context, val accident: Accident) {
     companion object {
         const val chanelId = "motoaccidents"
-        private const val ICON = R.mipmap.ic_launcher
+        private val ICON = R.mipmap.ic_launcher
 
         init {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val channel = NotificationChannel(chanelId, "Moto accidents", NotificationManager.IMPORTANCE_DEFAULT)
-                channel.description = "Moto accidents notifications"
-                (MyApp.context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(channel)
-            }
+            val channel = NotificationChannel(chanelId, "Moto accidents", NotificationManager.IMPORTANCE_DEFAULT)
+            channel.description = "Moto accidents notifications"
+            (MyApp.context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(channel)
         }
     }
 
@@ -47,7 +44,12 @@ class AccidentNotificationBuilder(val context: Context, val accident: Accident) 
             .setContentText(accident.address)
             .build()
 
-    private fun makePendingIntent(): PendingIntent = PendingIntent.getActivity(context, accident.coordinates.hashCode(), makeIntent(), PendingIntent.FLAG_ONE_SHOT)
+    private fun makePendingIntent(): PendingIntent = PendingIntent.getActivity(
+        context,
+        accident.coordinates.hashCode(),
+        makeIntent(),
+        PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+    )
 
     private fun makeSound(): Uri = when {
         Preferences.soundTitle == "default system" -> RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)

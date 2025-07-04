@@ -2,17 +2,17 @@ package motocitizen.utils
 
 import android.content.Context
 import android.util.DisplayMetrics
+import android.util.TypedValue
 import motocitizen.MyApp
-import org.jetbrains.anko.windowManager
 
-fun Int.dp(): Int = (dpScale * this + 0.5f).toInt()
+val displayMetrics: DisplayMetrics by lazy { MyApp.context.resources.displayMetrics }
 
-val dpScale: Float by lazy { MyApp.context.resources.displayMetrics.density }
-
-private fun Context.getDisplayMetrics(): DisplayMetrics {
-    val displayMetrics = DisplayMetrics()
-    windowManager.defaultDisplay.getMetrics(displayMetrics)
-    return displayMetrics
+fun Int.dp(): Int {
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        this.toFloat(),
+        displayMetrics
+    ).toInt()
 }
 
-fun Context.displayWidth(): Int = getDisplayMetrics().widthPixels
+fun Context.displayWidth(): Int = displayMetrics.widthPixels

@@ -19,7 +19,6 @@ import motocitizen.ui.dialogs.details.ConfirmDialog
 import motocitizen.ui.rows.volunteer.VolunteerRow
 import motocitizen.utils.hide
 import motocitizen.utils.show
-import org.jetbrains.anko.runOnUiThread
 
 class DetailVolunteersFragment : FragmentForAccident() {
     companion object {
@@ -41,7 +40,7 @@ class DetailVolunteersFragment : FragmentForAccident() {
     }
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         rootView = inflater.inflate(R.layout.fragment_detail_volunteers, container, false)
         bindViews()
         disabledButton.isEnabled = false
@@ -67,6 +66,7 @@ class DetailVolunteersFragment : FragmentForAccident() {
     private fun update() {
         setupAccess()
         content.removeAllViews()
+        val activity = requireActivity()
         accident.volunteers.forEach {
             try {
                 content.addView(VolunteerRow(activity, it))
@@ -76,7 +76,7 @@ class DetailVolunteersFragment : FragmentForAccident() {
         }
     }
 
-    private fun setupAccess() = runOnUiThread {
+    private fun setupAccess() = requireActivity().runOnUiThread {
         cancelButton.apply { if (canShowCancel()) show() else hide() }
         confirmButton.apply { if (canShowConfirm()) show() else hide() }
         disabledButton.apply { if (canShowDisabled()) show() else hide() }
@@ -89,21 +89,22 @@ class DetailVolunteersFragment : FragmentForAccident() {
     private fun canShowDisabled() = accident.isActive() && accident == Content.inPlace
 
     private fun showOnWayDialog() {
+        val activity = requireActivity()
         val dialog = ConfirmDialog()
         dialog.title = activity.getString(R.string.title_dialog_onway_confirm)
         dialog.setTargetFragment(this, DIALOG_ON_WAY_CONFIRM)
-        dialog.show(fragmentManager, "dialog")
-
+        dialog.show(parentFragmentManager, "dialog")
     }
 
     private fun showCancelDialog() {
+        val activity = requireActivity()
         val dialog = ConfirmDialog()
         dialog.title = activity.getString(R.string.title_dialog_cancel_onway_confirm)
         dialog.setTargetFragment(this, DIALOG_CANCEL_ON_WAY_CONFIRM)
-        dialog.show(fragmentManager, "dialog")
+        dialog.show(parentFragmentManager, "dialog")
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_CANCELED) return
         when (requestCode) {
             DIALOG_ON_WAY_CONFIRM        -> sendOnWay()

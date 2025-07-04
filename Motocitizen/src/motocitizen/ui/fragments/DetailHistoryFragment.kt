@@ -13,19 +13,19 @@ import motocitizen.ui.rows.history.HistoryRow
 
 class DetailHistoryFragment : FragmentForAccident() {
     companion object {
-        private const val ROOT_LAYOUT = R.layout.fragment_detail_history
-        private const val CONTENT_VIEW = R.id.details_log_content
+        private val ROOT_LAYOUT = R.layout.fragment_detail_history
+        private val CONTENT_VIEW = R.id.details_log_content
     }
 
     private lateinit var rootView: View
-    private val logContent: LinearLayout by lazy { rootView.findViewById(CONTENT_VIEW) as LinearLayout }
+    private val logContent: LinearLayout by lazy { rootView.findViewById(CONTENT_VIEW)!! }
     private lateinit var accident: Accident
 
     override fun setAccident(accident: Accident) {
         this.accident = accident
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         rootView = inflater.inflate(ROOT_LAYOUT, container, false)
         redrawHistory()
         return rootView
@@ -35,7 +35,7 @@ class DetailHistoryFragment : FragmentForAccident() {
         logContent.removeAllViews()
         accident.history.forEach {
             try {
-                logContent.addView(HistoryRow(activity, it))
+                logContent.addView(HistoryRow(requireActivity(), it))
             } catch (e: IllegalArgumentException) {
                 //todo fuckup
             }
@@ -48,8 +48,8 @@ class DetailHistoryFragment : FragmentForAccident() {
 
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         if (savedInstanceState == null) return
         accident = Content[savedInstanceState.getInt(ACCIDENT_ID_KEY)]!!
     }

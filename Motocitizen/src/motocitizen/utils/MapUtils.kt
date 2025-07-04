@@ -13,7 +13,7 @@ private const val DENSE = 1f
 private const val SEMI_DENSE = 0.5f
 private const val TRANSPARENT = 0.2f
 
-fun GoogleMap.accidentMarker(accident: Accident): Marker = addMarker(makeMarker(accident))
+fun GoogleMap.accidentMarker(accident: Accident): Marker? = addMarker(makeMarker(accident))
 
 private fun calculateAlpha(accident: Accident): Float {
     val age = ((Date().time - accident.time.time) / MS_IN_HOUR).toInt()

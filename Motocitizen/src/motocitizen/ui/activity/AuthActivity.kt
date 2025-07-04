@@ -3,7 +3,6 @@ package motocitizen.ui.activity
 import afterTextChanged
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -11,6 +10,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -43,8 +43,6 @@ class AuthActivity : AppCompatActivity() {
     private val forum: Button by bindView(R.id.forum)
     private val forumLoginForm: View by bindView(R.id.forum_login_form)
     private val authErrorHelper: TextView by bindView(R.id.auth_error_helper)
-
-    private val RC_SIGN_IN = 127
 
     private fun enableLoginBtn() {
         loginBtn.isEnabled = loginField.text.toString().isNotEmpty() && passwordField.text.toString().isNotEmpty()
@@ -148,4 +146,8 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun toMainScreen() = goTo(Screens.MAIN)
+
+    companion object {
+        private const val RC_SIGN_IN = 127
+    }
 }

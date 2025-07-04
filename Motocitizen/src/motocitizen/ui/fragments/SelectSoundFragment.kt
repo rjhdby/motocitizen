@@ -1,6 +1,5 @@
 package motocitizen.ui.fragments
 
-import android.app.Fragment
 import android.graphics.Color
 import android.media.Ringtone
 import android.media.RingtoneManager
@@ -11,12 +10,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TableLayout
+import androidx.fragment.app.Fragment
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.main.R
 import motocitizen.ui.rows.sound.SoundRow
 import motocitizen.utils.bindView
 import motocitizen.utils.gone
 import motocitizen.utils.show
+import androidx.core.util.isEmpty
+import androidx.core.util.size
 
 //todo pizdets
 class SelectSoundFragment : Fragment() {
@@ -32,13 +34,13 @@ class SelectSoundFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activity.setContentView(R.layout.select_sound_fragment)
+        requireActivity().setContentView(R.layout.select_sound_fragment)
     }
 
     override fun onResume() {
         super.onResume()
         rootView.show()
-        if (notifications.size() == 0) getSystemSounds()
+        if (notifications.isEmpty()) getSystemSounds()
 
         setUpListeners()
         drawList()
@@ -50,7 +52,7 @@ class SelectSoundFragment : Fragment() {
                 Preferences.setDefaultSoundAlarm()
             } else
                 Preferences.setSound(currentTitle, currentUri)
-            Preferences.initSound(activity)
+            Preferences.initSound(requireActivity())
             finish()
         }
         selectSoundCancelButton.setOnClickListener { finish() }
@@ -68,7 +70,7 @@ class SelectSoundFragment : Fragment() {
         }
     }
 
-    private fun drawList() = (0 until notifications.size()).forEach { inflateRow(ringtoneList, notifications.keyAt(it)) }
+    private fun drawList() = (0 until notifications.size).forEach { inflateRow(ringtoneList, notifications.keyAt(it)) }
 
     private fun inflateRow(viewGroup: ViewGroup, currentPosition: Int) {
         val tr = SoundRow(viewGroup.context, notifications.get(currentPosition).title)
@@ -92,7 +94,10 @@ class SelectSoundFragment : Fragment() {
     private fun finish() {
         rootView.gone()
 
-        fragmentManager.beginTransaction().remove(this).replace(android.R.id.content, SettingsFragment()).commit()
+        getParentFragmentManager().beginTransaction()
+            .remove(this)
+            .replace(android.R.id.content, SettingsFragment())
+            .commit()
     }
 
     private inner class Sound internal constructor(internal val uri: Uri, private val ringtone: Ringtone) {

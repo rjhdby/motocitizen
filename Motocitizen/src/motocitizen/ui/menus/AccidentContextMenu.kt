@@ -2,6 +2,8 @@ package motocitizen.ui.menus
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import motocitizen.content.accident.Accident
 import motocitizen.datasources.network.ApiResponse
 import motocitizen.datasources.network.requests.ActivateAccident
@@ -13,8 +15,7 @@ import motocitizen.main.R
 import motocitizen.subscribe.SubscribeManager
 import motocitizen.user.User
 import motocitizen.utils.*
-import org.jetbrains.anko.sendSMS
-import org.jetbrains.anko.share
+import androidx.core.net.toUri
 
 class AccidentContextMenu(context: Context, val accident: Accident) : ContextMenu(context) {
     init {
@@ -29,13 +30,24 @@ class AccidentContextMenu(context: Context, val accident: Accident) : ContextMen
     }
 
     private fun addCommonMenu() {
-        addButton(R.string.share) { context.share(accident.getAccidentTextToCopy()) }
+        addButton(R.string.share) {
+            val shareIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, accident.getAccidentTextToCopy())
+                type = "text/plain"
+            }
+            context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.share)))
+
+        }
         addButton(R.string.copy) { context.copyToClipBoard(accident.getAccidentTextToCopy()) }
         accident.description.getPhonesFromText().forEach {
             addButton(context.getString(R.string.popup_dial, it)) { context.makeDial(it) }
         }
         accident.description.getPhonesFromText().forEach {
-            addButton(context.getString(R.string.popup_sms, it)) { context.sendSMS(it) }
+            val smsIntent = Intent(Intent.ACTION_VIEW).apply {
+                data = "smsto:$it".toUri()
+            }
+            context.startActivity(smsIntent)
         }
         addButton(R.string.copy_coordinates) { context.copyToClipBoard(String.format("%s,%s", accident.latitude, accident.longitude)) }
     }

@@ -4,13 +4,15 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.media.RingtoneManager
 import android.net.Uri
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import com.google.android.gms.maps.model.LatLng
 import motocitizen.MyApp
 import motocitizen.datasources.preferences.Preferences.Stored.*
 import motocitizen.dictionary.Type
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
+import androidx.core.content.edit
+import androidx.core.net.toUri
 
 object Preferences {
 
@@ -106,9 +108,7 @@ object Preferences {
     }
 
     init {
-        values()
-                .filterNot { preferences.contains(it.key) }
-                .forEach { setValue(it, it.default) }
+        entries.filterNot { preferences.contains(it.key) }.forEach { setValue(it, it.default) }
     }
 
     //todo refactor sound settings
@@ -121,7 +121,7 @@ object Preferences {
         sound = if (soundURI == "default") {
             RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION)
         } else
-            Uri.parse(soundURI)
+            soundURI.toUri()
     }
 
     fun setDefaultSoundAlarm() {
@@ -153,14 +153,14 @@ object Preferences {
     }
 
     private fun setValue(stored: Stored, value: Any) {
-        preferences.edit().apply {
+        preferences.edit {
             when (stored.default) {
-                is Int     -> putInt(stored.key, value as Int)
+                is Int -> putInt(stored.key, value as Int)
                 is Boolean -> putBoolean(stored.key, value as Boolean)
-                is String  -> putString(stored.key, value as String)
-                is Float   -> putFloat(stored.key, value as Float)
+                is String -> putString(stored.key, value as String)
+                is Float -> putFloat(stored.key, value as Float)
             }
-        }.apply()
+        }
     }
 
     private class PreferenceDelegate<T>(private val stored: Stored) : ReadWriteProperty<Preferences, T> {

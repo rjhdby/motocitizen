@@ -1,7 +1,7 @@
 package motocitizen.ui.frames.create
 
-import android.support.v4.app.FragmentActivity
 import android.view.View
+import androidx.fragment.app.FragmentActivity
 import motocitizen.dictionary.Medicine
 import motocitizen.main.R
 import motocitizen.ui.frames.FrameInterface

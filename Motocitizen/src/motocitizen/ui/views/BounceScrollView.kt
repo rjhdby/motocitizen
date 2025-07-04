@@ -12,14 +12,9 @@ class BounceScrollView : ScrollView {
         private const val MAX_Y_OVER_SCROLL_DISTANCE = 40
     }
 
-    init {
-        val metrics = context.resources.displayMetrics
-        val density = metrics.density
-
-        mMaxYOverScrollDistance = (density * MAX_Y_OVER_SCROLL_DISTANCE).toInt()
-    }
-
-    private var mMaxYOverScrollDistance: Int = 0
+    private var mMaxYOverScrollDistance: Int = (
+            context.resources.displayMetrics.density * MAX_Y_OVER_SCROLL_DISTANCE
+            ).toInt()
     private var isRequestedUpdate = false
     private var listener: () -> Unit = {}
 
@@ -27,21 +22,27 @@ class BounceScrollView : ScrollView {
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
-    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle)
+    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(
+        context,
+        attrs,
+        defStyle
+    )
 
     fun setOverScrollListener(listener: () -> Unit) {
         this.listener = listener
     }
 
-    override fun overScrollBy(deltaX: Int,
-                              deltaY: Int,
-                              scrollX: Int,
-                              scrollY: Int,
-                              scrollRangeX: Int,
-                              scrollRangeY: Int,
-                              maxOverScrollX: Int,
-                              maxOverScrollY: Int,
-                              isTouchEvent: Boolean): Boolean {
+    override fun overScrollBy(
+        deltaX: Int,
+        deltaY: Int,
+        scrollX: Int,
+        scrollY: Int,
+        scrollRangeX: Int,
+        scrollRangeY: Int,
+        maxOverScrollX: Int,
+        maxOverScrollY: Int,
+        isTouchEvent: Boolean
+    ): Boolean {
 
         if (scrollY < -mMaxYOverScrollDistance * 0.9 && !isRequestedUpdate) {
             isRequestedUpdate = true
@@ -50,6 +51,16 @@ class BounceScrollView : ScrollView {
             isRequestedUpdate = false
             listener()
         }
-        return super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX, mMaxYOverScrollDistance, isTouchEvent)
+        return super.overScrollBy(
+            deltaX,
+            deltaY,
+            scrollX,
+            scrollY,
+            scrollRangeX,
+            scrollRangeY,
+            maxOverScrollX,
+            mMaxYOverScrollDistance,
+            isTouchEvent
+        )
     }
 }
