@@ -7,8 +7,8 @@ import androidx.fragment.app.DialogFragment
 
 class ConfirmDialog : DialogFragment() {
     companion object {
-        private const val YES_STRING = android.R.string.yes
-        private const val NO_STRING = android.R.string.no
+        private const val YES_STRING = "OK"
+        private const val NO_STRING = "Cancel"
         private const val ICON = android.R.drawable.ic_dialog_alert
     }
 
@@ -18,12 +18,12 @@ class ConfirmDialog : DialogFragment() {
         val dialog = AlertDialog.Builder(requireContext())
             .setTitle(title ?: "")
             .setIcon(ICON)
-            .setPositiveButton(getString(YES_STRING)) { _, _ ->
+            .setPositiveButton(YES_STRING) { _, _ ->
                 parentFragmentManager.setFragmentResult("confirm_dialog_result", Bundle().apply {
                     putBoolean("confirmed", true)
                 })
             }
-            .setNegativeButton(getString(NO_STRING)) { _, _ ->
+            .setNegativeButton(NO_STRING) { _, _ ->
                 parentFragmentManager.setFragmentResult("confirm_dialog_result", Bundle().apply {
                     putBoolean("confirmed", false)
                 })

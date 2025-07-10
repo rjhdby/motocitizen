@@ -19,7 +19,7 @@
 
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="27"/>
+        android:maxSdkVersion="35"/>
 
     <application
         android:name="motocitizen.MyApp"
@@ -36,7 +36,7 @@
             </intent-filter>
         </service>
 
-        <meta-data android:name="com.vk.sdk.AppId" android:value="6355438"/>
+        <meta-data android:name="com.vk.sdk.AppId" android:value="@string/vk_app_id"/>
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
@@ -46,7 +46,7 @@
             android:resource="@color/red"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDfQZrnHvn-fNCYmFQSMBa-1ClE0ZCWUQ4"/>
+            android:value="@string/google_maps_api_key"/>
 
         <activity
             android:name="motocitizen.ui.activity.MainScreenActivity"

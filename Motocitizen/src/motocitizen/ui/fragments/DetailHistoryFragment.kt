@@ -9,7 +9,7 @@ import motocitizen.content.Content
 import motocitizen.content.accident.Accident
 import motocitizen.main.R
 import motocitizen.ui.activity.AccidentDetailsActivity.Companion.ACCIDENT_ID_KEY
-import motocitizen.ui.rows.history.HistoryRow
+import motocitizen.ui.rows.HistoryRow
 
 class DetailHistoryFragment : FragmentForAccident() {
     companion object {

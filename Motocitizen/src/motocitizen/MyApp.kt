@@ -5,8 +5,9 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
-import android.preference.PreferenceManager
+import android.net.NetworkCapabilities
 import android.widget.Toast
+import androidx.preference.PreferenceManager
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.VKTokenExpiredHandler
 import motocitizen.datasources.preferences.Preferences
@@ -33,7 +34,7 @@ class MyApp : Application() {
         super.onCreate()
         context = applicationContext
         oldVersion = PreferenceManager.getDefaultSharedPreferences(this).getInt("mc.app.version", 0)
-        val currentVersion = packageManager.getPackageInfo(packageName, 0).versionCode
+        val currentVersion = packageManager.getPackageInfo(packageName, 0).longVersionCode
         if (oldVersion < currentVersion) Migration.makeMigration(this)
 
         Messaging.subscribe()
@@ -50,9 +51,11 @@ class MyApp : Application() {
         var oldVersion = 0
 
         fun isOnline(context: Context): Boolean {
-            val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            val netInfo = cm.activeNetworkInfo
-            return netInfo != null && netInfo.isConnectedOrConnecting
+            val connectivityManager = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+            val network = connectivityManager.activeNetwork ?: return false
+            val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+            return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+                    capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
         }
     }
 }

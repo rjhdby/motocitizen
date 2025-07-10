@@ -45,3 +45,4 @@ google-services.json
 gradle/
 motocitizen-release.apk
 projectFilesBackup/
+/secrets.properties

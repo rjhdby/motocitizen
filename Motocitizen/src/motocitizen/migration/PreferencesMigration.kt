@@ -2,10 +2,10 @@ package motocitizen.migration
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
 import motocitizen.MyApp
 import motocitizen.utils.tryOrPrintStack
 import androidx.core.content.edit
+import androidx.preference.PreferenceManager
 
 object PreferencesMigration : MigrationInterface {
     lateinit var preferences: SharedPreferences

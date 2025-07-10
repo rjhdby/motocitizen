@@ -12,9 +12,7 @@ class BounceScrollView : ScrollView {
         private const val MAX_Y_OVER_SCROLL_DISTANCE = 40
     }
 
-    private var mMaxYOverScrollDistance: Int = (
-            context.resources.displayMetrics.density * MAX_Y_OVER_SCROLL_DISTANCE
-            ).toInt()
+    private var mMaxYOverScrollDistance: Int = (context.resources.displayMetrics.density * MAX_Y_OVER_SCROLL_DISTANCE).toInt()
     private var isRequestedUpdate = false
     private var listener: () -> Unit = {}
 

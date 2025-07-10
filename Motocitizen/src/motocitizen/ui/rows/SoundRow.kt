@@ -1,24 +1,20 @@
-package motocitizen.ui.rows.sound
+package motocitizen.ui.rows
 
 import android.content.Context
 import android.widget.LinearLayout
 import android.widget.TableRow
 import android.widget.TextView
+import motocitizen.utils.bothMatch
+import motocitizen.utils.bothWrap
 import motocitizen.utils.dp
 
 class SoundRow(context: Context, val title: String) : TableRow(context) {
     init {
-        layoutParams = LayoutParams(
-            LayoutParams.MATCH_PARENT,
-            LayoutParams.MATCH_PARENT
-        )
+        layoutParams = bothMatch()
 
         val titleView = TextView(context).apply {
             text = title
-            layoutParams = LayoutParams(
-                LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT
-            )
+            layoutParams = bothWrap()
         }
         addView(titleView)
 

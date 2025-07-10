@@ -1,4 +1,4 @@
-package motocitizen.ui.rows.history
+package motocitizen.ui.rows
 
 import android.content.Context
 import android.graphics.Color
@@ -6,6 +6,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import motocitizen.content.history.History
 import motocitizen.user.User
+import motocitizen.utils.bothWrap
 import motocitizen.utils.dateTimeString
 import motocitizen.utils.name
 
@@ -34,10 +35,7 @@ class HistoryRow(context: Context, private val history: History) : LinearLayout(
 
     private fun createTextView(text: String): TextView = TextView(context).apply {
         this.text = text
-        layoutParams = LayoutParams(
-            LayoutParams.WRAP_CONTENT,
-            LayoutParams.WRAP_CONTENT
-        )
+        layoutParams = bothWrap()
         setTextColor(Color.BLACK)
     }
 }

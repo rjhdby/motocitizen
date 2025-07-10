@@ -16,7 +16,7 @@ import motocitizen.main.R
 import motocitizen.ui.activity.AccidentDetailsActivity
 import motocitizen.ui.activity.AccidentDetailsActivity.Companion.ACCIDENT_ID_KEY
 import motocitizen.ui.dialogs.details.ConfirmDialog
-import motocitizen.ui.rows.volunteer.VolunteerRow
+import motocitizen.ui.rows.VolunteerRow
 import motocitizen.utils.hide
 import motocitizen.utils.show
 
@@ -38,7 +38,6 @@ class DetailVolunteersFragment : FragmentForAccident() {
     override fun setAccident(accident: Accident) {
         this.accident = accident
     }
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         rootView = inflater.inflate(R.layout.fragment_detail_volunteers, container, false)
@@ -107,7 +106,7 @@ class DetailVolunteersFragment : FragmentForAccident() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_CANCELED) return
         when (requestCode) {
-            DIALOG_ON_WAY_CONFIRM        -> sendOnWay()
+            DIALOG_ON_WAY_CONFIRM -> sendOnWay()
             DIALOG_CANCEL_ON_WAY_CONFIRM -> sendCancelOnWay()
         }
     }
@@ -127,8 +126,8 @@ class DetailVolunteersFragment : FragmentForAccident() {
         super.onSaveInstanceState(outState)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         if (savedInstanceState == null) return
         accident = Content[savedInstanceState.getInt(ACCIDENT_ID_KEY)]!!
     }

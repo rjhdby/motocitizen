@@ -13,7 +13,7 @@ import android.widget.TableLayout
 import androidx.fragment.app.Fragment
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.main.R
-import motocitizen.ui.rows.sound.SoundRow
+import motocitizen.ui.rows.SoundRow
 import motocitizen.utils.bindView
 import motocitizen.utils.gone
 import motocitizen.utils.show

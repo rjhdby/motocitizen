@@ -65,8 +65,11 @@ object Preferences {
     init {
         initSound(MyApp.context)
         val oldVersion = appVersion
-        appVersion = MyApp.context.packageManager.getPackageInfo(MyApp.context.packageName, 0).versionCode
-        if (oldVersion != appVersion) MyApp.firstStart = true
+        val packageInfo = MyApp.context.packageManager.getPackageInfo(MyApp.context.packageName, 0)
+        appVersion = packageInfo.longVersionCode.toInt()
+        if (oldVersion != appVersion) {
+            MyApp.firstStart = true
+        }
     }
 
     private const val DEFAULT_LATITUDE = 55.752295f
@@ -130,26 +133,26 @@ object Preferences {
     }
 
     fun isEnabled(type: Type): Boolean = when (type) {
-        Type.BREAK                                               -> showBreaks
+        Type.BREAK -> showBreaks
         Type.MOTO_AUTO, Type.MOTO_MOTO, Type.MOTO_MAN, Type.SOLO -> showAccidents
-        Type.STEAL                                               -> showSteal
-        Type.OTHER                                               -> showOther
-        Type.USER                                                -> true
+        Type.STEAL -> showSteal
+        Type.OTHER -> showOther
+        Type.USER -> true
     }
 
     //todo wtf!?
     fun getPreferenceName(preference: String): String = when (preference) {
-        "hoursAgo"         -> "hours.ago"
-        "showAcc"          -> "mc.show.acc"
-        "showBreak"        -> "mc.show.break"
-        "showSteal"        -> "mc.show.steal"
-        "showOther"        -> "mc.show.other"
-        "distanceShow"     -> "mc.distance.show"
-        "distanceAlarm"    -> "mc.distance.alarm"
+        "hoursAgo" -> "hours.ago"
+        "showAcc" -> "mc.show.acc"
+        "showBreak" -> "mc.show.break"
+        "showSteal" -> "mc.show.steal"
+        "showOther" -> "mc.show.other"
+        "distanceShow" -> "mc.distance.show"
+        "distanceAlarm" -> "mc.distance.alarm"
         "maxNotifications" -> "notifications.max"
-        "useVibration"     -> "use.vibration"
-        "isTester"         -> "tester"
-        else               -> "unknown"
+        "useVibration" -> "use.vibration"
+        "isTester" -> "tester"
+        else -> "unknown"
     }
 
     private fun setValue(stored: Stored, value: Any) {
@@ -167,13 +170,13 @@ object Preferences {
 
         @Suppress("UNCHECKED_CAST")
         override fun getValue(thisRef: Preferences, property: KProperty<*>): T =
-                when (stored.default) {
-                    is String  -> preferences.getString(stored.key, stored.default) as T
-                    is Boolean -> preferences.getBoolean(stored.key, stored.default) as T
-                    is Int     -> preferences.getInt(stored.key, stored.default) as T
-                    is Float   -> preferences.getFloat(stored.key, stored.default) as T
-                    else       -> throw TypeCastException("Wrong property type")
-                }
+            when (stored.default) {
+                is String -> preferences.getString(stored.key, stored.default) as T
+                is Boolean -> preferences.getBoolean(stored.key, stored.default) as T
+                is Int -> preferences.getInt(stored.key, stored.default) as T
+                is Float -> preferences.getFloat(stored.key, stored.default) as T
+                else -> throw TypeCastException("Wrong property type")
+            }
 
         override fun setValue(thisRef: Preferences, property: KProperty<*>, value: T) {
             setValue(stored, value as Any)

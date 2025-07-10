@@ -24,7 +24,7 @@ import motocitizen.permissions.Permissions
 import motocitizen.subscribe.SubscribeManager
 import motocitizen.ui.Screens
 import motocitizen.ui.changelog.ChangeLog
-import motocitizen.ui.rows.accident.AccidentRowFactory
+import motocitizen.ui.rows.AccidentRow
 import motocitizen.ui.views.BounceScrollView
 import motocitizen.user.User
 import motocitizen.utils.*
@@ -37,11 +37,11 @@ class MainScreenActivity : AppCompatActivity() {
     }
     private val listenersScope = BackgroundScope.Default()
 
-    private val mapContainer: ViewGroup by bindView(R.id.google_map)
+    private val mapContainer: ViewGroup by bindViewWithActionBar(R.id.google_map)
     private val createAccButton: ImageButton by bindView(R.id.add_point_button)
     private val toAccListButton: ImageButton by bindView(R.id.list_button)
     private val toMapButton: ImageButton by bindView(R.id.map_button)
-    private val accListView: View by bindView(R.id.acc_list)
+    private val accListView: View by bindViewWithActionBar(R.id.acc_list)
     private val progressBar: ProgressBar by bindView(R.id.progressBar)
     private val listContent: ViewGroup by bindView(R.id.accListContent)
     private val dialButton: ImageButton by bindView(R.id.dial_button)
@@ -99,7 +99,7 @@ class MainScreenActivity : AppCompatActivity() {
 
     private fun redraw() {
         val newList = Content.getVisibleReversed()
-            .asyncMap { AccidentRowFactory.make(this@MainScreenActivity, it) }
+            .asyncMap { AccidentRow.make(this@MainScreenActivity, it) }
 
         runOnUiThread {
             listContent.removeAllViews()

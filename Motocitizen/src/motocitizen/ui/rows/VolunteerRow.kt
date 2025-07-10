@@ -1,10 +1,11 @@
-package motocitizen.ui.rows.volunteer
+package motocitizen.ui.rows
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.TableRow
 import android.widget.TextView
 import motocitizen.content.volunteer.VolunteerAction
+import motocitizen.utils.bothMatch
 import motocitizen.utils.name
 import motocitizen.utils.timeString
 
@@ -12,10 +13,7 @@ import motocitizen.utils.timeString
 open class VolunteerRow(context: Context, val volunteer: VolunteerAction) : TableRow(context) {
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        layoutParams = LayoutParams(
-            LayoutParams.MATCH_PARENT,
-            LayoutParams.MATCH_PARENT
-        )
+        layoutParams = bothMatch()
 
         addView(createTextView(volunteer.owner.name()))
         addView(createTextView(volunteer.status.text))

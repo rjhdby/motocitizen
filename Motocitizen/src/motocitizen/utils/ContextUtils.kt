@@ -33,7 +33,7 @@ fun Activity.goTo(target: Screens, bundle: Map<String, Any>) {
     val intentBundle = Bundle()
     bundle.forEach {
         when (it.value) {
-            is Int    -> intentBundle.putInt(it.key, it.value as Int)
+            is Int -> intentBundle.putInt(it.key, it.value as Int)
             is String -> intentBundle.putString(it.key, it.value as String)
         }
     }
@@ -51,10 +51,28 @@ fun Activity.toExternalMap(latLng: LatLng) {
 }
 
 fun AppCompatActivity.changeFragmentTo(containerView: Int, fragment: Fragment) = supportFragmentManager
-        .beginTransaction()
-        .replace(containerView, fragment)
-        .commit()
+    .beginTransaction()
+    .replace(containerView, fragment)
+    .commit()
 
 fun <T : View> Fragment.bindView(id: Int) = lazy { requireActivity().findViewById<T>(id) }
 
-fun <T : View> Activity.bindView(id: Int) = lazy { findViewById<T>(id) }
+fun <T : View> Activity.bindView(id: Int, topPadding: Int = 0) = lazy {
+    val view = findViewById<T>(id)
+    view.setPadding(0, topPadding, 0, 0)
+    return@lazy view
+}
+
+private fun Context.obtainActionBarHeight(): Int {
+    val styledAttrs = theme.obtainStyledAttributes(intArrayOf(android.R.attr.actionBarSize))
+    val height = styledAttrs.getDimensionPixelSize(0, 0)
+    styledAttrs.recycle()
+    return height
+}
+
+fun <T : View> Activity.bindViewWithActionBar(id: Int) = lazy {
+    val view = findViewById<T>(id)
+    val actionBarHeight = obtainActionBarHeight()
+    view.setPadding(0, actionBarHeight, 0, 0)
+    return@lazy view
+}
