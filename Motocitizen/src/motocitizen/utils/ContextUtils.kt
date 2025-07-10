@@ -63,7 +63,7 @@ fun <T : View> Activity.bindView(id: Int, topPadding: Int = 0) = lazy {
     return@lazy view
 }
 
-private fun Context.obtainActionBarHeight(): Int {
+fun Context.obtainActionBarHeight(): Int {
     val styledAttrs = theme.obtainStyledAttributes(intArrayOf(android.R.attr.actionBarSize))
     val height = styledAttrs.getDimensionPixelSize(0, 0)
     styledAttrs.recycle()

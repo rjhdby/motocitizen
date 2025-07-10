@@ -8,8 +8,10 @@ import motocitizen.content.accident.Accident
 import motocitizen.dictionary.AccidentStatus
 import motocitizen.dictionary.Medicine
 import motocitizen.main.R
+import motocitizen.ui.rows.AccidentRow
 import motocitizen.utils.distanceString
 import motocitizen.utils.name
+import motocitizen.utils.obtainActionBarHeight
 import motocitizen.utils.timeString
 
 class DetailsSummaryFrame(val activity: FragmentActivity, val accident: Accident) {
@@ -20,8 +22,7 @@ class DetailsSummaryFrame(val activity: FragmentActivity, val accident: Accident
     private val ownerView: TextView = activity.findViewById(R.id.acc_details_general_owner)
     private val addressView: TextView = activity.findViewById(R.id.acc_details_general_address)
     private val distanceView: TextView = activity.findViewById(R.id.acc_details_general_distance)
-    private val descriptionView: TextView =
-        activity.findViewById(R.id.acc_details_general_description)
+    private val descriptionView: TextView = activity.findViewById(R.id.acc_details_general_description)
 
     fun update() {
         val actionBar = (activity as AppCompatActivity).supportActionBar

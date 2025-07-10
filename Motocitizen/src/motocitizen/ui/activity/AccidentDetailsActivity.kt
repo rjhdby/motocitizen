@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -26,7 +27,13 @@ import motocitizen.ui.fragments.DetailVolunteersFragment
 import motocitizen.ui.frames.create.DetailsSummaryFrame
 import motocitizen.ui.menus.AccidentContextMenu
 import motocitizen.ui.menus.DetailsMenuController
-import motocitizen.utils.*
+import motocitizen.ui.rows.AccidentRow
+import motocitizen.utils.bindView
+import motocitizen.utils.changeFragmentTo
+import motocitizen.utils.goTo
+import motocitizen.utils.hide
+import motocitizen.utils.obtainActionBarHeight
+import motocitizen.utils.show
 
 class AccidentDetailsActivity : AppCompatActivity() {
     companion object {
@@ -44,10 +51,9 @@ class AccidentDetailsActivity : AppCompatActivity() {
         companion object {
             fun byId(id: Int) = entries.firstOrNull { it.id == id } ?: VOLUNTEER_TAB
         }
-
         fun fragment(accident: Accident): Fragment = when (this) {
-            MESSAGE_TAB   -> DetailMessagesFragment()
-            HISTORY_TAB   -> DetailHistoryFragment()
+            MESSAGE_TAB -> DetailMessagesFragment()
+            HISTORY_TAB -> DetailHistoryFragment()
             VOLUNTEER_TAB -> DetailVolunteersFragment()
         }.apply {
             setAccident(accident)
@@ -66,6 +72,10 @@ class AccidentDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(ROOT_LAYOUT)
+        val root = findViewById<ViewGroup>(R.id.activity_accident_details)
+        val actionBarPadding = obtainActionBarHeight()
+        root.setPadding(0, actionBarPadding, 0, 0)
+
         init(savedInstanceState?.getInt(ACCIDENT_ID_KEY))
     }
 
@@ -73,6 +83,7 @@ class AccidentDetailsActivity : AppCompatActivity() {
         try {
             val id = savedId ?: intent.extras?.getInt(ACCIDENT_ID_KEY) ?: throw RuntimeException()
             accident = Content[id] ?: throw RuntimeException()
+            val row = AccidentRow.make(this, accident)
             menuController = DetailsMenuController(this, accident)
             summaryFrame = DetailsSummaryFrame(this, accident)
 
@@ -98,7 +109,7 @@ class AccidentDetailsActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         findViewById<View>(GENERAL_INFORMATION_VIEW)
-                .setOnLongClickListener(this@AccidentDetailsActivity::generalPopUpListener)
+            .setOnLongClickListener(this@AccidentDetailsActivity::generalPopUpListener)
         init()
     }
 
@@ -124,11 +135,11 @@ class AccidentDetailsActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (menuController.itemSelected(item)) {
-            DetailsMenuController.MenuAction.TO_MAP                                            -> toMap()
+            DetailsMenuController.MenuAction.TO_MAP -> toMap()
             DetailsMenuController.MenuAction.HIDE_INFO, DetailsMenuController.MenuAction.SHARE -> Unit
-            DetailsMenuController.MenuAction.SEND_HIDE_REQUEST                                 -> sendHideRequest()
-            DetailsMenuController.MenuAction.SEND_FINISH_REQUEST                               -> sendFinishRequest()
-            else                                                                               -> return false
+            DetailsMenuController.MenuAction.SEND_HIDE_REQUEST -> sendHideRequest()
+            DetailsMenuController.MenuAction.SEND_FINISH_REQUEST -> sendFinishRequest()
+            else -> return false
         }
         return true
     }
@@ -137,7 +148,7 @@ class AccidentDetailsActivity : AppCompatActivity() {
         //TODO Суперкостыль !!!
         when (accident.status) {
             ENDED -> ActivateAccident(accident.id, this::accidentChangeCallback).call()
-            else  -> EndAccident(accident.id, this::accidentChangeCallback).call()
+            else -> EndAccident(accident.id, this::accidentChangeCallback).call()
         }
     }
 
@@ -148,7 +159,8 @@ class AccidentDetailsActivity : AppCompatActivity() {
                 ActivateAccident(accident.id, this::accidentChangeCallback).call()
                 ACTIVE
             }
-            else  -> {
+
+            else -> {
                 HideAccident(accident.id, this::accidentChangeCallback).call()
                 ENDED
             }
