@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import com.google.android.gms.maps.model.LatLng
 import motocitizen.content.accident.AccidentBuilder
-import motocitizen.datasources.network.ApiResponse
+import motocitizen.datasources.network.LegacyApiResponse
 import motocitizen.datasources.network.requests.CreateAccidentRequest
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.dictionary.Medicine
@@ -159,7 +159,7 @@ class CreateAccActivity : FragmentActivity() {
         refreshDescription()
     }
 
-    private fun createAccidentCallback(response: ApiResponse) {
+    private fun createAccidentCallback(response: LegacyApiResponse) {
         if (response.resultObject.has("id")) {
             finish()
         } else {

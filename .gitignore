@@ -46,3 +46,4 @@ gradle/
 motocitizen-release.apk
 projectFilesBackup/
 /secrets.properties
+/tmp/

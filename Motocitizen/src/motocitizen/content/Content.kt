@@ -1,9 +1,10 @@
 package motocitizen.content
 
 import motocitizen.content.accident.Accident
-import motocitizen.datasources.network.ApiResponse
+import motocitizen.content.volunteer.Volunteer
+import motocitizen.datasources.network.response.AccidentListResponse
+import motocitizen.datasources.network.response.AccidentResponse
 import org.json.JSONArray
-import org.json.JSONObject
 
 object Content {
     var inPlace: Accident? = null //todo
@@ -14,17 +15,13 @@ object Content {
 
     inline fun getByFilter(filter: (Accident) -> Boolean): List<Accident> = AccidentsController.accidents.values.filter(filter)
 
-    fun requestUpdate(callback: (ApiResponse) -> Unit) = AccidentsController.update(callback)
+    suspend fun requestUpdate(callback: (AccidentListResponse) -> Unit) = AccidentsController.loadAccidents(callback)
 
-    fun requestSingleAccident(id: Int, callback: (ApiResponse) -> Unit) {
-        AccidentsController.requestSingleAccident(id, callback)
+    suspend fun requestSingleAccident(id: Int, callback: (AccidentResponse) -> Unit) {
+        AccidentsController.loadSingleAccident(id, callback)
     }
 
-    fun requestDetailsForAccident(accident: Accident, callback: (ApiResponse) -> Unit) {
-        AccidentsController.requestDetailsForAccident(accident, callback)
-    }
-
-    fun addVolunteers(json: JSONObject) = VolunteersController.addVolunteers(json)
+    fun addVolunteers(volunteers: List<Volunteer>) = VolunteersController.addVolunteers(volunteers)
 
     fun addMessages(json: JSONArray) = MessagesController.addMessages(json)
 

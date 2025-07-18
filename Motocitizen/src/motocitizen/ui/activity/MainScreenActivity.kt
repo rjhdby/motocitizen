@@ -7,15 +7,20 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintSet.WRAP_CONTENT
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import motocitizen.MyApp
 import motocitizen.content.Content
+import motocitizen.content.accident.Accident
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.geo.geolocation.MyLocationManager
 import motocitizen.geo.maps.MainMapManager
@@ -27,7 +32,16 @@ import motocitizen.ui.changelog.ChangeLog
 import motocitizen.ui.rows.AccidentRow
 import motocitizen.ui.views.BounceScrollView
 import motocitizen.user.User
-import motocitizen.utils.*
+import motocitizen.utils.BackgroundScope
+import motocitizen.utils.bindView
+import motocitizen.utils.carryOver
+import motocitizen.utils.displayWidth
+import motocitizen.utils.goTo
+import motocitizen.utils.hide
+import motocitizen.utils.makeDial
+import motocitizen.utils.margins
+import motocitizen.utils.padToolbars
+import motocitizen.utils.show
 
 class MainScreenActivity : AppCompatActivity() {
     companion object {
@@ -35,13 +49,14 @@ class MainScreenActivity : AppCompatActivity() {
         private const val MAP: Byte = 1
         private const val SUBSCRIBE_TAG = "mainScreen"
     }
+
     private val listenersScope = BackgroundScope.Default()
 
-    private val mapContainer: ViewGroup by bindViewWithActionBar(R.id.google_map)
+    private val mapContainer: ViewGroup by bindView(R.id.google_map)
     private val createAccButton: ImageButton by bindView(R.id.add_point_button)
     private val toAccListButton: ImageButton by bindView(R.id.list_button)
     private val toMapButton: ImageButton by bindView(R.id.map_button)
-    private val accListView: View by bindViewWithActionBar(R.id.acc_list)
+    private val accListView: View by bindView(R.id.acc_list)
     private val progressBar: ProgressBar by bindView(R.id.progressBar)
     private val listContent: ViewGroup by bindView(R.id.accListContent)
     private val dialButton: ImageButton by bindView(R.id.dial_button)
@@ -63,6 +78,8 @@ class MainScreenActivity : AppCompatActivity() {
         setContentView(R.layout.main_screen_activity)
         map = MainMapManager(this)
         ChangeLog.show(this)
+        padToolbars(accListView)
+        padToolbars(mapContainer)
     }
 
     override fun onResume() {
@@ -99,7 +116,12 @@ class MainScreenActivity : AppCompatActivity() {
 
     private fun redraw() {
         val newList = Content.getVisibleReversed()
-            .asyncMap { AccidentRow.make(this@MainScreenActivity, it) }
+            .map { accident ->
+                AccidentRow.make(this@MainScreenActivity, accident).apply {
+                    layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT).margins(preset.margins)
+                    setOnClickListener { toMap(accident) }
+                }
+            }
 
         runOnUiThread {
             listContent.removeAllViews()
@@ -118,7 +140,7 @@ class MainScreenActivity : AppCompatActivity() {
         toAccListButton.setOnClickListener { setFrame(LIST) }
         toMapButton.setOnClickListener { setFrame(MAP) }
         dialButton.setOnClickListener { makeDial(getString(R.string.phone)) }
-        bounceScrollView.setOverScrollListener { requestAccidents() }
+        bounceScrollView.setOverScrollListener { lifecycleScope.launch { requestAccidents() } }
     }
 
     private fun subscribe() = listenersScope.launch {
@@ -132,7 +154,7 @@ class MainScreenActivity : AppCompatActivity() {
         ) { listenersScope.launch { redraw() } }
     }
 
-    private fun requestAccidents() {
+    private suspend fun requestAccidents() {
         when {
             transaction -> return
             !MyApp.isOnline(this) -> Toast.makeText(
@@ -166,10 +188,8 @@ class MainScreenActivity : AppCompatActivity() {
         intent.apply {
             when {
                 hasExtra("toMap") -> toMap(intent.extras?.getInt("toMap", 0) ?: 0)
-                hasExtra("toDetails") -> Unit //todo toDetails() ?
             }
             removeExtra("toMap")
-            removeExtra("toDetails")
         }
         setIntent(intent)
     }
@@ -187,7 +207,7 @@ class MainScreenActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.small_menu_settings -> goTo(Screens.SETTINGS)
             R.id.small_menu_about -> goTo(Screens.ABOUT)
-            R.id.action_refresh -> requestAccidents()
+            R.id.action_refresh -> lifecycleScope.launch { requestAccidents() }
             R.id.do_not_disturb -> flipDoNotDisturb(item)
             else -> return false
         }
@@ -199,10 +219,13 @@ class MainScreenActivity : AppCompatActivity() {
         Preferences.doNotDisturb = !Preferences.doNotDisturb
     }
 
-
     private fun toMap(id: Int) {
+        toMap(Content[id] ?: return)
+    }
+
+    private fun toMap(accident: Accident) {
         setFrame(MAP)
-        map.centerOnAccident(Content[id]!!)
+        map.centerOnAccident(accident)
     }
 
     private fun updateStatusBar() {

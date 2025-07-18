@@ -6,7 +6,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.json.JSONObject
 import java.io.IOException
 
-abstract class CoreRequest(val callback: (ApiResponse) -> Unit = {}) {
+abstract class CoreRequest(val callback: (LegacyApiResponse) -> Unit = {}) {
     abstract val url: String
     private val params: HashMap<String, String> = hashMapOf()
 
@@ -23,13 +23,13 @@ abstract class CoreRequest(val callback: (ApiResponse) -> Unit = {}) {
     open fun call() = client.newCall(buildRequest()).enqueue(enqueueCallback())
 
     private fun enqueueCallback(): Callback = object : Callback {
-        override fun onFailure(call: Call, e: IOException) = callback(ApiResponse(error))
+        override fun onFailure(call: Call, e: IOException) = callback(LegacyApiResponse(error))
 
         @Throws(IOException::class)
         override fun onResponse(call: Call, response: Response) = callback(response(response.body?.string()?:"")) //todo
     }
 
-    abstract fun response(string: String): ApiResponse
+    abstract fun response(string: String): LegacyApiResponse
 
     private fun makePost(post: Map<String, String>): RequestBody {
         val body = FormBody.Builder()

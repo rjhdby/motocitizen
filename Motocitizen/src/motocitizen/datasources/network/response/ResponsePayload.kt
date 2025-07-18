@@ -1,0 +1,3 @@
+package motocitizen.datasources.network.response
+
+sealed interface ResponsePayload

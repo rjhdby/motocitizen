@@ -111,6 +111,8 @@ dependencies {
     implementation("com.vk:androidsdk:2.1.1")
     implementation("com.google.android.gms:play-services-auth:21.3.0")
     implementation("androidx.preference:preference-ktx:1.2.1")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.19.1")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.19.1")
 
     // Jetpack Compose (если нужно)
     implementation("androidx.compose.ui:ui:1.8.3")

@@ -1,11 +1,12 @@
 package motocitizen.dictionary
 
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 
 import motocitizen.main.R
 
-enum class Type(override val code: String, override val text: String, private val mapIcon: Int): Dictionary<String> {
+enum class Type(override val code: String, override val text: String, private val mapIcon: Int) : Dictionary<String> {
     BREAK("b", "Поломка", R.drawable.break_icon),
     SOLO("m", "Один участник", R.drawable.accident),
     MOTO_MOTO("mm", "Мот/мот", R.drawable.accident),
@@ -19,4 +20,13 @@ enum class Type(override val code: String, override val text: String, private va
         get() = BitmapDescriptorFactory.fromResource(this.mapIcon)
 
     fun isAccident() = this in arrayOf(MOTO_AUTO, SOLO, MOTO_MOTO, MOTO_MAN)
+
+    companion object {
+        private val map = entries.associate { it.code to it }
+
+        @Suppress("unused")
+        @JsonCreator
+        @JvmStatic
+        fun fromString(code: String) = map[code] ?: OTHER
+    }
 }

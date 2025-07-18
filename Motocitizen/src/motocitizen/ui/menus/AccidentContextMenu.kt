@@ -3,9 +3,8 @@ package motocitizen.ui.menus
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import motocitizen.content.accident.Accident
-import motocitizen.datasources.network.ApiResponse
+import motocitizen.datasources.network.LegacyApiResponse
 import motocitizen.datasources.network.requests.ActivateAccident
 import motocitizen.datasources.network.requests.BanRequest
 import motocitizen.datasources.network.requests.EndAccident
@@ -26,7 +25,7 @@ class AccidentContextMenu(context: Context, val accident: Accident) : ContextMen
 
     private fun addOwnerAndModeratorMenu() {
         if (User.notIsModerator() && User.id != accident.owner) return
-        addButton(if (accident.isEnded()) R.string.unfinish else R.string.finish) { finishButtonPressed() }
+        addButton(if (accident.isFinished()) R.string.unfinish else R.string.finish) { finishButtonPressed() }
     }
 
     private fun addCommonMenu() {
@@ -59,7 +58,7 @@ class AccidentContextMenu(context: Context, val accident: Accident) : ContextMen
     }
 
     private fun finishButtonPressed() = when {
-        accident.isEnded() -> ActivateAccident(accident.id) {
+        accident.isFinished() -> ActivateAccident(accident.id) {
             accident.status = AccidentStatus.ACTIVE
             SubscribeManager.fireEvent(SubscribeManager.Event.ACCIDENTS_UPDATED)
         }
@@ -80,7 +79,7 @@ class AccidentContextMenu(context: Context, val accident: Accident) : ContextMen
         }
     }.call()
 
-    private fun banRequestCallback(response: ApiResponse) {
+    private fun banRequestCallback(response: LegacyApiResponse) {
         val result = when {
             response.hasError() -> "Ошибка связи с сервером"
             else                -> "Пользователь забанен"

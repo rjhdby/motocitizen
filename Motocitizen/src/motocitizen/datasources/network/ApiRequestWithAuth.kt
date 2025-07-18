@@ -4,7 +4,7 @@ import motocitizen.datasources.preferences.Preferences
 import motocitizen.user.Auth
 import motocitizen.utils.md5
 
-abstract class ApiRequestWithAuth(method: String, id: Int? = null, callback: (ApiResponse) -> Unit = {})
+abstract class ApiRequestWithAuth(method: String, id: Int? = null, callback: (LegacyApiResponse) -> Unit = {})
     : ApiRequest(method, id, callback) {
     override fun call() {
         when {

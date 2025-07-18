@@ -1,7 +1,7 @@
 package motocitizen.user
 
 import com.vk.api.sdk.VK
-import motocitizen.datasources.network.ApiResponse
+import motocitizen.datasources.network.LegacyApiResponse
 import motocitizen.datasources.network.requests.AuthRequest
 import motocitizen.datasources.preferences.Preferences
 import motocitizen.utils.getEnumOr
@@ -16,7 +16,7 @@ object Auth {
         GOOGLE("google");
 
         companion object {
-            fun current(): AuthType = values().firstOrNull { it.value == Preferences.authType } ?: NONE
+            fun current(): AuthType = entries.firstOrNull { it.value == Preferences.authType } ?: NONE
         }
     }
 
@@ -37,7 +37,7 @@ object Auth {
 
     fun autoAuth(callback: () -> Unit) = auth(AuthType.current(), callback)
 
-    private fun authRequestCallback(response: ApiResponse, callback: () -> Unit) {
+    private fun authRequestCallback(response: LegacyApiResponse, callback: () -> Unit) {
         parseAuthResult(response)
         if (!User.isAuthorized) logout()
         callback()
@@ -47,7 +47,7 @@ object Auth {
 
     fun isGoogleAuth() = AuthType.current() == AuthType.GOOGLE
 
-    private fun parseAuthResult(response: ApiResponse) {
+    private fun parseAuthResult(response: LegacyApiResponse) {
         User.isAuthorized = false
         tryOrPrintStack {
             val result = response.resultObject

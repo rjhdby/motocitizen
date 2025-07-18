@@ -1,13 +1,11 @@
 package motocitizen.content
 
 import motocitizen.content.volunteer.Volunteer
-import org.json.JSONObject
-import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 
 object VolunteersController {
-    val volunteers: TreeMap<Int, Volunteer> = TreeMap()
-    fun addVolunteers(volunteersList: JSONObject) {
-        volunteersList.keys()
-                .forEach { volunteers[it.toInt()] = Volunteer(it.toInt(), volunteersList.getString(it)) }
+    val volunteers: ConcurrentHashMap<Int, Volunteer> = ConcurrentHashMap()
+    fun addVolunteers(newVolunteers: List<Volunteer>) {
+        newVolunteers.forEach { volunteers[it.id] = it }
     }
 }

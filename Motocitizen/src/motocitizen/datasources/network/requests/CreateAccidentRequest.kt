@@ -2,12 +2,12 @@ package motocitizen.datasources.network.requests
 
 import motocitizen.content.accident.Accident
 import motocitizen.datasources.network.ApiRequestWithAuth
-import motocitizen.datasources.network.ApiResponse
+import motocitizen.datasources.network.LegacyApiResponse
 import motocitizen.datasources.network.Methods
 import motocitizen.datasources.preferences.Preferences
 
 
-class CreateAccidentRequest(accident: Accident, callback: (ApiResponse) -> Unit, forStat: Boolean = false) : ApiRequestWithAuth(Methods.CREATE, callback = callback) {
+class CreateAccidentRequest(accident: Accident, callback: (LegacyApiResponse) -> Unit, forStat: Boolean = false) : ApiRequestWithAuth(Methods.CREATE, callback = callback) {
     init {
         addParams(
                 "t" to accident.type.code,

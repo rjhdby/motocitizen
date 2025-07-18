@@ -1,12 +1,8 @@
 package motocitizen.ui.rows
 
-import android.app.Activity
 import android.content.Context
 import android.graphics.Typeface
 import android.text.method.LinkMovementMethod
-import android.view.View
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
@@ -15,18 +11,14 @@ import androidx.core.text.HtmlCompat
 import motocitizen.content.accident.Accident
 import motocitizen.dictionary.AccidentStatus
 import motocitizen.main.R
-import motocitizen.ui.Screens
-import motocitizen.ui.activity.AccidentDetailsActivity
 import motocitizen.ui.menus.AccidentContextMenu
 import motocitizen.utils.Margins
 import motocitizen.utils.getIntervalFromNowInText
-import motocitizen.utils.goTo
-import motocitizen.utils.margins
 
 class AccidentRow private constructor(
     context: Context,
     private val accident: Accident,
-    private val preset: Preset,
+    val preset: Preset,
 ) : ConstraintLayout(context) {
     companion object {
         fun make(context: Context, accident: Accident): AccidentRow = when (accident.status) {
@@ -56,7 +48,6 @@ class AccidentRow private constructor(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT).margins(preset.margins)
         setBackgroundResource(preset.background)
 
         val header = TextView(context).apply {
@@ -122,23 +113,9 @@ class AccidentRow private constructor(
             applyTo(this@AccidentRow)
         }
 
-        setUpListeners()
-    }
-
-    private fun setUpListeners() {
-        setOnClickListener { clickListener() }
-        setOnLongClickListener { longClickListener(it) }
-    }
-
-    private fun clickListener() {
-        (context as Activity).goTo(
-            Screens.DETAILS,
-            mapOf(AccidentDetailsActivity.Companion.ACCIDENT_ID_KEY to accident.id)
-        )
-    }
-
-    private fun longClickListener(v: View): Boolean {
-        AccidentContextMenu(context, accident).showAsDropDown(v)
-        return true
+        setOnLongClickListener {
+            AccidentContextMenu(context, accident).showAsDropDown(it)
+            true
+        }
     }
 }

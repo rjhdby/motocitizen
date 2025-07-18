@@ -15,7 +15,7 @@ import motocitizen.utils.Id
 import motocitizen.utils.MS_IN_HOUR
 import motocitizen.utils.distanceString
 import motocitizen.utils.metersFromUser
-import java.util.*
+import java.util.Date
 
 //todo simplify constructor
 class Accident(
@@ -25,16 +25,13 @@ class Accident(
     val time: Date,
     var location: AccidentLocation,
     val owner: Id,
-    var status: AccidentStatus
+    var status: AccidentStatus,
+    var description: String = "",
+    var messagesCount: Int = 0,
 ) {
 
     val volunteers = ArrayList<VolunteerAction>()
     val history = ArrayList<History>()
-    var messagesCount = 0
-    var description: String = ""
-        set(value) {
-            field = value.trim()
-        }
 
     var coordinates: LatLng = location.coordinates
         get() = location.coordinates
@@ -71,7 +68,7 @@ class Accident(
     }
 
     fun isActive() = status == ACTIVE
-    fun isEnded() = !isActive()
+    fun isFinished() = !isActive()
     fun isHidden() = status == HIDDEN
     fun body(): String {
         return yandexUrlRegex.replace(description, "").trim()

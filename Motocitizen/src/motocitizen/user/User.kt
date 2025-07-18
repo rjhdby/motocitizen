@@ -1,5 +1,7 @@
 package motocitizen.user
 
+import java.util.EnumSet
+
 object User {
     private var role = Role.RO
     var name = ""
@@ -11,9 +13,11 @@ object User {
 
     fun isReadOnly() = role == Role.RO
 
-    fun isModerator() = role in arrayOf(Role.MODERATOR, Role.DEVELOPER)
+    private val moderatorRoles = EnumSet.of(Role.MODERATOR, Role.DEVELOPER)
 
-    fun notIsModerator() = !isModerator()
+    fun isModerator() = role in moderatorRoles
+
+    fun notIsModerator() = role !in moderatorRoles
 
     fun logout() {
         name = ""

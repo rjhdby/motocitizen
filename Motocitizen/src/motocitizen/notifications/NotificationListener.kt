@@ -7,10 +7,12 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import kotlinx.coroutines.launch
 import motocitizen.content.Content
 import motocitizen.content.accident.Accident
 import motocitizen.datasources.preferences.Preferences
-import java.util.*
+import motocitizen.utils.BackgroundScope
+import java.util.LinkedList
 
 class NotificationListener : FirebaseMessagingService() {
     companion object {
@@ -22,8 +24,10 @@ class NotificationListener : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         val id = remoteMessage.data["id"]?.toInt() ?: return
-        Content.requestSingleAccident(id) {
-            raiseNotification(id)
+        BackgroundScope.IO().launch {
+            Content.requestSingleAccident(id) {
+                raiseNotification(id)
+            }
         }
     }
 
